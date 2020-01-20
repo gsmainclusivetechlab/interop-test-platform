@@ -2,7 +2,7 @@ version: "3.7"
 
 x-php-defaults: &php-defaults
   #build: ./build/php-fpm
-  image: hub.jcdev.net:24000/php7.3-fpm-stretch:latest
+  image: hub.jcdev.net:24000/php7.4-fpm-buster:latest
   cap_add:
     - SYS_PTRACE
   security_opt:
@@ -23,7 +23,6 @@ x-php-defaults: &php-defaults
     MYSQL_PASSWORD: ${DB_PASSWORD}
   depends_on:
     - mysqldb
-    - redis
 
 services:
   app:
@@ -40,20 +39,6 @@ services:
     ports:
       - "${HOST_SSHD_PORT}:22"
 
-  queue:
-    <<: *php-defaults
-    environment:
-      <<: *php-env-defaults
-      FOREGROUND_PROCESS: supervisor
-      CONTAINER_ENABLED: ${QUEUE_ENABLED}
-
-  redis:
-    image: redis:5
-    volumes:
-      - ./runtime/redis:/data
-    environment:
-      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-
   web:
     image: nginx:latest
     ports:
@@ -66,7 +51,7 @@ services:
       - ./build/ssl:/etc/nginx/ssl
 
   mysqldb:
-    image: mysql:5
+    image: mysql:5.7
     restart: always
     ports:
       - "${HOST_DB_PORT}:3306"
