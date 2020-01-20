@@ -1,0 +1,99 @@
+projectname: webhookproxy
+
+defaults:
+    instance: &default-instance
+        project:
+            env_variables: &default-env-vars
+                DOTENV_VALID: 1
+                MYSQL_HOST: host.docker.internal
+        composer_json:
+            require:
+        docker_server: &default-docker-server
+            target_server: s8
+            vhosts:
+                app: &vhost-app
+                    app_service: web
+                    app_service_port: 443
+                mail: &vhost-mailhog
+                    app_service: mailhog
+                    app_service_port: 8025
+            volumes:
+                x-php-defaults:
+                    - ./auth.json:/root/.composer/auth.json
+                    - ./id_rsa:/root/.ssh/id_rsa
+            env_variables:
+                SSHD_ENABLED: 0
+                PHP_XDEBUG_ENABLED: 0
+            remove_services:
+                - mysqldb
+            cleanup:
+                build:
+                    - runtime/mysql
+                    - runtime/redis
+                    - runtime/installed
+                    - src/composer.lock
+                    - src/vendors/
+                    - src/node_modules/
+                    - configs/nginx-server.conf
+                    - docker-compose.yml
+                    - .env
+                    - src/.env
+                    - build/nginx-server.conf
+                deploy:
+                    exclude:
+                        - src/storage
+                        - runtime
+
+instances:
+    develop:
+        <<: *default-instance
+        project:
+            env_variables:
+                <<: *default-env-vars
+                APP_API_URL: http://webhooks-proxy.develop.s8.justcoded.com
+        docker_server:
+            <<: *default-docker-server
+            vhosts:
+                app:
+                    <<: *vhost-app
+                    domain_name: webhooks-proxy.develop.s8.justcoded.com
+                    https: selfsigned
+                mail:
+                    <<: *vhost-mailhog
+                    domain_name: mail.webhooks-proxy.develop.s8.justcoded.com
+                    https: no
+    build:
+        <<: *default-instance
+        project:
+            env_variables:
+                <<: *default-env-vars
+                APP_API_URL: https://webhooks-proxy.build.s8.justcoded.com
+        docker_server:
+            <<: *default-docker-server
+            vhosts:
+                app:
+                    <<: *vhost-app
+                    domain_name: webhooks-proxy.build.s8.justcoded.com
+                    https: certbot
+                mail:
+                    <<: *vhost-mailhog
+                    domain_name: mail.webhooks-proxy.build.s8.justcoded.com
+                    https: no
+
+    staging:
+        <<: *default-instance
+        project:
+            env_variables:
+                <<: *default-env-vars
+                APP_API_URL: https://webhooks-proxy.staging.s8.justcoded.com
+        docker_server:
+            <<: *default-docker-server
+            vhosts:
+                app:
+                    <<: *vhost-app
+                    domain_name: webhooks-proxy.staging.s8.justcoded.com
+                    https: certbot
+                mail:
+                    <<: *vhost-mailhog
+                    domain_name: mail.webhooks-proxy.staging.s8.justcoded.com
+                    https: no
