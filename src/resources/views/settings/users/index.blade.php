@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Users'))
+@section('title', __('Users management'))
 
 @section('content')
     <div class="page-header">
@@ -9,11 +9,28 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                <div class="card-header">
+                    <div class="input-icon">
+                        <span class="input-icon-addon">
+                            <i class="fe fe-search"></i>
+                        </span>
+                        <input type="text" class="form-control w-10" placeholder="{{ __('Search') }}">
+                    </div>
+                    <div class="card-options">
+                        <div class="btn-group">
+                            <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
+                                {{ __('Active') }}
+                            </a>
+                            <a href="{{ route('settings.users.trashed') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.trashed')) active @endif">
+                                {{ __('Deleted') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
                         <thead>
                             <tr>
-                                <th class="text-muted">#</th>
                                 <th>{{ __('Name') }}</th>
                                 <th>{{ __('Email') }}</th>
                                 <th>{{ __('Company') }}</th>
@@ -24,9 +41,21 @@
                         <tbody>
                         @forelse ($users as $user)
                             <tr>
-                                <td class="text-muted">{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <td>
+                                    {{ $user->name }}
+                                </td>
+                                <td>
+                                    {{ $user->email }}
+                                    @if ($user->email_verified_at)
+                                        <div class="small text-muted">
+                                            {{ __('Verified') }}: {{ $user->email_verified_at->format('M d, Y') }}
+                                        </div>
+                                    @else
+                                        <div class="small text-warning">
+                                            {{ __('Not verified') }}
+                                        </div>
+                                    @endif
+                                </td>
                                 <td>{{ $user->company }}</td>
                                 <td>{{ $user->role }}</td>
                                 <td class="text-center">
@@ -35,14 +64,26 @@
                                         <div class="dropdown-menu dropdown-menu-right">
                                             <a href="#" class="dropdown-item">Action </a>
                                             <a href="#" class="dropdown-item">Another action </a>
-                                            <a href="#" class="dropdown-item">Something else here</a>
+                                            @if ($user->trashed())
+                                                <form action="{{ route('settings.users.restore', $user) }}" method="POST">
+                                                    @csrf
+                                                    @method('POST')
+                                                    <button class="dropdown-item" type="submit">{{ __('Restore') }}</button>
+                                                </form>
+                                            @else
+                                                <form action="{{ route('settings.users.destroy', $user) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="6">
+                                <td class="text-center" colspan="5">
                                     {{ __('No Results') }}
                                 </td>
                             </tr>
@@ -51,18 +92,7 @@
                     </table>
                 </div>
             </div>
-            @if ($users->hasPages())
-                <div class="row">
-                    <div class="col-md-6">
-                        @include('includes.summary', ['paginator' => $users])
-                    </div>
-                    <div class="col-md-6">
-                        <div class="justify-content-end d-flex">
-                            {{ $users->links() }}
-                        </div>
-                    </div>
-                </div>
-            @endif
+            @include('includes.pagination', ['paginator' => $users])
         </div>
     </div>
 @endsection

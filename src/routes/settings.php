@@ -13,5 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::resource('users', 'UserController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
+Route::resource('users', 'UserController', ['except' => ['show', 'create', 'store', 'edit', 'update']]);
+Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
+Route::post('users/{id}/restore', 'UserController@restore')->name('users.restore');
 Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
