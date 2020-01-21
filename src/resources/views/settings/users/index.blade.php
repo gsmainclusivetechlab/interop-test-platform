@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Users management'))
+@section('title', __('Users'))
 
 @section('content')
     <div class="page-header">
@@ -35,6 +35,7 @@
                                 <th>{{ __('Email') }}</th>
                                 <th>{{ __('Company') }}</th>
                                 <th>{{ __('Role') }}</th>
+                                <th>{{ __('Verified') }}</th>
                                 <th class="w-1"></th>
                             </tr>
                         </thead>
@@ -46,24 +47,18 @@
                                 </td>
                                 <td>
                                     {{ $user->email }}
-                                    @if ($user->email_verified_at)
-                                        <div class="small text-muted">
-                                            {{ __('Verified') }}: {{ $user->email_verified_at->format('M d, Y') }}
-                                        </div>
-                                    @else
-                                        <div class="small text-warning">
-                                            {{ __('Not verified') }}
-                                        </div>
-                                    @endif
                                 </td>
                                 <td>{{ $user->company }}</td>
                                 <td>{{ $user->role }}</td>
+                                <td>
+                                    @if ($user->email_verified_at)
+                                        {{ $user->email_verified_at->format('M d, Y') }}
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <div class="item-action dropdown">
                                         <a href="#" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="#" class="dropdown-item">Action </a>
-                                            <a href="#" class="dropdown-item">Another action </a>
                                             @if ($user->trashed())
                                                 <form action="{{ route('settings.users.restore', $user) }}" method="POST">
                                                     @csrf
