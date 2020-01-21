@@ -14,11 +14,7 @@
 
 Auth::routes(['verify' => true]);
 
-Route::get('/', 'HomeController@index')->name('home');
 Route::redirect('/home', '/');
+Route::get('/', 'HomeController@index')->name('home');
 
 Route::resource('sessions', 'SessionController', ['except' => ['show']]);
-
-Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
-    Route::resource('users', 'UserController', ['except' => ['show']]);
-});
