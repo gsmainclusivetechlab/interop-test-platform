@@ -7,8 +7,8 @@
         <div class="card-body p-6">
             <div class="card-title">@yield('title')</div>
             <div class="form-group">
-                <label for="email" class="form-label">{{ __('Email address') }}</label>
-                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('Enter email address') }}">
+                <label for="email" class="form-label">{{ __('Email') }}</label>
+                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('Enter email') }}">
                 @error('email')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -20,7 +20,7 @@
                     {{ __('Password') }}
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="float-right small">
-                            {{ __('I forgot password') }}
+                            {{ __('Forgot password?') }}
                         </a>
                     @endif
                 </label>
@@ -39,9 +39,15 @@
             </div>
             <div class="form-footer">
                 <button type="submit" class="btn btn-primary btn-block">
-                    {{ __('Sign in') }}
+                    {{ __('Login') }}
                 </button>
             </div>
         </div>
     </form>
+    @if (Route::has('register'))
+        <div class="text-center text-muted">
+            {{ __("Don't have account yet?") }}
+            <a href="{{ route('register') }}">{{ __('Register') }}</a>
+        </div>
+    @endif
 @endsection
