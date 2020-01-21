@@ -12,12 +12,7 @@
                 <h1 class="h2 mb-3">
                     {{ __('Oops.. You just found an error page..') }}
                 </h1>
-                <p class="h4 text-muted font-weight-normal mb-7">
-                    @yield('message')
-                </p>
-                <a class="btn btn-primary" href="{{ url()->previous() }}">
-                    <i class="fe fe-arrow-left mr-2"></i>{{ __('Go back') }}
-                </a>
+                @yield('content')
             </div>
         </div>
     </div>

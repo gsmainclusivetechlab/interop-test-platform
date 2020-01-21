@@ -19,13 +19,6 @@
                             <i class="dropdown-icon fe fe-user"></i>
                             {{ __('Profile') }}
                         </a>
-                        @can('administer')
-                            <a class="dropdown-item @if (request()->routeIs('settings.*')) active @endif" href="{{ route('settings.users.index') }}">
-                                <i class="dropdown-icon fe fe-settings"></i>
-                                {{ __('Settings') }}
-                            </a>
-                        @endcan
-                        <div class="dropdown-divider"></div>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button class="dropdown-item" type="submit">
@@ -55,14 +48,44 @@
                 <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
                     <li class="nav-item">
                         <a href="{{ route('home') }}" class="nav-link @if (request()->routeIs('home')) active @endif">
+                            <i class="fe fe-activity"></i>
                             {{ __('Dashboard') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('sessions.index') }}" class="nav-link @if (request()->routeIs('sessions.*')) active @endif">
+                            <i class="fe fe-box"></i>
                             {{ __('Sessions') }}
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fe fe-help-circle"></i>
+                            {{ __('Tutorial') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" target="_blank">
+                            <i class="fe fe-link"></i>
+                            {{ __('The Lab') }}
+                        </a>
+                    </li>
+                    @can('administer')
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link @if (request()->routeIs('settings.*')) active @endif" data-toggle="dropdown">
+                                <i class="fe fe-settings"></i>
+                                {{ __('Settings') }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-arrow">
+                                <a href="{{ route('settings.users.index') }}" class="dropdown-item @if (request()->routeIs('settings.users.*')) active @endif">
+                                    {{ __('Users') }}
+                                </a>
+                                <a href="{{ route('settings.sessions.index') }}" class="dropdown-item @if (request()->routeIs('settings.sessions.*')) active @endif">
+                                    {{ __('Sessions') }}
+                                </a>
+                            </div>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         </div>
