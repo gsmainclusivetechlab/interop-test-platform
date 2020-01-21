@@ -1,4 +1,4 @@
-Webhooks Proxy Server. Powered by Laravel 
+GSMA Test Control. Powered by Laravel 
 ===================================
 
 BASE STRUCTURE
