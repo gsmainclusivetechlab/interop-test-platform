@@ -22233,3 +22233,16 @@ svg {
   font-style: italic;
 }
 
+.col-login__title {
+  font-size: 1.25rem;
+}
+
+.col-login__subtitle {
+  font-size: 0.875rem;
+}
+
+.custom-control-label::before,
+.custom-control-label::after {
+  top: 0;
+}
+

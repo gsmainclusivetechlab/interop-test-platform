@@ -1,0 +1,16 @@
+.col-login {
+    &__title {
+        font-size: 1.25rem;
+    }
+
+    &__subtitle {
+        font-size: 0.875rem;
+    }
+}
+
+.custom-control-label {
+    &::before,
+    &::after {
+        top: 0;
+    }
+}
