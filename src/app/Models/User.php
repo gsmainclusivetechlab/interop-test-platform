@@ -17,7 +17,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'company',
         'role',
         'email',
@@ -39,4 +40,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'blocked_at' => 'datetime',
     ];
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return implode(' ', [$this->first_name, $this->last_name]);
+    }
 }

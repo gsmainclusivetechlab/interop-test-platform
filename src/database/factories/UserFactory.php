@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Hash;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
         'company' => $faker->company,
         'role' => User::ROLE_USER,
         'email' => $faker->unique()->safeEmail,

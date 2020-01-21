@@ -7,9 +7,18 @@
         <div class="card-body p-6">
             <div class="card-title">@yield('title')</div>
             <div class="form-group">
-                <label for="name" class="form-label">{{ __('Name') }}</label>
-                <input id="name" name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="{{ __('Enter name') }}">
-                @error('name')
+                <label for="first_name" class="form-label">{{ __('First name') }}</label>
+                <input id="first_name" name="first_name" value="{{ old('first_name') }}" type="text" class="form-control @error('first_name') is-invalid @enderror" placeholder="{{ __('Enter first name') }}">
+                @error('first_name')
+                    <span class="invalid-feedback">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="form-group">
+                <label for="last_name" class="form-label">{{ __('Last name') }}</label>
+                <input id="last_name" name="last_name" value="{{ old('last_name') }}" type="text" class="form-control @error('last_name') is-invalid @enderror" placeholder="{{ __('Enter last name') }}">
+                @error('last_name')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -37,15 +46,6 @@
                 <label for="password" class="form-label">{{ __('Password') }}</label>
                 <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('Enter password') }}">
                 @error('password')
-                    <span class="invalid-feedback">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-            <div class="form-group">
-                <label for="password_confirmation" class="form-label">{{ __('Confirm password') }}</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('Confirm password') }}">
-                @error('password_confirmation')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
                     </span>
