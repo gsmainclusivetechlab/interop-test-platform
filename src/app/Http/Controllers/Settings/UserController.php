@@ -11,6 +11,8 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->authorize('view-any', User::class);
+
         $users = User::latest()->paginate();
 
         return view('settings.users.index', compact('users'));
