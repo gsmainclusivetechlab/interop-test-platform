@@ -48,8 +48,8 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()
-            ->route('settings.users.index')
-            ->with('success', __('User deleted successfully'));
+            ->back()
+            ->with('success', __('User blocked successfully'));
     }
 
     /**
@@ -59,13 +59,16 @@ class UserController extends Controller
      */
     public function restore(int $id)
     {
-        $user = $this->findOnlyTrashedOrFail($id);
+        if (($user = User::onlyTrashed()->find($id)) === null) {
+            abort(404);
+        }
+
         $this->authorize('restore', $user);
         $user->restore();
 
         return redirect()
-            ->route('settings.users.trashed')
-            ->with('success', __('User restored successfully'));
+            ->back()
+            ->with('success', __('User unblocked successfully'));
     }
 
     /**
@@ -75,28 +78,45 @@ class UserController extends Controller
      */
     public function forceDestroy(int $id)
     {
-        $user = $this->findOnlyTrashedOrFail($id);
+        if (($user = User::withTrashed()->find($id)) === null) {
+            abort(404);
+        }
+
         $this->authorize('forceDelete', $user);
         $user->forceDelete();
 
         return redirect()
-            ->route('settings.users.trashed')
-            ->with('success', __('User force deleted successfully'));
+            ->back()
+            ->with('success', __('User deleted successfully'));
     }
 
     /**
-     * @param int $id
-     * @return User|null
-     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    protected function findOnlyTrashedOrFail(int $id)
+    public function promoteAdmin(User $user)
     {
-        $user = User::onlyTrashed()->find($id);
+        $this->authorize('promoteAdmin', $user);
+        $user->update(['role' => User::ROLE_ADMIN]);
 
-        if ($user === null) {
-            abort(404);
-        } else {
-            return $user;
-        }
+        return redirect()
+            ->back()
+            ->with('success', __('User promoted to admin successfully'));
+    }
+
+    /**
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function relegateAdmin(User $user)
+    {
+        $this->authorize('relegateAdmin', $user);
+        $user->update(['role' => User::ROLE_USER]);
+
+        return redirect()
+            ->back()
+            ->with('success', __('User relegated from admin successfully'));
     }
 }

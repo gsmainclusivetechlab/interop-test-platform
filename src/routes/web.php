@@ -24,5 +24,7 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
     Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
     Route::post('users/{user}/restore', 'UserController@restore')->name('users.restore');
     Route::delete('users/{user}/force-destroy', 'UserController@forceDestroy')->name('users.force-destroy');
+    Route::post('users/{user}/promote-admin', 'UserController@promoteAdmin')->name('users.promote-admin');
+    Route::post('users/{user}/relegate-admin', 'UserController@relegateAdmin')->name('users.relegate-admin');
     Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
 });

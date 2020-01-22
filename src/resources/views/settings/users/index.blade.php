@@ -22,7 +22,7 @@
                                 {{ __('Active') }}
                             </a>
                             <a href="{{ route('settings.users.trashed') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.trashed')) active @endif">
-                                {{ __('Deleted') }}
+                                {{ __('Blocked') }}
                             </a>
                         </div>
                     </div>
@@ -56,24 +56,29 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    @canany(['delete', 'restore', 'forceDelete'], $user)
+                                    @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
                                         <div class="item-action dropdown">
                                             <a href="#" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
+                                                @can('promoteAdmin', $user)
+                                                    <form action="{{ route('settings.users.promote-admin', $user) }}" method="POST">
+                                                        @csrf
+                                                        <button class="dropdown-item" type="submit">{{ __('Promote Admin') }}</button>
+                                                    </form>
+                                                @endcan
+
+                                                @can('relegateAdmin', $user)
+                                                    <form action="{{ route('settings.users.relegate-admin', $user) }}" method="POST">
+                                                        @csrf
+                                                        <button class="dropdown-item" type="submit">{{ __('Relegate Admin') }}</button>
+                                                    </form>
+                                                @endcan
+
                                                 @if ($user->trashed())
                                                     @can('restore', $user)
                                                         <form action="{{ route('settings.users.restore', $user) }}" method="POST">
                                                             @csrf
-                                                            @method('POST')
-                                                            <button class="dropdown-item" type="submit">{{ __('Restore') }}</button>
-                                                        </form>
-                                                    @endcan
-
-                                                    @can('forceDelete', $user)
-                                                        <form action="{{ route('settings.users.force-destroy', $user) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="dropdown-item" type="submit">{{ __('Force delete') }}</button>
+                                                            <button class="dropdown-item" type="submit">{{ __('Unblock') }}</button>
                                                         </form>
                                                     @endcan
                                                 @else
@@ -81,10 +86,18 @@
                                                         <form action="{{ route('settings.users.destroy', $user) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
+                                                            <button class="dropdown-item" type="submit">{{ __('Block') }}</button>
                                                         </form>
                                                     @endcan
                                                 @endif
+
+                                                @can('forceDelete', $user)
+                                                    <form action="{{ route('settings.users.force-destroy', $user) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
+                                                    </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     @endcanany

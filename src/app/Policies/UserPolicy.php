@@ -10,8 +10,6 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
-     *
      * @param  User  $user
      * @return mixed
      */
@@ -21,8 +19,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
-     *
      * @param  User  $user
      * @param  User  $model
      * @return mixed
@@ -33,8 +29,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can create models.
-     *
      * @param  User  $user
      * @return mixed
      */
@@ -44,8 +38,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
-     *
      * @param  User  $user
      * @param  User  $model
      * @return mixed
@@ -56,8 +48,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
-     *
      * @param  User  $user
      * @param  User  $model
      * @return mixed
@@ -68,8 +58,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
-     *
      * @param  User  $user
      * @param  User  $model
      * @return mixed
@@ -80,8 +68,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
-     *
      * @param  User  $user
      * @param  User  $model
      * @return mixed
@@ -89,5 +75,25 @@ class UserPolicy
     public function forceDelete(User $user, User $model)
     {
         return ($user->isAdmin() && !$model->isAdmin()) || ($user->isSuperAdmin() && !$user->is($model));
+    }
+
+    /**
+     * @param User $user
+     * @param User $model
+     * @return mixed
+     */
+    public function promoteAdmin(User $user, User $model)
+    {
+        return ($user->isSuperAdmin() && !$user->is($model) && !$model->isAdmin());
+    }
+
+    /**
+     * @param User $user
+     * @param User $model
+     * @return mixed
+     */
+    public function relegateAdmin(User $user, User $model)
+    {
+        return ($user->isSuperAdmin() && !$user->is($model) && $model->isAdmin());
     }
 }
