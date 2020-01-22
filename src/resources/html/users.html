@@ -61,16 +61,16 @@
             <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
                 <div class="container-fluid">
                     <div class="row align-items-center">
-                        <div class="col-lg-3 ml-auto text-right">
+                        <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
                             <a href="#" class="btn btn-outline-primary">
                                 <i class="fe fe-plus font-weight-bold"></i>
                                 New session
                             </a>
                         </div>
-                        <div class="col-lg order-lg-first">
-                            <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+                        <div class="col-lg order-lg-first my-2 my-lg-0">
+                            <ul class="nav nav-tabs border-0 flex-column flex-lg-row align-items-start">
                                 <li class="nav-item">
-                                    <a href="./index.html" class="nav-link"><i class="fe fe-home"></i> Home</a>
+                                    <a href="./index.html" class="nav-link active"><i class="fe fe-home"></i> Home</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="./index.html" class="nav-link"><i class="fe fe-clock"></i> Sessions</a>
@@ -97,37 +97,469 @@
                     <div class="row">
                         <div class="col">
                             <div class="card">
+                                <div class="card-header">
+                                    <div class="input-icon">
+                                        <span class="input-icon-addon">
+                                            <i class="fe fe-search"></i>
+                                        </span>
+                                        <input type="text" class="form-control w-10" placeholder="Search">
+                                    </div>
+                                    <div class="card-options">
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-outline-primary active">
+                                                Active
+                                            </a>
+                                            <a href="#" class="btn btn-outline-primary">
+                                                Deleted
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="table-responsive">
-                                    <table class="table card-table table-striped datatable">
-                                        <thead class="thead-light">
+                                    <table class="table table-striped table-vcenter text-nowrap card-table">
+                                        <thead class="table-light">
                                             <tr>
-                                                <th>User ID</th>
                                                 <th>Name</th>
-                                                <th>Last name</th>
                                                 <th>Email</th>
-                                                <th>Company name</th>
+                                                <th>Company</th>
                                                 <th>Role</th>
-                                                <th></th>
+                                                <th>Verified</th>
+                                                <th class="w-1"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>09366617</td>
-                                                <td>Sannah</td>
-                                                <td>Easton</td>
-                                                <td>sannah89@email.com</td>
-                                                <td>Easton Co</td>
-                                                <td>Admin</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        <i class="fe fe-more-vertical"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                        <a class="dropdown-item" href="#">View</a>
-                                                        <a class="dropdown-item" href="#">Change role</a>
-                                                        <a class="dropdown-item" href="#">Inactivate</a>
+                                                    Marjorie Lindgren
+                                                </td>
+                                                <td>
+                                                    elijah67@example.org
+                                                </td>
+                                                <td>Fritsch-Boyer</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Sep 18, 2011
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport"
+                                                            class="icon"><i class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/2"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Delores Funk
+                                                </td>
+                                                <td>
+                                                    stevie.simonis@example.org
+                                                </td>
+                                                <td>Mayer, Lemke and Legros</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Jun 24, 2008
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/3"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Juliana Luettgen
+                                                </td>
+                                                <td>
+                                                    rkassulke@example.net
+                                                </td>
+                                                <td>Kuhlman Ltd</td>
+                                                <td>user</td>
+                                                <td>
+                                                    May 24, 2017
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/4"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Eryn Torp
+                                                </td>
+                                                <td>
+                                                    nbergstrom@example.net
+                                                </td>
+                                                <td>Greenholt-Rosenbaum</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Feb 20, 1981
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/5"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Pearlie Torphy
+                                                </td>
+                                                <td>
+                                                    wbins@example.org
+                                                </td>
+                                                <td>Orn-Harris</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Jan 17, 2020
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/6"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Caleb McClure
+                                                </td>
+                                                <td>
+                                                    iokon@example.net
+                                                </td>
+                                                <td>Littel-Fisher</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Dec 29, 1988
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/7"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Cordell Ratke
+                                                </td>
+                                                <td>
+                                                    wbauch@example.org
+                                                </td>
+                                                <td>Ullrich and Sons</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Mar 01, 1992
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/8"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Kylee Oberbrunner
+                                                </td>
+                                                <td>
+                                                    hoeger.alexis@example.org
+                                                </td>
+                                                <td>Nolan Inc</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Jul 27, 2016
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/9"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Karen Daugherty
+                                                </td>
+                                                <td>
+                                                    kailyn79@example.com
+                                                </td>
+                                                <td>Waelchi-Rath</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Aug 02, 1999
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/10"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Danyka Predovic
+                                                </td>
+                                                <td>
+                                                    emely43@example.com
+                                                </td>
+                                                <td>Leuschke Ltd</td>
+                                                <td>user</td>
+                                                <td>
+                                                    May 04, 1978
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/11"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Bella Volkman
+                                                </td>
+                                                <td>
+                                                    ozulauf@example.com
+                                                </td>
+                                                <td>Lemke, Wilkinson and Koch</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Jul 24, 2001
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/12"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Alia Littel
+                                                </td>
+                                                <td>
+                                                    price.clay@example.org
+                                                </td>
+                                                <td>McGlynn and Sons</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Apr 16, 1990
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/13"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Burnice Jaskolski
+                                                </td>
+                                                <td>
+                                                    sporer.ellis@example.com
+                                                </td>
+                                                <td>West Ltd</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Apr 28, 1979
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/14"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Deon Gulgowski
+                                                </td>
+                                                <td>
+                                                    xoconner@example.com
+                                                </td>
+                                                <td>Gerhold-Parker</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Jul 16, 2019
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/15"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Hattie Miller
+                                                </td>
+                                                <td>
+                                                    ymclaughlin@example.org
+                                                </td>
+                                                <td>Gusikowski-Jakubowski</td>
+                                                <td>user</td>
+                                                <td>
+                                                    Feb 02, 2005
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="item-action dropdown">
+                                                        <a href="#" data-toggle="dropdown" data-boundary="viewport" class="icon"><i
+                                                                class="fe fe-more-vertical"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <form action="http://localhost:8084/settings/users/16"
+                                                                method="POST">
+                                                                <input type="hidden" name="_token"
+                                                                    value="bVGrhOszXFKvo1xHBh5AROQWMvG2eHCgazAH5A1z">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button class="dropdown-item"
+                                                                    type="submit">Delete</button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>

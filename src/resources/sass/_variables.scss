@@ -60,7 +60,9 @@ $input-color: $gray-700;
 $input-placeholder-color: $gray-500;
 $custom-control-label-color: $gray-700;
 
-$component-active-bg: $blue;
+$input-focus-border-color: $blue;
+$custom-select-focus-border-color: $blue;
+$input-btn-focus-color: rgba($blue, .25);
 
 // Body
 $body-bg: $gray-100;
