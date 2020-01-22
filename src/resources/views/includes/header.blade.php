@@ -65,7 +65,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" target="_blank">
+                        <a href="{{ env('APP_COMPANY_LAB_URL') }}" class="nav-link" target="_blank">
                             <i class="fe fe-link"></i>
                             {{ __('The Lab') }}
                         </a>
