@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestScenario;
-use App\Models\TestScenarioComponent;
-
 class HomeController extends Controller
 {
     /**
@@ -20,12 +17,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        $model = TestScenario::first();
-//        $pivot = $model->components()->wherePosition(2)->first()->pivot;
-//        dd($model->components);
-//        dd($pivot->moveNext());
-//        dd($pivot->delete());
-//        dd($model->components()->attach([5]));
+        $test = new \App\Testing\TestCase('execute');
+        $runner = new \PHPUnit\TextUI\TestRunner();
+        $result = $runner->doRun($test, [
+            'warnings' => [],
+        ]);
+
+        dd(1);
 
         return view('home');
     }
