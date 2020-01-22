@@ -1,0 +1,6 @@
+.custom-control-label {
+    &::before,
+    &::after {
+        top: -0.125rem;
+    }
+}
