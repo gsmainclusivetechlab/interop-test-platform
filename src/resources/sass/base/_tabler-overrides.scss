@@ -4,3 +4,24 @@
         top: -0.125rem;
     }
 }
+
+.nav-tabs {
+    .nav-item {
+        padding: 0 1rem;
+
+        i {
+            position: relative;
+            top: -0.125rem;
+            width: 0.75rem;
+            font-size: 0.75rem;
+        }
+    }
+}
+
+.nav-link {
+    color: inherit;
+
+    &:hover {
+        color: inherit;
+    }
+}
