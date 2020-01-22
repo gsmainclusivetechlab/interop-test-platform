@@ -1,10 +1,14 @@
 <div class="header py-4">
     <div class="container">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
             <a class="header-brand" href="{{ route('home') }}">
-                <img src="{{ asset('images/logo.png') }}" class="header-brand-img" alt="{{ config('app.name') }}">
+                <img src="{{ asset('images/logo.png') }}" class="h-7" alt="{{ config('app.name') }}">
             </a>
-            <div class="d-flex order-lg-2 ml-auto">
+            <div class="col text-center text-primary">
+                <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
+                <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
+            </div>
+            <div class="d-flex ml-auto">
                 <div class="dropdown">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                         <span class="avatar">
