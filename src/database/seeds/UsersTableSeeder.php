@@ -13,7 +13,8 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         factory(User::class)->create([
-            'name' => 'GSMA Admin',
+            'first_name' => 'GSMA',
+            'last_name' => 'Admin',
             'role' => User::ROLE_ADMIN,
             'email' => 'admin@gsma.com',
         ]);
