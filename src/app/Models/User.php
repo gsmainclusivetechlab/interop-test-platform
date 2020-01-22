@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Enums\RoleEnum;
 use App\Models\Traits\HasEnums;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasEnums;
+    // use HasEnums;
     use Notifiable;
     use SoftDeletes;
 
@@ -45,6 +49,26 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * @return array
+     */
+    public static function getRoles()
+    {
+        return [
+            static::ROLE_USER => __('System User'),
+            static::ROLE_ADMIN => __('Administrator'),
+            static::ROLE_SUPER_ADMIN => __('Super Administrator'),
+        ];
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRoleNameAttribute()
+    {
+        return Arr::get($this->getRoles(), $this->role);
+    }
 
     /**
      * @return string

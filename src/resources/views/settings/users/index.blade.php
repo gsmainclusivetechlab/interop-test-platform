@@ -49,7 +49,7 @@
                                     {{ $user->email }}
                                 </td>
                                 <td>{{ $user->company }}</td>
-                                <td>{{ $user->role }}</td>
+                                <td>{{ $user->role_name }}</td>
                                 <td>
                                     @if ($user->email_verified_at)
                                         {{ $user->email_verified_at->format('M d, Y') }}

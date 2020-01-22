@@ -8,20 +8,20 @@ trait HasEnums
     {
         $value = parent::getAttribute($key);
 
-        if ($this->isEnumAttribute($key)) {
-            return $this->getEnumAttribute($key, $value);
-        } else {
-            return $value;
+        if ($value && $this->isEnumAttribute($key)) {
+            return $this->asEnum($key, $value);
         }
+
+        return $value;
     }
 
-    protected function getEnumAttribute($key, $value)
+    public function setAttribute($key, $value)
     {
-        if (is_null($value)) {
-            return $value;
+        if ($value && $this->isEnumAttribute($key)) {
+            $value = $this->fromEnum($key, $value);
         }
 
-        return $this->asEnum($key, $value);
+        return parent::setAttribute($key, $value);
     }
 
     protected function asEnum($key, $value)
@@ -30,13 +30,13 @@ trait HasEnums
         return new $class($value);
     }
 
+    protected function fromEnum($key, $value)
+    {
+        return empty($value) ? $value : $this->asEnum($key, $value)->getValue();
+    }
+
     protected function isEnumAttribute(string $key)
     {
         return isset($this->enums[$key]);
-    }
-
-    protected function getEnumClass($key)
-    {
-        return $this->enums[$key];
     }
 }

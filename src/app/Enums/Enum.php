@@ -44,20 +44,14 @@ abstract class Enum
      */
     public static function values()
     {
-        $values = [];
-
-        foreach (static::toArray() as $key => $value) {
-            $values[$key] = new static($value);
-        }
-
-        return $values;
+        return array_values(static::toArray());
     }
 
     /**
      * @param mixed $value
      * @return bool
      */
-    public function equals($value)
+    public function is($value)
     {
         if ($value instanceof static) {
             return $this->getValue() === $value->getValue();
@@ -66,7 +60,7 @@ abstract class Enum
         }
     }
 
-    /*
+    /**
      * @return mixed
      */
     public function getValue()
