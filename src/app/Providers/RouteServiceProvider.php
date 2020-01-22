@@ -42,7 +42,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapWebRoutes();
-        $this->mapSettingsRoutes();
     }
 
     /**
@@ -72,21 +71,5 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
-    }
-
-    /**
-     * Define the "settings" routes for the application.
-     *
-     * These routes are typically stateless.
-     *
-     * @return void
-     */
-    protected function mapSettingsRoutes()
-    {
-        Route::prefix('settings')
-            ->name('settings.')
-            ->middleware('web')
-            ->namespace($this->namespace . '\Settings')
-            ->group(base_path('routes/settings.php'));
     }
 }

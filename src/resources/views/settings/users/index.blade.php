@@ -56,24 +56,38 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <div class="item-action dropdown">
-                                        <a href="#" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            @if ($user->trashed())
-                                                <form action="{{ route('settings.users.restore', $user) }}" method="POST">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <button class="dropdown-item" type="submit">{{ __('Restore') }}</button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('settings.users.destroy', $user) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
-                                                </form>
-                                            @endif
+                                    @canany(['delete', 'restore', 'forceDelete'], $user)
+                                        <div class="item-action dropdown">
+                                            <a href="#" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                @if ($user->trashed())
+                                                    @can('restore', $user)
+                                                        <form action="{{ route('settings.users.restore', $user) }}" method="POST">
+                                                            @csrf
+                                                            @method('POST')
+                                                            <button class="dropdown-item" type="submit">{{ __('Restore') }}</button>
+                                                        </form>
+                                                    @endcan
+
+                                                    @can('forceDelete', $user)
+                                                        <form action="{{ route('settings.users.force-destroy', $user) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item" type="submit">{{ __('Force delete') }}</button>
+                                                        </form>
+                                                    @endcan
+                                                @else
+                                                    @can('delete', $user)
+                                                        <form action="{{ route('settings.users.destroy', $user) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
+                                                        </form>
+                                                    @endcan
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endcanany
                                 </td>
                             </tr>
                         @empty

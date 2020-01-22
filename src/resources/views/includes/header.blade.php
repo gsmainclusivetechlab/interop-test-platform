@@ -70,7 +70,7 @@
                             {{ __('The Lab') }}
                         </a>
                     </li>
-                    @can('administer')
+                    @can ('viewAny', \App\Models\User::class)
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link @if (request()->routeIs('settings.*')) active @endif" data-toggle="dropdown">
                                 <i class="fe fe-settings"></i>
