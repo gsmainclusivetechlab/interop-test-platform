@@ -1,5 +1,5 @@
 // Typography
-$font-family-base: "gotham", sans-serif;
+$font-family-base: 'gotham', sans-serif;
 $font-size-base: 0.875rem;
 $font-size-lg: 1.125rem;
 $font-size-sm: 0.75rem;
@@ -26,33 +26,48 @@ $primary: $red;
 $secondary: $gray-600;
 $success: $green;
 $warning: $yellow;
-$danger: $blue;
+$danger: $red;
 $light: $gray-100;
 
 $colors: (
-    "blue": $blue,
-    "purple": $purple,
-    "pink": $pink,
-    "red": $red,
-    "orange": $orange,
-    "yellow": $yellow,
-    "green": $green,
-    "teal": $teal,
-    "cyan": $cyan,
-    "gray": $gray-600
+    'blue': $blue,
+    'purple': $purple,
+    'pink': $pink,
+    'red': $red,
+    'orange': $orange,
+    'yellow': $yellow,
+    'green': $green,
+    'teal': $teal,
+    'cyan': $cyan,
+    'gray': $gray-600
 );
 
 $theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary,
-    "success": $success,
-    "info": $info,
-    "warning": $warning,
-    "danger": $danger,
-    "light": $light,
-    "dark": $dark
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'light': $light,
+    'dark': $dark
 );
+
+$text-muted: $gray-600;
+$text-muted-dark: $gray-700;
+
+$input-color: $gray-700;
+$input-placeholder-color: $gray-500;
+$custom-control-label-color: $gray-700;
+
+$component-active-bg: $blue;
 
 // Body
 $body-bg: $gray-100;
-$body-color: $gray-700;
+$body-color: $gray-900;
+
+// Links
+//
+// Style anchor elements.
+$link-decoration: underline;
+$link-hover-decoration: none;
