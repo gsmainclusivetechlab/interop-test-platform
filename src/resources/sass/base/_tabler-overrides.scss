@@ -16,6 +16,13 @@
             font-size: 0.75rem;
         }
     }
+
+    .nav-link {
+        &.active {
+            color: map-get($map: $theme-colors, $key: 'primary');
+            border-color: currentColor;
+        }
+    }
 }
 
 .nav-link {
@@ -24,4 +31,8 @@
     &:hover {
         color: inherit;
     }
+}
+
+.dropdown-icon {
+    color: inherit;
 }
