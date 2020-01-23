@@ -3,12 +3,12 @@
 @section('title', __('Sessions'))
 
 @section('content')
-    <div class="page-header">
-        <h1 class="page-title">@yield('title')</h1>
-    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@yield('title')</h3>
+                </div>
                 <div class="table-responsive">
                     @php
                         $columns = [
@@ -27,10 +27,10 @@
                            data-server-side="true">
                         <thead>
                             <tr>
-                                <th>{{ __('Name') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Use Cases') }}</th>
-                                <th>{{ __('Test Cases') }}</th>
+                                <th class="col-md-4">{{ __('Name') }}</th>
+                                <th class="col-md-3">{{ __('Status') }}</th>
+                                <th class="col-md-2">{{ __('Use Cases') }}</th>
+                                <th class="col-md-2">{{ __('Test Cases') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
