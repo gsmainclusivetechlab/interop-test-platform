@@ -7,9 +7,6 @@
         <input type="hidden" name="token" value="{{ $token }}">
         <div class="card-body p-6">
             <div class="card-title">@yield('title')</div>
-            <p class="text-muted">
-                {{ __('Enter your email address and your password will be reset and emailed to you.') }}
-            </p>
             <div class="form-group">
                 <label for="email" class="form-label">
                     {{ __('Email') }}

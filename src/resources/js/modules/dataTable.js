@@ -1,6 +1,12 @@
 module.exports = (($) => {
     const init = () => {
-        $('.datatable').DataTable();
+        const $dataTableSelector = $('[data-datatable]');
+
+        if (!$dataTableSelector.length) {
+            return;
+        }
+
+        $dataTableSelector.DataTable();
     };
 
     return {

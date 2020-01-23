@@ -27,4 +27,5 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
     Route::post('users/{user}/promote-admin', 'UserController@promoteAdmin')->name('users.promote-admin');
     Route::post('users/{user}/relegate-admin', 'UserController@relegateAdmin')->name('users.relegate-admin');
     Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
+    Route::get('sessions/grid', 'SessionController@grid')->name('sessions.grid');
 });
