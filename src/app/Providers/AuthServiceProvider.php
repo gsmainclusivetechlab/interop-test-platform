@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\TestSession;
 use App\Models\User;
+use App\Policies\TestSessionPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         User::class => UserPolicy::class,
+        TeseSession::class => TestSessionPolicy::class,
     ];
 
     /**
