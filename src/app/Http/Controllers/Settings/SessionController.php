@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Http\DataTables\TestSessionTransformer;
 use App\Models\TestSession;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TestSessionCollection;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Arr;
+use Yajra\DataTables\EloquentDataTable;
 
 class SessionController extends Controller
 {
@@ -24,31 +23,20 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::latest()->paginate();
-
-        return view('settings.sessions.index', compact('sessions'));
+        return view('settings.sessions.index');
     }
 
     /**
-     * @return TestSessionCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function grid()
     {
-        Paginator::currentPageResolver(function () {
-            return (request('start') / request('length')) + 1;
-        });
+        $query = TestSession::query();
+        $dataTable = EloquentDataTable::create($query);
+        $dataTable->setTransformer(new TestSessionTransformer);
 
-        $query = TestSession::when(request('order'), function ($query, $order) {
-            foreach ($order as $item) {
-                $query->orderBy(Arr::get(request('columns'), $item['column'])['data'], $item['dir']);
-            }
+        dd($dataTable->toArray());
 
-            return $query;
-        })->when(request('search'), function ($query, $search) {
-            $query->where('name', 'like', "%{$search['value']}%");
-            return $query;
-        })->paginate(request('length'));
-
-        return new TestSessionCollection($query);
+        return $dataTable->toJson();
     }
 }

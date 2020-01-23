@@ -55583,7 +55583,7 @@ module.exports = function ($) {
 
 module.exports = function ($) {
   var init = function init() {
-    $.fn.dataTable.ext.errMode = 'none';
+    // $.fn.dataTable.ext.errMode = 'none';
     var $dataTableSelector = $('[data-datatable]');
 
     if (!$dataTableSelector.length) {
