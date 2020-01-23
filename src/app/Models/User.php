@@ -94,4 +94,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return in_array($this->role, [static::ROLE_SUPERADMIN]);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sessions()
+    {
+        return $this->hasMany(TestSession::class);
+    }
 }
