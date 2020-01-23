@@ -29,7 +29,7 @@ install: chmod composer-install
 
 update: chmod composer-install cache-clear
 	php artisan key:generate
-	php artisan migrate
+	php artisan migrate:fresh --seed
 	php artisan queue:restart
 
 # Composer helpers
