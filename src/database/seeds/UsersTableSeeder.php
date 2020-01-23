@@ -20,9 +20,9 @@ class UsersTableSeeder extends Seeder
         ]);
         factory(User::class)->create([
             'first_name' => 'GSMA',
-            'last_name' => 'Super Admin',
-            'role' => User::ROLE_SUPER_ADMIN,
-            'email' => 'super-admin@gsma.com',
+            'last_name' => 'Superadmin',
+            'role' => User::ROLE_SUPERADMIN,
+            'email' => 'superadmin@gsma.com',
         ]);
         factory(User::class, 20)->create();
     }
