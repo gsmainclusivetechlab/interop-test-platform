@@ -55514,7 +55514,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 module.exports = function ($) {
   var init = function init() {
-    $('.datatable').DataTable();
+    $('[data-datatable]').DataTable();
   };
 
   return {

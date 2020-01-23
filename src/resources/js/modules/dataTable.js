@@ -1,6 +1,6 @@
 module.exports = (($) => {
     const init = () => {
-        $('.datatable').DataTable();
+        $('[data-datatable]').DataTable();
     };
 
     return {
