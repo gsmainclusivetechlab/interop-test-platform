@@ -55453,7 +55453,10 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 var dataTable = __webpack_require__(/*! ./modules/dataTable */ "./resources/js/modules/dataTable.js");
 
+var confirmPopup = __webpack_require__(/*! ./modules/confirmPopup */ "./resources/js/modules/confirmPopup.js");
+
 dataTable.init();
+confirmPopup.init();
 
 /***/ }),
 
@@ -55505,6 +55508,72 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/constants.js":
+/*!***********************************!*\
+  !*** ./resources/js/constants.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var confirmPopupDefaults = {
+  buttonsStyling: false,
+  showCancelButton: true,
+  cancelButtonClass: 'btn btn-secondary',
+  confirmButtonClass: 'btn btn-primary mr-4',
+  confirmButtonText: 'Confirm'
+};
+module.exports = {
+  confirmPopupDefaults: confirmPopupDefaults
+};
+
+/***/ }),
+
+/***/ "./resources/js/modules/confirmPopup.js":
+/*!**********************************************!*\
+  !*** ./resources/js/modules/confirmPopup.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _require = __webpack_require__(/*! ../constants */ "./resources/js/constants.js"),
+    confirmPopupDefaults = _require.confirmPopupDefaults;
+
+module.exports = function ($) {
+  var init = function init() {
+    var $confirmBtnSelector = $('[data-confirm]');
+
+    if (!$confirmBtnSelector.length) {
+      return;
+    }
+
+    $confirmBtnSelector.each(function (index, confirmBtn) {
+      var _confirmBtn$dataset = confirmBtn.dataset,
+          titleText = _confirmBtn$dataset.confirmTitle,
+          text = _confirmBtn$dataset.confirmText,
+          icon = _confirmBtn$dataset.confirmIcon;
+      $(confirmBtn).on('click', function () {
+        Swal.fire(_objectSpread({}, confirmPopupDefaults, {
+          titleText: titleText,
+          text: text,
+          icon: icon
+        }));
+      });
+    });
+  };
+
+  return {
+    init: init
+  };
+}(jQuery);
+
+/***/ }),
+
 /***/ "./resources/js/modules/dataTable.js":
 /*!*******************************************!*\
   !*** ./resources/js/modules/dataTable.js ***!
@@ -55514,7 +55583,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 module.exports = function ($) {
   var init = function init() {
-    $('[data-datatable]').DataTable();
+    var $dataTableSelector = $('[data-datatable]');
+
+    if (!$dataTableSelector.length) {
+      return;
+    }
+
+    $dataTableSelector.DataTable();
   };
 
   return {
