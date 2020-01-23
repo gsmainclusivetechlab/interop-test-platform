@@ -18,6 +18,12 @@ class UsersTableSeeder extends Seeder
             'role' => User::ROLE_ADMIN,
             'email' => 'admin@gsma.com',
         ]);
+        factory(User::class)->create([
+            'first_name' => 'GSMA',
+            'last_name' => 'Super Admin',
+            'role' => User::ROLE_SUPER_ADMIN,
+            'email' => 'super-admin@gsma.com',
+        ]);
         factory(User::class, 20)->create();
     }
 }
