@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
-    const ROLE_SUPER_ADMIN = 'super-admin';
+    const ROLE_SUPERADMIN = 'superadmin';
 
     /**
      * @var array
@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             static::ROLE_USER => __('User'),
             static::ROLE_ADMIN => __('Admin'),
-            static::ROLE_SUPER_ADMIN => __('Super Admin'),
+            static::ROLE_SUPERADMIN => __('Superadmin'),
         ];
     }
 
@@ -83,7 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin()
     {
-        return in_array($this->role, [static::ROLE_ADMIN, static::ROLE_SUPER_ADMIN]);
+        return in_array($this->role, [static::ROLE_ADMIN, static::ROLE_SUPERADMIN]);
     }
 
     /**
@@ -91,7 +91,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isSuperAdmin()
     {
-        return in_array($this->role, [static::ROLE_SUPER_ADMIN]);
+        return in_array($this->role, [static::ROLE_SUPERADMIN]);
     }
 
 }
