@@ -1,0 +1,134 @@
+@mixin step-size($border-width, $dot-size: 1rem) {
+    .step-item {
+        padding-top: add($dot-size, 4px);
+
+        &::after {
+            top: add($dot-size / 2, 2px);
+            height: $border-width;
+        }
+
+        &::before {
+            width: $dot-size;
+            height: $dot-size;
+        }
+    }
+}
+
+@mixin step-color($color) {
+    .step-item {
+        &::after,
+        &::before {
+            color: $white;
+            background: $color;
+        }
+
+        &::before {
+            border-color: $color;
+        }
+
+        &.active::before {
+            color: $color;
+            border-color: inherit;
+        }
+    }
+}
+
+.steps {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 0;
+    margin: 2rem 0;
+    font-weight: $font-weight-bold;
+    list-style: none;
+    @include step-size(2px, 0.5rem);
+    @include step-color($primary);
+}
+
+@each $color, $value in $colors {
+    .steps-#{$color} {
+        @include step-color($value);
+    }
+}
+
+.step-item {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 1rem;
+    margin-top: 0;
+    color: inherit;
+    text-align: center;
+    cursor: default;
+
+    @at-root a#{&} {
+        cursor: pointer;
+
+        &:hover {
+            color: inherit;
+        }
+    }
+
+    &:not(:first-child)::after {
+        position: absolute;
+        left: -50%;
+        width: 100%;
+        content: '';
+        transform: translateY(-50%);
+    }
+
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        z-index: 1;
+        box-sizing: content-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        content: '';
+        border: 2px solid;
+        border-radius: 50%;
+        transform: translateX(-50%);
+    }
+
+    &.active {
+        &::before {
+            background: #fff;
+        }
+
+        & ~ .step-item {
+            color: $text-muted;
+
+            &::after,
+            &::before {
+                background: $steps-color-inactive;
+            }
+
+            &::before {
+                color: $text-muted !important;
+                border-color: $steps-border-color-inactive;
+            }
+        }
+    }
+}
+
+.steps-counter {
+    counter-reset: steps;
+    @include step-size(2px, 2rem);
+
+    .step-item {
+        counter-increment: steps;
+
+        &::before {
+            font-size: 1rem;
+            line-height: 1.5rem;
+            content: counter(steps);
+        }
+
+        &.active ~ .step-item {
+            &::before {
+                background: $steps-bg-color-inactive;
+            }
+        }
+    }
+}
