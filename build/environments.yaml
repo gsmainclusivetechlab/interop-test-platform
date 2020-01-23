@@ -50,7 +50,7 @@ instances:
         project:
             env_variables:
                 <<: *default-env-vars
-                APP_API_URL: http://gsma-itp-test-control.develop.s8.jc
+                APP_URL: http://gsma-itp-test-control.develop.s8.jc
         docker_server:
             <<: *default-docker-server
             vhosts:
@@ -67,7 +67,7 @@ instances:
         project:
             env_variables:
                 <<: *default-env-vars
-                APP_API_URL: http://gsma-itp-test-control.build.s8.jc
+                APP_URL: http://gsma-itp-test-control.build.s8.jc
         docker_server:
             <<: *default-docker-server
             vhosts:
@@ -85,7 +85,7 @@ instances:
         project:
             env_variables:
                 <<: *default-env-vars
-                APP_API_URL: http://gsma-itp-test-control.staging.s8.justcoded.com
+                APP_URL: http://gsma-itp-test-control.staging.s8.justcoded.com
         docker_server:
             <<: *default-docker-server
             vhosts:
