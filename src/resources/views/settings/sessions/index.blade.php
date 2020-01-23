@@ -27,10 +27,10 @@
                            data-server-side="true">
                         <thead>
                             <tr>
-                                <th class="col-md-4">{{ __('Name') }}</th>
-                                <th class="col-md-3">{{ __('Status') }}</th>
-                                <th class="col-md-2">{{ __('Use Cases') }}</th>
-                                <th class="col-md-2">{{ __('Test Cases') }}</th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Use Cases') }}</th>
+                                <th>{{ __('Test Cases') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
