@@ -2,8 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\TestScenario;
+use App\Models\TestSession;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +17,10 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(TestScenario::class, function (Faker $faker) {
+$factory->define(TestSession::class, function (Faker $faker) {
     return [
-        'name' => $faker->text(10),
+        'uuid' => Str::uuid(),
+        'name' => $faker->sentence(),
+        'description' => $faker->paragraph(),
     ];
 });
