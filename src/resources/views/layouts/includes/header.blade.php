@@ -1,20 +1,20 @@
 <div class="header py-4">
     <div class="container">
-        <div class="d-flex align-items-center">
-            <a class="header-brand" href="{{ route('home') }}">
+        <div class="row d-flex align-items-center">
+            <a class="col-2 header-brand mr-0" href="{{ route('home') }}">
                 <img src="{{ asset('images/logo.png') }}" class="h-7" alt="{{ config('app.name') }}">
             </a>
             <div class="col text-center text-primary">
                 <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
-            <div class="d-flex ml-auto">
-                <div class="dropdown">
+            <div class="col-3 d-flex ml-auto">
+                <div class="dropdown ml-auto col-auto">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                        <span class="avatar">
+                        <span class="avatar flex-shrink-0">
                             <i class="fe fe-user"></i>
                         </span>
-                        <span class="ml-2 d-none d-lg-block">
+                        <span class="ml-2 d-none d-lg-inline-block text-truncate">
                             <span class="text-default">{{ auth()->user()->name }}</span>
                         </span>
                     </a>
@@ -42,7 +42,7 @@
 <div id="header-menu" class="header collapse d-lg-flex p-0">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-3 ml-auto text-right">
+            <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
                 <a href="{{ route('sessions.create') }}" class="btn btn-outline-primary">
                     <i class="fe fe-plus mr-2"></i>
                     {{ __('New Session') }}
