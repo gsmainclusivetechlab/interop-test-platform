@@ -1,5 +1,5 @@
 @if ($paginator->hasPages())
-    <div class="row">
+    <div class="row align-items-center">
         <div class="col-md-6">
             {{ __('Showing :from to :to of :total entries', [
                 'from' => (($paginator->currentPage() - 1) * $paginator->perPage()) + 1,

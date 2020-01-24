@@ -3,19 +3,11 @@
 @section('title', __('Users'))
 
 @section('content')
-    <div class="page-header">
-        <h1 class="page-title">@yield('title')</h1>
-    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="input-icon">
-                        <span class="input-icon-addon">
-                            <i class="fe fe-search"></i>
-                        </span>
-                        <input type="text" class="form-control w-10" placeholder="{{ __('Search') }}">
-                    </div>
+                    <h3 class="card-title">@yield('title')</h3>
                     <div class="card-options">
                         <div class="btn-group">
                             <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
@@ -43,10 +35,10 @@
                         @forelse ($users as $user)
                             <tr>
                                 <td>
-                                    {{ $user->name }}
+                                    <a href="#">{{ $user->name }}</a>
                                 </td>
                                 <td>
-                                    {{ $user->email }}
+                                    <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                 </td>
                                 <td>{{ $user->company }}</td>
                                 <td>{{ $user->role_name }}</td>
@@ -113,8 +105,10 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="card-footer">
+                    @include('components.pagination', ['paginator' => $users])
+                </div>
             </div>
-            @include('includes.pagination', ['paginator' => $users])
         </div>
     </div>
 @endsection

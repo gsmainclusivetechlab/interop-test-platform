@@ -3,10 +3,9 @@
 @section('title', __('Forgot password'))
 @section('content')
     @if (session('status'))
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert"></button>
+        @component('components.alert', ['type' => 'success'])
             {{ session('status') }}
-        </div>
+        @endcomponent
     @endif
     <form class="card" action="{{ route('password.email') }}" method="POST">
         @csrf
