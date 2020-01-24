@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Http\DataTables\TestSessionTransformer;
+use App\Http\Resources\Settings\TestSessionResource;
 use App\Models\TestSession;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\EloquentDataTable;
@@ -29,13 +29,13 @@ class SessionController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function grid()
+    public function datatable()
     {
         $query = TestSession::query();
         $dataTable = EloquentDataTable::create($query);
-        $dataTable->setTransformer(new TestSessionTransformer);
-
-        dd($dataTable->toArray());
+        $dataTable->setTransformer(function ($item) {
+            return TestSessionResource::make($item)->resolve();
+        });
 
         return $dataTable->toJson();
     }

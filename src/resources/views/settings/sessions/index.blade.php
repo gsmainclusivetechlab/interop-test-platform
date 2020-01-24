@@ -13,8 +13,9 @@
                     @php
                         $columns = [
                             ['data' => 'name', 'type' => 'string'],
-                            ['defaultContent' => '', 'orderable' => false, 'searchable' => false],
-                            ['defaultContent' => '', 'orderable' => false, 'searchable' => false],
+                            ['data' => 'use_cases_count', 'type' => 'integer', 'orderable' => false, 'searchable' => false],
+                            ['data' => 'test_cases_count', 'type' => 'integer', 'orderable' => false, 'searchable' => false],
+                            ['data' => 'status', 'orderable' => false, 'searchable' => false],
                             ['defaultContent' => '', 'orderable' => false, 'searchable' => false],
                             ['defaultContent' => '', 'orderable' => false, 'searchable' => false],
                         ];
@@ -22,15 +23,16 @@
                     <table class="table table-hover table-outline table-vcenter card-table no-footer"
                            data-datatable=""
                            data-columns=@json($columns)
-                           data-ajax="{{ route('settings.sessions.grid') }}"
+                           data-ajax="{{ route('settings.sessions.datatable') }}"
                            data-processing="true"
                            data-server-side="true">
                         <thead>
                             <tr>
                                 <th>{{ __('Name') }}</th>
-                                <th>{{ __('Status') }}</th>
                                 <th>{{ __('Use Cases') }}</th>
                                 <th>{{ __('Test Cases') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Last Run') }}</th>
                                 <th></th>
                             </tr>
                         </thead>

@@ -3,10 +3,9 @@
 @section('title', __('Verify Your Email Address'))
 @section('content')
     @if (session('resent'))
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert"></button>
+        @component('components.alert', ['type' => 'success'])
             {{ __('A fresh verification link has been sent to your email address.') }}
-        </div>
+        @endcomponent
     @endif
     <form class="card" action="{{ route('verification.resend') }}" method="POST">
         @csrf
