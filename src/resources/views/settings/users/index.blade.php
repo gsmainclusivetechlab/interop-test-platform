@@ -7,7 +7,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">@yield('title')</h3>
+                    <h3 class="card-title font-weight-bold">@yield('title')</h3>
                     <div class="card-options">
                         <div class="btn-group">
                             <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
@@ -20,37 +20,37 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
-                        <thead>
+                    <table class="table table-striped card-table">
+                        <thead class="thead-light">
                             <tr>
-                                <th>{{ __('Name') }}</th>
-                                <th>{{ __('Email') }}</th>
-                                <th>{{ __('Company') }}</th>
-                                <th>{{ __('Role') }}</th>
-                                <th>{{ __('Verified') }}</th>
+                                <th class="w-25">{{ __('Name') }}</th>
+                                <th class="w-25">{{ __('Email') }}</th>
+                                <th class="w-25">{{ __('Company') }}</th>
+                                <th class="w-auto">{{ __('Role') }}</th>
+                                <th class="w-auto">{{ __('Verified') }}</th>
                                 <th class="w-1"></th>
                             </tr>
                         </thead>
                         <tbody>
                         @forelse ($users as $user)
                             <tr>
-                                <td>
+                                <td class="w-25 text-break">
                                     <a href="#">{{ $user->name }}</a>
                                 </td>
-                                <td>
+                                <td class="w-25 text-break">
                                     <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                 </td>
-                                <td>{{ $user->company }}</td>
-                                <td>{{ $user->role_name }}</td>
-                                <td>
+                                <td class="w-25 text-break">{{ $user->company }}</td>
+                                <td class="w-auto text-break">{{ $user->role_name }}</td>
+                                <td class="w-auto text-break">
                                     @if ($user->email_verified_at)
                                         {{ $user->email_verified_at->format('M d, Y') }}
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="w-1 text-center text-break">
                                     @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
                                         <div class="item-action dropdown">
-                                            <a href="#" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                                            <a href="#" data-toggle="dropdown" class="icon" data-boundary="viewport"><i class="fe fe-more-vertical"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 @can('promoteAdmin', $user)
                                                     <form action="{{ route('settings.users.promote-admin', $user) }}" method="POST">
