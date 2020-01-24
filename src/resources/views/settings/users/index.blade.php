@@ -35,10 +35,10 @@
                         @forelse ($users as $user)
                             <tr>
                                 <td>
-                                    {{ $user->name }}
+                                    <a href="#">{{ $user->name }}</a>
                                 </td>
                                 <td>
-                                    {{ $user->email }}
+                                    <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                 </td>
                                 <td>{{ $user->company }}</td>
                                 <td>{{ $user->role_name }}</td>
