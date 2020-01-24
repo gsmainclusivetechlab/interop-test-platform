@@ -18,7 +18,7 @@
                         </a>
                     @endif
                 </label>
-                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('Enter password') }}">
+                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
                 <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>

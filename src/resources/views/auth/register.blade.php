@@ -8,7 +8,7 @@
             <div class="card-title">@yield('title')</div>
             <div class="form-group">
                 <label for="first_name" class="form-label">{{ __('First name') }}</label>
-                <input id="first_name" name="first_name" value="{{ old('first_name') }}" type="text" class="form-control @error('first_name') is-invalid @enderror" placeholder="{{ __('Enter first name') }}">
+                <input id="first_name" name="first_name" value="{{ old('first_name') }}" type="text" class="form-control @error('first_name') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'John']) }}">
                 @error('first_name')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
                 <label for="last_name" class="form-label">{{ __('Last name') }}</label>
-                <input id="last_name" name="last_name" value="{{ old('last_name') }}" type="text" class="form-control @error('last_name') is-invalid @enderror" placeholder="{{ __('Enter last name') }}">
+                <input id="last_name" name="last_name" value="{{ old('last_name') }}" type="text" class="form-control @error('last_name') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'Doe']) }}">
                 @error('last_name')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label for="email" class="form-label">{{ __('Email') }}</label>
-                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('Enter email') }}">
+                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
                 @error('email')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label for="company" class="form-label">{{ __('Company') }}</label>
-                <input id="company" name="company" value="{{ old('company') }}" type="text" class="form-control @error('company') is-invalid @enderror" placeholder="{{ __('Enter company') }}">
+                <input id="company" name="company" value="{{ old('company') }}" type="text" class="form-control @error('company') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => env('APP_COMPANY_NAME')]) }}">
                 @error('company')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -44,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label for="password" class="form-label">{{ __('Password') }}</label>
-                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('Enter password') }}">
+                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
