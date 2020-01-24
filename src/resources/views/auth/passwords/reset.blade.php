@@ -24,18 +24,18 @@
                 </label>
                 <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
-                <span class="invalid-feedback" role="alert">
+                    <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">
-                    {{ __('Confirm Password') }}
+                    {{ __('Confirm password') }}
                 </label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
-                @error('password')
-                <span class="invalid-feedback" role="alert">
+                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                @error('password_confirmation')
+                    <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
