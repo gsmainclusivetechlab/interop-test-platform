@@ -1,3 +1,7 @@
+a {
+    transition: $btn-transition;
+}
+
 .custom-control-label {
     &::before,
     &::after {

@@ -55455,8 +55455,11 @@ var dataTable = __webpack_require__(/*! ./modules/dataTable */ "./resources/js/m
 
 var confirmPopup = __webpack_require__(/*! ./modules/confirmPopup */ "./resources/js/modules/confirmPopup.js");
 
+var flowChart = __webpack_require__(/*! ./modules/flowChart */ "./resources/js/modules/flowChart.js");
+
 dataTable.init();
 confirmPopup.init();
+flowChart.init();
 
 /***/ }),
 
@@ -55590,6 +55593,47 @@ module.exports = function ($) {
     }
 
     $dataTableSelector.DataTable();
+  };
+
+  return {
+    init: init
+  };
+}(jQuery);
+
+/***/ }),
+
+/***/ "./resources/js/modules/flowChart.js":
+/*!*******************************************!*\
+  !*** ./resources/js/modules/flowChart.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function ($) {
+  var init = function init() {
+    var $flowChart = $('[data-flow-chart]');
+
+    if (!$flowChart.length) {
+      return;
+    }
+
+    var IS_ACTIVE = 'is-active';
+    var IS_INACTIVE = 'is-inactive';
+    var GET = 'get';
+    var POST = 'POST';
+    var FLOW_ITEM_SELECTOR = 'flow-item';
+    var FLOW_BUTTON_SELECTOR = 'flow-btn';
+    $flowChart.on('click', function (e) {
+      var $target = $(e.target);
+
+      if ($target.is(".".concat(FLOW_BUTTON_SELECTOR))) {
+        return;
+      }
+
+      $target.siblings().removeClass(IS_ACTIVE);
+      $target.prevAll().addClass(IS_INACTIVE);
+      $target.addClass(IS_ACTIVE);
+    });
   };
 
   return {

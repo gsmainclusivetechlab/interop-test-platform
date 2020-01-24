@@ -20344,6 +20344,11 @@ svg {
   font-weight: 500;
   font-style: italic;
 }
+a {
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
 .custom-control-label::before, .custom-control-label::after {
   top: -0.125rem;
 }
@@ -20412,6 +20417,9 @@ svg {
   width: 0.5rem;
   height: 0.5rem;
 }
+.steps .step-item {
+  color: #de002b;
+}
 .steps .step-item::after, .steps .step-item::before {
   color: #fff;
   background: #de002b;
@@ -20424,6 +20432,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-blue .step-item {
+  color: #00568f;
+}
 .steps-blue .step-item::after, .steps-blue .step-item::before {
   color: #fff;
   background: #00568f;
@@ -20436,6 +20447,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-indigo .step-item {
+  color: #6574cd;
+}
 .steps-indigo .step-item::after, .steps-indigo .step-item::before {
   color: #fff;
   background: #6574cd;
@@ -20448,6 +20462,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-purple .step-item {
+  color: #95226c;
+}
 .steps-purple .step-item::after, .steps-purple .step-item::before {
   color: #fff;
   background: #95226c;
@@ -20460,6 +20477,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-pink .step-item {
+  color: #ee3772;
+}
 .steps-pink .step-item::after, .steps-pink .step-item::before {
   color: #fff;
   background: #ee3772;
@@ -20472,6 +20492,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-red .step-item {
+  color: #de002b;
+}
 .steps-red .step-item::after, .steps-red .step-item::before {
   color: #fff;
   background: #de002b;
@@ -20484,6 +20507,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-orange .step-item {
+  color: #ff6600;
+}
 .steps-orange .step-item::after, .steps-orange .step-item::before {
   color: #fff;
   background: #ff6600;
@@ -20496,6 +20522,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-yellow .step-item {
+  color: #fcbb2c;
+}
 .steps-yellow .step-item::after, .steps-yellow .step-item::before {
   color: #fff;
   background: #fcbb2c;
@@ -20508,6 +20537,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-green .step-item {
+  color: #9cb227;
+}
 .steps-green .step-item::after, .steps-green .step-item::before {
   color: #fff;
   background: #9cb227;
@@ -20520,6 +20552,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-teal .step-item {
+  color: #99cccc;
+}
 .steps-teal .step-item::after, .steps-teal .step-item::before {
   color: #fff;
   background: #99cccc;
@@ -20532,6 +20567,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-cyan .step-item {
+  color: #00a6c9;
+}
 .steps-cyan .step-item::after, .steps-cyan .step-item::before {
   color: #fff;
   background: #00a6c9;
@@ -20544,6 +20582,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-white .step-item {
+  color: #fff;
+}
 .steps-white .step-item::after, .steps-white .step-item::before {
   color: #fff;
   background: #fff;
@@ -20556,6 +20597,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-gray .step-item {
+  color: #7c7c7c;
+}
 .steps-gray .step-item::after, .steps-gray .step-item::before {
   color: #fff;
   background: #7c7c7c;
@@ -20568,6 +20612,9 @@ svg {
   border-color: inherit;
 }
 
+.steps-gray-dark .step-item {
+  color: #343a40;
+}
 .steps-gray-dark .step-item::after, .steps-gray-dark .step-item::before {
   color: #fff;
   background: #343a40;
@@ -20592,9 +20639,6 @@ svg {
 }
 a.step-item {
   cursor: pointer;
-}
-a.step-item:hover {
-  color: inherit;
 }
 
 .step-item:not(:first-child)::after {
@@ -20661,4 +20705,118 @@ a.step-item:hover {
 }
 .steps-counter .step-item.active ~ .step-item::before {
   background: #f8f8f9;
+}
+
+.flow-chart {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+}
+.flow-header {
+  width: 100%;
+  height: 100%;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.flow-item {
+  position: relative;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+  -webkit-box-flex: 1;
+          flex: 1 0 0;
+  min-height: 64px;
+  text-align: center;
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(36, 37, 41, 0.1);
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.flow-item:hover {
+  box-shadow: none;
+}
+.flow-item:not(:last-child) {
+  margin-right: 64px;
+}
+.flow-item.is-active {
+  box-shadow: inset 0 0 0 2px #de002b;
+}
+.flow-item.is-active .flow-actions {
+  border-style: dotted;
+}
+.flow-item.is-active + .flow-item .flow-actions {
+  color: #99cccc;
+}
+
+.flow-actions {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+  -webkit-box-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+          align-items: center;
+  width: 64px;
+  height: 100%;
+  color: #dededf;
+  border-style: solid;
+  border-width: 0;
+}
+
+.flow-btn {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  color: inherit;
+  border: 0;
+  border-style: inherit;
+  background-color: transparent;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.flow-btn:hover {
+  color: #99cccc;
+}
+.flow-btn:last-child {
+  -webkit-transform: scale(-1);
+          transform: scale(-1);
+}
+.flow-btn::before, .flow-btn::after {
+  content: "";
+  position: absolute;
+}
+.flow-btn::before {
+  top: 9px;
+  left: 0;
+  width: 100%;
+  height: 0;
+  border-width: 1px;
+  border-style: inherit;
+}
+.flow-btn::after {
+  right: 0;
+  top: 5px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 10px;
+  border-color: transparent transparent transparent currentColor;
 }

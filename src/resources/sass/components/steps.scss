@@ -16,6 +16,8 @@
 
 @mixin step-color($color) {
     .step-item {
+        color: $color;
+
         &::after,
         &::before {
             color: $white;
@@ -63,9 +65,7 @@
     @at-root a#{&} {
         cursor: pointer;
 
-        &:hover {
-            color: inherit;
-        }
+        // TODO: add steps hover state
     }
 
     &:not(:first-child)::after {

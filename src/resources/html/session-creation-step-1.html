@@ -87,16 +87,69 @@
                             <b>Create new session</b>
                         </h1>
                     </div>
-                    <div class="row">
-                        <div class="col">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-4">
                             <div class="steps steps-counter steps-red">
-                                <a href="#" class="step-item"></a>
-                                <a href="#" class="step-item"></a>
-                                <a href="#" class="step-item"></a>
-                                <a href="#" class="step-item active"></a>
-                                <span href="#" class="step-item"></span>
-                                <span href="#" class="step-item"></span>
-                                <span href="#" class="step-item"></span>
+                                <a href="#" class="step-item active">
+                                    <span class="d-inline-block mt-2">Select SUT</span>
+                                </a>
+                                <span class="step-item">
+                                    <span class="d-inline-block mt-2">Configure SUT</span>
+                                </span>
+                                <span class="step-item">
+                                    <span class="d-inline-block mt-2">Session info</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-6">
+                            <div class="flow-chart" data-flow-chart>
+                                <div class="flow-item">
+                                    <div class="flow-header">
+                                        Payer
+                                    </div>
+                                    <div class="flow-actions">
+                                        <button type="button" class="flow-btn" data-flow-action="get"></button>
+                                        <button type="button" class="flow-btn" data-flow-action="post"></button>
+                                    </div>
+                                </div>
+                                <div class="flow-item">
+                                    <div class="flow-header">
+                                        Service Provider
+                                    </div>
+                                    <div class="flow-actions">
+                                        <button type="button" class="flow-btn" data-flow-action="get"></button>
+                                        <button type="button" class="flow-btn" data-flow-action="post"></button>
+                                    </div>
+                                </div>
+
+                                <div class="flow-item">
+                                    <div class="flow-header">
+                                        Mobile Money Operator 1
+                                    </div>
+                                    <div class="flow-actions">
+                                        <button type="button" class="flow-btn" data-flow-action="get"></button>
+                                        <button type="button" class="flow-btn" data-flow-action="post"></button>
+                                    </div>
+                                </div>
+
+                                <div class="flow-item">
+                                    <div class="flow-header">
+                                        Mojaloop
+                                    </div>
+                                    <div class="flow-actions">
+                                        <button type="button" class="flow-btn" data-flow-action="get"></button>
+                                        <button type="button" class="flow-btn" data-flow-action="post"></button>
+                                    </div>
+                                </div>
+
+                                <div class="flow-item">
+                                    <div class="flow-header">
+                                        Mobile Money Operator 2
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
