@@ -23,5 +23,8 @@
         "sweetalert2": "^9.7.0",
         "tabler-ui": "^0.0.34",
         "vue-template-compiler": "^2.6.11"
+    },
+    "dependencies": {
+        "c3": "^0.7.12"
     }
 }

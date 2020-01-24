@@ -10,10 +10,7 @@
         <div class="card-header">
             <form action="">
                 <div class="input-icon">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-icon-addon">
-                      <i class="fe fe-search"></i>
-                    </span>
+                    @include('components.grids.search')
                 </div>
             </form>
         </div>
@@ -56,7 +53,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="6">
+                        <td class="text-center" colspan="7">
                             {{ __('No Results') }}
                         </td>
                     </tr>

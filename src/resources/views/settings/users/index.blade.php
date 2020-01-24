@@ -8,14 +8,7 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            <form action="">
-                <div class="input-icon">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-icon-addon">
-                      <i class="fe fe-search"></i>
-                    </span>
-                </div>
-            </form>
+            @include('components.grids.search')
             <div class="card-options">
                 <div class="btn-group">
                     <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
@@ -105,7 +98,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="5">
+                        <td class="text-center" colspan="6">
                             {{ __('No Results') }}
                         </td>
                     </tr>

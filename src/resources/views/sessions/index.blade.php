@@ -8,14 +8,7 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            <form action="">
-                <div class="input-icon">
-                    <input type="text" class="form-control" placeholder="Search for...">
-                    <span class="input-icon-addon">
-                      <i class="fe fe-search"></i>
-                    </span>
-                </div>
-            </form>
+            @include('components.grids.search')
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-hover card-table">
