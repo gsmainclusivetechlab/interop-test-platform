@@ -74,22 +74,27 @@
                             {{ __('The Lab') }}
                         </a>
                     </li>
-                    @can ('viewAny', \App\Models\User::class)
+                    @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\TestSession::class))
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link @if (request()->routeIs('settings.*')) active @endif" data-toggle="dropdown">
                                 <i class="fe fe-settings"></i>
                                 {{ __('Settings') }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-arrow">
-                                <a href="{{ route('settings.users.index') }}" class="dropdown-item @if (request()->routeIs('settings.users.*')) active @endif">
-                                    {{ __('Users') }}
-                                </a>
-                                <a href="{{ route('settings.sessions.index') }}" class="dropdown-item @if (request()->routeIs('settings.sessions.*')) active @endif">
-                                    {{ __('Sessions') }}
-                                </a>
+                                @can('viewAny', \App\Models\User::class)
+                                    <a href="{{ route('settings.users.index') }}" class="dropdown-item @if (request()->routeIs('settings.users.*')) active @endif">
+                                        {{ __('Users') }}
+                                    </a>
+                                @endcan
+
+                                @can('viewAny', \App\Models\TestSession::class)
+                                    <a href="{{ route('settings.sessions.index') }}" class="dropdown-item @if (request()->routeIs('settings.sessions.*')) active @endif">
+                                        {{ __('Sessions') }}
+                                    </a>
+                                @endcan
                             </div>
                         </li>
-                    @endcan
+                    @endif
                 </ul>
             </div>
         </div>

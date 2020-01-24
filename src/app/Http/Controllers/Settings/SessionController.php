@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Http\Resources\Settings\TestSessionResource;
 use App\Models\TestSession;
 use App\Http\Controllers\Controller;
-use Yajra\DataTables\EloquentDataTable;
 
 class SessionController extends Controller
 {
@@ -23,20 +21,8 @@ class SessionController extends Controller
      */
     public function index()
     {
-        return view('settings.sessions.index');
-    }
+        $sessions = TestSession::with('user')->paginate();
 
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function datatable()
-    {
-        $query = TestSession::query();
-        $dataTable = EloquentDataTable::create($query);
-        $dataTable->setTransformer(function ($item) {
-            return TestSessionResource::make($item)->resolve();
-        });
-
-        return $dataTable->toJson();
+        return view('settings.sessions.index', compact('sessions'));
     }
 }
