@@ -21,6 +21,5 @@ $factory->define(TestSession::class, function (Faker $faker) {
     return [
         'uuid' => Str::uuid(),
         'name' => $faker->sentence(),
-        'description' => $faker->paragraph(),
     ];
 });

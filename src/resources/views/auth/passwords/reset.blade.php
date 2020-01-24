@@ -11,7 +11,7 @@
                 <label for="email" class="form-label">
                     {{ __('Email') }}
                 </label>
-                <input id="email" name="email" value="{{ $email ?? old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('Enter email') }}">
+                <input id="email" name="email" value="{{ $email ?? old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -22,20 +22,20 @@
                 <label for="password" class="form-label">
                     {{ __('Password') }}
                 </label>
-                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('Enter password') }}">
+                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
-                <span class="invalid-feedback" role="alert">
+                    <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">
-                    {{ __('Confirm Password') }}
+                    {{ __('Confirm password') }}
                 </label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" placeholder="{{ __('Enter password again') }}">
-                @error('password')
-                <span class="invalid-feedback" role="alert">
+                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                @error('password_confirmation')
+                    <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror

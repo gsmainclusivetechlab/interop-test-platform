@@ -8,7 +8,7 @@
             <div class="card-title">@yield('title')</div>
             <div class="form-group">
                 <label for="email" class="form-label">{{ __('Email') }}</label>
-                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('Enter email') }}">
+                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
                 @error('email')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -24,7 +24,7 @@
                         </a>
                     @endif
                 </label>
-                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('Enter password') }}">
+                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>

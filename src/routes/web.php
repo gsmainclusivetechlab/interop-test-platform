@@ -19,6 +19,11 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::resource('sessions', 'SessionController', ['except' => ['show']]);
 
+Route::name('account.')->prefix('account')->namespace('Account')->group(function () {
+    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::post('profile', 'ProfileController@edit')->name('profile.update');
+});
+
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
     Route::resource('users', 'UserController', ['except' => ['show', 'create', 'store', 'edit', 'update']]);
     Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
@@ -27,5 +32,4 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
     Route::post('users/{user}/promote-admin', 'UserController@promoteAdmin')->name('users.promote-admin');
     Route::post('users/{user}/relegate-admin', 'UserController@relegateAdmin')->name('users.relegate-admin');
     Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
-    Route::get('sessions/grid', 'SessionController@grid')->name('sessions.grid');
 });

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TestSession;
+
 class SessionController extends Controller
 {
     /**
@@ -17,6 +19,8 @@ class SessionController extends Controller
      */
     public function index()
     {
-        return view('sessions.index');
+        $sessions = auth()->user()->sessions()->paginate();
+
+        return view('sessions.index', compact('sessions'));
     }
 }
