@@ -3,11 +3,23 @@
 @section('title', __('Users'))
 
 @section('content')
+    <div class="page-header">
+        <h1 class="page-title">
+            @yield('title')
+        </h1>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title font-weight-bold">@yield('title')</h3>
+                    <form action="">
+                        <div class="input-icon">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-icon-addon">
+                              <i class="fe fe-search"></i>
+                            </span>
+                        </div>
+                    </form>
                     <div class="card-options">
                         <div class="btn-group">
                             <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
@@ -20,34 +32,34 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-striped card-table">
+                    <table class="table table-striped table-hover card-table">
                         <thead class="thead-light">
                             <tr>
-                                <th class="w-25">{{ __('Name') }}</th>
-                                <th class="w-25">{{ __('Email') }}</th>
-                                <th class="w-25">{{ __('Company') }}</th>
-                                <th class="w-auto">{{ __('Role') }}</th>
-                                <th class="w-auto">{{ __('Verified') }}</th>
-                                <th class="w-1"></th>
+                                <th class="text-nowrap w-25">{{ __('Name') }}</th>
+                                <th class="text-nowrap w-25">{{ __('Email') }}</th>
+                                <th class="text-nowrap w-25">{{ __('Company') }}</th>
+                                <th class="text-nowrap w-auto">{{ __('Role') }}</th>
+                                <th class="text-nowrap w-auto">{{ __('Verified') }}</th>
+                                <th class="text-nowrap w-1"></th>
                             </tr>
                         </thead>
                         <tbody>
                         @forelse ($users as $user)
                             <tr>
-                                <td class="w-25 text-break">
+                                <td class="text-break">
                                     <a href="#">{{ $user->name }}</a>
                                 </td>
-                                <td class="w-25 text-break">
+                                <td class="text-break">
                                     <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                 </td>
-                                <td class="w-25 text-break">{{ $user->company }}</td>
-                                <td class="w-auto text-break">{{ $user->role_name }}</td>
-                                <td class="w-auto text-break">
+                                <td class="text-break">{{ $user->company }}</td>
+                                <td class="text-break">{{ $user->role_name }}</td>
+                                <td class="text-break">
                                     @if ($user->email_verified_at)
                                         {{ $user->email_verified_at->format('M d, Y') }}
                                     @endif
                                 </td>
-                                <td class="w-1 text-center text-break">
+                                <td class="text-center text-break">
                                     @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
                                         <div class="item-action dropdown">
                                             <a href="#" data-toggle="dropdown" class="icon" data-boundary="viewport"><i class="fe fe-more-vertical"></i></a>
