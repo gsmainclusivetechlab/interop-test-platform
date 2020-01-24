@@ -19,6 +19,11 @@ Route::get('/', 'HomeController@index')->name('home');
 
 Route::resource('sessions', 'SessionController', ['except' => ['show']]);
 
+Route::name('account.')->prefix('account')->namespace('Account')->group(function () {
+    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::post('profile', 'ProfileController@edit')->name('profile.update');
+});
+
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
     Route::resource('users', 'UserController', ['except' => ['show', 'create', 'store', 'edit', 'update']]);
     Route::get('users/trashed', 'UserController@trashed')->name('users.trashed');
