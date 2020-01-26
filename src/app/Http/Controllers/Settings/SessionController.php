@@ -21,7 +21,7 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::with('user')->when(request('q'), function ($query, $q) {
+        $sessions = TestSession::whereHas('user')->when(request('q'), function ($query, $q) {
             return $query->where('name', 'like', "%{$q}%");
         })->paginate();
 

@@ -50,9 +50,7 @@
                         </td>
                         <td class="text-center text-break">
                             @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
-                                <div class="item-action dropdown">
-                                    <a href="#" data-toggle="dropdown" class="icon" data-boundary="viewport"><i class="fe fe-more-vertical"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
+                                @component('components.grids.actions')
                                         @can('promoteAdmin', $user)
                                             <form action="{{ route('settings.users.promote-admin', $user) }}" method="POST">
                                                 @csrf
@@ -91,8 +89,7 @@
                                                 <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
                                             </form>
                                         @endcan
-                                    </div>
-                                </div>
+                                 @endcomponent
                             @endcanany
                         </td>
                     </tr>
