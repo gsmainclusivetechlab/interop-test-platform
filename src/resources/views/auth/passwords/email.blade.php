@@ -32,7 +32,9 @@
             </div>
         </div>
     </form>
-    <div class="text-center text-muted">
-        {{ __('Forget it') }}, <a href="{{ route('login') }}">{{ __('send me back') }}</a> {{ __('to the sign in screen') }}.
-    </div>
+    @guest
+        <div class="text-center text-muted">
+            {{ __('Forget it') }}, <a href="{{ route('login') }}">{{ __('send me back') }}</a> {{ __('to the sign in screen') }}.
+        </div>
+    @endguest
 @endsection

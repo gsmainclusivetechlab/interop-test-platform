@@ -1,4 +1,4 @@
-@if ($paginator->hasPages())
+@if ($paginator->count())
     <div class="row align-items-center">
         <div class="col-md-6">
             {{ __('Showing :from to :to of :total entries', [
@@ -9,7 +9,7 @@
         </div>
         <div class="col-md-6">
             <div class="justify-content-end d-flex">
-                {{ $paginator->links() }}
+                {{ $paginator->appends(request()->all())->links() }}
             </div>
         </div>
     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Account\UpdateProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -22,9 +23,17 @@ class ProfileController extends Controller
         return view('account.profile.edit');
     }
 
-
-    public function update()
+    /**
+     * @param UpdateProfileRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(UpdateProfileRequest $request)
     {
+        $user = auth()->user();
+        $user->update($request->all());
 
+        return redirect()
+            ->back()
+            ->with('success', __('Profile updated successfully'));
     }
 }
