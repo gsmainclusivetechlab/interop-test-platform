@@ -7,7 +7,7 @@
             <a href="{{ route('account.profile.edit') }}" class="list-group-item list-group-item-action d-flex align-items-center @if (request()->routeIs('account.profile.edit')) active @endif">
                 {{ __('Profile') }}
             </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">
+            <a href="{{ route('account.password.edit') }}" class="list-group-item list-group-item-action d-flex align-items-center @if (request()->routeIs('account.password.edit')) active @endif">
                 {{ __('Change password') }}
             </a>
         </div>

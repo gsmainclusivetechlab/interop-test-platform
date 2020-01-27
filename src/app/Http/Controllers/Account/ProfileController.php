@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\Account\UpdateProfileRequest;
 
 class ProfileController extends Controller
 {
@@ -20,9 +20,7 @@ class ProfileController extends Controller
      */
     public function edit()
     {
-        $user = auth()->user();
-
-        return view('account.profile.edit', compact('user'));
+        return view('account.profile.edit');
     }
 
     /**

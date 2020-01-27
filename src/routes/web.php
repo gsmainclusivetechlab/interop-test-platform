@@ -22,6 +22,8 @@ Route::resource('sessions', 'SessionController', ['except' => ['show']]);
 Route::name('account.')->prefix('account')->namespace('Account')->group(function () {
     Route::get('profile', 'ProfileController@edit')->name('profile.edit');
     Route::post('profile', 'ProfileController@update')->name('profile.update');
+    Route::get('password', 'PasswordController@edit')->name('password.edit');
+    Route::post('password', 'PasswordController@update')->name('password.update');
 });
 
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
