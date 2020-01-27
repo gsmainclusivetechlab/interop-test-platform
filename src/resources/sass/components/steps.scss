@@ -64,8 +64,6 @@
 
     @at-root a#{&} {
         cursor: pointer;
-
-        // TODO: add steps hover state
     }
 
     &:not(:first-child)::after {

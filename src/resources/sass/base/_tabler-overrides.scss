@@ -40,3 +40,22 @@ a {
 .dropdown-icon {
     color: inherit;
 }
+
+.border-dashed {
+    border-style: dashed !important;
+}
+
+.border-dotted {
+    border-style: dotted !important;
+}
+
+.btn.disabled,
+.dataTables_wrapper .dataTables_paginate .disabled.paginate_button,
+.btn:disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button:disabled {
+    color: $white;
+    border-color: $gray-300;
+    background-color: $gray-300;
+    opacity: 1;
+    cursor: not-allowed;
+}
