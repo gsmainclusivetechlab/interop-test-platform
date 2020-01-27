@@ -19,7 +19,9 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = auth()->user()->sessions()->paginate();
+        $sessions = auth()->user()->sessions()->when(request('q'), function ($query, $q) {
+            return $query->where('name', 'like', "%{$q}%");
+        })->paginate();
 
         return view('sessions.index', compact('sessions'));
     }

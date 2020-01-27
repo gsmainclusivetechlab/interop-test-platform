@@ -2,7 +2,7 @@ const { confirmPopupDefaults } = require('../constants');
 
 module.exports = (($) => {
     const init = () => {
-        const $confirmBtnSelector = $('[data-confirm]');
+        const $confirmBtnSelector = $('[data-confirm-form]');
 
         if (!$confirmBtnSelector.length) {
             return;
@@ -15,12 +15,18 @@ module.exports = (($) => {
                 confirmIcon: icon
             } = confirmBtn.dataset;
 
-            $(confirmBtn).on('click', () => {
+            $(confirmBtn).on('click', (e) => {
+                const form = e.target.form;
+                e.preventDefault();
                 Swal.fire({
                     ...confirmPopupDefaults,
                     titleText,
                     text,
                     icon
+                }).then((result) => {
+                    if (result.value) {
+                        form.submit();
+                    }
                 });
             });
         });

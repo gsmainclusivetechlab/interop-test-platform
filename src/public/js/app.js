@@ -40216,7 +40216,7 @@ var _require = __webpack_require__(/*! ../constants */ "./resources/js/constants
 
 module.exports = function ($) {
   var init = function init() {
-    var $confirmBtnSelector = $('[data-confirm]');
+    var $confirmBtnSelector = $('[data-confirm-form]');
 
     if (!$confirmBtnSelector.length) {
       return;
@@ -40227,12 +40227,18 @@ module.exports = function ($) {
           titleText = _confirmBtn$dataset.confirmTitle,
           text = _confirmBtn$dataset.confirmText,
           icon = _confirmBtn$dataset.confirmIcon;
-      $(confirmBtn).on('click', function () {
+      $(confirmBtn).on('click', function (e) {
+        var form = e.target.form;
+        e.preventDefault();
         Swal.fire(_objectSpread({}, confirmPopupDefaults, {
           titleText: titleText,
           text: text,
           icon: icon
-        }));
+        })).then(function (result) {
+          if (result.value) {
+            form.submit();
+          }
+        });
       });
     });
   };

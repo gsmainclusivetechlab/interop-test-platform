@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -21,7 +22,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::latest()->paginate();
+        $users = User::latest()->when(request('q'), function ($query, $q) {
+            return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%");
+        })->paginate();
 
         return view('settings.users.index', compact('users'));
     }
@@ -33,7 +36,9 @@ class UserController extends Controller
     public function trashed()
     {
         $this->authorize('viewAny', User::class);
-        $users = User::latest()->onlyTrashed()->paginate();
+        $users = User::latest()->onlyTrashed()->when(request('q'), function ($query, $q) {
+                return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%");
+        })->paginate();
 
         return view('settings.users.index', compact('users'));
     }

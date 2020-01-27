@@ -19,15 +19,16 @@
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="{{ route('account.profile.edit') }}">
                             <i class="dropdown-icon fe fe-user"></i>
-                            {{ __('Profile') }}
+                            {{ __('Account') }}
                         </a>
+                        <div class="dropdown-divider"></div>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button class="dropdown-item" type="submit">
                                 <i class="dropdown-icon fe fe-log-out"></i>
-                                {{ __('Sign out') }}
+                                {{ __('Logout') }}
                             </button>
                         </form>
                     </div>
