@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="NUFzjW2X6ItQlHbI7yF22EgFiI342q8hzaCQhlNP">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../public/images/favicon/favicon.png">
+    <link rel="apple-touch-icon" type="image/png" href="../../public/images/favicon/apple-touch-icon.png">
+    <title>Session creation - Interoperability Test Platform - GSMA Association</title>
+    <link href="../../public/css/app.css" rel="stylesheet">
+</head>
+
+<body class="">
+    <div class="page">
+        <div class="flex-fill">
+            <div class="header py-4">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center">
+                        <a class="header-brand" href="./index.html">
+                            <img src="../../public/images/logo.png" class="h-7" alt="GSMA">
+                        </a>
+                        <div class="col text-center text-primary">
+                            <h1 class="col-login__title mb-1">Inclusive Tech Lab</h1>
+                            <h2 class="col-login__subtitle mb-0">Interoperability Test Platform</h2>
+                        </div>
+                        <div class="d-flex ml-auto">
+                            <div class="dropdown">
+                                <a href="#" class="nav-link pr-0" data-toggle="dropdown">
+                                    <span class="avatar"
+                                        style="background-image: url(./demo/faces/female/25.jpg)"></span>
+                                    <span class="ml-2 d-none d-lg-flex align-items-center">
+                                        <span class="text-default pr-1">User name</span>
+                                        <i class="fe fe-chevron-down"></i>
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="dropdown-icon fe fe-user"></i> Profile
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="dropdown-icon fe fe-log-out"></i> Sign out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse"
+                            data-target="#headerMenuCollapse">
+                            <span class="header-toggler-icon"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fe fe-plus font-weight-bold"></i>
+                                New session
+                            </a>
+                        </div>
+                        <div class="col-lg order-lg-first my-2 my-lg-0">
+                            <ul class="nav nav-tabs border-0 flex-column flex-lg-row align-items-start">
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link active"><i class="fe fe-home"></i> Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link"><i class="fe fe-clock"></i> Sessions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link"><i class="fe fe-info"></i> Tutorial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link"><i class="fe fe-link"></i> The lab</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-3 my-md-5">
+                <div class="container-fluid">
+                    <div class="page-header">
+                        <h1 class="page-title mx-auto">
+                            <b>Create new session</b>
+                        </h1>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-4">
+                            <div class="steps steps-counter steps-red">
+                                <a href="#" class="step-item active">
+                                    <span class="d-inline-block mt-2">Select SUT</span>
+                                </a>
+                                <span class="step-item">
+                                    <span class="d-inline-block mt-2">Configure SUT</span>
+                                </span>
+                                <span class="step-item">
+                                    <span class="d-inline-block mt-2">Session info</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-6">
+                            <div class="flow-chart mb-6" data-flow-chart>
+                                <div class="flow-chart__item">
+                                    <div class="flow-chart__header">
+                                        Payer
+                                    </div>
+                                    <div class="flow-chart__actions">
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flow-chart__item">
+                                    <a href="./sessions-step-1-2.html" class="flow-chart__header">
+                                        Service Provider
+                                    </a>
+                                    <div class="flow-chart__actions">
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flow-chart__item">
+                                    <div class="flow-chart__header">
+                                        Mobile Money Operator 1
+                                    </div>
+                                    <div class="flow-chart__actions">
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flow-chart__item">
+                                    <div class="flow-chart__header">
+                                        Mojaloop
+                                    </div>
+                                    <div class="flow-chart__actions">
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                        <span class="flow-chart__btn ic-arrow-right"></span>
+                                    </div>
+                                </div>
+
+                                <div class="flow-chart__item">
+                                    <div class="flow-chart__header">
+                                        Mobile Money Operator 2
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-end">
+                                <div class="d-flex flex-column">
+                                    <div class="d-inline-flex align-items-center">
+                                        <span class="ic-arrow-right mr-2 text-teal"></span>
+                                        <small>Mobile Money API</small>
+                                    </div>
+                                    <div class="d-inline-flex align-items-center">
+                                        <span class="ic-arrow-right mr-2 text-dark"></span>
+                                        Mojaloop API
+                                    </div>
+                                    <div class="d-inline-flex align-items-center">
+                                        <span class="ic-arrow-right mr-2"></span>
+                                        <small>Simulated</small>
+                                    </div>
+                                    <div class="d-inline-flex align-items-center">
+                                        <span class="ic-arrow-right mr-2 border-dashed"></span>
+                                        <small>Not Simulated</small>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn ml-auto" disabled>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
+                        Copyright © 2020 <a href="#">GSMA</a>.
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="../../public/js/app.js"></script>
+</body>
+</html>
