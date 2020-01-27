@@ -8,13 +8,13 @@
             <h3 class="card-title">@yield('title')</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('account.password.update') }}" method="POST">
+            <form action="{{ route('account.password-update') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <div class="row align-items-center">
                         <label for="current_password" class="col-sm-3">{{ __('Current password') }}:</label>
                         <div class="col-sm-9">
-                            <input id="current_password" name="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror">
+                            <input id="current_password" name="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('current_password')
                                 <span class="invalid-feedback">
                                     <strong>{{ $message }}</strong>
@@ -27,7 +27,7 @@
                     <div class="row align-items-center">
                         <label for="password" class="col-sm-3">{{ __('New password') }}:</label>
                         <div class="col-sm-9">
-                            <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror">
+                            <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('password')
                             <span class="invalid-feedback">
                                     <strong>{{ $message }}</strong>
@@ -40,7 +40,7 @@
                     <div class="row align-items-center">
                         <label for="password_confirmation" class="col-sm-3">{{ __('Confirm new password') }}:</label>
                         <div class="col-sm-9">
-                            <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror">
+                            <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('password_confirmation')
                             <span class="invalid-feedback">
                                     <strong>{{ $message }}</strong>
