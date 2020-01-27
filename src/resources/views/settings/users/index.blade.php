@@ -52,10 +52,12 @@
                             @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
                                 @component('components.grids.actions')
                                         @can('promoteAdmin', $user)
-                                            <form action="{{ route('settings.users.promote-admin', $user) }}" method="POST">
-                                                @csrf
-                                                <button class="dropdown-item" type="submit">{{ __('Promote Admin') }}</button>
-                                            </form>
+                                            @include('components.grids.actions.form', [
+                                                'method' => 'POST',
+                                                'route' => route('settings.users.promote-admin', $user),
+                                                'label' => __('Promote Admin'),
+                                                'confirm' => __('Are you sure you want to promote this user to admin?')
+                                            ])
                                         @endcan
 
                                         @can('relegateAdmin', $user)
