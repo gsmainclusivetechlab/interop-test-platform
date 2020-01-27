@@ -55,8 +55,9 @@
                                             @include('components.grids.actions.form', [
                                                 'method' => 'POST',
                                                 'route' => route('settings.users.promote-admin', $user),
-                                                'label' => __('Promote Admin'),
-                                                'confirm' => __('Are you sure you want to promote this user to admin?')
+                                                'label' => __('Promote admin'),
+                                                'confirmTitle' => __('Confirm promote admin'),
+                                                'confirmText' => __('Are you sure you want to promote :user to admin?', ['user' => $user->name]),
                                             ])
                                         @endcan
 
@@ -64,8 +65,9 @@
                                             @include('components.grids.actions.form', [
                                                 'method' => 'POST',
                                                 'route' => route('settings.users.relegate-admin', $user),
-                                                'label' => __('Relegate Admin'),
-                                                'confirm' => __('Are you sure you want to relegate this user from admin?')
+                                                'label' => __('Relegate admin'),
+                                                'confirmTitle' => __('Confirm relegate admin'),
+                                                'confirmText' => __('Are you sure you want to relegate :user from admin?', ['user' => $user->name]),
                                             ])
                                         @endcan
 
@@ -75,7 +77,8 @@
                                                     'method' => 'POST',
                                                     'route' => route('settings.users.restore', $user),
                                                     'label' => __('Unblock'),
-                                                    'confirm' => __('Are you sure you want to unblock this user?')
+                                                    'confirmTitle' => __('Confirm unblock'),
+                                                    'confirmText' => __('Are you sure you want to unblock :user?', ['user' => $user->name]),
                                                 ])
                                             @endcan
                                         @else
@@ -84,7 +87,8 @@
                                                     'method' => 'DELETE',
                                                     'route' => route('settings.users.destroy', $user),
                                                     'label' => __('Block'),
-                                                    'confirm' => __('Are you sure you want to block this user?')
+                                                    'confirmTitle' => __('Confirm block'),
+                                                    'confirmText' => __('Are you sure you want to block :user?', ['user' => $user->name]),
                                                 ])
                                             @endcan
                                         @endif
@@ -94,7 +98,8 @@
                                                 'method' => 'DELETE',
                                                 'route' => route('settings.users.force-destroy', $user),
                                                 'label' => __('Delete'),
-                                                'confirm' => __('Are you sure you want to delete this user?')
+                                                'confirmTitle' => __('Confirm delete'),
+                                                'confirmText' => __('Are you sure you want to delete :user?', ['user' => $user->name]),
                                             ])
                                         @endcan
                                  @endcomponent
