@@ -61,35 +61,41 @@
                                         @endcan
 
                                         @can('relegateAdmin', $user)
-                                            <form action="{{ route('settings.users.relegate-admin', $user) }}" method="POST">
-                                                @csrf
-                                                <button class="dropdown-item" type="submit">{{ __('Relegate Admin') }}</button>
-                                            </form>
+                                            @include('components.grids.actions.form', [
+                                                'method' => 'POST',
+                                                'route' => route('settings.users.relegate-admin', $user),
+                                                'label' => __('Relegate Admin'),
+                                                'confirm' => __('Are you sure you want to relegate this user from admin?')
+                                            ])
                                         @endcan
 
                                         @if ($user->trashed())
                                             @can('restore', $user)
-                                                <form action="{{ route('settings.users.restore', $user) }}" method="POST">
-                                                    @csrf
-                                                    <button class="dropdown-item" type="submit">{{ __('Unblock') }}</button>
-                                                </form>
+                                                @include('components.grids.actions.form', [
+                                                    'method' => 'POST',
+                                                    'route' => route('settings.users.restore', $user),
+                                                    'label' => __('Unblock'),
+                                                    'confirm' => __('Are you sure you want to unblock this user?')
+                                                ])
                                             @endcan
                                         @else
                                             @can('delete', $user)
-                                                <form action="{{ route('settings.users.destroy', $user) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="dropdown-item" type="submit">{{ __('Block') }}</button>
-                                                </form>
+                                                @include('components.grids.actions.form', [
+                                                    'method' => 'DELETE',
+                                                    'route' => route('settings.users.destroy', $user),
+                                                    'label' => __('Block'),
+                                                    'confirm' => __('Are you sure you want to block this user?')
+                                                ])
                                             @endcan
                                         @endif
 
                                         @can('forceDelete', $user)
-                                            <form action="{{ route('settings.users.force-destroy', $user) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
-                                            </form>
+                                            @include('components.grids.actions.form', [
+                                                'method' => 'DELETE',
+                                                'route' => route('settings.users.force-destroy', $user),
+                                                'label' => __('Delete'),
+                                                'confirm' => __('Are you sure you want to delete this user?')
+                                            ])
                                         @endcan
                                  @endcomponent
                             @endcanany
