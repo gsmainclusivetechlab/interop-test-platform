@@ -40,3 +40,7 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
     });
     Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
 });
+
+Route::name('tests.')->prefix('tests')->namespace('Tests')->group(function () {
+    Route::any('run', 'RunController@handle')->name('run');
+});
