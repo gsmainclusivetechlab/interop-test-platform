@@ -76,6 +76,12 @@ $flow-chart-margin: 64px;
         border-style: inherit;
         transition: $btn-transition;
 
+        &.is-active {
+            &::before {
+                box-shadow: 0 2px 4px rgba($teal, 0.8);
+            }
+        }
+
         &:hover {
             color: inherit;
             text-decoration: none;
