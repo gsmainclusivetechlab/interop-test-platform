@@ -103,104 +103,109 @@
                         </div>
                     </div>
 
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-6">
-                            <div class="row">
-                                <div class="flow-chart mb-6" data-flow-chart>
-                                    <div class="flow-chart__item is-inactive">
-                                        <div class="flow-chart__header">
-                                            Payer
+                    <div class="row">
+                        <div class="col">
+                            <div class="row d-flex flex-column align-items-center justify-content-center">
+                                <div class="col-lg-6">
+                                    <div class="flow-chart mb-6">
+                                        <div class="flow-chart__item is-inactive">
+                                            <div class="flow-chart__header">
+                                                Payer
+                                            </div>
+                                            <div class="flow-chart__actions">
+                                                <span class="flow-chart__btn ic-arrow-right"></span>
+                                                <span class="flow-chart__btn ic-arrow-right"></span>
+                                            </div>
                                         </div>
-                                        <div class="flow-chart__actions">
-                                            <span class="flow-chart__btn ic-arrow-right"></span>
-                                            <span class="flow-chart__btn ic-arrow-right"></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="flow-chart__item is-active">
-                                        <div class="flow-chart__header">
-                                            Service Provider
+                                        <div class="flow-chart__item is-active">
+                                            <div class="flow-chart__header">
+                                                Service Provider
+                                            </div>
+                                            <div class="flow-chart__actions">
+                                                <a href="./sessions-step-2-2.html"
+                                                    class="flow-chart__btn ic-arrow-right"></a>
+                                                <span class="flow-chart__btn ic-arrow-right is-active"></span>
+                                            </div>
                                         </div>
-                                        <div class="flow-chart__actions">
-                                            <a href="./sessions-step-2-2.html" class="flow-chart__btn ic-arrow-right"></a>
-                                            <span class="flow-chart__btn ic-arrow-right is-active"></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="flow-chart__item">
-                                        <div class="flow-chart__header">
-                                            Mobile Money Operator 1
+                                        <div class="flow-chart__item">
+                                            <div class="flow-chart__header">
+                                                Mobile Money Operator 1
+                                            </div>
+                                            <div class="flow-chart__actions">
+                                                <span class="flow-chart__btn ic-arrow-right"></span>
+                                                <span class="flow-chart__btn ic-arrow-right"></span>
+                                            </div>
                                         </div>
-                                        <div class="flow-chart__actions">
-                                            <span class="flow-chart__btn ic-arrow-right"></span>
-                                            <span class="flow-chart__btn ic-arrow-right"></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="flow-chart__item">
-                                        <div class="flow-chart__header">
-                                            Mojaloop
+                                        <div class="flow-chart__item">
+                                            <div class="flow-chart__header">
+                                                Mojaloop
+                                            </div>
+                                            <div class="flow-chart__actions">
+                                                <span class="flow-chart__btn ic-arrow-right"></span>
+                                                <span class="flow-chart__btn ic-arrow-right"></span>
+                                            </div>
                                         </div>
-                                        <div class="flow-chart__actions">
-                                            <span class="flow-chart__btn ic-arrow-right"></span>
-                                            <span class="flow-chart__btn ic-arrow-right"></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="flow-chart__item">
-                                        <div class="flow-chart__header">
-                                            Mobile Money Operator 2
+                                        <div class="flow-chart__item">
+                                            <div class="flow-chart__header">
+                                                Mobile Money Operator 2
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3">
-                                    <div class="d-flex align-items-end">
-                                        <div class="d-flex flex-column">
-                                            <div class="d-inline-flex align-items-center">
-                                                <span class="ic-arrow-right mr-2 text-teal"></span>
-                                                <small>Mobile Money API</small>
-                                            </div>
-                                            <div class="d-inline-flex align-items-center">
-                                                <span class="ic-arrow-right mr-2 text-dark"></span>
-                                                Mojaloop API
-                                            </div>
-                                            <div class="d-inline-flex align-items-center">
-                                                <span class="ic-arrow-right mr-2"></span>
-                                                <small>Simulated</small>
-                                            </div>
-                                            <div class="d-inline-flex align-items-center">
-                                                <span class="ic-arrow-right mr-2 border-dashed"></span>
-                                                <small>Not Simulated</small>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-
-                                <div class="col-6">
-                                    <div class="card">
-                                        <div class="card-header border-0">
-                                            <h3 class="card-title">Mobile Money Operator 1 > Service Provider</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <p>Please enter the Key</p>
-
-                                            <form action="#">
-                                                <div class="form-group">
-                                                    <label for="key" class="form-label">Key</label>
-                                                    <input type="text" class="form-control"
-                                                        name="key" id="key" placeholder="Key">
+                                <div class="col-lg-6">
+                                    <div class="row d-flex">
+                                        <div class="col-lg-3">
+                                            <div class="d-flex align-items-end">
+                                                <div class="d-flex flex-column">
+                                                    <div class="d-inline-flex align-items-center">
+                                                        <span class="ic-arrow-right mr-2 text-teal"></span>
+                                                        <small>Mobile Money API</small>
+                                                    </div>
+                                                    <div class="d-inline-flex align-items-center">
+                                                        <span class="ic-arrow-right mr-2 text-dark"></span>
+                                                        Mojaloop API
+                                                    </div>
+                                                    <div class="d-inline-flex align-items-center">
+                                                        <span class="ic-arrow-right mr-2"></span>
+                                                        <small>Simulated</small>
+                                                    </div>
+                                                    <div class="d-inline-flex align-items-center">
+                                                        <span class="ic-arrow-right mr-2 border-dashed"></span>
+                                                        <small>Not Simulated</small>
+                                                    </div>
                                                 </div>
-                                            </form>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="mt-4 d-flex justify-content-between">
-                                        <a href="./sessions-step-2.html" class="btn btn-outline-primary">Back</a>
-                                        <a href="./sessions-step-3.html" class="btn btn-primary">Next</a>
+                                        <div class="col-lg-6">
+                                            <div class="card">
+                                                <div class="card-header border-0">
+                                                    <h3 class="card-title">Mobile Money Operator 1 > Service Provider
+                                                    </h3>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>Please enter the Key</p>
+
+                                                    <form action="#">
+                                                        <div class="form-group">
+                                                            <label for="key" class="form-label">Key</label>
+                                                            <input type="text" class="form-control" name="key" id="key"
+                                                                placeholder="Key">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-4 d-flex justify-content-between">
+                                                <a href="./sessions-step-2.html"
+                                                    class="btn btn-outline-primary">Back</a>
+                                                <a href="./sessions-step-3.html" class="btn btn-primary">Next</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
