@@ -25,14 +25,17 @@ Route::name('account.')->prefix('account')->group(function () {
 });
 
 Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
-Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
+Route::name('sessions.')->prefix('sessions')->group(function () {
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('', 'RegisterController@createSelection')->name('selection.create');
-        Route::post('', 'RegisterController@storeSelection')->name('selection.store');
-        Route::get('configuration', 'RegisterController@createConfiguration')->name('configuration.create');
-        Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
-        Route::get('information', 'RegisterController@createInformation')->name('information.create');
-        Route::post('information', 'RegisterController@storeInformation')->name('information.store');
+        Route::get('', 'SessionRegisterController@showSelections')->name('selection.index');
+        Route::get('{component}', 'SessionRegisterController@createSelection')->name('selection.create');
+        Route::post('{component}', 'SessionRegisterController@storeSelection')->name('selection.store');
+        Route::get('{component}/forward-configuration', 'SessionRegisterController@createForwardConfiguration')->name('configuration.create-forward');
+        Route::post('{component}/forward-configuration', 'SessionRegisterController@storeForwardConfiguration')->name('configuration.store-forward');
+        Route::get('{component}/backward-configuration', 'SessionRegisterController@createBackwardConfiguration')->name('configuration.create-backward');
+        Route::post('{component}/backward-configuration', 'SessionRegisterController@storeBackwardConfiguration')->name('configuration.store-backward');
+        Route::get('{component}/information', 'SessionRegisterController@createInformation')->name('information.create');
+        Route::post('{component}/information', 'SessionRegisterController@storeInformation')->name('information.store');
     });
 });
 
@@ -46,8 +49,4 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate-admin');
     });
     Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
-});
-
-Route::name('tests.')->prefix('tests')->namespace('Tests')->group(function () {
-    Route::any('run', 'RunController@handle')->name('run');
 });
