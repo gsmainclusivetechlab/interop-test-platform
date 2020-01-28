@@ -1,6 +1,8 @@
-@extends('layouts.account')
+@extends('layouts.app')
 
 @section('title', __('Change password'))
+
+@section('sidebar', \Illuminate\Support\Facades\View::make('account.includes.sidebar'))
 
 @section('content')
     <div class="card">
@@ -12,7 +14,9 @@
                 @csrf
                 <div class="form-group">
                     <div class="row align-items-center">
-                        <label for="current_password" class="col-sm-3">{{ __('Current password') }}:</label>
+                        <label for="current_password" class="col-sm-3">
+                            <b>{{ __('Current password') }}</b>
+                        </label>
                         <div class="col-sm-9">
                             <input id="current_password" name="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('current_password')
@@ -25,7 +29,9 @@
                 </div>
                 <div class="form-group">
                     <div class="row align-items-center">
-                        <label for="password" class="col-sm-3">{{ __('New password') }}:</label>
+                        <label for="password" class="col-sm-3">
+                            <b>{{ __('New password') }}</b>
+                        </label>
                         <div class="col-sm-9">
                             <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('password')
@@ -38,7 +44,9 @@
                 </div>
                 <div class="form-group">
                     <div class="row align-items-center">
-                        <label for="password_confirmation" class="col-sm-3">{{ __('Confirm new password') }}:</label>
+                        <label for="password_confirmation" class="col-sm-3">
+                            <b>{{ __('Confirm new password') }}</b>
+                        </label>
                         <div class="col-sm-9">
                             <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('password_confirmation')

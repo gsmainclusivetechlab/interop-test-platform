@@ -20,7 +20,7 @@ class AccountController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showProfileForm()
+    public function editProfile()
     {
         return view('account.profile');
     }
@@ -42,7 +42,7 @@ class AccountController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showPasswordForm()
+    public function editPassword()
     {
         return view('account.password');
     }

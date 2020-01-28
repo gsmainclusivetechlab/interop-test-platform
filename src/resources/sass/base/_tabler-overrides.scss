@@ -59,3 +59,15 @@ a {
     opacity: 1;
     cursor: not-allowed;
 }
+
+.font-weight-medium {
+    font-weight: 500 !important;
+}
+
+.dropdown-toggle {
+    &[aria-expanded="true"] {
+        &::after {
+            transform: scale(-1);
+        }
+    }
+}

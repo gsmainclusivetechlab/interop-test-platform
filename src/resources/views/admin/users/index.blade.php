@@ -4,7 +4,7 @@
 
 @section('content')
     <h1 class="page-title mb-5">
-        @yield('title')
+        <b>@yield('title')</b>
     </h1>
     <div class="card">
         <div class="card-header">

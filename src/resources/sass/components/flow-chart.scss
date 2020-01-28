@@ -4,8 +4,14 @@ $flow-chart-margin: 64px;
     $root: &;
 
     display: flex;
-    justify-content: center;
     align-items: center;
+    width: 100%;
+    overflow-x: auto;
+
+    &-wrapper {
+        max-width: 930px;
+        width: 100%;
+    }
 
     &__header {
         width: 100%;
@@ -26,6 +32,7 @@ $flow-chart-margin: 64px;
         justify-content: center;
         align-items: center;
         flex: 1 0 0;
+        min-width: 130px;
         min-height: $flow-chart-margin;
         text-align: center;
         border-radius: $border-radius;
@@ -75,6 +82,12 @@ $flow-chart-margin: 64px;
         color: inherit;
         border-style: inherit;
         transition: $btn-transition;
+
+        &.is-active {
+            &::before {
+                box-shadow: 0 2px 4px rgba($teal, 0.8);
+            }
+        }
 
         &:hover {
             color: inherit;

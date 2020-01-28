@@ -18,20 +18,20 @@ Route::redirect('/home', '/');
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::name('account.')->prefix('account')->group(function () {
-    Route::get('profile', 'AccountController@showProfileForm')->name('profile');
+    Route::get('profile', 'AccountController@editProfile')->name('profile.edit');
     Route::post('profile', 'AccountController@updateProfile')->name('profile.update');
-    Route::get('password', 'AccountController@showPasswordForm')->name('password');
+    Route::get('password', 'AccountController@editPassword')->name('password.edit');
     Route::post('password', 'AccountController@updatePassword')->name('password.update');
 });
 
 Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('', 'RegisterController@showSelectionForm')->name('selection');
+        Route::get('', 'RegisterController@createSelection')->name('selection.create');
         Route::post('', 'RegisterController@storeSelection')->name('selection.store');
-        Route::get('configuration', 'RegisterController@showConfigurationForm')->name('configuration');
+        Route::get('configuration', 'RegisterController@createConfiguration')->name('configuration.create');
         Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
-        Route::get('information', 'RegisterController@showInformationForm')->name('information');
+        Route::get('information', 'RegisterController@createInformation')->name('information.create');
         Route::post('information', 'RegisterController@storeInformation')->name('information.store');
     });
 });

@@ -15,17 +15,17 @@ class RegisterController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    public function showSelectionForm()
+    public function createSelection()
     {
         return view('sessions.register.selection');
     }
 
-    public function showConfigurationForm()
+    public function createConfiguration()
     {
         return view('sessions.register.configuration');
     }
 
-    public function showInformationForm()
+    public function createInformation()
     {
         return view('sessions.register.information');
     }
