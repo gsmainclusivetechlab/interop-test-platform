@@ -9,7 +9,7 @@
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
             <div class="col-3 d-flex ml-auto">
-                <div class="dropdown ml-auto col-auto">
+                <div class="dropdown ml-auto">
                     <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                         <span class="avatar flex-shrink-0">
                             <i class="fe fe-user"></i>
@@ -44,7 +44,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
-                <a href="#" class="btn btn-outline-primary">
+                <a href="{{ route('sessions.register.select') }}" class="btn btn-outline-primary">
                     <i class="fe fe-plus mr-2"></i>
                     {{ __('New Session') }}
                 </a>
@@ -77,19 +77,19 @@
                     </li>
                     @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\TestSession::class))
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link @if (request()->routeIs('settings.*')) active @endif" data-toggle="dropdown">
+                            <a href="#" class="nav-link @if (request()->routeIs('admin.*')) active @endif" data-toggle="dropdown">
                                 <i class="fe fe-settings"></i>
-                                {{ __('Settings') }}
+                                {{ __('Administration') }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-arrow">
                                 @can('viewAny', \App\Models\User::class)
-                                    <a href="{{ route('settings.users.index') }}" class="dropdown-item @if (request()->routeIs('settings.users.*')) active @endif">
+                                    <a href="{{ route('admin.users.index') }}" class="dropdown-item @if (request()->routeIs('admin.users.*')) active @endif">
                                         {{ __('Users') }}
                                     </a>
                                 @endcan
 
                                 @can('viewAny', \App\Models\TestSession::class)
-                                    <a href="{{ route('settings.sessions.index') }}" class="dropdown-item @if (request()->routeIs('settings.sessions.*')) active @endif">
+                                    <a href="{{ route('admin.sessions.index') }}" class="dropdown-item @if (request()->routeIs('admin.sessions.*')) active @endif">
                                         {{ __('Sessions') }}
                                     </a>
                                 @endcan

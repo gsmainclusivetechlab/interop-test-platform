@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
@@ -28,7 +28,7 @@ class UserController extends Controller
                 ->orWhere('company', 'like', "%{$q}%");
         })->paginate();
 
-        return view('settings.users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -44,7 +44,7 @@ class UserController extends Controller
                     ->orWhere('company', 'like', "%{$q}%");
         })->paginate();
 
-        return view('settings.users.index', compact('users'));
+        return view('admin.users.index', compact('users'));
     }
 
     /**

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Settings;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\TestSession;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class SessionController extends Controller
 {
@@ -21,10 +22,13 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::whereHas('user')->when(request('q'), function ($query, $q) {
-            return $query->where('name', 'like', "%{$q}%");
+        $sessions = TestSession::whereHas('user', function ($query) {
+            $query->when(request('q'), function ($query, $q) {
+                return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
+                    ->orWhere('name', 'like', "%{$q}%");
+            });
         })->paginate();
 
-        return view('settings.sessions.index', compact('sessions'));
+        return view('admin.sessions.index', compact('sessions'));
     }
 }

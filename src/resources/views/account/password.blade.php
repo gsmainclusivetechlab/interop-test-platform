@@ -8,7 +8,7 @@
             <h3 class="card-title">@yield('title')</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('account.update-password') }}" method="POST">
+            <form action="{{ route('account.password.update') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <div class="row align-items-center">

@@ -11,10 +11,10 @@
             @include('components.grids.search')
             <div class="card-options">
                 <div class="btn-group">
-                    <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('admin.users.index')) active @endif">
                         {{ __('Active') }}
                     </a>
-                    <a href="{{ route('settings.users.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.trash')) active @endif">
+                    <a href="{{ route('admin.users.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('admin.users.trash')) active @endif">
                         {{ __('Blocked') }}
                     </a>
                 </div>
@@ -55,7 +55,7 @@
                                             @can('restore', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'POST',
-                                                    'route' => route('settings.users.restore', $user),
+                                                    'route' => route('admin.users.restore', $user),
                                                     'label' => __('Unblock'),
                                                     'confirmTitle' => __('Confirm unblock'),
                                                     'confirmText' => __('Are you sure you want to unblock :user?', ['user' => $user->name]),
@@ -65,7 +65,7 @@
                                             @can('promoteAdmin', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'POST',
-                                                    'route' => route('settings.users.promote-admin', $user),
+                                                    'route' => route('admin.users.promote-admin', $user),
                                                     'label' => __('Promote admin'),
                                                     'confirmTitle' => __('Confirm promote admin'),
                                                     'confirmText' => __('Are you sure you want to promote :user to admin?', ['user' => $user->name]),
@@ -75,7 +75,7 @@
                                             @can('relegateAdmin', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'POST',
-                                                    'route' => route('settings.users.relegate-admin', $user),
+                                                    'route' => route('admin.users.relegate-admin', $user),
                                                     'label' => __('Relegate admin'),
                                                     'confirmTitle' => __('Confirm relegate admin'),
                                                     'confirmText' => __('Are you sure you want to relegate :user from admin?', ['user' => $user->name]),
@@ -85,7 +85,7 @@
                                             @can('delete', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'DELETE',
-                                                    'route' => route('settings.users.destroy', $user),
+                                                    'route' => route('admin.users.destroy', $user),
                                                     'label' => __('Block'),
                                                     'confirmTitle' => __('Confirm block'),
                                                     'confirmText' => __('Are you sure you want to block :user?', ['user' => $user->name]),
@@ -96,7 +96,7 @@
                                         @can('forceDelete', $user)
                                             @include('components.grids.actions.form', [
                                                 'method' => 'DELETE',
-                                                'route' => route('settings.users.force-destroy', $user),
+                                                'route' => route('admin.users.force-destroy', $user),
                                                 'label' => __('Delete'),
                                                 'confirmTitle' => __('Confirm delete'),
                                                 'confirmText' => __('Are you sure you want to delete :user?', ['user' => $user->name]),
