@@ -14,7 +14,7 @@
                     <a href="{{ route('settings.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.index')) active @endif">
                         {{ __('Active') }}
                     </a>
-                    <a href="{{ route('settings.users.trashed') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.trashed')) active @endif">
+                    <a href="{{ route('settings.users.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('settings.users.trash')) active @endif">
                         {{ __('Blocked') }}
                     </a>
                 </div>
@@ -51,26 +51,6 @@
                         <td class="text-center text-break">
                             @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
                                 @component('components.grids.actions')
-                                        @can('promoteAdmin', $user)
-                                            @include('components.grids.actions.form', [
-                                                'method' => 'POST',
-                                                'route' => route('settings.users.promote-admin', $user),
-                                                'label' => __('Promote admin'),
-                                                'confirmTitle' => __('Confirm promote admin'),
-                                                'confirmText' => __('Are you sure you want to promote :user to admin?', ['user' => $user->name]),
-                                            ])
-                                        @endcan
-
-                                        @can('relegateAdmin', $user)
-                                            @include('components.grids.actions.form', [
-                                                'method' => 'POST',
-                                                'route' => route('settings.users.relegate-admin', $user),
-                                                'label' => __('Relegate admin'),
-                                                'confirmTitle' => __('Confirm relegate admin'),
-                                                'confirmText' => __('Are you sure you want to relegate :user from admin?', ['user' => $user->name]),
-                                            ])
-                                        @endcan
-
                                         @if ($user->trashed())
                                             @can('restore', $user)
                                                 @include('components.grids.actions.form', [
@@ -82,6 +62,26 @@
                                                 ])
                                             @endcan
                                         @else
+                                            @can('promoteAdmin', $user)
+                                                @include('components.grids.actions.form', [
+                                                    'method' => 'POST',
+                                                    'route' => route('settings.users.promote-admin', $user),
+                                                    'label' => __('Promote admin'),
+                                                    'confirmTitle' => __('Confirm promote admin'),
+                                                    'confirmText' => __('Are you sure you want to promote :user to admin?', ['user' => $user->name]),
+                                                ])
+                                            @endcan
+
+                                            @can('relegateAdmin', $user)
+                                                @include('components.grids.actions.form', [
+                                                    'method' => 'POST',
+                                                    'route' => route('settings.users.relegate-admin', $user),
+                                                    'label' => __('Relegate admin'),
+                                                    'confirmTitle' => __('Confirm relegate admin'),
+                                                    'confirmText' => __('Are you sure you want to relegate :user from admin?', ['user' => $user->name]),
+                                                ])
+                                            @endcan
+
                                             @can('delete', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'DELETE',

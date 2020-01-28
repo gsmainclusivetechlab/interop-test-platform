@@ -19,7 +19,7 @@
                         </span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="{{ route('account.profile.edit') }}">
+                        <a class="dropdown-item" href="{{ route('account.profile') }}">
                             <i class="dropdown-icon fe fe-user"></i>
                             {{ __('Account') }}
                         </a>
@@ -44,7 +44,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
-                <a href="{{ route('sessions.create') }}" class="btn btn-outline-primary">
+                <a href="#" class="btn btn-outline-primary">
                     <i class="fe fe-plus mr-2"></i>
                     {{ __('New Session') }}
                 </a>
