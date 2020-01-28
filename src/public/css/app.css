@@ -20499,197 +20499,122 @@ a {
   border-color: inherit;
 }
 
-.steps-blue .step-item {
-  color: #00568f;
-}
-.steps-blue .step-item::after, .steps-blue .step-item::before {
-  color: #fff;
-  background: #00568f;
-}
-.steps-blue .step-item::before {
-  border-color: #00568f;
-}
-.steps-blue .step-item.active::before {
-  color: #00568f;
-  border-color: inherit;
-}
-
-.steps-indigo .step-item {
-  color: #6574cd;
-}
-.steps-indigo .step-item::after, .steps-indigo .step-item::before {
-  color: #fff;
-  background: #6574cd;
-}
-.steps-indigo .step-item::before {
-  border-color: #6574cd;
-}
-.steps-indigo .step-item.active::before {
-  color: #6574cd;
-  border-color: inherit;
-}
-
-.steps-purple .step-item {
-  color: #95226c;
-}
-.steps-purple .step-item::after, .steps-purple .step-item::before {
-  color: #fff;
-  background: #95226c;
-}
-.steps-purple .step-item::before {
-  border-color: #95226c;
-}
-.steps-purple .step-item.active::before {
-  color: #95226c;
-  border-color: inherit;
-}
-
-.steps-pink .step-item {
-  color: #ee3772;
-}
-.steps-pink .step-item::after, .steps-pink .step-item::before {
-  color: #fff;
-  background: #ee3772;
-}
-.steps-pink .step-item::before {
-  border-color: #ee3772;
-}
-.steps-pink .step-item.active::before {
-  color: #ee3772;
-  border-color: inherit;
-}
-
-.steps-red .step-item {
+.steps-primary .step-item {
   color: #de002b;
 }
-.steps-red .step-item::after, .steps-red .step-item::before {
+.steps-primary .step-item::after, .steps-primary .step-item::before {
   color: #fff;
   background: #de002b;
 }
-.steps-red .step-item::before {
+.steps-primary .step-item::before {
   border-color: #de002b;
 }
-.steps-red .step-item.active::before {
+.steps-primary .step-item.active::before {
   color: #de002b;
   border-color: inherit;
 }
 
-.steps-orange .step-item {
-  color: #ff6600;
-}
-.steps-orange .step-item::after, .steps-orange .step-item::before {
-  color: #fff;
-  background: #ff6600;
-}
-.steps-orange .step-item::before {
-  border-color: #ff6600;
-}
-.steps-orange .step-item.active::before {
-  color: #ff6600;
-  border-color: inherit;
-}
-
-.steps-yellow .step-item {
-  color: #fcbb2c;
-}
-.steps-yellow .step-item::after, .steps-yellow .step-item::before {
-  color: #fff;
-  background: #fcbb2c;
-}
-.steps-yellow .step-item::before {
-  border-color: #fcbb2c;
-}
-.steps-yellow .step-item.active::before {
-  color: #fcbb2c;
-  border-color: inherit;
-}
-
-.steps-green .step-item {
-  color: #9cb227;
-}
-.steps-green .step-item::after, .steps-green .step-item::before {
-  color: #fff;
-  background: #9cb227;
-}
-.steps-green .step-item::before {
-  border-color: #9cb227;
-}
-.steps-green .step-item.active::before {
-  color: #9cb227;
-  border-color: inherit;
-}
-
-.steps-teal .step-item {
-  color: #99cccc;
-}
-.steps-teal .step-item::after, .steps-teal .step-item::before {
-  color: #fff;
-  background: #99cccc;
-}
-.steps-teal .step-item::before {
-  border-color: #99cccc;
-}
-.steps-teal .step-item.active::before {
-  color: #99cccc;
-  border-color: inherit;
-}
-
-.steps-cyan .step-item {
-  color: #00a6c9;
-}
-.steps-cyan .step-item::after, .steps-cyan .step-item::before {
-  color: #fff;
-  background: #00a6c9;
-}
-.steps-cyan .step-item::before {
-  border-color: #00a6c9;
-}
-.steps-cyan .step-item.active::before {
-  color: #00a6c9;
-  border-color: inherit;
-}
-
-.steps-white .step-item {
-  color: #fff;
-}
-.steps-white .step-item::after, .steps-white .step-item::before {
-  color: #fff;
-  background: #fff;
-}
-.steps-white .step-item::before {
-  border-color: #fff;
-}
-.steps-white .step-item.active::before {
-  color: #fff;
-  border-color: inherit;
-}
-
-.steps-gray .step-item {
+.steps-secondary .step-item {
   color: #7c7c7c;
 }
-.steps-gray .step-item::after, .steps-gray .step-item::before {
+.steps-secondary .step-item::after, .steps-secondary .step-item::before {
   color: #fff;
   background: #7c7c7c;
 }
-.steps-gray .step-item::before {
+.steps-secondary .step-item::before {
   border-color: #7c7c7c;
 }
-.steps-gray .step-item.active::before {
+.steps-secondary .step-item.active::before {
   color: #7c7c7c;
   border-color: inherit;
 }
 
-.steps-gray-dark .step-item {
+.steps-success .step-item {
+  color: #9cb227;
+}
+.steps-success .step-item::after, .steps-success .step-item::before {
+  color: #fff;
+  background: #9cb227;
+}
+.steps-success .step-item::before {
+  border-color: #9cb227;
+}
+.steps-success .step-item.active::before {
+  color: #9cb227;
+  border-color: inherit;
+}
+
+.steps-info .step-item {
+  color: #45aaf2;
+}
+.steps-info .step-item::after, .steps-info .step-item::before {
+  color: #fff;
+  background: #45aaf2;
+}
+.steps-info .step-item::before {
+  border-color: #45aaf2;
+}
+.steps-info .step-item.active::before {
+  color: #45aaf2;
+  border-color: inherit;
+}
+
+.steps-warning .step-item {
+  color: #fcbb2c;
+}
+.steps-warning .step-item::after, .steps-warning .step-item::before {
+  color: #fff;
+  background: #fcbb2c;
+}
+.steps-warning .step-item::before {
+  border-color: #fcbb2c;
+}
+.steps-warning .step-item.active::before {
+  color: #fcbb2c;
+  border-color: inherit;
+}
+
+.steps-danger .step-item {
+  color: #de002b;
+}
+.steps-danger .step-item::after, .steps-danger .step-item::before {
+  color: #fff;
+  background: #de002b;
+}
+.steps-danger .step-item::before {
+  border-color: #de002b;
+}
+.steps-danger .step-item.active::before {
+  color: #de002b;
+  border-color: inherit;
+}
+
+.steps-light .step-item {
+  color: #f8f8f9;
+}
+.steps-light .step-item::after, .steps-light .step-item::before {
+  color: #fff;
+  background: #f8f8f9;
+}
+.steps-light .step-item::before {
+  border-color: #f8f8f9;
+}
+.steps-light .step-item.active::before {
+  color: #f8f8f9;
+  border-color: inherit;
+}
+
+.steps-dark .step-item {
   color: #343a40;
 }
-.steps-gray-dark .step-item::after, .steps-gray-dark .step-item::before {
+.steps-dark .step-item::after, .steps-dark .step-item::before {
   color: #fff;
   background: #343a40;
 }
-.steps-gray-dark .step-item::before {
+.steps-dark .step-item::before {
   border-color: #343a40;
 }
-.steps-gray-dark .step-item.active::before {
+.steps-dark .step-item.active::before {
   color: #343a40;
   border-color: inherit;
 }
