@@ -20436,6 +20436,15 @@ a {
   cursor: not-allowed;
 }
 
+.font-weight-medium {
+  font-weight: 500 !important;
+}
+
+.dropdown-toggle[aria-expanded=true]::after {
+  -webkit-transform: scale(-1);
+          transform: scale(-1);
+}
+
 .col-login__title {
   font-size: 1.25rem;
 }
