@@ -20783,8 +20783,16 @@ a.step-item {
   overflow-x: auto;
 }
 .flow-chart-wrapper {
-  max-width: 930px;
+  max-width: 932px;
   width: 100%;
+}
+.flow-chart-legend {
+  max-width: 198px;
+  width: 100%;
+}
+.flow-chart-content {
+  -webkit-box-flex: 1;
+          flex-grow: 1;
 }
 .flow-chart__header {
   width: 100%;
@@ -20807,7 +20815,7 @@ a.step-item {
           align-items: center;
   -webkit-box-flex: 1;
           flex: 1 0 0;
-  min-width: 130px;
+  min-width: 135px;
   min-height: 64px;
   text-align: center;
   border-radius: 6px;
