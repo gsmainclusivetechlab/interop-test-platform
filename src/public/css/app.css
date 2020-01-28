@@ -20777,10 +20777,14 @@ a.step-item {
 .flow-chart {
   display: -webkit-box;
   display: flex;
-  -webkit-box-pack: center;
-          justify-content: center;
   -webkit-box-align: center;
           align-items: center;
+  width: 100%;
+  overflow-x: auto;
+}
+.flow-chart-wrapper {
+  max-width: 930px;
+  width: 100%;
 }
 .flow-chart__header {
   width: 100%;
@@ -20803,6 +20807,7 @@ a.step-item {
           align-items: center;
   -webkit-box-flex: 1;
           flex: 1 0 0;
+  min-width: 130px;
   min-height: 64px;
   text-align: center;
   border-radius: 6px;

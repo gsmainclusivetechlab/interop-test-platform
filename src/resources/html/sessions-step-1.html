@@ -87,6 +87,7 @@
                             <b>Create new session</b>
                         </h1>
                     </div>
+
                     <div class="row d-flex justify-content-center">
                         <div class="col-xl-4 col-lg-8">
                             <div class="steps steps-counter steps-red">
@@ -105,8 +106,8 @@
 
                     <div class="row">
                         <div class="col">
-                            <div class="row d-flex flex-column align-items-center justify-content-center">
-                                <div class="col-lg-6">
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <div class="flow-chart-wrapper">
                                     <div class="flow-chart mb-6">
                                         <div class="flow-chart__item">
                                             <div class="flow-chart__header">
@@ -154,31 +155,28 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="row d-flex align-items-end">
-                                        <div class="col-lg-3">
-                                            <div class="d-flex flex-column">
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2 text-teal"></span>
-                                                    <small>Mobile Money API</small>
-                                                </div>
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2 text-dark"></span>
-                                                    Mojaloop API
-                                                </div>
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2"></span>
-                                                    <small>Simulated</small>
-                                                </div>
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2 border-dashed"></span>
-                                                    <small>Not Simulated</small>
-                                                </div>
+
+                                    <div class="d-flex justify-content-between align-items-end">
+                                        <div class="flow-chart-legend d-flex flex-column">
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2 text-teal"></span>
+                                                <small>Mobile Money API</small>
+                                            </div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2 text-dark"></span>
+                                                Mojaloop API
+                                            </div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2"></span>
+                                                <small>Simulated</small>
+                                            </div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2 border-dashed"></span>
+                                                <small>Not Simulated</small>
                                             </div>
                                         </div>
 
-                                        <button type="button" class="btn ml-auto" disabled>
+                                        <button type="button" class="btn" disabled>
                                             Next
                                         </button>
                                     </div>
@@ -188,7 +186,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <footer class="footer">
