@@ -27,10 +27,12 @@ Route::name('account.')->prefix('account')->group(function () {
 Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('', 'RegisterController@showSelectionForm')->name('select');
-        Route::post('', 'RegisterController@storeSelection')->name('select.store');
-        Route::get('configure', 'RegisterController@showConfiguratonForm')->name('configure');
-        Route::post('configure', 'RegisterController@storeConfiguraton')->name('configure.store');
+        Route::get('', 'RegisterController@showSelectionForm')->name('selection');
+        Route::post('', 'RegisterController@storeSelection')->name('selection.store');
+        Route::get('configuration', 'RegisterController@showConfigurationForm')->name('configuration');
+        Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
+        Route::get('information', 'RegisterController@showInformationForm')->name('information');
+        Route::post('information', 'RegisterController@storeInformation')->name('information.store');
     });
 });
 

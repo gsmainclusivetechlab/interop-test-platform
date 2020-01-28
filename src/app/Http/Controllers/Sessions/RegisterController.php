@@ -17,6 +17,16 @@ class RegisterController extends Controller
 
     public function showSelectionForm()
     {
-        return view('sessions.register.select');
+        return view('sessions.register.selection');
+    }
+
+    public function showConfigurationForm()
+    {
+        return view('sessions.register.configuration');
+    }
+
+    public function showInformationForm()
+    {
+        return view('sessions.register.information');
     }
 }
