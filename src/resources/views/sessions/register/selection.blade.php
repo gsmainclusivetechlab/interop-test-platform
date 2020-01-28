@@ -54,7 +54,7 @@
                                 Mobile Money Operator 2
                             </div>
                         </div>
-                    </div>чки
+                    </div>
                     <div class="d-flex justify-content-between align-items-end">
                         <div class="flow-chart-legend d-flex flex-column">
                             <div class="d-inline-flex align-items-center">
