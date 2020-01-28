@@ -21,7 +21,11 @@
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                         <a class="dropdown-item" href="{{ route('account.profile.edit') }}">
                             <i class="dropdown-icon fe fe-user"></i>
-                            {{ __('Account') }}
+                            {{ __('Profile') }}
+                        </a>
+                        <a class="dropdown-item" href="{{ route('account.profile.edit') }}">
+                            <i class="dropdown-icon fe fe-settings"></i>
+                            {{ __('Settings') }}
                         </a>
                         <div class="dropdown-divider"></div>
                         <form action="{{ route('logout') }}" method="POST">
@@ -78,7 +82,7 @@
                     @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\TestSession::class))
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link @if (request()->routeIs('admin.*')) active @endif" data-toggle="dropdown">
-                                <i class="fe fe-settings"></i>
+                                <i class="fe fe-lock"></i>
                                 {{ __('Administration') }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-arrow">
