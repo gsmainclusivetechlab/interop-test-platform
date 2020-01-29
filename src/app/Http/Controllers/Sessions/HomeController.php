@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Models\TestSession;
 
 class HomeController extends Controller
 {
@@ -12,6 +13,8 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('can:viewAnyOwn,' . TestSession::class)->only('index');
+        // $this->authorizeResource(TestSession::class, 'session');
     }
 
     /**
@@ -24,5 +27,14 @@ class HomeController extends Controller
         })->paginate();
 
         return view('sessions.index', compact('sessions'));
+    }
+
+    /**
+     * @param TestSession $session
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show(TestSession $session)
+    {
+        return view('sessions.show', compact('session'));
     }
 }

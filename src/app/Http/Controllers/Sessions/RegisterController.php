@@ -18,33 +18,54 @@ class RegisterController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function createSelection()
     {
         return view('sessions.register.selection');
     }
 
+    /**
+     * @param StoreRegisterSelectionRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeSelection(StoreRegisterSelectionRequest $request)
     {
         return redirect()
             ->route('sessions.register.configuration.create');
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function createConfiguration()
     {
         return view('sessions.register.configuration');
     }
 
+    /**
+     * @param StoreRegisterConfigurationRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeConfiguration(StoreRegisterConfigurationRequest $request)
     {
         return redirect()
             ->route('sessions.register.information.create');
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function createInformation()
     {
         return view('sessions.register.information');
     }
 
+    /**
+     * @param StoreRegisterInformationRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeInformation(StoreRegisterInformationRequest $request)
     {
         $user = auth()->user();
