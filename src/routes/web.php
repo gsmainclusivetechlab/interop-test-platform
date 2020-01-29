@@ -17,11 +17,11 @@ Auth::routes(['verify' => true]);
 Route::redirect('/home', '/');
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::name('account.')->prefix('account')->group(function () {
-    Route::get('profile', 'AccountController@editProfile')->name('profile.edit');
-    Route::post('profile', 'AccountController@updateProfile')->name('profile.update');
-    Route::get('password', 'AccountController@editPassword')->name('password.edit');
-    Route::post('password', 'AccountController@updatePassword')->name('password.update');
+Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
+    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::post('profile', 'ProfileController@update')->name('profile.update');
+    Route::get('password', 'PasswordController@edit')->name('password.edit');
+    Route::post('password', 'PasswordController@update')->name('password.update');
 });
 
 Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);

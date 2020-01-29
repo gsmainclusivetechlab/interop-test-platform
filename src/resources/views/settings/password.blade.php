@@ -2,7 +2,7 @@
 
 @section('title', __('Change password'))
 
-@section('sidebar', \Illuminate\Support\Facades\View::make('account.includes.sidebar'))
+@section('sidebar', \Illuminate\Support\Facades\View::make('settings.includes.sidebar'))
 
 @section('content')
     <div class="card">
@@ -10,7 +10,7 @@
             <h3 class="card-title">@yield('title')</h3>
         </div>
         <div class="card-body">
-            <form action="{{ route('account.password.update') }}" method="POST">
+            <form action="{{ route('settings.password.update') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <div class="row align-items-center">
