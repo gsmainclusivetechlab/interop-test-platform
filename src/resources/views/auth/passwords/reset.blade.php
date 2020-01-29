@@ -7,6 +7,9 @@
         <input type="hidden" name="token" value="{{ $token }}">
         <div class="card-body p-6">
             <div class="card-title">@yield('title')</div>
+            <p class="text-muted">
+                {{ __('You can set a new password below. Please take the time to choose a secure and difficult to guess password.') }}
+            </p>
             <div class="form-group">
                 <label class="form-label">
                     {{ __('Email') }}

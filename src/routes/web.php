@@ -27,8 +27,8 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('', 'RegisterController@createSelection')->name('selection.create');
-        Route::post('', 'RegisterController@storeSelection')->name('selection.store');
+        Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
+        Route::post('selection', 'RegisterController@storeSelection')->name('selection.store');
         Route::get('configuration', 'RegisterController@createConfiguration')->name('configuration.create');
         Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
         Route::get('information', 'RegisterController@createInformation')->name('information.create');
