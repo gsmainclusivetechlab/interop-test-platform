@@ -27,15 +27,12 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::get('', 'HomeController@index')->name('index');
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('', 'RegisterController@index')->name('index');
-        Route::get('{component}', 'RegisterController@createSelection')->name('create_selection');
-        Route::post('{component}', 'RegisterController@storeSelection')->name('store_selection');
-        Route::get('{component}/forward-configuration', 'RegisterController@createForwardConfiguration')->name('create_forward_configuration');
-        Route::post('{component}/forward-configuration', 'RegisterController@storeForwardConfiguration')->name('store_forward_configuration');
-        Route::get('{component}/backward-configuration', 'RegisterController@createBackwardConfiguration')->name('create_backward_configuration');
-        Route::post('{component}/backward-configuration', 'RegisterController@storeBackwardConfiguration')->name('store_backward_configuration');
-        Route::get('{component}/information', 'RegisterController@createInformation')->name('create-information');
-        Route::post('{component}/information', 'RegisterController@storeInformation')->name('store-information');
+        Route::get('', 'RegisterController@createSelection')->name('selection.create');
+        Route::post('', 'RegisterController@storeSelection')->name('selection.store');
+        Route::get('configuration', 'RegisterController@createConfiguration')->name('configuration.create');
+        Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
+        Route::get('information', 'RegisterController@createInformation')->name('information.create');
+        Route::post('information', 'RegisterController@storeInformation')->name('information.store');
     });
 });
 

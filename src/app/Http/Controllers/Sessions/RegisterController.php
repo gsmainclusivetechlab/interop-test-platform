@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Sessions\StoreRegisterConfigurationRequest;
+use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
+use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
 use App\Models\TestSession;
 
 class RegisterController extends Controller
@@ -15,28 +18,42 @@ class RegisterController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    public function index()
-    {
-        return view('sessions.register.index');
-    }
-
     public function createSelection()
     {
-        return view('sessions.register.create-selection');
+        return view('sessions.register.selection');
     }
 
-    public function createForwardConfiguration()
+    public function storeSelection(StoreRegisterSelectionRequest $request)
     {
-        return view('sessions.register.create-forward-configuration');
+        return redirect()
+            ->route('sessions.register.configuration.create');
     }
 
-    public function createBackwardConfiguration()
+    public function createConfiguration()
     {
-        return view('sessions.register.create-backward-configuration');
+        return view('sessions.register.configuration');
+    }
+
+    public function storeConfiguration(StoreRegisterConfigurationRequest $request)
+    {
+        return redirect()
+            ->route('sessions.register.information.create');
     }
 
     public function createInformation()
     {
-        return view('sessions.register.create-information');
+        return view('sessions.register.information');
+    }
+
+    public function storeInformation(StoreRegisterInformationRequest $request)
+    {
+        $user = auth()->user();
+        $session = $user->sessions()->create([
+            'name' => $request->get('name'),
+        ]);
+
+        return redirect()
+            ->route('sessions.index')
+            ->with('success', __('Session created successfully'));
     }
 }

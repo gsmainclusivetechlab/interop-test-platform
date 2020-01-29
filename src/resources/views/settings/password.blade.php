@@ -14,11 +14,11 @@
                 @csrf
                 <div class="form-group">
                     <div class="row align-items-center">
-                        <label for="current_password" class="col-sm-3">
+                        <label class="col-sm-3">
                             <b>{{ __('Current password') }}</b>
                         </label>
                         <div class="col-sm-9">
-                            <input id="current_password" name="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                            <input name="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('current_password')
                                 <span class="invalid-feedback">
                                     <strong>{{ $message }}</strong>
@@ -29,11 +29,11 @@
                 </div>
                 <div class="form-group">
                     <div class="row align-items-center">
-                        <label for="password" class="col-sm-3">
+                        <label class="col-sm-3">
                             <b>{{ __('New password') }}</b>
                         </label>
                         <div class="col-sm-9">
-                            <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                            <input name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('password')
                             <span class="invalid-feedback">
                                     <strong>{{ $message }}</strong>
@@ -44,11 +44,11 @@
                 </div>
                 <div class="form-group">
                     <div class="row align-items-center">
-                        <label for="password_confirmation" class="col-sm-3">
+                        <label class="col-sm-3">
                             <b>{{ __('Confirm new password') }}</b>
                         </label>
                         <div class="col-sm-9">
-                            <input id="password_confirmation" name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                            <input name="password_confirmation" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                             @error('password_confirmation')
                             <span class="invalid-feedback">
                                     <strong>{{ $message }}</strong>
