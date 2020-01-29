@@ -65,7 +65,7 @@
                                             @can('promoteAdmin', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'POST',
-                                                    'route' => route('admin.users.promote-admin', $user),
+                                                    'route' => route('admin.users.promote_admin', $user),
                                                     'label' => __('Promote admin'),
                                                     'confirmTitle' => __('Confirm promote admin'),
                                                     'confirmText' => __('Are you sure you want to promote :user to admin?', ['user' => $user->name]),
@@ -75,7 +75,7 @@
                                             @can('relegateAdmin', $user)
                                                 @include('components.grids.actions.form', [
                                                     'method' => 'POST',
-                                                    'route' => route('admin.users.relegate-admin', $user),
+                                                    'route' => route('admin.users.relegate_admin', $user),
                                                     'label' => __('Relegate admin'),
                                                     'confirmTitle' => __('Confirm relegate admin'),
                                                     'confirmText' => __('Are you sure you want to relegate :user from admin?', ['user' => $user->name]),
@@ -96,7 +96,7 @@
                                         @can('forceDelete', $user)
                                             @include('components.grids.actions.form', [
                                                 'method' => 'DELETE',
-                                                'route' => route('admin.users.force-destroy', $user),
+                                                'route' => route('admin.users.force_destroy', $user),
                                                 'label' => __('Delete'),
                                                 'confirmTitle' => __('Confirm delete'),
                                                 'confirmText' => __('Are you sure you want to delete :user?', ['user' => $user->name]),

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Sessions;
 
-use App\Models\TestSession;
+use App\Http\Controllers\Controller;
 
-class SessionController extends Controller
+class HomeController extends Controller
 {
     /**
      * @return void

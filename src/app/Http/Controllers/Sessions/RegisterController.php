@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Sessions;
 
+use App\Http\Controllers\Controller;
 use App\Models\TestSession;
 
-class SessionRegisterController extends Controller
+class RegisterController extends Controller
 {
     /**
      * @return void
@@ -14,9 +15,9 @@ class SessionRegisterController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    public function showSelections()
+    public function index()
     {
-        return view('sessions.register.selections');
+        return view('sessions.register.index');
     }
 
     public function createSelection()
