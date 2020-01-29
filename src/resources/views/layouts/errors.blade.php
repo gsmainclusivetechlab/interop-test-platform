@@ -4,8 +4,8 @@
     @include('layouts.includes.head')
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
-    <div class="page">
+<body
+    <div id="app" class="page">
         <div class="page-content">
             <div class="container text-center">
                 <div class="display-1 text-muted mb-5"><i class="si si-exclamation"></i> @yield('code')</div>

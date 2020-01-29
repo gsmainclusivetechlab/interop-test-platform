@@ -87,9 +87,10 @@
                             <b>Create new session</b>
                         </h1>
                     </div>
+
                     <div class="row d-flex justify-content-center">
-                        <div class="col-4">
-                            <div class="steps steps-counter steps-red">
+                        <div class="col-xl-4 col-lg-8">
+                            <div class="steps steps-counter steps-primary">
                                 <a href="#" class="step-item">
                                     <span class="d-inline-block mt-2">Select SUT</span>
                                 </a>
@@ -105,9 +106,28 @@
 
                     <div class="row">
                         <div class="col">
-                            <div class="row d-flex flex-column align-items-center justify-content-center">
-                                <div class="col-lg-6">
-                                    <div class="flow-chart mb-6">
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <div class="flow-chart-wrapper">
+
+                                    <div class="mermaid d-flex justify-content-center mb-6">
+                                        graph LR;
+                                            p(Payer);
+                                            sp(Service <br> provider):::is-active;
+                                            mmo-1(Mobile Money <br> Operator 1);
+                                            mojaloop(Mojaloop);
+                                            mmo-2(Mobily Money <br> Operator 2);
+
+                                            p -.-> sp --> mmo-1 --> mojaloop --> mmo-2
+                                            mmo-2 --> mojaloop --> mmo-1 --> sp -.-> p
+
+                                            classDef node fill:#fff,stroke:#fff,color:#242529
+                                            classDef clickable fill:#fff,stroke:#fff,color:#242529
+
+                                            linkStyle default stroke:#dededf,fill:none
+                                            linkStyle 1,6 stroke-width:2px,fill:none,stroke:#99cccc
+                                    </div>
+
+                                    <!-- <div class="flow-chart mb-6">
                                         <div class="flow-chart__item is-inactive">
                                             <div class="flow-chart__header">
                                                 Payer
@@ -155,32 +175,29 @@
                                                 Mobile Money Operator 2
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="row d-flex">
-                                        <div class="col-lg-3">
-                                            <div class="d-flex flex-column">
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2 text-teal"></span>
-                                                    <small>Mobile Money API</small>
-                                                </div>
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2 text-dark"></span>
-                                                    Mojaloop API
-                                                </div>
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2"></span>
-                                                    <small>Simulated</small>
-                                                </div>
-                                                <div class="d-inline-flex align-items-center">
-                                                    <span class="ic-arrow-right mr-2 border-dashed"></span>
-                                                    <small>Not Simulated</small>
-                                                </div>
+                                    </div> -->
+
+                                    <div class="d-flex justify-content-between">
+                                        <div class="flow-chart-legend d-flex flex-column">
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2 text-teal"></span>
+                                                <small>Mobile Money API</small>
+                                            </div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2 text-dark"></span>
+                                                Mojaloop API
+                                            </div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2"></span>
+                                                <small>Simulated</small>
+                                            </div>
+                                            <div class="d-inline-flex align-items-center">
+                                                <span class="ic-arrow-right mr-2 border-dashed"></span>
+                                                <small>Not Simulated</small>
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-6">
+                                        <div class="flow-chart-content">
                                             <div class="card">
                                                 <div class="card-header border-0">
                                                     <h3 class="card-title">Select a connection</h3>
@@ -191,7 +208,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="mt-4 d-flex justify-content-between">
+                                            <div class="d-flex justify-content-between">
                                                 <a href="./sessions-step-1-2.html"
                                                     class="btn btn-outline-primary">Back</a>
                                                 <button type="button" class="btn btn-primary" disabled>Next</button>

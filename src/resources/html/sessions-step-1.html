@@ -90,7 +90,7 @@
 
                     <div class="row d-flex justify-content-center">
                         <div class="col-xl-4 col-lg-8">
-                            <div class="steps steps-counter steps-red">
+                            <div class="steps steps-counter steps-primary">
                                 <a href="#" class="step-item active">
                                     <span class="d-inline-block mt-2">Select SUT</span>
                                 </a>
@@ -108,7 +108,26 @@
                         <div class="col">
                             <div class="d-flex flex-column align-items-center justify-content-center">
                                 <div class="flow-chart-wrapper">
-                                    <div class="flow-chart mb-6">
+                                    <div class="mermaid d-flex justify-content-center mb-6">
+                                        graph LR;
+                                            p(Payer);
+                                            sp(Service <br> provider);
+                                            mmo-1(Mobile Money <br> Operator 1);
+                                            mojaloop(Mojaloop);
+                                            mmo-2(Mobily Money <br> Operator 2);
+
+                                            p --> sp --> mmo-1 --> mojaloop --> mmo-2
+                                            mmo-2 --> mojaloop --> mmo-1 --> sp --> p
+
+                                            click sp "https://example.com"
+
+                                            classDef node fill:#fff,stroke:#fff,color:#242529
+                                            classDef clickable fill:#fff,stroke:#fff,color:#242529
+
+                                            linkStyle default stroke:#dededf,fill:none
+                                    </div>
+
+                                    <!-- <div class="flow-chart mb-6">
                                         <div class="flow-chart__item">
                                             <div class="flow-chart__header">
                                                 Payer
@@ -154,7 +173,7 @@
                                                 Mobile Money Operator 2
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="d-flex justify-content-between align-items-end">
                                         <div class="flow-chart-legend d-flex flex-column">

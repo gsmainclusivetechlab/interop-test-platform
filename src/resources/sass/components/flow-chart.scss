@@ -9,8 +9,17 @@ $flow-chart-margin: 64px;
     overflow-x: auto;
 
     &-wrapper {
-        max-width: 930px;
+        max-width: 932px;
         width: 100%;
+    }
+
+    &-legend {
+        max-width: 198px;
+        width: 100%;
+    }
+
+    &-content {
+        flex-grow: 1;
     }
 
     &__header {
@@ -32,7 +41,7 @@ $flow-chart-margin: 64px;
         justify-content: center;
         align-items: center;
         flex: 1 0 0;
-        min-width: 130px;
+        min-width: 135px;
         min-height: $flow-chart-margin;
         text-align: center;
         border-radius: $border-radius;
@@ -96,6 +105,36 @@ $flow-chart-margin: 64px;
 
         &:last-child {
             transform: scale(-1);
+        }
+    }
+}
+
+.mermaid {
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &[data-processed='true'] {
+        opacity: 1;
+    }
+
+    .label {
+        color: $body-color;
+        text-align: center;
+    }
+
+    .arrowheadPath {
+        fill: $gray-300 !important;
+    }
+
+    .clickable {
+        cursor: pointer;
+
+        .label {
+            transition: color 0.15s;
+        }
+
+        rect {
+            transition: fill 0.15s;
         }
     }
 }
