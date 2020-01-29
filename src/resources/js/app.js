@@ -6,6 +6,8 @@ const flowChart = require('./modules/flowChart');
 confirmPopup.init();
 flowChart.init();
 
+$('body').tooltip({ selector: '[data-toggle=tooltip]' });
+
 window.Vue = require('vue');
 
 /**
