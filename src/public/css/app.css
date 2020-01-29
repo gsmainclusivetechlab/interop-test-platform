@@ -20799,3 +20799,30 @@ a.step-item {
   -webkit-transform: scale(-1);
           transform: scale(-1);
 }
+
+.mermaid {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s;
+  transition: opacity 0.15s;
+}
+.mermaid[data-processed=true] {
+  opacity: 1;
+}
+.mermaid .label {
+  color: #242529;
+  text-align: center;
+}
+.mermaid .arrowheadPath {
+  fill: #dededf !important;
+}
+.mermaid .clickable {
+  cursor: pointer;
+}
+.mermaid .clickable .label {
+  -webkit-transition: color 0.15s;
+  transition: color 0.15s;
+}
+.mermaid .clickable rect {
+  -webkit-transition: fill 0.15s;
+  transition: fill 0.15s;
+}

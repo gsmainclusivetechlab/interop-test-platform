@@ -108,3 +108,33 @@ $flow-chart-margin: 64px;
         }
     }
 }
+
+.mermaid {
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &[data-processed='true'] {
+        opacity: 1;
+    }
+
+    .label {
+        color: $body-color;
+        text-align: center;
+    }
+
+    .arrowheadPath {
+        fill: $gray-300 !important;
+    }
+
+    .clickable {
+        cursor: pointer;
+
+        .label {
+            transition: color 0.15s;
+        }
+
+        rect {
+            transition: fill 0.15s;
+        }
+    }
+}
