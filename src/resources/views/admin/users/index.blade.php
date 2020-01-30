@@ -49,6 +49,16 @@
                             @endif
                         </td>
                         <td class="text-center text-break">
+                            <b-nav class="ml-auto">
+                                <b-nav-item-dropdown class="item-action" no-caret right toggle-class="icon">
+                                    <template v-slot:button-content>
+                                        <i class="fe fe-more-vertical"></i>
+                                    </template>
+                                    <b-dropdown-form action="#" method="POST">
+                                        <confirm class="dropdown-item" title="{{ __('Confirm unblock') }}">Test</confirm>
+                                    </b-dropdown-form>
+                                </b-nav-item-dropdown>
+                            </b-nav>
                             @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
                                 @component('components.grids.actions')
                                         @if ($user->trashed())
