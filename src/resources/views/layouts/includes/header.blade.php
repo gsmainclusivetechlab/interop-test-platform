@@ -9,34 +9,34 @@
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
             <div class="col-3 d-flex ml-auto">
-                <div class="dropdown ml-auto">
-                    <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                        <span class="avatar flex-shrink-0">
-                            <i class="fe fe-user"></i>
-                        </span>
-                        <span class="ml-2 d-none d-lg-inline-block text-truncate">
-                            <span class="text-default">{{ auth()->user()->name }}</span>
-                        </span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="#">
+                <b-navbar-nav class="ml-auto">
+                    <b-nav-item-dropdown class="ml-auto" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
+                        <template v-slot:button-content>
+                            <span class="avatar flex-shrink-0">
+                                <i class="fe fe-user"></i>
+                            </span>
+                            <span class="ml-2 d-none d-lg-inline-block text-truncate">
+                                <span class="text-default">{{ auth()->user()->name }}</span>
+                            </span>
+                        </template>
+                        <b-dropdown-item href="#">
                             <i class="dropdown-icon fe fe-user"></i>
                             {{ __('Profile') }}
-                        </a>
-                        <a class="dropdown-item" href="{{ route('settings.profile.edit') }}">
+                        </b-dropdown-item>
+                        <b-dropdown-item href="{{ route('settings.profile.edit') }}" @if (request()->routeIs('settings.profile.edit')) active @endif>
                             <i class="dropdown-icon fe fe-settings"></i>
                             {{ __('Settings') }}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <form action="{{ route('logout') }}" method="POST">
+                        </b-dropdown-item>
+                        <b-dropdown-divider></b-dropdown-divider>
+                        <b-dropdown-form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button class="dropdown-item" type="submit">
                                 <i class="dropdown-icon fe fe-log-out"></i>
                                 {{ __('Logout') }}
                             </button>
-                        </form>
-                    </div>
-                </div>
+                        </b-dropdown-form>
+                    </b-nav-item-dropdown>
+                </b-navbar-nav>
             </div>
             <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse" data-target="#header-menu">
                 <span class="header-toggler-icon"></span>
@@ -80,25 +80,23 @@
                         </a>
                     </li>
                     @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\TestSession::class))
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link @if (request()->routeIs('admin.*')) active @endif" data-toggle="dropdown">
+                        <b-nav-item-dropdown menu-class="dropdown-menu-arrow" toggle-class="@if (request()->routeIs('admin.*')) active @endif">
+                            <template v-slot:button-content>
                                 <i class="fe fe-lock"></i>
                                 {{ __('Administration') }}
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-arrow">
-                                @can('viewAny', \App\Models\User::class)
-                                    <a href="{{ route('admin.users.index') }}" class="dropdown-item @if (request()->routeIs('admin.users.*')) active @endif">
-                                        {{ __('Users') }}
-                                    </a>
-                                @endcan
+                            </template>
+                            @can('viewAny', \App\Models\User::class)
+                                <b-dropdown-item href="{{ route('admin.users.index') }}" @if (request()->routeIs('admin.users.*')) active @endif>
+                                    {{ __('Users') }}
+                                </b-dropdown-item>
+                            @endcan
 
-                                @can('viewAny', \App\Models\TestSession::class)
-                                    <a href="{{ route('admin.sessions.index') }}" class="dropdown-item @if (request()->routeIs('admin.sessions.*')) active @endif">
-                                        {{ __('Sessions') }}
-                                    </a>
-                                @endcan
-                            </div>
-                        </li>
+                            @can('viewAny', \App\Models\TestSession::class)
+                                <b-dropdown-item href="{{ route('admin.sessions.index') }}" @if (request()->routeIs('admin.sessions.*')) active @endif>
+                                    {{ __('Sessions') }}
+                                </b-dropdown-item>
+                            @endcan
+                        </b-nav-item-dropdown>
                     @endif
                 </ul>
             </div>

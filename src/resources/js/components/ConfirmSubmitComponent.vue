@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    // import mermaid from 'mermaid';
+    import Swal from 'sweetalert2';
 
     export default {
         mounted() {
