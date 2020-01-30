@@ -10,7 +10,7 @@
         <div class="card-header">
             <form action="">
                 <div class="input-icon">
-                    @include('components.grids.search')
+                    @include('components.grid.search')
                 </div>
             </form>
         </div>
@@ -39,12 +39,7 @@
                         <td class="text-break">0</td>
                         <td class="text-break">0</td>
                         <td class="text-break">
-                            @component('components.progress')
-                                {{--    @include('components.progress-bar', ['type' => 'success', 'value' => 35])--}}
-                                {{--    @include('components.progress-bar', ['type' => 'danger', 'value' => 25])--}}
-                                {{--    @include('components.progress-bar', ['type' => 'warning', 'value' => 25])--}}
-                                {{--    @include('components.progress-bar', ['type' => 'secondary', 'value' => 15])--}}
-                            @endcomponent
+                            <b-progress class="rounded-0"></b-progress>
                         </td>
                         <td class="text-break"></td>
                         <td class="text-center">
@@ -62,7 +57,7 @@
             </table>
         </div>
         <div class="card-footer">
-            @include('components.grids.pagination', ['paginator' => $sessions])
+            @include('components.grid.pagination', ['paginator' => $sessions])
         </div>
     </div>
 @endsection

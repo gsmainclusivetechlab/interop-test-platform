@@ -8,7 +8,7 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            @include('components.grids.search')
+            @include('components.grid.search')
             <div class="card-options">
                 <div class="btn-group">
                     <a href="{{ route('admin.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('admin.users.index')) active @endif">
@@ -49,21 +49,11 @@
                             @endif
                         </td>
                         <td class="text-center text-break">
-                            <b-nav class="ml-auto">
-                                <b-nav-item-dropdown class="item-action" no-caret right toggle-class="icon">
-                                    <template v-slot:button-content>
-                                        <i class="fe fe-more-vertical"></i>
-                                    </template>
-                                    <b-dropdown-form action="#" method="POST">
-                                        <confirm class="dropdown-item" title="{{ __('Confirm unblock') }}">Test</confirm>
-                                    </b-dropdown-form>
-                                </b-nav-item-dropdown>
-                            </b-nav>
                             @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
-                                @component('components.grids.actions')
+                                @component('components.grid.actions')
                                         @if ($user->trashed())
                                             @can('restore', $user)
-                                                @include('components.grids.actions.form', [
+                                                @include('components.grid.actions.form', [
                                                     'method' => 'POST',
                                                     'route' => route('admin.users.restore', $user),
                                                     'label' => __('Unblock'),
@@ -73,7 +63,7 @@
                                             @endcan
                                         @else
                                             @can('promoteAdmin', $user)
-                                                @include('components.grids.actions.form', [
+                                                @include('components.grid.actions.form', [
                                                     'method' => 'POST',
                                                     'route' => route('admin.users.promote_admin', $user),
                                                     'label' => __('Promote admin'),
@@ -83,7 +73,7 @@
                                             @endcan
 
                                             @can('relegateAdmin', $user)
-                                                @include('components.grids.actions.form', [
+                                                @include('components.grid.actions.form', [
                                                     'method' => 'POST',
                                                     'route' => route('admin.users.relegate_admin', $user),
                                                     'label' => __('Relegate admin'),
@@ -93,7 +83,7 @@
                                             @endcan
 
                                             @can('delete', $user)
-                                                @include('components.grids.actions.form', [
+                                                @include('components.grid.actions.form', [
                                                     'method' => 'DELETE',
                                                     'route' => route('admin.users.destroy', $user),
                                                     'label' => __('Block'),
@@ -104,7 +94,7 @@
                                         @endif
 
                                         @can('forceDelete', $user)
-                                            @include('components.grids.actions.form', [
+                                            @include('components.grid.actions.form', [
                                                 'method' => 'DELETE',
                                                 'route' => route('admin.users.force_destroy', $user),
                                                 'label' => __('Delete'),
@@ -127,7 +117,7 @@
             </table>
         </div>
         <div class="card-footer">
-            @include('components.grids.pagination', ['paginator' => $users])
+            @include('components.grid.pagination', ['paginator' => $users])
         </div>
     </div>
 @endsection
