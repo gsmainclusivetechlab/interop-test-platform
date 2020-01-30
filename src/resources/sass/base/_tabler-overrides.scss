@@ -65,7 +65,7 @@ a {
 }
 
 .dropdown-toggle {
-    &[aria-expanded="true"] {
+    &[aria-expanded='true'] {
         &::after {
             transform: scale(-1);
         }

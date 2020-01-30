@@ -21,6 +21,8 @@ $yellow: #fcbb2c;
 $green: #9cb227;
 $teal: #99cccc;
 $cyan: #00a6c9;
+$light-green: #ebf0d4;
+$light-pink: #f8ccd5;
 
 $primary: $red;
 $secondary: $gray-600;
@@ -39,7 +41,9 @@ $colors: (
     'green': $green,
     'teal': $teal,
     'cyan': $cyan,
-    'gray': $gray-600
+    'gray': $gray-600,
+    'light-green': $light-green,
+    'light-pink': $light-pink
 );
 
 $theme-colors: (
@@ -60,7 +64,7 @@ $custom-control-label-color: $gray-700;
 
 $input-focus-border-color: $blue;
 $custom-select-focus-border-color: $blue;
-$input-btn-focus-color: rgba($blue, .25);
+$input-btn-focus-color: rgba($blue, 0.25);
 
 $steps-color-inactive: $gray-300;
 $steps-border-color-inactive: transparent;
