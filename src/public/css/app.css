@@ -19,8 +19,6 @@
   --white: #fff;
   --gray: #7c7c7c;
   --gray-dark: #343a40;
-  --light-green: #ebf0d4;
-  --light-pink: #f8ccd5;
   --primary: #de002b;
   --secondary: #7c7c7c;
   --success: #9cb227;
@@ -13294,126 +13292,6 @@ button.bg-gray-dark-darkest:focus {
   background-color: black !important;
 }
 
-.bg-light-green-lightest {
-  background-color: #fdfefb !important;
-}
-
-a.bg-light-green-lightest:hover, a.bg-light-green-lightest:focus,
-button.bg-light-green-lightest:hover,
-button.bg-light-green-lightest:focus {
-  background-color: #e9f4d2 !important;
-}
-
-.bg-light-green-lighter {
-  background-color: #f9fbf2 !important;
-}
-
-a.bg-light-green-lighter:hover, a.bg-light-green-lighter:focus,
-button.bg-light-green-lighter:hover,
-button.bg-light-green-lighter:focus {
-  background-color: #e7efcb !important;
-}
-
-.bg-light-green-light {
-  background-color: #f1f5e1 !important;
-}
-
-a.bg-light-green-light:hover, a.bg-light-green-light:focus,
-button.bg-light-green-light:hover,
-button.bg-light-green-light:focus {
-  background-color: #dfe8bb !important;
-}
-
-.bg-light-green-dark {
-  background-color: #bcc0aa !important;
-}
-
-a.bg-light-green-dark:hover, a.bg-light-green-dark:focus,
-button.bg-light-green-dark:hover,
-button.bg-light-green-dark:focus {
-  background-color: #a5aa8d !important;
-}
-
-.bg-light-green-darker {
-  background-color: #5e6055 !important;
-}
-
-a.bg-light-green-darker:hover, a.bg-light-green-darker:focus,
-button.bg-light-green-darker:hover,
-button.bg-light-green-darker:focus {
-  background-color: #44453d !important;
-}
-
-.bg-light-green-darkest {
-  background-color: #2f302a !important;
-}
-
-a.bg-light-green-darkest:hover, a.bg-light-green-darkest:focus,
-button.bg-light-green-darkest:hover,
-button.bg-light-green-darkest:focus {
-  background-color: #141512 !important;
-}
-
-.bg-light-pink-lightest {
-  background-color: #fefafb !important;
-}
-
-a.bg-light-pink-lightest:hover, a.bg-light-pink-lightest:focus,
-button.bg-light-pink-lightest:hover,
-button.bg-light-pink-lightest:focus {
-  background-color: #f6d0d9 !important;
-}
-
-.bg-light-pink-lighter {
-  background-color: #fdf0f2 !important;
-}
-
-a.bg-light-pink-lighter:hover, a.bg-light-pink-lighter:focus,
-button.bg-light-pink-lighter:hover,
-button.bg-light-pink-lighter:focus {
-  background-color: #f7c3cb !important;
-}
-
-.bg-light-pink-light {
-  background-color: #fadbe2 !important;
-}
-
-a.bg-light-pink-light:hover, a.bg-light-pink-light:focus,
-button.bg-light-pink-light:hover,
-button.bg-light-pink-light:focus {
-  background-color: #f4aebe !important;
-}
-
-.bg-light-pink-dark {
-  background-color: #c6a3aa !important;
-}
-
-a.bg-light-pink-dark:hover, a.bg-light-pink-dark:focus,
-button.bg-light-pink-dark:hover,
-button.bg-light-pink-dark:focus {
-  background-color: #b2848d !important;
-}
-
-.bg-light-pink-darker {
-  background-color: #635255 !important;
-}
-
-a.bg-light-pink-darker:hover, a.bg-light-pink-darker:focus,
-button.bg-light-pink-darker:hover,
-button.bg-light-pink-darker:focus {
-  background-color: #473b3d !important;
-}
-
-.bg-light-pink-darkest {
-  background-color: #32292b !important;
-}
-
-a.bg-light-pink-darkest:hover, a.bg-light-pink-darkest:focus,
-button.bg-light-pink-darkest:hover,
-button.bg-light-pink-darkest:focus {
-  background-color: #161213 !important;
-}
-
 .display-1 i,
 .display-2 i,
 .display-3 i,
@@ -13642,34 +13520,6 @@ button.bg-gray-dark:focus {
 
 .text-gray-dark {
   color: #343a40 !important;
-}
-
-.bg-light-green {
-  background-color: #ebf0d4 !important;
-}
-
-a.bg-light-green:hover, a.bg-light-green:focus,
-button.bg-light-green:hover,
-button.bg-light-green:focus {
-  background-color: #d9e3ae !important;
-}
-
-.text-light-green {
-  color: #ebf0d4 !important;
-}
-
-.bg-light-pink {
-  background-color: #f8ccd5 !important;
-}
-
-a.bg-light-pink:hover, a.bg-light-pink:focus,
-button.bg-light-pink:hover,
-button.bg-light-pink:focus {
-  background-color: #f29fb0 !important;
-}
-
-.text-light-pink {
-  color: #f8ccd5 !important;
 }
 
 .icon {
@@ -14642,66 +14492,6 @@ a.icon:hover {
   box-shadow: 0 0 0 2px rgba(82, 88, 93, 0.5);
 }
 
-.btn-light-green {
-  color: #495057;
-  background-color: #ebf0d4;
-  border-color: #ebf0d4;
-}
-.btn-light-green:hover {
-  color: #495057;
-  background-color: #dee6b8;
-  border-color: #d9e3ae;
-}
-.btn-light-green:focus, .btn-light-green.focus {
-  color: #495057;
-  background-color: #dee6b8;
-  border-color: #d9e3ae;
-  box-shadow: 0 0 0 2px rgba(211, 216, 193, 0.5);
-}
-.btn-light-green.disabled, .btn-light-green:disabled {
-  color: #495057;
-  background-color: #ebf0d4;
-  border-color: #ebf0d4;
-}
-.btn-light-green:not(:disabled):not(.disabled):active, .btn-light-green:not(:disabled):not(.disabled).active, .show > .btn-light-green.dropdown-toggle {
-  color: #495057;
-  background-color: #d9e3ae;
-  border-color: #d5e0a5;
-}
-.btn-light-green:not(:disabled):not(.disabled):active:focus, .btn-light-green:not(:disabled):not(.disabled).active:focus, .show > .btn-light-green.dropdown-toggle:focus {
-  box-shadow: 0 0 0 2px rgba(211, 216, 193, 0.5);
-}
-
-.btn-light-pink {
-  color: #495057;
-  background-color: #f8ccd5;
-  border-color: #f8ccd5;
-}
-.btn-light-pink:hover {
-  color: #495057;
-  background-color: #f3aab9;
-  border-color: #f29fb0;
-}
-.btn-light-pink:focus, .btn-light-pink.focus {
-  color: #495057;
-  background-color: #f3aab9;
-  border-color: #f29fb0;
-  box-shadow: 0 0 0 2px rgba(222, 185, 194, 0.5);
-}
-.btn-light-pink.disabled, .btn-light-pink:disabled {
-  color: #495057;
-  background-color: #f8ccd5;
-  border-color: #f8ccd5;
-}
-.btn-light-pink:not(:disabled):not(.disabled):active, .btn-light-pink:not(:disabled):not(.disabled).active, .show > .btn-light-pink.dropdown-toggle {
-  color: #fff;
-  background-color: #f29fb0;
-  border-color: #f094a7;
-}
-.btn-light-pink:not(:disabled):not(.disabled):active:focus, .btn-light-pink:not(:disabled):not(.disabled).active:focus, .show > .btn-light-pink.dropdown-toggle:focus {
-  box-shadow: 0 0 0 2px rgba(222, 185, 194, 0.5);
-}
-
 .btn-option {
   background: transparent;
   color: #7c7c7c;
@@ -15609,16 +15399,6 @@ Card alert
   color: #343a40;
 }
 
-.avatar-light-green {
-  background-color: #f9fbf2;
-  color: #ebf0d4;
-}
-
-.avatar-light-pink {
-  background-color: #fdf0f2;
-  color: #f8ccd5;
-}
-
 .product-price {
   font-size: 1rem;
 }
@@ -16506,16 +16286,6 @@ a.tag-addon:hover {
 
 .tag-gray-dark {
   background-color: #343a40;
-  color: #fff;
-}
-
-.tag-light-green {
-  background-color: #ebf0d4;
-  color: #fff;
-}
-
-.tag-light-pink {
-  background-color: #f8ccd5;
   color: #fff;
 }
 
