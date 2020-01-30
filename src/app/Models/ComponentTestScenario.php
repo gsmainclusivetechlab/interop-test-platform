@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasPosition;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class TestScenarioComponent extends Pivot
+class ComponentTestScenario extends Pivot
 {
     use HasPosition;
 
@@ -13,10 +13,6 @@ class TestScenarioComponent extends Pivot
      * @var bool
      */
     public $timestamps = false;
-    /**
-     * @var string
-     */
-    protected $table = 'test_scenarios_components';
 
     /**
      * @return array|string

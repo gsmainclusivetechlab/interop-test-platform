@@ -18,8 +18,8 @@ class TestScenario extends Model
      */
     public function components()
     {
-        return $this->belongsToMany(Component::class, 'test_scenarios_components')
-            ->using(TestScenarioComponent::class)
+        return $this->belongsToMany(Component::class)
+            ->using(ComponentTestScenario::class)
             ->withPivot('position')
             ->orderBy('position');
     }
