@@ -18,6 +18,10 @@
                 type: String,
                 default: 'Are you sure?'
             },
+            icon: {
+                type: String,
+                default: 'error'
+            },
             text: {
                 type: String,
                 default: "You won't be able to revert this!"

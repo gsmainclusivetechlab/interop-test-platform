@@ -15,8 +15,6 @@ class CreateTestSuitesTable extends Migration
     {
         Schema::create('test_suites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('test_scenario_id');
-            $table->foreign('test_scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
             $table->string('name');
             $table->timestamps();
         });
