@@ -3,6 +3,7 @@
 <head>
     @include('layouts.includes.head')
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
 <body>
     <div id="app" class="page">
@@ -30,6 +31,5 @@
         </div>
         @include('layouts.includes.footer')
     </div>
-    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

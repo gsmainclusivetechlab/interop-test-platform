@@ -6,13 +6,13 @@
 <div class="row d-flex justify-content-center">
     <div class="col-md-8">
         <div class="steps steps-counter steps-primary">
-            <span class="step-item @if (request()->routeIs(['sessions.register.index', 'sessions.register.create-selection'])) active @endif">
+            <span class="step-item @if (request()->routeIs('sessions.register.selection.create')) active @endif">
                 <span class="d-inline-block mt-2">{{ __('Select SUT') }}</span>
             </span>
-            <span class="step-item @if (request()->routeIs(['sessions.register.create-forward-configuration', 'sessions.register.create-backward-configuration'])) active @endif">
+            <span class="step-item @if (request()->routeIs('sessions.register.configuration.create')) active @endif">
                 <span class="d-inline-block mt-2">{{ __('Configure SUT') }}</span>
             </span>
-            <span class="step-item @if (request()->routeIs('sessions.register.create-information')) active @endif">
+            <span class="step-item @if (request()->routeIs('sessions.register.information.create')) active @endif">
                 <span class="d-inline-block mt-2">{{ __('Session info') }}</span>
             </span>
         </div>

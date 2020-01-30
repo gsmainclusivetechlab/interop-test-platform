@@ -4,7 +4,7 @@
 
 @section('content')
     <h1 class="page-title mb-5">
-        @yield('title')
+        <b>@yield('title')</b>
     </h1>
     <div class="card">
         <div class="card-header">
@@ -26,7 +26,7 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td>
-                            <a href="#">{{ $session->name }}</a>
+                            <a href="{{ route('sessions.show', ['session' => $session]) }}">{{ $session->name }}</a>
                         </td>
                         <td>0</td>
                         <td>0</td>

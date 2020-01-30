@@ -24,23 +24,20 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
     Route::post('password', 'PasswordController@update')->name('password.update');
 });
 
+Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
-    Route::get('', 'HomeController@index')->name('index');
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('', 'RegisterController@index')->name('index');
-        Route::get('{component}', 'RegisterController@createSelection')->name('create_selection');
-        Route::post('{component}', 'RegisterController@storeSelection')->name('store_selection');
-        Route::get('{component}/forward-configuration', 'RegisterController@createForwardConfiguration')->name('create_forward_configuration');
-        Route::post('{component}/forward-configuration', 'RegisterController@storeForwardConfiguration')->name('store_forward_configuration');
-        Route::get('{component}/backward-configuration', 'RegisterController@createBackwardConfiguration')->name('create_backward_configuration');
-        Route::post('{component}/backward-configuration', 'RegisterController@storeBackwardConfiguration')->name('store_backward_configuration');
-        Route::get('{component}/information', 'RegisterController@createInformation')->name('create-information');
-        Route::post('{component}/information', 'RegisterController@storeInformation')->name('store-information');
+        Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
+        Route::post('selection', 'RegisterController@storeSelection')->name('selection.store');
+        Route::get('configuration', 'RegisterController@createConfiguration')->name('configuration.create');
+        Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
+        Route::get('information', 'RegisterController@createInformation')->name('information.create');
+        Route::post('information', 'RegisterController@storeInformation')->name('information.store');
     });
 });
 
 Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
-    Route::resource('users', 'UserController', ['except' => ['show', 'create', 'store', 'edit', 'update']]);
+    Route::resource('users', 'UserController', ['only' => ['index', 'destroy']]);
     Route::name('users.')->prefix('users')->group(function () {
         Route::get('trash', 'UserController@trash')->name('trash');
         Route::post('{user}/restore', 'UserController@restore')->name('restore');
@@ -48,5 +45,5 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote_admin');
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate_admin');
     });
-    Route::resource('sessions', 'SessionController', ['except' => ['show', 'create', 'store', 'edit', 'update', 'destroy']]);
+    Route::resource('sessions', 'SessionController', ['only' => ['index']]);
 });

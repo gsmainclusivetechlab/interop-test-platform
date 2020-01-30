@@ -15,9 +15,11 @@
 </template>
 
 <script>
+    import Swal from 'sweetalert2';
+
     export default {
         mounted() {
-            console.log('Component mounted.')
+            console.log(this.$el);
         }
     }
 </script>

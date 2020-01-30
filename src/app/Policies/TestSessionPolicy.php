@@ -21,12 +21,21 @@ class TestSessionPolicy
 
     /**
      * @param  User  $user
+     * @return mixed
+     */
+    public function viewAnyOwn(User $user)
+    {
+        return true;
+    }
+
+    /**
+     * @param  User  $user
      * @param  TestSession  $model
      * @return mixed
      */
     public function view(User $user, TestSession $model)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $model->user_id == $user->id;
     }
 
     /**
