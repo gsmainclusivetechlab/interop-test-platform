@@ -1,7 +1,7 @@
 <template>
-    <component is="button" @click="e => !confirmed && confirm(e)">
+    <button @click="e => !confirmed && confirm(e)">
         <slot></slot>
-    </component>
+    </button>
 </template>
 
 <script>

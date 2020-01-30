@@ -20674,6 +20674,9 @@ a {
   -webkit-transform: scale(-1);
           transform: scale(-1);
 }
+.dropdown-toggle-no-caret::after {
+  display: none;
+}
 
 .col-login__title {
   font-size: 1.25rem;

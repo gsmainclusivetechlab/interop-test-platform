@@ -70,4 +70,10 @@ a {
             transform: scale(-1);
         }
     }
+
+    &-no-caret {
+        &::after {
+            display: none;
+        }
+    }
 }
