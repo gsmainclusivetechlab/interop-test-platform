@@ -1,4 +1,4 @@
-<diagram-component>
+<div class="mermaid d-flex justify-content-center">
     graph LR;
 
     p(Payer);
@@ -15,4 +15,20 @@
 
     linkStyle default stroke:#dededf,fill:none
     linkStyle 1,6 stroke-width:2px,fill:none,stroke:#99cccc
-</diagram-component>
+</div>
+<script src="https://unpkg.com/mermaid@latest/dist/mermaid.min.js"></script>
+<script type="text/javascript">
+    mermaid.initialize({
+        securityLevel: 'loose',
+        flowchart: {
+            curve: 'cardinal',
+        },
+        theme: 'neutral',
+        themeCSS: `
+            .clickable:hover rect { fill: #de002b !important }
+            .clickable:hover .label { color: #fff !important }
+            .is-active rect { fill: #de002b !important }
+            .is-active .label { color: #fff !important }
+        `
+    });
+</script>
