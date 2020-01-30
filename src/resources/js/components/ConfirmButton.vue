@@ -1,14 +1,14 @@
 <template>
-    <component is="button" @click="e => !confirmed && confirm(e)">
+    <button @click="confirm">
         <slot></slot>
-    </component>
+    </button>
 </template>
 
 <script>
     import Swal from 'sweetalert2';
 
     export default {
-        data: function () {
+        data() {
             return {
                 confirmed: false
             };
@@ -32,7 +32,7 @@
             },
             customClass: {
                 type: Object,
-                default: function () {
+                default() {
                     return {
                         confirmButton: 'btn btn-primary mr-4',
                         cancelButton: 'btn btn-secondary'
@@ -45,11 +45,13 @@
             }
         },
         methods: {
-            confirm: function (event) {
+            confirm(e) {
                 if (!this.confirmed) {
-                    event.preventDefault();
+                    e.preventDefault();
+
                     Swal.fire(this.$props).then((result) => {
                         this.confirmed = result.value;
+
                         if (result.value) {
                             this.$el.click();
                         }

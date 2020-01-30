@@ -65,9 +65,26 @@ a {
 }
 
 .dropdown-toggle {
-    &[aria-expanded="true"] {
+    &[aria-expanded='true'] {
         &::after {
             transform: scale(-1);
+        }
+    }
+
+    &-no-caret {
+        &::after {
+            display: none;
+        }
+    }
+}
+
+.alert-dismissible {
+    .close {
+        height: 100%;
+        line-height: 1;
+
+        &::before {
+            display: none;
         }
     }
 }
