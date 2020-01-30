@@ -142,11 +142,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
-    confirm: function confirm(event) {
+    confirm: function confirm(e) {
       var _this = this;
 
       if (!this.confirmed) {
-        event.preventDefault();
+        e.preventDefault();
         sweetalert2__WEBPACK_IMPORTED_MODULE_0___default.a.fire(this.$props).then(function (result) {
           _this.confirmed = result.value;
 
@@ -40160,18 +40160,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "button",
-    {
-      on: {
-        click: function(e) {
-          return !_vm.confirmed && _vm.confirm(e)
-        }
-      }
-    },
-    [_vm._t("default")],
-    2
-  )
+  return _c("button", { on: { click: _vm.confirm } }, [_vm._t("default")], 2)
 }
 var staticRenderFns = []
 render._withStripped = true

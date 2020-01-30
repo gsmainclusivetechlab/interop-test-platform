@@ -20448,6 +20448,14 @@ a {
   display: none;
 }
 
+.alert-dismissible .close {
+  height: 100%;
+  line-height: 1;
+}
+.alert-dismissible .close::before {
+  display: none;
+}
+
 .col-login__title {
   font-size: 1.25rem;
 }
