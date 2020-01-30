@@ -2,7 +2,7 @@
     graph LR;
 
     p(Payer);
-    sp(Service Provider)@if (isset($component) && $component == 'sp'):::is-active @endif;
+    sp(Service Provider)@if (request()->routeIs('sessions.register.configuration.create')):::is-active @endif;
     mmo-1(Mobile Money Operator 1);
     mojaloop(Mojaloop);
     mmo-2(Mobily Money Operator 2);

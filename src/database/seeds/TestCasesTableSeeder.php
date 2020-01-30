@@ -14,5 +14,6 @@ class TestCasesTableSeeder extends Seeder
     public function run()
     {
         TestSuite::first()->cases()->saveMany(factory(TestCase::class, 5)->make(['behavior' => TestCase::BEHAVIOR_POSITIVE]));
+        TestSuite::first()->cases()->saveMany(factory(TestCase::class, 5)->make(['behavior' => TestCase::BEHAVIOR_NEGATIVE]));
     }
 }

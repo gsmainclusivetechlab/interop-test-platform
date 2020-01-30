@@ -38,6 +38,29 @@
                             <div class="card-header border-0">
                                 <h3 class="card-title">{{ __('Select use cases') }}</h3>
                             </div>
+
+                            <div class="card-body">
+                                @foreach($suites as $suite)
+                                    <ul class="list-group">
+                                        @foreach($suite->cases()->get() as $case)
+                                            <li class="list-group-item border-0 py-0">
+                                                <label class="custom-control custom-checkbox d-inline-block mb-0 pt-3 pb-2">
+                                                    <input name="cases[]" value="{{ $case->id }}" type="checkbox" class="custom-control-input">
+                                                    <span class="custom-control-label font-weight-medium">
+                                                        {{ $case->name }}
+                                                    </span>
+                                                </label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endforeach
+
+                                @error('cases')
+                                <span class="text-danger">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>

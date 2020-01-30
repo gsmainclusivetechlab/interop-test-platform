@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\TestScenario;
 use App\Models\TestSuite;
 use Illuminate\Database\Seeder;
 
@@ -13,6 +12,6 @@ class TestSuitesTableSeeder extends Seeder
      */
     public function run()
     {
-        TestScenario::first()->suites()->saveMany(factory(TestSuite::class, 1)->make(['name' => 'Merchant Initiated Flow']));
+        factory(TestSuite::class)->create(['name' => 'Merchant Initiated Flow']);
     }
 }

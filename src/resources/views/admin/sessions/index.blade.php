@@ -37,7 +37,9 @@
                             <a href="#">{{ $session->user->name }}</a>
                         </td>
                         <td class="text-break">0</td>
-                        <td class="text-break">0</td>
+                        <td class="text-break">
+                            {{ $session->cases_count }}
+                        </td>
                         <td class="text-break">
                             <b-progress class="rounded-0"></b-progress>
                         </td>

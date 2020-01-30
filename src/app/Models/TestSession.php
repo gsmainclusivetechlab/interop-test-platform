@@ -20,4 +20,12 @@ class TestSession extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function cases()
+    {
+        return $this->belongsToMany(TestCase::class);
+    }
 }

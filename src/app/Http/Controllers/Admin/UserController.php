@@ -22,11 +22,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::latest()->when(request('q'), function ($query, $q) {
+        $users = User::when(request('q'), function ($query, $q) {
             return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
                 ->orWhere('email', 'like', "%{$q}%")
                 ->orWhere('company', 'like', "%{$q}%");
-        })->paginate();
+        })->latest()->paginate();
 
         return view('admin.users.index', compact('users'));
     }
@@ -38,11 +38,11 @@ class UserController extends Controller
     public function trash()
     {
         $this->authorize('viewAny', User::class);
-        $users = User::latest()->onlyTrashed()->when(request('q'), function ($query, $q) {
+        $users = User::onlyTrashed()->when(request('q'), function ($query, $q) {
                 return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
                     ->orWhere('company', 'like', "%{$q}%");
-        })->paginate();
+        })->latest()->paginate();
 
         return view('admin.users.index', compact('users'));
     }

@@ -13,8 +13,6 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->middleware('can:viewAnyOwn,' . TestSession::class)->only('index');
-        // $this->authorizeResource(TestSession::class, 'session');
     }
 
     /**
@@ -24,7 +22,7 @@ class HomeController extends Controller
     {
         $sessions = auth()->user()->sessions()->when(request('q'), function ($query, $q) {
             return $query->where('name', 'like', "%{$q}%");
-        })->paginate();
+        })->withCount(['cases'])->latest()->paginate();
 
         return view('sessions.index', compact('sessions'));
     }
@@ -35,6 +33,7 @@ class HomeController extends Controller
      */
     public function show(TestSession $session)
     {
+        dd($session->cases()->count());
         return view('sessions.show', compact('session'));
     }
 }

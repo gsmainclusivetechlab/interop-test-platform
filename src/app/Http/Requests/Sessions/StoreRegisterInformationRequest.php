@@ -25,6 +25,7 @@ class StoreRegisterInformationRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'cases' => 'required|array|exists:test_cases,id',
         ];
     }
 }

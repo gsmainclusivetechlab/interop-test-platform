@@ -18,4 +18,12 @@ class TestCase extends Model
         'description',
         'preconditions',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function suite()
+    {
+        return $this->belongsTo(TestSuite::class);
+    }
 }
