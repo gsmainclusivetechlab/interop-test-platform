@@ -3,9 +3,7 @@
 @section('title', __('Forgot password'))
 @section('content')
     @if (session('status'))
-        @component('components.alert', ['type' => 'success'])
-            {{ session('status') }}
-        @endcomponent
+        <b-alert show variant="success" dismissible>{{ session('status') }}</b-alert>
     @endif
     <form class="card" action="{{ route('password.email') }}" method="POST">
         @csrf

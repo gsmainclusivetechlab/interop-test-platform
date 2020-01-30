@@ -38,9 +38,9 @@
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
             </div>
-            <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse" data-target="#header-menu">
+            <b-navbar-toggle target="header-menu" class="header-toggler d-lg-none ml-3 ml-lg-0">
                 <span class="header-toggler-icon"></span>
-            </a>
+            </b-navbar-toggle>
         </div>
     </div>
 </div>

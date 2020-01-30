@@ -2,7 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('layouts.includes.head')
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app" class="page">
@@ -25,6 +24,5 @@
             </div>
         </div>
     </div>
-    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

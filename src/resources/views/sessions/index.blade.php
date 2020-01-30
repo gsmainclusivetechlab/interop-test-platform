@@ -8,7 +8,7 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            @include('components.grids.search')
+            @include('components.grid.search')
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-hover card-table">
@@ -31,12 +31,7 @@
                         <td>0</td>
                         <td>0</td>
                         <td>
-                            @component('components.progress')
-                                {{--    @include('components.progress-bar', ['type' => 'success', 'value' => 35])--}}
-                                {{--    @include('components.progress-bar', ['type' => 'danger', 'value' => 25])--}}
-                                {{--    @include('components.progress-bar', ['type' => 'warning', 'value' => 25])--}}
-                                {{--    @include('components.progress-bar', ['type' => 'secondary', 'value' => 15])--}}
-                            @endcomponent
+                            <b-progress class="rounded-0"></b-progress>
                         </td>
                         <td></td>
                         <td class="text-center">
@@ -54,7 +49,7 @@
             </table>
         </div>
         <div class="card-footer">
-            @include('components.grids.pagination', ['paginator' => $sessions])
+            @include('components.grid.pagination', ['paginator' => $sessions])
         </div>
     </div>
 @endsection
