@@ -7,7 +7,6 @@ use App\Http\Requests\Sessions\StoreRegisterConfigurationRequest;
 use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
 use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
 use App\Models\TestScenario;
-use App\Models\TestSession;
 
 class RegisterController extends Controller
 {
@@ -24,9 +23,6 @@ class RegisterController extends Controller
      */
     public function createSelection()
     {
-        $scenario = TestScenario::first();
-
-        dd($scenario->components);
         return view('sessions.register.selection');
     }
 
@@ -63,7 +59,9 @@ class RegisterController extends Controller
      */
     public function createInformation()
     {
-        return view('sessions.register.information');
+        $scenario = TestScenario::first();
+
+        return view('sessions.register.information', compact('scenario'));
     }
 
     /**

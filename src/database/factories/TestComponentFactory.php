@@ -2,9 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\TestSession;
+use App\Models\TestComponent;
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,9 +16,8 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(TestSession::class, function (Faker $faker) {
+$factory->define(TestComponent::class, function (Faker $faker) {
     return [
-        // 'uuid' => Str::uuid(),
         'name' => $faker->sentence(),
     ];
 });

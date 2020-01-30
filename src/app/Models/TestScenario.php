@@ -14,12 +14,20 @@ class TestScenario extends Model
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function suites()
+    {
+        return $this->hasMany(TestSuite::class);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function components()
     {
-        return $this->belongsToMany(Component::class)
-            ->using(ComponentTestScenario::class)
+        return $this->belongsToMany(TestComponent::class)
+            ->using(TestComponentTestScenario::class)
             ->withPivot('position')
             ->orderBy('position');
     }

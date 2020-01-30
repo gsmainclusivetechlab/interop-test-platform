@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Component;
+use App\Models\TestComponent;
 use Illuminate\Database\Seeder;
 
-class ComponentsTableSeeder extends Seeder
+class TestComponentsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,7 +12,7 @@ class ComponentsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Component::class)->createMany($this->getData());
+        factory(TestComponent::class)->createMany($this->getData());
     }
 
     /**

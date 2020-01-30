@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasPosition;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ComponentTestScenario extends Pivot
+class TestComponentTestScenario extends Pivot
 {
     use HasPosition;
 

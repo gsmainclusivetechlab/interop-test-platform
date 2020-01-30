@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Component;
+use App\Models\TestComponent;
 use App\Models\TestScenario;
 use Illuminate\Database\Seeder;
 
@@ -13,8 +13,8 @@ class TestScenariosTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(TestScenario::class, 1)->create()->each(function ($scenario) {
-            $scenario->components()->attach(Component::limit(5)->pluck('id'));
+        factory(TestScenario::class)->create(['name' => 'Mobile Money API and Mojaloop Hub'])->each(function ($scenario) {
+            $scenario->components()->attach(TestComponent::pluck('id'));
         });
     }
 }

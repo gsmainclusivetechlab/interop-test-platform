@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TestSession extends Model
+class TestSuite extends Model
 {
     /**
      * @var array
@@ -14,10 +14,10 @@ class TestSession extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function user()
+    public function cases()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(TestCase::class);
     }
 }
