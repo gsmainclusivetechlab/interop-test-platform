@@ -27,7 +27,7 @@
             }
         },
         mounted: function () {
-            mermaid.init(this.$props.options, this.$el);
+            mermaid.init(this.$props, this.$el);
         }
     }
 </script>
