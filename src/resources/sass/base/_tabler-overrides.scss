@@ -65,6 +65,9 @@ a {
 }
 
 .dropdown-toggle {
+    display: flex;
+    align-items: baseline;
+
     &[aria-expanded='true'] {
         &::after {
             transform: scale(-1);
@@ -75,6 +78,20 @@ a {
         &::after {
             display: none;
         }
+    }
+
+    &::after {
+        content: '\E92D';
+        position: relative;
+        top: 2px;
+        font-family: 'feather' !important;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        border: 0;
+        vertical-align: 0;
     }
 }
 
