@@ -26,7 +26,7 @@ class TestSessionPolicy
      */
     public function view(User $user, TestSession $model)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $model->user_id == $user->id;
     }
 
     /**

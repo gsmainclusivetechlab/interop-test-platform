@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 $factory->define(TestSession::class, function (Faker $faker) {
     return [
-        'uuid' => Str::uuid(),
+        // 'uuid' => Str::uuid(),
         'name' => $faker->sentence(),
     ];
 });

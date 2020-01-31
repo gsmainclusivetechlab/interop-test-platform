@@ -3,9 +3,7 @@
 @section('title', __('Forgot password'))
 @section('content')
     @if (session('status'))
-        @component('components.alert', ['type' => 'success'])
-            {{ session('status') }}
-        @endcomponent
+        <b-alert show variant="success" dismissible>{{ session('status') }}</b-alert>
     @endif
     <form class="card" action="{{ route('password.email') }}" method="POST">
         @csrf
@@ -15,10 +13,10 @@
                 {{ __('Enter your email address and your password will be reset and emailed to you.') }}
             </p>
             <div class="form-group">
-                <label for="email" class="form-label">
+                <label class="form-label">
                     {{ __('Email') }}
                 </label>
-                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
+                <input name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
                 @error('email')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>

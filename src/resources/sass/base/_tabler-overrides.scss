@@ -65,9 +65,43 @@ a {
 }
 
 .dropdown-toggle {
-    &[aria-expanded="true"] {
+    display: flex;
+    align-items: baseline;
+
+    &[aria-expanded='true'] {
         &::after {
             transform: scale(-1);
+        }
+    }
+
+    &-no-caret {
+        &::after {
+            display: none;
+        }
+    }
+
+    &::after {
+        content: '\E92D';
+        position: relative;
+        top: 2px;
+        font-family: 'feather' !important;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        border: 0;
+        vertical-align: 0;
+    }
+}
+
+.alert-dismissible {
+    .close {
+        height: 100%;
+        line-height: 1;
+
+        &::before {
+            display: none;
         }
     }
 }

@@ -7,8 +7,10 @@
         <div class="card-body p-6">
             <div class="card-title">@yield('title')</div>
             <div class="form-group">
-                <label for="email" class="form-label">{{ __('Email') }}</label>
-                <input id="email" name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
+                <label class="form-label">
+                    {{ __('Email') }}
+                </label>
+                <input name="email" value="{{ old('email') }}" type="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'john.doe@email.com']) }}">
                 @error('email')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -16,7 +18,7 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="password" class="form-label">
+                <label class="form-label">
                     {{ __('Password') }}
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="float-right small">
@@ -24,7 +26,7 @@
                         </a>
                     @endif
                 </label>
-                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                <input name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>
@@ -32,8 +34,8 @@
                 @enderror
             </div>
             <div class="form-group">
-                <label for="remember" class="custom-control custom-checkbox">
-                    <input id="remember" name="remember" type="checkbox" class="custom-control-input" {{ old('remember') ? 'checked' : '' }}>
+                <label class="custom-control custom-checkbox">
+                    <input name="remember" type="checkbox" class="custom-control-input" {{ old('remember') ? 'checked' : '' }}>
                     <span class="custom-control-label">{{ __('Remember me') }}</span>
                 </label>
             </div>

@@ -1,17 +1,9 @@
 @if(session('success'))
-    @component('components.alert', ['type' => 'success'])
-        {{ session('success') }}
-    @endcomponent
+    <b-alert show variant="success" dismissible>{{ session('success') }}</b-alert>
 @elseif(session('danger'))
-    @component('components.alert', ['type' => 'danger'])
-        {{ session('danger') }}
-    @endcomponent
+    <b-alert show variant="danger" dismissible>{{ session('danger') }}</b-alert>
 @elseif(session('warning'))
-    @component('components.alert', ['type' => 'warning'])
-        {{ session('warning') }}
-    @endcomponent
+    <b-alert show variant="warning" dismissible>{{ session('warning') }}</b-alert>
 @elseif(session('info'))
-    @component('components.alert', ['type' => 'info'])
-        {{ session('info') }}
-    @endcomponent
+    <b-alert show variant="info" dismissible>{{ session('info') }}</b-alert>
 @endif

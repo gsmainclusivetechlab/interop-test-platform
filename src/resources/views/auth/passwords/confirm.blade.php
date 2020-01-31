@@ -10,7 +10,7 @@
                 {{ __('Please confirm your password before continuing.') }}
             </p>
             <div class="form-group">
-                <label for="password" class="form-label">
+                <label class="form-label">
                     {{ __('Password') }}
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" class="float-right small">
@@ -18,7 +18,7 @@
                         </a>
                     @endif
                 </label>
-                <input id="password" name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
+                <input name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => '**********']) }}">
                 @error('password')
                     <span class="invalid-feedback">
                         <strong>{{ $message }}</strong>

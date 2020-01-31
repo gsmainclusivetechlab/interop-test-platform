@@ -13,7 +13,7 @@ class TestSessionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::whereRole(User::ROLE_USER)->limit(20)->get();
+        $users = User::whereRole(User::ROLE_USER)->get();
 
         foreach ($users as $user) {
             $user->sessions()->saveMany(factory(TestSession::class, 5)->make());

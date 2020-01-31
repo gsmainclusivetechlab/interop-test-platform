@@ -11,7 +11,7 @@
 </head>
 
 <body class="">
-    <div class="page">
+    <div id="app" class="page">
         <div class="flex-fill">
             <div class="header py-4">
                 <div class="container-fluid">
@@ -106,163 +106,159 @@
 
                     <div class="row d-flex justify-content-center">
                         <div class="col-8">
-                            <div class="card">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="card-header border-0">Session info</div>
-                                        <div class="card-body">
-                                            <p class="text-muted">Please enter the Session info </p>
+                            <form action="#" class="needs-validation was-validated">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="card-header border-0">
+                                                <h2 class="card-title">Session info</h2>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="text-muted">Please enter the Session info </p>
 
-                                            <form action="#">
                                                 <div class="form-group">
                                                     <label for="session-name" class="form-label">Session name</label>
                                                     <input type="text" class="form-control" name="session_name"
-                                                        id="session-name" placeholder="Session name">
+                                                        id="session-name" placeholder="Session name" required>
                                                 </div>
-                                            </form>
 
-                                            <strong>SUT:</strong>
-                                            <p>Service Provider</p>
+                                                <strong>SUT:</strong>
+                                                <p>Service Provider</p>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-6">
-                                        <div class="card-header border-0 pl-0">Select use cases</div>
-                                        <div class="card-body pl-0">
-                                            <form action="#" class="overflow-auto" style="height: 320px">
-                                                <ul class="list-group">
+                                        <div class="col-6">
+                                            <div class="card-header border-0 pl-0">
+                                                <h2 class="card-title">Select use cases</h2>
+                                            </div>
+                                            <div class="card-body pl-0">
+                                                <ul class="list-group overflow-auto" style="height: 320px">
                                                     <li class="list-group-item">
-                                                        <label
-                                                            class="custom-control custom-checkbox d-inline-block mb-0">
-                                                            <input type="checkbox" class="custom-control-input" checked>
-                                                            <b class="custom-control-label">Merchant Payment
-                                                                Initiated</b>
-                                                        </label>
+                                                        <span class="dropdown-toggle font-weight-bold"
+                                                            aria-expanded="true" v-b-toggle.merchant>Merchant Payment
+                                                            Initiated
+                                                        </span>
 
-                                                        <span class="dropdown-toggle p-1" data-toggle="collapse"
-                                                            data-target="#merchant" aria-controls="merchant"
-                                                            aria-expanded="true"></span>
 
-                                                        <ul id="merchant" class="list-group collapse show">
-                                                            <li class="list-group-item border-0 py-0">
-                                                                <label
-                                                                    class="custom-control custom-checkbox d-inline-block mb-0 pt-3 pb-2">
-                                                                    <input type="checkbox" class="custom-control-input"
-                                                                        checked>
+                                                        <b-collapse visible id="merchant">
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item border-0 py-0">
                                                                     <span
-                                                                        class="custom-control-label font-weight-medium">Happy
+                                                                        class="d-inline-block dropdown-toggle py-2 font-weight-medium"
+                                                                        aria-expanded="true" v-b-toggle.happy-flow>Happy
                                                                         flow</span>
-                                                                </label>
 
-                                                                <span class="dropdown-toggle p-1" data-toggle="collapse"
-                                                                    data-target="#happy-flow" aria-controls="happy-flow"
-                                                                    aria-expanded="true"></span>
+                                                                    <b-collapse visible id="happy-flow">
+                                                                        <ul class="list-group">
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Authorized
+                                                                                        Transaction</span>
+                                                                                </label>
+                                                                            </li>
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Unauthorized
+                                                                                        Transaction by MMO1</span>
+                                                                                </label>
+                                                                            </li>
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Unauthorized
+                                                                                        Transaction by Mojaloop</span>
+                                                                                </label>
+                                                                            </li>
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Unauthorized
+                                                                                        Transaction by MMO2</span>
+                                                                                </label>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </b-collapse>
+                                                                </li>
 
-                                                                <ul id="happy-flow" class="list-group collapse show">
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Authorized
-                                                                                Transaction</span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Unauthorized
-                                                                                Transaction by MMO1</span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Unauthorized
-                                                                                Transaction by Mojaloop</span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Unauthorized
-                                                                                Transaction by MMO2</span>
-                                                                        </label>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-
-                                                            <li class="list-group-item border-0 py-0">
-                                                                <label
-                                                                    class="custom-control custom-checkbox d-inline-block mb-0 pt-3 pb-2">
-                                                                    <input type="checkbox" class="custom-control-input"
-                                                                        checked>
+                                                                <li class="list-group-item border-0 py-0">
                                                                     <span
-                                                                        class="custom-control-label font-weight-medium">Unhappy
-                                                                        Flow</span>
-                                                                </label>
+                                                                        class="d-inline-block dropdown-toggle py-2 font-weight-medium"
+                                                                        aria-expanded="true"
+                                                                        v-b-toggle.unhappy-flow>Unhappy flow</span>
 
-                                                                <span class="dropdown-toggle p-1" data-toggle="collapse"
-                                                                    data-target="#unhappy-flow"
-                                                                    aria-controls="unhappy-flow"
-                                                                    aria-expanded="true"></span>
-
-                                                                <ul id="unhappy-flow" class="list-group collapse show">
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Unauthorized
-                                                                                Transaction by MMO2</span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Unauthorized
-                                                                                Transaction by MMO1</span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <label
-                                                                            class="custom-control custom-checkbox mb-0">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input">
-                                                                            <span
-                                                                                class="custom-control-label">Unauthorized
-                                                                                Transaction by Mojaloop</span>
-                                                                        </label>
-                                                                    </li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
+                                                                    <b-collapse visible id="unhappy-flow">
+                                                                        <ul class="list-group">
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Authorized
+                                                                                        Transaction</span>
+                                                                                </label>
+                                                                            </li>
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Unauthorized
+                                                                                        Transaction by MMO1</span>
+                                                                                </label>
+                                                                            </li>
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Unauthorized
+                                                                                        Transaction by Mojaloop</span>
+                                                                                </label>
+                                                                            </li>
+                                                                            <li class="list-group-item">
+                                                                                <label
+                                                                                    class="custom-control custom-checkbox mb-0">
+                                                                                    <input type="checkbox"
+                                                                                        class="custom-control-input">
+                                                                                    <span
+                                                                                        class="custom-control-label">Unauthorized
+                                                                                        Transaction by MMO2</span>
+                                                                                </label>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </b-collapse>
+                                                                </li>
+                                                            </ul>
+                                                        </b-collapse>
                                                     </li>
                                                 </ul>
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="mt-4 d-flex justify-content-between">
-                                <a href="./sessions-step-2.html" class="btn btn-outline-primary">Back</a>
-                                <a href="#" class="btn btn-primary">Create</a>
-                            </div>
+                                <div class="mt-4 d-flex justify-content-between">
+                                    <a href="./sessions-step-2.html" class="btn btn-outline-primary">Back</a>
+                                    <button class="btn btn-primary">Create</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -279,7 +275,8 @@
                 </div>
             </div>
         </footer>
+    </div>
 
-        <script src="../../public/js/app.js"></script>
+    <script src="../../public/js/app.js"></script>
 </body>
 </html>

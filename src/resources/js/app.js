@@ -1,5 +1,8 @@
 require('./bootstrap');
 
-const confirmPopup = require('./modules/confirmPopup');
+Vue.use(BootstrapVue);
+Vue.component('confirm-button', require('./components/ConfirmButton.vue').default);
 
-confirmPopup.init();
+const app = new Vue({
+    el: '#app',
+});
