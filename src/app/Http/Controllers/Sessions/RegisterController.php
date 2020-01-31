@@ -59,7 +59,7 @@ class RegisterController extends Controller
      */
     public function createInformation()
     {
-        $suites = TestSuite::get();
+        $suites = TestSuite::whereHas('positiveCases')->orWhereHas('negativeCases')->get();
 
         return view('sessions.register.information', compact('suites'));
     }
@@ -77,7 +77,7 @@ class RegisterController extends Controller
         $session->cases()->attach($request->input('cases'));
 
         return redirect()
-            ->route('sessions.index')
+            ->route('sessions.show', $session)
             ->with('success', __('Session created successfully'));
     }
 }

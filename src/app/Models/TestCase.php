@@ -26,4 +26,22 @@ class TestCase extends Model
     {
         return $this->belongsTo(TestSuite::class);
     }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePositive($query)
+    {
+        return $query->whereBehavior(static::BEHAVIOR_POSITIVE);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNegative($query)
+    {
+        return $query->whereBehavior(static::BEHAVIOR_NEGATIVE);
+    }
 }
