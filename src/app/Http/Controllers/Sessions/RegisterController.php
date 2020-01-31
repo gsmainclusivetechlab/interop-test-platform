@@ -72,9 +72,9 @@ class RegisterController extends Controller
     {
         $user = auth()->user();
         $session = $user->sessions()->create([
-            'name' => $request->get('name'),
+            'name' => $request->input('name'),
         ]);
-        $session->cases()->attach($request->get('cases'));
+        $session->cases()->attach($request->input('cases'));
 
         return redirect()
             ->route('sessions.index')

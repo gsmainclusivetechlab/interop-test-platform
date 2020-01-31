@@ -26,6 +26,15 @@ class TestSession extends Model
      */
     public function cases()
     {
-        return $this->belongsToMany(TestCase::class);
+        return $this->belongsToMany(TestCase::class)
+            ->using(TestCaseTestSession::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function suites()
+    {
+        return $this->hasManyThrough(TestSuite::class, TestCaseTestSession::class, 'test_session_id', 'id', 'id', 'test_suite_id');
     }
 }

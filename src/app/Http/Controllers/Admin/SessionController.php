@@ -27,7 +27,12 @@ class SessionController extends Controller
                 return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
                     ->orWhere('name', 'like', "%{$q}%");
             });
-        })->withCount(['cases'])->latest()->paginate();
+        })->withCount([
+            'cases',
+            'suites' => function ($query) {
+                $query->select(DB::raw('COUNT(DISTINCT id)'));
+            },
+        ])->latest()->paginate();
 
         return view('admin.sessions.index', compact('sessions'));
     }

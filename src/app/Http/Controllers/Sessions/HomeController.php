@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Models\TestSession;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -22,7 +23,12 @@ class HomeController extends Controller
     {
         $sessions = auth()->user()->sessions()->when(request('q'), function ($query, $q) {
             return $query->where('name', 'like', "%{$q}%");
-        })->withCount(['cases'])->latest()->paginate();
+        })->withCount([
+            'cases',
+            'suites' => function ($query) {
+                $query->select(DB::raw('COUNT(DISTINCT id)'));
+            },
+        ])->latest()->paginate();
 
         return view('sessions.index', compact('sessions'));
     }
@@ -33,7 +39,6 @@ class HomeController extends Controller
      */
     public function show(TestSession $session)
     {
-        dd($session->cases()->count());
         return view('sessions.show', compact('session'));
     }
 }

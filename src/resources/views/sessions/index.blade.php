@@ -29,7 +29,7 @@
                             <a href="{{ route('sessions.show', ['session' => $session]) }}">{{ $session->name }}</a>
                         </td>
                         <td>
-
+                            {{ $session->suites_count }}
                         </td>
                         <td>
                             {{ $session->cases_count }}
@@ -38,9 +38,7 @@
                             <b-progress class="rounded-0"></b-progress>
                         </td>
                         <td></td>
-                        <td class="text-center">
-
-                        </td>
+                        <td class="text-center"></td>
                     </tr>
                 @empty
                     <tr>

@@ -36,8 +36,10 @@
                         <td class="text-break">
                             <a href="#">{{ $session->user->name }}</a>
                         </td>
-                        <td class="text-break">0</td>
-                        <td class="text-break">
+                        <td>
+                            {{ $session->suites_count }}
+                        </td>
+                        <td>
                             {{ $session->cases_count }}
                         </td>
                         <td class="text-break">

@@ -18,6 +18,9 @@ class CreateTestCaseTestSessionTable extends Migration
             $table->foreign('test_case_id')->references('id')->on('test_cases')->onDelete('cascade');
             $table->unsignedBigInteger('test_session_id');
             $table->foreign('test_session_id')->references('id')->on('test_sessions')->onDelete('cascade');
+            $table->unsignedBigInteger('test_suite_id');
+            $table->foreign('test_suite_id')->references('test_suite_id')->on('test_cases')->onDelete('cascade')->onUpdate('cascade');
+            $table->primary(['test_case_id', 'test_session_id']);
         });
     }
 
