@@ -26,6 +26,7 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 
 Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
+    Route::resource('{session}/cases', 'CaseController', ['only' => ['show']]);
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
         Route::post('selection', 'RegisterController@storeSelection')->name('selection.store');

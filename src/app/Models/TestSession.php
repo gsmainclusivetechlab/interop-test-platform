@@ -31,10 +31,27 @@ class TestSession extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function positiveCases()
+    {
+        return $this->cases()->positive();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function negativeCases()
+    {
+        return $this->cases()->negative();
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function suites()
     {
-        return $this->hasManyThrough(TestSuite::class, TestCaseTestSession::class, 'test_session_id', 'id', 'id', 'test_suite_id');
+        return $this->hasManyThrough(TestSuite::class, TestCaseTestSession::class, 'test_session_id', 'id', 'id', 'test_suite_id')
+            ->distinct();
     }
 }
