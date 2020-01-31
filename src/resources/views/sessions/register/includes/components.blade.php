@@ -13,19 +13,21 @@
     classDef node fill:#fff,stroke:#fff,color:#242529
     classDef clickable fill:#fff,stroke:#fff,color:#242529
 </div>
-<script src="https://unpkg.com/mermaid@latest/dist/mermaid.min.js"></script>
-<script type="text/javascript">
-    mermaid.initialize({
-        securityLevel: 'loose',
-        flowchart: {
-            curve: 'cardinal',
-        },
-        theme: 'neutral',
-        themeCSS: `
+@push('scripts')
+    <script src="https://unpkg.com/mermaid@latest/dist/mermaid.min.js"></script>
+    <script type="text/javascript">
+        mermaid.initialize({
+            securityLevel: 'loose',
+            flowchart: {
+                curve: 'cardinal',
+            },
+            theme: 'neutral',
+            themeCSS: `
             .clickable:hover rect { fill: #de002b !important }
             .clickable:hover .label { color: #fff !important }
             .is-active rect { fill: #de002b !important }
             .is-active .label { color: #fff !important }
         `
-    });
-</script>
+        });
+    </script>
+@endpush
