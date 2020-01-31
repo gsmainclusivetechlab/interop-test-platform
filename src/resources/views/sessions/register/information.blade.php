@@ -38,27 +38,71 @@
                             <div class="card-header border-0">
                                 <h3 class="card-title">{{ __('Select use cases') }}</h3>
                             </div>
+                            <div class="card-body pl-0">
+                                <ul class="list-group overflow-auto" style="height: 320px">
+                                    @foreach($suites as $suite)
+                                        <li class="list-group-item">
+                                            <span class="dropdown-toggle font-weight-bold" aria-expanded="true" v-b-toggle.suite-{{ $suite->id }}>
+                                                {{ $suite->name }}
+                                            </span>
+                                            @if ($suite->positiveCases->count())
+                                                <b-collapse id="suite-{{ $suite->id }}" visible>
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item border-0 py-0">
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" aria-expanded="true" v-b-toggle.happy-flow>
+                                                                {{ __('Happy flow') }}
+                                                            </span>
+                                                            <b-collapse id="happy-flow" visible>
+                                                                <ul class="list-group">
+                                                                    @foreach($suite->positiveCases as $case)
+                                                                        <li class="list-group-item">
+                                                                            <label class="custom-control custom-checkbox mb-0">
+                                                                                <input name="cases[{{ $case->id }}]" value="{{ $case->id }}" type="checkbox" class="custom-control-input" {{ old("cases.{$case->id}") ? 'checked' : '' }}>
+                                                                                <span class="custom-control-label">
+                                                                                    {{ $case->name }}
+                                                                                </span>
+                                                                            </label>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </b-collapse>
+                                                        </li>
+                                                    </ul>
+                                                </b-collapse>
+                                            @endif
 
-                            <div class="card-body">
-                                @foreach($suites as $suite)
-                                    <ul class="list-group">
-                                        @foreach($suite->cases()->get() as $case)
-                                            <li class="list-group-item border-0 py-0">
-                                                <label class="custom-control custom-checkbox d-inline-block mb-0 pt-3 pb-2">
-                                                    <input name="cases[]" value="{{ $case->id }}" type="checkbox" class="custom-control-input">
-                                                    <span class="custom-control-label font-weight-medium">
-                                                        {{ $case->name }}
-                                                    </span>
-                                                </label>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endforeach
-
+                                            @if ($suite->negativeCases->count())
+                                                <b-collapse id="suite-{{ $suite->id }}" visible>
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item border-0 py-0">
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" aria-expanded="true" v-b-toggle.happy-flow>
+                                                                {{ __('Unhappy flow') }}
+                                                            </span>
+                                                            <b-collapse id="happy-flow" visible>
+                                                                <ul class="list-group">
+                                                                    @foreach($suite->negativeCases as $case)
+                                                                        <li class="list-group-item">
+                                                                            <label class="custom-control custom-checkbox mb-0">
+                                                                                <input name="cases[{{ $case->id }}]" value="{{ $case->id }}" type="checkbox" class="custom-control-input" {{ old("cases.{$case->id}") ? 'checked' : '' }}>
+                                                                                <span class="custom-control-label">
+                                                                                    {{ $case->name }}
+                                                                                </span>
+                                                                            </label>
+                                                                        </li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </b-collapse>
+                                                        </li>
+                                                    </ul>
+                                                </b-collapse>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
                                 @error('cases')
-                                <span class="text-danger">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                    <div class="text-danger small mt-3">
+                                        <strong>{{ $message }}</strong>
+                                    </div>
                                 @enderror
                             </div>
                         </div>

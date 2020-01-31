@@ -20,4 +20,20 @@ class TestSuite extends Model
     {
         return $this->hasMany(TestCase::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function positiveCases()
+    {
+        return $this->cases()->positive();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function negativeCases()
+    {
+        return $this->cases()->negative();
+    }
 }

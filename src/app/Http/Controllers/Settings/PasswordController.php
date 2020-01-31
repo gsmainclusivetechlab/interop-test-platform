@@ -32,7 +32,7 @@ class PasswordController extends Controller
     public function update(ChangePasswordRequest $request)
     {
         $user = auth()->user();
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($request->input('password'));
         $user->setRememberToken(Str::random(60));
         $user->save();
 
