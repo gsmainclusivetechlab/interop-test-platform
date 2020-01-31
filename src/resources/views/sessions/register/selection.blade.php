@@ -26,6 +26,9 @@
                                         </label>
                                         <select class="form-control custom-select">
                                             <option value="sp">{{ __('Service Provider') }}</option>
+                                            <option value="mmo-1" disabled>{{ __('Mobile Money Operator 1') }}</option>
+                                            <option value="mojaloop" disabled>{{ __('Mojaloop') }}</option>
+                                            <option value="mmo-2" disabled>{{ __('Mobily Money Operator 2') }}</option>
                                         </select>
                                         <small class="form-text text-muted">
                                             {{ __('Now only Service Provider can be set as System Under Test.') }}
