@@ -12,9 +12,6 @@
 
     classDef node fill:#fff,stroke:#fff,color:#242529
     classDef clickable fill:#fff,stroke:#fff,color:#242529
-
-    linkStyle default stroke:#dededf,fill:none
-    linkStyle 1,6 stroke-width:2px,fill:none,stroke:#99cccc
 </div>
 <script src="https://unpkg.com/mermaid@latest/dist/mermaid.min.js"></script>
 <script type="text/javascript">

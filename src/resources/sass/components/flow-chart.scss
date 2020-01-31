@@ -122,8 +122,38 @@ $flow-chart-margin: 64px;
         text-align: center;
     }
 
-    .arrowheadPath {
-        fill: $gray-300 !important;
+    .edgePath {
+        .path {
+            stroke: $gray-300 !important;
+        }
+
+        .arrowheadPath {
+            fill: $gray-300 !important;
+        }
+
+        &:nth-child(3),
+        &:nth-child(4),
+        &:nth-child(5),
+        &:nth-child(6) {
+            .path {
+                stroke: $body-color !important;
+            }
+
+            .arrowheadPath {
+                fill: $body-color !important;
+            }
+        }
+
+        &:nth-child(2),
+        &:nth-child(7) {
+            .path {
+                stroke: $teal !important;
+            }
+
+            .arrowheadPath {
+                fill: $teal !important;
+            }
+        }
     }
 
     .clickable {

@@ -20369,9 +20369,8 @@ svg {
   left: 0;
   width: calc(100% - 5px);
   height: 0;
-  border-width: 1px;
+  border: 1px solid;
   border-style: inherit;
-  border-color: currentColor;
 }
 .ic-arrow-right::after {
   right: 0;
@@ -20842,8 +20841,23 @@ a.step-item {
   color: #242529;
   text-align: center;
 }
-.mermaid .arrowheadPath {
+.mermaid .edgePath .path {
+  stroke: #dededf !important;
+}
+.mermaid .edgePath .arrowheadPath {
   fill: #dededf !important;
+}
+.mermaid .edgePath:nth-child(3) .path, .mermaid .edgePath:nth-child(4) .path, .mermaid .edgePath:nth-child(5) .path, .mermaid .edgePath:nth-child(6) .path {
+  stroke: #242529 !important;
+}
+.mermaid .edgePath:nth-child(3) .arrowheadPath, .mermaid .edgePath:nth-child(4) .arrowheadPath, .mermaid .edgePath:nth-child(5) .arrowheadPath, .mermaid .edgePath:nth-child(6) .arrowheadPath {
+  fill: #242529 !important;
+}
+.mermaid .edgePath:nth-child(2) .path, .mermaid .edgePath:nth-child(7) .path {
+  stroke: #99cccc !important;
+}
+.mermaid .edgePath:nth-child(2) .arrowheadPath, .mermaid .edgePath:nth-child(7) .arrowheadPath {
+  fill: #99cccc !important;
 }
 .mermaid .clickable {
   cursor: pointer;
