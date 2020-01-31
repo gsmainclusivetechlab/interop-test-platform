@@ -1,4 +1,4 @@
-projectname: webhookproxy
+projectname: gsma-itp-test-control
 
 defaults:
     instance: &default-instance
@@ -13,7 +13,7 @@ defaults:
             vhosts:
                 app: &vhost-app
                     app_service: web
-                    app_service_port: 443
+                    app_service_port: 80
                 mail: &vhost-mailhog
                     app_service: mailhog
                     app_service_port: 8025
@@ -50,34 +50,34 @@ instances:
         project:
             env_variables:
                 <<: *default-env-vars
-                APP_API_URL: http://webhooks-proxy.develop.s8.justcoded.com
+                APP_URL: http://gsma-itp-test-control.develop.s8.jc
         docker_server:
             <<: *default-docker-server
             vhosts:
                 app:
                     <<: *vhost-app
-                    domain_name: webhooks-proxy.develop.s8.justcoded.com
-                    https: selfsigned
+                    domain_name: gsma-itp-test-control.develop.s8.jc
+                    https: no
                 mail:
                     <<: *vhost-mailhog
-                    domain_name: mail.webhooks-proxy.develop.s8.justcoded.com
+                    domain_name: mail.gsma-itp-test-control.develop.s8.jc
                     https: no
     build:
         <<: *default-instance
         project:
             env_variables:
                 <<: *default-env-vars
-                APP_API_URL: https://webhooks-proxy.build.s8.justcoded.com
+                APP_URL: http://gsma-itp-test-control.build.s8.jc
         docker_server:
             <<: *default-docker-server
             vhosts:
                 app:
                     <<: *vhost-app
-                    domain_name: webhooks-proxy.build.s8.justcoded.com
-                    https: certbot
+                    domain_name: gsma-itp-test-control.build.s8.jc
+                    https: no
                 mail:
                     <<: *vhost-mailhog
-                    domain_name: mail.webhooks-proxy.build.s8.justcoded.com
+                    domain_name: mail.gsma-itp-test-control.build.s8.jc
                     https: no
 
     staging:
@@ -85,15 +85,15 @@ instances:
         project:
             env_variables:
                 <<: *default-env-vars
-                APP_API_URL: https://webhooks-proxy.staging.s8.justcoded.com
+                APP_URL: http://gsma-itp-test-control.staging.s8.justcoded.com
         docker_server:
             <<: *default-docker-server
             vhosts:
                 app:
                     <<: *vhost-app
-                    domain_name: webhooks-proxy.staging.s8.justcoded.com
-                    https: certbot
+                    domain_name: gsma-itp-test-control.staging.s8.justcoded.com
+                    https: no
                 mail:
                     <<: *vhost-mailhog
-                    domain_name: mail.webhooks-proxy.staging.s8.justcoded.com
+                    domain_name: mail.gsma-itp-test-control.staging.s8.justcoded.com
                     https: no

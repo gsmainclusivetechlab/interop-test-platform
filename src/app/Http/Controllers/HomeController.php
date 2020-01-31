@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestScenario;
-use App\Models\TestScenarioComponent;
-
 class HomeController extends Controller
 {
     /**
@@ -12,10 +9,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([
-            'auth',
-            'verified',
-        ]);
+        $this->middleware(['auth', 'verified']);
     }
 
     /**
@@ -23,13 +17,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        $model = TestScenario::first();
-//        $pivot = $model->components()->wherePosition(2)->first()->pivot;
-//        dd($model->components);
-//        dd($pivot->moveNext());
-//        dd($pivot->delete());
-//        dd($model->components()->attach([5]));
-
         return view('home');
     }
 }

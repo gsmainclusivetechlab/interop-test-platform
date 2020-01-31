@@ -13,9 +13,18 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         factory(User::class)->create([
-            'name' => 'GSMA Admin',
+            'first_name' => 'GSMA',
+            'last_name' => 'Admin',
             'role' => User::ROLE_ADMIN,
             'email' => 'admin@gsma.com',
+            'company' => 'GSMA',
+        ]);
+        factory(User::class)->create([
+            'first_name' => 'GSMA',
+            'last_name' => 'Superadmin',
+            'role' => User::ROLE_SUPERADMIN,
+            'email' => 'superadmin@gsma.com',
+            'company' => 'GSMA',
         ]);
         factory(User::class, 20)->create();
     }

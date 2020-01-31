@@ -15,11 +15,11 @@ info:
 	@echo "	chmod 				Chmod storage and bootstrap folders"
 	@echo "	cache-clear 			Clear all cache"
 
-COMPOSER_OPTS = 
+COMPOSER_OPTS =
 
 MAYBE_SUDO = sudo
 ifneq "$(NOSUDO)" ""
-	MAYBE_SUDO = 
+	MAYBE_SUDO =
 endif
 
 # INSTALL AFTER CLONE
@@ -28,7 +28,8 @@ install: chmod composer-install
 	php artisan migrate:fresh --seed
 
 update: chmod composer-install cache-clear
-	php artisan migrate
+	php artisan key:generate
+	php artisan migrate:fresh --seed
 	php artisan queue:restart
 
 # Composer helpers
@@ -36,7 +37,7 @@ ci: composer-install
 composer-install: composer-init
 	@echo 'Install composer...'
 	$(COMPOSER_OPTS) composer install
-	
+
 cu: composer-update
 composer-update: composer-init
 	@echo 'Update composer...'

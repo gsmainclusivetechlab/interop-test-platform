@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -36,5 +40,38 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        if ($this->isCredentialsValid($request)) {
+            throw ValidationException::withMessages([
+                $this->username() => [__('Your account is blocked. Please contact us for more details.')],
+            ]);
+        } else {
+            throw ValidationException::withMessages([
+                $this->username() => [trans('auth.failed')],
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    protected function isCredentialsValid(Request $request)
+    {
+        $password = User::withTrashed()
+            ->where($this->username(), $request->get($this->username()))
+            ->value('password');
+
+        return $password && Hash::check($request->password, $password);
     }
 }
