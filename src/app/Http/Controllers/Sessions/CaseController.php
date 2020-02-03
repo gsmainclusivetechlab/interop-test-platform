@@ -23,6 +23,6 @@ class CaseController extends Controller
      */
     public function show(TestSession $session, TestCase $case)
     {
-        return view('sessions.cases.show', compact('session'));
+        return view('sessions.cases.show', compact('session', 'case'));
     }
 }

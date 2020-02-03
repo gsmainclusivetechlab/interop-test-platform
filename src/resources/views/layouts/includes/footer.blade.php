@@ -1,5 +1,5 @@
 <footer class="footer">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row align-items-center flex-row-reverse">
             <div class="col-auto ml-lg-auto">
                 <div class="row align-items-center">

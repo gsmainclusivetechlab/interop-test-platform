@@ -1,6 +1,6 @@
 <div class="header py-4">
-    <div class="container">
-        <div class="row d-flex align-items-center">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
             <a class="col-2 header-brand mr-0" href="{{ route('home') }}">
                 <img src="{{ asset('images/logo.png') }}" class="h-7" alt="{{ config('app.name') }}">
             </a>
@@ -8,9 +8,9 @@
                 <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
-            <div class="col-3 d-flex ml-auto">
+            <div class="col-3 d-flex ml-auto pr-0">
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-item-dropdown class="ml-auto" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
+                    <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
                         <template v-slot:button-content>
                             <span class="avatar flex-shrink-0">
                                 <i class="fe fe-user"></i>
@@ -45,7 +45,7 @@
     </div>
 </div>
 <div id="header-menu" class="header collapse d-lg-flex p-0">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
                 <a href="{{ route('sessions.register.selection.create') }}" class="btn btn-outline-primary">

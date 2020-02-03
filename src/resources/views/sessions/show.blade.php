@@ -3,27 +3,7 @@
 @section('title', __('Session :name', ['name' => $session->name]))
 
 @section('content')
-    <div class="row border-bottom">
-        <div class="col">
-            <div class="page-header m-0 py-2">
-                <h1 class="page-title">
-                    <b>@yield('title')</b>
-                </h1>
-                <span class="badge badge-success ml-2 p-1">{{ __('Active') }}</span>
-                <div class="ml-4 pt-1">
-                    {{ __('Execution') }}:
-                    <i class="fe fe-briefcase"></i>
-                    <small>{{ $session->suites->count() }}</small>
-                    <i class="fe fe-file-text"></i>
-                    <small>{{ $session->cases->count() }}</small>
-                </div>
-                <div class="col-2">
-                    <b-progress class="h-3 rounded-0"></b-progress>
-                </div>
-                <a href="#" class="btn btn-outline-primary ml-4">{{ __('Deactivate') }}</a>
-            </div>
-        </div>
-    </div>
+    @include('sessions.includes.header', ['session' => $session])
     <div class="row align-items-start">
         <div class="col-3 flex-fill bg-white p-0">
             <div class="card mb-0 p-0 border-0 rounded-0 shadow-none">
@@ -85,7 +65,44 @@
             </div>
         </div>
         <div class="col-9 mt-3">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <b>{{ __('Latest test runs') }}</b>
+                            </h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover card-table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-nowrap w-25">{{ __('Test Case') }}</th>
+                                        <th class="text-nowrap w-25">{{ __('Test Run') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Status') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Date') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
+                                        <th class="text-nowrap w-1"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @forelse ([] as $run)
+                                    <tr>
 
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-center" colspan="6">
+                                            {{ __('No Results') }}
+                                        </td>
+                                    </tr>
+                                @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
