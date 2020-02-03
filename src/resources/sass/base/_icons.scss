@@ -21,8 +21,8 @@
         left: 0;
         width: calc(100% - 5px);
         height: 0;
-        border: 1px solid;
-        border-style: inherit;
+        border: 1px solid currentColor;
+        border-style: inherit !important;
     }
 
     &::after {
