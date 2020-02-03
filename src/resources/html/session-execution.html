@@ -123,8 +123,9 @@
                             <div class="card-body p-0">
                                 <ul class="list-unstyled">
                                     <li>
-                                        <span class="d-block dropdown-toggle py-2 px-4 border-bottom font-weight-bold dropdown-toggle" aria-expanded="true"
-                                            v-b-toggle.merchant>Merchant Payment
+                                        <span
+                                            class="d-block dropdown-toggle py-2 px-4 border-bottom font-weight-bold dropdown-toggle"
+                                            aria-expanded="true" v-b-toggle.merchant>Merchant Payment
                                             Initiated
                                         </span>
 
@@ -142,22 +143,26 @@
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="./session-execution-2.html">Authorized
                                                                     Transaction</a>
-                                                                <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-success"></span>
+                                                                <span
+                                                                    class="flex-shrink-0 mr-0 ml-1 status-icon bg-success"></span>
                                                             </li>
                                                             <li
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="#">Unauthorized Transaction by MMO1</a>
-                                                                <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-danger"></span>
+                                                                <span
+                                                                    class="flex-shrink-0 mr-0 ml-1 status-icon bg-danger"></span>
                                                             </li>
                                                             <li
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="#">Unauthorized Transaction by Mojaloop</a>
-                                                                <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-secondary"></span>
+                                                                <span
+                                                                    class="flex-shrink-0 mr-0 ml-1 status-icon bg-secondary"></span>
                                                             </li>
                                                             <li
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="#">Unauthorized Transaction by MMO2</a>
-                                                                <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-warning"></span>
+                                                                <span
+                                                                    class="flex-shrink-0 mr-0 ml-1 status-icon bg-warning"></span>
                                                             </li>
                                                         </ul>
                                                     </b-collapse>
@@ -226,30 +231,13 @@
                                                     <td class="text-break">23 Feb, 16:20</td>
                                                     <td class="text-break">1 min 46 sec </td>
                                                     <td class="text-center text-break">
-                                                        <div class="item-action dropdown position-static"><a href="#"
-                                                                data-toggle="dropdown" data-boundary="viewport"
-                                                                class="icon" aria-expanded="false"><i
-                                                                    class="fe fe-more-vertical"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right" style="">
-                                                                <form action="http://localhost:8084/admin/users/3"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm block"
-                                                                        data-confirm-text="Are you sure you want to block Ollie Hansen?"
-                                                                        class="dropdown-item">Block</button></form>
-                                                                <form
-                                                                    action="http://localhost:8084/admin/users/3/force-destroy"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm delete"
-                                                                        data-confirm-text="Are you sure you want to delete Ollie Hansen?"
-                                                                        class="dropdown-item">Delete</button></form>
-                                                            </div>
-                                                        </div>
+                                                        <b-dropdown class="item-action" no-caret right
+                                                            toggle-class="icon text-decoration-none py-0" variant="link"
+                                                            boundary="window">
+                                                            <template v-slot:button-content>
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </template>
+                                                        </b-dropdown>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -261,30 +249,13 @@
                                                     <td class="text-break">13 Feb, 16:19</td>
                                                     <td class="text-break">12 min 20 sec </td>
                                                     <td class="text-center text-break">
-                                                        <div class="item-action dropdown position-static"><a href="#"
-                                                                data-toggle="dropdown" data-boundary="viewport"
-                                                                class="icon" aria-expanded="false"><i
-                                                                    class="fe fe-more-vertical"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right" style="">
-                                                                <form action="http://localhost:8084/admin/users/3"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm block"
-                                                                        data-confirm-text="Are you sure you want to block Ollie Hansen?"
-                                                                        class="dropdown-item">Block</button></form>
-                                                                <form
-                                                                    action="http://localhost:8084/admin/users/3/force-destroy"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm delete"
-                                                                        data-confirm-text="Are you sure you want to delete Ollie Hansen?"
-                                                                        class="dropdown-item">Delete</button></form>
-                                                            </div>
-                                                        </div>
+                                                        <b-dropdown class="item-action" no-caret right
+                                                            toggle-class="icon text-decoration-none py-0" variant="link"
+                                                            boundary="window">
+                                                            <template v-slot:button-content>
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </template>
+                                                        </b-dropdown>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -296,30 +267,13 @@
                                                     <td class="text-break">06 Feb, 16:18</td>
                                                     <td class="text-break">21 min 11 sec</td>
                                                     <td class="text-center text-break">
-                                                        <div class="item-action dropdown position-static"><a href="#"
-                                                                data-toggle="dropdown" data-boundary="viewport"
-                                                                class="icon" aria-expanded="false"><i
-                                                                    class="fe fe-more-vertical"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right" style="">
-                                                                <form action="http://localhost:8084/admin/users/3"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm block"
-                                                                        data-confirm-text="Are you sure you want to block Ollie Hansen?"
-                                                                        class="dropdown-item">Block</button></form>
-                                                                <form
-                                                                    action="http://localhost:8084/admin/users/3/force-destroy"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm delete"
-                                                                        data-confirm-text="Are you sure you want to delete Ollie Hansen?"
-                                                                        class="dropdown-item">Delete</button></form>
-                                                            </div>
-                                                        </div>
+                                                        <b-dropdown class="item-action" no-caret right
+                                                            toggle-class="icon text-decoration-none py-0" variant="link"
+                                                            boundary="window">
+                                                            <template v-slot:button-content>
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </template>
+                                                        </b-dropdown>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -331,30 +285,13 @@
                                                     <td class="text-break">02 Feb, 20:00</td>
                                                     <td class="text-break">9 min 11 sec</td>
                                                     <td class="text-center text-break">
-                                                        <div class="item-action dropdown position-static"><a href="#"
-                                                                data-toggle="dropdown" data-boundary="viewport"
-                                                                class="icon" aria-expanded="false"><i
-                                                                    class="fe fe-more-vertical"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right" style="">
-                                                                <form action="http://localhost:8084/admin/users/3"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm block"
-                                                                        data-confirm-text="Are you sure you want to block Ollie Hansen?"
-                                                                        class="dropdown-item">Block</button></form>
-                                                                <form
-                                                                    action="http://localhost:8084/admin/users/3/force-destroy"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm delete"
-                                                                        data-confirm-text="Are you sure you want to delete Ollie Hansen?"
-                                                                        class="dropdown-item">Delete</button></form>
-                                                            </div>
-                                                        </div>
+                                                        <b-dropdown class="item-action" no-caret right
+                                                            toggle-class="icon text-decoration-none py-0" variant="link"
+                                                            boundary="window">
+                                                            <template v-slot:button-content>
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </template>
+                                                        </b-dropdown>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -366,30 +303,13 @@
                                                     <td class="text-break">30 Jan, 17:31</td>
                                                     <td class="text-break">3 min 52 sec</td>
                                                     <td class="text-center text-break">
-                                                        <div class="item-action dropdown position-static"><a href="#"
-                                                                data-toggle="dropdown" data-boundary="viewport"
-                                                                class="icon" aria-expanded="false"><i
-                                                                    class="fe fe-more-vertical"></i></a>
-                                                            <div class="dropdown-menu dropdown-menu-right" style="">
-                                                                <form action="http://localhost:8084/admin/users/3"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm block"
-                                                                        data-confirm-text="Are you sure you want to block Ollie Hansen?"
-                                                                        class="dropdown-item">Block</button></form>
-                                                                <form
-                                                                    action="http://localhost:8084/admin/users/3/force-destroy"
-                                                                    method="POST"><input type="hidden" name="_token"
-                                                                        value="tfb0nyeFycEeSvXge6yNoNWnWkb3Yq2aoJFzXb99">
-                                                                    <input type="hidden" name="_method" value="DELETE">
-                                                                    <button type="submit" data-confirm-form=""
-                                                                        data-confirm-title="Confirm delete"
-                                                                        data-confirm-text="Are you sure you want to delete Ollie Hansen?"
-                                                                        class="dropdown-item">Delete</button></form>
-                                                            </div>
-                                                        </div>
+                                                        <b-dropdown class="item-action" no-caret right
+                                                            toggle-class="icon text-decoration-none py-0" variant="link"
+                                                            boundary="window">
+                                                            <template v-slot:button-content>
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </template>
+                                                        </b-dropdown>
                                                     </td>
                                                 </tr>
                                             </tbody>
