@@ -20591,6 +20591,14 @@ a {
   display: none;
 }
 
+.c3 line,
+.c3 path {
+  stroke: #dededf;
+}
+.c3 .c3-axis text {
+  fill: #7c7c7c;
+}
+
 .col-login__title {
   font-size: 1.25rem;
 }
