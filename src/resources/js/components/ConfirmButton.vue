@@ -20,7 +20,7 @@
             },
             icon: {
                 type: String,
-                default: 'error'
+                default: 'warning'
             },
             text: {
                 type: String,

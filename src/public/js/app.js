@@ -117,7 +117,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     icon: {
       type: String,
-      "default": 'error'
+      "default": 'warning'
     },
     text: {
       type: String,
