@@ -7,3 +7,5 @@ Vue.component('chart', require('./components/Chart.vue').default);
 const app = new Vue({
     el: '#app',
 });
+
+hljs.initHighlightingOnLoad();
