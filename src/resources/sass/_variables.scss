@@ -21,6 +21,7 @@ $yellow: #fcbb2c;
 $green: #9cb227;
 $teal: #99cccc;
 $cyan: #00a6c9;
+$mint: #00a182;
 
 $primary: $red;
 $secondary: $gray-600;
@@ -39,7 +40,8 @@ $colors: (
     'green': $green,
     'teal': $teal,
     'cyan': $cyan,
-    'gray': $gray-600
+    'gray': $gray-600,
+    'mint': $mint
 );
 
 $theme-colors: (

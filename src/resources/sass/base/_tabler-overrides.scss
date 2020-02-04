@@ -105,3 +105,16 @@ a {
         }
     }
 }
+
+.c3 {
+    line,
+    path {
+        stroke: $gray-300;
+    }
+
+    .c3-axis {
+        text {
+            fill: $gray-600;
+        }
+    }
+}
