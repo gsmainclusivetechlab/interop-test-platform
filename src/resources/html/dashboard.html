@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="NUFzjW2X6ItQlHbI7yF22EgFiI342q8hzaCQhlNP">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../public/images/favicon/favicon.png">
+    <link rel="apple-touch-icon" type="image/png" href="../../public/images/favicon/apple-touch-icon.png">
+    <title>Session execution - Interoperability Test Platform - GSMA Association</title>
+    <link href="../../public/css/app.css" rel="stylesheet">
+</head>
+
+<body class="">
+    <div id="app" class="page">
+        <div class="flex-fill">
+            <div class="header py-4">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center">
+                        <a class="header-brand" href="./index.html">
+                            <img src="../../public/images/logo.png" class="h-7" alt="GSMA">
+                        </a>
+                        <div class="col text-center text-primary">
+                            <h1 class="col-login__title mb-1">Inclusive Tech Lab</h1>
+                            <h2 class="col-login__subtitle mb-0">Interoperability Test Platform</h2>
+                        </div>
+                        <div class="d-flex ml-auto">
+                            <div class="dropdown">
+                                <a href="#" class="nav-link pr-0" data-toggle="dropdown">
+                                    <span class="avatar"
+                                        style="background-image: url(./demo/faces/female/25.jpg)"></span>
+                                    <span class="ml-2 d-none d-lg-flex align-items-center">
+                                        <span class="text-default pr-1">User name</span>
+                                        <i class="fe fe-chevron-down"></i>
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="dropdown-icon fe fe-user"></i> Profile
+                                    </a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="dropdown-icon fe fe-log-out"></i> Sign out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0" data-toggle="collapse"
+                            data-target="#headerMenuCollapse">
+                            <span class="header-toggler-icon"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
+                            <a href="#" class="btn btn-outline-primary">
+                                <i class="fe fe-plus font-weight-bold"></i>
+                                New session
+                            </a>
+                        </div>
+                        <div class="col-lg order-lg-first my-2 my-lg-0">
+                            <ul class="nav nav-tabs border-0 flex-column flex-lg-row align-items-start">
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link active"><i class="fe fe-home"></i> Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link"><i class="fe fe-clock"></i> Sessions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link"><i class="fe fe-info"></i> Tutorial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./index.html" class="nav-link"><i class="fe fe-link"></i> The lab</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-header m-0 py-2">
+                            <h1 class="page-title">
+                                <b>Latest sessions</b>
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-9">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-header flex-column align-items-start border-bottom py-4">
+                                        <div class="d-flex align-items-center w-100 mb-2">
+                                            <b-progress class="w-100 h-3 rounded-0 bg-white border border-white"
+                                                :max="100">
+                                                <b-progress-bar :value="35" variant="success" v-b-tooltip.html.bottom
+                                                    title="<span class='status-icon bg-success'></span>23 Test Cases are Passed">
+                                                </b-progress-bar>
+                                                <b-progress-bar :value="30" variant="danger"></b-progress-bar>
+                                                <b-progress-bar :value="25" variant="warning"></b-progress-bar>
+                                                <b-progress-bar :value="20" variant="secondary"></b-progress-bar>
+                                            </b-progress>
+
+                                            <b-dropdown class="item-action" no-caret
+                                                toggle-class="icon text-align-right text-decoration-none p-0"
+                                                variant="link" boundary="window">
+                                                <template v-slot:button-content>
+                                                    <i class="fe fe-more-horizontal ml-auto"></i>
+                                                </template>
+                                                <li class="px-2">View</li>
+                                                <li class="px-2">Edit</li>
+                                                <li class="px-2">Delete</li>
+                                            </b-dropdown>
+                                        </div>
+
+                                        <h2 class="card-title"><b>Session #1</b></h2>
+                                        <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit ipsum
+                                            dolor sit
+                                            amet</p>
+                                    </div>
+                                    <div class="card-body py-4">
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <i class="fe fe-briefcase"></i>
+                                                7
+                                            </li>
+                                            <li>
+                                                <i class="fe fe-file-text"></i>
+                                                42
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled">
+                                            <a class="page-link d-flex" href="#">
+                                                <i class="fe fe-chevron-left"></i>
+                                                Prev
+                                            </a>
+                                        </li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link d-flex" href="#">
+                                                Next
+                                                <i class="fe fe-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="card">
+                            <div class="card-header border-bottom">
+                                <h2 class="card-title">
+                                    <b>Overview</b>
+                                </h2>
+                            </div>
+                            <div class="card-body">
+                                <chart></chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
+                    Copyright © 2020 <a href="#">GSMA</a>.
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+    <script src="../../public/js/app.js"></script>
+</body>
+</html>
