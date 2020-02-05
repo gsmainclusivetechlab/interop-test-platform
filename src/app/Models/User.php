@@ -18,6 +18,8 @@ class User extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use SoftDeletes;
 
+    const DELETED_AT = 'blocked_at';
+
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_SUPERADMIN = 'superadmin';

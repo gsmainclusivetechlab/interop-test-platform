@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\ValidateTraceContext;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
@@ -15,7 +16,7 @@ class MmoController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['api']);
+        $this->middleware(['api', ValidateTraceContext::class]);
         request()->headers->set('accept', 'applications/json');
     }
 
@@ -23,6 +24,8 @@ class MmoController extends Controller
     {
         $client = new Client();
         $request = $request->withUri(new Uri('http://api-gateway.p73.skushnir.pers/quotations'));
+
+        dd($request);
 
         try {
             $response = $client->send($request);
