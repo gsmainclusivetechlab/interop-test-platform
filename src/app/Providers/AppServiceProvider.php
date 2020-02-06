@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Mixins\PsrRequestMixin;
+use App\Mixins\PsrHttpRequestMixin;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,14 +25,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerRequestMixins();
+        $this->registerHttpRequestMixins();
     }
 
     /**
      * @return void
      */
-    protected function registerRequestMixins()
+    protected function registerHttpRequestMixins()
     {
-        Request::mixin(new PsrRequestMixin);
+        Request::mixin(new PsrHttpRequestMixin);
     }
 }
