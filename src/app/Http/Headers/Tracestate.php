@@ -95,6 +95,14 @@ class Tracestate
     }
 
     /**
+     * @return bool
+     */
+    public function hasVendors()
+    {
+        return !empty($this->vendors);
+    }
+
+    /**
      * @param $tracestate
      * @return array|false
      */

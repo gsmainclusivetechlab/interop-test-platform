@@ -8,10 +8,9 @@ class InvalidTraceContextException extends HttpException
 {
     /**
      * InvalidTraceContextException constructor.
-     * @param string|null $message
      */
-    public function __construct(string $message = null)
+    public function __construct()
     {
-        parent::__construct(403, $message ?: 'Invalid trace context.');
+        parent::__construct(403, 'Invalid trace context.');
     }
 }

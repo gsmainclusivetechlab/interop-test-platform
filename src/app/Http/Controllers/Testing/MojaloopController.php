@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\SetJsonHeaders;
+use App\Http\Middleware\ValidateTraceContext;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
@@ -15,8 +17,7 @@ class MojaloopController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['api']);
-        // request()->headers->set('accept', 'applications/json');
+        $this->middleware(['api', ValidateTraceContext::class, SetJsonHeaders::class]);
     }
 
     public function quotes(ServerRequestInterface $request)
