@@ -8,7 +8,7 @@ use App\Http\Middleware\SetJsonHeaders;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Http\Request;
 
 class MmoController extends Controller
 {
@@ -20,10 +20,10 @@ class MmoController extends Controller
         $this->middleware(['api', ValidateTraceContext::class, SetJsonHeaders::class]);
     }
 
-    public function quotations(ServerRequestInterface $request)
+    public function quotations(Request $request)
     {
         $client = new Client();
-        $request = $request->withUri(new Uri('http://api-gateway.p73.skushnir.pers/quotations'));
+        $request = $request->covertToPsr()->withUri(new Uri('http://api-gateway.p73.skushnir.pers/quotations'));
 
         try {
             $response = $client->send($request);

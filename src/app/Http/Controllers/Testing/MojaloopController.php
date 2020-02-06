@@ -8,7 +8,7 @@ use App\Http\Middleware\ValidateTraceContext;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\ServerRequestInterface;
+use Illuminate\Http\Request;
 
 class MojaloopController extends Controller
 {
@@ -20,10 +20,10 @@ class MojaloopController extends Controller
         $this->middleware(['api', ValidateTraceContext::class, SetJsonHeaders::class]);
     }
 
-    public function quotes(ServerRequestInterface $request)
+    public function quotes(Request $request)
     {
         $client = new Client();
-        $request = $request->withUri(new Uri('http://quoting-service.mojaloop.staging.s4.justcoded.com/quotes'));
+        $request = $request->covertToPsr()->withUri(new Uri('http://quoting-service.mojaloop.staging.s4.justcoded.com/quotes'));
 
         try {
             $response = $client->send($request);
@@ -33,7 +33,7 @@ class MojaloopController extends Controller
         }
     }
 
-    public function quotesCallback(ServerRequestInterface $request)
+    public function quotesCallback(Request $request)
     {
         return [];
     }
