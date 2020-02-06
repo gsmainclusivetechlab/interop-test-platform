@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Controller;
-use App\Http\Middleware\ValidateTraceContext;
+use App\Http\Headers\Traceparent;
+use App\Http\Middleware\ValidateTraceparent;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
@@ -16,8 +17,8 @@ class MmoController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['api', ValidateTraceContext::class]);
-        request()->headers->set('accept', 'applications/json');
+        $this->middleware(['api', ValidateTraceparent::class]);
+        // request()->headers->set('accept', 'applications/json');
     }
 
     public function quotations(ServerRequestInterface $request)
@@ -25,7 +26,7 @@ class MmoController extends Controller
         $client = new Client();
         $request = $request->withUri(new Uri('http://api-gateway.p73.skushnir.pers/quotations'));
 
-        dd($request);
+        dd($request->hasHeader(Traceparent::NAME));
 
         try {
             $response = $client->send($request);

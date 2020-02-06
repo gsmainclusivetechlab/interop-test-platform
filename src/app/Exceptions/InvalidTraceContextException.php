@@ -7,12 +7,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class InvalidTraceContextException extends HttpException
 {
     /**
-     * Create a new exception instance.
-     *
-     * @return void
+     * InvalidTraceContextException constructor.
+     * @param string|null $message
      */
-    public function __construct()
+    public function __construct(string $message = null)
     {
-        parent::__construct(403, 'Invalid trace context.');
+        parent::__construct(403, $message ?: 'Invalid trace context.');
     }
 }

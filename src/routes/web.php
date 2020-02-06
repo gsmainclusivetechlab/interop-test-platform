@@ -52,4 +52,5 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
     Route::any('mmo/quotations', 'MmoController@quotations')->name('mmo.quotations');
     Route::any('mojaloop/quotes', 'MojaloopController@quotes')->name('mojaloop.quotes');
+    Route::any('mojaloop/quotes-callback', 'MojaloopController@quotesCallback')->name('mojaloop.quotes.callback');
 });

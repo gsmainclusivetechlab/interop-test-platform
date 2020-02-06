@@ -16,7 +16,7 @@ class MojaloopController extends Controller
     public function __construct()
     {
         $this->middleware(['api']);
-        request()->headers->set('accept', 'applications/json');
+        // request()->headers->set('accept', 'applications/json');
     }
 
     public function quotes(ServerRequestInterface $request)
@@ -30,5 +30,10 @@ class MojaloopController extends Controller
         } catch (RequestException $e) {
             return $e->getResponse() ?: $e;
         }
+    }
+
+    public function quotesCallback(ServerRequestInterface $request)
+    {
+        return [];
     }
 }
