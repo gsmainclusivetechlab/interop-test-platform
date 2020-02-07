@@ -19,6 +19,7 @@ import ace from 'ace-builds/src-min-noconflict/ace';
 import yaml from 'js-yaml';
 import { debounce } from '../helpers';
 import 'ace-builds/src-min-noconflict/mode-yaml';
+import 'ace-builds/src-min-noconflict/mode-json';
 
 const DEBOUNCED_TIME = 250;
 const ANNOTATION_TYPE = 'error';
