@@ -3,5 +3,17 @@
 @section('title', __('Dashboard'))
 
 @section('content')
+<form action="#" v-cloak>
+    <web-editor
+        :options="{fontSize: 14}"
+        editor-subject-name="validation_rules123"
+        >---
+receipt: Oz-Ware Purchase
+Invoice date: 2007-08-06
+
+customer:
+    given: Dorothy
+    family: Gale</web-editor>
+</form>
 
 @endsection
