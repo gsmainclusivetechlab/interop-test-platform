@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Http\Middleware\SetJsonHeaders;
+use App\Testing\RequestTest;
+use App\Testing\TestRunner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\TestSuite;
 
 class MmoController extends Controller
 {
@@ -23,7 +26,7 @@ class MmoController extends Controller
     public function quotations(Request $request)
     {
         $client = new Client();
-        $request = $request->covertToPsr()->withUri(new Uri('http://api-gateway.p73.skushnir.pers/quotations'));
+        $request = $request->convertToPsr()->withUri(new Uri('http://gsma-itp-mmo-api.develop.s8.jc/quotations'));
 
         try {
             $response = $client->send($request);

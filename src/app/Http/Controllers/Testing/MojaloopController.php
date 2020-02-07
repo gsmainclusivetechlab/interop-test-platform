@@ -23,7 +23,7 @@ class MojaloopController extends Controller
     public function quotes(Request $request)
     {
         $client = new Client();
-        $request = $request->covertToPsr()->withUri(new Uri('http://quoting-service.mojaloop.staging.s4.justcoded.com/quotes'));
+        $request = $request->convertToPsr()->withUri(new Uri('http://quoting-service.mojaloop.staging.s4.justcoded.com/quotes'));
 
         try {
             $response = $client->send($request);
