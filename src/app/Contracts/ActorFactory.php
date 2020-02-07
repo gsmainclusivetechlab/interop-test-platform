@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface Actor
+interface ActorFactory
 {
     /**
      * @param string $driver

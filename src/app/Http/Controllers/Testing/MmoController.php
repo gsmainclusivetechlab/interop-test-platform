@@ -11,8 +11,6 @@ class MmoController extends Controller
 {
     public function quotations(Request $request)
     {
-        dd(1);
-
         $client = new Client();
         $psrRequest = $request->convertToPsr()
             ->withUri(new Uri('http://gsma-itp-mmo-api.develop.s8.jc/quotations'));
