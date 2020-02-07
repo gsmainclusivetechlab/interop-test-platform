@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Testing;
+namespace App\Testing\Tests;
 
+use App\Testing\TestCase;
 use Illuminate\Http\Response;
 
 final class ResponseTest extends TestCase

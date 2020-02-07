@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Testing;
+namespace App\Testing\Tests;
 
+use App\Testing\TestCase;
 use Illuminate\Http\Request;
 
 final class RequestTest extends TestCase
@@ -20,6 +21,6 @@ final class RequestTest extends TestCase
      */
     public function doRun(Request $request)
     {
-        $this->assertValidationPasses([], ['title' => 'required|unique:posts|max:255']);
+        $this->assertValidationNotPasses([], ['title' => 'required|unique:posts|max:255']);
     }
 }
