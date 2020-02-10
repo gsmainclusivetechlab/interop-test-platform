@@ -13,7 +13,7 @@ class Controller extends BaseController
      */
     public function __construct()
     {
-        $this->middleware(['api', ValidateTraceContext::class, SetJsonHeaders::class]);
+        $this->middleware(['api', /*ValidateTraceContext::class,*/ SetJsonHeaders::class]);
     }
 
     protected function createTestRunner()

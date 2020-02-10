@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers\Testing;
 
-use GuzzleHttp\Client;
+use App\Facades\Simulator;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Uri;
 use Illuminate\Http\Request;
 
 class MmoController extends Controller
 {
     public function quotations(Request $request)
     {
-        $client = new Client();
-        $psrRequest = $request->convertToPsr()
-            ->withUri(new Uri('http://gsma-itp-mmo-api.develop.s8.jc/quotations'));
+        $simulator = Simulator::driver('mobile-money');
+        $psrRequest = $request->convertToPsr();
 
         try {
-            $psrResponse = $client->send($psrRequest);
+            $psrResponse = $simulator->request($psrRequest->getMethod(), 'quotations', $psrRequest->getHeaders(), $psrRequest->getBody());
             return $psrResponse;
         } catch (RequestException $e) {
             return $e->getResponse() ?: $e;
