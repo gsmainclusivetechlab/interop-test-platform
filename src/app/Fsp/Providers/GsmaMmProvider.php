@@ -3,18 +3,31 @@
 namespace App\Fsp\Providers;
 
 use App\Fsp\FspProvider;
+use Psr\Http\Message\ResponseInterface;
 
 class GsmaMmProvider extends FspProvider
 {
     /**
+     * @var string
+     */
+    protected $baseUri;
+
+    /**
+     * @param string $baseUri
      * @param array $clientConfig
      */
-    public function __construct(array $clientConfig = [])
+    public function __construct($baseUri, array $clientConfig = [])
     {
-        $clientConfig = array_merge([
-            'base_uri' => env('MOBILE_MONEY_URL'),
-            'allow_redirects' => false,
-        ], $clientConfig);
+        $this->baseUri = $baseUri;
         parent::__construct($clientConfig);
+    }
+
+    /**
+     * @param array $options
+     * @return ResponseInterface
+     */
+    public function storeQuotation(array $options = [])
+    {
+        return $this->getClient()->post("{$this->baseUri}/quotations", $options);
     }
 }

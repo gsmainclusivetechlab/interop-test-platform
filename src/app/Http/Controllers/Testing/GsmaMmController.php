@@ -4,26 +4,20 @@ namespace App\Http\Controllers\Testing;
 
 use App\Facades\Fsp;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\RequestOptions;
-use Illuminate\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class GsmaMmController extends Controller
 {
-    public function storeQuotation(Request $request)
+    public function storeQuotation(ServerRequestInterface $request)
     {
-        $simulator = Fsp::driver('mojaloop-hub');
-
-        dd($simulator->request('POST', 'quotes', [
-            RequestOptions::BODY =>$request->getContent(),
-            RequestOptions::HEADERS => $request->headers->all(),
-        ])->getBody()->getContents());
-
-        $simulator = Fsp::driver('gsma-mm');
-        $psrRequest = $request->convertToPsr();
+        $fsp = Fsp::driver('gsma-mm');
 
         try {
-            $psrResponse = $simulator->request($psrRequest->getMethod(), 'quotations', $psrRequest->getHeaders(), $psrRequest->getBody());
-            return $psrResponse;
+            $response = $fsp->storeQuotation([
+                'body' => $request->getBody(),
+                'headers' => collect($request->getHeaders())->except('host')->all(),
+            ]);
+            return $response;
         } catch (RequestException $e) {
             return $e->getResponse() ?: $e;
         }

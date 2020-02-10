@@ -4,24 +4,26 @@ namespace App\Http\Controllers\Testing;
 
 use App\Facades\Fsp;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class MojaloopHubController extends Controller
 {
-    public function storeQuote(Request $request)
+    public function storeQuote(ServerRequestInterface $request)
     {
-        $simulator = Fsp::driver('mojaloop-hub');
-        $psrRequest = $request->convertToPsr();
+        $fsp = Fsp::driver('mojaloop-hub');
 
         try {
-            $psrResponse = $simulator->request($psrRequest->getMethod(), 'quotes', $psrRequest->getHeaders(), $psrRequest->getBody());
-            return $psrResponse;
+            $response = $fsp->storeQuote([
+                'body' => $request->getBody(),
+                'headers' => collect($request->getHeaders())->except('host')->all(),
+            ]);
+            return $response;
         } catch (RequestException $e) {
             return $e->getResponse() ?: $e;
         }
     }
 
-    public function quotesCallback(Request $request)
+    public function quotesCallback(ServerRequestInterface $request)
     {
         return [];
     }

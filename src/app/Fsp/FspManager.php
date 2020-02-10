@@ -11,19 +11,21 @@ use InvalidArgumentException;
 class FspManager extends Manager implements FspFactory
 {
     /**
-     * @return MojaloopHubProvider
-     */
-    protected function createMojaloopHubDriver()
-    {
-        return new MojaloopHubProvider();
-    }
-
-    /**
      * @return GsmaMmProvider
      */
     protected function createGsmaMmDriver()
     {
-        return new GsmaMmProvider();
+        $config = $this->config;
+        return new GsmaMmProvider($config->get('services.gsma_mm.base_uri'));
+    }
+
+    /**
+     * @return MojaloopHubProvider
+     */
+    protected function createMojaloopHubDriver()
+    {
+        $config = $this->config;
+        return new MojaloopHubProvider($config->get('services.mojaloop_hub.quoting_service_uri'));
     }
 
     /**
