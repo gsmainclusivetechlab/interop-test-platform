@@ -314,9 +314,10 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <web-editor :options="{
+                                                                <web-editor editor-class="border-0 rounded-0" :options="{
                                                                     mode: 'ace/mode/json',
                                                                     readOnly: true,
+                                                                    highlightActiveLine: false,
                                                                     showPrintMargin: false,
                                                                     showGutter: false,
                                                                     useWorker: false

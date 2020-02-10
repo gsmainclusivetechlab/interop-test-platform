@@ -7,7 +7,11 @@
                 class="form-control"
                 hidden
             ></textarea>
-            <div class="web-editor form-control pr-0" ref="editor">
+            <div
+                class="web-editor form-control pr-0"
+                :class="this.$props.editorClass"
+                ref="editor"
+            >
                 <slot></slot>
             </div>
         </div>
@@ -32,6 +36,9 @@ export default {
     props: {
         options: {
             type: Object,
+        },
+        editorClass: {
+            type: String,
         },
         editorSubjectName: {
             type: String,
@@ -126,9 +133,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .web-editor {
     height: 100%;
-    min-height: 500px;
+    min-height: 250px;
 }
 </style>

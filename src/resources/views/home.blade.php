@@ -6,7 +6,6 @@
 <form action="#" v-cloak>
     <web-editor
         :options="{fontSize: 14}"
-        editor-subject-name="validation_rules123"
         >---
 receipt: Oz-Ware Purchase
 Invoice date: 2007-08-06
