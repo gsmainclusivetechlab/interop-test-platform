@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Simulators;
+namespace App\Fsp;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
-abstract class SimulatorProvider
+abstract class FspProvider
 {
     /**
      * @var Client
@@ -57,16 +60,20 @@ abstract class SimulatorProvider
 
     /**
      * @param $method
-     * @param string $uri
-     * @param array $headers
-     * @param string|null|resource|StreamInterface $body
+     * @param string|UriInterface $uri
+     * @param array $options
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function request($method, $uri = '', array $headers = [], $body = null)
+    public function request($method, $uri = '', array $options = [])
     {
+        $body = $options[RequestOptions::BODY] ?? [];
+        $headers = $options[RequestOptions::HEADERS] ?? [];
         $request = new Request($method, $uri, $headers, $body);
+        // $request = $request->withUri(new Uri(implode('/', [env('MOBILE_MONEY_URL'), $uri])));
         $request = $request->withoutHeader('host');
 
-        return $this->getClient()->send($request);
+        unset($options[RequestOptions::BODY], $options[RequestOptions::HEADERS]);
+
+        return $this->getClient()->send($request, $options);
     }
 }

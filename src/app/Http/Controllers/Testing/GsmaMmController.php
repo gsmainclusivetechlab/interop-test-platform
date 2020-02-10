@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Facades\Simulator;
+use App\Facades\Fsp;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\RequestOptions;
 use Illuminate\Http\Request;
 
-class MmoController extends Controller
+class GsmaMmController extends Controller
 {
-    public function quotations(Request $request)
+    public function storeQuotation(Request $request)
     {
-        $simulator = Simulator::driver('mobile-money');
+        $simulator = Fsp::driver('mojaloop-hub');
+
+        dd($simulator->request('POST', 'quotes', [
+            RequestOptions::BODY =>$request->getContent(),
+            RequestOptions::HEADERS => $request->headers->all(),
+        ])->getBody()->getContents());
+
+        $simulator = Fsp::driver('gsma-mm');
         $psrRequest = $request->convertToPsr();
 
         try {

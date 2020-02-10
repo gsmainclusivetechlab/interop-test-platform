@@ -66,9 +66,9 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('mmo/quotations', 'MmoController@quotations')->name('mmo.quotations');
-    Route::any('mojaloop/quotes', 'MojaloopController@quotes')->name('mojaloop.quotes');
-    Route::any('mojaloop/quotes-callback/{method}', 'MojaloopController@quotesCallback')
+    Route::post('gsma-mm/quotations', 'GsmaMmController@storeQuotation')->name('gsma_mm.quotations.store');
+    Route::post('mojaloop/quotes', 'MojaloopHubController@storeQuote')->name('mojaloop_hub.quotes.store');
+    Route::any('mojaloop/quotes-callback/{method}', 'MojaloopHubController@quotesCallback')
         ->name('mojaloop.quotes.callback')
         ->where(['method' => '[a-z0-9-\/]+']);
 });

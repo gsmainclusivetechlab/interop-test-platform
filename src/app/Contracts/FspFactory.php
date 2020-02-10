@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface SimulatorFactory
+interface FspFactory
 {
     /**
      * @param string $driver

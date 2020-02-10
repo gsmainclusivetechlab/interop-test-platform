@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Simulators\Providers;
+namespace App\Fsp\Providers;
 
-use App\Simulators\SimulatorProvider;
+use App\Fsp\FspProvider;
 
-class MobileMoneyProvider extends SimulatorProvider
+class MojaloopHubProvider extends FspProvider
 {
     /**
      * @param array $clientConfig
@@ -12,7 +12,7 @@ class MobileMoneyProvider extends SimulatorProvider
     public function __construct(array $clientConfig = [])
     {
         $clientConfig = array_merge([
-            'base_uri' => env('MOBILE_MONEY_URL'),
+            'base_uri' => env('MOJALOOP_QUOTING_SERVICE_URL'),
             'allow_redirects' => false,
         ], $clientConfig);
         parent::__construct($clientConfig);

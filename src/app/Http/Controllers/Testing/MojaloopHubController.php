@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Facades\Simulator;
+use App\Facades\Fsp;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 
-class MojaloopController extends Controller
+class MojaloopHubController extends Controller
 {
-    public function quotes(Request $request)
+    public function storeQuote(Request $request)
     {
-        $simulator = Simulator::driver('mojaloop');
+        $simulator = Fsp::driver('mojaloop-hub');
         $psrRequest = $request->convertToPsr();
 
         try {

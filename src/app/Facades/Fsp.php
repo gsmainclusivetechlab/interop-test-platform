@@ -2,17 +2,17 @@
 
 namespace App\Facades;
 
-use App\Contracts\SimulatorFactory;
+use App\Contracts\FspFactory;
 use Illuminate\Support\Facades\Facade;
 
-class Simulator extends Facade
+class Fsp extends Facade
 {
     /**
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return SimulatorFactory::class;
+        return FspFactory::class;
     }
 }
 
