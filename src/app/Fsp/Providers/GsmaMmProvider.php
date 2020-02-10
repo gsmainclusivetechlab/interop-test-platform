@@ -3,7 +3,9 @@
 namespace App\Fsp\Providers;
 
 use App\Fsp\FspProvider;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class GsmaMmProvider extends FspProvider
 {
@@ -23,11 +25,15 @@ class GsmaMmProvider extends FspProvider
     }
 
     /**
-     * @param array $options
+     * @param string|StreamInterface $body
+     * @param array $headers
      * @return ResponseInterface
      */
-    public function storeQuotation(array $options = [])
+    public function storeQuotation($body, array $headers = [])
     {
-        return $this->getClient()->post("{$this->baseUri}/quotations", $options);
+        return $this->getClient()->post("{$this->baseUri}/quotations", [
+            RequestOptions::BODY => $body,
+            RequestOptions::HEADERS => $headers,
+        ]);
     }
 }

@@ -13,10 +13,7 @@ class MojaloopHubController extends Controller
         $fsp = Fsp::driver('mojaloop-hub');
 
         try {
-            $response = $fsp->storeQuote([
-                'body' => $request->getBody(),
-                'headers' => collect($request->getHeaders())->except('host')->all(),
-            ]);
+            $response = $fsp->storeQuote($request->getBody(), collect($request->getHeaders())->except('host')->all());
             return $response;
         } catch (RequestException $e) {
             return $e->getResponse() ?: $e;

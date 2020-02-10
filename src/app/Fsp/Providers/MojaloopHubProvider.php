@@ -3,7 +3,9 @@
 namespace App\Fsp\Providers;
 
 use App\Fsp\FspProvider;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class MojaloopHubProvider extends FspProvider
 {
@@ -23,11 +25,15 @@ class MojaloopHubProvider extends FspProvider
     }
 
     /**
-     * @param array $options
+     * @param string|StreamInterface $body
+     * @param array $headers
      * @return ResponseInterface
      */
-    public function storeQuote(array $options = [])
+    public function storeQuote($body, array $headers = [])
     {
-        return $this->getClient()->post("{$this->quotingServiceUri}/quotes", $options);
+        return $this->getClient()->post("{$this->quotingServiceUri}/quotes", [
+            RequestOptions::BODY => $body,
+            RequestOptions::HEADERS => $headers,
+        ]);
     }
 }

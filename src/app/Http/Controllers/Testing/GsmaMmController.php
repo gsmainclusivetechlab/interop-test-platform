@@ -13,10 +13,7 @@ class GsmaMmController extends Controller
         $fsp = Fsp::driver('gsma-mm');
 
         try {
-            $response = $fsp->storeQuotation([
-                'body' => $request->getBody(),
-                'headers' => collect($request->getHeaders())->except('host')->all(),
-            ]);
+            $response = $fsp->storeQuotation($request->getBody(), collect($request->getHeaders())->except('host')->all());
             return $response;
         } catch (RequestException $e) {
             return $e->getResponse() ?: $e;
