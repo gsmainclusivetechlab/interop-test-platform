@@ -314,15 +314,21 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-<code>{
+                                                                <web-editor editor-class="border-0 rounded-0" :options="{
+                                                                    mode: 'ace/mode/json',
+                                                                    readOnly: true,
+                                                                    highlightActiveLine: false,
+                                                                    showPrintMargin: false,
+                                                                    showGutter: false,
+                                                                    useWorker: false
+                                                                }">{
     "url": "https://api.github.com/repos/vmg/redcarpet/issues/683",
     "repository_url": "https://api.github.com/repos/vmg/redcarpet",
     "labels_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/labels{/name}",
     "comments_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/comments",
     "events_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/events",
-    "html_url": "https://github.com/vmg/redcarpet/issues/683",
-}</code></pre>
+    "html_url": "https://github.com/vmg/redcarpet/issues/683"
+}</web-editor>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
