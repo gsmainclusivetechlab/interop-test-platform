@@ -1,6 +1,21 @@
 require('./bootstrap');
 
-Vue.use(BootstrapVue);
+import {
+    AlertPlugin,
+    DropdownPlugin,
+    NavPlugin,
+    NavbarPlugin,
+    CollapsePlugin,
+    ProgressPlugin,
+} from 'bootstrap-vue';
+
+Vue.use(AlertPlugin);
+Vue.use(DropdownPlugin);
+Vue.use(NavPlugin);
+Vue.use(NavbarPlugin);
+Vue.use(CollapsePlugin);
+Vue.use(ProgressPlugin);
+
 Vue.component(
     'confirm-button',
     require('./components/ConfirmButton.vue').default,
