@@ -11,5 +11,3 @@ Vue.component('web-editor', require('./components/WebEditor.vue').default);
 const app = new Vue({
     el: '#app',
 });
-
-hljs.initHighlightingOnLoad();
