@@ -1,6 +1,11 @@
 {
-    "/js/app.js": "/js/app.js?id=affccabaa56d66c02473",
-    "/css/app.css": "/css/app.css?id=8bb0a9493a8119e6f86f",
-    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
-    "/js/vendor.js": "/js/vendor.js?id=fab3718e8286e3ef93bc"
+    "/js/app.js": "/js/app.js?id=0406dbbcaba12ccd7d0e",
+    "/css/vendor.css": "/css/vendor.css?id=2012f5d78ec85a3d5514",
+    "/css/app.css": "/css/app.css?id=d1a25fb36199b4cdc7bc",
+    "/js/chunks/chart.chunk.ecfcf6a3490dc2be2c7a.js": "/js/chunks/chart.chunk.ecfcf6a3490dc2be2c7a.js?id=7a83b77e2b1090dc145f",
+    "/js/chunks/confirm.chunk.bcd0759424eb67b476e0.js": "/js/chunks/confirm.chunk.bcd0759424eb67b476e0.js?id=77416d24476f54520678",
+    "/js/chunks/editor.chunk.2d194c02534ca935c115.js": "/js/chunks/editor.chunk.2d194c02534ca935c115.js?id=e7ac027b3def7a5461ab",
+    "/js/chunks/vendors~chart.chunk.da85b7e41ab779028ddc.js": "/js/chunks/vendors~chart.chunk.da85b7e41ab779028ddc.js?id=df0502be5af8c2467137",
+    "/js/chunks/vendors~confirm.chunk.a96bf4adc918454bbe1d.js": "/js/chunks/vendors~confirm.chunk.a96bf4adc918454bbe1d.js?id=ee6a91c35e6d9fb2d111",
+    "/js/chunks/vendors~editor.chunk.230784086a6eba0769d8.js": "/js/chunks/vendors~editor.chunk.230784086a6eba0769d8.js?id=0dfe5047b483dbd22d83"
 }

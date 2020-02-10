@@ -132,10 +132,3 @@ export default {
     },
 };
 </script>
-
-<style scoped lang="scss">
-.web-editor {
-    height: 100%;
-    min-height: 250px;
-}
-</style>

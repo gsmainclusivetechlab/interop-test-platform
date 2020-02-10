@@ -4,7 +4,6 @@
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon/favicon.png') }}">
 <link rel="apple-touch-icon" type="image/png" href="{{ asset('images/favicon/apple-touch-icon.png') }}">
 <title>@yield('title') - {{ config('app.name') }} - {{ env('APP_COMPANY_NAME') }}</title>
+<link href="{{ mix('css/vendor.css') }}" rel="stylesheet">
 <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-<script src="{{ mix('js/manifest.js') }}" defer></script>
-<script src="{{ mix('js/vendor.js') }}" defer></script>
 <script src="{{ mix('js/app.js') }}" defer></script>
