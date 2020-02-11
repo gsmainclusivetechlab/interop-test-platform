@@ -1,4 +1,6 @@
 const mix = require('laravel-mix');
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 /*
  |--------------------------------------------------------------------------
@@ -15,6 +17,13 @@ mix.webpackConfig({
     output: {
         chunkFilename: 'js/chunks/[name].chunk.[chunkhash].js',
     },
+    plugins: [
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: [
+                path.resolve(process.cwd(), 'public/js'),
+            ],
+        }),
+    ],
 })
     .js('resources/js/app.js', 'public/js')
     .sass('resources/sass/vendor.scss', 'public/css')
