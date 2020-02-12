@@ -1,6 +1,7 @@
 const mix = require('laravel-mix');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 /*
  |--------------------------------------------------------------------------
@@ -25,6 +26,10 @@ mix.babelConfig({
                 cleanOnceBeforeBuildPatterns: [
                     path.resolve(process.cwd(), 'public/js'),
                 ],
+            }),
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'static',
+                reportFilename: './webpack-stats/report.html',
             }),
         ],
     })
