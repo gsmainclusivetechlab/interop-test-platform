@@ -65,10 +65,10 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('sessions', 'SessionController', ['only' => ['index']]);
 });
 
-Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::post('gsma-mm/quotations', 'GsmaMmController@storeQuotation')->name('gsma_mm.quotations.store');
-    Route::post('mojaloop/quotes', 'MojaloopHubController@storeQuote')->name('mojaloop_hub.quotes.store');
-    Route::any('mojaloop/quotes-callback/{method}', 'MojaloopHubController@quotesCallback')
-        ->name('mojaloop.quotes.callback')
+Route::name('mocks.')->prefix('mocks')->namespace('Mocks')->group(function () {
+    Route::post('gsma-mm/quotations', 'GsmaMmQuotationController@store')->name('gsma_mm.quotations.store');
+    Route::post('mojaloop-hub/quotes', 'MojaloopHubQuoteController@store')->name('mojaloop_hub.quotes.store');
+    Route::any('mojaloop-hub/quotes/callback/{method}', 'MojaloopHubQuoteController@callback')
+        ->name('mojaloop_hub.quotes.callback')
         ->where(['method' => '[a-z0-9-\/]+']);
 });

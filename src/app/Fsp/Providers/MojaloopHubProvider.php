@@ -25,6 +25,14 @@ class MojaloopHubProvider extends FspProvider
     }
 
     /**
+     * @return string
+     */
+    public function getQuotingServiceUri()
+    {
+        return $this->quotingServiceUri;
+    }
+
+    /**
      * @param string|StreamInterface $body
      * @param array $headers
      * @return ResponseInterface

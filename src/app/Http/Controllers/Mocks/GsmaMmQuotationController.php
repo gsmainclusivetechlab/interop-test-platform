@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Testing;
+namespace App\Http\Controllers\Mocks;
 
 use App\Facades\Fsp;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ServerRequestInterface;
 
-class GsmaMmController extends Controller
+class GsmaMmQuotationController extends Controller
 {
-    public function storeQuotation(ServerRequestInterface $request)
+    public function store(ServerRequestInterface $request)
     {
         $fsp = Fsp::driver('gsma-mm');
 

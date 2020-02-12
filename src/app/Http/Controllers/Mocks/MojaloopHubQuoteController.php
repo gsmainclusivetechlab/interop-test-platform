@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Testing;
+namespace App\Http\Controllers\Mocks;
 
 use App\Facades\Fsp;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ServerRequestInterface;
 
-class MojaloopHubController extends Controller
+class MojaloopHubQuoteController extends Controller
 {
-    public function storeQuote(ServerRequestInterface $request)
+    public function store(ServerRequestInterface $request)
     {
         $fsp = Fsp::driver('mojaloop-hub');
 
@@ -20,7 +20,7 @@ class MojaloopHubController extends Controller
         }
     }
 
-    public function quotesCallback(ServerRequestInterface $request)
+    public function callback(ServerRequestInterface $request)
     {
         return [];
     }

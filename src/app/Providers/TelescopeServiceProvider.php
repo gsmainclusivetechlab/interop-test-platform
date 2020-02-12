@@ -24,7 +24,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         $this->hideSensitiveRequestDetails();
 
         Telescope::filter(function (IncomingEntry $entry) {
-            return $this->isTestingRequest($entry);
+            return $this->isMocksRequest($entry);
 
 //            return $entry->isReportableException() ||
 //                   $entry->isFailedRequest() ||
@@ -38,9 +38,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      * @param IncomingEntry $entry
      * @return bool
      */
-    protected function isTestingRequest(IncomingEntry $entry)
+    protected function isMocksRequest(IncomingEntry $entry)
     {
-        return $entry->type == EntryType::REQUEST && Str::is('/testing/*', $entry->content['uri']);
+        return $entry->type == EntryType::REQUEST && Str::is('/mocks/*', $entry->content['uri']);
     }
 
     /**

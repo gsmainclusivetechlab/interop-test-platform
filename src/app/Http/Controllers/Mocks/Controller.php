@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Testing;
+namespace App\Http\Controllers\Mocks;
 
 use App\Http\Controllers\Controller as BaseController;
 use App\Http\Middleware\ValidateTraceContext;

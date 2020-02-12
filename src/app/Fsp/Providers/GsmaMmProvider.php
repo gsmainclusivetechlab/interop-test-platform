@@ -25,6 +25,14 @@ class GsmaMmProvider extends FspProvider
     }
 
     /**
+     * @return string
+     */
+    public function getBaseUri()
+    {
+        return $this->baseUri;
+    }
+
+    /**
      * @param string|StreamInterface $body
      * @param array $headers
      * @return ResponseInterface
