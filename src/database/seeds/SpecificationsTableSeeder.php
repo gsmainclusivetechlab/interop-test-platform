@@ -29,10 +29,10 @@ class SpecificationsTableSeeder extends Seeder
     {
         return [
             [
-                'name' => 'GSMA MM',
+                'name' => 'Mobile Money API',
             ],
             [
-                'name' => 'Mojaloop Hub',
+                'name' => 'Mojaloop Hub API',
             ],
         ];
     }

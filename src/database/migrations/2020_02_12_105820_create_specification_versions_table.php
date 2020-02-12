@@ -19,6 +19,7 @@ class CreateSpecificationVersionsTable extends Migration
             $table->unsignedBigInteger('specification_id');
             $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('cascade');
             $table->string('version');
+            $table->unique(['specification_id', 'version']);
             $table->longText('schema');
             $table->timestamps();
         });
