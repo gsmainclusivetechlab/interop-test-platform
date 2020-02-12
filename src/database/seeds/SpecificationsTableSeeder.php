@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Specification;
-use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
+use Symfony\Component\Yaml\Yaml;
 
 class SpecificationsTableSeeder extends Seeder
 {
@@ -13,11 +13,13 @@ class SpecificationsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Specification::class)->createMany($this->getData())->each(function ($specification, $key) {
-            foreach (Arr::get($this->getVersionsData(), $key, []) as $version) {
-                $specification->versions()->create($version);
+        foreach ($this->getData() as $key => $data) {
+            $specification = Specification::create($data);
+
+            foreach (Arr::get($this->getVersionsData(), $key, []) as $versionData) {
+                $specification->versions()->create($versionData);
             }
-        });
+        }
     }
 
     /**
@@ -44,8 +46,13 @@ class SpecificationsTableSeeder extends Seeder
             [
                 [
                     'version' => '1.0',
-                    'schema' => (array) Reader::readFromYamlFile('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')
-                        ->getSerializableData(),
+                    'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
+                ],
+            ],
+            [
+                [
+                    'version' => '1.0',
+                    'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
                 ],
             ],
         ];

@@ -12,7 +12,9 @@ class ComponentsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Component::class)->createMany($this->getData());
+        foreach ($this->getData() as $data) {
+            Component::create($data);
+        }
     }
 
     /**
