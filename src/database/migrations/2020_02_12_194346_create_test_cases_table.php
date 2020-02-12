@@ -18,9 +18,6 @@ class CreateTestCasesTable extends Migration
             $table->unsignedBigInteger('test_suite_id');
             $table->foreign('test_suite_id')->references('id')->on('test_suites')->onDelete('cascade');
             $table->string('name');
-            $table->string('behavior');
-            $table->text('description')->nullable();
-            $table->text('preconditions')->nullable();
             $table->timestamps();
         });
     }

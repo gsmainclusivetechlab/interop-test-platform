@@ -16,7 +16,6 @@ class CreateTestScenariosTable extends Migration
         Schema::create('test_scenarios', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

@@ -45,13 +45,13 @@ class SpecificationsTableSeeder extends Seeder
         return [
             [
                 [
-                    'version' => '1.0',
+                    'name' => '1.0',
                     'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
                 ],
             ],
             [
                 [
-                    'version' => '1.0',
+                    'name' => '1.0',
                     'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
                 ],
             ],

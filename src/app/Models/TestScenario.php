@@ -11,7 +11,6 @@ class TestScenario extends Model
      */
     protected $fillable = [
         'name',
-        'description',
     ];
 
 //    /**
