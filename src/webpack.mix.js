@@ -13,18 +13,21 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
  |
  */
 
-mix.webpackConfig({
-    output: {
-        chunkFilename: 'js/chunks/[name].chunk.[chunkhash].js',
-    },
-    plugins: [
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: [
-                path.resolve(process.cwd(), 'public/js'),
-            ],
-        }),
-    ],
+mix.babelConfig({
+    plugins: ['@babel/plugin-syntax-dynamic-import'],
 })
+    .webpackConfig({
+        output: {
+            chunkFilename: 'js/chunks/[name].chunk.js',
+        },
+        plugins: [
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: [
+                    path.resolve(process.cwd(), 'public/js'),
+                ],
+            }),
+        ],
+    })
     .js('resources/js/app.js', 'public/js')
     .sass('resources/sass/vendor.scss', 'public/css')
     .sass('resources/sass/app.scss', 'public/css')
