@@ -21,7 +21,7 @@ class HomeController extends Controller
         $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder)->fromSchema($schema)->getRequestValidator();
         // $match = $validator->validate(request()->convertToPsr());
 
-        dd($schema);
+        dd($schema->getSerializableData());
 
         return view('home');
     }
