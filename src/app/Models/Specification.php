@@ -11,6 +11,7 @@ class Specification extends Model
      */
     protected $fillable = [
         'name',
+        'description',
     ];
 
     /**
@@ -20,4 +21,5 @@ class Specification extends Model
     {
         return $this->hasMany(SpecificationVersion::class);
     }
+
 }

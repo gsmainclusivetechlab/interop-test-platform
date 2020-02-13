@@ -17,8 +17,8 @@ class CreateTestStepsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('test_case_id');
             $table->foreign('test_case_id')->references('id')->on('test_cases')->onDelete('cascade');
-            $table->unsignedBigInteger('test_platform_id');
-            $table->foreign('test_platform_id')->references('id')->on('test_platforms')->onDelete('cascade');
+            $table->unsignedBigInteger('specification_id');
+            $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('cascade');
             $table->string('path');
             $table->string('method');
             $table->unsignedInteger('position');

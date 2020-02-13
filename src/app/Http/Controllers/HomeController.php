@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestScenario;
+use App\Models\Environment;
+use Symfony\Component\Yaml\Yaml;
 
 class HomeController extends Controller
 {
@@ -19,7 +20,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        dd(TestScenario::first());
+        dd(Yaml::dump(Environment::first()->variables));
 
 //        $schema = \cebe\openapi\Reader::readFromYamlFile('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml');
 //        $validator = (new \League\OpenAPIValidation\PSR7\ValidatorBuilder)->fromSchema($schema)->getRequestValidator();

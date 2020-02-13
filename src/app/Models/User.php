@@ -25,6 +25,10 @@ class User extends Authenticatable implements MustVerifyEmail
     const ROLE_SUPERADMIN = 'superadmin';
 
     /**
+     * @var string
+     */
+    protected $table = 'users';
+    /**
      * @var array
      */
     protected $fillable = [

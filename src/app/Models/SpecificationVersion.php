@@ -13,9 +13,11 @@ class SpecificationVersion extends Model
      * @var array
      */
     protected $fillable = [
-        'version',
+        'name',
         'schema',
+        'server',
     ];
+
     /**
      * @var array
      */

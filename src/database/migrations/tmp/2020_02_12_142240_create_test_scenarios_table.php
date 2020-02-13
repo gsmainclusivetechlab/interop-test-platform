@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSpecificationVersionsTable extends Migration
+class CreateTestScenariosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateSpecificationVersionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('specification_versions', function (Blueprint $table) {
+        Schema::create('test_scenarios', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
-            $table->unsignedBigInteger('specification_id');
-            $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('cascade');
             $table->string('name');
-            $table->longText('schema');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateSpecificationVersionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('specification_versions');
+        Schema::dropIfExists('test_scenarios');
     }
 }
