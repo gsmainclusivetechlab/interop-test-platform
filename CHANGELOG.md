@@ -1,7 +1,8 @@
 ## v0.2
-- Task:
-- Task:
-- Task:
+- Task: Session execution - Session page (Markup) [@jc_ohladkov]
+- Task: Session page graph [@jc_ohladkov]
+- Task: Homepage (user dashboard) [@jc_ohladkov]
+- Task: Responsive layout [@jc_ohladkov]
 
 ## v0.1
 - Task: Login [@jc_akokorev]
