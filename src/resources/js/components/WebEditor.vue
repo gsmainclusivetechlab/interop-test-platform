@@ -20,16 +20,19 @@
 
 <script>
 import ace from 'ace-builds/src-min-noconflict/ace';
-import yaml from 'js-yaml';
 import { debounce } from '../helpers';
 import 'ace-builds/src-min-noconflict/mode-yaml';
 import 'ace-builds/src-min-noconflict/mode-json';
 
+import jsonWorkerUrl from 'file-loader!ace-builds/src-noconflict/worker-json';
+ace.config.setModuleUrl('ace/mode/json_worker', jsonWorkerUrl);
+
 const DEBOUNCED_TIME = 250;
 const ANNOTATION_TYPE = 'error';
+const DEFAULT_MODE = 'ace/mode/yaml';
 
 const options = {
-    mode: 'ace/mode/yaml',
+    mode: DEFAULT_MODE,
 };
 
 export default {
@@ -75,6 +78,9 @@ export default {
         getValue() {
             return this.editor.getSession().getValue();
         },
+        getMode() {
+            return this.editor.getSession().getMode().$id;
+        },
         setEditorSubjectValue(value = this.value) {
             this.editorSubject.value = value;
 
@@ -99,12 +105,24 @@ export default {
             return this;
         },
         validateSyntax(value = this.getValue()) {
+            const mode = this.getMode();
+
             return new Promise((resolve, reject) => {
                 try {
-                    yaml.safeLoad(value);
-                    resolve(true);
+                    if (mode !== DEFAULT_MODE) {
+                        return;
+                    }
+
+                    import(/* webpackChunkName: "yaml" */ 'js-yaml')
+                        .then(({ default: yaml }) => {
+                            yaml.safeLoad(value);
+                        })
+                        .then(() => resolve(true))
+                        .catch((error) => {
+                            this.onSyntaxError(error);
+                        });
                 } catch (error) {
-                    this.onSyntaxError(error);
+                    throw error;
                 }
             });
         },

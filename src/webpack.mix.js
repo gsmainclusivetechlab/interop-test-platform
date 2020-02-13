@@ -19,7 +19,7 @@ mix.babelConfig({
 })
     .webpackConfig({
         output: {
-            chunkFilename: 'js/chunks/[name].chunk.js',
+            chunkFilename: 'js/chunks/[name].js',
         },
         plugins: [
             new CleanWebpackPlugin({
