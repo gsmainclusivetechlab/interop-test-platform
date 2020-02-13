@@ -1,10 +1,6 @@
-@import '~tabler-ui/src/assets/scss/variables.scss';
-@import 'variables';
-@import '~bootstrap/scss/bootstrap';
-@import '~tabler-ui/src/assets/scss/dashboard/dashboard';
-@import '~sweetalert2/dist/sweetalert2.min.css';
-@import '~bootstrap-vue/dist/bootstrap-vue.min.css';
-@import '~c3/c3.min.css';
-@import '~highlight.js/scss/default.scss';
+@import '~tabler-ui/src/assets/scss/variables';
+@import 'base/variables';
+@import 'ui/bootstrap';
+@import 'ui/tabler';
 @import 'base/main';
 @import 'components/main';

@@ -1,4 +1,12 @@
 {
-    "/js/app.js": "/js/app.js?id=b3c523ae816527641060",
-    "/css/app.css": "/css/app.css?id=40c12cd6754413e8ff0d"
+    "/js/app.js": "/js/app.js?id=de88aac98e0dc907c7f5",
+    "/css/vendor.css": "/css/vendor.css?id=2012f5d78ec85a3d5514",
+    "/css/app.css": "/css/app.css?id=d5e7c11f8939a56b244f",
+    "/js/chunks/chart.js": "/js/chunks/chart.js?id=f324190d092c0c879d95",
+    "/js/chunks/confirm.js": "/js/chunks/confirm.js?id=f04e9fb008d1a1c560f9",
+    "/js/chunks/editor.js": "/js/chunks/editor.js?id=2020c77bc4d80c946901",
+    "/js/chunks/vendors~c3.js": "/js/chunks/vendors~c3.js?id=447fa5a0eed70e935350",
+    "/js/chunks/vendors~editor.js": "/js/chunks/vendors~editor.js?id=0ad3685df43ae2379cc3",
+    "/js/chunks/vendors~sweetalert2.js": "/js/chunks/vendors~sweetalert2.js?id=4237ab7b2979d5e6061d",
+    "/js/chunks/vendors~yaml.js": "/js/chunks/vendors~yaml.js?id=b8e9dbf64c1ba6908efc"
 }

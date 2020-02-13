@@ -3,8 +3,6 @@
 </template>
 
 <script>
-import c3 from 'c3';
-
 export default {
     data() {
         return {};
@@ -76,13 +74,16 @@ export default {
     mounted() {
         const { data, axis, legend, padding } = this.$props;
 
-        c3.generate({
-            bindto: this.$el,
-            data,
-            axis,
-            legend,
-            padding,
-        });
+        import(/* webpackChunkName: "c3" */ 'c3').then(
+            ({ default: c3 }) =>
+                c3.generate({
+                    bindto: this.$el,
+                    data,
+                    axis,
+                    legend,
+                    padding,
+                }),
+        );
     },
     methods: {},
 };

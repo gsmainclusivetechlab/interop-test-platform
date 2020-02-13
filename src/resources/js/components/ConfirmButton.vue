@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2';
-
 export default {
     data() {
         return {
@@ -53,13 +51,17 @@ export default {
             if (!this.confirmed) {
                 e.preventDefault();
 
-                Swal.fire(this.$props).then((result) => {
-                    this.confirmed = result.value;
+                import(
+                    /* webpackChunkName: "sweetalert2" */ 'sweetalert2'
+                ).then(({ default: Swal }) =>
+                    Swal.fire(this.$props).then((result) => {
+                        this.confirmed = result.value;
 
-                    if (result.value) {
-                        this.$el.click();
-                    }
-                });
+                        if (result.value) {
+                            this.$el.click();
+                        }
+                    }),
+                );
             }
         },
     },
