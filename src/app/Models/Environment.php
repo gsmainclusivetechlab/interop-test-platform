@@ -21,6 +21,7 @@ class Environment extends Model
     protected $fillable = [
         'name',
         'description',
+        'variables',
     ];
 
     /**

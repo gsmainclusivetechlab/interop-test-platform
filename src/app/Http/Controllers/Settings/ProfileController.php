@@ -30,7 +30,7 @@ class ProfileController extends Controller
     public function update(UpdateProfileRequest $request)
     {
         $user = auth()->user();
-        $user->update($request->all());
+        $user->update($request->input());
 
         return redirect()
             ->back()
