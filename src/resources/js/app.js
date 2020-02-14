@@ -25,6 +25,9 @@ Vue.component('chart', () =>
 Vue.component('web-editor', () =>
     import(/* webpackChunkName: "editor" */ './components/WebEditor.vue'),
 );
+Vue.component('flow-chart', () =>
+    import(/* webpackChunkName: "flow-chart" */ './components/FlowChart.vue'),
+);
 
 const app = new Vue({
     el: '#app',
