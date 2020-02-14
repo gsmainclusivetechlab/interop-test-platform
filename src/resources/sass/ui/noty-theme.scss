@@ -1,0 +1,54 @@
+.noty_theme__bootstrap-v4.noty_bar {
+    position: relative;
+    color: $light;
+    border-radius: $border-radius;
+    overflow: hidden;
+
+    .noty_body {
+        padding: 1rem 1.25rem;
+        line-height: 1;
+    }
+
+    .noty_buttons {
+        padding: 10px;
+    }
+
+    .noty_close_button {
+        top: calc(50% - 2px);
+        right: 0.5rem;
+        transform: translateY(-50%);
+        font-size: 1.25rem;
+        line-height: 1;
+        color: inherit;
+        background: transparent;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.15s;
+
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+}
+
+.noty_theme__bootstrap-v4.noty_type__notification {
+    background-color: map-get($map: $theme-colors, $key: 'secondary');
+}
+
+.noty_theme__bootstrap-v4.noty_type__alert,
+.noty_theme__bootstrap-v4.noty_type__error {
+    background-color: map-get($map: $theme-colors, $key: 'primary');
+}
+
+.noty_theme__bootstrap-v4.noty_type__warning {
+    background-color: map-get($map: $theme-colors, $key: 'warning');
+}
+
+.noty_theme__bootstrap-v4.noty_type__info,
+.noty_theme__bootstrap-v4.noty_type__information {
+    background-color: map-get($map: $colors, $key: 'blue');
+}
+
+.noty_theme__bootstrap-v4.noty_type__success {
+    background-color: map-get($map: $theme-colors, $key: 'success');
+}

@@ -28,6 +28,11 @@ Vue.component('web-editor', () =>
 Vue.component('flow-chart', () =>
     import(/* webpackChunkName: "flow-chart" */ './components/FlowChart.vue'),
 );
+Vue.component('notification', () =>
+    import(
+        /* webpackChunkName: "notification" */ './components/Notification.vue'
+    ),
+);
 
 const app = new Vue({
     el: '#app',
