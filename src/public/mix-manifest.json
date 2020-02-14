@@ -1,14 +1,16 @@
 {
-    "/js/app.js": "/js/app.js?id=6c39151936a46bb0b99a",
-    "/css/vendor.css": "/css/vendor.css?id=2012f5d78ec85a3d5514",
-    "/css/app.css": "/css/app.css?id=d5e7c11f8939a56b244f",
-    "/js/chunks/chart.js": "/js/chunks/chart.js?id=922c6cea8e6d5198ccd6",
-    "/js/chunks/confirm.js": "/js/chunks/confirm.js?id=6ca4372ec79e1c969fd1",
-    "/js/chunks/editor.js": "/js/chunks/editor.js?id=16d883a22868461f1d8d",
-    "/js/chunks/flow-chart.js": "/js/chunks/flow-chart.js?id=8ad8c57943598d782665",
-    "/js/chunks/vendors~c3.js": "/js/chunks/vendors~c3.js?id=9725437a19a4f29bfcf2",
-    "/js/chunks/vendors~editor.js": "/js/chunks/vendors~editor.js?id=402917ff3663156d96a1",
-    "/js/chunks/vendors~mermaid.js": "/js/chunks/vendors~mermaid.js?id=757ef1a07554d9cd72a5",
-    "/js/chunks/vendors~sweetalert2.js": "/js/chunks/vendors~sweetalert2.js?id=cabe0e55387c3879868a",
-    "/js/chunks/vendors~yaml.js": "/js/chunks/vendors~yaml.js?id=de4499d2608e405bd2dd"
+    "/js/app.js": "/js/app.js?id=69ad9b37492e77f20526",
+    "/css/vendor.css": "/css/vendor.css?id=c6ce66a033e7e8f4ae13",
+    "/css/app.css": "/css/app.css?id=87b121c26f698f05d9ad",
+    "/js/chunks/chart.js": "/js/chunks/chart.js?id=c9fc60770b6d6228b3ed",
+    "/js/chunks/confirm.js": "/js/chunks/confirm.js?id=72ed721eac1d62288880",
+    "/js/chunks/editor.js": "/js/chunks/editor.js?id=91fc5d46784e93719706",
+    "/js/chunks/flow-chart.js": "/js/chunks/flow-chart.js?id=56cd321816a2a6877f6b",
+    "/js/chunks/notification.js": "/js/chunks/notification.js?id=b70c1047f5643dee7d2a",
+    "/js/chunks/vendors~c3.js": "/js/chunks/vendors~c3.js?id=20954f43c7be92a8d151",
+    "/js/chunks/vendors~editor.js": "/js/chunks/vendors~editor.js?id=26fa1358bab27c3112f2",
+    "/js/chunks/vendors~mermaid.js": "/js/chunks/vendors~mermaid.js?id=13d1e16f79b32388a293",
+    "/js/chunks/vendors~notification.js": "/js/chunks/vendors~notification.js?id=d329131d7c84578dd7c6",
+    "/js/chunks/vendors~sweetalert2.js": "/js/chunks/vendors~sweetalert2.js?id=d1561061e2462298221c",
+    "/js/chunks/vendors~yaml.js": "/js/chunks/vendors~yaml.js?id=f18ad110678de9c1fc5e"
 }
