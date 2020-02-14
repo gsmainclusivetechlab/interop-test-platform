@@ -1,4 +1,7 @@
 const mix = require('laravel-mix');
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,6 +14,26 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js');
-mix.sass('resources/sass/app.scss', 'public/css');
-mix.version();
+mix.babelConfig({
+    plugins: ['@babel/plugin-syntax-dynamic-import'],
+})
+    .webpackConfig({
+        output: {
+            chunkFilename: 'js/chunks/[name].js',
+        },
+        plugins: [
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: [
+                    path.resolve(process.cwd(), 'public/js'),
+                ],
+            }),
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'static',
+                reportFilename: './webpack-stats/report.html',
+            }),
+        ],
+    })
+    .js('resources/js/app.js', 'public/js')
+    .sass('resources/sass/vendor.scss', 'public/css')
+    .sass('resources/sass/app.scss', 'public/css')
+    .version();

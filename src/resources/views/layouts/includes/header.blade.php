@@ -1,9 +1,11 @@
 <div class="header py-4">
     <div class="container-fluid">
-        <div class="d-flex align-items-center">
-            <a class="col-2 header-brand mr-0" href="{{ route('home') }}">
-                <img src="{{ asset('images/logo.png') }}" class="h-7" alt="{{ config('app.name') }}">
-            </a>
+        <div class="row d-flex align-items-center">
+            <div class="col-2">
+                <a class="header-brand mr-0" href="{{ route('home') }}">
+                    <img src="{{ asset('images/logo.png') }}" class="h-7" alt="{{ config('app.name') }}">
+                </a>
+            </div>
             <div class="col text-center text-primary">
                 <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
@@ -28,7 +30,7 @@
                             {{ __('Settings') }}
                         </b-dropdown-item>
                         <b-dropdown-divider></b-dropdown-divider>
-                        <b-dropdown-form action="{{ route('logout') }}" method="POST">
+                        <b-dropdown-form action="{{ route('logout') }}" method="POST" form-class="p-0">
                             @csrf
                             <button class="dropdown-item" type="submit">
                                 <i class="dropdown-icon fe fe-log-out"></i>
@@ -44,7 +46,7 @@
         </div>
     </div>
 </div>
-<div id="header-menu" class="header collapse d-lg-flex p-0">
+<b-collapse id="header-menu" class="header d-lg-flex p-0" is-nav>
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
@@ -102,4 +104,4 @@
             </div>
         </div>
     </div>
-</div>
+</b-collapse>

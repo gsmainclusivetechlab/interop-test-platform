@@ -1,6 +1,7 @@
 @extends('layouts.base')
 
 @push('styles')
+    <link href="{{ mix('css/vendor.css') }}" rel="stylesheet">
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 @endpush
 
