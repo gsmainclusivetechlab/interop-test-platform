@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ComponentsTableSeeder::class,
             EnvironmentsTableSeeder::class,
-//            SpecificationsTableSeeder::class,
-//            TestScenariosTableSeeder::class,
+            SpecificationsTableSeeder::class,
+            TestScenariosTableSeeder::class,
         ]);
     }
 }

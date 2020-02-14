@@ -14,11 +14,7 @@ class SpecificationsTableSeeder extends Seeder
     public function run()
     {
         foreach ($this->getData() as $key => $data) {
-            $specification = Specification::create($data);
-
-            foreach (Arr::get($this->getVersionsData(), $key, []) as $versionData) {
-                $specification->versions()->create($versionData);
-            }
+            Specification::create($data);
         }
     }
 
@@ -29,31 +25,14 @@ class SpecificationsTableSeeder extends Seeder
     {
         return [
             [
-                'name' => 'Mobile Money API',
+                'name' => 'Mobile Money API v1.0',
+                'server' => '{MM_API_HOST}',
+                'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
             ],
             [
-                'name' => 'Mojaloop Hub API',
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getVersionsData()
-    {
-        return [
-            [
-                [
-                    'version' => '1.0',
-                    'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
-                ],
-            ],
-            [
-                [
-                    'version' => '1.0',
-                    'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
-                ],
+                'name' => 'Mojaloop Hub API v1.0',
+                'server' => '{MOJALOOP_API_HOST}',
+                'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
             ],
         ];
     }

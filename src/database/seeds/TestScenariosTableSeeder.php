@@ -15,9 +15,9 @@ class TestScenariosTableSeeder extends Seeder
         foreach ($this->getData() as $key => $data) {
             $scenario = TestScenario::create($data);
 
-            foreach (Arr::get($this->getComponentsData(), $key, []) as $componentData) {
-                $scenario->components()->attach($componentData);
-            }
+//            foreach (Arr::get($this->getComponentsData(), $key, []) as $componentData) {
+//                $scenario->components()->attach($componentData);
+//            }
         }
     }
 
@@ -28,7 +28,7 @@ class TestScenariosTableSeeder extends Seeder
     {
         return [
             [
-                'name' => 'Mobile Money API and Mojaloop Hub API',
+                'name' => 'Mobile Money API v1.0 and Mojaloop Hub API v1.0',
             ],
         ];
     }

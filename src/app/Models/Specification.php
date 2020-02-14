@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin Eloquent
+ */
 class Specification extends Model
 {
     /**
@@ -11,15 +15,15 @@ class Specification extends Model
      */
     protected $fillable = [
         'name',
+        'server',
+        'schema',
         'description',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @var array
      */
-    public function versions()
-    {
-        return $this->hasMany(SpecificationVersion::class);
-    }
-
+    protected $casts = [
+        'schema' => 'array',
+    ];
 }
