@@ -30,9 +30,9 @@ class TestCase extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function useCase()
+    public function operation()
     {
-        return $this->belongsTo(TestUseCase::class, 'use_case_id');
+        return $this->belongsTo(TestOperation::class, 'operation_id');
     }
 
     /**

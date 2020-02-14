@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin Eloquent
  */
-class TestUseCaseStep extends Model
+class TestOperationStep extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'test_use_cases_steps';
+    protected $table = 'test_operations_steps';
 
     /**
      * @var array
@@ -26,9 +26,9 @@ class TestUseCaseStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function useCase()
+    public function operation()
     {
-        return $this->belongsTo(TestUseCase::class, 'use_case_id');
+        return $this->belongsTo(TestOperation::class, 'operation_id');
     }
 
     /**

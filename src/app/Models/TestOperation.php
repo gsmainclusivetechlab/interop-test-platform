@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin Eloquent
  */
-class TestUseCase extends Model
+class TestOperation extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'test_use_cases';
+    protected $table = 'test_operations';
 
     /**
      * @var array
@@ -27,7 +27,7 @@ class TestUseCase extends Model
      */
     public function cases()
     {
-        return $this->hasMany(TestCase::class, 'use_case_id');
+        return $this->hasMany(TestCase::class, 'operation_id');
     }
 
     /**

@@ -36,6 +36,6 @@ class TestCaseStep extends Model
      */
     public function step()
     {
-        return $this->belongsTo(TestUseCaseStep::class, 'step_id');
+        return $this->belongsTo(TestOperationStep::class, 'step_id');
     }
 }

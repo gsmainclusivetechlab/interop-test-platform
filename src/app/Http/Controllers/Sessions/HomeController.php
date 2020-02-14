@@ -25,7 +25,7 @@ class HomeController extends Controller
             return $query->where('name', 'like', "%{$q}%");
         })->withCount([
             'cases',
-            'useCases' => function ($query) {
+            'operations' => function ($query) {
                 $query->select(DB::raw('COUNT(DISTINCT id)'));
             },
         ])->latest()->paginate();

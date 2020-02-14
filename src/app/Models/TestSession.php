@@ -65,6 +65,6 @@ class TestSession extends Model
      */
     public function useCases()
     {
-        return $this->hasManyThrough(TestUseCase::class, TestSessionCase::class, 'session_id', 'id', 'id', 'use_case_id')->distinct();
+        return $this->hasManyThrough(TestOperation::class, TestSessionCase::class, 'session_id', 'id', 'id', 'use_case_id')->distinct();
     }
 }

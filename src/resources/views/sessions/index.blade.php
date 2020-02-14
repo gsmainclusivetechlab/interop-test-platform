@@ -29,7 +29,7 @@
                             <a href="{{ route('sessions.show', ['session' => $session]) }}">{{ $session->name }}</a>
                         </td>
                         <td>
-                            {{ $session->use_cases_count }}
+                            {{ $session->operations_count }}
                         </td>
                         <td>
                             {{ $session->cases_count }}

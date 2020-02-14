@@ -37,7 +37,7 @@
                             <a href="#">{{ $session->owner->name }}</a>
                         </td>
                         <td>
-                            {{ $session->use_cases_count }}
+                            {{ $session->operations_count }}
                         </td>
                         <td>
                             {{ $session->cases_count }}

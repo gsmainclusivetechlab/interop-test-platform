@@ -19,8 +19,8 @@ class CreateTestSessionsCasesTable extends Migration
             $table->unsignedBigInteger('session_id');
             $table->foreign('session_id')->references('id')->on('test_sessions')->onDelete('cascade');
             $table->primary(['case_id', 'session_id']);
-            $table->unsignedBigInteger('use_case_id');
-            $table->foreign('use_case_id')->references('use_case_id')->on('test_cases')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('operation_id');
+            $table->foreign('operation_id')->references('operation_id')->on('test_cases')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
