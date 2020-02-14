@@ -22,10 +22,6 @@
 import ace from 'ace-builds/src-min-noconflict/ace';
 import { debounce } from '../helpers';
 import 'ace-builds/src-min-noconflict/mode-yaml';
-import 'ace-builds/src-min-noconflict/mode-json';
-
-import jsonWorkerUrl from 'file-loader!ace-builds/src-noconflict/worker-json';
-ace.config.setModuleUrl('ace/mode/json_worker', jsonWorkerUrl);
 
 const DEBOUNCED_TIME = 250;
 const ANNOTATION_TYPE = 'error';
