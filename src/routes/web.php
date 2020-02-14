@@ -63,12 +63,13 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
             ->name('relegate_admin');
     });
     Route::resource('sessions', 'SessionController', ['only' => ['index']]);
+    Route::resource('environments', 'EnvironmentController', ['except' => ['show']]);
 });
 
-Route::name('mocks.')->prefix('mocks')->namespace('Mocks')->group(function () {
-    Route::post('gsma-mm/quotations', 'GsmaMmQuotationController@store')->name('gsma_mm.quotations.store');
-    Route::post('mojaloop-hub/quotes', 'MojaloopHubQuoteController@store')->name('mojaloop_hub.quotes.store');
-    Route::any('mojaloop-hub/quotes/callback/{method}', 'MojaloopHubQuoteController@callback')
-        ->name('mojaloop_hub.quotes.callback')
-        ->where(['method' => '[a-z0-9-\/]+']);
-});
+//Route::name('mocks.')->prefix('mocks')->namespace('Mocks')->group(function () {
+//    Route::post('gsma-mm/quotations', 'GsmaMmQuotationController@store')->name('gsma_mm.quotations.store');
+//    Route::post('mojaloop-hub/quotes', 'MojaloopHubQuoteController@store')->name('mojaloop_hub.quotes.store');
+//    Route::any('mojaloop-hub/quotes/callback/{method}', 'MojaloopHubQuoteController@callback')
+//        ->name('mojaloop_hub.quotes.callback')
+//        ->where(['method' => '[a-z0-9-\/]+']);
+//});

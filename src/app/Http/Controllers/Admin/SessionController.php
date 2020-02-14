@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class SessionController extends Controller
 {
     /**
-     * UserController constructor.
+     * SessionController constructor.
      */
     public function __construct()
     {

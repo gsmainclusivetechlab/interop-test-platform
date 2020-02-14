@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\TestSession;
+use App\Models\Environment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TestSessionPolicy
+class EnvironmentPolicy
 {
     use HandlesAuthorization;
 
@@ -21,12 +21,12 @@ class TestSessionPolicy
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Environment  $model
      * @return mixed
      */
-    public function view(User $user, TestSession $model)
+    public function view(User $user, Environment $model)
     {
-        return $user->isAdmin() || $model->user_id == $user->id;
+        return $user->isAdmin();
     }
 
     /**
@@ -40,20 +40,20 @@ class TestSessionPolicy
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Environment  $model
      * @return mixed
      */
-    public function update(User $user, TestSession $model)
+    public function update(User $user, Environment $model)
     {
         return $user->isAdmin();
     }
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Environment  $model
      * @return mixed
      */
-    public function delete(User $user, TestSession $model)
+    public function delete(User $user, Environment $model)
     {
         return ($user->isAdmin());
     }

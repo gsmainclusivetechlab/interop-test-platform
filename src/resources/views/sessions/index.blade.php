@@ -26,7 +26,7 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td>
-                            <a href="{{ route('sessions.show', ['session' => $session]) }}">{{ $session->name }}</a>
+                            <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
                         </td>
                         <td>
                             {{ $session->operations_count }}

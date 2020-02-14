@@ -81,7 +81,9 @@
                             {{ __('The Lab') }}
                         </a>
                     </li>
-                    @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\TestSession::class))
+                    @if(auth()->user()->can('viewAny', \App\Models\User::class) ||
+                        auth()->user()->can('viewAny', \App\Models\TestSession::class) ||
+                        auth()->user()->can('viewAny', \App\Models\Environment::class))
                         <b-nav-item-dropdown menu-class="dropdown-menu-arrow" toggle-class="@if (request()->routeIs('admin.*')) active @endif">
                             <template v-slot:button-content>
                                 <i class="fe fe-lock"></i>
@@ -96,6 +98,12 @@
                             @can('viewAny', \App\Models\TestSession::class)
                                 <b-dropdown-item href="{{ route('admin.sessions.index') }}" @if (request()->routeIs('admin.sessions.*')) active @endif>
                                     {{ __('Sessions') }}
+                                </b-dropdown-item>
+                            @endcan
+
+                            @can('viewAny', \App\Models\Environment::class)
+                                <b-dropdown-item href="{{ route('admin.environments.index') }}" @if (request()->routeIs('admin.environments.*')) active @endif>
+                                    {{ __('Environments') }}
                                 </b-dropdown-item>
                             @endcan
                         </b-nav-item-dropdown>

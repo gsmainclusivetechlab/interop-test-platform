@@ -63,8 +63,8 @@ class TestSession extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function useCases()
+    public function operations()
     {
-        return $this->hasManyThrough(TestOperation::class, TestSessionCase::class, 'session_id', 'id', 'id', 'use_case_id')->distinct();
+        return $this->hasManyThrough(TestOperation::class, TestSessionCase::class, 'session_id', 'id', 'id', 'operation_id')->distinct();
     }
 }
