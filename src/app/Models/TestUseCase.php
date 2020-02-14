@@ -1,11 +1,20 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
-class TestSuite extends Model
+/**
+ * @mixin Eloquent
+ */
+class TestUseCase extends Model
 {
+    /**
+     * @var string
+     */
+    protected $table = 'test_use_cases';
+
     /**
      * @var array
      */
@@ -18,7 +27,7 @@ class TestSuite extends Model
      */
     public function cases()
     {
-        return $this->hasMany(TestCase::class);
+        return $this->hasMany(TestCase::class, 'use_case_id');
     }
 
     /**

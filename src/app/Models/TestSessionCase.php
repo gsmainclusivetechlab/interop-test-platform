@@ -1,12 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class TestCaseTestSession extends Pivot
+/**
+ * @mixin Eloquent
+ */
+class TestSessionCase extends Pivot
 {
+    /**
+     * @var string
+     */
+    protected $table = 'test_sessions_cases';
+
     /**
      * @var bool
      */
@@ -22,7 +31,7 @@ class TestCaseTestSession extends Pivot
         parent::boot();
 
         static::saving(function (Model $model) {
-            $model->test_suite_id = $model->case()->value('test_suite_id');
+            $model->use_case_id = $model->case()->value('use_case_id');
         });
     }
 
@@ -31,14 +40,14 @@ class TestCaseTestSession extends Pivot
      */
     public function case()
     {
-        return $this->belongsTo(TestCase::class, 'test_case_id');
+        return $this->belongsTo(TestCase::class, 'case_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function suite()
+    public function useCase()
     {
-        return $this->belongsTo(TestSuite::class, 'test_suite_id');
+        return $this->belongsTo(TestUseCase::class, 'use_case_id');
     }
 }

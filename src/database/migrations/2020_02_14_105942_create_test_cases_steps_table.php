@@ -17,8 +17,8 @@ class CreateTestCasesStepsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('case_id');
             $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
-            $table->unsignedBigInteger('use_case_step_id');
-            $table->foreign('use_case_step_id')->references('id')->on('test_use_cases_steps')->onDelete('cascade');
+            $table->unsignedBigInteger('step_id');
+            $table->foreign('step_id')->references('id')->on('test_use_cases_steps')->onDelete('cascade');
             $table->longText('request_validation');
             $table->longText('response_validation');
             $table->timestamps();

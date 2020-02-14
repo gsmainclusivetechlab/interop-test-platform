@@ -17,13 +17,14 @@ class CreateTestResultsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('run_id');
             $table->foreign('run_id')->references('id')->on('test_runs')->onDelete('cascade');
-            $table->unsignedBigInteger('case_step_id');
-            $table->foreign('case_step_id')->references('id')->on('test_cases_steps')->onDelete('cascade');
+            $table->unsignedBigInteger('step_id');
+            $table->foreign('step_id')->references('id')->on('test_cases_steps')->onDelete('cascade');
             $table->text('result')->nullable();
             $table->longText('request')->nullable();
             $table->longText('response')->nullable();
             $table->string('status');
             $table->unsignedInteger('time');
+            $table->unsignedInteger('position');
             $table->timestamp('created_at');
         });
     }
