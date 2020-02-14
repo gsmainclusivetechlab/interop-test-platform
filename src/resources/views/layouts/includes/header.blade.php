@@ -10,7 +10,7 @@
                 <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
-            <div class="col-3 d-flex ml-auto pr-0">
+            <div class="col-3 d-flex ml-auto">
                 <b-navbar-nav class="ml-auto">
                     <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
                         <template v-slot:button-content>
