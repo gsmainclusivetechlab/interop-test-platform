@@ -31,13 +31,13 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td class="text-break">
-                            <a href="{{ route('sessions.show', ['session' => $session]) }}">{{ $session->name }}</a>
+                            <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
                         </td>
                         <td class="text-break">
-                            <a href="#">{{ $session->user->name }}</a>
+                            <a href="#">{{ $session->owner->name }}</a>
                         </td>
                         <td>
-                            {{ $session->suites_count }}
+                            {{ $session->operations_count }}
                         </td>
                         <td>
                             {{ $session->cases_count }}

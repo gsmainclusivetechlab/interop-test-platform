@@ -42,17 +42,17 @@
                                 <ul class="list-group overflow-auto" style="height: 320px">
                                     @foreach($suites as $suite)
                                         <li class="list-group-item">
-                                            <span class="dropdown-toggle font-weight-bold" aria-expanded="true" v-b-toggle.suite-{{ $suite->id }}>
+                                            <b class="dropdown-toggle" v-b-toggle.suite-{{ $suite->id }}>
                                                 {{ $suite->name }}
-                                            </span>
+                                            </b>
                                             @if ($suite->positiveCases->count())
                                                 <b-collapse id="suite-{{ $suite->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" aria-expanded="true" v-b-toggle.happy-flow>
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-cases-{{ $suite->id }}>
                                                                 {{ __('Happy flow') }}
                                                             </span>
-                                                            <b-collapse id="happy-flow" visible>
+                                                            <b-collapse id="positive-cases-{{ $suite->id }}" visible>
                                                                 <ul class="list-group">
                                                                     @foreach($suite->positiveCases as $case)
                                                                         <li class="list-group-item">
@@ -75,10 +75,10 @@
                                                 <b-collapse id="suite-{{ $suite->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" aria-expanded="true" v-b-toggle.unhappy-flow>
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-cases-{{ $suite->id }}>
                                                                 {{ __('Unhappy flow') }}
                                                             </span>
-                                                            <b-collapse id="unhappy-flow" visible>
+                                                            <b-collapse id="negative-cases-{{ $suite->id }}" visible>
                                                                 <ul class="list-group">
                                                                     @foreach($suite->negativeCases as $case)
                                                                         <li class="list-group-item">

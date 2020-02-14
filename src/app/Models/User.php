@@ -1,26 +1,33 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\RoleEnum;
-use App\Models\Traits\HasEnums;
+use Eloquent;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
 
+/**
+ * @mixin Eloquent
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     // use HasEnums;
     use Notifiable;
     use SoftDeletes;
 
+    const DELETED_AT = 'blocked_at';
+
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_SUPERADMIN = 'superadmin';
+
+    /**
+     * @var string
+     */
+    protected $table = 'users';
 
     /**
      * @var array
@@ -47,7 +54,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -99,6 +105,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sessions()
     {
-        return $this->hasMany(TestSession::class);
+        return $this->hasMany(TestSession::class, 'owner_id');
     }
 }

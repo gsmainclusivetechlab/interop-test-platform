@@ -1,13 +1,22 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin Eloquent
+ */
 class TestCase extends Model
 {
     const BEHAVIOR_NEGATIVE = 'negative';
     const BEHAVIOR_POSITIVE = 'positive';
+
+    /**
+     * @var string
+     */
+    protected $table = 'test_cases';
 
     /**
      * @var array
@@ -16,15 +25,14 @@ class TestCase extends Model
         'name',
         'behavior',
         'description',
-        'preconditions',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function suite()
+    public function operation()
     {
-        return $this->belongsTo(TestSuite::class);
+        return $this->belongsTo(TestOperation::class, 'operation_id');
     }
 
     /**

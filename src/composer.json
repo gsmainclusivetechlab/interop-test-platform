@@ -1,19 +1,20 @@
 {
-    "name": "laravel/laravel",
+    "name": "justcoded/gsma-itp-test-control",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": [
-        "framework",
-        "laravel"
-    ],
+    "description": "GSMA ITP Inclusive Tech Lab",
     "license": "MIT",
     "require": {
         "php": "^7.2",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "^6.2",
+        "laravel/telescope": "^2.1",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.0",
-        "phpunit/phpunit": "^8.5"
+        "league/openapi-psr7-validator": "^0.7.0",
+        "nyholm/psr7": "^1.2",
+        "phpunit/phpunit": "^8.5",
+        "symfony/psr-http-message-bridge": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

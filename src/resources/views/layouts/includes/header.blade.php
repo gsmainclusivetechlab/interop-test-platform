@@ -1,5 +1,5 @@
 <div class="header py-4">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row d-flex align-items-center">
             <div class="col-2">
                 <a class="header-brand mr-0" href="{{ route('home') }}">
@@ -10,9 +10,9 @@
                 <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
-            <div class="col-3 d-flex ml-auto">
+            <div class="col-3 d-flex ml-auto pr-0">
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-item-dropdown class="ml-auto" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
+                    <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
                         <template v-slot:button-content>
                             <span class="avatar flex-shrink-0">
                                 <i class="fe fe-user"></i>
@@ -47,7 +47,7 @@
     </div>
 </div>
 <b-collapse id="header-menu" class="header d-lg-flex p-0" is-nav>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
                 <a href="{{ route('sessions.register.selection.create') }}" class="btn btn-outline-primary">
@@ -81,7 +81,9 @@
                             {{ __('The Lab') }}
                         </a>
                     </li>
-                    @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\TestSession::class))
+                    @if(auth()->user()->can('viewAny', \App\Models\User::class) ||
+                        auth()->user()->can('viewAny', \App\Models\TestSession::class) ||
+                        auth()->user()->can('viewAny', \App\Models\Environment::class))
                         <b-nav-item-dropdown menu-class="dropdown-menu-arrow" toggle-class="@if (request()->routeIs('admin.*')) active @endif">
                             <template v-slot:button-content>
                                 <i class="fe fe-lock"></i>
@@ -96,6 +98,12 @@
                             @can('viewAny', \App\Models\TestSession::class)
                                 <b-dropdown-item href="{{ route('admin.sessions.index') }}" @if (request()->routeIs('admin.sessions.*')) active @endif>
                                     {{ __('Sessions') }}
+                                </b-dropdown-item>
+                            @endcan
+
+                            @can('viewAny', \App\Models\Environment::class)
+                                <b-dropdown-item href="{{ route('admin.environments.index') }}" @if (request()->routeIs('admin.environments.*')) active @endif>
+                                    {{ __('Environments') }}
                                 </b-dropdown-item>
                             @endcan
                         </b-nav-item-dropdown>
