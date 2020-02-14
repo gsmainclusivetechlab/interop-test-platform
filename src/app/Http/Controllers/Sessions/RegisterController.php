@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Sessions;
 
@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Sessions\StoreRegisterConfigurationRequest;
 use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
 use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
-use App\Models\TestSuite;
+use App\Models\TestOperation;
 
 class RegisterController extends Controller
 {
@@ -59,7 +59,7 @@ class RegisterController extends Controller
      */
     public function createInformation()
     {
-        $suites = TestSuite::whereHas('positiveCases')->orWhereHas('negativeCases')->get();
+        $suites = TestOperation::whereHas('positiveCases')->orWhereHas('negativeCases')->get();
 
         return view('sessions.register.information', compact('suites'));
     }

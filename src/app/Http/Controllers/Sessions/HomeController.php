@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Sessions;
 
@@ -25,7 +25,7 @@ class HomeController extends Controller
             return $query->where('name', 'like', "%{$q}%");
         })->withCount([
             'cases',
-            'suites' => function ($query) {
+            'operations' => function ($query) {
                 $query->select(DB::raw('COUNT(DISTINCT id)'));
             },
         ])->latest()->paginate();
