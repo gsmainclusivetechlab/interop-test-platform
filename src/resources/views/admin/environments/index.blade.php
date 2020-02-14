@@ -18,7 +18,8 @@
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
-                        <th class="text-nowrap">{{ __('Name') }}</th>
+                        <th class="text-nowrap w-25">{{ __('Name') }}</th>
+                        <th class="text-nowrap">{{ __('Description') }}</th>
                         <th class="text-nowrap w-1"></th>
                     </tr>
                 </thead>
@@ -27,6 +28,9 @@
                     <tr>
                         <td class="text-break">
                             <a href="{{ route('admin.environments.edit', $environment) }}">{{ $environment->name }}</a>
+                        </td>
+                        <td class="text-break">
+                            {{ \Illuminate\Support\Str::limit($environment->description) }}
                         </td>
                         <td class="text-center">
 

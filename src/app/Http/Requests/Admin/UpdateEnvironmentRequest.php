@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Rules\Yaml;
+use App\Rules\YamlRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateEnvironmentRequest extends FormRequest
@@ -27,7 +27,7 @@ class UpdateEnvironmentRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
-            'variables' => ['required', new Yaml()],
+            'variables' => ['required', new YamlRule()],
         ];
     }
 }

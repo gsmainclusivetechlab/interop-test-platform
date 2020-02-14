@@ -8,7 +8,7 @@
     </h1>
     {{ Form::open(['route' => ['admin.environments.update', $environment], 'method' => 'PATCH']) }}
         <div class="form-group">
-            <div class="row align-items-center">
+            <div class="row">
                 <label class="col-sm-3">
                     <b>{{ __('Name') }}</b>
                 </label>
@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="row align-items-center">
+            <div class="row">
                 <label class="col-sm-3">
                     <b>{{ __('Description') }}</b>
                 </label>
@@ -38,12 +38,12 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="row align-items-center">
+            <div class="row">
                 <label class="col-sm-3">
                     <b>{{ __('Variables') }}</b>
                 </label>
                 <div class="col-sm-9">
-{{--                    <web-editor>{{ old('variables', \Symfony\Component\Yaml\Yaml::dump($environment->variables)) }}</web-editor>--}}
+                    <web-editor editor-class="@error('variables') is-invalid @enderror" editor-subject-name="variables">{{ old('variables', \Symfony\Component\Yaml\Yaml::dump($environment->variables)) }}</web-editor>
                     @error('variables')
                         <span class="invalid-feedback">
                             <strong>{{ $message }}</strong>

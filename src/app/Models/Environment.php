@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @mixin Eloquent
@@ -30,4 +31,18 @@ class Environment extends Model
     protected $casts = [
         'variables' => 'array',
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function (Model $model) {
+            $model->variables = Yaml::parse($model->variables);
+        });
+    }
 }

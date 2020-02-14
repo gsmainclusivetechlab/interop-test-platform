@@ -3,8 +3,9 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use Symfony\Component\Yaml\Yaml;
 
-class Yaml implements Rule
+class YamlRule implements Rule
 {
     /**
      * Determine if the validation rule passes.
@@ -15,7 +16,7 @@ class Yaml implements Rule
      */
     public function passes($attribute, $value)
     {
-        return \Symfony\Component\Yaml\Yaml::parse($value) !== null;
+        return Yaml::parse($value) !== null;
     }
 
     /**
@@ -25,6 +26,6 @@ class Yaml implements Rule
      */
     public function message()
     {
-        return __('The validation error message.');
+        return __(':attribute has not valid yaml format.');
     }
 }
