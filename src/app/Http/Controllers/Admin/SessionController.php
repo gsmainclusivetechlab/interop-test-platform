@@ -22,7 +22,7 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::whereHas('user', function ($query) {
+        $sessions = TestSession::whereHas('owner', function ($query) {
             $query->when(request('q'), function ($query, $q) {
                 return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
                     ->orWhere('name', 'like', "%{$q}%");

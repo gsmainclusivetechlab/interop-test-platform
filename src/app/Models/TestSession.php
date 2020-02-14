@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -12,6 +12,11 @@ class TestSession extends Model
     const DELETED_AT = 'deactivated_at';
 
     /**
+     * @var string
+     */
+    protected $table = 'test_sessions';
+
+    /**
      * @var array
      */
     protected $fillable = [
@@ -21,7 +26,7 @@ class TestSession extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function owner()
     {
         return $this->belongsTo(User::class);
     }

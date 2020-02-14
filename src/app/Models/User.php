@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Models;
 
@@ -107,6 +105,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sessions()
     {
-        return $this->hasMany(TestSession::class);
+        return $this->hasMany(TestSession::class, 'owner_id');
     }
 }
