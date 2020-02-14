@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin Eloquent
  */
-class TestPlatform extends Model
+class TestPlatformConnection extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'test_platforms';
+    protected $table = 'test_platforms_connections';
 
     /**
      * @var array
@@ -27,24 +27,24 @@ class TestPlatform extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function source()
+    {
+        return $this->belongsTo(TestPlatform::class, 'source_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function target()
+    {
+        return $this->belongsTo(TestPlatform::class, 'target_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function scenario()
     {
         return $this->belongsTo(TestScenario::class, 'scenario_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function component()
-    {
-        return $this->belongsTo(Component::class, 'component_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function specification()
-    {
-        return $this->belongsTo(Specification::class, 'specification_id');
     }
 }

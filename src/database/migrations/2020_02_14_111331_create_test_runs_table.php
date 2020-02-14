@@ -15,10 +15,14 @@ class CreateTestRunsTable extends Migration
     {
         Schema::create('test_runs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('test_case_id');
-            $table->unsignedBigInteger('test_session_id');
-            $table->foreign(['test_case_id', 'test_session_id'])->references(['test_case_id', 'test_session_id'])->on('test_case_test_session')->onDelete('cascade');
+            $table->uuid('uuid')->unique();
+            $table->unsignedBigInteger('case_id');
+            $table->unsignedBigInteger('session_id');
+            $table->foreign(['case_id', 'session_id'])->references(['case_id', 'session_id'])->on('test_sessions_cases')->onDelete('cascade');
+            $table->string('status');
             $table->timestamp('created_at');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('finished_at')->nullable();
         });
     }
 

@@ -13,12 +13,33 @@ use Illuminate\Database\Eloquent\Model;
 class TestScenario extends Model
 {
     /**
+     * @var string
+     */
+    protected $table = 'test_scenarios';
+
+    /**
      * @var array
      */
     protected $fillable = [
         'name',
         'description',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function platforms()
+    {
+        return $this->hasMany(TestPlatform::class, 'scenario_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function platformsConnections()
+    {
+        return $this->hasMany(TestPlatformConnection::class, 'scenario_id');
+    }
 
 //    /**
 //     * @return \Illuminate\Database\Eloquent\Relations\HasMany

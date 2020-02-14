@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 class Environment extends Model
 {
     /**
+     * @var string
+     */
+    protected $table = 'environments';
+
+    /**
      * @var array
      */
     protected $fillable = [

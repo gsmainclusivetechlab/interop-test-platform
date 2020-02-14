@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 class Specification extends Model
 {
     /**
+     * @var string
+     */
+    protected $table = 'specifications';
+
+    /**
      * @var array
      */
     protected $fillable = [

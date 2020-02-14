@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Component;
+use App\Models\Specification;
 use App\Models\TestScenario;
 use Illuminate\Database\Seeder;
 
@@ -14,10 +16,8 @@ class TestScenariosTableSeeder extends Seeder
     {
         foreach ($this->getData() as $key => $data) {
             $scenario = TestScenario::create($data);
-
-//            foreach (Arr::get($this->getComponentsData(), $key, []) as $componentData) {
-//                $scenario->components()->attach($componentData);
-//            }
+            $scenario->platforms()->createMany(Arr::get($this->getPlatformsData(), $key, []));
+            $scenario->platformsConnections()->createMany(Arr::get($this->getPlatformsConnectionsData(), $key, []));
         }
     }
 
@@ -36,14 +36,44 @@ class TestScenariosTableSeeder extends Seeder
     /**
      * @return array
      */
-    protected function getComponentsData()
+    protected function getPlatformsData()
     {
         return [
             [
                 [
-
+                    'component_id' => Component::whereName('Payer')->value('id'),
+                    'position' => 1,
+                ],
+                [
+                    'component_id' => Component::whereName('Service Provider')->value('id'),
+                    'position' => 2,
+                ],
+                [
+                    'component_id' => Component::whereName('Mobile Money Operator 1')->value('id'),
+                    'specification_id' => Specification::whereName('Mobile Money API v1.0')->value('id'),
+                    'position' => 3,
+                ],
+                [
+                    'component_id' => Component::whereName('Mojaloop System')->value('id'),
+                    'specification_id' => Specification::whereName('Mojaloop Hub API v1.0')->value('id'),
+                    'position' => 4,
+                ],
+                [
+                    'component_id' => Component::whereName('Mobile Money Operator 2')->value('id'),
+                    'specification_id' => Specification::whereName('Mojaloop Hub API v1.0')->value('id'),
+                    'position' => 5,
                 ],
             ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getPlatformsConnectionsData()
+    {
+        return [
+
         ];
     }
 }

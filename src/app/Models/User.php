@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var string
      */
     protected $table = 'users';
+
     /**
      * @var array
      */

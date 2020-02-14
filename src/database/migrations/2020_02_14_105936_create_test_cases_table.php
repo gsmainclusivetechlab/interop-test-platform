@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestSessionsTable extends Migration
+class CreateTestCasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateTestSessionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_sessions', function (Blueprint $table) {
+        Schema::create('test_cases', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('use_case_id');
+            $table->foreign('use_case_id')->references('id')->on('test_use_cases')->onDelete('cascade');
             $table->string('name');
+            $table->text('description')->nullable();
             $table->timestamps();
-            $table->softDeletes('deactivated_at');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateTestSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_sessions');
+        Schema::dropIfExists('test_cases');
     }
 }

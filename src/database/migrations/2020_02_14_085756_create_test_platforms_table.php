@@ -14,14 +14,15 @@ class CreateTestPlatformsTable extends Migration
     public function up()
     {
         Schema::create('test_platforms', function (Blueprint $table) {
-            $table->unsignedBigInteger('test_scenario_id');
-            $table->foreign('test_scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
+            $table->unsignedBigInteger('scenario_id');
+            $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
             $table->unsignedBigInteger('component_id');
             $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
-            $table->primary(['test_scenario_id', 'component_id']);
-            $table->unsignedBigInteger('specification_version_id')->nullable();
-            $table->foreign('specification_version_id')->references('id')->on('specification_versions')->onDelete('set null');
+            $table->primary(['scenario_id', 'component_id']);
+            $table->unsignedBigInteger('specification_id')->nullable();
+            $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('set null');
             $table->unsignedInteger('position');
+            $table->timestamps();
         });
     }
 

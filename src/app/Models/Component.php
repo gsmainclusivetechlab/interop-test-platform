@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Model;
 class Component extends Model
 {
     /**
+     * @var string
+     */
+    protected $table = 'components';
+
+    /**
      * @var array
      */
     protected $fillable = [
