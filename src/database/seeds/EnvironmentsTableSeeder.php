@@ -2,6 +2,7 @@
 
 use App\Models\Environment;
 use Illuminate\Database\Seeder;
+use Symfony\Component\Yaml\Yaml;
 
 class EnvironmentsTableSeeder extends Seeder
 {
@@ -25,10 +26,10 @@ class EnvironmentsTableSeeder extends Seeder
         return [
             [
                 'name' => 'Justcoded Servers',
-                'variables' => [
+                'variables' => Yaml::dump([
                     'MM_API_HOST' => 'http://gsma-itp-mmo-api.develop.s8.jc',
                     'MOJALOOP_API_HOST' => 'http://quoting-service.mojaloop.staging.s4.justcoded.com',
-                ],
+                ]),
             ],
         ];
     }
