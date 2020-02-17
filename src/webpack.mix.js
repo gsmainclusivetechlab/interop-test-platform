@@ -9,6 +9,7 @@ mix.babelConfig({
     .webpackConfig({
         output: {
             chunkFilename: 'js/chunks/[name].js',
+            publicPath: '/assets/',
         },
         plugins: [
             new CleanWebpackPlugin({
@@ -23,4 +24,12 @@ mix.babelConfig({
     .js('resources/js/app.js', 'js')
     .sass('resources/sass/vendor.scss', 'css')
     .sass('resources/sass/app.scss', 'css')
+    .copyDirectory('resources/fonts', 'public/assets/fonts')
+    .copyDirectory(
+        'node_modules/tabler-ui/dist/assets/fonts',
+        'public/assets/fonts',
+    )
+    .options({
+        processCssUrls: false,
+    })
     .version();
