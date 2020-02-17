@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\SetJsonHeaders;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class TestingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['api', /*ValidateTraceContext::class,*/ SetJsonHeaders::class]);
+    }
+
     public function handle(ServerRequestInterface $request)
     {
         dd($request);
@@ -21,4 +27,15 @@ class TestingController extends Controller
             return $e->getResponse() ?: $e;
         }
     }
+
+//    protected function createTestRunner()
+//    {
+//        $testSuite = new TestSuite();
+//        $testSuite->addTest(new RequestTest(request()));
+//
+//        $testRunner = new TestRunner();
+//        $testResult = $testRunner->run($testSuite);
+//
+//        dd($testResult);
+//    }
 }
