@@ -19,8 +19,6 @@ class CreateTestSessionsTable extends Migration
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('scenario_id');
             $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
-            $table->unsignedBigInteger('environment_id')->nullable();
-            $table->foreign('environment_id')->references('id')->on('environments')->onDelete('set null');
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();

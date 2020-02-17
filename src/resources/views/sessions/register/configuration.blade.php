@@ -13,48 +13,54 @@
                         @include('sessions.register.includes.components')
                     </div>
                     <div class="d-flex justify-content-between">
-                        @include('sessions.register.includes.components-info')
-                        <div class="flow-chart-content">
-                            <div class="card">
-                                <div class="card-header border-0">
-                                    <h3 class="card-title">@yield('title')</h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <h5>
-                                            {{ __('Service Provider') }} > {{ __('Mobile Money Operator 1') }}
-                                        </h5>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            {{ __('URL') }}
-                                        </label>
-                                        <input type="text" disabled class="form-control" value="https://sandbox.mobilemoneyapi.io/v1.0/passthrough/mm">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            {{ __('Key') }}
-                                        </label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                    <hr>
-                                    <div class="form-group">
-                                        <h5>
-                                            {{ __('Mobile Money Operator 1') }} < {{ __('Service Provider') }}
-                                        </h5>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">
-                                            {{ __('Key') }}
-                                        </label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                                </div>
+                        <div class="d-flex w-100">
+                            <div class="col-4">
+                                @include('sessions.register.includes.components-info')
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <a href="{{ route('sessions.register.selection.create') }}" class="btn btn-outline-primary">{{ __('Back') }}</a>
-                                <button type="submit" class="btn btn-primary">{{ __('Next') }}</button>
-                            </div>
+                            <div class="col-8">
+                                <div class="flow-chart-content">
+                                    <div class="card">
+                                        <div class="card-header border-0">
+                                            <h3 class="card-title">@yield('title')</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <h5>
+                                                    {{ __('Service Provider') }} > {{ __('Mobile Money Operator 1') }}
+                                                </h5>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    {{ __('URL') }}
+                                                </label>
+                                                <input type="text" disabled class="form-control" value="https://sandbox.mobilemoneyapi.io/v1.0/passthrough/mm">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    {{ __('Key') }}
+                                                </label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                            <hr>
+                                            <div class="form-group">
+                                                <h5>
+                                                    {{ __('Mobile Money Operator 1') }} < {{ __('Service Provider') }}
+                                                </h5>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">
+                                                    {{ __('Key') }}
+                                                </label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{{ route('sessions.register.selection.create') }}" class="btn btn-outline-primary">{{ __('Back') }}</a>
+                                        <button type="submit" class="btn btn-primary">{{ __('Next') }}</button>
+                                    </div>
+                                </div>
+                             </div>
                         </div>
                     </div>
                 </form>

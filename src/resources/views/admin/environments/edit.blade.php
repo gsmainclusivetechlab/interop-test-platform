@@ -43,7 +43,7 @@
                     <b>{{ __('Variables') }}</b>
                 </label>
                 <div class="col-sm-9">
-                    <web-editor editor-class="@error('variables') is-invalid @enderror" editor-subject-name="variables">{{ old('variables', \Symfony\Component\Yaml\Yaml::dump($environment->variables)) }}</web-editor>
+                    <web-editor editor-class="@error('variables') is-invalid @enderror" editor-subject-name="variables">{{ old('variables', $environment->variables) }}</web-editor>
                     @error('variables')
                         <span class="invalid-feedback">
                             <strong>{{ $message }}</strong>
