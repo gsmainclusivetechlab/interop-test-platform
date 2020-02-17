@@ -1,16 +1,35 @@
 const mix = require('laravel-mix');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
-
-mix.js('resources/js/app.js', 'public/js');
-mix.sass('resources/sass/app.scss', 'public/css');
-mix.version();
+mix.setPublicPath('public/assets');
+mix.babelConfig({
+    plugins: ['@babel/plugin-syntax-dynamic-import'],
+})
+    .webpackConfig({
+        output: {
+            chunkFilename: 'js/chunks/[name].js',
+            publicPath: '/assets/',
+        },
+        plugins: [
+            new CleanWebpackPlugin({
+                cleanOnceBeforeBuildPatterns: ['**/*', '!.gitignore'],
+            }),
+            new BundleAnalyzerPlugin({
+                analyzerMode: 'static',
+                reportFilename: 'webpack-stats.html',
+            }),
+        ],
+    })
+    .js('resources/js/app.js', 'js')
+    .sass('resources/sass/vendor.scss', 'css')
+    .sass('resources/sass/app.scss', 'css')
+    .copyDirectory('resources/fonts', 'public/assets/fonts')
+    .copyDirectory(
+        'node_modules/tabler-ui/dist/assets/fonts',
+        'public/assets/fonts',
+    )
+    .options({
+        processCssUrls: false,
+    })
+    .version();

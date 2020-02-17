@@ -1,9 +1,9 @@
 @if(session('success'))
-    <b-alert show variant="success" dismissible>{{ session('success') }}</b-alert>
+    <notification :options="{text: '{{ session('success') }}', type: 'success'}"></notification>
 @elseif(session('danger'))
-    <b-alert show variant="danger" dismissible>{{ session('danger') }}</b-alert>
+    <notification :options="{text: '{{ session('danger') }}', type: 'danger'}"></notification>
 @elseif(session('warning'))
-    <b-alert show variant="warning" dismissible>{{ session('warning') }}</b-alert>
+    <notification :options="{text: '{{ session('warning') }}', type: 'warning'}"></notification>
 @elseif(session('info'))
-    <b-alert show variant="info" dismissible>{{ session('info') }}</b-alert>
+    <notification :options="{text: '{{ session('info') }}', type: 'info'}"></notification>
 @endif

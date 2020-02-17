@@ -1,8 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.settings')
 
 @section('title', __('Profile'))
-
-@section('sidebar', \Illuminate\Support\Facades\View::make('settings.includes.sidebar'))
 
 @section('content')
     <div class="card">

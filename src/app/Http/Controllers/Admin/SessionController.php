@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class SessionController extends Controller
 {
     /**
-     * UserController constructor.
+     * SessionController constructor.
      */
     public function __construct()
     {
@@ -22,14 +22,14 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::whereHas('user', function ($query) {
+        $sessions = TestSession::whereHas('owner', function ($query) {
             $query->when(request('q'), function ($query, $q) {
                 return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
                     ->orWhere('name', 'like', "%{$q}%");
             });
         })->withCount([
             'cases',
-            'suites' => function ($query) {
+            'operations' => function ($query) {
                 $query->select(DB::raw('COUNT(DISTINCT id)'));
             },
         ])->latest()->paginate();

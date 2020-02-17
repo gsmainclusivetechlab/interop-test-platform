@@ -5,63 +5,65 @@
 </template>
 
 <script>
-    import Swal from 'sweetalert2';
-
-    export default {
-        data() {
-            return {
-                confirmed: false
-            };
+export default {
+    data() {
+        return {
+            confirmed: false,
+        };
+    },
+    props: {
+        title: {
+            type: String,
+            default: 'Are you sure?',
         },
-        props: {
-            title: {
-                type: String,
-                default: 'Are you sure?'
-            },
-            icon: {
-                type: String,
-                default: 'warning'
-            },
-            text: {
-                type: String,
-                default: "You won't be able to revert this!"
-            },
-            buttonsStyling: {
-                type: Boolean,
-                default: false
-            },
-            showCancelButton: {
-                type: Boolean,
-                default: true
-            },
-            customClass: {
-                type: Object,
-                default() {
-                    return {
-                        confirmButton: 'btn btn-primary mr-4',
-                        cancelButton: 'btn btn-secondary'
-                    };
-                }
-            },
-            confirmButtonText: {
-                type: String,
-                default: 'Confirm'
-            }
+        icon: {
+            type: String,
+            default: 'warning',
         },
-        methods: {
-            confirm(e) {
-                if (!this.confirmed) {
-                    e.preventDefault();
+        text: {
+            type: String,
+            default: "You won't be able to revert this!",
+        },
+        buttonsStyling: {
+            type: Boolean,
+            default: false,
+        },
+        showCancelButton: {
+            type: Boolean,
+            default: true,
+        },
+        customClass: {
+            type: Object,
+            default() {
+                return {
+                    confirmButton: 'btn btn-primary mr-4',
+                    cancelButton: 'btn btn-secondary',
+                };
+            },
+        },
+        confirmButtonText: {
+            type: String,
+            default: 'Confirm',
+        },
+    },
+    methods: {
+        confirm(e) {
+            if (!this.confirmed) {
+                e.preventDefault();
 
+                import(
+                    /* webpackChunkName: "sweetalert2" */ 'sweetalert2'
+                ).then(({ default: Swal }) =>
                     Swal.fire(this.$props).then((result) => {
                         this.confirmed = result.value;
 
                         if (result.value) {
                             this.$el.click();
                         }
-                    });
-                }
+                    }),
+                );
             }
-        }
-    }
+        },
+    },
+};
 </script>

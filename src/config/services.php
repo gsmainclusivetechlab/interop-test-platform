@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'gsma_mm' => [
+        'base_uri' => env('GSMA_MM_BASE_URI'),
+    ],
+
+    'mojaloop_hub' => [
+        'quoting_service_uri' => env('MOJALOOP_HUB_QUOTING_SERVICE_URI'),
+    ],
 ];
