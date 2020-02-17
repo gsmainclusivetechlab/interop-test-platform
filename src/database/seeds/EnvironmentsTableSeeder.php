@@ -28,7 +28,7 @@ class EnvironmentsTableSeeder extends Seeder
                 'name' => 'Justcoded Servers',
                 'variables' => Yaml::dump([
                     'MM_API_HOST' => 'http://gsma-itp-mmo-api.develop.s8.jc',
-                    'MOJALOOP_API_HOST' => 'http://quoting-service.mojaloop.staging.s4.justcoded.com',
+                    'MOJALOOP_API_HOST' => 'http://transaction-requests-service.mojaloop.staging.s4.justcoded.com',
                 ]),
             ],
         ];

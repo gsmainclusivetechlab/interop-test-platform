@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Component;
+use App\Models\TestScenario;
 
 class HomeController extends Controller
 {

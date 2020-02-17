@@ -19,7 +19,8 @@ class TestPlatform extends Model
      * @var array
      */
     protected $fillable = [
-
+        'name',
+        'description',
     ];
 
     /**
@@ -28,14 +29,6 @@ class TestPlatform extends Model
     public function scenario()
     {
         return $this->belongsTo(TestScenario::class, 'scenario_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function component()
-    {
-        return $this->belongsTo(Component::class, 'component_id');
     }
 
     /**

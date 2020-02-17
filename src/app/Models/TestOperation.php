@@ -25,6 +25,14 @@ class TestOperation extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function steps()
+    {
+        return $this->hasMany(TestOperationStep::class, 'operation_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function cases()
     {
         return $this->hasMany(TestCase::class, 'operation_id');

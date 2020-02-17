@@ -27,11 +27,4 @@ class Specification extends Model
         'schema',
         'description',
     ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'schema' => 'array',
-    ];
 }

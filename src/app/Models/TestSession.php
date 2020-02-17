@@ -26,6 +26,7 @@ class TestSession extends Model
     protected $fillable = [
         'name',
         'description',
+        'scenario_id',
     ];
 
     /**
@@ -41,25 +42,25 @@ class TestSession extends Model
      */
     public function cases()
     {
-        return $this->belongsToMany(TestCase::class, 'case_id')->using(TestSessionCase::class);
+        return $this->belongsToMany(TestCase::class, 'test_sessions_cases', 'session_id', 'case_id')->using(TestSessionCase::class);
     }
 
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function positiveCases()
-//    {
-//        return $this->cases()->positive();
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function negativeCases()
-//    {
-//        return $this->cases()->negative();
-//    }
-//
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function positiveCases()
+    {
+        return $this->cases()->positive();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function negativeCases()
+    {
+        return $this->cases()->negative();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */

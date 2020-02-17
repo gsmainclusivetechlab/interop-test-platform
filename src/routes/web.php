@@ -66,10 +66,8 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('environments', 'EnvironmentController', ['except' => ['show']]);
 });
 
-//Route::name('mocks.')->prefix('mocks')->namespace('Mocks')->group(function () {
-//    Route::post('gsma-mm/quotations', 'GsmaMmQuotationController@store')->name('gsma_mm.quotations.store');
-//    Route::post('mojaloop-hub/quotes', 'MojaloopHubQuoteController@store')->name('mojaloop_hub.quotes.store');
-//    Route::any('mojaloop-hub/quotes/callback/{method}', 'MojaloopHubQuoteController@callback')
-//        ->name('mojaloop_hub.quotes.callback')
-//        ->where(['method' => '[a-z0-9-\/]+']);
-//});
+Route::name('testing.')->prefix('testing')->group(function () {
+    Route::any('{session-case}/run/{route}', 'TestingController@run')
+        ->name('run')
+        ->where(['route' => '[a-z0-9-\/]+']);
+});

@@ -21,6 +21,7 @@ class CreateTestCasesStepsTable extends Migration
             $table->foreign('step_id')->references('id')->on('test_operations_steps')->onDelete('cascade');
             $table->longText('request_validation');
             $table->longText('response_validation');
+            $table->unsignedInteger('position');
             $table->timestamps();
         });
     }

@@ -14,6 +14,7 @@ class CreateTestSessionsCasesTable extends Migration
     public function up()
     {
         Schema::create('test_sessions_cases', function (Blueprint $table) {
+            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('case_id');
             $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
             $table->unsignedBigInteger('session_id');

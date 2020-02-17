@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -11,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class TestSessionCase extends Pivot
 {
+    use HasUuid;
+
     /**
      * @var string
      */
@@ -31,7 +34,7 @@ class TestSessionCase extends Pivot
         parent::boot();
 
         static::saving(function (Model $model) {
-            $model->use_case_id = $model->case()->value('use_case_id');
+            $model->operation_id = $model->case()->value('operation_id');
         });
     }
 

@@ -28,6 +28,14 @@ class TestCase extends Model
     ];
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function steps()
+    {
+        return $this->hasMany(TestCaseStep::class, 'case_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function operation()

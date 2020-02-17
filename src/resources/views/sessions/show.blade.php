@@ -12,21 +12,21 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-unstyled">
-                        @foreach($session->suites as $suite)
+                        @foreach($session->operations as $operation)
                             <li>
-                                <b class="d-block dropdown-toggle py-2 px-4 border-bottom" v-b-toggle.suite-{{ $suite->id }}>
-                                    {{ $suite->name }}
+                                <b class="d-block dropdown-toggle py-2 px-4 border-bottom" v-b-toggle.suite-{{ $operation->id }}>
+                                    {{ $operation->name }}
                                 </b>
-                                @if ($session->positiveCases->where('test_suite_id', $suite->id)->count())
-                                    <b-collapse id="suite-{{ $suite->id }}" visible>
+                                @if ($session->positiveCases->where('operation_id', $operation->id)->count())
+                                    <b-collapse id="suite-{{ $operation->id }}" visible>
                                         <ul class="list-unstyled">
                                             <li>
-                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.positive-cases-{{ $suite->id }}>
+                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.positive-cases-{{ $operation->id }}>
                                                     {{ __('Happy flow') }}
                                                 </span>
-                                                <b-collapse id="positive-cases-{{ $suite->id }}" visible>
+                                                <b-collapse id="positive-cases-{{ $operation->id }}" visible>
                                                     <ul class="list-unstyled">
-                                                        @foreach($session->positiveCases->where('test_suite_id', $suite->id) as $case)
+                                                        @foreach($session->positiveCases->where('operation_id', $operation->id) as $case)
                                                             <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="{{ route('sessions.cases.show', [$session, $case]) }}">{{ $case->name }}</a>
                                                             </li>
@@ -38,16 +38,16 @@
                                     </b-collapse>
                                 @endif
 
-                                @if ($session->negativeCases->where('test_suite_id', $suite->id)->count())
-                                    <b-collapse id="suite-{{ $suite->id }}" visible>
+                                @if ($session->negativeCases->where('operation_id', $operation->id)->count())
+                                    <b-collapse id="suite-{{ $operation->id }}" visible>
                                         <ul class="list-unstyled">
                                             <li>
-                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.negative-cases-{{ $suite->id }}>
+                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.negative-cases-{{ $operation->id }}>
                                                     {{ __('Unhappy flow') }}
                                                 </span>
-                                                <b-collapse id="negative-cases-{{ $suite->id }}" visible>
+                                                <b-collapse id="negative-cases-{{ $operation->id }}" visible>
                                                     <ul class="list-unstyled">
-                                                        @foreach($session->negativeCases->where('test_suite_id', $suite->id) as $case)
+                                                        @foreach($session->negativeCases->where('operation_id', $operation->id) as $case)
                                                             <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="{{ route('sessions.cases.show', [$session, $case]) }}">{{ $case->name }}</a>
                                                             </li>

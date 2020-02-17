@@ -8,7 +8,7 @@
             <div class="ml-4 pt-1">
                 {{ __('Execution') }}:
                 <i class="fe fe-briefcase"></i>
-                <small>{{ $session->suites->count() }}</small>
+                <small>{{ $session->operations->count() }}</small>
                 <i class="fe fe-file-text"></i>
                 <small>{{ $session->cases->count() }}</small>
             </div>

@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestPlatformConnection extends Model
 {
+    const CONNECTION_SIMULATED = 'simulated';
+    const CONNECTION_NOT_SIMULATED = 'not-simulated';
+
     /**
      * @var string
      */
@@ -19,7 +22,7 @@ class TestPlatformConnection extends Model
      * @var array
      */
     protected $fillable = [
-
+        'connection',
     ];
 
     /**

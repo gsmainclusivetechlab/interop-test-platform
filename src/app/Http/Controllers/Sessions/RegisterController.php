@@ -7,6 +7,7 @@ use App\Http\Requests\Sessions\StoreRegisterConfigurationRequest;
 use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
 use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
 use App\Models\TestOperation;
+use App\Models\TestScenario;
 
 class RegisterController extends Controller
 {
@@ -59,9 +60,9 @@ class RegisterController extends Controller
      */
     public function createInformation()
     {
-        $suites = TestOperation::whereHas('positiveCases')->orWhereHas('negativeCases')->get();
+        $operations = TestOperation::whereHas('positiveCases')->orWhereHas('negativeCases')->get();
 
-        return view('sessions.register.information', compact('suites'));
+        return view('sessions.register.information', compact('operations'));
     }
 
     /**
@@ -73,6 +74,7 @@ class RegisterController extends Controller
         $user = auth()->user();
         $session = $user->sessions()->create([
             'name' => $request->input('name'),
+            'scenario_id' => TestScenario::first()->value('id'),
         ]);
         $session->cases()->attach($request->input('cases'));
 
