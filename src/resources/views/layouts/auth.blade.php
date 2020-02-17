@@ -1,12 +1,12 @@
 @extends('layouts.base')
 
 @push('styles')
-    <link href="{{ mix('css/vendor.css') }}" rel="stylesheet">
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/vendor.css', 'assets') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css', 'assets') }}" rel="stylesheet">
 @endpush
 
 @push('scripts')
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{ mix('js/app.js', 'assets') }}" defer></script>
 @endpush
 
 @section('page')

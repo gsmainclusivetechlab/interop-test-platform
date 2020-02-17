@@ -1,5 +1,4 @@
 const mix = require('laravel-mix');
-const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
@@ -13,7 +12,7 @@ mix.babelConfig({
         },
         plugins: [
             new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: ['public/assets/**/*', '!.gitignore'],
+                cleanOnceBeforeBuildPatterns: ['**/*', '!.gitignore'],
             }),
             new BundleAnalyzerPlugin({
                 analyzerMode: 'static',
