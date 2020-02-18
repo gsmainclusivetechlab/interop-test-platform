@@ -1,22 +1,25 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Testing;
 
+use App\Http\Controllers\Controller;
 use App\Http\Middleware\SetJsonHeaders;
+use App\Http\Middleware\ValidateTraceContext;
+use App\Models\Specification;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ServerRequestInterface;
 
-class TestingController extends Controller
+class CallbackController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['api', /*ValidateTraceContext::class,*/ SetJsonHeaders::class]);
+        $this->middleware(['api', ValidateTraceContext::class, SetJsonHeaders::class]);
     }
 
-    public function handle(ServerRequestInterface $request)
+    public function __invoke(Specification $specification, ServerRequestInterface $request, string $path)
     {
-        dd($request);
+        dd($specification);
 
         $client = new Client();
 

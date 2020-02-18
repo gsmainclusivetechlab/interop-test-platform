@@ -5,7 +5,7 @@ namespace App\Testing\Tests;
 use App\Testing\TestCase;
 use Illuminate\Http\Response;
 
-final class ResponseTest extends TestCase
+final class ExpectedResponseValidationTest extends TestCase
 {
     /**
      * @param Response $response

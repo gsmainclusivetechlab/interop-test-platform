@@ -18,7 +18,7 @@ class CreateTestResultsTable extends Migration
             $table->unsignedBigInteger('run_id');
             $table->foreign('run_id')->references('id')->on('test_runs')->onDelete('cascade');
             $table->unsignedBigInteger('step_id');
-            $table->foreign('step_id')->references('id')->on('test_cases_steps')->onDelete('cascade');
+            $table->foreign('step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->text('result')->nullable();
             $table->longText('request')->nullable();
             $table->longText('response')->nullable();

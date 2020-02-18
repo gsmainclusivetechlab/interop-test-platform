@@ -29,7 +29,7 @@ class SessionController extends Controller
             });
         })->withCount([
             'cases',
-            'operations' => function ($query) {
+            'suites' => function ($query) {
                 $query->select(DB::raw('COUNT(DISTINCT id)'));
             },
         ])->latest()->paginate();

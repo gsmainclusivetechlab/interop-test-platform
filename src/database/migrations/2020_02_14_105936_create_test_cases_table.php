@@ -15,11 +15,11 @@ class CreateTestCasesTable extends Migration
     {
         Schema::create('test_cases', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('operation_id');
-            $table->foreign('operation_id')->references('id')->on('test_operations')->onDelete('cascade');
+            $table->unsignedBigInteger('suite_id');
+            $table->foreign('suite_id')->references('id')->on('test_suites')->onDelete('cascade');
             $table->string('name');
-            $table->string('behavior');
             $table->text('description')->nullable();
+            $table->string('behavior');
             $table->timestamps();
         });
     }

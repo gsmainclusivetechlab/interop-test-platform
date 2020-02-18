@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestCasesStepsTable extends Migration
+class CreateTestStepsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateTestCasesStepsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_cases_steps', function (Blueprint $table) {
+        Schema::create('test_steps', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('case_id');
             $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
-            $table->unsignedBigInteger('step_id');
-            $table->foreign('step_id')->references('id')->on('test_operations_steps')->onDelete('cascade');
+            $table->unsignedBigInteger('source_id');
+            $table->unsignedBigInteger('target_id');
+            $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('test_platforms_connections')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('path');
+            $table->string('method');
             $table->longText('request_validation');
             $table->longText('response_validation');
             $table->unsignedInteger('position');
@@ -33,6 +36,6 @@ class CreateTestCasesStepsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_cases_steps');
+        Schema::dropIfExists('test_steps');
     }
 }

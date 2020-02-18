@@ -32,9 +32,8 @@ class TestSessionCase extends Pivot
     protected static function boot()
     {
         parent::boot();
-
         static::saving(function (Model $model) {
-            $model->operation_id = $model->case()->value('operation_id');
+            $model->suite_id = $model->case()->value('suite_id');
         });
     }
 
@@ -47,10 +46,26 @@ class TestSessionCase extends Pivot
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function steps()
+    {
+        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'case_id', 'case_id', 'id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function operation()
+    public function suite()
     {
-        return $this->belongsTo(TestOperation::class, 'operation_id');
+        return $this->belongsTo(TestSuite::class, 'suite_id');
+    }
+
+    /**
+     * @return string|void
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

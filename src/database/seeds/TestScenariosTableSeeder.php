@@ -5,6 +5,7 @@ use App\Models\TestCase;
 use App\Models\TestPlatform;
 use App\Models\TestPlatformConnection;
 use App\Models\TestScenario;
+use App\Models\TestSuite;
 use Illuminate\Database\Seeder;
 
 class TestScenariosTableSeeder extends Seeder
@@ -18,12 +19,12 @@ class TestScenariosTableSeeder extends Seeder
     {
         foreach ($this->getData() as $key => $data) {
             $scenario = TestScenario::create($data);
-            $scenario->platforms()->createMany(Arr::get($this->getPlatformsData(), $key, []));
-            $scenario->platformsConnections()->createMany(Arr::get($this->getPlatformsConnectionsData(), $key, []));
-            $scenario->operations()->createMany(Arr::get($this->getOperationsData(), $key, []))->each(function ($operation, $key) {
-                $operation->steps()->createMany(Arr::get($this->getOperationsStepsData(), $key, []));
-                $operation->cases()->createMany(Arr::get($this->getOperationsCasesData(), $key, []))->each(function ($case, $key) {
-                    $case->steps()->createMany(Arr::get($this->getOperationsCasesStepsData(), $key, []));
+            $scenario->platforms()->createMany(Arr::get($this->getPlatformsData(), $key, []))->each(function (TestPlatform $platform, $key) {
+                $platform->connections()->attach(Arr::get($this->getPlatformsConnectionsData(), $key, []));
+            });
+            $scenario->suites()->createMany(Arr::get($this->getSuitesData(), $key, []))->each(function (TestSuite $suite, $key) {
+                $suite->cases()->createMany(Arr::get($this->getCasesData(), $key, []))->each(function (TestCase $case, $key) {
+                    $case->steps()->createMany(Arr::get($this->getStepsData(), $key, []));
                 });
             });
         }
@@ -50,26 +51,21 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'name' => 'Payer',
-                    'position' => 1,
                 ],
                 [
                     'name' => 'Service Provider',
-                    'position' => 2,
                 ],
                 [
                     'name' => 'Mobile Money Operator 1',
-                    'specification_id' => Specification::whereName('Mobile Money API v1.0')->value('id'),
-                    'position' => 3,
+                    'specification_id' => Specification::where('name', 'Mobile Money API v1.0')->value('id'),
                 ],
                 [
                     'name' => 'Mojaloop System',
-                    'specification_id' => Specification::whereName('Mojaloop Hub API v1.0')->value('id'),
-                    'position' => 4,
+                    'specification_id' => Specification::where('name', 'Mojaloop Hub API v1.0')->value('id'),
                 ],
                 [
                     'name' => 'Mobile Money Operator 2',
-                    'specification_id' => Specification::whereName('Mojaloop Hub API v1.0')->value('id'),
-                    'position' => 5,
+                    'specification_id' => Specification::where('name', 'Mojaloop Hub API v1.0')->value('id'),
                 ],
             ],
         ];
@@ -81,45 +77,60 @@ class TestScenariosTableSeeder extends Seeder
     protected function getPlatformsConnectionsData()
     {
         return [
+            /**
+             * Payer
+             */
             [
                 [
-                    'source_id' => TestPlatform::whereName('Payer')->value('id'),
-                    'target_id' => TestPlatform::whereName('Service Provider')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Service Provider')->value('id'),
+                    'connection' => TestPlatformConnection::CONNECTION_NOT_SIMULATED,
+                ],
+            ],
+            /**
+             * Service Provider
+             */
+            [
+                [
+                    'target_id' => TestPlatform::where('name', 'Payer')->value('id'),
                     'connection' => TestPlatformConnection::CONNECTION_NOT_SIMULATED,
                 ],
                 [
-                    'source_id' => TestPlatform::whereName('Service Provider')->value('id'),
-                    'target_id' => TestPlatform::whereName('Payer')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_NOT_SIMULATED,
+                    'target_id' => TestPlatform::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
                 ],
+            ],
+            /**
+             * Mobile Money Operator 1
+             */
+            [
                 [
-                    'source_id' => TestPlatform::whereName('Service Provider')->value('id'),
-                    'target_id' => TestPlatform::whereName('Mobile Money Operator 1')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Service Provider')->value('id'),
                     'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
                 ],
                 [
-                    'source_id' => TestPlatform::whereName('Mobile Money Operator 1')->value('id'),
-                    'target_id' => TestPlatform::whereName('Service Provider')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Mojaloop System')->value('id'),
+                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                ],
+            ],
+            /**
+             * Mojaloop System
+             */
+            [
+                [
+                    'target_id' => TestPlatform::where('name', 'Mobile Money Operator 1')->value('id'),
                     'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
                 ],
                 [
-                    'source_id' => TestPlatform::whereName('Mobile Money Operator 1')->value('id'),
-                    'target_id' => TestPlatform::whereName('Mojaloop System')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Mobile Money Operator 2')->value('id'),
                     'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
                 ],
+            ],
+            /**
+             * Mobile Money Operator 2
+             */
+            [
                 [
-                    'source_id' => TestPlatform::whereName('Mojaloop System')->value('id'),
-                    'target_id' => TestPlatform::whereName('Mobile Money Operator 1')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
-                ],
-                [
-                    'source_id' => TestPlatform::whereName('Mojaloop System')->value('id'),
-                    'target_id' => TestPlatform::whereName('Mobile Money Operator 2')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
-                ],
-                [
-                    'source_id' => TestPlatform::whereName('Mobile Money Operator 2')->value('id'),
-                    'target_id' => TestPlatform::whereName('Mojaloop System')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Mojaloop System')->value('id'),
                     'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
                 ],
             ],
@@ -129,7 +140,7 @@ class TestScenariosTableSeeder extends Seeder
     /**
      * @return array
      */
-    public function getOperationsData()
+    public function getSuitesData()
     {
         return [
             [
@@ -143,68 +154,7 @@ class TestScenariosTableSeeder extends Seeder
     /**
      * @return array
      */
-    public function getOperationsStepsData()
-    {
-        return [
-            [
-                [
-                    'path' => 'transactions',
-                    'method' => 'POST',
-                    'position' => 1,
-                    'connection_id' => TestPlatformConnection::whereHas('source', function ($query) {
-                        $query->whereName('Service Provider');
-                    })->whereHas('target', function ($query) {
-                        $query->whereName('Mobile Money Operator 1');
-                    })->value('id'),
-                ],
-                [
-                    'path' => 'transactionRequests',
-                    'method' => 'POST',
-                    'position' => 2,
-                    'connection_id' => TestPlatformConnection::whereHas('source', function ($query) {
-                        $query->whereName('Mobile Money Operator 1');
-                    })->whereHas('target', function ($query) {
-                        $query->whereName('Mojaloop System');
-                    })->value('id'),
-                ],
-                [
-                    'path' => 'transactionRequests',
-                    'method' => 'POST',
-                    'position' => 3,
-                    'connection_id' => TestPlatformConnection::whereHas('source', function ($query) {
-                        $query->whereName('Mojaloop System');
-                    })->whereHas('target', function ($query) {
-                        $query->whereName('Mobile Money Operator 2');
-                    })->value('id'),
-                ],
-                [
-                    'path' => 'transactionRequests',
-                    'method' => 'PUT',
-                    'position' => 4,
-                    'connection_id' => TestPlatformConnection::whereHas('source', function ($query) {
-                        $query->whereName('Mobile Money Operator 2');
-                    })->whereHas('target', function ($query) {
-                        $query->whereName('Mojaloop System');
-                    })->value('id'),
-                ],
-                [
-                    'path' => 'transactionRequests',
-                    'method' => 'PUT',
-                    'position' => 5,
-                    'connection_id' => TestPlatformConnection::whereHas('source', function ($query) {
-                        $query->whereName('Mojaloop System');
-                    })->whereHas('target', function ($query) {
-                        $query->whereName('Mobile Money Operator 1');
-                    })->value('id'),
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getOperationsCasesData()
+    public function getCasesData()
     {
         return [
             [
@@ -219,21 +169,25 @@ class TestScenariosTableSeeder extends Seeder
     /**
      * @return array
      */
-    public function getOperationsCasesStepsData()
+    public function getStepsData()
     {
         return [
             [
                 [
-                    'step_id' => 1,
+                    'path' => 'transactions',
+                    'method' => 'POST',
+                    'source_id' => TestPlatform::where('name', 'Service Provider')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Mobile Money Operator 1')->value('id'),
                     'request_validation' => '',
                     'response_validation' => '',
-                    'position' => 1,
                 ],
                 [
-                    'step_id' => 2,
+                    'path' => 'transactionRequests',
+                    'method' => 'POST',
+                    'source_id' => TestPlatform::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'target_id' => TestPlatform::where('name', 'Mojaloop System')->value('id'),
                     'request_validation' => '',
                     'response_validation' => '',
-                    'position' => 2,
                 ],
             ],
         ];

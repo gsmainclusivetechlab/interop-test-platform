@@ -34,17 +34,9 @@ class TestScenario extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function platformsConnections()
+    public function suites()
     {
-        return $this->hasMany(TestPlatformConnection::class, 'scenario_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function operations()
-    {
-        return $this->hasMany(TestOperation::class, 'scenario_id');
+        return $this->hasMany(TestSuite::class, 'scenario_id');
     }
 
 //

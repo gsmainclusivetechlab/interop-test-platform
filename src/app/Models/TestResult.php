@@ -34,7 +34,7 @@ class TestResult extends Model
      */
     public function step()
     {
-        return $this->belongsTo(TestCaseStep::class, 'step_id');
+        return $this->belongsTo(TestStep::class, 'step_id');
     }
 
 }

@@ -66,8 +66,11 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('environments', 'EnvironmentController', ['except' => ['show']]);
 });
 
-Route::name('testing.')->prefix('testing')->group(function () {
-    Route::any('{session-case}/run/{route}', 'TestingController@run')
+Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
+    Route::any('{sessionCase}/run/{path}', 'RunController')
         ->name('run')
-        ->where(['route' => '[a-z0-9-\/]+']);
+        ->where('path', '.*');
+    Route::any('{specification}/callback/{path}', 'CallbackController')
+        ->name('callback')
+        ->where('path', '.*');
 });

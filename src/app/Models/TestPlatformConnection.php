@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Eloquent;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * @mixin Eloquent
  */
-class TestPlatformConnection extends Model
+class TestPlatformConnection extends Pivot
 {
     const CONNECTION_SIMULATED = 'simulated';
     const CONNECTION_NOT_SIMULATED = 'not-simulated';
@@ -17,6 +17,11 @@ class TestPlatformConnection extends Model
      * @var string
      */
     protected $table = 'test_platforms_connections';
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * @var array
@@ -39,13 +44,5 @@ class TestPlatformConnection extends Model
     public function target()
     {
         return $this->belongsTo(TestPlatform::class, 'target_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function scenario()
-    {
-        return $this->belongsTo(TestScenario::class, 'scenario_id');
     }
 }

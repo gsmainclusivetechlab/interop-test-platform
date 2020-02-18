@@ -40,21 +40,21 @@
                             </div>
                             <div class="card-body pl-0">
                                 <ul class="list-group overflow-auto" style="height: 320px">
-                                    @foreach($operations as $operation)
+                                    @foreach($suites as $suite)
                                         <li class="list-group-item">
-                                            <b class="dropdown-toggle" v-b-toggle.suite-{{ $operation->id }}>
-                                                {{ $operation->name }}
+                                            <b class="dropdown-toggle" v-b-toggle.suite-{{ $suite->id }}>
+                                                {{ $suite->name }}
                                             </b>
-                                            @if ($operation->positiveCases->count())
-                                                <b-collapse id="suite-{{ $operation->id }}" visible>
+                                            @if ($suite->positiveCases->count())
+                                                <b-collapse id="suite-{{ $suite->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-cases-{{ $operation->id }}>
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-cases-{{ $suite->id }}>
                                                                 {{ __('Happy flow') }}
                                                             </span>
-                                                            <b-collapse id="positive-cases-{{ $operation->id }}" visible>
+                                                            <b-collapse id="positive-cases-{{ $suite->id }}" visible>
                                                                 <ul class="list-group">
-                                                                    @foreach($operation->positiveCases as $case)
+                                                                    @foreach($suite->positiveCases as $case)
                                                                         <li class="list-group-item">
                                                                             <label class="custom-control custom-checkbox mb-0">
                                                                                 <input name="cases[{{ $case->id }}]" value="{{ $case->id }}" type="checkbox" class="custom-control-input" {{ old("cases.{$case->id}") ? 'checked' : '' }}>
@@ -71,16 +71,16 @@
                                                 </b-collapse>
                                             @endif
 
-                                            @if ($operation->negativeCases->count())
-                                                <b-collapse id="suite-{{ $operation->id }}" visible>
+                                            @if ($suite->negativeCases->count())
+                                                <b-collapse id="suite-{{ $suite->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-cases-{{ $operation->id }}>
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-cases-{{ $suite->id }}>
                                                                 {{ __('Unhappy flow') }}
                                                             </span>
-                                                            <b-collapse id="negative-cases-{{ $operation->id }}" visible>
+                                                            <b-collapse id="negative-cases-{{ $suite->id }}" visible>
                                                                 <ul class="list-group">
-                                                                    @foreach($operation->negativeCases as $case)
+                                                                    @foreach($suite->negativeCases as $case)
                                                                         <li class="list-group-item">
                                                                             <label class="custom-control custom-checkbox mb-0">
                                                                                 <input name="cases[{{ $case->id }}]" value="{{ $case->id }}" type="checkbox" class="custom-control-input" {{ old("cases.{$case->id}") ? 'checked' : '' }}>

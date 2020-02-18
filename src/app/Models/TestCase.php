@@ -32,7 +32,7 @@ class TestCase extends Model
      */
     public function steps()
     {
-        return $this->hasMany(TestCaseStep::class, 'case_id');
+        return $this->hasMany(TestStep::class, 'case_id');
     }
 
     /**
@@ -40,7 +40,7 @@ class TestCase extends Model
      */
     public function operation()
     {
-        return $this->belongsTo(TestOperation::class, 'operation_id');
+        return $this->belongsTo(TestSuite::class, 'suite_id');
     }
 
     /**

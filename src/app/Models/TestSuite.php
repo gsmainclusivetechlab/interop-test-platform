@@ -8,34 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin Eloquent
  */
-class TestOperation extends Model
+class TestSuite extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'test_operations';
+    protected $table = 'test_suites';
 
     /**
      * @var array
      */
     protected $fillable = [
         'name',
+        'description',
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function steps()
-    {
-        return $this->hasMany(TestOperationStep::class, 'operation_id');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function cases()
     {
-        return $this->hasMany(TestCase::class, 'operation_id');
+        return $this->hasMany(TestCase::class, 'suite_id');
     }
 
     /**

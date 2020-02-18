@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPosition;
+use App\Scopes\PositionScope;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestPlatform extends Model
 {
+    use HasPosition;
+
     /**
      * @var string
      */
@@ -22,6 +26,15 @@ class TestPlatform extends Model
         'name',
         'description',
     ];
+
+    /**
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new PositionScope());
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -37,5 +50,13 @@ class TestPlatform extends Model
     public function specification()
     {
         return $this->belongsTo(Specification::class, 'specification_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function connections()
+    {
+        return $this->belongsToMany(static::class, 'test_platforms_connections', 'source_id', 'source_id')->using(TestPlatformConnection::class);
     }
 }

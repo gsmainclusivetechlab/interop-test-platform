@@ -5,7 +5,7 @@ namespace App\Testing\Tests;
 use App\Testing\TestCase;
 use Illuminate\Http\Request;
 
-final class RequestTest extends TestCase
+final class ExpectedRequestValidationTest extends TestCase
 {
     /**
      * @param Request $request
