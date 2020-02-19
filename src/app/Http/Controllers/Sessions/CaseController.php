@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Models\TestCase;
 use App\Models\TestSession;
 
 class CaseController extends Controller
@@ -16,13 +15,10 @@ class CaseController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    /**
-     * @param TestSession $session
-     * @param TestCase $case
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function show(TestSession $session, TestCase $case)
+    public function show(TestSession $session, int $case)
     {
+        $case = $session->cases()->where('case_id', $case)->firstOrFail();
+
         return view('sessions.cases.show', compact('session', 'case'));
     }
 }

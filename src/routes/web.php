@@ -30,8 +30,8 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 });
 
 Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
+Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
-    Route::resource('{session}/cases', 'CaseController', ['only' => ['show']]);
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')
             ->name('selection.create');
@@ -67,10 +67,10 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{sessionCase}/run/{path}', 'RunController')
+    Route::any('{sessionCase}/run/{path?}', 'RunController')
         ->name('run')
         ->where('path', '.*');
-    Route::any('{specification}/callback/{path}', 'CallbackController')
+    Route::any('{specification}/callback/{path?}', 'CallbackController')
         ->name('callback')
         ->where('path', '.*');
 });
