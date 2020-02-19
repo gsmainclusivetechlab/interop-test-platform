@@ -13,6 +13,13 @@ class TestRun extends Model
 {
     use HasUuid;
 
+    const STATUS_INCOMPLETE = 'incomplete';
+    const STATUS_PASSED = 'passed';
+    const STATUS_ERROR = 'error';
+    const STATUS_FAILURE = 'failure';
+
+    const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -22,7 +29,15 @@ class TestRun extends Model
      * @var array
      */
     protected $fillable = [
+        'case_id',
+        'session_id',
+    ];
 
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'status' => self::STATUS_INCOMPLETE,
     ];
 
     /**

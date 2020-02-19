@@ -2,47 +2,35 @@
 
 namespace App\Testing;
 
-use App\Testing\Hooks\AfterSuccessfulTest;
-use App\Testing\Hooks\AfterTestError;
-use App\Testing\Hooks\AfterTestFailure;
-use App\Testing\Hooks\AfterTestWarning;
+use App\Models\TestRun;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\TestListenerAdapter;
 
-final class TestRunner
+class TestRunner
 {
+    /**
+     * @var TestRun
+     */
+    protected $run;
+
+    /**
+     * @param TestRun $run
+     */
+//    public function __construct(TestRun $run)
+//    {
+//        $this->run = $run;
+//    }
+
     /**
      * @param Test $test
      * @return TestResult
      */
     public function run(Test $test)
     {
-        $listener = $this->createListener();
-        $listener->add(new AfterSuccessfulTest);
-        $listener->add(new AfterTestError());
-        $listener->add(new AfterTestFailure);
-        $listener->add(new AfterTestWarning);
-        $result = $this->createResult();
-        $result->addListener($listener);
+        $result = new TestResult;
+        $result->addListener(new TestListener());
         $result = $test->run($result);
 
         return $result;
-    }
-
-    /**
-     * @return TestResult
-     */
-    protected function createResult()
-    {
-        return new TestResult;
-    }
-
-    /**
-     * @return TestListenerAdapter
-     */
-    protected function createListener()
-    {
-        return new TestListenerAdapter;
     }
 }
