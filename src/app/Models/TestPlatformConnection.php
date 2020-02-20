@@ -10,9 +10,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class TestPlatformConnection extends Pivot
 {
-    const CONNECTION_SIMULATED = 'simulated';
-    const CONNECTION_NOT_SIMULATED = 'not-simulated';
-
     /**
      * @var string
      */
@@ -27,7 +24,14 @@ class TestPlatformConnection extends Pivot
      * @var array
      */
     protected $fillable = [
-        'connection',
+        'simulated',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'simulated' => false,
     ];
 
     /**

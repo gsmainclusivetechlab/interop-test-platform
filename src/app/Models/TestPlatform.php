@@ -25,6 +25,14 @@ class TestPlatform extends Model
     protected $fillable = [
         'name',
         'description',
+        'sut',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'sut' => false,
     ];
 
     /**
@@ -57,6 +65,8 @@ class TestPlatform extends Model
      */
     public function connections()
     {
-        return $this->belongsToMany(static::class, 'test_platforms_connections', 'source_id', 'source_id')->using(TestPlatformConnection::class);
+        return $this->belongsToMany(static::class, 'test_platforms_connections', 'target_id', 'source_id')
+            ->using(TestPlatformConnection::class)
+            ->withPivot('simulated');
     }
 }

@@ -21,6 +21,7 @@ class CreateTestPlatformsTable extends Migration
             $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
             $table->unsignedBigInteger('specification_id')->nullable();
             $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('set null');
+            $table->boolean('sut');
             $table->unsignedInteger('position');
             $table->timestamps();
         });

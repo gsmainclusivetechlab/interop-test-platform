@@ -10,7 +10,7 @@
                 <form class="flow-chart-wrapper" action="{{ route('sessions.register.selection.store') }}" method="POST">
                     @csrf
                     <div class="mb-6">
-                        @include('sessions.register.includes.components')
+                        @include('sessions.register.includes.components', ['scenario' => $scenario])
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="d-flex w-100">

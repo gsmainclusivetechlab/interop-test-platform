@@ -19,7 +19,7 @@ class CreateTestPlatformsConnectionsTable extends Migration
             $table->unsignedBigInteger('target_id');
             $table->foreign('target_id')->references('id')->on('test_platforms')->onDelete('cascade');
             $table->primary(['source_id', 'target_id']);
-            $table->string('connection');
+            $table->boolean('simulated');
         });
     }
 

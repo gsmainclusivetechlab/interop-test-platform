@@ -24,7 +24,8 @@ class RegisterController extends Controller
      */
     public function createSelection()
     {
-        return view('sessions.register.selection');
+        $scenario = TestScenario::firstOrFail();
+        return view('sessions.register.selection', compact('scenario'));
     }
 
     /**

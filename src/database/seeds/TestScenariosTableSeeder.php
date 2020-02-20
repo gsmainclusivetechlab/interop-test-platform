@@ -3,7 +3,6 @@
 use App\Models\Specification;
 use App\Models\TestCase;
 use App\Models\TestPlatform;
-use App\Models\TestPlatformConnection;
 use App\Models\TestScenario;
 use App\Models\TestSuite;
 use Illuminate\Database\Seeder;
@@ -54,6 +53,7 @@ class TestScenariosTableSeeder extends Seeder
                 ],
                 [
                     'name' => 'Service Provider',
+                    'sut' => true,
                 ],
                 [
                     'name' => 'Mobile Money Operator 1',
@@ -83,7 +83,7 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => TestPlatform::where('name', 'Service Provider')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_NOT_SIMULATED,
+                    'simulated' => false,
                 ],
             ],
             /**
@@ -92,11 +92,11 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => TestPlatform::where('name', 'Payer')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_NOT_SIMULATED,
+                    'simulated' => false,
                 ],
                 [
                     'target_id' => TestPlatform::where('name', 'Mobile Money Operator 1')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                    'simulated' => true,
                 ],
             ],
             /**
@@ -105,11 +105,11 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => TestPlatform::where('name', 'Service Provider')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                    'simulated' => true,
                 ],
                 [
                     'target_id' => TestPlatform::where('name', 'Mojaloop System')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                    'simulated' => true,
                 ],
             ],
             /**
@@ -118,11 +118,11 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => TestPlatform::where('name', 'Mobile Money Operator 1')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                    'simulated' => true,
                 ],
                 [
                     'target_id' => TestPlatform::where('name', 'Mobile Money Operator 2')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                    'simulated' => true,
                 ],
             ],
             /**
@@ -131,7 +131,7 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => TestPlatform::where('name', 'Mojaloop System')->value('id'),
-                    'connection' => TestPlatformConnection::CONNECTION_SIMULATED,
+                    'simulated' => true,
                 ],
             ],
         ];
