@@ -14,7 +14,6 @@ use Illuminate\Support\Arr;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    // use HasEnums;
     use Notifiable;
     use SoftDeletes;
 
@@ -59,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return array
      */
-    public static function getRoles()
+    public static function getRoleLabels()
     {
         return [
             static::ROLE_USER => __('User'),
@@ -71,9 +70,9 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return string|null
      */
-    public function getRoleNameAttribute()
+    public function getRoleLabelAttribute()
     {
-        return Arr::get($this->getRoles(), $this->role);
+        return Arr::get($this->getRoleLabels(), $this->role);
     }
 
     /**

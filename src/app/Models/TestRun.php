@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasUuid;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin Eloquent
@@ -64,5 +65,21 @@ class TestRun extends Model
     public function getDurationAttribute()
     {
         return $this->results()->sum('time');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusTypeAttribute()
+    {
+        return Arr::get(TestResult::getStatusTypes(), $this->status);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusLabelAttribute()
+    {
+        return Arr::get(TestResult::getStatusLabels(), $this->status);
     }
 }

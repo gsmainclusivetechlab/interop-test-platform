@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasPosition;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin Eloquent
@@ -63,4 +64,45 @@ class TestResult extends Model
         return $this->belongsTo(TestStep::class, 'step_id');
     }
 
+    /**
+     * @return array
+     */
+    public static function getStatusTypes()
+    {
+        return [
+            static::STATUS_INCOMPLETE => 'secondary',
+            static::STATUS_PASSED => 'success',
+            static::STATUS_ERROR => 'danger',
+            static::STATUS_FAILURE => 'danger',
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusTypeAttribute()
+    {
+        return Arr::get(TestResult::getStatusTypes(), $this->status);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatusLabels()
+    {
+        return [
+            static::STATUS_INCOMPLETE => __('Incomplete'),
+            static::STATUS_PASSED => __('Passed'),
+            static::STATUS_ERROR => __('Error'),
+            static::STATUS_FAILURE => __('Failure'),
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusLabelAttribute()
+    {
+        return Arr::get(TestResult::getStatusLabels(), $this->status);
+    }
 }

@@ -145,7 +145,8 @@ class TestScenariosTableSeeder extends Seeder
         return [
             [
                 [
-                    'name' => 'Merchant Initiated Flow'
+                    'name' => 'Merchant-Initiated Merchant Payment',
+                    'description' => 'A Merchant-Initiated Merchant Payment is typically a receive amount, where the Payer FSP is not disclosing any fees to the Payee FSP. Please refer to 5.1.6.8 in "Open API for FSP Interoperability Specification" for more details.',
                 ],
             ],
         ];

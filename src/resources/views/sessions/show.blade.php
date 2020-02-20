@@ -78,7 +78,7 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th class="text-nowrap w-25">{{ __('Test Case') }}</th>
-                                        <th class="text-nowrap w-25">{{ __('Test Run') }}</th>
+                                        <th class="text-nowrap w-25">{{ __('Run ID') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
@@ -99,7 +99,8 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                {{ $run->status }}
+                                                <span class="status-icon bg-{{ $run->status_type }}"></span>
+                                                {{ $run->status_label }}
                                             </td>
                                             <td>
                                                 {{ $run->created_at->diffForHumans() }}

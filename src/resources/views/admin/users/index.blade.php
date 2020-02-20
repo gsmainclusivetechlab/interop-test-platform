@@ -42,7 +42,7 @@
                             <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                         </td>
                         <td class="text-break">{{ $user->company }}</td>
-                        <td class="text-break">{{ $user->role_name }}</td>
+                        <td class="text-break">{{ $user->role_label }}</td>
                         <td class="text-break">
                             @if ($user->email_verified_at)
                                 {{ $user->email_verified_at->diffForHumans() }}
