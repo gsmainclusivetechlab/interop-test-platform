@@ -4,7 +4,7 @@ namespace App\Http\Headers;
 
 use InvalidArgumentException;
 
-class Traceparent
+class TraceparentHeader
 {
     const NAME = 'traceparent';
 
@@ -64,7 +64,7 @@ class Traceparent
 
     /**
      * @param string $version
-     * @return Traceparent
+     * @return TraceparentHeader
      */
     public function withVersion($version)
     {
@@ -84,7 +84,7 @@ class Traceparent
 
     /**
      * @param string $traceId
-     * @return Traceparent
+     * @return TraceparentHeader
      */
     public function withTraceId($traceId)
     {
@@ -104,7 +104,7 @@ class Traceparent
 
     /**
      * @param string $parentId
-     * @return Traceparent
+     * @return TraceparentHeader
      */
     public function withParentId($parentId)
     {
@@ -124,7 +124,7 @@ class Traceparent
 
     /**
      * @param string $traceFlags
-     * @return Traceparent
+     * @return TraceparentHeader
      */
     public function withTraceFlags($traceFlags)
     {
@@ -167,7 +167,7 @@ class Traceparent
 
     /**
      * @param array $parts
-     * @return Traceparent
+     * @return TraceparentHeader
      */
     public static function fromParts(array $parts)
     {

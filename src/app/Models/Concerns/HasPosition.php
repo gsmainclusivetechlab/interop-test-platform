@@ -2,8 +2,6 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
-
 trait HasPosition
 {
     /**
@@ -11,15 +9,13 @@ trait HasPosition
      */
     protected static function bootHasPosition()
     {
-        static::creating(function (Model $model) {
+        static::creating(function ($model) {
             $model->generatePositionOnCreate();
         });
-
-        static::updating(function (Model $model) {
+        static::updating(function ($model) {
             $model->generatePositionOnUpdate();
         });
-
-        static::deleting(function (Model $model) {
+        static::deleting(function ($model) {
             $model->generatePositionOnDelete();
         });
     }

@@ -21,8 +21,7 @@ class CreateTestRunsTable extends Migration
             $table->foreign(['case_id', 'session_id'])->references(['case_id', 'session_id'])->on('test_sessions_cases')->onDelete('cascade');
             $table->string('status');
             $table->timestamp('created_at');
-            $table->timestamp('started_at')->nullable();
-            $table->timestamp('finished_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
         });
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Headers;
 
 use InvalidArgumentException;
 
-class Tracestate
+class TracestateHeader
 {
     const NAME = 'tracestate';
 
@@ -63,7 +63,7 @@ class Tracestate
     /**
      * @param string $key
      * @param string $value
-     * @return Tracestate
+     * @return TracestateHeader
      */
     public function withVendor($key, $value)
     {
@@ -75,7 +75,7 @@ class Tracestate
 
     /**
      * @param string $key
-     * @return Tracestate
+     * @return TracestateHeader
      */
     public function withoutVendor($key)
     {
@@ -136,7 +136,7 @@ class Tracestate
 
     /**
      * @param array $parts
-     * @return Tracestate
+     * @return TracestateHeader
      */
     public static function fromParts(array $parts)
     {

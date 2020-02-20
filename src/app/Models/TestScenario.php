@@ -38,16 +38,4 @@ class TestScenario extends Model
     {
         return $this->hasMany(TestSuite::class, 'scenario_id');
     }
-
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function components()
-//    {
-//        return $this->belongsToMany(TestComponent::class)
-//            ->using(TestComponentTestScenario::class)
-//            ->withPivot('position')
-//            ->orderBy('position');
-//    }
 }

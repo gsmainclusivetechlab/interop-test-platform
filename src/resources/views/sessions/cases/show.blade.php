@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="col-9 mt-3">
-            {{ route('testing.run', [$case->pivot->uuid]) }}
+            {{ route('testing.run', [$session, $case]) }}
         </div>
     </div>
 @endsection

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\Environment;
-use App\Models\TestSessionCase;
+use App\Models\TestCase;
+use App\Models\TestSession;
 use App\Testing\TestRunner;
 use App\Testing\Tests\ValidateRequestTest;
 use App\Testing\Tests\ValidateResponseTest;
@@ -21,14 +22,17 @@ class RunController extends Controller
         $this->middleware(['api', SetJsonHeaders::class]);
     }
 
-    public function __invoke(TestSessionCase $sessionCase, ServerRequestInterface $request, string $path = null)
+    public function __invoke(ServerRequestInterface $request, TestSession $session, TestCase $case, string $path = null)
     {
         $environment = Environment::first();
-        $step = $sessionCase->steps()
+        $case = $session->cases()->where('case_id', $case->id)->firstOrFail();
+        $step = $case->steps()
             ->where('path', $path)
             ->where('method', $request->getMethod())
             ->whereHas('targetSpecification')
             ->firstOrFail();
+
+        dd($step);
 
         $uri = (new Uri($environment->parse($step->targetSpecification->server)))->withPath($path);
         $request = $request->withUri($uri);
