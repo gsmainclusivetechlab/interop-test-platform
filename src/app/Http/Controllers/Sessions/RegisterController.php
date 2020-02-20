@@ -43,7 +43,8 @@ class RegisterController extends Controller
      */
     public function createConfiguration()
     {
-        return view('sessions.register.configuration');
+        $scenario = TestScenario::firstOrFail();
+        return view('sessions.register.configuration', compact('scenario'));
     }
 
     /**

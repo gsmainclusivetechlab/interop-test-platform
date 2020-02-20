@@ -65,7 +65,7 @@ class TestPlatform extends Model
      */
     public function connections()
     {
-        return $this->belongsToMany(static::class, 'test_platforms_connections', 'target_id', 'source_id')
+        return $this->belongsToMany(static::class, 'test_platforms_connections', 'source_id', 'target_id')
             ->using(TestPlatformConnection::class)
             ->withPivot('simulated');
     }
