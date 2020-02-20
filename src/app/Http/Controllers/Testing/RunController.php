@@ -6,14 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\Environment;
 use App\Models\TestCase;
+use App\Models\TestRun;
 use App\Models\TestSession;
-use App\Testing\TestRunner;
-use App\Testing\Tests\ValidateRequestTest;
-use App\Testing\Tests\ValidateResponseTest;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\TestSuite;
+use App\Testing\Tests\GatewayTest;
 use Psr\Http\Message\ServerRequestInterface;
+use function GuzzleHttp\Psr7\uri_for;
 
 class RunController extends Controller
 {
@@ -32,18 +29,20 @@ class RunController extends Controller
             ->whereHas('targetSpecification')
             ->firstOrFail();
 
-        dd($step);
+        $run = TestRun::create([
+            'case_id' => $case->id,
+            'session_id' => $session->id,
+        ]);
 
-        $uri = (new Uri($environment->parse($step->targetSpecification->server)))->withPath($path);
-        $request = $request->withUri($uri);
-        $response = (new Client(['http_errors' => false]))->send($request);
+        $test = new GatewayTest($request->withUri(uri_for($environment->parse($step->targetSpecification->server))->withPath($path)), [], ['code' => 'in:(200)']);
+        $result = $test->run();
 
-        $suite = new TestSuite();
-        $suite->addTest(new ValidateRequestTest($request));
-        $suite->addTest(new ValidateResponseTest($response));
-
-        $runner = new TestRunner();
-        $result = $runner->run($suite);
+        $runResult = $run->results()->create([
+            'step_id' => $step->id,
+            'time' => $result->time(),
+            'request' => $test->getRequestAsArray(),
+            'response' => $test->getResponseAsArray(),
+        ]);
 
         dd($result);
     }

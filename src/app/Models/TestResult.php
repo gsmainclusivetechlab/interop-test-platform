@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPosition;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestResult extends Model
 {
+    use HasPosition;
+
+    const STATUS_INCOMPLETE = 'incomplete';
+    const STATUS_PASSED = 'passed';
+    const STATUS_ERROR = 'error';
+    const STATUS_FAILURE = 'failure';
+
+    const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -19,7 +29,23 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
+        'step_id',
+        'time',
+        'status',
+        'request',
+        'response',
+    ];
 
+    protected $casts = [
+        'request' => 'array',
+        'response' => 'array',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'status' => self::STATUS_INCOMPLETE,
     ];
 
     /**

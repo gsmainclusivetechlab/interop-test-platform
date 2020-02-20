@@ -38,6 +38,14 @@ class TestSession extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function runs()
+    {
+        return $this->hasMany(TestRun::class, 'session_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function cases()

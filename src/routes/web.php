@@ -26,6 +26,7 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 
 Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
+Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
@@ -51,6 +52,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{session}/{case}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
-//    Route::any('{specification}/callback/{path?}', 'CallbackController')->name('callback')->where('path', '.*');
+    Route::any('run/{session}-{case}/{path?}', 'RunController')->name('run')->where('path', '.*');
+//    Route::any('callback/{path?}', 'CallbackController')->name('callback')->where('path', '.*');
 });

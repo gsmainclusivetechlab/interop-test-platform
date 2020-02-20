@@ -32,4 +32,20 @@ class TestSessionCase extends Pivot
             $model->suite_id = $model->case()->value('suite_id');
         });
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function case()
+    {
+        return $this->belongsTo(TestCase::class, 'case_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function session()
+    {
+        return $this->belongsTo(TestSession::class, 'session_id');
+    }
 }

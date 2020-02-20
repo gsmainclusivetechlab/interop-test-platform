@@ -13,11 +13,6 @@ class TestRun extends Model
 {
     use HasUuid;
 
-    const STATUS_INCOMPLETE = 'incomplete';
-    const STATUS_PASSED = 'passed';
-    const STATUS_ERROR = 'error';
-    const STATUS_FAILURE = 'failure';
-
     const UPDATED_AT = null;
 
     /**
@@ -37,7 +32,7 @@ class TestRun extends Model
      * @var array
      */
     protected $attributes = [
-        'status' => self::STATUS_INCOMPLETE,
+        'status' => TestResult::STATUS_INCOMPLETE,
     ];
 
     /**
@@ -55,4 +50,19 @@ class TestRun extends Model
         return $this->belongsTo(TestSession::class, 'session_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function results()
+    {
+        return $this->hasMany(TestResult::class, 'run_id');
+    }
+
+    /**
+     * @return float
+     */
+    public function getDurationAttribute()
+    {
+        return $this->results()->sum('time');
+    }
 }

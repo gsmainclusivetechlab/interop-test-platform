@@ -39,6 +39,8 @@ class HomeController extends Controller
      */
     public function show(TestSession $session)
     {
-        return view('sessions.show', compact('session'));
+        $runs = $session->runs()->with('case', 'session')->latest()->paginate();
+
+        return view('sessions.show', compact('session', 'runs'));
     }
 }

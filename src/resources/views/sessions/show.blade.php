@@ -86,19 +86,43 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @forelse ([] as $run)
-                                    <tr>
+                                    @forelse ($runs as $run)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('sessions.cases.show', [$run->session, $run->case]) }}">
+                                                    {{ $run->case->name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('sessions.cases.runs.show', [$run->session, $run->case, $run]) }}">
+                                                    {{ $run->uuid }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ $run->status }}
+                                            </td>
+                                            <td>
+                                                {{ $run->created_at->diffForHumans() }}
+                                            </td>
+                                            <td>
+                                                {{ $run->duration }}
+                                            </td>
+                                            <td>
 
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td class="text-center" colspan="6">
-                                            {{ __('No Results') }}
-                                        </td>
-                                    </tr>
-                                @endforelse
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-center" colspan="6">
+                                                {{ __('No Results') }}
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="card-footer">
+                            @include('components.grid.pagination', ['paginator' => $runs])
                         </div>
                     </div>
                 </div>

@@ -23,7 +23,7 @@ class CreateTestResultsTable extends Migration
             $table->longText('request')->nullable();
             $table->longText('response')->nullable();
             $table->string('status');
-            $table->unsignedInteger('time');
+            $table->unsignedDecimal('time');
             $table->unsignedInteger('position');
             $table->timestamp('created_at');
         });
