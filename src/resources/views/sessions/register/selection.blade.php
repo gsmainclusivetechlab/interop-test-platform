@@ -7,17 +7,17 @@
     <div class="row">
         <div class="col">
             <div class="d-flex flex-column align-items-center justify-content-center">
-                <form class="flow-chart-wrapper" action="{{ route('sessions.register.selection.store') }}" method="POST">
+                <form class="w-100 flow-chart-wrapper" action="{{ route('sessions.register.selection.store') }}" method="POST">
                     @csrf
                     <div class="mb-6">
                         @include('sessions.register.includes.components', ['scenario' => $scenario])
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex w-100">
-                            <div class="col-4">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
                             @include('sessions.register.includes.components-info')
                             </div>
-                            <div class="col-8">
+                            <div class="col-9">
                                 <div class="flow-chart-content">
                                     <div class="card">
                                         <div class="card-header border-0">

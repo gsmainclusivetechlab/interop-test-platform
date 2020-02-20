@@ -5,7 +5,7 @@
 @section('content')
     @include('sessions.register.includes.header')
     <div class="row d-flex justify-content-center">
-        <div class="col">
+        <div class="container">
             <form action="{{ route('sessions.register.information.store') }}" method="POST">
                 @csrf
                 <div class="card">
