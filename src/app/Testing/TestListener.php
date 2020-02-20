@@ -2,37 +2,35 @@
 
 namespace App\Testing;
 
+use App\Models\TestRun;
+use App\Models\TestStep;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener as BaseTestListener;
-use PHPUnit\Framework\TestSuite;
-use PHPUnit\Framework\Warning;
+use PHPUnit\Framework\TestListenerDefaultImplementation;
 
 class TestListener implements BaseTestListener
 {
-    public function __construct()
-    {
-
-    }
+    use TestListenerDefaultImplementation;
 
     /**
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
+     * @var TestRun
      */
-    public function addError(Test $test, \Throwable $t, float $time): void
-    {
-        // TODO: Implement addError() method.
-    }
+    protected $run;
 
     /**
-     * @param Test $test
-     * @param Warning $e
-     * @param float $time
+     * @var TestStep
      */
-    public function addWarning(Test $test, Warning $e, float $time): void
+    protected $step;
+
+    /**
+     * @param TestRun $run
+     * @param TestStep $step
+     */
+    public function __construct(TestRun $run, TestStep $step)
     {
-        // TODO: Implement addWarning() method.
+        $this->run = $run;
+        $this->step = $step;
     }
 
     /**
@@ -42,69 +40,6 @@ class TestListener implements BaseTestListener
      */
     public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
-        // TODO: Implement addFailure() method.
-    }
-
-    /**
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void
-    {
-        // TODO: Implement addIncompleteTest() method.
-    }
-
-    /**
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addRiskyTest(Test $test, \Throwable $t, float $time): void
-    {
-        // TODO: Implement addRiskyTest() method.
-    }
-
-    /**
-     * @param Test $test
-     * @param \Throwable $t
-     * @param float $time
-     */
-    public function addSkippedTest(Test $test, \Throwable $t, float $time): void
-    {
-        // TODO: Implement addSkippedTest() method.
-    }
-
-    /**
-     * @param TestSuite $suite
-     */
-    public function startTestSuite(TestSuite $suite): void
-    {
-        // TODO: Implement startTestSuite() method.
-    }
-
-    /**
-     * @param TestSuite $suite
-     */
-    public function endTestSuite(TestSuite $suite): void
-    {
-        // TODO: Implement endTestSuite() method.
-    }
-
-    /**
-     * @param Test $test
-     */
-    public function startTest(Test $test): void
-    {
-        // TODO: Implement startTest() method.
-    }
-
-    /**
-     * @param Test $test
-     * @param float $time
-     */
-    public function endTest(Test $test, float $time): void
-    {
-        // TODO: Implement endTest() method.
+        dd($test);
     }
 }

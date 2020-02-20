@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPosition;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -12,8 +11,6 @@ use Illuminate\Support\Arr;
  */
 class TestResult extends Model
 {
-    use HasPosition;
-
     const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_PASSED = 'passed';
     const STATUS_ERROR = 'error';
@@ -37,6 +34,9 @@ class TestResult extends Model
         'response',
     ];
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'request' => 'array',
         'response' => 'array',

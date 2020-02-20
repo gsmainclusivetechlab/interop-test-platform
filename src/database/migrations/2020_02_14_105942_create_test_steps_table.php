@@ -22,8 +22,8 @@ class CreateTestStepsTable extends Migration
             $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('test_platforms_connections')->onDelete('cascade')->onUpdate('cascade');
             $table->string('path');
             $table->string('method');
-            $table->longText('request_validation');
-            $table->longText('response_validation');
+            $table->longText('request_rules');
+            $table->longText('response_rules');
             $table->unsignedInteger('position');
             $table->timestamps();
         });

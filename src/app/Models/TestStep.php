@@ -25,8 +25,16 @@ class TestStep extends Model
     protected $fillable = [
         'path',
         'method',
-        'request_validation',
-        'response_validation',
+        'request_rules',
+        'response_rules',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'request_rules' => 'array',
+        'response_rules' => 'array',
     ];
 
     /**

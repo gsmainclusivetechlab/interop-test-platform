@@ -8,7 +8,10 @@ use App\Models\Environment;
 use App\Models\TestCase;
 use App\Models\TestRun;
 use App\Models\TestSession;
-use App\Testing\Tests\GatewayTest;
+use App\Testing\TestListener;
+use App\Testing\Tests\ValidatePsrMessagesTest;
+use GuzzleHttp\Client;
+use PHPUnit\Framework\TestResult;
 use Psr\Http\Message\ServerRequestInterface;
 use function GuzzleHttp\Psr7\uri_for;
 
@@ -34,15 +37,23 @@ class RunController extends Controller
             'session_id' => $session->id,
         ]);
 
-        $test = new GatewayTest($request->withUri(uri_for($environment->parse($step->targetSpecification->server))->withPath($path)), [], ['code' => 'in:(200)']);
-        $result = $test->run();
+        $uri = uri_for($environment->parse($step->targetSpecification->server))->withPath($path);
+        $request = $request->withUri($uri);
+        $response = (new Client(['http_errors' => false]))->send($request);
 
-        $runResult = $run->results()->create([
-            'step_id' => $step->id,
-            'time' => $result->time(),
-            'request' => $test->getRequestAsArray(),
-            'response' => $test->getResponseAsArray(),
-        ]);
+        $test = new ValidatePsrMessagesTest($request, $response, $step->request_rules, $step->response_rules);
+        $result = new TestResult();
+        $result->addListener(new TestListener($run, $step));
+        $result = $test->run($result);
+
+        dd($result);
+
+//        $runResult = $run->results()->create([
+//            'step_id' => $step->id,
+//            'time' => floor($result->time() * 1000),
+//            'request' => $test->getRequestAsArray(),
+//            'response' => $test->getResponseAsArray(),
+//        ]);
 
         dd($result);
     }

@@ -3,8 +3,6 @@
 namespace App\Testing\Tests;
 
 use App\Testing\Constraints\ValidationPasses;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
@@ -13,17 +11,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SebastianBergmann\Timer\Timer;
 
-class GatewayTest extends Assert implements Test
+class ValidatePsrMessagesTest extends Assert implements Test
 {
     /**
      * @var ServerRequestInterface
      */
     protected $request;
-
-    /**
-     * @var array
-     */
-    protected $requestValidationRules = [];
 
     /**
      * @var ResponseInterface
@@ -33,14 +26,21 @@ class GatewayTest extends Assert implements Test
     /**
      * @var array
      */
+    protected $requestValidationRules = [];
+
+    /**
+     * @var array
+     */
     protected $responseValidationRules = [];
 
     /**
      * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
      */
-    public function __construct(ServerRequestInterface $request, array $requestValidationRules = [], array $responseValidationRules = [])
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, array $requestValidationRules = [], array $responseValidationRules = [])
     {
         $this->request = $request;
+        $this->response = $response;
         $this->requestValidationRules = $requestValidationRules;
         $this->responseValidationRules = $responseValidationRules;
     }
@@ -72,13 +72,10 @@ class GatewayTest extends Assert implements Test
         $result->startTest($this);
 
         try {
-            $this->response = $this->createHttpClient()->send($this->request);
             $this->assertThat($this->getRequestAsArray(), new ValidationPasses($this->requestValidationRules));
             $this->assertThat($this->getResponseAsArray(), new ValidationPasses($this->responseValidationRules));
         } catch (AssertionFailedError $e) {
             $result->addFailure($this, $e, Timer::stop());
-        } catch (RequestException $e) {
-            $result->addError($this, $e, Timer::stop());
         }
 
         $result->endTest($this, Timer::stop());
@@ -91,14 +88,6 @@ class GatewayTest extends Assert implements Test
     public function count()
     {
         return 1;
-    }
-
-    /**
-     * @return Client
-     */
-    protected function createHttpClient()
-    {
-        return new Client(['http_errors' => false]);
     }
 
     /**
