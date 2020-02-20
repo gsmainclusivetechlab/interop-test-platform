@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Session :name', ['name' => $session->name]))
+@section('title', $session->name)
 
 @section('content')
     @include('sessions.includes.header', ['session' => $session])

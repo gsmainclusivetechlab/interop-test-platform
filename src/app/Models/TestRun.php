@@ -60,11 +60,11 @@ class TestRun extends Model
     }
 
     /**
-     * @return float
+     * @return int
      */
     public function getDurationAttribute()
     {
-        return $this->results()->sum('time');
+        return floor($this->results()->sum('time') * 1000);
     }
 
     /**

@@ -23,8 +23,9 @@ class TestCase extends Model
      */
     protected $fillable = [
         'name',
-        'behavior',
         'description',
+        'preconditions',
+        'behavior',
     ];
 
     /**
@@ -49,7 +50,7 @@ class TestCase extends Model
      */
     public function scopePositive($query)
     {
-        return $query->whereBehavior(static::BEHAVIOR_POSITIVE);
+        return $query->where('behavior', static::BEHAVIOR_POSITIVE);
     }
 
     /**
@@ -58,6 +59,6 @@ class TestCase extends Model
      */
     public function scopeNegative($query)
     {
-        return $query->whereBehavior(static::BEHAVIOR_NEGATIVE);
+        return $query->where('behavior', static::BEHAVIOR_NEGATIVE);
     }
 }

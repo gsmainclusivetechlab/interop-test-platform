@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Session :name', ['name' => $session->name]))
+@section('title', $session->name)
 
 @section('content')
     @include('sessions.includes.header', ['session' => $session])
@@ -103,14 +103,12 @@
                                                 {{ $run->status_label }}
                                             </td>
                                             <td>
-                                                {{ $run->created_at->diffForHumans() }}
+                                                {{ $run->created_at->format('d M Y, H:m') }}
                                             </td>
                                             <td>
-                                                {{ $run->duration }}
+                                                {{ \Carbon\CarbonInterval::microseconds($run->duration)->forHumans() }}
                                             </td>
-                                            <td>
-
-                                            </td>
+                                            <td></td>
                                         </tr>
                                     @empty
                                         <tr>

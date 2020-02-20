@@ -2,7 +2,7 @@
     <div class="col">
         <div class="page-header m-0 pb-5">
             <h1 class="page-title">
-                <b>@yield('title')</b>
+                <b>{{ $session->name }}</b>
             </h1>
             <span class="badge badge-success ml-2 p-1">{{ __('Active') }}</span>
             <div class="ml-4 pt-1">
