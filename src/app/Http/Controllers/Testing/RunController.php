@@ -6,14 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\Environment;
 use App\Models\TestCase;
-use App\Models\TestRun;
 use App\Models\TestSession;
-use App\Testing\TestListener;
-use App\Testing\Tests\ValidatePsrMessagesTest;
+use App\Testing\Tests\ValidateRequestTest;
+use App\Testing\Tests\ValidateResponseTest;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\TestSuite;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use function GuzzleHttp\Psr7\uri_for;
 
 class RunController extends Controller
 {
@@ -32,21 +33,21 @@ class RunController extends Controller
             ->whereHas('targetSpecification')
             ->firstOrFail();
 
-        $run = TestRun::create([
-            'case_id' => $case->id,
-            'session_id' => $session->id,
-        ]);
+//        $run = TestRun::create([
+//            'case_id' => $case->id,
+//            'session_id' => $session->id,
 
-        $uri = uri_for($environment->parse($step->targetSpecification->server))->withPath($path);
+        $uri = (new Uri($environment->parse($step->targetSpecification->server)))->withPath($path);
         $request = $request->withUri($uri);
         $response = (new Client(['http_errors' => false]))->send($request);
 
-        $test = new ValidatePsrMessagesTest($request, $response, $step->request_rules, $step->response_rules);
+        $suite = new TestSuite();
+        $suite->addTest(new ValidateRequestTest($request, []));
+        $suite->addTest(new ValidateResponseTest($response, []));
         $result = new TestResult();
-        $result->addListener(new TestListener($run, $step));
-        $result = $test->run($result);
+        $result = $suite->run($result);
 
-        dd($result);
+        dd($result->wasSuccessful());
 
 //        $runResult = $run->results()->create([
 //            'step_id' => $step->id,
@@ -54,7 +55,5 @@ class RunController extends Controller
 //            'request' => $test->getRequestAsArray(),
 //            'response' => $test->getResponseAsArray(),
 //        ]);
-
-        dd($result);
     }
 }
