@@ -15,15 +15,13 @@ class CreateTestStepsTable extends Migration
     {
         Schema::create('test_steps', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('case_id');
-            $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
+            $table->unsignedBigInteger('operation_id');
+            $table->foreign('operation_id')->references('id')->on('test_operations')->onDelete('cascade');
             $table->unsignedBigInteger('source_id');
             $table->unsignedBigInteger('target_id');
-            $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('test_platforms_connections')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('test_connections')->onDelete('cascade')->onUpdate('cascade');
             $table->string('path');
             $table->string('method');
-            $table->longText('request_rules');
-            $table->longText('response_rules');
             $table->unsignedInteger('position');
             $table->timestamps();
         });
