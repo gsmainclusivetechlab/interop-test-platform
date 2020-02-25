@@ -22,11 +22,11 @@ class TestScenariosTableSeeder extends Seeder
                 $component->platform()->createMany(Arr::get($this->getPlatformsData(), $key, []));
                 $component->connections()->attach(Arr::get($this->getConnectionsData(), $key, []));
             });
-//            $scenario->suites()->createMany(Arr::get($this->getSuitesData(), $key, []))->each(function (TestSuite $suite, $key) {
-//                $suite->cases()->createMany(Arr::get($this->getCasesData(), $key, []))->each(function (TestCase $case, $key) {
-//                    $case->steps()->createMany(Arr::get($this->getStepsData(), $key, []));
-//                });
-//            });
+            $scenario->suites()->createMany(Arr::get($this->getSuitesData(), $key, []))->each(function (TestSuite $suite, $key) {
+                $suite->cases()->createMany(Arr::get($this->getCasesData(), $key, []))->each(function (TestCase $case, $key) {
+                    $case->steps()->createMany(Arr::get($this->getStepsData(), $key, []));
+                });
+            });
         }
     }
 

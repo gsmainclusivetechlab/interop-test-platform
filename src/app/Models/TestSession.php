@@ -50,7 +50,7 @@ class TestSession extends Model
      */
     public function cases()
     {
-        return $this->belongsToMany(TestCase::class, 'test_sessions_cases', 'session_id', 'case_id')->using(TestSessionCase::class);
+        return $this->belongsToMany(TestCase::class, 'test_sessions_cases', 'session_id', 'case_id')->using(TestPlan::class);
     }
 
     /**
@@ -74,6 +74,6 @@ class TestSession extends Model
      */
     public function suites()
     {
-        return $this->hasManyThrough(TestSuite::class, TestSessionCase::class, 'session_id', 'id', 'id', 'suite_id')->distinct();
+        return $this->hasManyThrough(TestSuite::class, TestPlan::class, 'session_id', 'id', 'id', 'suite_id')->distinct();
     }
 }

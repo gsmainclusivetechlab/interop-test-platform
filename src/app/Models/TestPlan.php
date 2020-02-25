@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 /**
  * @mixin Eloquent
  */
-class TestSessionCase extends Pivot
+class TestPlan extends Pivot
 {
     /**
      * @var string
      */
-    protected $table = 'test_sessions_cases';
+    protected $table = 'test_plans';
 
     /**
      * @var bool
