@@ -7,6 +7,7 @@ use InvalidArgumentException;
 class TraceparentHeader
 {
     const NAME = 'traceparent';
+    const DEFAULT_VERSION = '00';
 
     /**
      * @var string

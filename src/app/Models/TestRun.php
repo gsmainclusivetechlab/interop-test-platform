@@ -15,7 +15,6 @@ class TestRun extends Model
     use HasUuid;
 
     const UPDATED_AT = null;
-
     /**
      * @var string
      */
@@ -27,13 +26,6 @@ class TestRun extends Model
     protected $fillable = [
         'case_id',
         'session_id',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'status' => TestResult::STATUS_INCOMPLETE,
     ];
 
     /**
@@ -65,21 +57,5 @@ class TestRun extends Model
     public function getDurationAttribute()
     {
         return floor($this->results()->sum('time') * 1000);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusTypeAttribute()
-    {
-        return Arr::get(TestResult::getStatusTypes(), $this->status);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusLabelAttribute()
-    {
-        return Arr::get(TestResult::getStatusLabels(), $this->status);
     }
 }

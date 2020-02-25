@@ -57,6 +57,14 @@ class TestStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function platform()
+    {
+        return $this->belongsTo(TestPlatform::class, 'target_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function source()
     {
         return $this->belongsTo(TestComponent::class, 'source_id');

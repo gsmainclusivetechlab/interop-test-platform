@@ -1,9 +1,9 @@
 <flow-chart>
     graph LR;
-        @foreach($scenario->platforms as $platform)
-            {{ $platform->id }}({{$platform->name}})@if($platform->sut):::is-active @endif;
-            @foreach ($platform->connections as $connection)
-                {{ $platform->id }} @if($connection->pivot->simulated) --> @else -.-> @endif {{ $connection->id }}
+        @foreach($scenario->components as $component)
+            {{ $component->id }}({{$component->name}})@if($component->name == 'Service Provider'):::is-active @endif;
+            @foreach ($component->connections as $connection)
+                {{ $component->id }} @if($connection->pivot->simulated) --> @else -.-> @endif {{ $connection->id }}
             @endforeach
         @endforeach
         classDef node fill:#fff,stroke:#fff,color:#242529

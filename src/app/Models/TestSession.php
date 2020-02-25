@@ -50,7 +50,7 @@ class TestSession extends Model
      */
     public function cases()
     {
-        return $this->belongsToMany(TestCase::class, 'test_sessions_cases', 'session_id', 'case_id')->using(TestPlan::class);
+        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'case_id')->using(TestPlan::class);
     }
 
     /**

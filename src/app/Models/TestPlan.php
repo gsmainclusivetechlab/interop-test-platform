@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use Eloquent;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class TestPlan extends Pivot
 {
+    use HasUuid;
+
     /**
      * @var string
      */
@@ -42,10 +45,26 @@ class TestPlan extends Pivot
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function steps()
+    {
+        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'case_id', 'case_id', 'id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function session()
     {
         return $this->belongsTo(TestSession::class, 'session_id');
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

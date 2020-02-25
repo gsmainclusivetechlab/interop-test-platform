@@ -11,7 +11,6 @@ use Illuminate\Support\Arr;
  */
 class TestResult extends Model
 {
-    const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_PASSED = 'passed';
     const STATUS_ERROR = 'error';
     const STATUS_FAILURE = 'failure';
@@ -43,13 +42,6 @@ class TestResult extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $attributes = [
-        'status' => self::STATUS_INCOMPLETE,
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function run()
@@ -70,7 +62,6 @@ class TestResult extends Model
     public static function getStatusTypes()
     {
         return [
-            static::STATUS_INCOMPLETE => 'secondary',
             static::STATUS_PASSED => 'success',
             static::STATUS_ERROR => 'danger',
             static::STATUS_FAILURE => 'danger',
@@ -91,7 +82,6 @@ class TestResult extends Model
     public static function getStatusLabels()
     {
         return [
-            static::STATUS_INCOMPLETE => __('Incomplete'),
             static::STATUS_PASSED => __('Passed'),
             static::STATUS_ERROR => __('Error'),
             static::STATUS_FAILURE => __('Failure'),

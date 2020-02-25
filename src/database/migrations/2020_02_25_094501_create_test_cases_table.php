@@ -15,7 +15,6 @@ class CreateTestCasesTable extends Migration
     {
         Schema::create('test_cases', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('suite_id');
             $table->foreign('suite_id')->references('id')->on('test_suites')->onDelete('cascade');
             $table->string('name');
