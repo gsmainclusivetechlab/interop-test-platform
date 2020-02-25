@@ -40,7 +40,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function isMocksRequest(IncomingEntry $entry)
     {
-        return $entry->type == EntryType::REQUEST && Str::is('/mocks/*', $entry->content['uri']);
+        return $entry->type == EntryType::REQUEST && Str::is('/testing/*', $entry->content['uri']);
     }
 
     /**

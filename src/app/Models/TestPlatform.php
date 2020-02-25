@@ -46,6 +46,6 @@ class TestPlatform extends Model
      */
     public function specification()
     {
-        return $this->belongsTo(SpecificationVersion::class, 'specification_id');
+        return $this->belongsTo(Specification::class, 'specification_id');
     }
 }

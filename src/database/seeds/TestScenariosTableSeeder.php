@@ -216,6 +216,22 @@ class TestScenariosTableSeeder extends Seeder
                     'expected_request' => [],
                     'expected_response' => [],
                 ],
+                [
+                    'path' => 'quotes/%',
+                    'method' => 'PUT',
+                    'source_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
+                    'expected_request' => [],
+                    'expected_response' => [],
+                ],
+                [
+                    'path' => 'transfers/%',
+                    'method' => 'PUT',
+                    'source_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
+                    'expected_request' => [],
+                    'expected_response' => [],
+                ],
             ],
         ];
     }

@@ -5,16 +5,10 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Controllers\Controller;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
-use App\Models\TestCase;
 use App\Models\TestPlan;
 use App\Models\TestRun;
-use App\Models\TestSession;
-use App\Testing\Tests\ValidateRequestTest;
-use App\Testing\Tests\ValidateResponseTest;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -34,7 +28,7 @@ class RunController extends Controller
     public function __invoke(ServerRequestInterface $request, TestPlan $plan, string $path = null)
     {
         $step = $plan->steps()
-            ->where('path', $path)
+            ->whereRaw('? like path', $path)
             ->where('method', $request->getMethod())
             ->firstOrFail();
 
@@ -46,8 +40,8 @@ class RunController extends Controller
         $uri = (new Uri($step->platform->server))
             ->withPath($path);
         $traceparent = (new TraceparentHeader())
-            ->withVersion(TraceparentHeader::DEFAULT_VERSION)
-            ->withTraceId(str_replace('-', '', $run->uuid));
+            ->withTraceId($run->trace_id)
+            ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withUri($uri)
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
         $response = (new Client(['http_errors' => false]))->send($request);
