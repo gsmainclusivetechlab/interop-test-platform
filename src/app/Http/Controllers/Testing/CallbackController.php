@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
+use App\Models\Specification;
 use App\Models\TestRun;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
@@ -24,13 +25,17 @@ class CallbackController extends Controller
      * @param string|null $path
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, string $path = null)
+    public function __invoke(ServerRequestInterface $request, Specification $specification, string $path = null)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
-        $run = TestRun::where('trace_id', $traceparent->getTraceId())->firstOrFail();
+        $run = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
+            ->firstOrFail();
         $step = $run->steps()
             ->whereRaw('? like path', $path)
             ->where('method', $request->getMethod())
+            ->whereHas('platform', function ($query) use ($specification) {
+                $query->where('specification_id', $specification->id);
+            })
             ->firstOrFail();
 
         $uri = (new Uri($step->platform->server))

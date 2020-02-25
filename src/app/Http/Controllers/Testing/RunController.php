@@ -7,16 +7,22 @@ use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\TestPlan;
 use App\Models\TestRun;
+use App\Testing\Constraints\ValidationPasses;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SebastianBergmann\Timer\Timer;
+use Throwable;
 
 class RunController extends Controller
 {
     public function __construct()
     {
         $this->middleware(['api', SetJsonHeaders::class]);
+        // $this->middleware('log')->only('index');
     }
 
     /**
@@ -40,27 +46,37 @@ class RunController extends Controller
         $uri = (new Uri($step->platform->server))
             ->withPath($path);
         $traceparent = (new TraceparentHeader())
-            ->withTraceId($run->trace_id)
+            ->withTraceId(str_replace('-', '', $run->uuid))
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withUri($uri)
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
-        $response = (new Client(['http_errors' => false]))->send($request);
+        // $response = (new Client(['http_errors' => false]))->send($request);
 
-        return $response;
+        Timer::start();
 
-//        $suite = new TestSuite();
-//        $suite->addTest(new ValidateRequestTest($request, []));
-//        $suite->addTest(new ValidateResponseTest($response, []));
-//        $result = new TestResult();
-//        $result = $suite->run($result);
-//
-//        dd($result->wasSuccessful());
+        try {
+            Assert::assertThat((array) $request, new ValidationPasses($step->expected_request));
+//            Assert::assertThat((array) $response, new ValidationPasses($step->expected_response));
+        } catch (AssertionFailedError $exception) {
+            dd($exception->getMessage());
+        } catch (Throwable $exception) {
+            dd($exception->getMessage());
+        } finally {
+            $time = Timer::stop();
+        }
 
-//        $runResult = $run->results()->create([
+        dd($request);
+
+//        $result = $run->results()->create([
 //            'step_id' => $step->id,
-//            'time' => floor($result->time() * 1000),
-//            'request' => $test->getRequestAsArray(),
-//            'response' => $test->getResponseAsArray(),
+//            'time' => floor($time * 1000),
+//            'request' => (array) $request,
+//            'response' => (array) $response,
 //        ]);
+    }
+
+    protected function doTest()
+    {
+
     }
 }

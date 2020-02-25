@@ -15,7 +15,7 @@ class CreateTestRunsTable extends Migration
     {
         Schema::create('test_runs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('trace_id')->unique();
+            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('session_id');
             $table->unsignedBigInteger('case_id');
             $table->foreign(['session_id', 'case_id'])->references(['session_id', 'case_id'])->on('test_plans')->onDelete('cascade');

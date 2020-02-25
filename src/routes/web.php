@@ -52,6 +52,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('run/{plan}/{path?}', 'RunController')->name('run')->where('path', '.*');
-    Route::any('callback/{path?}', 'CallbackController')->name('callback')->where('path', '.*');
+    Route::any('{plan}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
+    Route::any('{specification}/callback/{path?}', 'CallbackController')->name('callback')->where('path', '.*');
 });

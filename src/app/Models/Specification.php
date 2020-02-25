@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Specification extends Model
 {
+    use HasUuid;
+
     /**
      * @var string
      */
@@ -30,4 +33,12 @@ class Specification extends Model
     protected $casts = [
         'schema' => 'array',
     ];
+
+    /**
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }

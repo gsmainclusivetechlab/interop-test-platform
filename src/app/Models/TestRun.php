@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 /**
  * @mixin Eloquent
  */
 class TestRun extends Model
 {
+    use HasUuid;
+
     const UPDATED_AT = null;
     /**
      * @var string
@@ -24,17 +26,6 @@ class TestRun extends Model
         'case_id',
         'session_id',
     ];
-
-    /**
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->trace_id = str_replace('-', '', Str::uuid());
-        });
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
