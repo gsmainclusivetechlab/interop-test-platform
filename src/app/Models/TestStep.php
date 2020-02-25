@@ -25,16 +25,16 @@ class TestStep extends Model
     protected $fillable = [
         'path',
         'method',
-        'request_rules',
-        'response_rules',
+        'expected_request',
+        'expected_response',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'request_rules' => 'array',
-        'response_rules' => 'array',
+        'expected_request' => 'array',
+        'expected_response' => 'array',
     ];
 
     /**
@@ -59,15 +59,7 @@ class TestStep extends Model
      */
     public function source()
     {
-        return $this->belongsTo(TestPlatform::class, 'source_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function sourceSpecification()
-    {
-        return $this->hasOneThrough(Specification::class, TestPlatform::class, 'id', 'id', 'source_id', 'specification_id');
+        return $this->belongsTo(TestComponent::class, 'source_id');
     }
 
     /**
@@ -75,14 +67,6 @@ class TestStep extends Model
      */
     public function target()
     {
-        return $this->belongsTo(TestPlatform::class, 'target_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function targetSpecification()
-    {
-        return $this->hasOneThrough(Specification::class, TestPlatform::class, 'id', 'id', 'target_id', 'specification_id');
+        return $this->belongsTo(TestComponent::class, 'target_id');
     }
 }

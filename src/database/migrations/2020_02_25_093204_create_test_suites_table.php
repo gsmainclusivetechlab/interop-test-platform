@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestCasesTable extends Migration
+class CreateTestSuitesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateTestCasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_cases', function (Blueprint $table) {
+        Schema::create('test_suites', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('operation_id');
-            $table->foreign('operation_id')->references('id')->on('test_operations')->onDelete('cascade');
+            $table->unsignedBigInteger('scenario_id');
+            $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->text('preconditions')->nullable();
-            $table->string('behavior');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreateTestCasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_cases');
+        Schema::dropIfExists('test_suites');
     }
 }

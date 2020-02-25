@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Specification extends Model
 {
-    use HasUuid;
-
     /**
      * @var string
      */
@@ -23,8 +20,14 @@ class Specification extends Model
      */
     protected $fillable = [
         'name',
-        'server',
-        'schema',
         'description',
+        'schema',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'schema' => 'array',
     ];
 }

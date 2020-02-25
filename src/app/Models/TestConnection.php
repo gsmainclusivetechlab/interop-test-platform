@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 /**
  * @mixin Eloquent
  */
-class TestPlatformConnection extends Pivot
+class TestConnection extends Pivot
 {
     /**
      * @var string
      */
-    protected $table = 'test_platforms_connections';
+    protected $table = 'test_connections';
 
     /**
      * @var bool
@@ -39,7 +39,7 @@ class TestPlatformConnection extends Pivot
      */
     public function source()
     {
-        return $this->belongsTo(TestPlatform::class, 'source_id');
+        return $this->belongsTo(TestComponent::class, 'source_id');
     }
 
     /**
@@ -47,6 +47,6 @@ class TestPlatformConnection extends Pivot
      */
     public function target()
     {
-        return $this->belongsTo(TestPlatform::class, 'target_id');
+        return $this->belongsTo(TestComponent::class, 'target_id');
     }
 }

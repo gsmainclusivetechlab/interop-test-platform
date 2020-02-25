@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestServicesTable extends Migration
+class CreateTestPlatformsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreateTestServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_services', function (Blueprint $table) {
-            $table->foreign('component_id')->references('id')->on('test_components')->onDelete('cascade');
+        Schema::create('test_platforms', function (Blueprint $table) {
             $table->unsignedBigInteger('component_id');
+            $table->foreign('component_id')->references('id')->on('test_components')->onDelete('cascade');
             $table->primary('component_id');
-            $table->string('uri');
+            $table->unsignedBigInteger('specification_id');
+            $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('cascade');
+            $table->string('server');
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateTestServicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_services');
+        Schema::dropIfExists('test_platforms');
     }
 }

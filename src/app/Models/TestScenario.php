@@ -26,16 +26,16 @@ class TestScenario extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function platforms()
+    public function suites()
     {
-        return $this->hasMany(TestPlatform::class, 'scenario_id');
+        return $this->hasMany(TestSuite::class, 'scenario_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function suites()
+    public function components()
     {
-        return $this->hasMany(TestSuite::class, 'scenario_id');
+        return $this->hasMany(TestComponent::class, 'scenario_id');
     }
 }

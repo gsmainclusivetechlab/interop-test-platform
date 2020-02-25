@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPosition;
-use App\Scopes\PositionScope;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,44 +10,35 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestPlatform extends Model
 {
-    use HasPosition;
-
     /**
      * @var string
      */
     protected $table = 'test_platforms';
 
     /**
+     * @var string
+     */
+    protected $primaryKey = 'component_id';
+
+    /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
-        'sut',
+        'specification_id',
+        'server',
     ];
-
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'sut' => false,
-    ];
-
-    /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new PositionScope());
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function scenario()
+    public function component()
     {
-        return $this->belongsTo(TestScenario::class, 'scenario_id');
+        return $this->belongsTo(TestComponent::class, 'component_id');
     }
 
     /**
@@ -57,16 +46,6 @@ class TestPlatform extends Model
      */
     public function specification()
     {
-        return $this->belongsTo(Specification::class, 'specification_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function connections()
-    {
-        return $this->belongsToMany(static::class, 'test_platforms_connections', 'source_id', 'target_id')
-            ->using(TestPlatformConnection::class)
-            ->withPivot('simulated');
+        return $this->belongsTo(SpecificationVersion::class, 'specification_id');
     }
 }
