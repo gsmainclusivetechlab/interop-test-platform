@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Http\Controllers\Controller;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Specification;
 use App\Models\TestRun;
-use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
+use Illuminate\Database\Query\Builder;
+use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Throwable;
 
-class CallbackController extends Controller
+class TestController extends Controller
 {
+    /**
+     * TestController constructor.
+     */
     public function __construct()
     {
         $this->middleware(['api', SetJsonHeaders::class, ValidateTraceContext::class]);
@@ -22,8 +26,9 @@ class CallbackController extends Controller
 
     /**
      * @param ServerRequestInterface $request
+     * @param Specification $specification
      * @param string|null $path
-     * @return ResponseInterface
+     * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
     public function __invoke(ServerRequestInterface $request, Specification $specification, string $path = null)
     {
@@ -33,7 +38,7 @@ class CallbackController extends Controller
         $step = $run->steps()
             ->whereRaw('? like path', $path)
             ->where('method', $request->getMethod())
-            ->whereHas('platform', function ($query) use ($specification) {
+            ->whereHas('platform', function (Builder $query) use ($specification) {
                 $query->where('specification_id', $specification->id);
             })
             ->firstOrFail();
@@ -41,8 +46,7 @@ class CallbackController extends Controller
         $uri = (new Uri($step->platform->server))
             ->withPath($path);
         $request = $request->withUri($uri);
-        $response = (new Client(['http_errors' => false]))->send($request);
 
-        return $response;
+        return $this->doTest($request, $run, $step);
     }
 }

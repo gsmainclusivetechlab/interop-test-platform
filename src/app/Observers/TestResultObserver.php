@@ -12,7 +12,7 @@ class TestResultObserver
      */
     public function passed(TestResult $result)
     {
-        dd(1);
+
     }
 
     /**
