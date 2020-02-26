@@ -24,7 +24,11 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
     Route::post('password', 'PasswordController@update')->name('password.update');
 });
 
-Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
+Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show', 'destroy']]);
+Route::name('sessions.')->prefix('sessions')->group(function () {
+    Route::get('trash', 'Sessions\HomeController@trash')->name('trash');
+    Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
+});
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
 //Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
 Route::get('sessions/{session}/cases/{case}/runs/{run}/{position?}', 'Sessions\RunController@show')->name('sessions.cases.runs.show');
@@ -48,7 +52,12 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote_admin');
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate_admin');
     });
-    Route::resource('sessions', 'SessionController', ['only' => ['index']]);
+    Route::resource('sessions', 'SessionController', ['only' => ['index', 'destroy']]);
+    Route::name('sessions.')->prefix('sessions')->group(function () {
+        Route::get('trash', 'SessionController@trash')->name('trash');
+        Route::post('{session}/restore', 'SessionController@restore')->name('restore');
+        Route::delete('{session}/force-destroy', 'SessionController@forceDestroy')->name('force_destroy');
+    });
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {

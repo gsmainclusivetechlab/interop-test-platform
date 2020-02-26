@@ -5,7 +5,7 @@
                 <a href="{{ route('sessions.show', $session) }}" class="text-decoration-none">
                     <i class="fe fe-chevron-left"></i>
                 </a>
-                <span>{{ $case->name }}</span>
+                {{ $case->name }}
             </h3>
         </div>
         <div class="card-body p-0">

@@ -73,10 +73,8 @@ class UserController extends Controller
      */
     public function restore(int $id)
     {
-        if (($user = User::onlyTrashed()->find($id)) === null) {
-            abort(404);
-        }
-
+        $user = User::onlyTrashed()
+            ->findOrFail($id);
         $this->authorize('restore', $user);
         $user->restore();
 
@@ -92,10 +90,8 @@ class UserController extends Controller
      */
     public function forceDestroy(int $id)
     {
-        if (($user = User::withTrashed()->find($id)) === null) {
-            abort(404);
-        }
-
+        $user = User::withTrashed()
+            ->findOrFail($id);
         $this->authorize('forceDelete', $user);
         $user->forceDelete();
 
