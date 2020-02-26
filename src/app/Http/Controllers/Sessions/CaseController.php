@@ -18,8 +18,15 @@ class CaseController extends Controller
 
     public function show(TestSession $session, TestCase $case)
     {
-        $case = $session->cases()->where('case_id', $case->id)->firstOrFail();
-        $runs = $session->runs()->with('case', 'session')->where('case_id', $case->id)->latest()->paginate();
+        $case = $session->cases()
+            ->where('case_id', $case->id)
+            ->firstOrFail();
+        $runs = $session->runs()
+            ->with('case', 'session')
+            ->where('case_id', $case->id)
+            ->whereNotNull('completed_at')
+            ->latest()
+            ->paginate();
 
         return view('sessions.cases.show', compact('session', 'case', 'runs'));
     }

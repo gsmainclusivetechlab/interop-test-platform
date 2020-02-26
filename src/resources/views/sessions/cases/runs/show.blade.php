@@ -14,9 +14,9 @@
                         </a>
                         <span>{{ $case->name }}</span>
                     </h3>
-                    <a href="#" class="lead ml-auto text-decoration-none">
-                        <i class="fe fe-download"></i>
-                    </a>
+{{--                    <a href="#" class="lead ml-auto text-decoration-none">--}}
+{{--                        <i class="fe fe-download"></i>--}}
+{{--                    </a>--}}
                 </div>
                 <div class="card-body p-0">
                     @if ($case->description || $case->preconditions)

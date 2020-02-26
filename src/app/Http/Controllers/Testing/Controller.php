@@ -33,12 +33,12 @@ class Controller extends BaseController
         try {
             $response = (new Client(['http_errors' => false]))->send($request);
             $result->response = $this->convertResponseToArray($response);
-            Assert::assertThat($result->request, new ValidationPasses($step->expected_request));
-            Assert::assertThat($result->response, new ValidationPasses($step->expected_response));
-            $result->passed();
+            Assert::assertThat($result->request, new ValidationPasses($step->expected_request), __('Request'));
+            Assert::assertThat($result->response, new ValidationPasses($step->expected_response), __('Response'));
+            $result->pass();
             return $response;
         } catch (AssertionFailedError $exception) {
-            $result->failed($exception->getMessage());
+            $result->fail($exception->getMessage());
             return $response;
         } catch (Throwable $exception) {
             $result->error($exception->getMessage());

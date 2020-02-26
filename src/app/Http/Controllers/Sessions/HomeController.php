@@ -21,14 +21,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $sessions = auth()->user()->sessions()->when(request('q'), function ($query, $q) {
-            return $query->where('name', 'like', "%{$q}%");
-        })->withCount([
-            'cases',
-            'suites' => function ($query) {
-                $query->select(DB::raw('COUNT(DISTINCT id)'));
-            },
-        ])->latest()->paginate();
+        $sessions = auth()->user()->sessions()
+            ->when(request('q'), function ($query, $q) {
+                return $query->where('name', 'like', "%{$q}%");
+            })
+            ->withCount([
+                'cases',
+                'suites' => function ($query) {
+                    $query->select(DB::raw('COUNT(DISTINCT id)'));
+                },
+            ])
+            ->latest()
+            ->paginate();
 
         return view('sessions.index', compact('sessions'));
     }
@@ -39,7 +43,11 @@ class HomeController extends Controller
      */
     public function show(TestSession $session)
     {
-        $runs = $session->runs()->with('case', 'session')->latest()->paginate();
+        $runs = $session->runs()
+            ->with('case', 'session')
+            ->whereNotNull('completed_at')
+            ->latest()
+            ->paginate();
 
         return view('sessions.show', compact('session', 'runs'));
     }

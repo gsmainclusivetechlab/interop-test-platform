@@ -8,7 +8,6 @@ use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Specification;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
-use Illuminate\Database\Query\Builder;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,7 +37,7 @@ class TestController extends Controller
         $step = $run->steps()
             ->whereRaw('? like path', $path)
             ->where('method', $request->getMethod())
-            ->whereHas('platform', function (Builder $query) use ($specification) {
+            ->whereHas('platform', function ($query) use ($specification) {
                 $query->where('specification_id', $specification->id);
             })
             ->firstOrFail();

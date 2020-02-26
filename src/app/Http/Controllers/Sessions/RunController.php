@@ -19,7 +19,9 @@ class RunController extends Controller
 
     public function show(TestSession $session, TestCase $case, TestRun $run)
     {
-        $case = $session->cases()->where('case_id', $case->id)->firstOrFail();
+        $case = $session->cases()
+            ->where('case_id', $case->id)
+            ->firstOrFail();
 
         return view('sessions.cases.runs.show', compact('session', 'case', 'run'));
     }

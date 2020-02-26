@@ -10,18 +10,20 @@ class TestResultObserver
      * @param TestResult $result
      * @return void
      */
-    public function passed(TestResult $result)
+    public function pass(TestResult $result)
     {
-
+        if ($result->step->isLastPosition()) {
+            $result->run->pass();
+        }
     }
 
     /**
      * @param TestResult $result
      * @return void
      */
-    public function failed(TestResult $result)
+    public function fail(TestResult $result)
     {
-        $result->run->complete();
+        $result->run->fail();
     }
 
     /**
@@ -30,6 +32,6 @@ class TestResultObserver
      */
     public function error(TestResult $result)
     {
-        $result->run->complete();
+        $result->run->fail();
     }
 }

@@ -76,7 +76,7 @@
                                             {{ $run->status_label }}
                                         </td>
                                         <td>
-                                            {{ $run->created_at->format('d M Y, H:m') }}
+                                            {{ $run->completed_at->format('d M Y, H:m') }}
                                         </td>
                                         <td>
                                             {{ \Carbon\CarbonInterval::microseconds($run->duration)->forHumans() }}

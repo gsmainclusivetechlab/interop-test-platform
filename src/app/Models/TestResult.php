@@ -12,11 +12,11 @@ use SebastianBergmann\Timer\Timer;
  */
 class TestResult extends Model
 {
-    const STATUS_PASSED = 'passed';
-    const STATUS_ERROR = 'error';
-    const STATUS_FAILURE = 'failure';
-
     const UPDATED_AT = null;
+
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
+    const STATUS_ERROR = 'error';
 
     /**
      * @var string
@@ -28,8 +28,6 @@ class TestResult extends Model
      */
     protected $fillable = [
         'step_id',
-        'time',
-        'status',
         'request',
         'response',
     ];
@@ -46,8 +44,8 @@ class TestResult extends Model
      * @var array
      */
     protected $observables = [
-        'passed',
-        'failed',
+        'pass',
+        'fail',
         'error',
     ];
 
@@ -72,9 +70,9 @@ class TestResult extends Model
     public static function getStatusTypes()
     {
         return [
-            static::STATUS_PASSED => 'success',
-            static::STATUS_ERROR => 'danger',
-            static::STATUS_FAILURE => 'danger',
+            static::STATUS_PASS => 'success',
+            static::STATUS_FAIL => 'danger',
+            static::STATUS_ERROR => 'warning',
         ];
     }
 
@@ -83,7 +81,7 @@ class TestResult extends Model
      */
     public function getStatusTypeAttribute()
     {
-        return Arr::get(TestResult::getStatusTypes(), $this->status);
+        return Arr::get(static::getStatusTypes(), $this->status);
     }
 
     /**
@@ -92,9 +90,9 @@ class TestResult extends Model
     public static function getStatusLabels()
     {
         return [
-            static::STATUS_PASSED => __('Passed'),
+            static::STATUS_PASS => __('Pass'),
+            static::STATUS_FAIL => __('Fail'),
             static::STATUS_ERROR => __('Error'),
-            static::STATUS_FAILURE => __('Failure'),
         ];
     }
 
@@ -103,56 +101,59 @@ class TestResult extends Model
      */
     public function getStatusLabelAttribute()
     {
-        return Arr::get(TestResult::getStatusLabels(), $this->status);
+        return Arr::get(static::getStatusLabels(), $this->status);
     }
 
     /**
      * @param string|null $message
+     * @param array $options
      * @return bool
      */
-    public function passed(string $message = null)
+    public function pass(string $message = null, array $options = [])
     {
+        $this->status = static::STATUS_PASS;
         $this->status_message = $message;
-        $this->status = static::STATUS_PASSED;
         $this->time = floor(Timer::stop() * 1000);
 
-        if (!$this->save()) {
+        if (!$this->save($options)) {
             return false;
         }
 
-        $this->fireModelEvent('passed');
+        $this->fireModelEvent('pass');
         return true;
     }
 
     /**
      * @param string|null $message
+     * @param array $options
      * @return bool
      */
-    public function failed(string $message = null)
+    public function fail(string $message = null, array $options = [])
     {
+        $this->status = static::STATUS_FAIL;
         $this->status_message = $message;
-        $this->status = static::STATUS_FAILURE;
         $this->time = floor(Timer::stop() * 1000);
 
-        if (!$this->save()) {
+        if (!$this->save($options)) {
             return false;
         }
 
-        $this->fireModelEvent('failed');
+        $this->fireModelEvent('fail');
         return true;
     }
 
     /**
      * @param string|null $message
+     * @param array $options
      * @return bool
      */
-    public function error(string $message = null)
+    public function error(string $message = null, array $options = [])
     {
-        $this->status_message = $message;
         $this->status = static::STATUS_ERROR;
+        $this->status_message = $message;
         $this->time = floor(Timer::stop() * 1000);
 
-        if (!$this->save()) {
+        if (!$this->save($options)) {
             return false;
         }
 

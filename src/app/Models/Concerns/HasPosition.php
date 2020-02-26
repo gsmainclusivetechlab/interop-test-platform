@@ -159,6 +159,22 @@ trait HasPosition
     }
 
     /**
+     * @return bool
+     */
+    public function isFirstPosition()
+    {
+        return $this->getAttribute($this->getPositionColumn()) == 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLastPosition()
+    {
+        return ($this->getAttribute($this->getPositionColumn()) >= $this->getPositionGroupCount());
+    }
+
+    /**
      * @return string
      */
     public function getPositionColumn()
