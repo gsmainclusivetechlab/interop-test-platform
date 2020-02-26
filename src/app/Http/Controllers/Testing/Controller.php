@@ -53,11 +53,11 @@ class Controller extends BaseController
     protected function convertRequestToArray(ServerRequestInterface $request)
     {
         return [
-            'uri' => $request->getUri(),
+            'uri' => (string) $request->getUri(),
             'method' => $request->getMethod(),
             'headers' => $request->getHeaders(),
-            'body' => $request->getParsedBody(),
-            'query_params' => $request->getQueryParams(),
+            'body' => $request->getBody()->getContents(),
+            'query' => $request->getQueryParams(),
         ];
     }
 
@@ -68,7 +68,7 @@ class Controller extends BaseController
     protected function convertResponseToArray(ResponseInterface $response)
     {
         return [
-            'status_code' => $response->getStatusCode(),
+            'status' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
             'body' => $response->getBody()->getContents(),
         ];

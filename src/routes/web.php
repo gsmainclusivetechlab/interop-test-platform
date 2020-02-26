@@ -26,7 +26,8 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 
 Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show']]);
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
-Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
+//Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
+Route::get('sessions/{session}/cases/{case}/runs/{run}/{position?}', 'Sessions\RunController@show')->name('sessions.cases.runs.show');
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
@@ -48,7 +49,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate_admin');
     });
     Route::resource('sessions', 'SessionController', ['only' => ['index']]);
-    Route::resource('environments', 'EnvironmentController', ['except' => ['show']]);
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {

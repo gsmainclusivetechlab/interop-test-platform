@@ -45,7 +45,7 @@
                         <td class="text-break">{{ $user->role_label }}</td>
                         <td class="text-break">
                             @if ($user->email_verified_at)
-                                {{ $user->email_verified_at->format('d M Y, H:m') }}
+                                {{ $user->email_verified_at }}
                             @endif
                         </td>
                         <td class="text-center text-break">

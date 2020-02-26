@@ -17,13 +17,17 @@ class RunController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    public function show(TestSession $session, TestCase $case, TestRun $run)
+    public function show(TestSession $session, TestCase $case, TestRun $run, int $position = 1)
     {
         $session->loadCount(['runs', 'passRuns', 'failRuns', 'suites', 'cases']);
         $case = $session->cases()
             ->where('case_id', $case->id)
             ->firstOrFail();
+        $result = $run->results()
+            ->whereHas('step', function ($query) use ($position) {
+                $query->where('position', $position);
+            })->firstOrFail();
 
-        return view('sessions.cases.runs.show', compact('session', 'case', 'run'));
+        return view('sessions.cases.runs', compact('session', 'case', 'run', 'result'));
     }
 }

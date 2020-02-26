@@ -38,7 +38,7 @@ class TestRun extends Model
      * @var array
      */
     protected $casts = [
-        'completed_at' => 'date',
+        'completed_at' => 'datetime',
     ];
 
     /**
