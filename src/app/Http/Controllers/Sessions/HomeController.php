@@ -43,6 +43,7 @@ class HomeController extends Controller
      */
     public function show(TestSession $session)
     {
+        $session->loadCount(['runs', 'passRuns', 'failRuns', 'suites', 'cases']);
         $runs = $session->runs()
             ->with('case', 'session')
             ->whereNotNull('completed_at')

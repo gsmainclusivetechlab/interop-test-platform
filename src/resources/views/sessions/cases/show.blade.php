@@ -56,7 +56,7 @@
                             <table class="table table-striped table-hover card-table">
                                 <thead class="thead-light">
                                 <tr>
-                                    <th class="text-nowrap w-25">{{ __('Run ID') }}</th>
+                                    <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
                                     <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                                     <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                                     <th class="text-nowrap w-auto">{{ __('Duration') }}</th>

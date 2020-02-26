@@ -19,6 +19,7 @@ class RunController extends Controller
 
     public function show(TestSession $session, TestCase $case, TestRun $run)
     {
+        $session->loadCount(['runs', 'passRuns', 'failRuns', 'suites', 'cases']);
         $case = $session->cases()
             ->where('case_id', $case->id)
             ->firstOrFail();

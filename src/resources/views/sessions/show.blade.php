@@ -77,8 +77,8 @@
                             <table class="table table-striped table-hover card-table">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="text-nowrap w-25">{{ __('Test Case') }}</th>
-                                        <th class="text-nowrap w-25">{{ __('Run ID') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Test Case') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
@@ -103,7 +103,7 @@
                                                 {{ $run->status_label }}
                                             </td>
                                             <td>
-                                                {{ $run->created_at->format('d M Y, H:m') }}
+                                                {{ $run->completed_at->format('d M Y, H:m') }}
                                             </td>
                                             <td>
                                                 {{ \Carbon\CarbonInterval::microseconds($run->duration)->forHumans() }}

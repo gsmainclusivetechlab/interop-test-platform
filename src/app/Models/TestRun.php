@@ -39,6 +39,12 @@ class TestRun extends Model
      */
     protected $casts = [
         'completed_at' => 'date',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
         'status' => self::STATUS_EXECUTING,
     ];
 
@@ -83,11 +89,29 @@ class TestRun extends Model
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePass($query)
+    {
+        return $query->where('status', static::STATUS_PASS);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFail($query)
+    {
+        return $query->where('status', static::STATUS_FAIL);
+    }
+
+    /**
      * @return int
      */
     public function getDurationAttribute()
     {
-        return floor($this->results()->sum('time') * 1000);
+        return $this->results()->sum('time');
     }
 
     /**

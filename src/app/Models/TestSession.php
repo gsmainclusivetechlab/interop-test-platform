@@ -48,6 +48,22 @@ class TestSession extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function passRuns()
+    {
+        return $this->runs()->pass();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function failRuns()
+    {
+        return $this->runs()->fail();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function cases()
     {
         return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'case_id')->using(TestPlan::class);
