@@ -81,6 +81,7 @@ class RegisterController extends Controller
         $scenario = TestScenario::firstOrFail();
         $session = $user->sessions()->create([
             'name' => $request->input('name'),
+            'description' => $request->input('description'),
             'scenario_id' => $scenario->id,
         ]);
         $session->cases()->attach($request->input('cases'));

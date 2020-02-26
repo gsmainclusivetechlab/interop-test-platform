@@ -43,7 +43,7 @@
                             {{ $session->cases_count }}
                         </td>
                         <td class="text-break">
-                            <b-progress class="rounded-0"></b-progress>
+                            @include('sessions.includes.runs-progress', $session)
                         </td>
                         <td class="text-break"></td>
                         <td class="text-center">

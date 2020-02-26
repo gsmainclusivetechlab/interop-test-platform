@@ -30,6 +30,17 @@ class TestSession extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $withCount = [
+        'cases',
+        'suites',
+        'runs',
+        'passRuns',
+        'failRuns',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function owner()
@@ -66,7 +77,9 @@ class TestSession extends Model
      */
     public function cases()
     {
-        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'case_id')->using(TestPlan::class);
+        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'case_id')
+            ->using(TestPlan::class)
+            ->withPivot(['uuid']);
     }
 
     /**

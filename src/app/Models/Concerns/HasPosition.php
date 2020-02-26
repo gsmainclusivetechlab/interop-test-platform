@@ -2,6 +2,8 @@
 
 namespace App\Models\Concerns;
 
+use App\Scopes\PositionScope;
+
 trait HasPosition
 {
     /**
@@ -9,6 +11,7 @@ trait HasPosition
      */
     protected static function bootHasPosition()
     {
+        static::addGlobalScope(new PositionScope());
         static::creating(function ($model) {
             $model->generatePositionOnCreate();
         });

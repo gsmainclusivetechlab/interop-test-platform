@@ -17,6 +17,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $sessions = auth()->user()->sessions()
+            ->latest()
+            ->paginate();
+
+        return view('home', compact('sessions'));
     }
 }

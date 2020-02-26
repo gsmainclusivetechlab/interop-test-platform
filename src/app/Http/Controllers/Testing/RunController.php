@@ -6,7 +6,6 @@ use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\TestPlan;
 use App\Models\TestRun;
-use App\Models\TestStep;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
@@ -26,10 +25,10 @@ class RunController extends Controller
     /**
      * @param ServerRequestInterface $request
      * @param TestPlan $plan
-     * @param string|null $path
+     * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $plan, string $path = null)
+    public function __invoke(ServerRequestInterface $request, TestPlan $plan, string $path = '')
     {
         $step = $plan->steps()
             ->whereRaw('? like path', $path)

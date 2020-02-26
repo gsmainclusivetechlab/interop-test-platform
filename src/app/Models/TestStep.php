@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
-use App\Scopes\PositionScope;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,15 +35,6 @@ class TestStep extends Model
         'expected_request' => 'array',
         'expected_response' => 'array',
     ];
-
-    /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new PositionScope());
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

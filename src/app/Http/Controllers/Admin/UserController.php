@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -22,11 +21,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::when(request('q'), function ($query, $q) {
-            return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
-                ->orWhere('email', 'like', "%{$q}%")
-                ->orWhere('company', 'like', "%{$q}%");
-        })->latest()->paginate();
+        $users = User::withoutTrashed()
+            ->when(request('q'), function ($query, $q) {
+                $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('company', 'like', "%{$q}%");
+            })
+            ->latest()
+            ->paginate();
 
         return view('admin.users.index', compact('users'));
     }
@@ -38,11 +40,14 @@ class UserController extends Controller
     public function trash()
     {
         $this->authorize('viewAny', User::class);
-        $users = User::onlyTrashed()->when(request('q'), function ($query, $q) {
-                return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
+        $users = User::onlyTrashed()
+            ->when(request('q'), function ($query, $q) {
+                 $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
                     ->orWhere('company', 'like', "%{$q}%");
-        })->latest()->paginate();
+            })
+            ->latest()
+            ->paginate();
 
         return view('admin.users.index', compact('users'));
     }

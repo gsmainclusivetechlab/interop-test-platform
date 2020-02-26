@@ -9,27 +9,28 @@
             </h3>
         </div>
         <div class="card-body p-0">
-            @if ($case->description || $case->preconditions)
-                <ul class="list-unstyled">
-                    @if ($case->description)
-                        <li class="py-3 px-4 border-bottom">
-                            <strong class="d-block mb-1">{{ __('Description') }}</strong>
-                            <p class="mb-0">
-                                {{ $case->description }}
-                            </p>
-                        </li>
-                    @endif
+            <ul class="list-unstyled">
+                <li class="py-3 px-4 border-bottom">
+                    <input type="text" readonly value="{{ route('testing.run', [$case->pivot]) }}" class="form-control">
+                </li>
+                @if ($case->description)
+                    <li class="py-3 px-4 border-bottom">
+                        <strong class="d-block mb-1">{{ __('Description') }}</strong>
+                        <p class="mb-0">
+                            {{ $case->description }}
+                        </p>
+                    </li>
+                @endif
 
-                    @if ($case->preconditions)
-                        <li class="py-3 px-4 border-bottom">
-                            <strong class="d-block mb-1">{{ __('Preconditions') }}</strong>
-                            <p class="mb-0">
-                                {{ $case->preconditions }}
-                            </p>
-                        </li>
-                    @endif
-                </ul>
-            @endif
+                @if ($case->preconditions)
+                    <li class="py-3 px-4 border-bottom">
+                        <strong class="d-block mb-1">{{ __('Preconditions') }}</strong>
+                        <p class="mb-0">
+                            {{ $case->preconditions }}
+                        </p>
+                    </li>
+                @endif
+            </ul>
         </div>
     </div>
 </div>

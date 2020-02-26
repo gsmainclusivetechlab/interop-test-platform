@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
-use App\Scopes\PositionScope;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,15 +25,6 @@ class TestComponent extends Model
         'name',
         'description',
     ];
-
-    /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new PositionScope());
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

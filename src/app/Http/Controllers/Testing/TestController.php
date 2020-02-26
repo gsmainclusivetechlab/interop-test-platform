@@ -26,10 +26,10 @@ class TestController extends Controller
     /**
      * @param ServerRequestInterface $request
      * @param Specification $specification
-     * @param string|null $path
+     * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, Specification $specification, string $path = null)
+    public function __invoke(ServerRequestInterface $request, Specification $specification, string $path = '')
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $run = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
