@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Mixins\PsrHttpRequestMixin;
 use App\Mixins\PsrHttpResponseMixin;
+use App\Models\TestResult;
+use App\Observers\TestResultObserver;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerMixins();
+        TestResult::observe(TestResultObserver::class);
     }
 
     /**

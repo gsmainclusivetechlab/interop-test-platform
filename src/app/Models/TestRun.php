@@ -66,4 +66,21 @@ class TestRun extends Model
     {
         return floor($this->results()->sum('time') * 1000);
     }
+
+    /**
+     * @return string
+     */
+    public function getTraceIdAttribute()
+    {
+        return str_replace('-', '', $this->uuid);
+    }
+
+    /**
+     * @return bool
+     */
+    public function complete()
+    {
+        $this->completed_at = now();
+        return $this->save();
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use SebastianBergmann\Timer\Timer;
 
 /**
  * @mixin Eloquent
@@ -39,6 +40,15 @@ class TestResult extends Model
     protected $casts = [
         'request' => 'array',
         'response' => 'array',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $observables = [
+        'passed',
+        'failed',
+        'error',
     ];
 
     /**
@@ -94,5 +104,59 @@ class TestResult extends Model
     public function getStatusLabelAttribute()
     {
         return Arr::get(TestResult::getStatusLabels(), $this->status);
+    }
+
+    /**
+     * @param string|null $message
+     * @return bool
+     */
+    public function passed(string $message = null)
+    {
+        $this->status_message = $message;
+        $this->status = static::STATUS_PASSED;
+        $this->time = floor(Timer::stop() * 1000);
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('passed');
+        return true;
+    }
+
+    /**
+     * @param string|null $message
+     * @return bool
+     */
+    public function failed(string $message = null)
+    {
+        $this->status_message = $message;
+        $this->status = static::STATUS_FAILURE;
+        $this->time = floor(Timer::stop() * 1000);
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('failed');
+        return true;
+    }
+
+    /**
+     * @param string|null $message
+     * @return bool
+     */
+    public function error(string $message = null)
+    {
+        $this->status_message = $message;
+        $this->status = static::STATUS_ERROR;
+        $this->time = floor(Timer::stop() * 1000);
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('error');
+        return true;
     }
 }
