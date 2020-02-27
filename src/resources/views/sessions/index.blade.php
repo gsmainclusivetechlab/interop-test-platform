@@ -9,8 +9,18 @@
     <div class="card">
         <div class="card-header">
             @include('components.grid.search')
+            <div class="card-options">
+                <div class="btn-group">
+                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index')) active @endif">
+                        {{ __('Active') }}
+                    </a>
+                    <a href="{{ route('sessions.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.trash')) active @endif">
+                        {{ __('Deactivated') }}
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
@@ -26,7 +36,11 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td>
-                            <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
+                            @if($session->trashed())
+                                {{ $session->name }}
+                            @else
+                                <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
+                            @endif
                         </td>
                         <td>
                             {{ $session->suites_count }}

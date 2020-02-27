@@ -73,7 +73,7 @@
                                 <b>{{ __('Latest test runs') }}</b>
                             </h2>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive mb-0">
                             <table class="table table-striped table-hover card-table">
                                 <thead class="thead-light">
                                     <tr>

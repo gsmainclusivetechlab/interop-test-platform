@@ -14,7 +14,7 @@
                 </div>
             </form>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
