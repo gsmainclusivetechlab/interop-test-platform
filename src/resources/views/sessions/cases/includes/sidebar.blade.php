@@ -11,7 +11,14 @@
         <div class="card-body p-0">
             <ul class="list-unstyled">
                 <li class="py-3 px-4 border-bottom">
-                    <input type="text" readonly value="{{ route('testing.run', [$case->pivot]) }}" class="form-control">
+                    <div class="input-group">
+                        <input id="url" type="text" class="form-control" readonly value="{{ route('testing.run', [$case->pivot]) }}">
+                        <span class="input-group-append">
+                            <button class="btn" type="button" data-clipboard-target="#url">
+                                <i class="fe fe-copy"></i>
+                            </button>
+                        </span>
+                    </div>
                 </li>
                 @if ($case->description)
                     <li class="py-3 px-4 border-bottom">

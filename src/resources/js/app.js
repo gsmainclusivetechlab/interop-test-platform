@@ -10,6 +10,9 @@ import {
 } from 'bootstrap-vue';
 
 import hljs from 'highlight.js';
+import Clipboard from 'clipboard';
+
+new Clipboard('[data-clipboard-target]');
 
 Vue.use(AlertPlugin);
 Vue.use(DropdownPlugin);
