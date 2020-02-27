@@ -93,30 +93,9 @@
                                                     <b class="text-nowrap">
                                                         {{ __('Step :n', ['n' => $step->position]) }}
                                                     </b>
-                                                    @switch($step->method)
-                                                        @case('POST')
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">
-                                                            {{ $step->method }}
-                                                        </span>
-                                                        @break
-
-                                                        @case('PUT')
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">
-                                                            {{ $step->method }}
-                                                        </span>
-                                                        @break
-
-                                                        @case('DELETE')
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-red">
-                                                            {{ $step->method }}
-                                                        </span>
-                                                        @break
-
-                                                        @default
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-blue">
-                                                            {{ $step->method }}
-                                                        </span>
-                                                    @endswitch
+                                                    <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-gray">
+                                                        {{ $step->method }}
+                                                    </span>
                                                     /{{ $step->path }}
                                                 </span>
                                             </li>
