@@ -25,6 +25,7 @@ class HomeController extends Controller
             ->when(request('q'), function ($query, $q) {
                 return $query->where('name', 'like', "%{$q}%");
             })
+            ->with('lastRun')
             ->latest()
             ->paginate();
 
@@ -43,6 +44,7 @@ class HomeController extends Controller
             ->when(request('q'), function ($query, $q) {
                 return $query->where('name', 'like', "%{$q}%");
             })
+            ->with('lastRun')
             ->latest()
             ->paginate();
 

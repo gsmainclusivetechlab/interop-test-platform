@@ -27,6 +27,7 @@ class SessionController extends Controller
                         ->orWhere('name', 'like', "%{$q}%");
                 });
             })
+            ->with('lastRun')
             ->latest()
             ->paginate();
 

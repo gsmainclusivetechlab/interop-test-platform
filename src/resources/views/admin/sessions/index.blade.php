@@ -42,13 +42,15 @@
                         <td>
                             {{ $session->cases_count }}
                         </td>
-                        <td class="text-break">
+                        <td>
                             @include('sessions.includes.runs-progress', $session)
                         </td>
-                        <td class="text-break"></td>
-                        <td class="text-center">
-
+                        <td>
+                            @if($session->lastRun)
+                                {{ $session->lastRun->completed_at }}
+                            @endif
                         </td>
+                        <td class="text-center"></td>
                     </tr>
                 @empty
                     <tr>

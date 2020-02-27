@@ -27,21 +27,21 @@
 
                                 @if ($run->fail_results_count)
                                     <span class="text-danger mr-2">
-                                        <i class="fe fe-check"></i>
+                                        <i class="fe fe-alert-circle"></i>
                                         {{ __(':n Fail', ['n' => $run->fail_results_count]) }}
                                     </span>
                                 @endif
 
                                 @if ($run->error_results_count)
                                     <span class="text-warning mr-2">
-                                        <i class="fe fe-check"></i>
+                                        <i class="fe fe-alert-triangle"></i>
                                         {{ __(':n Error', ['n' => $run->error_results_count]) }}
                                     </span>
                                 @endif
 
                                 @if ($run->steps_count - $run->results_count)
                                     <span class="text-secondary mr-2">
-                                        <i class="fe fe-check"></i>
+                                        <i class="fe fe-alert-octagon"></i>
                                         {{ __(':n No Executed', ['n' => $run->steps_count - $run->results_count]) }}
                                     </span>
                                 @endif
@@ -173,7 +173,11 @@
                                                     <div class="w-25 px-4 py-2 border">
                                                         <strong>{{ __('Headers') }}</strong>
                                                     </div>
-                                                    <div class="w-75 px-4 py-2 border">@json($requestHeaders)</div>
+                                                    <div class="w-75 px-4 py-2 border">
+                                                        <pre class="mb-0 p-0 bg-transparent">
+                                                            <code>@json($requestHeaders, JSON_PRETTY_PRINT)</code>
+                                                        </pre>
+                                                    </div>
                                                 </div>
                                             @endif
 
@@ -182,7 +186,11 @@
                                                     <div class="w-25 px-4 py-2 border">
                                                         <strong>{{ __('Query') }}</strong>
                                                     </div>
-                                                    <div class="w-75 px-4 py-2 border">@json($requestQuery)</div>
+                                                    <div class="w-75 px-4 py-2 border">
+                                                        <pre class="mb-0 p-0 bg-transparent">
+                                                            <code>@json($requestQuery, JSON_PRETTY_PRINT)</code>
+                                                        </pre>
+                                                    </div>
                                                 </div>
                                             @endif
 
@@ -191,7 +199,11 @@
                                                     <div class="w-25 px-4 py-2 border">
                                                         <strong>{{ __('Body') }}</strong>
                                                     </div>
-                                                    <div class="w-75 px-4 py-2 border">{{ $requestBody }}</div>
+                                                    <div class="w-75 px-4 py-2 border">
+                                                        <pre class="mb-0 p-0 bg-transparent">
+                                                            <code>{{ $requestBody }}</code>
+                                                        </pre>
+                                                    </div>
                                                 </div>
                                             @endif
                                         </div>
@@ -220,7 +232,11 @@
                                                     <div class="w-25 px-4 py-2 border">
                                                         <strong>{{ __('Headers') }}</strong>
                                                     </div>
-                                                    <div class="w-75 px-4 py-2 border">@json($responseHeaders)</div>
+                                                    <div class="w-75 px-4 py-2 border">
+                                                        <pre class="mb-0 p-0 bg-transparent">
+                                                            <code>@json($responseHeaders, JSON_PRETTY_PRINT)</code>
+                                                        </pre>
+                                                    </div>
                                                 </div>
                                             @endif
 
@@ -229,7 +245,11 @@
                                                     <div class="w-25 px-4 py-2 border">
                                                         <strong>{{ __('Body') }}</strong>
                                                     </div>
-                                                    <div class="w-75 px-4 py-2 border">{{ $responseBody }}</div>
+                                                    <div class="w-75 px-4 py-2 border">
+                                                        <pre class="mb-0 p-0 bg-transparent">
+                                                            <code>{{ $responseBody }}</code>
+                                                        </pre>
+                                                    </div>
                                                 </div>
                                             @endif
                                         </div>

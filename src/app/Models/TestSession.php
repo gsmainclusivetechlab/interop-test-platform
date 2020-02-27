@@ -57,6 +57,14 @@ class TestSession extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function lastRun()
+    {
+        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function passRuns()

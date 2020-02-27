@@ -29,7 +29,7 @@ Route::name('sessions.')->prefix('sessions')->group(function () {
     Route::get('', 'Sessions\HomeController@index')->name('index');
     Route::get('trash', 'Sessions\HomeController@trash')->name('trash');
     Route::get('{session}', 'Sessions\HomeController@show')->name('show');
-    Route::delete('{session}/destroy', 'Sessions\HomeController@show')->name('destroy');
+    Route::delete('{session}/destroy', 'Sessions\HomeController@destroy')->name('destroy');
     Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
 });
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);

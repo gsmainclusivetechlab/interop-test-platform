@@ -37,7 +37,11 @@
                         <td>
                             @include('sessions.includes.runs-progress', $session)
                         </td>
-                        <td></td>
+                        <td>
+                            @if($session->lastRun)
+                                {{ $session->lastRun->completed_at }}
+                            @endif
+                        </td>
                         <td class="text-center"></td>
                     </tr>
                 @empty
