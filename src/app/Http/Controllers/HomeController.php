@@ -19,7 +19,7 @@ class HomeController extends Controller
     {
         $sessions = auth()->user()->sessions()
             ->latest()
-            ->paginate(18);
+            ->paginate(12);
 
         return view('home', compact('sessions'));
     }

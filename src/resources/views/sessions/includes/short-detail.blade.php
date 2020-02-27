@@ -53,11 +53,11 @@
         <ul class="list-unstyled">
             <li>
                 <i class="fe fe-briefcase"></i>
-                {{ $session->suites_count }}
+                {{ $session->cases->unique('suite_id')->count() }}
             </li>
             <li>
                 <i class="fe fe-file-text"></i>
-                {{ $session->cases_count }}
+                {{ $session->cases->count() }}
             </li>
         </ul>
     </div>

@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         @forelse ($sessions as $session)
-            <div class="col-xl-2 col-md-4">
+            <div class="col-xl-3 col-md-4">
                 @include('sessions.includes.short-detail', $session)
             </div>
         @empty

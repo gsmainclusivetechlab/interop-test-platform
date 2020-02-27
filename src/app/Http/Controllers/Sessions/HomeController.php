@@ -62,8 +62,11 @@ class HomeController extends Controller
             ->with('case', 'session')
             ->latest()
             ->paginate();
+        $suites = $session->cases->mapWithKeys(function ($item) {
+            return [$item->suite];
+        });
 
-        return view('sessions.show', compact('session', 'runs'));
+        return view('sessions.show', compact('session', 'runs', 'suites'));
     }
 
     /**

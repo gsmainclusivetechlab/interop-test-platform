@@ -43,10 +43,10 @@
                             @endif
                         </td>
                         <td>
-                            {{ $session->suites_count }}
+                            {{ $session->cases->unique('suite_id')->count() }}
                         </td>
                         <td>
-                            {{ $session->cases_count }}
+                            {{ $session->cases->count() }}
                         </td>
                         <td>
                             @include('sessions.includes.runs-progress', $session)

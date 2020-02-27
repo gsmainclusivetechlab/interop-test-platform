@@ -12,7 +12,7 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-unstyled">
-                        @foreach($session->suites as $suite)
+                        @foreach($suites as $suite)
                             <li>
                                 <b class="d-block dropdown-toggle py-2 px-4 border-bottom" v-b-toggle.suite-{{ $suite->id }}>
                                     {{ $suite->name }}

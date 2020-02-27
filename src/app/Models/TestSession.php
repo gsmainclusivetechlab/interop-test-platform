@@ -32,9 +32,14 @@ class TestSession extends Model
     /**
      * @var array
      */
-    protected $withCount = [
+    protected $with = [
         'cases',
-        'suites',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $withCount = [
         'runs',
         'passRuns',
         'failRuns',
@@ -104,13 +109,5 @@ class TestSession extends Model
     public function negativeCases()
     {
         return $this->cases()->negative();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function suites()
-    {
-        return $this->hasManyThrough(TestSuite::class, TestPlan::class, 'session_id', 'id', 'id', 'suite_id')->distinct();
     }
 }

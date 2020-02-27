@@ -21,10 +21,10 @@
                                 <span class="text-default">{{ auth()->user()->name }}</span>
                             </span>
                         </template>
-                        <b-dropdown-item href="#">
-                            <i class="dropdown-icon fe fe-user"></i>
-                            {{ __('Profile') }}
-                        </b-dropdown-item>
+{{--                        <b-dropdown-item href="#">--}}
+{{--                            <i class="dropdown-icon fe fe-user"></i>--}}
+{{--                            {{ __('Profile') }}--}}
+{{--                        </b-dropdown-item>--}}
                         <b-dropdown-item href="{{ route('settings.profile.edit') }}" @if (request()->routeIs('settings.profile.edit')) active @endif>
                             <i class="dropdown-icon fe fe-settings"></i>
                             {{ __('Settings') }}
@@ -69,12 +69,12 @@
                             {{ __('Sessions') }}
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="fe fe-help-circle"></i>
-                            {{ __('Tutorial') }}
-                        </a>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a href="#" class="nav-link">--}}
+{{--                            <i class="fe fe-help-circle"></i>--}}
+{{--                            {{ __('Tutorial') }}--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <li class="nav-item">
                         <a href="{{ env('APP_COMPANY_LAB_URL') }}" class="nav-link" target="_blank">
                             <i class="fe fe-link"></i>
