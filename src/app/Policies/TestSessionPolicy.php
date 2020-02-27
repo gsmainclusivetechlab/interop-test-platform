@@ -28,7 +28,7 @@ class TestSessionPolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+
     }
 
     /**

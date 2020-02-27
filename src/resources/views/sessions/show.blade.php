@@ -103,10 +103,10 @@
                                                 {{ $run->status_label }}
                                             </td>
                                             <td>
-                                                {{ $run->created_at }}
+                                                {{ $run->completed_at }}
                                             </td>
                                             <td>
-                                                {{ \Carbon\CarbonInterval::microseconds($run->duration)->forHumans() }}
+                                                {{ __(':n ms', ['n' => $run->duration]) }}
                                             </td>
                                             <td></td>
                                         </tr>

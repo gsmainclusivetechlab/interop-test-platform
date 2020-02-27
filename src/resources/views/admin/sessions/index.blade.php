@@ -57,7 +57,7 @@
                         </td>
                         <td>
                             @if($session->lastRun)
-                                {{ $session->lastRun->completed_at }}
+                                {{ $session->lastRun->completed_at->diffForHumans() }}
                             @endif
                         </td>
                         <td class="text-center">

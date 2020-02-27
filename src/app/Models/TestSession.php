@@ -34,6 +34,7 @@ class TestSession extends Model
      */
     protected $with = [
         'cases',
+        'lastRun',
     ];
 
     /**
@@ -44,6 +45,11 @@ class TestSession extends Model
         'passRuns',
         'failRuns',
     ];
+
+    /**
+     * @var int
+     */
+    protected $perPage = 10;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

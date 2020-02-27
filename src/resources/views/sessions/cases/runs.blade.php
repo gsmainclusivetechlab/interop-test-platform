@@ -42,7 +42,7 @@
                                 @if ($run->steps_count - $run->results_count)
                                     <span class="text-secondary mr-2">
                                         <i class="fe fe-alert-octagon"></i>
-                                        {{ __(':n No Executed', ['n' => $run->steps_count - $run->results_count]) }}
+                                        {{ __(':n Not Executed', ['n' => $run->steps_count - $run->results_count]) }}
                                     </span>
                                 @endif
                             </div>

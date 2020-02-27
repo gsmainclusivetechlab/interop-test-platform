@@ -59,6 +59,12 @@
                 <i class="fe fe-file-text"></i>
                 {{ $session->cases->count() }}
             </li>
+            @if($session->lastRun)
+                <li>
+                    <i class="fe fe-calendar"></i>
+                    {{ $session->lastRun->completed_at->diffForHumans() }}
+                </li>
+            @endif
         </ul>
     </div>
 </div>
