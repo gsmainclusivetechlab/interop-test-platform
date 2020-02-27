@@ -20,8 +20,10 @@ Vue.component('notification', () =>
     ),
 );
 
-new Vue({
-    el: '#app',
-    router,
-    render: (h) => h(App),
-});
+if (document.querySelector('#app')) {
+    new Vue({
+        el: '#app',
+        router,
+        render: (h) => h(App),
+    });
+}

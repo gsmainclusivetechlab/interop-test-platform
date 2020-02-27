@@ -8,3 +8,7 @@
 @push('scripts')
     <script src="{{ mix('js/app.js', 'assets') }}" defer></script>
 @endpush
+
+@section('page')
+    <div id="app"></div>
+@endsection
