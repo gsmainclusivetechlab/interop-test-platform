@@ -79,8 +79,7 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'specification_id' => Specification::where('name', 'Mobile Money API v1.1.0')->value('id'),
-                    // 'server' => 'http://gsma-itp-mmo-api.develop.s8.jc',
-                    'server' => 'http://172.16.1.72:8084',
+                    'server' => 'http://gsma-itp-mmo-api.develop.s8.jc',
                 ],
             ],
             [
@@ -92,8 +91,7 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'specification_id' => Specification::where('name', 'Mojaloop FSPIOP API v1.0')->value('id'),
-                    // 'server' => 'http://moja-simulator.develop.s8.jc',
-                    'server' => 'http://172.16.1.233:8444',
+                    'server' => 'http://moja-simulator.develop.s8.jc',
                 ],
             ],
         ];
