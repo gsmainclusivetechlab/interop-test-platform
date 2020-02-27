@@ -12,9 +12,9 @@
             <ul class="list-unstyled">
                 <li class="py-3 px-4 border-bottom">
                     <div class="input-group">
-                        <input id="url" type="text" class="form-control" readonly value="{{ route('testing.run', [$case->pivot]) }}">
+                        <input id="{{ $case->pivot->uuid }}" type="text" class="form-control" readonly value="{{ route('testing.run', [$case->pivot]) }}">
                         <span class="input-group-append">
-                            <button class="btn border" type="button" data-clipboard-target="#url">
+                            <button class="btn border" type="button" data-clipboard-target="#{{ $case->pivot->uuid }}">
                                 <i class="fe fe-copy"></i>
                             </button>
                         </span>
