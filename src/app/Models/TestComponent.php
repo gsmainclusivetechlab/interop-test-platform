@@ -51,4 +51,12 @@ class TestComponent extends Model
             ->using(TestConnection::class)
             ->withPivot('simulated');
     }
+
+    /**
+     * @return array
+     */
+    public function getPositionGroupColumn()
+    {
+        return ['scenario_id'];
+    }
 }

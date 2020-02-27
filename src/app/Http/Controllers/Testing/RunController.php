@@ -25,26 +25,23 @@ class RunController extends Controller
     /**
      * @param ServerRequestInterface $request
      * @param TestPlan $plan
-     * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $plan, string $path = '')
+    public function __invoke(ServerRequestInterface $request, TestPlan $plan)
     {
-        $step = $plan->steps()
-            ->whereRaw('? like path', $path)
-            ->where('method', $request->getMethod())
-            ->firstOrFail();
+        $step = $plan->steps()->firstOrFail();
         $run = TestRun::create([
             'case_id' => $plan->case_id,
             'session_id' => $plan->session_id,
         ]);
 
         $uri = (new Uri($step->platform->server))
-            ->withPath($path);
+            ->withPath($step->path);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($run->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withUri($uri)
+            ->withMethod($step->method)
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
         return $this->doTest($request, $run, $step);

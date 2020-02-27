@@ -31,7 +31,7 @@ Route::name('sessions.')->prefix('sessions')->group(function () {
     Route::get('{session}', 'Sessions\HomeController@show')->name('show');
     Route::delete('{session}/destroy', 'Sessions\HomeController@destroy')->name('destroy');
     Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
-    Route::delete('{session}/force-destroy', 'Sessions\HomeController@destroy')->name('force_destroy');
+    Route::delete('{session}/force-destroy', 'Sessions\HomeController@forceDestroy')->name('force_destroy');
 });
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
 //Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
@@ -65,6 +65,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{plan}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
-    Route::any('{specification}/test/{path?}', 'TestController')->name('test')->where('path', '.*');
+    Route::any('{plan}/run', 'RunController')->name('run');
+    Route::any('{specification}/test/{path}', 'TestController')->name('test')->where('path', '.*');
 });

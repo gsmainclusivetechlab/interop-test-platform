@@ -67,4 +67,12 @@ class TestStep extends Model
     {
         return $this->belongsTo(TestComponent::class, 'target_id');
     }
+
+    /**
+     * @return array
+     */
+    public function getPositionGroupColumn()
+    {
+        return ['case_id'];
+    }
 }

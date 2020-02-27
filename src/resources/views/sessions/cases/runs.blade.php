@@ -154,7 +154,7 @@
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <pre class="mb-0 p-0 bg-transparent">
-                                                            <code>@json($requestHeaders, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre>@json($requestHeaders, JSON_PRETTY_PRINT)</code>
                                                         </pre>
                                                     </div>
                                                 </div>
@@ -167,7 +167,7 @@
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <pre class="mb-0 p-0 bg-transparent">
-                                                            <code>@json($requestQuery, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre>@json($requestQuery, JSON_PRETTY_PRINT)</code>
                                                         </pre>
                                                     </div>
                                                 </div>
@@ -180,7 +180,7 @@
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <pre class="mb-0 p-0 bg-transparent">
-                                                            <code>@json($requestBody, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre>@json($requestBody, JSON_PRETTY_PRINT)</code>
                                                         </pre>
                                                     </div>
                                                 </div>
@@ -213,7 +213,7 @@
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <pre class="mb-0 p-0 bg-transparent">
-                                                            <code>@json($responseHeaders, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre>@json($responseHeaders, JSON_PRETTY_PRINT)</code>
                                                         </pre>
                                                     </div>
                                                 </div>
@@ -226,7 +226,7 @@
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <pre class="mb-0 p-0 bg-transparent">
-                                                            <code>{{ $responseBody }}</code>
+                                                            <code v-pre>{{ $responseBody }}</code>
                                                         </pre>
                                                     </div>
                                                 </div>
