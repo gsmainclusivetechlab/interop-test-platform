@@ -50,7 +50,7 @@
                     </div>
                     <div class="rounded-0 bg-white">
                         <div class="row">
-                            <div class="col-4 pr-0">
+                            <div class="col-3 pr-0">
                                 <ul class="list-unstyled mb-0">
                                     @foreach ($run->steps as $step)
                                         @if($stepResult = $run->results()->where('step_id', $step->id)->first())
@@ -103,7 +103,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            <div class="col-8 pl-0 border-left">
+                            <div class="col-9 pl-0 border-left">
                                 <div class="lead p-4">
                                     <b class="text-nowrap">
                                         {{ __('Step :n', ['n' => $result->step->position]) }}
