@@ -56,7 +56,43 @@
                                 {{ $session->lastRun->completed_at }}
                             @endif
                         </td>
-                        <td class="text-center"></td>
+                        <td class="text-center">
+                            @canany(['delete', 'restore'], $session)
+                                @component('components.grid.actions')
+                                    @if ($session->trashed())
+                                        @can('restore', $session)
+                                            @include('components.grid.actions.form', [
+                                                'method' => 'POST',
+                                                'route' => route('sessions.restore', $session),
+                                                'label' => __('Activate'),
+                                                'confirmTitle' => __('Confirm activate'),
+                                                'confirmText' => __('Are you sure you want to activate :name?', ['name' => $session->name]),
+                                            ])
+                                        @endcan
+                                    @else
+                                        @can('delete', $session)
+                                            @include('components.grid.actions.form', [
+                                                'method' => 'DELETE',
+                                                'route' => route('sessions.destroy', $session),
+                                                'label' => __('Deactivate'),
+                                                'confirmTitle' => __('Confirm deactivate'),
+                                                'confirmText' => __('Are you sure you want to deactivate :name?', ['name' => $session->name]),
+                                            ])
+                                        @endcan
+                                    @endif
+
+                                    @can('delete', $session)
+                                        @include('components.grid.actions.form', [
+                                            'method' => 'DELETE',
+                                            'route' => route('sessions.force_destroy', $session),
+                                            'label' => __('Delete'),
+                                            'confirmTitle' => __('Confirm delete'),
+                                            'confirmText' => __('Are you sure you want to delete :name?', ['name' => $session->name]),
+                                        ])
+                                    @endcan
+                                @endcomponent
+                            @endcanany
+                        </td>
                     </tr>
                 @empty
                     <tr>

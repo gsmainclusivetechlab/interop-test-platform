@@ -92,7 +92,7 @@ class UserController extends Controller
     {
         $user = User::withTrashed()
             ->findOrFail($id);
-        $this->authorize('forceDelete', $user);
+        $this->authorize('delete', $user);
         $user->forceDelete();
 
         return redirect()

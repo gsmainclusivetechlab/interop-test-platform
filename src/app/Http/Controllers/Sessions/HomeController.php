@@ -75,7 +75,7 @@ class HomeController extends Controller
         $session->delete();
 
         return redirect()
-            ->route('sessions.index')
+            ->back()
             ->with('success', __('Session deactivated successfully'));
     }
 
@@ -92,7 +92,24 @@ class HomeController extends Controller
         $session->restore();
 
         return redirect()
-            ->route('sessions.index')
+            ->back()
             ->with('success', __('Session activated successfully'));
+    }
+
+    /**
+     * @param integer $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function forceDestroy(int $id)
+    {
+        $session = TestSession::withTrashed()
+            ->findOrFail($id);
+        $this->authorize('delete', $session);
+        $session->forceDelete();
+
+        return redirect()
+            ->back()
+            ->with('success', __('Session deleted successfully'));
     }
 }

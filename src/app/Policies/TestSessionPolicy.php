@@ -55,6 +55,16 @@ class TestSessionPolicy
      */
     public function delete(User $user, TestSession $model)
     {
-        return ($user->isAdmin());
+        return $user->isAdmin();
+    }
+
+    /**
+     * @param  User  $user
+     * @param  TestSession  $model
+     * @return mixed
+     */
+    public function restore(User $user, TestSession $model)
+    {
+        return $user->isAdmin();
     }
 }

@@ -31,6 +31,7 @@ Route::name('sessions.')->prefix('sessions')->group(function () {
     Route::get('{session}', 'Sessions\HomeController@show')->name('show');
     Route::delete('{session}/destroy', 'Sessions\HomeController@destroy')->name('destroy');
     Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
+    Route::delete('{session}/force-destroy', 'Sessions\HomeController@destroy')->name('force_destroy');
 });
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
 //Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
