@@ -20,7 +20,7 @@ class TestController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['api', SetJsonHeaders::class, ValidateTraceContext::class]);
+        $this->middleware([SetJsonHeaders::class, ValidateTraceContext::class]);
     }
 
     /**

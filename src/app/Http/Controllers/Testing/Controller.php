@@ -56,7 +56,7 @@ class Controller extends BaseController
             'uri' => (string) $request->getUri(),
             'method' => $request->getMethod(),
             'headers' => $request->getHeaders(),
-            'body' => $request->getBody()->getContents(),
+            'body' => $request->getParsedBody(),
             'query' => $request->getQueryParams(),
         ];
     }

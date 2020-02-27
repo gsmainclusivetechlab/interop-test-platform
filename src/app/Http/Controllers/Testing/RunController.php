@@ -19,7 +19,7 @@ class RunController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['api', SetJsonHeaders::class]);
+        $this->middleware([SetJsonHeaders::class]);
     }
 
     /**

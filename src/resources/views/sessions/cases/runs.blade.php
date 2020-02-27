@@ -180,7 +180,7 @@
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <pre class="mb-0 p-0 bg-transparent">
-                                                            <code>{{ $requestBody }}</code>
+                                                            <code>@json($requestBody, JSON_PRETTY_PRINT)</code>
                                                         </pre>
                                                     </div>
                                                 </div>

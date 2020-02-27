@@ -13,6 +13,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->authorizeResource(TestSession::class, 'session');
     }
 
     /**

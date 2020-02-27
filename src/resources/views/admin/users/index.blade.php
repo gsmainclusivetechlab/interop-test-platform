@@ -36,7 +36,11 @@
                 @forelse ($users as $user)
                     <tr>
                         <td class="text-break">
-                            <a href="#">{{ $user->name }}</a>
+                            @if($user->trashed())
+                                {{ $user->name }}
+                            @else
+                                <a href="#">{{ $user->name }}</a>
+                            @endif
                         </td>
                         <td class="text-break">
                             <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>

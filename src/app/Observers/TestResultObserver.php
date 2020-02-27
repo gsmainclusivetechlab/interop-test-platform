@@ -12,7 +12,7 @@ class TestResultObserver
      */
     public function pass(TestResult $result)
     {
-        if ($result->step->isLastPosition()) {
+        if ($result->run->results()->count() >= $result->run->steps()->count()) {
             $result->run->pass();
         }
     }
