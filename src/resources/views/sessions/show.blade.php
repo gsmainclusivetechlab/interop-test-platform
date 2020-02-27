@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', __('Session :name', ['name' => $session->name]))
+@section('title', $session->name)
 
 @section('content')
     @include('sessions.includes.header', ['session' => $session])
@@ -17,7 +17,7 @@
                                 <b class="d-block dropdown-toggle py-2 px-4 border-bottom" v-b-toggle.suite-{{ $suite->id }}>
                                     {{ $suite->name }}
                                 </b>
-                                @if ($session->positiveCases->where('test_suite_id', $suite->id)->count())
+                                @if ($session->positiveCases->where('suite_id', $suite->id)->count())
                                     <b-collapse id="suite-{{ $suite->id }}" visible>
                                         <ul class="list-unstyled">
                                             <li>
@@ -26,7 +26,7 @@
                                                 </span>
                                                 <b-collapse id="positive-cases-{{ $suite->id }}" visible>
                                                     <ul class="list-unstyled">
-                                                        @foreach($session->positiveCases->where('test_suite_id', $suite->id) as $case)
+                                                        @foreach($session->positiveCases->where('suite_id', $suite->id) as $case)
                                                             <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="{{ route('sessions.cases.show', [$session, $case]) }}">{{ $case->name }}</a>
                                                             </li>
@@ -38,7 +38,7 @@
                                     </b-collapse>
                                 @endif
 
-                                @if ($session->negativeCases->where('test_suite_id', $suite->id)->count())
+                                @if ($session->negativeCases->where('suite_id', $suite->id)->count())
                                     <b-collapse id="suite-{{ $suite->id }}" visible>
                                         <ul class="list-unstyled">
                                             <li>
@@ -47,7 +47,7 @@
                                                 </span>
                                                 <b-collapse id="negative-cases-{{ $suite->id }}" visible>
                                                     <ul class="list-unstyled">
-                                                        @foreach($session->negativeCases->where('test_suite_id', $suite->id) as $case)
+                                                        @foreach($session->negativeCases->where('suite_id', $suite->id) as $case)
                                                             <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                 <a href="{{ route('sessions.cases.show', [$session, $case]) }}">{{ $case->name }}</a>
                                                             </li>
@@ -73,12 +73,12 @@
                                 <b>{{ __('Latest test runs') }}</b>
                             </h2>
                         </div>
-                        <div class="table-responsive">
+                        <div class="table-responsive mb-0">
                             <table class="table table-striped table-hover card-table">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th class="text-nowrap w-25">{{ __('Test Case') }}</th>
-                                        <th class="text-nowrap w-25">{{ __('Test Run') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Test Case') }}</th>
+                                        <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
@@ -86,19 +86,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @forelse ([] as $run)
-                                    <tr>
-
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td class="text-center" colspan="6">
-                                            {{ __('No Results') }}
-                                        </td>
-                                    </tr>
-                                @endforelse
+                                    @forelse ($runs as $run)
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('sessions.cases.show', [$run->session, $run->case]) }}">
+                                                    {{ $run->case->name }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('sessions.cases.runs.show', [$run->session, $run->case, $run]) }}">
+                                                    {{ $run->uuid }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="status-icon bg-{{ $run->status_type }}"></span>
+                                                {{ $run->status_label }}
+                                            </td>
+                                            <td>
+                                                {{ $run->created_at }}
+                                            </td>
+                                            <td>
+                                                {{ \Carbon\CarbonInterval::microseconds($run->duration)->forHumans() }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td class="text-center" colspan="6">
+                                                {{ __('No Results') }}
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="card-footer">
+                            @include('components.grid.pagination', ['paginator' => $runs])
                         </div>
                     </div>
                 </div>

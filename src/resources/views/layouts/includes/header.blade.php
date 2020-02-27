@@ -1,7 +1,7 @@
 <div class="header py-4">
     <div class="container-fluid">
         <div class="row d-flex align-items-center">
-            <div class="col-2">
+            <div class="col-3">
                 <a class="header-brand mr-0" href="{{ route('home') }}">
                     <img src="{{ asset('images/logo.png') }}" class="h-7" alt="{{ config('app.name') }}">
                 </a>

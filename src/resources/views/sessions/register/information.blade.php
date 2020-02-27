@@ -5,7 +5,7 @@
 @section('content')
     @include('sessions.register.includes.header')
     <div class="row d-flex justify-content-center">
-        <div class="col">
+        <div class="container">
             <form action="{{ route('sessions.register.information.store') }}" method="POST">
                 @csrf
                 <div class="card">
@@ -28,9 +28,14 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">
-                                        {{ __('SUT') }}
+                                        {{ __('Description') }}
                                     </label>
-                                    <input type="text" disabled class="form-control" value="Service Provider">
+                                    <textarea name="description" class="form-control @error('name') is-invalid @enderror">{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

@@ -26,6 +26,18 @@ class TestSession extends Model
     protected $fillable = [
         'name',
         'description',
+        'scenario_id',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $withCount = [
+        'cases',
+        'suites',
+        'runs',
+        'passRuns',
+        'failRuns',
     ];
 
     /**
@@ -37,34 +49,68 @@ class TestSession extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function runs()
+    {
+        return $this->hasMany(TestRun::class, 'session_id')->completed();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function lastRun()
+    {
+        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function passRuns()
+    {
+        return $this->runs()->pass();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function failRuns()
+    {
+        return $this->runs()->fail();
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function cases()
     {
-        return $this->belongsToMany(TestCase::class, 'case_id')->using(TestSessionCase::class);
+        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'case_id')
+            ->using(TestPlan::class)
+            ->withPivot(['uuid']);
     }
 
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function positiveCases()
-//    {
-//        return $this->cases()->positive();
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function negativeCases()
-//    {
-//        return $this->cases()->negative();
-//    }
-//
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function positiveCases()
+    {
+        return $this->cases()->positive();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function negativeCases()
+    {
+        return $this->cases()->negative();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function operations()
+    public function suites()
     {
-        return $this->hasManyThrough(TestOperation::class, TestSessionCase::class, 'session_id', 'id', 'id', 'operation_id')->distinct();
+        return $this->hasManyThrough(TestSuite::class, TestPlan::class, 'session_id', 'id', 'id', 'suite_id')->distinct();
     }
 }

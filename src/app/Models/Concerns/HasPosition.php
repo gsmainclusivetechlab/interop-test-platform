@@ -2,7 +2,7 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Scopes\PositionScope;
 
 trait HasPosition
 {
@@ -11,15 +11,14 @@ trait HasPosition
      */
     protected static function bootHasPosition()
     {
-        static::creating(function (Model $model) {
+        static::addGlobalScope(new PositionScope());
+        static::creating(function ($model) {
             $model->generatePositionOnCreate();
         });
-
-        static::updating(function (Model $model) {
+        static::updating(function ($model) {
             $model->generatePositionOnUpdate();
         });
-
-        static::deleting(function (Model $model) {
+        static::deleting(function ($model) {
             $model->generatePositionOnDelete();
         });
     }
@@ -160,6 +159,22 @@ trait HasPosition
         $this->update([$positionColumn => $position]);
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFirstPosition()
+    {
+        return $this->getAttribute($this->getPositionColumn()) == 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLastPosition()
+    {
+        return ($this->getAttribute($this->getPositionColumn()) >= $this->getPositionGroupCount());
     }
 
     /**

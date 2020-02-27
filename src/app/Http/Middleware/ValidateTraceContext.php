@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Exceptions\InvalidTraceContextException;
-use App\Http\Headers\Traceparent;
-use App\Http\Headers\Tracestate;
+use App\Http\Headers\TraceparentHeader;
+use App\Http\Headers\TracestateHeader;
 use Closure;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -31,13 +31,13 @@ class ValidateTraceContext
      */
     protected function hasValidTraceContext(Request $request)
     {
-        if (!$request->headers->get(Traceparent::NAME)) {
+        if (!$request->headers->get(TraceparentHeader::NAME)) {
             return false;
         }
 
         try {
-            $tracestate = new Tracestate($request->headers->get(Tracestate::NAME));
-            $traceparent = new Traceparent($request->headers->get(Traceparent::NAME));
+            $tracestate = new TracestateHeader($request->headers->get(TracestateHeader::NAME));
+            $traceparent = new TraceparentHeader($request->headers->get(TraceparentHeader::NAME));
 
             return !$tracestate->hasVendors() || array_search($traceparent->getParentId(), $tracestate->getVendors()) !== false;
         } catch (InvalidArgumentException $e) {

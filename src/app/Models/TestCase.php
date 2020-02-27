@@ -23,16 +23,25 @@ class TestCase extends Model
      */
     protected $fillable = [
         'name',
-        'behavior',
         'description',
+        'preconditions',
+        'behavior',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function steps()
+    {
+        return $this->hasMany(TestStep::class, 'case_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function operation()
+    public function suite()
     {
-        return $this->belongsTo(TestOperation::class, 'operation_id');
+        return $this->belongsTo(TestSuite::class, 'suite_id');
     }
 
     /**
@@ -41,7 +50,7 @@ class TestCase extends Model
      */
     public function scopePositive($query)
     {
-        return $query->whereBehavior(static::BEHAVIOR_POSITIVE);
+        return $query->where('behavior', static::BEHAVIOR_POSITIVE);
     }
 
     /**
@@ -50,6 +59,6 @@ class TestCase extends Model
      */
     public function scopeNegative($query)
     {
-        return $query->whereBehavior(static::BEHAVIOR_NEGATIVE);
+        return $query->where('behavior', static::BEHAVIOR_NEGATIVE);
     }
 }

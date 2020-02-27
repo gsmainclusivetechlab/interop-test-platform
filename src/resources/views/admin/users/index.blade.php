@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
@@ -36,20 +36,24 @@
                 @forelse ($users as $user)
                     <tr>
                         <td class="text-break">
-                            <a href="#">{{ $user->name }}</a>
+                            @if($user->trashed())
+                                {{ $user->name }}
+                            @else
+                                <a href="#">{{ $user->name }}</a>
+                            @endif
                         </td>
                         <td class="text-break">
                             <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                         </td>
                         <td class="text-break">{{ $user->company }}</td>
-                        <td class="text-break">{{ $user->role_name }}</td>
+                        <td class="text-break">{{ $user->role_label }}</td>
                         <td class="text-break">
                             @if ($user->email_verified_at)
-                                {{ $user->email_verified_at->format('M d, Y') }}
+                                {{ $user->email_verified_at }}
                             @endif
                         </td>
                         <td class="text-center text-break">
-                            @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore', 'forceDelete'], $user)
+                            @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore'], $user)
                                 @component('components.grid.actions')
                                         @if ($user->trashed())
                                             @can('restore', $user)
@@ -58,7 +62,7 @@
                                                     'route' => route('admin.users.restore', $user),
                                                     'label' => __('Unblock'),
                                                     'confirmTitle' => __('Confirm unblock'),
-                                                    'confirmText' => __('Are you sure you want to unblock :user?', ['user' => $user->name]),
+                                                    'confirmText' => __('Are you sure you want to unblock :name?', ['name' => $user->name]),
                                                 ])
                                             @endcan
                                         @else
@@ -68,7 +72,7 @@
                                                     'route' => route('admin.users.promote_admin', $user),
                                                     'label' => __('Promote admin'),
                                                     'confirmTitle' => __('Confirm promote admin'),
-                                                    'confirmText' => __('Are you sure you want to promote :user to admin?', ['user' => $user->name]),
+                                                    'confirmText' => __('Are you sure you want to promote :name to admin?', ['name' => $user->name]),
                                                 ])
                                             @endcan
 
@@ -78,7 +82,7 @@
                                                     'route' => route('admin.users.relegate_admin', $user),
                                                     'label' => __('Relegate admin'),
                                                     'confirmTitle' => __('Confirm relegate admin'),
-                                                    'confirmText' => __('Are you sure you want to relegate :user from admin?', ['user' => $user->name]),
+                                                    'confirmText' => __('Are you sure you want to relegate :name from admin?', ['name' => $user->name]),
                                                 ])
                                             @endcan
 
@@ -88,18 +92,18 @@
                                                     'route' => route('admin.users.destroy', $user),
                                                     'label' => __('Block'),
                                                     'confirmTitle' => __('Confirm block'),
-                                                    'confirmText' => __('Are you sure you want to block :user?', ['user' => $user->name]),
+                                                    'confirmText' => __('Are you sure you want to block :name?', ['name' => $user->name]),
                                                 ])
                                             @endcan
                                         @endif
 
-                                        @can('forceDelete', $user)
+                                        @can('delete', $user)
                                             @include('components.grid.actions.form', [
                                                 'method' => 'DELETE',
                                                 'route' => route('admin.users.force_destroy', $user),
                                                 'label' => __('Delete'),
                                                 'confirmTitle' => __('Confirm delete'),
-                                                'confirmText' => __('Are you sure you want to delete :user?', ['user' => $user->name]),
+                                                'confirmText' => __('Are you sure you want to delete :name?', ['name' => $user->name]),
                                             ])
                                         @endcan
                                  @endcomponent

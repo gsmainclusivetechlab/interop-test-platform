@@ -68,16 +68,6 @@ class UserPolicy
     }
 
     /**
-     * @param  User  $user
-     * @param  User  $model
-     * @return mixed
-     */
-    public function forceDelete(User $user, User $model)
-    {
-        return ($user->isAdmin() && !$model->isAdmin()) || ($user->isSuperAdmin() && !$user->is($model));
-    }
-
-    /**
      * @param User $user
      * @param User $model
      * @return mixed

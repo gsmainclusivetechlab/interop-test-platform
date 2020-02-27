@@ -9,6 +9,11 @@ import {
     ProgressPlugin,
 } from 'bootstrap-vue';
 
+import hljs from 'highlight.js';
+import Clipboard from 'clipboard';
+
+new Clipboard('[data-clipboard-target]');
+
 Vue.use(AlertPlugin);
 Vue.use(DropdownPlugin);
 Vue.use(NavPlugin);
@@ -37,3 +42,5 @@ Vue.component('notification', () =>
 const app = new Vue({
     el: '#app',
 });
+
+hljs.initHighlightingOnLoad();

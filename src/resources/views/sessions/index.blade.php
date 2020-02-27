@@ -9,8 +9,18 @@
     <div class="card">
         <div class="card-header">
             @include('components.grid.search')
+            <div class="card-options">
+                <div class="btn-group">
+                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index')) active @endif">
+                        {{ __('Active') }}
+                    </a>
+                    <a href="{{ route('sessions.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.trash')) active @endif">
+                        {{ __('Deactivated') }}
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
@@ -26,19 +36,63 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td>
-                            <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
+                            @if($session->trashed())
+                                {{ $session->name }}
+                            @else
+                                <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
+                            @endif
                         </td>
                         <td>
-                            {{ $session->operations_count }}
+                            {{ $session->suites_count }}
                         </td>
                         <td>
                             {{ $session->cases_count }}
                         </td>
                         <td>
-                            <b-progress class="rounded-0"></b-progress>
+                            @include('sessions.includes.runs-progress', $session)
                         </td>
-                        <td></td>
-                        <td class="text-center"></td>
+                        <td>
+                            @if($session->lastRun)
+                                {{ $session->lastRun->completed_at }}
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @canany(['delete', 'restore'], $session)
+                                @component('components.grid.actions')
+                                    @if ($session->trashed())
+                                        @can('restore', $session)
+                                            @include('components.grid.actions.form', [
+                                                'method' => 'POST',
+                                                'route' => route('sessions.restore', $session),
+                                                'label' => __('Activate'),
+                                                'confirmTitle' => __('Confirm activate'),
+                                                'confirmText' => __('Are you sure you want to activate :name?', ['name' => $session->name]),
+                                            ])
+                                        @endcan
+                                    @else
+                                        @can('delete', $session)
+                                            @include('components.grid.actions.form', [
+                                                'method' => 'DELETE',
+                                                'route' => route('sessions.destroy', $session),
+                                                'label' => __('Deactivate'),
+                                                'confirmTitle' => __('Confirm deactivate'),
+                                                'confirmText' => __('Are you sure you want to deactivate :name?', ['name' => $session->name]),
+                                            ])
+                                        @endcan
+                                    @endif
+
+                                    @can('delete', $session)
+                                        @include('components.grid.actions.form', [
+                                            'method' => 'DELETE',
+                                            'route' => route('sessions.force_destroy', $session),
+                                            'label' => __('Delete'),
+                                            'confirmTitle' => __('Confirm delete'),
+                                            'confirmText' => __('Are you sure you want to delete :name?', ['name' => $session->name]),
+                                        ])
+                                    @endcan
+                                @endcomponent
+                            @endcanany
+                        </td>
                     </tr>
                 @empty
                     <tr>

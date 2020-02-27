@@ -11,12 +11,24 @@ class TestSessionPolicy
     use HandlesAuthorization;
 
     /**
+     * @param User $user
+     * @param string $ability
+     * @return bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+    }
+
+    /**
      * @param  User  $user
      * @return mixed
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
@@ -26,7 +38,7 @@ class TestSessionPolicy
      */
     public function view(User $user, TestSession $model)
     {
-        return $user->isAdmin() || $model->user_id == $user->id;
+        return $model->owner->is($user);
     }
 
     /**
@@ -35,7 +47,7 @@ class TestSessionPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
@@ -45,7 +57,7 @@ class TestSessionPolicy
      */
     public function update(User $user, TestSession $model)
     {
-        return $user->isAdmin();
+        return $model->owner->is($user);
     }
 
     /**
@@ -55,6 +67,16 @@ class TestSessionPolicy
      */
     public function delete(User $user, TestSession $model)
     {
-        return ($user->isAdmin());
+        return $model->owner->is($user);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  TestSession  $model
+     * @return mixed
+     */
+    public function restore(User $user, TestSession $model)
+    {
+        return $model->owner->is($user);
     }
 }

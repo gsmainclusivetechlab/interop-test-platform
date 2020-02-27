@@ -32,8 +32,7 @@ class ValidationPasses extends Constraint
      */
     public function matches($data): bool
     {
-        return Validator::make($data, $this->rules, $this->messages)
-            ->passes();
+        return Validator::make($data, $this->rules, $this->messages)->passes();
     }
 
     /**

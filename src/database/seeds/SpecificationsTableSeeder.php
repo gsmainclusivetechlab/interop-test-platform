@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use App\Models\Specification;
 use Illuminate\Database\Seeder;
@@ -25,16 +25,19 @@ class SpecificationsTableSeeder extends Seeder
     {
         return [
             [
-                'uuid' => '015f918d-9020-4b3a-8233-b043a1a8d5a0',
-                'name' => 'Mobile Money API v1.0',
-                'server' => '{MM_API_HOST}',
-                'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
+                'uuid' => '6fd1452c-eae3-4019-a2b1-d6f1c6cff2d5',
+                'name' => 'Mobile Money API v1.1.0',
+                'schema' => Yaml::parseFile(database_path('schemas/mm.api.yaml')),
             ],
             [
-                'uuid' => '475f55d4-765d-45cf-9354-9e5a3be70276',
+                'uuid' => 'c32ab451-9301-4a0d-9fb8-ab5ad9e68468',
                 'name' => 'Mojaloop Hub API v1.0',
-                'server' => '{MOJALOOP_API_HOST}',
-                'schema' => Yaml::parse(file_get_contents('https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml')),
+                'schema' => Yaml::parseFile(database_path('schemas/mojaloop.api.yaml')),
+            ],
+            [
+                'uuid' => '4a4caa7e-dee4-4be6-83a3-d4db3c3ecebb',
+                'name' => 'Mojaloop FSPIOP API v1.0',
+                'schema' => Yaml::parseFile(database_path('schemas/mojaloop.api.yaml')),
             ],
         ];
     }
