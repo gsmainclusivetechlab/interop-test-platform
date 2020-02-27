@@ -6,8 +6,6 @@
     @stack('scripts')
 </head>
 <body>
-    <div id="app" class="page">
-        @yield('page')
-    </div>
+    <div id="app"></div>
 </body>
 </html>

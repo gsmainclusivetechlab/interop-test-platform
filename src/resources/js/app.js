@@ -1,20 +1,6 @@
 import Vue from 'vue';
-
-import {
-    AlertPlugin,
-    DropdownPlugin,
-    NavPlugin,
-    NavbarPlugin,
-    CollapsePlugin,
-    ProgressPlugin,
-} from 'bootstrap-vue';
-
-Vue.use(AlertPlugin);
-Vue.use(DropdownPlugin);
-Vue.use(NavPlugin);
-Vue.use(NavbarPlugin);
-Vue.use(CollapsePlugin);
-Vue.use(ProgressPlugin);
+import router from './router';
+import App from './views/App.vue';
 
 Vue.component('confirm-button', () =>
     import(/* webpackChunkName: "confirm" */ './components/ConfirmButton.vue'),
@@ -34,6 +20,8 @@ Vue.component('notification', () =>
     ),
 );
 
-const app = new Vue({
+new Vue({
     el: '#app',
+    router,
+    render: (h) => h(App),
 });

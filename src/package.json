@@ -28,6 +28,7 @@
         "sweetalert2": "^9.7.0",
         "tabler-ui": "^0.0.34",
         "vue": "^2.5.17",
+        "vue-router": "^3.1.5",
         "vue-template-compiler": "^2.6.11",
         "webpack-bundle-analyzer": "^3.6.0"
     }
