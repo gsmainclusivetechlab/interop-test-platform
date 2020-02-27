@@ -25,7 +25,6 @@ class CaseController extends Controller
         $runs = $session->runs()
             ->with('case', 'session')
             ->where('case_id', $case->id)
-            ->whereNotNull('completed_at')
             ->latest()
             ->paginate();
 

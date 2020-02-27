@@ -51,6 +51,17 @@ class TestRun extends Model
     /**
      * @var array
      */
+    protected $withCount = [
+        'steps',
+        'results',
+        'passResults',
+        'failResults',
+        'errorResults',
+    ];
+
+    /**
+     * @var array
+     */
     protected $observables = [
         'pass',
         'fail',
@@ -89,6 +100,30 @@ class TestRun extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function passResults()
+    {
+        return $this->results()->pass();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function failResults()
+    {
+        return $this->results()->fail();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function errorResults()
+    {
+        return $this->results()->error();
+    }
+
+    /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -104,6 +139,15 @@ class TestRun extends Model
     public function scopeFail($query)
     {
         return $query->where('status', static::STATUS_FAIL);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereNotNull('completed_at');
     }
 
     /**

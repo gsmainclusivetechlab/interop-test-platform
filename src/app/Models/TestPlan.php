@@ -24,6 +24,14 @@ class TestPlan extends Pivot
     public $timestamps = false;
 
     /**
+     * @var array
+     */
+    protected $with = [
+        'case',
+        'session',
+    ];
+
+    /**
      * The "booting" method of the model.
      *
      * @return void
@@ -66,5 +74,14 @@ class TestPlan extends Pivot
     public function getRouteKeyName()
     {
         return 'uuid';
+    }
+
+    /**
+     * @param  mixed  $value
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function resolveRouteBinding($value)
+    {
+        return $this->where($this->getRouteKeyName(), $value)->whereHas('session')->firstOrFail() ?? abort(404);
     }
 }

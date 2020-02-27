@@ -14,8 +14,10 @@
                 @include('sessions.includes.short-detail', $session)
             </div>
         @empty
-            <div class="card card-body bg-light">
-                {{ __('No Results') }}
+            <div class="col-12">
+                <div class="card card-body bg-light">
+                    {{ __('No Results') }}
+                </div>
             </div>
         @endforelse
     </div>

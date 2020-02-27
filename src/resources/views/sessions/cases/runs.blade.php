@@ -17,6 +17,35 @@
                                 </a>
                                 {{ $run->uuid }} ({{ $case->name }})
                             </h3>
+                            <div class="card-options">
+                                @if ($run->pass_results_count)
+                                    <span class="text-success mr-2">
+                                        <i class="fe fe-check"></i>
+                                        {{ __(':n Pass', ['n' => $run->pass_results_count]) }}
+                                    </span>
+                                @endif
+
+                                @if ($run->fail_results_count)
+                                    <span class="text-danger mr-2">
+                                        <i class="fe fe-check"></i>
+                                        {{ __(':n Fail', ['n' => $run->fail_results_count]) }}
+                                    </span>
+                                @endif
+
+                                @if ($run->error_results_count)
+                                    <span class="text-warning mr-2">
+                                        <i class="fe fe-check"></i>
+                                        {{ __(':n Error', ['n' => $run->error_results_count]) }}
+                                    </span>
+                                @endif
+
+                                @if ($run->steps_count - $run->results_count)
+                                    <span class="text-secondary mr-2">
+                                        <i class="fe fe-check"></i>
+                                        {{ __(':n No Executed', ['n' => $run->steps_count - $run->results_count]) }}
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="rounded-0 bg-white">

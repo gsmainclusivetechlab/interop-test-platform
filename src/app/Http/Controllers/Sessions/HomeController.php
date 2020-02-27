@@ -57,7 +57,6 @@ class HomeController extends Controller
     {
         $runs = $session->runs()
             ->with('case', 'session')
-            ->whereNotNull('completed_at')
             ->latest()
             ->paginate();
 

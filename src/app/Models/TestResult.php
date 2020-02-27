@@ -65,6 +65,33 @@ class TestResult extends Model
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePass($query)
+    {
+        return $query->where('status', static::STATUS_PASS);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFail($query)
+    {
+        return $query->where('status', static::STATUS_FAIL);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeError($query)
+    {
+        return $query->where('status', static::STATUS_ERROR);
+    }
+
+    /**
      * @return array
      */
     public static function getStatusTypes()

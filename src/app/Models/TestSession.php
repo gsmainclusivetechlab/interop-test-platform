@@ -53,7 +53,7 @@ class TestSession extends Model
      */
     public function runs()
     {
-        return $this->hasMany(TestRun::class, 'session_id');
+        return $this->hasMany(TestRun::class, 'session_id')->completed();
     }
 
     /**
