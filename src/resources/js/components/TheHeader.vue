@@ -69,53 +69,62 @@
                             </b-nav-item-dropdown>
                         </b-navbar-nav>
                     </div>
-                    <b-navbar-toggle
-                        target="header-nav"
-                        class="header-toggler d-lg-none ml-3 ml-lg-0"
+                    <button
+                        v-b-toggle.header-nav
+                        type="button"
+                        aria-label="Toggle navigation"
+                        aria-controls="header-nav"
+                        aria-expanded="false"
+                        class="header-toggler d-lg-none ml-3 ml-lg-0 navbar-toggler"
                     >
                         <span class="header-toggler-icon"></span>
-                    </b-navbar-toggle>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <b-collapse id="header-nav" class="header d-lg-flex p-0" is-nav>
+        <b-collapse id="header-nav" class="header d-lg-flex p-0">
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
-                        <a href="#" class="btn btn-outline-primary">
+                        <router-link
+                            :to="{ name: 'sessions.register' }"
+                            exact
+                            class="btn btn-outline-primary"
+                        >
                             <i class="fe fe-plus mr-2"></i>
                             New Session
-                        </a>
+                        </router-link>
                     </div>
                     <div class="col-lg order-lg-first">
                         <ul
                             class="nav nav-tabs border-0 flex-column flex-lg-row"
                         >
                             <li class="nav-item">
-                                <b-link
+                                <router-link
                                     :to="{ name: 'dashboard' }"
-                                    class="nav-link"
                                     exact
+                                    class="nav-link"
                                 >
                                     <i class="fe fe-activity"></i>
                                     Dashboard
-                                </b-link>
+                                </router-link>
                             </li>
                             <li class="nav-item">
-                                <b-link
+                                <router-link
                                     :to="{ name: 'sessions' }"
+                                    exact
                                     class="nav-link"
                                 >
                                     <i class="fe fe-box"></i>
                                     Sessions
-                                </b-link>
+                                </router-link>
                             </li>
                             <li class="nav-item">
-                                <b-link to="#" class="nav-link">
+                                <router-link to="#" class="nav-link">
                                     <i class="fe fe-help-circle"></i>
                                     Tutorial
-                                </b-link>
+                                </router-link>
                             </li>
                             <li class="nav-item">
                                 <a
@@ -150,29 +159,13 @@
 </template>
 
 <script>
-import {
-    BNavbarNav,
-    BNavbarBrand,
-    BNavbarToggle,
-    BNavItemDropdown,
-    BDropdownItem,
-    BDropdownForm,
-    BDropdownDivider,
-    BCollapse,
-    BLink,
-} from 'bootstrap-vue';
+import { BNavbarNav, BNavbarBrand, BNavItemDropdown } from 'bootstrap-vue';
 
 export default {
     components: {
         BNavbarNav,
         BNavbarBrand,
-        BNavbarToggle,
         BNavItemDropdown,
-        BDropdownItem,
-        BDropdownForm,
-        BDropdownDivider,
-        BCollapse,
-        BLink,
     },
 };
 </script>

@@ -26,6 +26,7 @@
                 responsive
                 striped
                 hover
+                head-variant="light"
                 emptyText="No Results"
                 show-empty
                 class="card-table mb-0"
@@ -35,8 +36,6 @@
 </template>
 
 <script>
-import { BCard, BTable } from 'bootstrap-vue';
-
 export default {
     data() {
         return {
@@ -74,13 +73,9 @@ export default {
                     testCases: 'Test Cases',
                     status: 'Status',
                     lastRun: 'Last Run',
-                }
+                },
             ],
         };
-    },
-    components: {
-        BCard,
-        BTable,
     },
 };
 </script>
