@@ -122,9 +122,9 @@ class HomeController extends Controller
     public function showChart(TestSession $session)
     {
         $data = [
-            "data1" => [220, 240, 270, 250, 280],
-            "data2" => [180, 150, 300, 70, 120],
-            "data3" => [200, 310, 150, 100, 180],
+            'x' => ['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+            [220, 240, 270, 250, 280],
+            [180, 150, 300, 70, 120],
         ];
         return $data;
     }

@@ -69,7 +69,7 @@
 {{--                <div class="col-12">--}}
 {{--                    <div class="card">--}}
 {{--                        <div class="card-body">--}}
-{{--                            <chart :data=@json(['url' => route('sessions.chart', $session), 'mimeType' => 'json'])></chart>--}}
+{{--                            <chart :data={{ json_encode(['x' => 'x', 'url' => route('sessions.chart', $session), 'mimeType' => 'json', 'colors' => ['#ff0000', '#ff0000']]) }}></chart>--}}
 {{--                        </div>--}}
 {{--                    </div>--}}
 {{--                </div>--}}
