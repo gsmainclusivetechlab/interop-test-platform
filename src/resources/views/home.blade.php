@@ -8,7 +8,7 @@
             <b>{{ __('Latest sessions') }}</b>
         </h1>
     </div>
-    <div class="row">
+    <div class="row row-cards row-deck">
         @forelse ($sessions as $session)
             <div class="col-xl-3 col-md-4">
                 @include('sessions.includes.short-detail', $session)
