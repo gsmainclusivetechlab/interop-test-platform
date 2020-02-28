@@ -16,13 +16,17 @@ class CaseController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    /**
-     * @param TestSession $session
-     * @param TestCase $case
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function show(TestSession $session, TestCase $case)
     {
-        return view('sessions.cases.show', compact('session', 'case'));
+        $case = $session->cases()
+            ->where('case_id', $case->id)
+            ->firstOrFail();
+        $runs = $session->runs()
+            ->with('case', 'session')
+            ->where('case_id', $case->id)
+            ->latest()
+            ->paginate();
+
+        return view('sessions.cases.show', compact('session', 'case', 'runs'));
     }
 }

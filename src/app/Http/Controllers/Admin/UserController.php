@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -22,11 +21,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::when(request('q'), function ($query, $q) {
-            return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
-                ->orWhere('email', 'like', "%{$q}%")
-                ->orWhere('company', 'like', "%{$q}%");
-        })->latest()->paginate();
+        $users = User::withoutTrashed()
+            ->when(request('q'), function ($query, $q) {
+                $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('company', 'like', "%{$q}%");
+            })
+            ->latest()
+            ->paginate();
 
         return view('admin.users.index', compact('users'));
     }
@@ -38,11 +40,14 @@ class UserController extends Controller
     public function trash()
     {
         $this->authorize('viewAny', User::class);
-        $users = User::onlyTrashed()->when(request('q'), function ($query, $q) {
-                return $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', "%{$q}%")
+        $users = User::onlyTrashed()
+            ->when(request('q'), function ($query, $q) {
+                 $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
                     ->orWhere('company', 'like', "%{$q}%");
-        })->latest()->paginate();
+            })
+            ->latest()
+            ->paginate();
 
         return view('admin.users.index', compact('users'));
     }
@@ -68,10 +73,8 @@ class UserController extends Controller
      */
     public function restore(int $id)
     {
-        if (($user = User::onlyTrashed()->find($id)) === null) {
-            abort(404);
-        }
-
+        $user = User::onlyTrashed()
+            ->findOrFail($id);
         $this->authorize('restore', $user);
         $user->restore();
 
@@ -87,11 +90,9 @@ class UserController extends Controller
      */
     public function forceDestroy(int $id)
     {
-        if (($user = User::withTrashed()->find($id)) === null) {
-            abort(404);
-        }
-
-        $this->authorize('forceDelete', $user);
+        $user = User::withTrashed()
+            ->findOrFail($id);
+        $this->authorize('delete', $user);
         $user->forceDelete();
 
         return redirect()

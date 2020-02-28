@@ -23,9 +23,8 @@ class Specification extends Model
      */
     protected $fillable = [
         'name',
-        'server',
-        'schema',
         'description',
+        'schema',
     ];
 
     /**
@@ -34,4 +33,12 @@ class Specification extends Model
     protected $casts = [
         'schema' => 'array',
     ];
+
+    /**
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
 }

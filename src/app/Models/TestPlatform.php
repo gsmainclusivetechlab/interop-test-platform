@@ -16,26 +16,29 @@ class TestPlatform extends Model
     protected $table = 'test_platforms';
 
     /**
+     * @var string
+     */
+    protected $primaryKey = 'component_id';
+
+    /**
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
      * @var array
      */
     protected $fillable = [
-
+        'specification_id',
+        'server',
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function scenario()
-    {
-        return $this->belongsTo(TestScenario::class, 'scenario_id');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function component()
     {
-        return $this->belongsTo(Component::class, 'component_id');
+        return $this->belongsTo(TestComponent::class, 'component_id');
     }
 
     /**

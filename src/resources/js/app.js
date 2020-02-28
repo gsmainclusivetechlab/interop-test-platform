@@ -7,7 +7,13 @@ import {
     NavbarPlugin,
     CollapsePlugin,
     ProgressPlugin,
+    VBTooltipPlugin,
 } from 'bootstrap-vue';
+
+import hljs from 'highlight.js';
+import Clipboard from 'clipboard';
+
+new Clipboard('[data-clipboard-target]');
 
 Vue.use(AlertPlugin);
 Vue.use(DropdownPlugin);
@@ -15,6 +21,7 @@ Vue.use(NavPlugin);
 Vue.use(NavbarPlugin);
 Vue.use(CollapsePlugin);
 Vue.use(ProgressPlugin);
+Vue.use(VBTooltipPlugin);
 
 Vue.component('confirm-button', () =>
     import(/* webpackChunkName: "confirm" */ './components/ConfirmButton.vue'),
@@ -37,3 +44,5 @@ Vue.component('notification', () =>
 const app = new Vue({
     el: '#app',
 });
+
+hljs.initHighlightingOnLoad();

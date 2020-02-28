@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Illuminate\Database\Seeder;
 
@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersTableSeeder::class,
-            ComponentsTableSeeder::class,
-            EnvironmentsTableSeeder::class,
             SpecificationsTableSeeder::class,
             TestScenariosTableSeeder::class,
         ]);

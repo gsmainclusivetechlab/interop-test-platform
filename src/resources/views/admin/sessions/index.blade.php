@@ -8,18 +8,24 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            <form action="">
-                <div class="input-icon">
-                    @include('components.grid.search')
+            @include('components.grid.search')
+            <div class="card-options">
+                <div class="btn-group">
+                    <a href="{{ route('admin.sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('admin.sessions.index')) active @endif">
+                        {{ __('Active') }}
+                    </a>
+                    <a href="{{ route('admin.sessions.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('admin.sessions.trash')) active @endif">
+                        {{ __('Deactivated') }}
+                    </a>
                 </div>
-            </form>
+            </div>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
                         <th class="text-nowrap w-25">{{ __('Name') }}</th>
-                        <th class="text-nowrap w-25">{{ __('Owner') }}</th>
+                        <th class="text-nowrap w-auto">{{ __('Owner') }}</th>
                         <th class="text-nowrap w-auto">{{ __('Use Cases') }}</th>
                         <th class="text-nowrap w-auto">{{ __('Test Cases') }}</th>
                         <th class="text-nowrap w-25">{{ __('Status') }}</th>
@@ -31,23 +37,65 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td class="text-break">
-                            <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
+                            @if($session->trashed())
+                                {{ $session->name }}
+                            @else
+                                <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
+                            @endif
                         </td>
                         <td class="text-break">
                             <a href="#">{{ $session->owner->name }}</a>
                         </td>
                         <td>
-                            {{ $session->operations_count }}
+                            {{ $session->cases->unique('suite_id')->count() }}
                         </td>
                         <td>
-                            {{ $session->cases_count }}
+                            {{ $session->cases->count() }}
                         </td>
-                        <td class="text-break">
-                            <b-progress class="rounded-0"></b-progress>
+                        <td>
+                            @include('sessions.includes.runs-progress', $session)
                         </td>
-                        <td class="text-break"></td>
+                        <td>
+                            @if($session->lastRun)
+                                {{ $session->lastRun->completed_at->diffForHumans() }}
+                            @endif
+                        </td>
                         <td class="text-center">
+                            @canany(['delete', 'restore'], $session)
+                                @component('components.grid.actions')
+                                    @if ($session->trashed())
+                                        @can('restore', $session)
+                                            @include('components.grid.actions.form', [
+                                                'method' => 'POST',
+                                                'route' => route('sessions.restore', $session),
+                                                'label' => __('Activate'),
+                                                'confirmTitle' => __('Confirm activate'),
+                                                'confirmText' => __('Are you sure you want to activate :name?', ['name' => $session->name]),
+                                            ])
+                                        @endcan
+                                    @else
+                                        @can('delete', $session)
+                                            @include('components.grid.actions.form', [
+                                                'method' => 'DELETE',
+                                                'route' => route('sessions.destroy', $session),
+                                                'label' => __('Deactivate'),
+                                                'confirmTitle' => __('Confirm deactivate'),
+                                                'confirmText' => __('Are you sure you want to deactivate :name?', ['name' => $session->name]),
+                                            ])
+                                        @endcan
+                                    @endif
 
+                                    @can('delete', $session)
+                                        @include('components.grid.actions.form', [
+                                            'method' => 'DELETE',
+                                            'route' => route('sessions.force_destroy', $session),
+                                            'label' => __('Delete'),
+                                            'confirmTitle' => __('Confirm delete'),
+                                            'confirmText' => __('Are you sure you want to delete :name?', ['name' => $session->name]),
+                                        ])
+                                    @endcan
+                                @endcomponent
+                            @endcanany
                         </td>
                     </tr>
                 @empty

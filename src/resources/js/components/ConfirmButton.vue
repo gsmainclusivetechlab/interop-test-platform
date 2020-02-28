@@ -54,13 +54,15 @@ export default {
                 import(
                     /* webpackChunkName: "sweetalert2" */ 'sweetalert2'
                 ).then(({ default: Swal }) =>
-                    Swal.fire(this.$props).then((result) => {
-                        this.confirmed = result.value;
+                    Swal.fire({ ...this.$props, heightAuto: false }).then(
+                        (result) => {
+                            this.confirmed = result.value;
 
-                        if (result.value) {
-                            this.$el.click();
-                        }
-                    }),
+                            if (result.value) {
+                                this.$el.click();
+                            }
+                        },
+                    ),
                 );
             }
         },

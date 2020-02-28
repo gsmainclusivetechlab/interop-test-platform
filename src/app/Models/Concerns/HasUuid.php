@@ -2,7 +2,6 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 trait HasUuid
@@ -12,7 +11,7 @@ trait HasUuid
      */
     protected static function bootHasUuid()
     {
-        static::creating(function (Model $model) {
+        static::creating(function ($model) {
             if (!$model->isDirty($model->getUuidColumn())) {
                 $model->generateUuid();
             }

@@ -15,6 +15,10 @@ class ValidationPasses extends Constraint
      * @var array
      */
     protected $messages;
+    /**
+     * @var array
+     */
+    protected $errors = [];
 
     /**
      * @param array $rules
@@ -32,8 +36,14 @@ class ValidationPasses extends Constraint
      */
     public function matches($data): bool
     {
-        return Validator::make($data, $this->rules, $this->messages)
-            ->passes();
+        $validator = Validator::make($data, $this->rules, $this->messages);
+        $passes = $validator->passes();
+
+        if (!$passes) {
+            $this->errors = $validator->errors()->all();
+        }
+
+        return $passes;
     }
 
     /**
@@ -42,7 +52,7 @@ class ValidationPasses extends Constraint
      */
     public function failureDescription($data): string
     {
-        return $this->toString();
+        return $this->toString() . ' (' . implode(PHP_EOL, $this->errors) . ')';
     }
 
     /**
