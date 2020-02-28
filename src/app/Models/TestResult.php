@@ -56,6 +56,7 @@ class TestResult extends Model
     {
         return $this->belongsTo(TestRun::class, 'run_id');
     }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

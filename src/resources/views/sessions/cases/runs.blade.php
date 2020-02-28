@@ -47,6 +47,19 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="card-body bg-light">
+                            <flow-chart>
+                                graph LR;
+                                @foreach($session->scenario->components as $component)
+                                    {{ $component->id }}({{$component->name}})@if($component->is($result->step->source) || $component->is($result->step->target)):::is-active @endif;
+                                    @foreach ($component->connections as $connection)
+                                        {{ $component->id }} @if($connection->pivot->simulated) --> @else -.-> @endif {{ $connection->id }}
+                                    @endforeach
+                                @endforeach
+                                classDef node fill:#fff,stroke:#fff,color:#242529
+                                classDef clickable fill:#fff,stroke:#fff,color:#242529
+                            </flow-chart>
+                        </div>
                     </div>
                     <div class="rounded-0 bg-white">
                         <div class="row">
@@ -149,41 +162,65 @@
 
                                             @if($requestHeaders = Arr::get($request, 'headers'))
                                                 <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border">
+                                                    <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-headers-{{ $result->id }}>
                                                         <strong>{{ __('Headers') }}</strong>
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json($requestHeaders, JSON_PRETTY_PRINT)</code>
-                                                        </pre>
+                                                        {{ __('(:n) params', ['n' => count($requestHeaders)]) }}
                                                     </div>
                                                 </div>
+                                                <b-collapse id="request-headers-{{ $result->id }}">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border"></div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            <pre class="mb-0 p-0 bg-transparent">
+                                                                <code v-pre>@json($requestHeaders, JSON_PRETTY_PRINT)</code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </b-collapse>
                                             @endif
 
                                             @if($requestQuery = Arr::get($request, 'query'))
                                                 <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border">
+                                                    <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-query-{{ $result->id }}>
                                                         <strong>{{ __('Query') }}</strong>
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json($requestQuery, JSON_PRETTY_PRINT)</code>
-                                                        </pre>
+                                                        {{ __('(:n) params', ['n' => count($requestQuery)]) }}
                                                     </div>
                                                 </div>
+                                                <b-collapse id="request-query-{{ $result->id }}">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border"></div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            <pre class="mb-0 p-0 bg-transparent">
+                                                                <code v-pre>@json($requestQuery, JSON_PRETTY_PRINT)</code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </b-collapse>
                                             @endif
 
                                             @if($requestBody = Arr::get($request, 'body'))
                                                 <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border">
+                                                    <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-body-{{ $result->id }}>
                                                         <strong>{{ __('Body') }}</strong>
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json($requestBody, JSON_PRETTY_PRINT)</code>
-                                                        </pre>
+                                                        {{ __('(:n) params', ['n' => count($requestBody)]) }}
                                                     </div>
                                                 </div>
+                                                <b-collapse id="request-body-{{ $result->id }}">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border"></div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            <pre class="mb-0 p-0 bg-transparent">
+                                                                <code v-pre>@json($requestBody, JSON_PRETTY_PRINT)</code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </b-collapse>
                                             @endif
                                         </div>
                                     </div>
@@ -208,28 +245,44 @@
 
                                             @if($responseHeaders = Arr::get($response, 'headers'))
                                                 <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border">
+                                                    <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.response-headers-{{ $result->id }}>
                                                         <strong>{{ __('Headers') }}</strong>
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json($responseHeaders, JSON_PRETTY_PRINT)</code>
-                                                        </pre>
+                                                        {{ __('(:n) params', ['n' => count($responseHeaders)]) }}
                                                     </div>
                                                 </div>
+                                                <b-collapse id="response-headers-{{ $result->id }}">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border"></div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            <pre class="mb-0 p-0 bg-transparent">
+                                                                <code v-pre>@json($responseHeaders, JSON_PRETTY_PRINT)</code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </b-collapse>
                                             @endif
 
                                             @if($responseBody = Arr::get($response, 'body'))
                                                 <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border">
+                                                    <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.response-body-{{ $result->id }}>
                                                         <strong>{{ __('Body') }}</strong>
                                                     </div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>{{ $responseBody }}</code>
-                                                        </pre>
+                                                        {{ __('(:n) params', ['n' => count($responseBody)]) }}
                                                     </div>
                                                 </div>
+                                                <b-collapse id="response-body-{{ $result->id }}">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border"></div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            <pre class="mb-0 p-0 bg-transparent">
+                                                                <code v-pre>@json($responseBody, JSON_PRETTY_PRINT)</code>
+                                                            </pre>
+                                                        </div>
+                                                    </div>
+                                                </b-collapse>
                                             @endif
                                         </div>
                                     </div>

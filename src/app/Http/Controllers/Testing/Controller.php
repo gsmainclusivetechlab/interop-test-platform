@@ -70,7 +70,7 @@ class Controller extends BaseController
         return [
             'status' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
-            'body' => $response->getBody()->getContents(),
+            'body' => json_decode($response->getBody()->getContents(), true),
         ];
     }
 }

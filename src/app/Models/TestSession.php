@@ -60,6 +60,14 @@ class TestSession extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function scenario()
+    {
+        return $this->belongsTo(TestScenario::class, 'scenario_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function runs()
