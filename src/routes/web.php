@@ -29,6 +29,7 @@ Route::name('sessions.')->prefix('sessions')->group(function () {
     Route::get('', 'Sessions\HomeController@index')->name('index');
     Route::get('trash', 'Sessions\HomeController@trash')->name('trash');
     Route::get('{session}', 'Sessions\HomeController@show')->name('show');
+    Route::get('{session}/chart', 'Sessions\HomeController@showChart')->name('chart');
     Route::delete('{session}/destroy', 'Sessions\HomeController@destroy')->name('destroy');
     Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
     Route::delete('{session}/force-destroy', 'Sessions\HomeController@forceDestroy')->name('force_destroy');
