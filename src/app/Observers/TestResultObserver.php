@@ -12,7 +12,7 @@ class TestResultObserver
      */
     public function pass(TestResult $result)
     {
-        if ($result->run->results()->count() >= $result->run->steps()->count()) {
+        if ($result->run->results()->count() >= $result->run->steps()->count()/* && !$result->run->isCompleted()*/) {
             $result->run->pass();
         }
     }

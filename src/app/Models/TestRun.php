@@ -211,6 +211,14 @@ class TestRun extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function isCompleted()
+    {
+        return $this->completed_at != null;
+    }
+
+    /**
      * @param array $options
      * @return bool
      */
