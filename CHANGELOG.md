@@ -1,3 +1,12 @@
+## v0.3
+- Task: Session execution - pages (Markup) [@jc_ohladkov]
+- Task: Session execution - Session page [@jc_akokorev]
+- Task: Session execution - Test Case page [@jc_akokorev]
+- Task: Session execution - Test Run page [@jc_akokorev]
+- Tesk: Test Run execution [@jc_akokorev]
+- Task: Homepage (user dashboard)[@jc_akokorev]
+- Task: Mojaloop FSP Merchant Payment implementation [@jc_ohladkov]
+
 ## v0.2
 - Task: Session execution - Session page (Markup) [@jc_ohladkov]
 - Task: Session page graph [@jc_ohladkov]
