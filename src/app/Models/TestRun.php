@@ -68,11 +68,6 @@ class TestRun extends Model
     ];
 
     /**
-     * @var int
-     */
-    protected $perPage = 10;
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function case()

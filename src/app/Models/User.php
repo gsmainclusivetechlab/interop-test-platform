@@ -56,11 +56,6 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * @var int
-     */
-    protected $perPage = 10;
-
-    /**
      * @return array
      */
     public static function getRoleLabels()
