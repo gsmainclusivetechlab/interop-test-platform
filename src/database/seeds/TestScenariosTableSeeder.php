@@ -346,7 +346,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -356,7 +356,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -366,7 +366,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -376,7 +376,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -386,7 +386,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -396,7 +396,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -406,7 +406,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -416,7 +416,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -426,7 +426,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -436,7 +436,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -446,7 +446,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -456,7 +456,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -466,7 +466,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
             ],
@@ -478,7 +478,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:400',
+                        'status' => 'in:400',
                     ],
                 ],
             ],
@@ -490,7 +490,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -500,7 +500,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:500',
+                        'status' => 'in:500',
                     ],
                 ],
             ],
@@ -512,7 +512,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -522,7 +522,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -532,7 +532,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -542,7 +542,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -552,7 +552,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -562,7 +562,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -572,7 +572,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:202',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -582,7 +582,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -592,7 +592,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'same:200',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -601,7 +601,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [
-                        'body.amount.amount' => 'same:70'
+                        'body.amount.amount' => 'in:70'
                     ],
                     'expected_response' => [],
                 ],
