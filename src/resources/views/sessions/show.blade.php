@@ -69,7 +69,7 @@
 {{--                <div class="col-12">--}}
 {{--                    <div class="card">--}}
 {{--                        <div class="card-body">--}}
-{{--                            <chart></chart>--}}
+{{--                            <chart :data=@json(['url' => route('sessions.chart', $session), 'mimeType' => 'json'])></chart>--}}
 {{--                        </div>--}}
 {{--                    </div>--}}
 {{--                </div>--}}
