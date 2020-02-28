@@ -300,7 +300,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -310,7 +310,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(202)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -320,7 +320,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(202)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -330,7 +330,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -340,7 +340,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -350,7 +350,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(202)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -360,7 +360,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(202)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -370,7 +370,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -380,7 +380,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -390,7 +390,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(202)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -400,7 +400,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(202)',
+                        'status' => 'in:202',
                     ],
                 ],
                 [
@@ -410,7 +410,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:200',
                     ],
                 ],
                 [
@@ -420,7 +420,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(200)',
+                        'status' => 'in:200',
                     ],
                 ],
             ],
@@ -432,7 +432,7 @@ The Payer would like to buy goods or services worth {amount} USD from a Merchant
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
                     'expected_response' => [
-                        'status' => 'in:(400)',
+                        'status' => 'in:400',
                     ],
                 ],
             ],

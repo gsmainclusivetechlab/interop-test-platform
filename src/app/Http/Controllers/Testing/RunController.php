@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Testing;
 
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
+use App\Jobs\ProcessTimeoutTestRun;
 use App\Models\TestPlan;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
@@ -34,6 +35,9 @@ class RunController extends Controller
             'case_id' => $plan->case_id,
             'session_id' => $plan->session_id,
         ]);
+
+        ProcessTimeoutTestRun::dispatch($run)
+            ->delay(now()->addMinutes(1));
 
         $uri = (new Uri($step->platform->server))
             ->withPath($step->path);
