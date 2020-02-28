@@ -1,4 +1,4 @@
-GSMA Test Control. Powered by Laravel 
+GSMA Test Control
 ===================================
 
 BASE STRUCTURE
@@ -27,10 +27,8 @@ Project can be setup with Docker.
     - build/nginx-server.conf
 4. Check .env files for correct configurations.
 5. Login to JC docker hub: `docker login hub.jcdev.net:24000`
-6. Run a test run to build containers and init DB: `make test-run`. After containers up press "Ctrl+C" to exit.
-7. Run containers with `make run`
-7. Add to your `/etc/hosts` file: `127.0.0.1 httpproxy.test`
-9. Run installation `make install`  
+6. Run containers with `make run`
+7. Run installation `make install`  
 
 ### Docker PHP Container
 
@@ -54,11 +52,13 @@ To open nodejs container permanently just run:
 
 ### Site access:
 
-Access your site via URL: http://httpproxy.test:8082
+Access your site via URL: http://localhost:8084
 
-Mail catcher: http://httpproxy.test:8086
+Mail catcher: http://localhost:8086
 
-Admin login: admin@domain.com / 123456
+Admin login: admin@gsma.com / password
+
+Superadmin login: superadmin@gsma.com / password
 
 You're ready to write your code!
 ------------
