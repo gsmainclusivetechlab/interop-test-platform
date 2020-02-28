@@ -20,6 +20,7 @@ class TestRun extends Model
     const STATUS_EXECUTING = 'executing';
     const STATUS_PASS = 'pass';
     const STATUS_FAIL = 'fail';
+    const STATUS_TIMEOUT = 'timeout';
 
     /**
      * @var string
@@ -65,6 +66,7 @@ class TestRun extends Model
     protected $observables = [
         'pass',
         'fail',
+        'timeout',
     ];
 
     /**
@@ -175,6 +177,7 @@ class TestRun extends Model
             static::STATUS_EXECUTING => 'secondary',
             static::STATUS_PASS => 'success',
             static::STATUS_FAIL => 'danger',
+            static::STATUS_TIMEOUT => 'secondary',
         ];
     }
 
@@ -195,6 +198,7 @@ class TestRun extends Model
             static::STATUS_EXECUTING => __('Executing'),
             static::STATUS_PASS => __('Pass'),
             static::STATUS_FAIL => __('Fail'),
+            static::STATUS_TIMEOUT => __('Timeout'),
         ];
     }
 
@@ -237,6 +241,23 @@ class TestRun extends Model
         }
 
         $this->fireModelEvent('fail');
+        return true;
+    }
+
+    /**
+     * @param array $options
+     * @return bool
+     */
+    public function timeout(array $options = [])
+    {
+        $this->status = static::STATUS_TIMEOUT;
+        $this->completed_at = now();
+
+        if (!$this->save($options)) {
+            return false;
+        }
+
+        $this->fireModelEvent('timeout');
         return true;
     }
 }

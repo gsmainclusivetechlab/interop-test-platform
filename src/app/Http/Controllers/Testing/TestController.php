@@ -29,7 +29,7 @@ class TestController extends Controller
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, Specification $specification, string $path = '')
+    public function __invoke(ServerRequestInterface $request, Specification $specification, string $path)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $run = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())

@@ -20,8 +20,6 @@ class CreateTestPlansTable extends Migration
             $table->unsignedBigInteger('case_id');
             $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
             $table->primary(['session_id', 'case_id']);
-            $table->unsignedBigInteger('suite_id');
-            $table->foreign('suite_id')->references('suite_id')->on('test_cases')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

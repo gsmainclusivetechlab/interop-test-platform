@@ -13,7 +13,6 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestSession::class, 'session');
     }
 
     /**
@@ -26,7 +25,6 @@ class HomeController extends Controller
             ->when(request('q'), function ($query, $q) {
                 return $query->where('name', 'like', "%{$q}%");
             })
-            ->with('lastRun')
             ->latest()
             ->paginate();
 
@@ -39,13 +37,11 @@ class HomeController extends Controller
      */
     public function trash()
     {
-        $this->authorize('viewAny', TestSession::class);
         $sessions = auth()->user()->sessions()
             ->onlyTrashed()
             ->when(request('q'), function ($query, $q) {
                 return $query->where('name', 'like', "%{$q}%");
             })
-            ->with('lastRun')
             ->latest()
             ->paginate();
 
@@ -58,12 +54,16 @@ class HomeController extends Controller
      */
     public function show(TestSession $session)
     {
+        $this->authorize('view', $session);
         $runs = $session->runs()
             ->with('case', 'session')
             ->latest()
             ->paginate();
+        $suites = $session->cases->mapWithKeys(function ($item) {
+            return [$item->suite];
+        });
 
-        return view('sessions.show', compact('session', 'runs'));
+        return view('sessions.show', compact('session', 'runs', 'suites'));
     }
 
     /**
@@ -73,6 +73,7 @@ class HomeController extends Controller
      */
     public function destroy(TestSession $session)
     {
+        $this->authorize('delete', $session);
         $session->delete();
 
         return redirect()

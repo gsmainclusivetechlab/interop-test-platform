@@ -32,19 +32,6 @@ class TestPlan extends Pivot
     ];
 
     /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::saving(function ($model) {
-            $model->suite_id = $model->case()->value('suite_id');
-        });
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function case()

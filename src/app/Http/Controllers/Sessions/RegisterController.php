@@ -8,7 +8,6 @@ use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
 use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
 use App\Models\TestSuite;
 use App\Models\TestScenario;
-use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {

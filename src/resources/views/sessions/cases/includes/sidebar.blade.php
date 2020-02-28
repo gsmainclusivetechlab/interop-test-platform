@@ -12,29 +12,17 @@
             <ul class="list-unstyled">
                 <li class="py-3 px-4 border-bottom">
                     <div class="input-group">
-                        <input id="{{ $case->pivot->uuid }}" type="text" class="form-control" readonly value="{{ route('testing.run', [$case->pivot]) }}">
+                        <input id="run-url-{{ $case->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', [$case->pivot]) }}">
                         <span class="input-group-append">
-                            <button class="btn border" type="button" data-clipboard-target="#{{ $case->pivot->uuid }}">
+                            <button class="btn border" type="button" data-clipboard-target="#run-url-{{ $case->id }}">
                                 <i class="fe fe-copy"></i>
                             </button>
                         </span>
                     </div>
                 </li>
                 @if ($case->description)
-                    <li class="py-3 px-4 border-bottom">
-                        <strong class="d-block mb-1">{{ __('Description') }}</strong>
-                        <p class="mb-0">
-                            {{ $case->description }}
-                        </p>
-                    </li>
-                @endif
-
-                @if ($case->preconditions)
-                    <li class="py-3 px-4 border-bottom">
-                        <strong class="d-block mb-1">{{ __('Preconditions') }}</strong>
-                        <p class="mb-0">
-                            {{ $case->preconditions }}
-                        </p>
+                    <li class="py-3 px-4 border-bottom" v-pre>
+                        {{ \Illuminate\Mail\Markdown::parse($case->description) }}
                     </li>
                 @endif
             </ul>

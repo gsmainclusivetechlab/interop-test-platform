@@ -187,7 +187,100 @@ class TestScenariosTableSeeder extends Seeder
             [
                 [
                     'name' => 'Authorized Transaction',
+                    'description' => '**Description**
+
+The Payer would like to buy goods or services worth {amount} USD from a Merchant (the Payee) in the Payee MMO system. {amount} USD is transferred from the Payer MMO to the Payee MMO.
+
+---
+
+**Pre-conditions**
+
+- Payee and Payer MMOs in Mojaloop as Participants.
+- Payee and Payer exist in Mojaloop as Parties.
+
+---
+
+**Test data headers**
+
+	{
+	    "Accept": "application/json",
+	    "Content-Type": "application/json",
+	    "X-Callback-URL": "http://example.com/example",
+	    "X-Date": "2020-02-20T10:28:44.466Z"
+    }
+
+---
+
+**Test data body**
+
+	{
+        "amount":"100",
+        "currency":"USD",
+        "type":"merchantpay",
+        "debitParty":
+        [
+	        {
+	                "key":"msisdn",
+	                "value":"+33555123456"
+	        }
+        ],
+        "creditParty":
+        [
+	        {
+	                "key":"msisdn",
+	                "value":"+33555123457"
+	        }
+        ]
+    }',
                     'behavior' => TestCase::BEHAVIOR_POSITIVE,
+                ],
+                [
+                    'name' => 'Refused Transaction by MMO1',
+                    'description' => '**Description**
+
+The Payer would like to buy goods or services worth {amount} USD from a Merchant (the Payee) in the Payee MMO system. Payee sends the Transaction amount in wrong format to his MMO, so that MMO denies to process transaction.
+
+---
+
+**Pre-conditions**
+
+- Transaction amount should be any float with .00, e.g. 50.00
+
+---
+
+**Test data headers**
+
+	{
+	    "Accept": "application/json",
+	    "Content-Type": "application/json",
+	    "X-Callback-URL": "http://example.com/example",
+	    "X-Date": "2020-02-20T10:28:44.466Z",
+    }
+
+---
+
+**Test data body**
+
+	{
+        "amount":"50.00",
+        "currency":"USD",
+        "type":"merchantpay",
+        "debitParty":
+        [
+	        {
+	                "key":"msisdn",
+	                "value":"+33555123456"
+	        }
+        ],
+        "creditParty":
+        [
+	        {
+	                "key":"msisdn",
+	                "value":"+33555123457"
+	        }
+        ]
+    }',
+                    'behavior' => TestCase::BEHAVIOR_NEGATIVE,
                 ],
             ],
         ];
@@ -206,7 +299,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Service Provider')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'transactionRequests',
@@ -214,7 +309,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'transactionRequests',
@@ -222,7 +319,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'transactionRequests/%',
@@ -230,7 +329,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:200',
+                    ],
                 ],
                 [
                     'path' => 'transactionRequests/%',
@@ -238,7 +339,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:200',
+                    ],
                 ],
                 [
                     'path' => 'quotes',
@@ -246,7 +349,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'quotes',
@@ -254,7 +359,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'quotes/%',
@@ -262,7 +369,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:200',
+                    ],
                 ],
                 [
                     'path' => '%/quotes/%',
@@ -270,7 +379,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:200',
+                    ],
                 ],
                 [
                     'path' => 'transfers',
@@ -278,7 +389,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'transfers',
@@ -286,7 +399,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:202',
+                    ],
                 ],
                 [
                     'path' => 'transfers/%',
@@ -294,7 +409,9 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:200',
+                    ],
                 ],
                 [
                     'path' => '%/transfers/%',
@@ -302,7 +419,21 @@ class TestScenariosTableSeeder extends Seeder
                     'source_id' => TestComponent::where('name', 'Mojaloop System')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 2')->value('id'),
                     'expected_request' => [],
-                    'expected_response' => [],
+                    'expected_response' => [
+                        'status' => 'in:200',
+                    ],
+                ],
+            ],
+            [
+                [
+                    'path' => 'transactions',
+                    'method' => 'POST',
+                    'source_id' => TestComponent::where('name', 'Service Provider')->value('id'),
+                    'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'expected_request' => [],
+                    'expected_response' => [
+                        'status' => 'in:400',
+                    ],
                 ],
             ],
         ];

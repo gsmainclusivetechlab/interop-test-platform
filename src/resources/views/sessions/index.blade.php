@@ -43,17 +43,17 @@
                             @endif
                         </td>
                         <td>
-                            {{ $session->suites_count }}
+                            {{ $session->cases->unique('suite_id')->count() }}
                         </td>
                         <td>
-                            {{ $session->cases_count }}
+                            {{ $session->cases->count() }}
                         </td>
                         <td>
                             @include('sessions.includes.runs-progress', $session)
                         </td>
                         <td>
                             @if($session->lastRun)
-                                {{ $session->lastRun->completed_at }}
+                                {{ $session->lastRun->completed_at->diffForHumans() }}
                             @endif
                         </td>
                         <td class="text-center">

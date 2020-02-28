@@ -24,7 +24,6 @@ class TestCase extends Model
     protected $fillable = [
         'name',
         'description',
-        'preconditions',
         'behavior',
     ];
 

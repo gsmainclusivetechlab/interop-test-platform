@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header flex-column align-items-start border-bottom py-4">
+    <div class="card-header flex-column align-items-start h-100 border-bottom py-4">
         <div class="d-flex align-items-center w-100 mb-2">
             @include('sessions.includes.runs-progress', $session)
             <b-dropdown class="item-action" no-caret menu-class="dropdown-menu-arrow" toggle-class="icon text-align-right text-decoration-none p-0" variant="link" boundary="window">
@@ -42,23 +42,29 @@
                 @endcan
             </b-dropdown>
         </div>
-        <h2 class="card-title">
+        <h2 class="card-title w-100 text-truncate">
             <b>{{ $session->name }}</b>
         </h2>
         <p class="mb-0">
             {{ \Illuminate\Support\Str::limit($session->description) }}
         </p>
     </div>
-    <div class="card-body py-4">
+    <div class="card-body flex-shrink-0 py-4">
         <ul class="list-unstyled">
             <li>
                 <i class="fe fe-briefcase"></i>
-                {{ $session->suites_count }}
+                {{ $session->cases->unique('suite_id')->count() }}
             </li>
             <li>
                 <i class="fe fe-file-text"></i>
-                {{ $session->cases_count }}
+                {{ $session->cases->count() }}
             </li>
+            @if($session->lastRun)
+                <li>
+                    <i class="fe fe-calendar"></i>
+                    {{ $session->lastRun->completed_at->diffForHumans() }}
+                </li>
+            @endif
         </ul>
     </div>
 </div>

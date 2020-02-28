@@ -23,4 +23,13 @@ class TestRunObserver
     {
 
     }
+
+    /**
+     * @param TestRun $run
+     * @return void
+     */
+    public function timeout(TestRun $run)
+    {
+
+    }
 }

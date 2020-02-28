@@ -7,6 +7,7 @@ import {
     NavbarPlugin,
     CollapsePlugin,
     ProgressPlugin,
+    VBTooltipPlugin,
 } from 'bootstrap-vue';
 
 import hljs from 'highlight.js';
@@ -20,6 +21,7 @@ Vue.use(NavPlugin);
 Vue.use(NavbarPlugin);
 Vue.use(CollapsePlugin);
 Vue.use(ProgressPlugin);
+Vue.use(VBTooltipPlugin);
 
 Vue.component('confirm-button', () =>
     import(/* webpackChunkName: "confirm" */ './components/ConfirmButton.vue'),
