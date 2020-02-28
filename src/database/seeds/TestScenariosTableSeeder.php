@@ -510,6 +510,7 @@ The Payer would like to buy goods or services worth 70 USD from a Merchant (the 
                     'method' => 'POST',
                     'source_id' => TestComponent::where('name', 'Service Provider')->value('id'),
                     'target_id' => TestComponent::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'expected_request' => [],
                     'expected_response' => [
                         'status' => 'in:202',
                     ],

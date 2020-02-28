@@ -26,10 +26,12 @@ endif
 install: chmod composer-install
 	php artisan key:generate
 	php artisan migrate:fresh --seed
+	php artisan telescope:publish
 
 update: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
+	php artisan telescope:publish
 	php artisan queue:restart
 
 # Composer helpers
