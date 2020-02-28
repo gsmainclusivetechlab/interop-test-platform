@@ -177,6 +177,7 @@ class TestRun extends Model
             static::STATUS_EXECUTING => 'secondary',
             static::STATUS_PASS => 'success',
             static::STATUS_FAIL => 'danger',
+            static::STATUS_TIMEOUT => 'secondary',
         ];
     }
 
@@ -197,6 +198,7 @@ class TestRun extends Model
             static::STATUS_EXECUTING => __('Executing'),
             static::STATUS_PASS => __('Pass'),
             static::STATUS_FAIL => __('Fail'),
+            static::STATUS_TIMEOUT => __('Timeout'),
         ];
     }
 
