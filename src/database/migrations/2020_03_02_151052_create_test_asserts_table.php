@@ -20,6 +20,7 @@ class CreateTestAssertsTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->longText('rules');
+            $table->longText('messages');
             $table->timestamps();
         });
     }

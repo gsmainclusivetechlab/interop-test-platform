@@ -27,17 +27,17 @@ class SpecificationsTableSeeder extends Seeder
             [
                 'uuid' => '6fd1452c-eae3-4019-a2b1-d6f1c6cff2d5',
                 'name' => 'Mobile Money API v1.1.0',
-                'schema' => Yaml::parseFile(database_path('schemas/mm.api.yaml')),
+                'schema' => Yaml::parseFile(database_path('seeds/openapi/mm.api.yaml')),
             ],
             [
                 'uuid' => 'c32ab451-9301-4a0d-9fb8-ab5ad9e68468',
                 'name' => 'Mojaloop Hub API v1.0',
-                'schema' => Yaml::parseFile(database_path('schemas/mojaloop.api.yaml')),
+                'schema' => Yaml::parseFile(database_path('seeds/openapi/mojaloop.api.yaml')),
             ],
             [
                 'uuid' => '4a4caa7e-dee4-4be6-83a3-d4db3c3ecebb',
                 'name' => 'Mojaloop FSPIOP API v1.0',
-                'schema' => Yaml::parseFile(database_path('schemas/mojaloop.api.yaml')),
+                'schema' => Yaml::parseFile(database_path('seeds/openapi/mojaloop.api.yaml')),
             ],
         ];
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Symfony\Component\Yaml\Yaml;
+
 class HomeController extends Controller
 {
     /**
@@ -17,6 +19,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+//        dd(Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml')));
         $sessions = auth()->user()->sessions()
             ->latest()
             ->paginate(12);
