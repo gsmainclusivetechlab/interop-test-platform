@@ -1,8 +1,0 @@
-- name: test1
-  description: test1
-  components:
-    - name: component1
-    - name: component2
-
-- name: test2
-  description: test2

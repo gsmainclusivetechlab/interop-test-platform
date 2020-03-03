@@ -1,0 +1,40 @@
+schemas:
+  - name: Mobile Money API
+    version: v1.1.0
+    openapi: ./seeds/openapi/mm-v1.1.0.yaml
+
+test-scenarios:
+  - name: Mobile Money API v1.1.0 and Mojaloop FSPIOP API v1.0
+
+#- name: Mobile Money API v1.1.0 and Mojaloop FSPIOP API v1.0
+#  components:
+#    - name: Payer
+#      platform:
+#        schema: 1
+#        version: v0.1
+#        server: test
+#      connections:
+#        2:
+#          simulated: false
+#    - name: Service Provider
+#      connections:
+#        1:
+#          simulated: false
+#        3:
+#          simulated: true
+#    - name: Mobile Money Operator 1
+#      connections:
+#        2:
+#          simulated: true
+#        4:
+#          simulated: true
+#    - name: Mojaloop System
+#      connections:
+#        3:
+#          simulated: true
+#        5:
+#          simulated: true
+#    - name: Mobile Money Operator 2
+#      connections:
+#        4:
+#          simulated: true

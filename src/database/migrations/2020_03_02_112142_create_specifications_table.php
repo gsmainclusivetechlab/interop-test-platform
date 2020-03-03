@@ -15,8 +15,11 @@ class CreateSpecificationsTable extends Migration
     {
         Schema::create('specifications', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->string('version');
+            $table->longText('openapi');
             $table->timestamps();
         });
     }

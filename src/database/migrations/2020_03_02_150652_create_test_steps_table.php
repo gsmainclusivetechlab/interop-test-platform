@@ -19,8 +19,8 @@ class CreateTestStepsTable extends Migration
             $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
             $table->unsignedBigInteger('source_id');
             $table->unsignedBigInteger('target_id');
-            $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('test_connections')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign(['target_id'])->references(['component_id'])->on('test_platforms')->onDelete('cascade');
+            $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('components_connections')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign(['target_id'])->references(['component_id'])->on('components_services')->onDelete('cascade');
             $table->string('path');
             $table->string('method');
             $table->unsignedInteger('position');

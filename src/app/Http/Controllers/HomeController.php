@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Testing\TestRunner;
+use Illuminate\Support\Arr;
 use Symfony\Component\Yaml\Yaml;
 
 class HomeController extends Controller
@@ -19,7 +21,48 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        dd(Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml')));
+        $data = Yaml::parseFile(database_path('seeds/data/tests.yaml'));
+
+        dd($data);
+
+        if (!empty($schemas = Arr::get($data, 'schemas', []))) {
+            foreach ($schemas as $schema) {
+                \App\Models\Schema::createMany($schemas)->each(function ($schema, $key) use ($schemas) {
+                    if (!empty($versions = Arr::get($schemas, 'versions'))) {
+
+                    }
+                });
+            }
+        }
+
+        dd($data);
+
+        foreach ($data as $key => $item) {
+            $scenario = \App\Models\TestScenario::create($item);
+
+            if (!empty($componentsData = Arr::get($item, 'components'))) {
+                $scenario->components()->createMany($componentsData)->each(function (\App\Models\TestComponent $component, $key) use ($scenario, $componentsData) {
+                    if (!empty($platformData = Arr::get($componentsData, "{$key}.platform"))) {
+                        dd($platformData);
+                    }
+
+                    if (!empty($connectionsData = Arr::get($componentsData, "{$key}.connections"))) {
+                        foreach ($connectionsData as $connectionKey => $connectionItem) {
+                            $component->connections()->attach($scenario->components()->offset($connectionKey - 1)->value('id'), $connectionItem);
+                        }
+                    }
+//                    $component->platform()->createMany(Arr::get($this->getPlatformsData(), $key, []));
+
+                });
+            }
+        }
+
+        dd(Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml')));
+
+//        $runner = new TestRunner();
+//        $suite = $runner->getLoader()->load();
+//        dd($suite);
+
         $sessions = auth()->user()->sessions()
             ->latest()
             ->paginate(12);

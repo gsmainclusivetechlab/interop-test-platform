@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSpecificationsVersionsTable extends Migration
+class CreateComponentsServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateSpecificationsVersionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('specifications_versions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
+        Schema::create('components_services', function (Blueprint $table) {
+            $table->unsignedBigInteger('component_id');
+            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
+            $table->primary('component_id');
             $table->unsignedBigInteger('specification_id');
             $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('cascade');
-            $table->string('version');
-            $table->longText('schema');
+            $table->string('server');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateSpecificationsVersionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('specifications_versions');
+        Schema::dropIfExists('components_services');
     }
 }

@@ -19,10 +19,11 @@ class CreateTestResultsTable extends Migration
             $table->foreign('run_id')->references('id')->on('test_runs')->onDelete('cascade');
             $table->unsignedBigInteger('step_id');
             $table->foreign('step_id')->references('id')->on('test_steps')->onDelete('cascade');
-            $table->longText('request')->nullable();
-            $table->longText('response')->nullable();
-            $table->string('status')->index();
-            $table->text('status_message')->nullable();
+            $table->longText('request');
+            $table->longText('response');
+            $table->unsignedInteger('passed');
+            $table->unsignedInteger('errors');
+            $table->unsignedInteger('failures');
             $table->unsignedInteger('time');
             $table->timestamp('created_at');
         });
