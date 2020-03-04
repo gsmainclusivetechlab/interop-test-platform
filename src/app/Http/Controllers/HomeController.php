@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Testing\TestRunner;
+use cebe\openapi\Reader;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\Yaml\Yaml;
@@ -22,6 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        dd(Reader::readFromYamlFile(database_path('seeds/openapi/mm-v1.1.0.yaml')));
         dd(\App\Models\ApiVersion::first()->openapi);
 
         $data = Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml'));

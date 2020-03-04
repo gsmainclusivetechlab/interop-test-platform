@@ -6,6 +6,7 @@ use App\Models\TestComponent;
 use App\Models\TestScenario;
 use App\Models\TestSuite;
 use Illuminate\Database\Seeder;
+use Symfony\Component\Yaml\Yaml;
 
 class TestScenariosTableSeeder extends Seeder
 {
@@ -14,18 +15,24 @@ class TestScenariosTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ($this->getData() as $key => $data) {
-            $scenario = TestScenario::create($data);
-            $scenario->components()->createMany(Arr::get($this->getComponentsData(), $key))->each(function (TestComponent $component, $key) {
-                $component->platform()->createMany(Arr::get($this->getPlatformsData(), $key, []));
-                $component->connections()->attach(Arr::get($this->getConnectionsData(), $key, []));
-            });
-            $scenario->suites()->createMany(Arr::get($this->getSuitesData(), $key, []))->each(function (TestSuite $suite, $key) {
-                $suite->cases()->createMany(Arr::get($this->getCasesData(), $key, []))->each(function (TestCase $case, $key) {
-                    $case->steps()->createMany(Arr::get($this->getStepsData(), $key, []));
-                });
-            });
+        $data = Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml'));
+
+        foreach ($data as $item) {
+
         }
+
+//        foreach ($this->getData() as $key => $data) {
+//            $scenario = TestScenario::create($data);
+//            $scenario->components()->createMany(Arr::get($this->getComponentsData(), $key))->each(function (TestComponent $component, $key) {
+//                $component->platform()->createMany(Arr::get($this->getPlatformsData(), $key, []));
+//                $component->connections()->attach(Arr::get($this->getConnectionsData(), $key, []));
+//            });
+//            $scenario->suites()->createMany(Arr::get($this->getSuitesData(), $key, []))->each(function (TestSuite $suite, $key) {
+//                $suite->cases()->createMany(Arr::get($this->getCasesData(), $key, []))->each(function (TestCase $case, $key) {
+//                    $case->steps()->createMany(Arr::get($this->getStepsData(), $key, []));
+//                });
+//            });
+//        }
     }
 
     /**
