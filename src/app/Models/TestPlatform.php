@@ -37,7 +37,7 @@ class TestPlatform extends Model
      */
     public function component()
     {
-        return $this->belongsTo(TestComponent::class, 'component_id');
+        return $this->belongsTo(Component::class, 'component_id');
     }
 
     /**

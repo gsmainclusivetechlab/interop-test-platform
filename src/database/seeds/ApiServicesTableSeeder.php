@@ -3,7 +3,6 @@
 use App\Models\ApiService;
 use cebe\openapi\spec\OpenApi;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
 use Symfony\Component\Yaml\Yaml;
 
 class ApiServicesTableSeeder extends Seeder
@@ -16,8 +15,8 @@ class ApiServicesTableSeeder extends Seeder
         $data = $this->getData();
 
         foreach ($data as $item) {
-            $versions = Arr::pull($item, 'versions', []);
-            ApiService::create($item)->versions()->createMany($versions);
+            $item = collect($item);
+            ApiService::create($item->only(['name', 'description'])->all())->versions()->createMany($item->get('versions', []));
         }
     }
 

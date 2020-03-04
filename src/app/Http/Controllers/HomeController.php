@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Testing\TestRunner;
-use cebe\openapi\Reader;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\Yaml\Yaml;
 
 class HomeController extends Controller
@@ -23,32 +20,29 @@ class HomeController extends Controller
      */
     public function index()
     {
-        dd(Reader::readFromYamlFile(database_path('seeds/openapi/mm-v1.1.0.yaml')));
-        dd(\App\Models\ApiVersion::first()->openapi);
-
-        $data = Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml'));
-
-        foreach ($data as $key => $item) {
-            $scenario = \App\Models\TestScenario::create($item);
-
-            if (!empty($componentsData = Arr::get($item, 'components'))) {
-                $scenario->components()->createMany($componentsData)->each(function (\App\Models\TestComponent $component, $key) use ($scenario, $componentsData) {
-                    if (!empty($platformData = Arr::get($componentsData, "{$key}.platform"))) {
-                        dd($platformData);
-                    }
-
-                    if (!empty($connectionsData = Arr::get($componentsData, "{$key}.connections"))) {
-                        foreach ($connectionsData as $connectionKey => $connectionItem) {
-                            $component->connections()->attach($scenario->components()->offset($connectionKey - 1)->value('id'), $connectionItem);
-                        }
-                    }
-//                    $component->platform()->createMany(Arr::get($this->getPlatformsData(), $key, []));
-
-                });
-            }
-        }
-
-        dd(Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml')));
+//        $data = Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml'));
+//
+//        foreach ($data as $key => $item) {
+//            $scenario = \App\Models\TestScenario::make($item);
+//            dd($scenario);
+//            if (!empty($componentsData = Arr::get($item, 'components'))) {
+//                $scenario->components()->createMany($componentsData)->each(function (\App\Models\Component $component, $key) use ($scenario, $componentsData) {
+//                    if (!empty($platformData = Arr::get($componentsData, "{$key}.platform"))) {
+//                        dd($platformData);
+//                    }
+//
+//                    if (!empty($connectionsData = Arr::get($componentsData, "{$key}.connections"))) {
+//                        foreach ($connectionsData as $connectionKey => $connectionItem) {
+//                            $component->connections()->attach($scenario->components()->offset($connectionKey - 1)->value('id'), $connectionItem);
+//                        }
+//                    }
+////                    $component->platform()->createMany(Arr::get($this->getPlatformsData(), $key, []));
+//
+//                });
+//            }
+//        }
+//
+//        dd(Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml')));
 
 //        $runner = new TestRunner();
 //        $suite = $runner->getLoader()->load();

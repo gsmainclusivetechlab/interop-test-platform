@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestComponent extends Model
+class Component extends Model
 {
     use HasPosition;
 
     /**
      * @var string
      */
-    protected $table = 'test_components';
+    protected $table = 'components';
 
     /**
      * @var array

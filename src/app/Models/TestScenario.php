@@ -35,6 +35,6 @@ class TestScenario extends Model
      */
     public function components()
     {
-        return $this->hasMany(TestComponent::class, 'scenario_id');
+        return $this->hasMany(Component::class, 'scenario_id');
     }
 }
