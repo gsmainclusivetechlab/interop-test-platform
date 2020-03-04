@@ -26,9 +26,10 @@ class RunController extends Controller
     /**
      * @param ServerRequestInterface $request
      * @param TestPlan $plan
+     * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $plan)
+    public function __invoke(ServerRequestInterface $request, TestPlan $plan, string $path)
     {
         $step = $plan->steps()->firstOrFail();
         $run = TestRun::create([
@@ -36,16 +37,16 @@ class RunController extends Controller
             'session_id' => $plan->session_id,
         ]);
 
-        ProcessTimeoutTestRun::dispatch($run)
-            ->delay(now()->addMinutes(1));
+//        ProcessTimeoutTestRun::dispatch($run)
+//            ->delay(now()->addMinutes(1));
 
         $uri = (new Uri($step->platform->server))
-            ->withPath($step->path);
+            ->withPath($path);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($run->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withUri($uri)
-            ->withMethod($step->method)
+            ->withMethod($request->getMethod())
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
         return $this->doTest($request, $run, $step);

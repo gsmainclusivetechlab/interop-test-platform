@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestConnection extends Pivot
 {

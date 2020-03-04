@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestPlatform extends Model
 {
@@ -46,6 +45,6 @@ class TestPlatform extends Model
      */
     public function specification()
     {
-        return $this->belongsTo(Specification::class, 'specification_id');
+        return $this->belongsTo(ApiService::class, 'specification_id');
     }
 }

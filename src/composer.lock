@@ -971,16 +971,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v7.0.0",
+            "version": "v7.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "0b12ef19623c40e22eff91a4b48cb13b3b415b25"
+                "reference": "cbd46c70bc747af5f80a4a257ff58fd533e3f815"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/0b12ef19623c40e22eff91a4b48cb13b3b415b25",
-                "reference": "0b12ef19623c40e22eff91a4b48cb13b3b415b25",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/cbd46c70bc747af5f80a4a257ff58fd533e3f815",
+                "reference": "cbd46c70bc747af5f80a4a257ff58fd533e3f815",
                 "shasum": ""
             },
             "require": {
@@ -1118,7 +1118,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-03-03T13:26:07+00:00"
+            "time": "2020-03-03T22:20:03+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -1186,16 +1186,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "ec838c75ba1886d014c5465b1ecc79b2071f46c7"
+                "reference": "47a0a1dac76f5e73803c86e1f38b2c7e0ae7fa83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/ec838c75ba1886d014c5465b1ecc79b2071f46c7",
-                "reference": "ec838c75ba1886d014c5465b1ecc79b2071f46c7",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/47a0a1dac76f5e73803c86e1f38b2c7e0ae7fa83",
+                "reference": "47a0a1dac76f5e73803c86e1f38b2c7e0ae7fa83",
                 "shasum": ""
             },
             "require": {
@@ -1237,7 +1237,7 @@
                 "laravel",
                 "ui"
             ],
-            "time": "2020-03-03T13:43:00+00:00"
+            "time": "2020-03-03T20:16:46+00:00"
         },
         {
             "name": "league/commonmark",
@@ -6943,16 +6943,16 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v4.1.1",
+            "version": "v4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "1a7c9c49ece828a02b1118234652ada53c1f840b"
+                "reference": "e81356da90969139c85709f8353e59f1e7d5e01c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/1a7c9c49ece828a02b1118234652ada53c1f840b",
-                "reference": "1a7c9c49ece828a02b1118234652ada53c1f840b",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/e81356da90969139c85709f8353e59f1e7d5e01c",
+                "reference": "e81356da90969139c85709f8353e59f1e7d5e01c",
                 "shasum": ""
             },
             "require": {
@@ -7009,7 +7009,7 @@
                 "php",
                 "symfony"
             ],
-            "time": "2020-02-26T22:38:35+00:00"
+            "time": "2020-03-03T18:17:47+00:00"
         },
         {
             "name": "scrivo/highlight.php",

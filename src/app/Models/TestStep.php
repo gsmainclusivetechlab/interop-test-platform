@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestStep extends Model
 {

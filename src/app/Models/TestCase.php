@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestCase extends Model
 {

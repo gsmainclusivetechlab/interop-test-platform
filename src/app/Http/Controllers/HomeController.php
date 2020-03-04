@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Testing\TestRunner;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\Yaml\Yaml;
 
 class HomeController extends Controller
@@ -21,21 +22,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Yaml::parseFile(database_path('seeds/data/tests.yaml'));
+        dd(\App\Models\ApiVersion::first()->openapi);
 
-        dd($data);
-
-        if (!empty($schemas = Arr::get($data, 'schemas', []))) {
-            foreach ($schemas as $schema) {
-                \App\Models\Schema::createMany($schemas)->each(function ($schema, $key) use ($schemas) {
-                    if (!empty($versions = Arr::get($schemas, 'versions'))) {
-
-                    }
-                });
-            }
-        }
-
-        dd($data);
+        $data = Yaml::parseFile(database_path('seeds/data/test-scenarios.yaml'));
 
         foreach ($data as $key => $item) {
             $scenario = \App\Models\TestScenario::create($item);

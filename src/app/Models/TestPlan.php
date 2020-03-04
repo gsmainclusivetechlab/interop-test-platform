@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
-use Eloquent;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestPlan extends Pivot
 {

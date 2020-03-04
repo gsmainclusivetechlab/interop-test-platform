@@ -2,36 +2,36 @@
 
 namespace App\Models;
 
+use App\Casts\OpenApiCast;
 use App\Models\Concerns\HasUuid;
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
-class Specification extends Model
+class ApiVersion extends Model
 {
     use HasUuid;
 
     /**
      * @var string
      */
-    protected $table = 'specifications';
+    protected $table = 'api_versions';
 
     /**
      * @var array
      */
     protected $fillable = [
         'name',
-        'description',
-        'schema',
+        'server',
+        'openapi',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'schema' => 'array',
+        'openapi' => OpenApiCast::class,
     ];
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSpecificationsTable extends Migration
+class CreateApiServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateSpecificationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('specifications', function (Blueprint $table) {
+        Schema::create('api_services', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('version');
-            $table->longText('openapi');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateSpecificationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('specifications');
+        Schema::dropIfExists('api_services');
     }
 }

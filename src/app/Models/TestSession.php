@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestSession extends Model
 {

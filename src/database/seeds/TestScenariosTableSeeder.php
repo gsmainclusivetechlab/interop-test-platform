@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Specification;
+use App\Models\ApiService;
 use App\Models\TestCase;
 use App\Models\TestComponent;
 use App\Models\TestScenario;
@@ -10,8 +10,6 @@ use Illuminate\Database\Seeder;
 class TestScenariosTableSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
-     *
      * @return void
      */
     public function run()
@@ -78,19 +76,19 @@ class TestScenariosTableSeeder extends Seeder
             [],
             [
                 [
-                    'specification_id' => Specification::where('name', 'Mobile Money API v1.1.0')->value('id'),
+                    'specification_id' => ApiService::where('name', 'Mobile Money API v1.1.0')->value('id'),
                     'server' => env('FSIOP_MM_SIMULATOR_URL')
                 ],
             ],
             [
                 [
-                    'specification_id' => Specification::where('name', 'Mojaloop Hub API v1.0')->value('id'),
+                    'specification_id' => ApiService::where('name', 'Mojaloop Hub API v1.0')->value('id'),
                     'server' => env('FSIOP_MOJALOOP_HUB_URL'),
                 ],
             ],
             [
                 [
-                    'specification_id' => Specification::where('name', 'Mojaloop FSPIOP API v1.0')->value('id'),
+                    'specification_id' => ApiService::where('name', 'Mojaloop FSPIOP API v1.0')->value('id'),
                     'server' => env('FSIOP_MOJALOOP_SIMULATOR_URL'),
                 ],
             ],

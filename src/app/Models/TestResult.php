@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use SebastianBergmann\Timer\Timer;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestResult extends Model
 {
