@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\OpenApiCast;
+use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -9,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiService extends Model
 {
+    use HasUuid;
+
     /**
      * @var string
      */
@@ -18,15 +22,23 @@ class ApiService extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
+        'version',
+        'server',
+        'openapi',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @var array
      */
-    public function versions()
+    protected $casts = [
+        'openapi' => OpenApiCast::class,
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function platform()
     {
-        return $this->hasMany(ApiVersion::class, 'service_id');
+        return $this->belongsTo(ApiPlatform::class, 'platform_id');
     }
 }

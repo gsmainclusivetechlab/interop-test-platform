@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
-use App\Models\ApiService;
+use App\Models\ApiPlatform;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
@@ -25,11 +25,11 @@ class TestController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param ApiService $specification
+     * @param ApiPlatform $specification
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, ApiService $specification, string $path)
+    public function __invoke(ServerRequestInterface $request, ApiPlatform $specification, string $path)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $run = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())

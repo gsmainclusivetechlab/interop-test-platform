@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiVersionsTable extends Migration
+class CreateTestComponentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateApiVersionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_versions', function (Blueprint $table) {
+        Schema::create('test_components', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
-            $table->unsignedBigInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('api_services')->onDelete('cascade');
+            $table->unsignedBigInteger('scenario_id');
+            $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
             $table->string('name');
-            $table->string('server');
-            $table->longText('openapi');
+            $table->text('description')->nullable();
+            $table->unsignedInteger('position');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateApiVersionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_versions');
+        Schema::dropIfExists('test_components');
     }
 }

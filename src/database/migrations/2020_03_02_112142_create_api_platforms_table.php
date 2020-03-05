@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComponentsTable extends Migration
+class CreateApiPlatformsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateComponentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('components', function (Blueprint $table) {
+        Schema::create('api_platforms', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('scenario_id');
-            $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->unsignedInteger('position');
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateComponentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('components');
+        Schema::dropIfExists('api_platforms');
     }
 }

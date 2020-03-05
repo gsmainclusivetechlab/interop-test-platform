@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class Component extends Model
+class TestComponent extends Model
 {
     use HasPosition;
 
     /**
      * @var string
      */
-    protected $table = 'components';
+    protected $table = 'test_components';
 
     /**
      * @var array
@@ -36,9 +36,9 @@ class Component extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function platform()
+    public function service()
     {
-        return $this->hasOne(TestPlatform::class, 'component_id');
+        return $this->hasOne(ApiService::class, 'service_id');
     }
 
     /**

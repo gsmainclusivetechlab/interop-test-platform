@@ -48,7 +48,7 @@ class TestStep extends Model
      */
     public function platform()
     {
-        return $this->belongsTo(TestPlatform::class, 'target_id');
+        return $this->belongsTo(TestService::class, 'target_id');
     }
 
     /**
@@ -56,7 +56,7 @@ class TestStep extends Model
      */
     public function source()
     {
-        return $this->belongsTo(Component::class, 'source_id');
+        return $this->belongsTo(TestComponent::class, 'source_id');
     }
 
     /**
@@ -64,7 +64,7 @@ class TestStep extends Model
      */
     public function target()
     {
-        return $this->belongsTo(Component::class, 'target_id');
+        return $this->belongsTo(TestComponent::class, 'target_id');
     }
 
     /**

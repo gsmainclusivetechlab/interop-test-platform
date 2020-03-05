@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestPlatform extends Model
+class TestService extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'test_platforms';
+    protected $table = 'test_services';
 
     /**
      * @var string
@@ -25,26 +25,18 @@ class TestPlatform extends Model
     public $incrementing = false;
 
     /**
-     * @var array
-     */
-    protected $fillable = [
-        'specification_id',
-        'server',
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function component()
     {
-        return $this->belongsTo(Component::class, 'component_id');
+        return $this->belongsTo(TestComponent::class, 'component_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function specification()
+    public function api()
     {
-        return $this->belongsTo(ApiService::class, 'specification_id');
+        return $this->belongsTo(ApiService::class, 'api_id');
     }
 }

@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestScenario extends Model
+class ApiPlatform extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'test_scenarios';
+    protected $table = 'api_platforms';
 
     /**
      * @var array
@@ -25,16 +25,8 @@ class TestScenario extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function suites()
+    public function services()
     {
-        return $this->hasMany(TestSuite::class, 'scenario_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function components()
-    {
-        return $this->hasMany(TestComponent::class, 'scenario_id');
+        return $this->hasMany(ApiService::class, 'platform_id');
     }
 }

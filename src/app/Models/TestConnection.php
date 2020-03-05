@@ -27,18 +27,11 @@ class TestConnection extends Pivot
     ];
 
     /**
-     * @var array
-     */
-    protected $attributes = [
-        'simulated' => false,
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function source()
     {
-        return $this->belongsTo(Component::class, 'source_id');
+        return $this->belongsTo(TestComponent::class, 'source_id');
     }
 
     /**
@@ -46,6 +39,6 @@ class TestConnection extends Pivot
      */
     public function target()
     {
-        return $this->belongsTo(Component::class, 'target_id');
+        return $this->belongsTo(TestComponent::class, 'target_id');
     }
 }
