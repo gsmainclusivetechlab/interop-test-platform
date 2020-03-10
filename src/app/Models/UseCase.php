@@ -12,7 +12,7 @@ class UseCase extends Model
     /**
      * @var string
      */
-    protected $table = 'test_suites';
+    protected $table = 'use_cases';
 
     /**
      * @var array
@@ -33,24 +33,24 @@ class UseCase extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function cases()
+    public function testCases()
     {
-        return $this->hasMany(TestCase::class, 'suite_id');
+        return $this->hasMany(TestCase::class, 'use_case_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function positiveCases()
+    public function positiveTestCases()
     {
-        return $this->cases()->positive();
+        return $this->testCases()->positive();
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function negativeCases()
+    public function negativeTestCases()
     {
-        return $this->cases()->negative();
+        return $this->testCases()->negative();
     }
 }

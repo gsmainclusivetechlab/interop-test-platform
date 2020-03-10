@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestComponentsTable extends Migration
+class CreateComponentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateTestComponentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_components', function (Blueprint $table) {
+        Schema::create('components', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('test_scenario_id');
-            $table->foreign('test_scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
+            $table->unsignedBigInteger('scenario_id');
+            $table->foreign('scenario_id')->references('id')->on('scenarios')->onDelete('cascade');
             $table->unsignedBigInteger('api_service_id')->nullable();
             $table->foreign('api_service_id')->references('id')->on('api_services')->onDelete('set null');
             $table->string('name');
@@ -33,6 +33,6 @@ class CreateTestComponentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_components');
+        Schema::dropIfExists('components');
     }
 }

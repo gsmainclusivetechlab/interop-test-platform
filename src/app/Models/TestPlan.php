@@ -51,7 +51,7 @@ class TestPlan extends Pivot
      */
     public function session()
     {
-        return $this->belongsTo(TestSession::class, 'session_id');
+        return $this->belongsTo(Session::class, 'session_id');
     }
 
     /**

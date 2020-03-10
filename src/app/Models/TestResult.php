@@ -26,7 +26,6 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
-        'step_id',
         'request',
         'response',
     ];
@@ -51,17 +50,9 @@ class TestResult extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function run()
+    public function testRun()
     {
         return $this->belongsTo(TestRun::class, 'run_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function step()
-    {
-        return $this->belongsTo(TestStep::class, 'step_id');
     }
 
     /**

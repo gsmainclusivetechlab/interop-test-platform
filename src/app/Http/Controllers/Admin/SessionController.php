@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\TestSession;
+use App\Models\Session;
 use App\Http\Controllers\Controller;
 
 class SessionController extends Controller
@@ -13,7 +13,7 @@ class SessionController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestSession::class, 'session');
+        $this->authorizeResource(Session::class, 'session');
     }
 
     /**
@@ -21,7 +21,7 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::withoutTrashed()
+        $sessions = Session::withoutTrashed()
             ->whereHas('owner', function ($query) {
                 $query->when(request('q'), function ($query, $q) {
                     $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
@@ -40,8 +40,8 @@ class SessionController extends Controller
      */
     public function trash()
     {
-        $this->authorize('viewAny', TestSession::class);
-        $sessions = TestSession::onlyTrashed()
+        $this->authorize('viewAny', Session::class);
+        $sessions = Session::onlyTrashed()
             ->whereHas('owner', function ($query) {
                 $query->when(request('q'), function ($query, $q) {
                     $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
@@ -55,11 +55,11 @@ class SessionController extends Controller
     }
 
     /**
-     * @param TestSession $session
+     * @param Session $session
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(TestSession $session)
+    public function destroy(Session $session)
     {
         $session->delete();
 
@@ -75,7 +75,7 @@ class SessionController extends Controller
      */
     public function restore(int $id)
     {
-        $session = TestSession::onlyTrashed()
+        $session = Session::onlyTrashed()
             ->findOrFail($id);
         $this->authorize('restore', $session);
         $session->restore();
@@ -92,7 +92,7 @@ class SessionController extends Controller
      */
     public function forceDestroy(int $id)
     {
-        $session = TestSession::withTrashed()
+        $session = Session::withTrashed()
             ->findOrFail($id);
         $this->authorize('delete', $session);
         $session->forceDelete();

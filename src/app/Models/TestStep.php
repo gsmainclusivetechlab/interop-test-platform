@@ -21,34 +21,16 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
-        'path',
-        'method',
-        'expected_request',
-        'expected_response',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'expected_request' => 'array',
-        'expected_response' => 'array',
+        'name',
+        'description',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function case()
+    public function testCase()
     {
-        return $this->belongsTo(TestCase::class, 'case_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function platform()
-    {
-        return $this->belongsTo(TestService::class, 'target_id');
+        return $this->belongsTo(TestCase::class, 'test_case_id');
     }
 
     /**
@@ -72,6 +54,22 @@ class TestStep extends Model
      */
     public function getPositionGroupColumn()
     {
-        return ['case_id'];
+        return ['test_case_id'];
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testRequestScripts()
+    {
+        return $this->hasMany(TestRequestScript::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResponseScripts()
+    {
+        return $this->hasMany(TestResponseScript::class, 'test_step_id');
     }
 }

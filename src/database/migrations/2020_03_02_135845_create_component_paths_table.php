@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestComponentPathsTable extends Migration
+class CreateComponentPathsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateTestComponentPathsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_component_paths', function (Blueprint $table) {
+        Schema::create('component_paths', function (Blueprint $table) {
             $table->unsignedBigInteger('source_id');
-            $table->foreign('source_id')->references('id')->on('test_components')->onDelete('cascade');
+            $table->foreign('source_id')->references('id')->on('components')->onDelete('cascade');
             $table->unsignedBigInteger('target_id');
-            $table->foreign('target_id')->references('id')->on('test_components')->onDelete('cascade');
+            $table->foreign('target_id')->references('id')->on('components')->onDelete('cascade');
             $table->primary(['source_id', 'target_id']);
             $table->boolean('simulated');
         });
@@ -30,6 +30,6 @@ class CreateTestComponentPathsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_component_paths');
+        Schema::dropIfExists('component_paths');
     }
 }

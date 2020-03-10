@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Models\TestSession;
+use App\Models\Session;
 
 class HomeController extends Controller
 {
@@ -49,10 +49,10 @@ class HomeController extends Controller
     }
 
     /**
-     * @param TestSession $session
+     * @param Session $session
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(TestSession $session)
+    public function show(Session $session)
     {
         $this->authorize('view', $session);
         $runs = $session->runs()
@@ -67,11 +67,11 @@ class HomeController extends Controller
     }
 
     /**
-     * @param TestSession $session
+     * @param Session $session
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(TestSession $session)
+    public function destroy(Session $session)
     {
         $this->authorize('delete', $session);
         $session->delete();
@@ -88,7 +88,7 @@ class HomeController extends Controller
      */
     public function restore(int $id)
     {
-        $session = TestSession::onlyTrashed()
+        $session = Session::onlyTrashed()
             ->findOrFail($id);
         $this->authorize('restore', $session);
         $session->restore();
@@ -105,7 +105,7 @@ class HomeController extends Controller
      */
     public function forceDestroy(int $id)
     {
-        $session = TestSession::withTrashed()
+        $session = Session::withTrashed()
             ->findOrFail($id);
         $this->authorize('delete', $session);
         $session->forceDelete();
@@ -116,10 +116,10 @@ class HomeController extends Controller
     }
 
     /**
-     * @param TestSession $session
+     * @param Session $session
      * @return array
      */
-    public function showChart(TestSession $session)
+    public function showChart(Session $session)
     {
         $data = [
             'x' => ['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],

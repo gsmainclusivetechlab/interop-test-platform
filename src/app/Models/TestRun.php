@@ -29,8 +29,8 @@ class TestRun extends Model
      * @var array
      */
     protected $fillable = [
-        'case_id',
         'session_id',
+        'test_case_id',
     ];
 
     /**
@@ -70,17 +70,17 @@ class TestRun extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function case()
+    public function testCase()
     {
-        return $this->belongsTo(TestCase::class, 'case_id');
+        return $this->belongsTo(TestCase::class, 'test_case_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function steps()
+    public function testSteps()
     {
-        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'case_id', 'case_id', 'id');
+        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'test_case_id', 'test_case_id', 'id');
     }
 
     /**
@@ -88,15 +88,15 @@ class TestRun extends Model
      */
     public function session()
     {
-        return $this->belongsTo(TestSession::class, 'session_id');
+        return $this->belongsTo(Session::class, 'session_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function results()
+    public function testResults()
     {
-        return $this->hasMany(TestResult::class, 'run_id');
+        return $this->hasMany(TestResult::class, 'test_run_id');
     }
 
     /**

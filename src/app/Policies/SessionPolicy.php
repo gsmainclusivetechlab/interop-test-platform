@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\TestSession;
+use App\Models\Session;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TestSessionPolicy
+class SessionPolicy
 {
     use HandlesAuthorization;
 
@@ -33,10 +33,10 @@ class TestSessionPolicy
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Session  $model
      * @return mixed
      */
-    public function view(User $user, TestSession $model)
+    public function view(User $user, Session $model)
     {
         return $model->owner->is($user);
     }
@@ -52,30 +52,30 @@ class TestSessionPolicy
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Session  $model
      * @return mixed
      */
-    public function update(User $user, TestSession $model)
+    public function update(User $user, Session $model)
     {
         return $model->owner->is($user);
     }
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Session  $model
      * @return mixed
      */
-    public function delete(User $user, TestSession $model)
+    public function delete(User $user, Session $model)
     {
         return $model->owner->is($user);
     }
 
     /**
      * @param  User  $user
-     * @param  TestSession  $model
+     * @param  Session  $model
      * @return mixed
      */
-    public function restore(User $user, TestSession $model)
+    public function restore(User $user, Session $model)
     {
         return $model->owner->is($user);
     }

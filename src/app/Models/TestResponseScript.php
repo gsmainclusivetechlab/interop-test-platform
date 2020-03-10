@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestRequestScript extends Model
+class TestResponseScript extends Model
 {
     use HasPosition;
 
     /**
      * @var string
      */
-    protected $table = 'test_request_scripts';
+    protected $table = 'test_response_scripts';
 
     /**
      * @var array

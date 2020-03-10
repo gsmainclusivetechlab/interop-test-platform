@@ -19,6 +19,7 @@ class CreateTestResponseScriptsTable extends Migration
             $table->foreign('test_step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->string('name');
             $table->longText('rules');
+            $table->unsignedInteger('position');
             $table->timestamps();
         });
     }

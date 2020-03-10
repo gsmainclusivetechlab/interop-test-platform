@@ -72,28 +72,18 @@
                     "creditParty": [{"key":"msisdn", "value":"+33555123457"}]
                 }
           test_steps:
-            - name: I would like to Buy goods
-              source_id: Payer
-              target_id: Service Provider
             - name: POST /transactions
               source_id: Service Provider
               target_id: Mobile Money Operator 1
               test_request_scripts:
-                - name:
+                - name: Request is transaction
                   rules:
+                    uri: regex:/^.+\/transactions$/i
+                    method: in:POST
               test_response_scripts:
                 - name: Response is OK
                   rules:
-                    - code: in:200
-#          steps:
-#            - path: transactions
-#              method: POST
-#              source_id: Service Provider
-#              target_id: Mobile Money Operator 1
-#            - path: transactionRequests
-#              method: POST
-#              source_id: Mobile Money Operator 1
-#              target_id: Mojaloop
+                    status_code: in:200
         - name: Refused Transaction by MMO1
           behavior: negative
           description: |

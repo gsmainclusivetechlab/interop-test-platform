@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @mixin \Eloquent
  */
-class TestSession extends Model
+class Session extends Model
 {
     use SoftDeletes;
 

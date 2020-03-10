@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Models\TestCase;
 use App\Models\TestRun;
-use App\Models\TestSession;
+use App\Models\Session;
 
 class RunController extends Controller
 {
@@ -17,7 +17,7 @@ class RunController extends Controller
         $this->middleware(['auth', 'verified']);
     }
 
-    public function show(TestSession $session, TestCase $case, TestRun $run, int $position = 1)
+    public function show(Session $session, TestCase $case, TestRun $run, int $position = 1)
     {
         $case = $session->cases()
             ->where('case_id', $case->id)

@@ -103,6 +103,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sessions()
     {
-        return $this->hasMany(TestSession::class, 'owner_id');
+        return $this->hasMany(Session::class, 'owner_id');
     }
 }
