@@ -1,0 +1,199 @@
+- name: Mobile Money API v1.1.0 and Mojaloop FSPIOP API v1.0
+  components:
+    - name: Payer
+      paths:
+        - target_id: Service Provider
+          simulated: false
+    - name: Service Provider
+      paths:
+        - target_id: Payer
+          simulated: false
+        - target_id: Mobile Money Operator 1
+          simulated: true
+    - name: Mobile Money Operator 1
+      api_service_id: Mobile Money v1.1.0
+      paths:
+        - target_id: Service Provider
+          simulated: true
+        - target_id: Mojaloop
+          simulated: true
+    - name: Mojaloop
+      api_service_id: Mojaloop Hub v1.0
+      paths:
+        - target_id: Mobile Money Operator 1
+          simulated: true
+        - target_id: Mobile Money Operator 2
+          simulated: true
+    - name: Mobile Money Operator 2
+      api_service_id: Mojaloop FSP v1.0
+      paths:
+        - target_id: Mojaloop
+          simulated: true
+  use_cases:
+    - name: Merchant-Initiated Merchant Payment
+      description: |
+        A Merchant-Initiated Merchant Payment is typically a receive amount, where the Payer FSP is not disclosing any fees to the Payee FSP.
+        Please refer to 5.1.6.8 in "Open API for FSP Interoperability Specification" for more details
+      test_cases:
+        - name: Authorized Transaction
+          behavior: positive
+          description: |
+            **Description**
+
+            The Payer would like to buy goods or services worth {amount} USD from a Merchant (the Payee) in the Payee MMO system. {amount} USD is transferred from the Payer MMO to the Payee MMO.
+
+            ---
+
+            **Pre-conditions**
+
+            - Payee and Payer MMOs in Mojaloop as Participants.
+            - Payee and Payer exist in Mojaloop as Parties.
+
+            ---
+
+            **Test data headers**
+
+            	{
+            	    "Accept": "application/json",
+            	    "Content-Type": "application/json",
+            	    "X-Callback-URL": "http://example.com/example",
+            	    "X-Date": "2020-02-20T10:28:44.466Z"
+                }
+
+            ---
+
+            **Test data body**
+
+            	{
+                    "amount":"100.00",
+                    "currency":"USD",
+                    "type":"merchantpay",
+                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
+                    "creditParty": [{"key":"msisdn", "value":"+33555123457"}]
+                }
+          test_steps:
+            - name: I would like to Buy goods
+              source_id: Payer
+              target_id: Service Provider
+            - name: POST /transactions
+              source_id: Service Provider
+              target_id: Mobile Money Operator 1
+              test_request_scripts:
+                - name:
+                  rules:
+              test_response_scripts:
+                - name: Response is OK
+                  rules:
+                    - code: in:200
+#          steps:
+#            - path: transactions
+#              method: POST
+#              source_id: Service Provider
+#              target_id: Mobile Money Operator 1
+#            - path: transactionRequests
+#              method: POST
+#              source_id: Mobile Money Operator 1
+#              target_id: Mojaloop
+        - name: Refused Transaction by MMO1
+          behavior: negative
+          description: |
+            **Description**
+
+            The Payer would like to buy goods or services worth {amount} USD from a Merchant (the Payee) in the Payee MMO system. Payee sends the Transaction amount in wrong format to his MMO, so that MMO denies to process transaction.
+
+            ---
+
+            **Pre-conditions**
+
+            - Transaction amount should be any float with .00, e.g. 50.00
+
+            ---
+
+            **Test data headers**
+
+            	{
+            	    "Accept": "application/json",
+            	    "Content-Type": "application/json",
+            	    "X-Callback-URL": "http://example.com/example",
+            	    "X-Date": "2020-02-20T10:28:44.466Z"
+                }
+
+            ---
+
+            **Test data body**
+
+            	{
+                    "amount":"50.00",
+                    "currency":"USD",
+                    "type":"merchantpay",
+                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
+                    "creditParty": [{"key":"msisdn", "value":"+33555123457"}]
+                }
+        - name: Refused Transaction by Mojaloop
+          behavior: negative
+          description: |
+            **Description**
+
+            The Payer would like to buy goods or services worth {amount} USD from a Merchant (the Payee) in the Payee MMO system. Payee's MMO misses to transfer partyIdentifier to Mojaloop and gets an error.
+
+            ---
+
+            **Pre-conditions**
+
+            - Send "creditParty":"16135551213" within the initial quesry to MMO1.
+            - MMO1 misses to send Payee's "partyIdentifier":"16135551213" to Mojaloop.
+
+            **Test data headers**
+
+            	{
+            		"Accept": "application/json",
+            		"Content-Type": "application/json",
+            		"X-Callback-URL": "http://example.com/example",
+            		"X-Date": "2020-02-20T10:28:44.466Z"
+            	}
+
+            ---
+
+            **Test data body**
+
+            	{
+            		"amount":"50.00",
+            		"currency":"USD",
+            		"type":"merchantpay",
+            		"debitParty": [{"key":"msisdn", "value":"33555123456"}],
+            		"creditParty": [{"key":"msisdn", "value":"16135551213"}]
+            	}
+        - name: Transaction amount matches requested amount
+          behavior: positive
+          description: |
+            **Description**
+
+            The Payer would like to buy goods or services worth 70 USD from a Merchant (the Payee) in the Payee MMO system. Payer's MMO runs transaction for 70.00 USD as it was requested.
+
+            ---
+
+            **Pre-conditions**
+
+            - Payee and Payer MMOs in Mojaloop as Participants.
+            - Payee and Payer exist in Mojaloop as Parties.
+
+            **Test data headers**
+
+            	{
+            		"Accept": "application/json",
+            		"Content-Type": "application/json",
+            		"X-Callback-URL": "http://example.com/example",
+            		"X-Date": "2020-02-20T10:28:44.466Z"
+            	}
+
+            ---
+
+            **Test data body**
+
+            	{
+            		"amount":"70.00",
+            		"currency":"USD",
+            		"type":"merchantpay",
+            		"debitParty": [{"key":"msisdn", "value":"+33555123456"}],
+            		"creditParty": [{ "key":"msisdn", "value":"+33555123457"}]
+            	}

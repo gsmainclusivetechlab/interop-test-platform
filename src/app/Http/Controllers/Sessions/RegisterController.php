@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Sessions\StoreRegisterConfigurationRequest;
 use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
 use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
-use App\Models\TestSuite;
-use App\Models\TestScenario;
+use App\Models\UseCase;
+use App\Models\Scenario;
 
 class RegisterController extends Controller
 {
@@ -24,7 +24,7 @@ class RegisterController extends Controller
      */
     public function createSelection()
     {
-        $scenario = TestScenario::firstOrFail();
+        $scenario = Scenario::firstOrFail();
 
         return view('sessions.register.selection', compact('scenario'));
     }
@@ -44,7 +44,7 @@ class RegisterController extends Controller
      */
     public function createConfiguration()
     {
-        $scenario = TestScenario::firstOrFail();
+        $scenario = Scenario::firstOrFail();
 
         return view('sessions.register.configuration', compact('scenario'));
     }
@@ -64,8 +64,8 @@ class RegisterController extends Controller
      */
     public function createInformation()
     {
-        $scenario = TestScenario::firstOrFail();
-        $suites = TestSuite::whereHas('cases')->get();
+        $scenario = Scenario::firstOrFail();
+        $suites = UseCase::whereHas('cases')->get();
 
         return view('sessions.register.information', compact('scenario', 'suites'));
     }
@@ -77,7 +77,7 @@ class RegisterController extends Controller
     public function storeInformation(StoreRegisterInformationRequest $request)
     {
         $user = auth()->user();
-        $scenario = TestScenario::firstOrFail();
+        $scenario = Scenario::firstOrFail();
         $session = $user->sessions()->create([
             'name' => $request->input('name'),
             'description' => $request->input('description'),

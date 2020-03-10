@@ -15,8 +15,10 @@ class CreateTestComponentsTable extends Migration
     {
         Schema::create('test_components', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('scenario_id');
-            $table->foreign('scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
+            $table->unsignedBigInteger('test_scenario_id');
+            $table->foreign('test_scenario_id')->references('id')->on('test_scenarios')->onDelete('cascade');
+            $table->unsignedBigInteger('api_service_id')->nullable();
+            $table->foreign('api_service_id')->references('id')->on('api_services')->onDelete('set null');
             $table->string('name');
             $table->text('description')->nullable();
             $table->unsignedInteger('position');

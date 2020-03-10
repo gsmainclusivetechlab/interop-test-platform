@@ -15,12 +15,10 @@ class CreateTestResponseScriptsTable extends Migration
     {
         Schema::create('test_response_scripts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('step_id');
-            $table->foreign('step_id')->references('id')->on('test_steps')->onDelete('cascade');
+            $table->unsignedBigInteger('test_step_id');
+            $table->foreign('test_step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->string('name');
             $table->longText('rules');
-            $table->longText('messages');
-            $table->longText('attributes');
             $table->timestamps();
         });
     }

@@ -22,7 +22,9 @@ class ApiService extends Model
      * @var array
      */
     protected $fillable = [
+        'name',
         'version',
+        'description',
         'server',
         'openapi',
     ];
@@ -33,12 +35,4 @@ class ApiService extends Model
     protected $casts = [
         'openapi' => OpenApiCast::class,
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function platform()
-    {
-        return $this->belongsTo(ApiPlatform::class, 'platform_id');
-    }
 }

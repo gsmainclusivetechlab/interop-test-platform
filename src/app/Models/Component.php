@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestComponent extends Model
+class Component extends Model
 {
     use HasPosition;
 
     /**
      * @var string
      */
-    protected $table = 'test_components';
+    protected $table = 'components';
 
     /**
      * @var array
@@ -23,6 +23,7 @@ class TestComponent extends Model
     protected $fillable = [
         'name',
         'description',
+        'api_service_id',
     ];
 
     /**
@@ -30,24 +31,24 @@ class TestComponent extends Model
      */
     public function scenario()
     {
-        return $this->belongsTo(TestScenario::class, 'scenario_id');
+        return $this->belongsTo(Scenario::class, 'scenario_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function service()
+    public function apiService()
     {
-        return $this->hasOne(ApiService::class, 'service_id');
+        return $this->hasOne(ApiService::class, 'api_service_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function connections()
+    public function paths()
     {
-        return $this->belongsToMany(static::class, 'test_connections', 'source_id', 'target_id')
-            ->using(TestConnection::class)
+        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id')
+            ->using(ComponentPath::class)
             ->withPivot('simulated');
     }
 

@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 /**
  * @mixin \Eloquent
  */
-class TestConnection extends Pivot
+class ComponentPath extends Pivot
 {
     /**
      * @var string
      */
-    protected $table = 'test_connections';
+    protected $table = 'component_paths';
 
     /**
      * @var bool
@@ -31,7 +31,7 @@ class TestConnection extends Pivot
      */
     public function source()
     {
-        return $this->belongsTo(TestComponent::class, 'source_id');
+        return $this->belongsTo(Component::class, 'source_id');
     }
 
     /**
@@ -39,6 +39,6 @@ class TestConnection extends Pivot
      */
     public function target()
     {
-        return $this->belongsTo(TestComponent::class, 'target_id');
+        return $this->belongsTo(Component::class, 'target_id');
     }
 }

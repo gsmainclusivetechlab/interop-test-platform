@@ -58,7 +58,7 @@ class TestSession extends Model
      */
     public function scenario()
     {
-        return $this->belongsTo(TestScenario::class, 'scenario_id');
+        return $this->belongsTo(Scenario::class, 'scenario_id');
     }
 
     /**

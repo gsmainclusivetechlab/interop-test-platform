@@ -16,9 +16,9 @@ class CreateApiServicesTable extends Migration
         Schema::create('api_services', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('uuid')->unique();
-            $table->unsignedBigInteger('platform_id');
-            $table->foreign('platform_id')->references('id')->on('api_platforms')->onDelete('cascade');
+            $table->string('name');
             $table->string('version');
+            $table->text('description')->nullable();
             $table->string('server');
             $table->longText('openapi');
             $table->timestamps();

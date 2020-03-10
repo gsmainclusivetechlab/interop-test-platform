@@ -14,11 +14,11 @@ class CreateTestPlansTable extends Migration
     public function up()
     {
         Schema::create('test_plans', function (Blueprint $table) {
-            $table->unsignedBigInteger('session_id');
-            $table->foreign('session_id')->references('id')->on('test_sessions')->onDelete('cascade');
-            $table->unsignedBigInteger('case_id');
-            $table->foreign('case_id')->references('id')->on('test_cases')->onDelete('cascade');
-            $table->primary(['session_id', 'case_id']);
+            $table->unsignedBigInteger('test_session_id');
+            $table->foreign('test_session_id')->references('id')->on('test_sessions')->onDelete('cascade');
+            $table->unsignedBigInteger('test_case_id');
+            $table->foreign('test_case_id')->references('id')->on('test_cases')->onDelete('cascade');
+            $table->primary(['test_session_id', 'test_case_id']);
             $table->uuid('uuid')->unique();
         });
     }

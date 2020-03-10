@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestSuite extends Model
+class UseCase extends Model
 {
     /**
      * @var string
@@ -21,6 +21,14 @@ class TestSuite extends Model
         'name',
         'description',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function scenario()
+    {
+        return $this->belongsTo(Scenario::class, 'scenario_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

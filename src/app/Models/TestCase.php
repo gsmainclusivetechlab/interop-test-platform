@@ -29,17 +29,17 @@ class TestCase extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function steps()
+    public function testSteps()
     {
-        return $this->hasMany(TestStep::class, 'case_id');
+        return $this->hasMany(TestStep::class, 'test_case_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function suite()
+    public function testSuite()
     {
-        return $this->belongsTo(TestSuite::class, 'suite_id');
+        return $this->belongsTo(TestSuite::class, 'test_suite_id');
     }
 
     /**
