@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\HandlerStack;
+
 class HomeController extends Controller
 {
     /**
@@ -33,6 +35,10 @@ class HomeController extends Controller
 //        $runner->addExtension(new TestExecutionExtension());
 //
 //        dd($runner->run($suite));
+
+        $stack = new HandlerStack();
+
+        dd($stack);
 
         $sessions = auth()->user()->sessions()
             ->latest()

@@ -19,7 +19,7 @@ class CreateTestExecutionsTable extends Migration
             $table->foreign('test_result_id')->references('id')->on('test_results')->onDelete('cascade');
             $table->string('name');
             $table->string('status')->index();
-            $table->string('message')->nullable();
+            $table->string('exception')->nullable();
             $table->timestamp('created_at');
         });
     }
