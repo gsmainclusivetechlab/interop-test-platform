@@ -13,8 +13,6 @@
 
 
 Auth::routes(['verify' => true]);
-
-Route::redirect('/home', '/');
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {

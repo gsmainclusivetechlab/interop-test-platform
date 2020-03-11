@@ -2,14 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestRequestScript;
-use App\Testing\Extensions\TestExecutionExtension;
-use App\Testing\TestRunner;
-use App\Testing\Tests\ValidateRequestTest;
-use App\Testing\Tests\ValidateResponseTest;
-use PHPUnit\Framework\TestSuite;
-use Psr\Http\Message\ServerRequestInterface;
-
 class HomeController extends Controller
 {
     /**
@@ -23,15 +15,24 @@ class HomeController extends Controller
     /**
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(ServerRequestInterface $request)
+    public function index()
     {
-        $suite = new TestSuite();
-        $suite->addTest(new ValidateResponseTest($request, new TestRequestScript()));
-//        $suite->addTest(new ValidateRequestTest($request, new TestRequestScript()));
-
-        $runner = new TestRunner();
-        $runner->addExtension(new TestExecutionExtension());
-        dd($runner->run($suite));
+//        $suite = new TestSuite();
+//        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
+//        $requestSuite->setRequest($request);
+//        $suite->addTestSuite($requestSuite);
+//        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
+//        $requestSuite->setRequest($request);
+//        $suite->addTestSuite($requestSuite);
+//
+//        $loader = new TestSuiteLoader();
+//
+//        dd($loader->load());
+//
+//        $runner = new TestRunner();
+//        $runner->addExtension(new TestExecutionExtension());
+//
+//        dd($runner->run($suite));
 
         $sessions = auth()->user()->sessions()
             ->latest()

@@ -12,7 +12,7 @@ class TestRunner
     /**
      * @var TestHook[]
      */
-    private $extensions = [];
+    protected $extensions = [];
 
     /**
      * @param Test $test

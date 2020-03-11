@@ -14,6 +14,6 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
 
     public function executeAfterTestFailure(string $test, string $message, float $time): void
     {
-        dd($test);
+
     }
 }
