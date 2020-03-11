@@ -7,6 +7,7 @@ use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\ProcessTimeoutTestRun;
 use App\Models\TestPlan;
 use App\Models\TestRun;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
@@ -29,26 +30,44 @@ class RunController extends Controller
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $plan, string $path)
+    public function __invoke(ServerRequestInterface $request, TestPlan $testPlan, string $path)
     {
-        $step = $plan->steps()->firstOrFail();
-        $run = TestRun::create([
-            'case_id' => $plan->case_id,
-            'session_id' => $plan->session_id,
+        $testStep = $testPlan->testSteps()->firstOrFail();
+
+        $testRun = TestRun::create([
+            'session_id' => $testPlan->session_id,
+            'test_case_id' => $testPlan->test_case_id,
+        ]);
+        $testResult = $testRun->testResults()->make([
+            'source_id' => $testStep->source_id,
+            'target_id' => $testStep->target_id,
+            'request' => [],
+            'response' => [],
+            'total' => 0,
+            'passed' => 0,
+            'errors' => 0,
+            'failures' => 0,
+            'time' => 0,
         ]);
 
 //        ProcessTimeoutTestRun::dispatch($run)
 //            ->delay(now()->addMinutes(1));
 
-        $uri = (new Uri($step->platform->server))
+        $uri = (new Uri($testStep->target->apiService->server))
             ->withPath($path);
         $traceparent = (new TraceparentHeader())
-            ->withTraceId($run->trace_id)
+            ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withUri($uri)
             ->withMethod($request->getMethod())
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
-        return $this->doTest($request, $run, $step);
+        $response = (new Client(['http_errors' => false]))->send($request);
+        $testResult->save();
+
+        return 1;
+        dd($response);
+
+        return $this->doTest($request, $testRun, $testStep);
     }
 }

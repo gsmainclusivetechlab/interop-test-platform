@@ -43,13 +43,6 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $attributes = [
-        'status' => self::STATUS_EXECUTING,
-    ];
-
-    /**
-     * @var array
-     */
     protected $with = [
         'session',
         'testCase',

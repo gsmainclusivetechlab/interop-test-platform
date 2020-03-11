@@ -26,24 +26,24 @@ class TestPlan extends Pivot
      * @var array
      */
     protected $with = [
-        'case',
         'session',
+        'testCase',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function case()
+    public function testCase()
     {
-        return $this->belongsTo(TestCase::class, 'case_id');
+        return $this->belongsTo(TestCase::class, 'test_case_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function steps()
+    public function testSteps()
     {
-        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'case_id', 'case_id', 'id');
+        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'test_case_id', 'test_case_id', 'id');
     }
 
     /**

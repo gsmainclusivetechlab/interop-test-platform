@@ -84,6 +84,13 @@
                 - name: Response is OK
                   rules:
                     status_code: in:200
+              test_request_prescripts:
+                - name: Override shit
+                  values:
+                    headers:
+                      x-callback-url: example.com
+                    body:
+                      amount.amount: 100
         - name: Refused Transaction by MMO1
           behavior: negative
           description: |

@@ -35,11 +35,11 @@ class Component extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function apiService()
     {
-        return $this->hasOne(ApiService::class, 'api_service_id');
+        return $this->belongsTo(ApiService::class, 'api_service_id');
     }
 
     /**

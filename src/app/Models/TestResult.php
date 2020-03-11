@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use SebastianBergmann\Timer\Timer;
@@ -11,6 +12,8 @@ use SebastianBergmann\Timer\Timer;
  */
 class TestResult extends Model
 {
+    use HasPosition;
+
     const UPDATED_AT = null;
 
     const STATUS_PASS = 'pass';
@@ -26,6 +29,8 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
+        'source_id',
+        'target_id',
         'request',
         'response',
     ];
@@ -38,14 +43,30 @@ class TestResult extends Model
         'response' => 'array',
     ];
 
+    protected $attributes = [
+        'total' => 0,
+        'passed' => 0,
+        'errors' => 0,
+        'failures' => 0,
+        'time' => 0,
+    ];
+
     /**
      * @var array
      */
-    protected $observables = [
-        'pass',
-        'fail',
-        'error',
-    ];
+//    protected $observables = [
+//        'pass',
+//        'fail',
+//        'error',
+//    ];
+
+    /**
+     * @return array
+     */
+    public function getPositionGroupColumn()
+    {
+        return ['test_run_id'];
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

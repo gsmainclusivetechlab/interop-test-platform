@@ -50,14 +50,6 @@ class TestStep extends Model
     }
 
     /**
-     * @return array
-     */
-    public function getPositionGroupColumn()
-    {
-        return ['test_case_id'];
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testRequestScripts()
@@ -71,5 +63,13 @@ class TestStep extends Model
     public function testResponseScripts()
     {
         return $this->hasMany(TestResponseScript::class, 'test_step_id');
+    }
+
+    /**
+     * @return array
+     */
+    public function getPositionGroupColumn()
+    {
+        return ['test_case_id'];
     }
 }
