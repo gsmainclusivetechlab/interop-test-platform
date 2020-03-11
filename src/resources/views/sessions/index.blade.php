@@ -11,10 +11,10 @@
             @include('components.grid.search')
             <div class="card-options">
                 <div class="btn-group">
-                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index')) active @endif">
+                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index') && !request()->route()->hasParameter('trashed')) active @endif">
                         {{ __('Active') }}
                     </a>
-                    <a href="{{ route('sessions.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.trash')) active @endif">
+                    <a href="{{ route('sessions.index', 'trashed') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index') && request()->route()->hasParameter('trashed')) active @endif">
                         {{ __('Deactivated') }}
                     </a>
                 </div>

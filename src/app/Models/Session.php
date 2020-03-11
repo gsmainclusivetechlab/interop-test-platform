@@ -45,13 +45,13 @@ class Session extends Model
 //        'failRuns',
 //    ];
 //
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-//     */
-//    public function owner()
-//    {
-//        return $this->belongsTo(User::class, 'owner_id');
-//    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 //
 //    /**
 //     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

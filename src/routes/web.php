@@ -15,23 +15,20 @@
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
-    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
-    Route::post('profile', 'ProfileController@update')->name('profile.update');
-    Route::get('password', 'PasswordController@edit')->name('password.edit');
-    Route::post('password', 'PasswordController@update')->name('password.update');
+Route::name('sessions.')->prefix('sessions')->group(function () {
+    Route::get('/{trashed?}', 'SessionController@index')->name('index')->where('trashed', 'trashed');
 });
 
 //Route::resource('sessions', 'Sessions\HomeController', ['only' => ['index', 'show', 'destroy']]);
-Route::name('sessions.')->prefix('sessions')->group(function () {
-    Route::get('', 'Sessions\HomeController@index')->name('index');
-    Route::get('trash', 'Sessions\HomeController@trash')->name('trash');
-    Route::get('{session}', 'Sessions\HomeController@show')->name('show');
-    Route::get('{session}/chart', 'Sessions\HomeController@showChart')->name('chart');
-    Route::delete('{session}/destroy', 'Sessions\HomeController@destroy')->name('destroy');
-    Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
-    Route::delete('{session}/force-destroy', 'Sessions\HomeController@forceDestroy')->name('force_destroy');
-});
+//Route::name('sessions.')->prefix('sessions')->group(function () {
+//    Route::get('', 'Sessions\HomeController@index')->name('index');
+//    Route::get('trash', 'Sessions\HomeController@trash')->name('trash');
+//    Route::get('{session}', 'Sessions\HomeController@show')->name('show');
+//    Route::get('{session}/chart', 'Sessions\HomeController@showChart')->name('chart');
+//    Route::delete('{session}/destroy', 'Sessions\HomeController@destroy')->name('destroy');
+//    Route::post('{session}/restore', 'Sessions\HomeController@restore')->name('restore');
+//    Route::delete('{session}/force-destroy', 'Sessions\HomeController@forceDestroy')->name('force_destroy');
+//});
 Route::resource('sessions.cases', 'Sessions\CaseController', ['only' => ['show']]);
 //Route::resource('sessions.cases.runs', 'Sessions\RunController', ['only' => ['show']]);
 Route::get('sessions/{session}/cases/{case}/runs/{run}/{position?}', 'Sessions\RunController@show')->name('sessions.cases.runs.show');
@@ -55,12 +52,20 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote_admin');
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate_admin');
     });
-    Route::resource('sessions', 'SessionController', ['only' => ['index', 'destroy']]);
+//    Route::resource('sessions', 'SessionController', ['only' => ['index', 'destroy']]);
     Route::name('sessions.')->prefix('sessions')->group(function () {
-        Route::get('trash', 'SessionController@trash')->name('trash');
+        Route::get('/{trashed?}', 'SessionController@index')->name('index')->where('trashed', 'trashed');
+        Route::delete('{session}/destroy', 'SessionController@destroy')->name('destroy');
         Route::post('{session}/restore', 'SessionController@restore')->name('restore');
         Route::delete('{session}/force-destroy', 'SessionController@forceDestroy')->name('force_destroy');
     });
+});
+
+Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
+    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::post('profile', 'ProfileController@update')->name('profile.update');
+    Route::get('password', 'PasswordController@edit')->name('password.edit');
+    Route::post('password', 'PasswordController@update')->name('password.update');
 });
 
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
