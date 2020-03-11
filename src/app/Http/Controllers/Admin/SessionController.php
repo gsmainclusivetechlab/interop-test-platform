@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 class SessionController extends Controller
 {
     /**
-     * @return void
+     * SessionController constructor.
      */
     public function __construct()
     {
@@ -52,16 +52,14 @@ class SessionController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param Session $sessionOnlyTrashed
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function restore(int $id)
+    public function restore(Session $sessionOnlyTrashed)
     {
-        $session = Session::onlyTrashed()
-            ->findOrFail($id);
-        $this->authorize('restore', $session);
-        $session->restore();
+        $this->authorize('restore', $sessionOnlyTrashed);
+        $sessionOnlyTrashed->restore();
 
         return redirect()
             ->back()
@@ -69,16 +67,14 @@ class SessionController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param Session $sessionWithTrashed
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function forceDestroy(int $id)
+    public function forceDestroy(Session $sessionWithTrashed)
     {
-        $session = Session::withTrashed()
-            ->findOrFail($id);
-        $this->authorize('delete', $session);
-        $session->forceDelete();
+        $this->authorize('delete', $sessionWithTrashed);
+        $sessionWithTrashed->forceDelete();
 
         return redirect()
             ->back()

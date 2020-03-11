@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Requests\Sessions;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRegisterConfigurationRequest extends FormRequest
+class StoreSessionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,6 +23,10 @@ class StoreRegisterConfigurationRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            'name' => 'required|string|max:255',
+            'description' => 'string|nullable',
+            'test_cases' => 'required|array|exists:test_cases,id',
+        ];
     }
 }

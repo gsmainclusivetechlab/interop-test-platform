@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserController extends Controller
 {
@@ -21,30 +22,13 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::withoutTrashed()
-            ->when(request('q'), function ($query, $q) {
+        $users = User::when(request('q'), function (Builder $query, $q) {
                 $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
                     ->orWhere('company', 'like', "%{$q}%");
             })
-            ->latest()
-            ->paginate();
-
-        return view('admin.users.index', compact('users'));
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function trash()
-    {
-        $this->authorize('viewAny', User::class);
-        $users = User::onlyTrashed()
-            ->when(request('q'), function ($query, $q) {
-                 $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%")
-                    ->orWhere('company', 'like', "%{$q}%");
+            ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
+                return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
             })
             ->latest()
             ->paginate();
@@ -67,16 +51,14 @@ class UserController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param User $userOnlyTrashed
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function restore(int $id)
+    public function restore(User $userOnlyTrashed)
     {
-        $user = User::onlyTrashed()
-            ->findOrFail($id);
-        $this->authorize('restore', $user);
-        $user->restore();
+        $this->authorize('restore', $userOnlyTrashed);
+        $userOnlyTrashed->restore();
 
         return redirect()
             ->back()
@@ -84,16 +66,14 @@ class UserController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param User $userWithTrashed
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function forceDestroy(int $id)
+    public function forceDestroy(User $userWithTrashed)
     {
-        $user = User::withTrashed()
-            ->findOrFail($id);
-        $this->authorize('delete', $user);
-        $user->forceDelete();
+        $this->authorize('delete', $userWithTrashed);
+        $userWithTrashed->forceDelete();
 
         return redirect()
             ->back()

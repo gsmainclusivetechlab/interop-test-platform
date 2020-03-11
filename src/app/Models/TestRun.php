@@ -50,13 +50,21 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $withCount = [
-        'steps',
-        'results',
-        'passResults',
-        'failResults',
-        'errorResults',
+    protected $with = [
+        'session',
+        'testCase',
     ];
+
+//    /**
+//     * @var array
+//     */
+//    protected $withCount = [
+//        'steps',
+//        'results',
+//        'passResults',
+//        'failResults',
+//        'errorResults',
+//    ];
 
     /**
      * @var array
@@ -102,9 +110,9 @@ class TestRun extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function passResults()
+    public function passTestResults()
     {
-        return $this->results()->pass();
+        return $this->testResults()->pass();
     }
 
     /**
@@ -112,7 +120,7 @@ class TestRun extends Model
      */
     public function failResults()
     {
-        return $this->results()->fail();
+        return $this->testResults()->fail();
     }
 
     /**
@@ -120,7 +128,7 @@ class TestRun extends Model
      */
     public function errorResults()
     {
-        return $this->results()->error();
+        return $this->testResults()->error();
     }
 
     /**

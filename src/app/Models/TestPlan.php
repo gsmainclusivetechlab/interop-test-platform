@@ -54,20 +54,20 @@ class TestPlan extends Pivot
         return $this->belongsTo(Session::class, 'session_id');
     }
 
-    /**
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'uuid';
-    }
-
-    /**
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function resolveRouteBinding($value)
-    {
-        return $this->where($this->getRouteKeyName(), $value)->whereHas('session')->firstOrFail() ?? abort(404);
-    }
+//    /**
+//     * @return string
+//     */
+//    public function getRouteKeyName()
+//    {
+//        return 'uuid';
+//    }
+//
+//    /**
+//     * @param  mixed  $value
+//     * @return \Illuminate\Database\Eloquent\Model|null
+//     */
+//    public function resolveRouteBinding($value)
+//    {
+//        return $this->where($this->getRouteKeyName(), $value)->whereHas('session')->firstOrFail() ?? abort(404);
+//    }
 }

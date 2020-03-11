@@ -15,6 +15,8 @@ class CreateTestExecutionsTable extends Migration
     {
         Schema::create('test_executions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('test_result_id');
+            $table->foreign('test_result_id')->references('id')->on('test_results')->onDelete('cascade');
             $table->string('name');
             $table->string('status')->index();
             $table->string('message')->nullable();

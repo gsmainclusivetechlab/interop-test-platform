@@ -1,14 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Sessions;
 
+use App\Http\Controllers\Controller;
 use App\Models\Session;
 use Illuminate\Database\Eloquent\Builder;
 
-class SessionController extends Controller
+class OverviewController extends Controller
 {
     /**
-     * @return void
+     * OverviewController constructor.
      */
     public function __construct()
     {
@@ -41,15 +42,14 @@ class SessionController extends Controller
     public function show(Session $session)
     {
         $this->authorize('view', $session);
-        $runs = $session->testRuns()
-            ->with('case', 'session')
+        $testRuns = $session->testRuns()
             ->latest()
             ->paginate();
-        $suites = $session->cases->mapWithKeys(function ($item) {
-            return [$item->suite];
+        $useCases = $session->testCases->mapWithKeys(function ($item) {
+            return [$item->useCase];
         });
 
-        return view('sessions.show', compact('session', 'runs', 'suites'));
+        return view('sessions.show', compact('session', 'testRuns', 'useCases'));
     }
 
     /**
@@ -59,7 +59,6 @@ class SessionController extends Controller
      */
     public function destroy(Session $session)
     {
-        $this->authorize('delete', $session);
         $session->delete();
 
         return redirect()
@@ -68,16 +67,14 @@ class SessionController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param Session $sessionOnlyTrashed
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function restore(int $id)
+    public function restore(Session $sessionOnlyTrashed)
     {
-        $session = Session::onlyTrashed()
-            ->findOrFail($id);
-        $this->authorize('restore', $session);
-        $session->restore();
+        $this->authorize('restore', $sessionOnlyTrashed);
+        $sessionOnlyTrashed->restore();
 
         return redirect()
             ->back()
@@ -85,33 +82,17 @@ class SessionController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param Session $sessionWithTrashed
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function forceDestroy(int $id)
+    public function forceDestroy(Session $sessionWithTrashed)
     {
-        $session = Session::withTrashed()
-            ->findOrFail($id);
-        $this->authorize('delete', $session);
-        $session->forceDelete();
+        $this->authorize('delete', $sessionWithTrashed);
+        $sessionWithTrashed->forceDelete();
 
         return redirect()
             ->back()
             ->with('success', __('Session deleted successfully'));
     }
-
-//    /**
-//     * @param Session $session
-//     * @return array
-//     */
-//    public function showChart(Session $session)
-//    {
-//        $data = [
-//            'x' => ['2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
-//            [220, 240, 270, 250, 280],
-//            [180, 150, 300, 70, 120],
-//        ];
-//        return $data;
-//    }
 }

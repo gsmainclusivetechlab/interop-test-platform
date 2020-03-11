@@ -28,13 +28,13 @@ class Session extends Model
         'scenario_id',
     ];
 
-//    /**
-//     * @var array
-//     */
-//    protected $with = [
-//        'cases',
-//        'lastRun',
-//    ];
+    /**
+     * @var array
+     */
+    protected $with = [
+        'testCases',
+        'lastTestRun',
+    ];
 //
 //    /**
 //     * @var array
@@ -52,30 +52,30 @@ class Session extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-//     */
-//    public function scenario()
-//    {
-//        return $this->belongsTo(Scenario::class, 'scenario_id');
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-//     */
-//    public function runs()
-//    {
-//        return $this->hasMany(TestRun::class, 'session_id')->completed();
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function lastRun()
-//    {
-//        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
-//    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function scenario()
+    {
+        return $this->belongsTo(Scenario::class, 'scenario_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testRuns()
+    {
+        return $this->hasMany(TestRun::class, 'session_id')->completed();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function lastTestRun()
+    {
+        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
+    }
 //
 //    /**
 //     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -93,29 +93,29 @@ class Session extends Model
 //        return $this->runs()->fail();
 //    }
 //
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function cases()
-//    {
-//        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'case_id')
-//            ->using(TestPlan::class)
-//            ->withPivot(['uuid']);
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function positiveCases()
-//    {
-//        return $this->cases()->positive();
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function negativeCases()
-//    {
-//        return $this->cases()->negative();
-//    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function testCases()
+    {
+        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'test_case_id')
+            ->using(TestPlan::class)
+            ->withPivot(['uuid']);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function positiveTestCases()
+    {
+        return $this->testCases()->positive();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function negativeTestCases()
+    {
+        return $this->testCases()->negative();
+    }
 }

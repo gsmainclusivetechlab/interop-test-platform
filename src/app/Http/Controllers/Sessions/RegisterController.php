@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Sessions\StoreRegisterConfigurationRequest;
-use App\Http\Requests\Sessions\StoreRegisterInformationRequest;
-use App\Http\Requests\Sessions\StoreRegisterSelectionRequest;
+use App\Http\Requests\StoreSessionRequest;
 use App\Models\UseCase;
 use App\Models\Scenario;
 
 class RegisterController extends Controller
 {
     /**
-     * @return void
+     * SessionRegisterController constructor.
      */
     public function __construct()
     {
@@ -26,14 +24,13 @@ class RegisterController extends Controller
     {
         $scenario = Scenario::firstOrFail();
 
-        return view('sessions.register.selection', compact('scenario'));
+        return view('sessions-register.selection', compact('scenario'));
     }
 
     /**
-     * @param StoreRegisterSelectionRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeSelection(StoreRegisterSelectionRequest $request)
+    public function storeSelection()
     {
         return redirect()
             ->route('sessions.register.configuration.create');
@@ -46,14 +43,13 @@ class RegisterController extends Controller
     {
         $scenario = Scenario::firstOrFail();
 
-        return view('sessions.register.configuration', compact('scenario'));
+        return view('sessions-register.configuration', compact('scenario'));
     }
 
     /**
-     * @param StoreRegisterConfigurationRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeConfiguration(StoreRegisterConfigurationRequest $request)
+    public function storeConfiguration()
     {
         return redirect()
             ->route('sessions.register.information.create');
@@ -65,16 +61,16 @@ class RegisterController extends Controller
     public function createInformation()
     {
         $scenario = Scenario::firstOrFail();
-        $suites = UseCase::whereHas('cases')->get();
+        $useCases = UseCase::whereHas('testCases')->get();
 
-        return view('sessions.register.information', compact('scenario', 'suites'));
+        return view('sessions-register.information', compact('scenario', 'useCases'));
     }
 
     /**
-     * @param StoreRegisterInformationRequest $request
+     * @param StoreSessionRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeInformation(StoreRegisterInformationRequest $request)
+    public function storeInformation(StoreSessionRequest $request)
     {
         $user = auth()->user();
         $scenario = Scenario::firstOrFail();
@@ -83,7 +79,7 @@ class RegisterController extends Controller
             'description' => $request->input('description'),
             'scenario_id' => $scenario->id,
         ]);
-        $session->cases()->attach($request->input('cases'));
+        $session->testCases()->attach($request->input('test_cases'));
 
         return redirect()
             ->route('sessions.show', $session)

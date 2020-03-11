@@ -5,7 +5,7 @@
 @section('content')
     @include('sessions.includes.header', ['session' => $session])
     <div class="row align-items-start">
-        @include('sessions.cases.includes.sidebar', ['case' => $case])
+        @include('sessions.test-cases.includes.sidebar', ['case' => $case])
         <div class="col-9 mt-3">
             <div class="row">
                 <div class="col">
