@@ -298,7 +298,40 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                some query
+                                                                <div class="json-tree">
+                                                                    <code class="json-tree-code">{
+                                                                        "Server": [
+                                                                            "nginx\/1.14.0 (Ubuntu)"
+                                                                        ],
+                                                                        "Date": [
+                                                                            "Thu, 12 Mar 2020 08:47:04 GMT"
+                                                                        ],
+                                                                        "Content-Type": [
+                                                                            "application\/json"
+                                                                        ],
+                                                                        "Transfer-Encoding": [
+                                                                            "chunked"
+                                                                        ],
+                                                                        "Connection": [
+                                                                            "close"
+                                                                        ],
+                                                                        "X-Powered-By": [
+                                                                            "PHP\/7.4.1"
+                                                                        ],
+                                                                        "X-Date": [
+                                                                            "Thu, 12 Mar 2020 08:47:04 GMT"
+                                                                        ],
+                                                                        "Cache-Control": [
+                                                                            "no-cache, private"
+                                                                        ],
+                                                                        "X-RateLimit-Limit": [
+                                                                            "60"
+                                                                        ],
+                                                                        "X-RateLimit-Remaining": [
+                                                                            "58"
+                                                                        ]
+                                                                    }</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
@@ -315,15 +348,56 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-<code>{
-    "url": "https://api.github.com/repos/vmg/redcarpet/issues/683",
-    "repository_url": "https://api.github.com/repos/vmg/redcarpet",
-    "labels_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/labels{/name}",
-    "comments_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/comments",
-    "events_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/events",
-    "html_url": "https://github.com/vmg/redcarpet/issues/683",
-}</code></pre>
+                                                                <div class="mb-0 p-0 bg-transparent json-tree">
+<code class="json-tree-code">{
+    "transactionRequestId": "4f538ef0-927b-4a4d-873b-d9fe399a9c78",
+    "payee": {
+        "partyIdInfo": {
+            "partyIdType": "MSISDN",
+            "partyIdentifier": "+33555123457"
+        },
+        "name": null,
+        "personalInfo": {
+            "complexName": {
+                "firstName": null,
+                "middleName": null,
+                "lastName": null
+            },
+            "dateOfBirth": null
+        }
+    },
+    "payer": {
+        "partyIdType": "MSISDN",
+        "partyIdentifier": "+33555123456"
+    },
+    "amount": {
+        "currency": "USD",
+        "amount": "10.1"
+    },
+    "transactionType": {
+        "scenario": "MERCHANTPAY",
+        "subScenario": null,
+        "initiator": "PAYEE",
+        "initiatorType": "BUSINESS",
+        "refundInfo": {
+            "originalTransactionId": null
+        }
+    },
+    "note": null,
+    "geoCode": {
+        "latitude": null,
+        "longitude": null
+    },
+    "authenticationType": null,
+    "extensionList": {
+        "extension": [
+            {
+                "key": null,
+                "value": null
+            }
+        ]
+    }
+}</code></div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
