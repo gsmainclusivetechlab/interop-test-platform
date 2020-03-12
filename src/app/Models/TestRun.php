@@ -43,10 +43,10 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $with = [
-        'session',
-        'testCase',
-    ];
+//    protected $with = [
+//        'session',
+//        'testCase',
+//    ];
 
 //    /**
 //     * @var array
@@ -62,11 +62,11 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $observables = [
-        'pass',
-        'fail',
-        'timeout',
-    ];
+//    protected $observables = [
+//        'pass',
+//        'fail',
+//        'timeout',
+//    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

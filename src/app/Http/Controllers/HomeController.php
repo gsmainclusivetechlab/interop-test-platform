@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TestResult;
+use App\Models\TestRun;
+use App\Models\TestStep;
+use App\Testing\TestRequest;
+use App\Testing\TestResponse;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
+use function foo\func;
 
 class HomeController extends Controller
 {
@@ -39,6 +46,40 @@ class HomeController extends Controller
 //        $stack = new HandlerStack();
 //
 //        dd($stack);
+
+//        $run = TestRun::firstWhere('id', 206);
+//        $step = $run->testSteps()
+//            ->whereHas('source', function ($query) {
+//                $query->whereHas('apiService', function ($query) {
+//                    $query->where('server', 'http://172.16.1.72:8084');
+//                });
+//            })
+//            ->offset($run->testResults()
+//                ->whereHas('testStep', function ($query) {
+//                    $query->whereHas('source', function ($query) {
+//                        $query->whereHas('apiService', function ($query) {
+//                            $query->where('server', 'http://172.16.1.72:8084');
+//                        });
+//                    });
+//                })->count());
+//
+//        dd($run->testSteps()
+//            ->whereHas('source', function ($query) {
+//                $query->whereHas('apiService', function ($query) {
+//                    $query->where('server', 'like', '%172.16.1.72:8084');
+//                });
+//            })->count());
+//        dd($run->testResults()
+//            ->whereHas('testStep', function ($query) {
+//                $query->whereHas('source', function ($query) {
+//                    $query->whereHas('apiService', function ($query) {
+//                        $query->where('server', 'http://172.16.1.72:8084');
+//                    });
+//                });
+//            })->get());
+
+        dd(TestResult::firstWhere('id', 2347)->request);
+        dd((new TestResponse(new Response()))->toArray());
 
         $sessions = auth()->user()->sessions()
             ->latest()

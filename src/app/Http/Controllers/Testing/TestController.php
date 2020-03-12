@@ -37,32 +37,46 @@ class TestController extends Controller
             ->whereNull('completed_at')
             ->firstOrFail();
 
+//        $testStep = $testRun->testSteps()
+//            ->offset($testRun->testResults()->count())
+//            ->firstOrFail();
+
+//        $testStep = $testRun->testSteps()
+//            ->whereHas('source', function ($query) use ($authority) {
+//                $query->whereHas('apiService', function ($query) use ($authority) {
+//                    $query->where('server', 'like', "%{$authority}");
+//                });
+//            })
+//            ->offset($testRun->testResults()
+//                ->whereHas('testStep', function ($query) use ($authority) {
+//                    $query->whereHas('source', function ($query) use ($authority) {
+//                        $query->whereHas('apiService', function ($query) use ($authority) {
+//                            $query->where('server', "%{$authority}");
+//                        });
+//                    });
+//                })->count())
+//            ->firstOrFail();
+
         $testStep = $testRun->testSteps()
-            ->offset($testRun->testResults()->count())
+            ->whereHas('target', function ($query) use ($apiService) {
+                $query->where('api_service_id', $apiService->id);
+            })
+            ->offset($testRun->testResults()
+                ->whereHas('testStep', function ($query) use ($apiService) {
+                    $query->whereHas('target', function ($query) use ($apiService) {
+                        $query->where('api_service_id', $apiService->id);
+                    });
+                })->count())
             ->firstOrFail();
 
-        $testResult = $testRun->testResults()->make([
+        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+        $request = $request->withUri($uri);
+        $response = (new Client(['http_errors' => false]))->send($request);
+
+        $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
-            'request' => [],
-            'response' => [],
-            'total' => 0,
-            'passed' => 0,
-            'errors' => 0,
-            'failures' => 0,
-            'time' => 0,
         ]);
 
-        $uri = (new Uri($testStep->target->apiService->server))
-            ->withPath($path);
-
-        $request = $request->withUri($uri);
-
-        $response = (new Client(['http_errors' => false]))->send($request);
-        $testResult->save();
-
-        return $response;
-        dd(1);
-
-        return $this->doTest($request, $testRun, $testStep);
+        return $this->doTest($testResult);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Controller as BaseController;
+use App\Models\TestResult;
 use App\Models\TestRun;
 use App\Models\TestStep;
 use App\Testing\Constraints\ValidationPasses;
@@ -16,13 +17,7 @@ use Throwable;
 
 class Controller extends BaseController
 {
-    /**
-     * @param ServerRequestInterface $request
-     * @param TestRun $run
-     * @param TestStep $step
-     * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
-     */
-    protected function doTest(ServerRequestInterface $request, TestRun $run, TestStep $step)
+    protected function doTest(TestResult $testResult)
     {
 //        $result = $run->results()->make([
 //            'step_id' => $step->id,

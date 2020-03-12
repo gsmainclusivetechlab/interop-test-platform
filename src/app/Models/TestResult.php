@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\RequestCast;
 use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -38,7 +39,7 @@ class TestResult extends Model
      * @var array
      */
     protected $casts = [
-        'request' => 'array',
+        'request' => RequestCast::class,
         'response' => 'array',
     ];
 
@@ -72,7 +73,12 @@ class TestResult extends Model
      */
     public function testRun()
     {
-        return $this->belongsTo(TestRun::class, 'run_id');
+        return $this->belongsTo(TestRun::class, 'test_run_id');
+    }
+
+    public function testStep()
+    {
+        return $this->belongsTo(TestStep::class, 'test_step_id');
     }
 
     /**
