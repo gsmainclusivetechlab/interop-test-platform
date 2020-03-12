@@ -19,6 +19,7 @@ class Controller extends BaseController
 {
     protected function doTest(TestResult $testResult)
     {
+        dd($testResult);
 //        $result = $run->results()->make([
 //            'step_id' => $step->id,
 //            'request' => $this->convertRequestToArray($request),
@@ -40,33 +41,5 @@ class Controller extends BaseController
 //            $result->error($exception->getMessage());
 //            return $exception;
 //        }
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return array
-     */
-    protected function convertRequestToArray(ServerRequestInterface $request)
-    {
-        return [
-            'uri' => (string) $request->getUri(),
-            'method' => $request->getMethod(),
-            'headers' => $request->getHeaders(),
-            'body' => $request->getParsedBody(),
-            'query' => $request->getQueryParams(),
-        ];
-    }
-
-    /**
-     * @param ResponseInterface $response
-     * @return array
-     */
-    protected function convertResponseToArray(ResponseInterface $response)
-    {
-        return [
-            'status' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'body' => json_decode($response->getBody()->getContents(), true),
-        ];
     }
 }

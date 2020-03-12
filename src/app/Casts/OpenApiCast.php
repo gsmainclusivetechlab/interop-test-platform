@@ -19,6 +19,10 @@ class OpenApiCast implements CastsAttributes
      */
     public function get($model, string $key, $value, array $attributes)
     {
+        if (!is_string($value)) {
+            return $value;
+        }
+
         return Reader::readFromJson($value);
     }
 
@@ -31,6 +35,10 @@ class OpenApiCast implements CastsAttributes
      */
     public function set($model, string $key, $value, array $attributes)
     {
+        if (!$value instanceof OpenApi) {
+            return $value;
+        }
+
         return Writer::writeToJson($value);
     }
 }

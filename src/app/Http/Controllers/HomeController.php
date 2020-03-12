@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TestResult;
-use App\Models\TestRun;
-use App\Models\TestStep;
-use App\Testing\TestRequest;
-use App\Testing\TestResponse;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use function foo\func;
+use App\Testing\RequestTestSuite;
+use App\Testing\Tests\ValidateRequestTest;
+use App\Testing\TestSuiteLoader;
+use PHPUnit\Framework\TestResult;
+use PHPUnit\Framework\TestSuite;
+use Psr\Http\Message\ServerRequestInterface;
 
 class HomeController extends Controller
 {
@@ -24,17 +22,22 @@ class HomeController extends Controller
     /**
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(ServerRequestInterface $request)
     {
-//        $suite = new TestSuite();
-//        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
-//        $requestSuite->setRequest($request);
-//        $suite->addTestSuite($requestSuite);
-//        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
-//        $requestSuite->setRequest($request);
-//        $suite->addTestSuite($requestSuite);
-//
+        $suite = new TestSuite();
+        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
+        $requestSuite->setRequest($request);
+        $suite->addTestSuite($requestSuite);
+        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
+        $requestSuite->setRequest($request);
+        $suite->addTestSuite($requestSuite);
+
 //        $loader = new TestSuiteLoader();
+
+        $result = new TestResult();
+        $suite->run($result);
+
+        dd($result);
 //
 //        dd($loader->load());
 //
@@ -77,9 +80,6 @@ class HomeController extends Controller
 //                    });
 //                });
 //            })->get());
-
-        dd(TestResult::firstWhere('id', 2347)->request);
-        dd((new TestResponse(new Response()))->toArray());
 
         $sessions = auth()->user()->sessions()
             ->latest()

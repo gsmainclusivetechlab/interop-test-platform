@@ -7,8 +7,6 @@ use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\ProcessTimeoutTestRun;
 use App\Models\TestPlan;
 use App\Models\TestRun;
-use App\Testing\TestRequest;
-use App\Testing\TestResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
@@ -55,10 +53,8 @@ class RunController extends Controller
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
             'request' => $request,
-//            'response' => new TestResponse($response),
+            'response' => $response,
         ]);
-
-        dd($testResult->request);
 
         return $this->doTest($testResult);
     }

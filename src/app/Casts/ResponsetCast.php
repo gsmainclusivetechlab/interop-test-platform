@@ -2,18 +2,18 @@
 
 namespace App\Casts;
 
-use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
-class RequestCast implements CastsAttributes
+class ResponsetCast implements CastsAttributes
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return ServerRequest|mixed
+     * @return Response|mixed
      */
     public function get($model, string $key, $value, array $attributes)
     {
@@ -21,7 +21,7 @@ class RequestCast implements CastsAttributes
             return $value;
         }
 
-        return new ServerRequest(...json_decode($value, true));
+        return new Response(...json_decode($value, true));
     }
 
     /**
@@ -33,17 +33,16 @@ class RequestCast implements CastsAttributes
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        if (!$value instanceof ServerRequestInterface) {
+        if (!$value instanceof ResponseInterface) {
             return $value;
         }
 
         return json_encode([
-            $value->getMethod(),
-            $value->getUri()->__toString(),
+            $value->getStatusCode(),
             $value->getHeaders(),
             $value->getBody()->__toString(),
             $value->getProtocolVersion(),
-            $value->getServerParams(),
+            $value->getReasonPhrase(),
         ]);
     }
 }
