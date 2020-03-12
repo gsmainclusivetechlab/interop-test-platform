@@ -30,22 +30,19 @@ class TestController extends Controller
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, ApiService $specification, string $path)
+    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $path)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
             ->whereNull('completed_at')
             ->firstOrFail();
 
-        return 1;
-
         $testStep = $testRun->testSteps()
             ->offset($testRun->testResults()->count())
             ->firstOrFail();
 
         $testResult = $testRun->testResults()->make([
-            'source_id' => $testStep->source_id,
-            'target_id' => $testStep->target_id,
+            'test_step_id' => $testStep->id,
             'request' => [],
             'response' => [],
             'total' => 0,
@@ -57,12 +54,13 @@ class TestController extends Controller
 
         $uri = (new Uri($testStep->target->apiService->server))
             ->withPath($path);
+
         $request = $request->withUri($uri);
 
         $response = (new Client(['http_errors' => false]))->send($request);
         $testResult->save();
 
-        return 1;
+        return $response;
         dd(1);
 
         return $this->doTest($request, $testRun, $testStep);

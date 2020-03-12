@@ -24,7 +24,7 @@ class RegisterController extends Controller
     {
         $scenario = Scenario::firstOrFail();
 
-        return view('sessions-register.selection', compact('scenario'));
+        return view('sessions.register.selection', compact('scenario'));
     }
 
     /**
@@ -43,7 +43,7 @@ class RegisterController extends Controller
     {
         $scenario = Scenario::firstOrFail();
 
-        return view('sessions-register.configuration', compact('scenario'));
+        return view('sessions.register.configuration', compact('scenario'));
     }
 
     /**
@@ -63,7 +63,7 @@ class RegisterController extends Controller
         $scenario = Scenario::firstOrFail();
         $useCases = UseCase::whereHas('testCases')->get();
 
-        return view('sessions-register.information', compact('scenario', 'useCases'));
+        return view('sessions.register.information', compact('scenario', 'useCases'));
     }
 
     /**

@@ -29,8 +29,7 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
-        'source_id',
-        'target_id',
+        'test_step_id',
         'request',
         'response',
     ];
@@ -44,9 +43,9 @@ class TestResult extends Model
     ];
 
     protected $attributes = [
-        'total' => 0,
+//        'total' => 0,
         'passed' => 0,
-        'errors' => 0,
+//        'errors' => 0,
         'failures' => 0,
         'time' => 0,
     ];

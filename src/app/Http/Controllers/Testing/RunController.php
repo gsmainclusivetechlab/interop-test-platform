@@ -39,8 +39,7 @@ class RunController extends Controller
             'test_case_id' => $testPlan->test_case_id,
         ]);
         $testResult = $testRun->testResults()->make([
-            'source_id' => $testStep->source_id,
-            'target_id' => $testStep->target_id,
+            'test_step_id' => $testStep->id,
             'request' => [],
             'response' => [],
             'total' => 0,
@@ -65,7 +64,7 @@ class RunController extends Controller
         $response = (new Client(['http_errors' => false]))->send($request);
         $testResult->save();
 
-        return 1;
+        return $response;
         dd($response);
 
         return $this->doTest($request, $testRun, $testStep);

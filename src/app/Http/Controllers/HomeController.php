@@ -36,9 +36,9 @@ class HomeController extends Controller
 //
 //        dd($runner->run($suite));
 
-        $stack = new HandlerStack();
-
-        dd($stack);
+//        $stack = new HandlerStack();
+//
+//        dd($stack);
 
         $sessions = auth()->user()->sessions()
             ->latest()
