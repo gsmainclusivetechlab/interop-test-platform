@@ -12,8 +12,7 @@ import {
 
 import hljs from 'highlight.js';
 import Clipboard from 'clipboard';
-
-new Clipboard('[data-clipboard-target]');
+import jsonTree from './components/jsonTreeViewer';
 
 Vue.use(AlertPlugin);
 Vue.use(DropdownPlugin);
@@ -46,3 +45,6 @@ const app = new Vue({
 });
 
 hljs.initHighlightingOnLoad();
+jsonTree.init();
+
+new Clipboard('[data-clipboard-target]');
