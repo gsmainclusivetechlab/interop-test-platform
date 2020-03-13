@@ -7,9 +7,9 @@
             <div class="ml-4 pt-1">
                 {{ __('Execution') }}:
                 <i class="fe fe-briefcase"></i>
-                <small>{{ $session->cases->unique('suite_id')->count() }}</small>
+                <small>{{ $session->testCases->unique('use_case_id')->count() }}</small>
                 <i class="fe fe-file-text"></i>
-                <small>{{ $session->cases->count() }}</small>
+                <small>{{ $session->testCases->count() }}</small>
             </div>
             <div class="col-2">
                 @include('sessions.includes.runs-progress', $session)

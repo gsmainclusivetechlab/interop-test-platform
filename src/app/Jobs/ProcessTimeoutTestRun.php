@@ -31,8 +31,8 @@ class ProcessTimeoutTestRun implements ShouldQueue
      */
     public function handle()
     {
-        if (!$this->run->completed_at) {
-            $this->run->timeout();
+        if (!$this->run->isCompleted()) {
+            $this->run->failure(__('Timeout expired'));
         }
     }
 }

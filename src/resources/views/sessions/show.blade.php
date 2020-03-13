@@ -12,23 +12,23 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-unstyled">
-                        @foreach($suites as $suite)
+                        @foreach($useCases as $useCase)
                             <li>
-                                <b class="d-block dropdown-toggle py-2 px-4 border-bottom" v-b-toggle.suite-{{ $suite->id }}>
-                                    {{ $suite->name }}
+                                <b class="d-block dropdown-toggle py-2 px-4 border-bottom" v-b-toggle.use-case-{{ $useCase->id }}>
+                                    {{ $useCase->name }}
                                 </b>
-                                @if ($session->positiveCases->where('suite_id', $suite->id)->count())
-                                    <b-collapse id="suite-{{ $suite->id }}" visible>
+                                @if ($session->positiveTestCases->where('use_case_id', $useCase->id)->count())
+                                    <b-collapse id="use-case-{{ $useCase->id }}" visible>
                                         <ul class="list-unstyled">
                                             <li>
-                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.positive-cases-{{ $suite->id }}>
+                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.positive-test-cases-{{ $useCase->id }}>
                                                     {{ __('Happy flow') }}
                                                 </span>
-                                                <b-collapse id="positive-cases-{{ $suite->id }}" visible>
+                                                <b-collapse id="positive-test-cases-{{ $useCase->id }}" visible>
                                                     <ul class="list-unstyled">
-                                                        @foreach($session->positiveCases->where('suite_id', $suite->id) as $case)
+                                                        @foreach($session->positiveTestCases->where('use_case_id', $useCase->id) as $testCase)
                                                             <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
-                                                                <a href="{{ route('sessions.cases.show', [$session, $case]) }}">{{ $case->name }}</a>
+                                                                <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
                                                             </li>
                                                         @endforeach
                                                     </ul>
@@ -38,18 +38,18 @@
                                     </b-collapse>
                                 @endif
 
-                                @if ($session->negativeCases->where('suite_id', $suite->id)->count())
-                                    <b-collapse id="suite-{{ $suite->id }}" visible>
+                                @if ($session->negativeTestCases->where('use_case_id', $useCase->id)->count())
+                                    <b-collapse id="use-case-{{ $useCase->id }}" visible>
                                         <ul class="list-unstyled">
                                             <li>
-                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.negative-cases-{{ $suite->id }}>
+                                                <span class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom" v-b-toggle.negative-test-cases-{{ $useCase->id }}>
                                                     {{ __('Unhappy flow') }}
                                                 </span>
-                                                <b-collapse id="negative-cases-{{ $suite->id }}" visible>
+                                                <b-collapse id="negative-test-cases-{{ $useCase->id }}" visible>
                                                     <ul class="list-unstyled">
-                                                        @foreach($session->negativeCases->where('suite_id', $suite->id) as $case)
+                                                        @foreach($session->negativeTestCases->where('use_case_id', $useCase->id) as $testCase)
                                                             <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
-                                                                <a href="{{ route('sessions.cases.show', [$session, $case]) }}">{{ $case->name }}</a>
+                                                                <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
                                                             </li>
                                                         @endforeach
                                                     </ul>
@@ -88,38 +88,34 @@
                                         <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Date') }}</th>
-                                        <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
                                         <th class="text-nowrap w-1"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($runs as $run)
+                                    @forelse ($testRuns as $testRun)
                                         <tr>
                                             <td>
-                                                <a href="{{ route('sessions.cases.show', [$run->session, $run->case]) }}">
-                                                    {{ $run->case->name }}
+                                                <a href="{{ route('sessions.test_cases.show', [$testRun->session, $testRun->testCase]) }}">
+                                                    {{ $testRun->testCase->name }}
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="{{ route('sessions.cases.runs.show', [$run->session, $run->case, $run]) }}">
-                                                    {{ $run->uuid }}
+                                                <a href="{{ route('sessions.test_cases.results', [$testRun->session, $testRun->testCase, $testRun]) }}">
+                                                    {{ $testRun->uuid }}
                                                 </a>
                                             </td>
                                             <td>
-                                                <span class="status-icon bg-{{ $run->status_type }}"></span>
-                                                {{ $run->status_label }}
+                                                <span class="status-icon bg-{{ $testRun->status_type }}"></span>
+                                                {{ $testRun->status_label }}
                                             </td>
                                             <td>
-                                                {{ $run->completed_at }}
-                                            </td>
-                                            <td>
-                                                {{ __(':n ms', ['n' => $run->duration]) }}
+                                                {{ $testRun->completed_at }}
                                             </td>
                                             <td></td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td class="text-center" colspan="6">
+                                            <td class="text-center" colspan="5">
                                                 {{ __('No Results') }}
                                             </td>
                                         </tr>
@@ -128,7 +124,7 @@
                             </table>
                         </div>
                         <div class="card-footer">
-                            @include('components.grid.pagination', ['paginator' => $runs])
+                            @include('components.grid.pagination', ['paginator' => $testRuns])
                         </div>
                     </div>
                 </div>

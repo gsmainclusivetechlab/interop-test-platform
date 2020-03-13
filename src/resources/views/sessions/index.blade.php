@@ -11,10 +11,10 @@
             @include('components.grid.search')
             <div class="card-options">
                 <div class="btn-group">
-                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index')) active @endif">
+                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index') && !request()->route()->hasParameter('trashed')) active @endif">
                         {{ __('Active') }}
                     </a>
-                    <a href="{{ route('sessions.trash') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.trash')) active @endif">
+                    <a href="{{ route('sessions.index', 'trashed') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index') && request()->route()->hasParameter('trashed')) active @endif">
                         {{ __('Deactivated') }}
                     </a>
                 </div>
@@ -43,10 +43,10 @@
                             @endif
                         </td>
                         <td>
-                            {{ $session->cases->unique('suite_id')->count() }}
+                            {{ $session->testCases->unique('use_case_id')->count() }}
                         </td>
                         <td>
-                            {{ $session->cases->count() }}
+                            {{ $session->testCases->count() }}
                         </td>
                         <td>
                             @include('sessions.includes.runs-progress', $session)

@@ -7,6 +7,7 @@ use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\ProcessTimeoutTestRun;
 use App\Models\TestPlan;
 use App\Models\TestRun;
+use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
@@ -26,28 +27,39 @@ class RunController extends Controller
     /**
      * @param ServerRequestInterface $request
      * @param TestPlan $plan
+     * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $plan)
+    public function __invoke(ServerRequestInterface $request, TestPlan $testPlan, string $path)
     {
-        $step = $plan->steps()->firstOrFail();
-        $run = TestRun::create([
-            'case_id' => $plan->case_id,
-            'session_id' => $plan->session_id,
+        $testRun = TestRun::create([
+            'session_id' => $testPlan->session_id,
+            'test_case_id' => $testPlan->test_case_id,
         ]);
 
-        ProcessTimeoutTestRun::dispatch($run)
+        ProcessTimeoutTestRun::dispatch($testRun)
             ->delay(now()->addMinutes(1));
 
-        $uri = (new Uri($step->platform->server))
-            ->withPath($step->path);
-        $traceparent = (new TraceparentHeader())
-            ->withTraceId($run->trace_id)
-            ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $request->withUri($uri)
-            ->withMethod($step->method)
-            ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
+        try {
+            $testStep = $testPlan->testSteps()->firstOrFail();
+            $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+            $traceparent = (new TraceparentHeader())
+                ->withTraceId($testRun->trace_id)
+                ->withVersion(TraceparentHeader::DEFAULT_VERSION);
+            $request = $request->withUri($uri)
+                ->withMethod($request->getMethod())
+                ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
+            $response = (new Client(['http_errors' => false]))->send($request);
+            $testResult = $testRun->testResults()->create([
+                'test_step_id' => $testStep->id,
+                'request' => $request,
+                'response' => $response,
+            ]);
 
-        return $this->doTest($request, $run, $step);
+            return $this->doTest($testResult);
+        } catch (Throwable $e) {
+            $testRun->failure($e->getMessage());
+            return $e;
+        }
     }
 }

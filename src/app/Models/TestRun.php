@@ -3,13 +3,11 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use SebastianBergmann\Timer\Timer;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestRun extends Model
 {
@@ -17,10 +15,9 @@ class TestRun extends Model
 
     const UPDATED_AT = null;
 
-    const STATUS_EXECUTING = 'executing';
-    const STATUS_PASS = 'pass';
-    const STATUS_FAIL = 'fail';
-    const STATUS_TIMEOUT = 'timeout';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_PASSED = 'passed';
+    const STATUS_FAILURE = 'failure';
 
     /**
      * @var string
@@ -31,8 +28,15 @@ class TestRun extends Model
      * @var array
      */
     protected $fillable = [
-        'case_id',
         'session_id',
+        'test_case_id',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'status' => self::STATUS_PROCESSING,
     ];
 
     /**
@@ -45,44 +49,43 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $attributes = [
-        'status' => self::STATUS_EXECUTING,
-    ];
+//    protected $with = [
+//        'session',
+//        'testCase',
+//    ];
 
-    /**
-     * @var array
-     */
-    protected $withCount = [
-        'steps',
-        'results',
-        'passResults',
-        'failResults',
-        'errorResults',
-    ];
+//    /**
+//     * @var array
+//     */
+//    protected $withCount = [
+//        'steps',
+//        'results',
+//        'passResults',
+//        'failResults',
+//        'errorResults',
+//    ];
 
     /**
      * @var array
      */
     protected $observables = [
-        'pass',
-        'fail',
-        'timeout',
+        'passed',
+        'failure',
     ];
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function case()
+    public function testCase()
     {
-        return $this->belongsTo(TestCase::class, 'case_id');
+        return $this->belongsTo(TestCase::class, 'test_case_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function steps()
+    public function testSteps()
     {
-        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'case_id', 'case_id', 'id');
+        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'test_case_id', 'test_case_id', 'id');
     }
 
     /**
@@ -90,57 +93,49 @@ class TestRun extends Model
      */
     public function session()
     {
-        return $this->belongsTo(TestSession::class, 'session_id');
+        return $this->belongsTo(Session::class, 'session_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function results()
+    public function testResults()
     {
-        return $this->hasMany(TestResult::class, 'run_id');
+        return $this->hasMany(TestResult::class, 'test_run_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function passResults()
+    public function passedTestResults()
     {
-        return $this->results()->pass();
+        return $this->testResults()->passed();
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function failResults()
+    public function failureTestResults()
     {
-        return $this->results()->fail();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function errorResults()
-    {
-        return $this->results()->error();
+        return $this->testResults()->failure();
     }
 
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePass($query)
+    public function scopePassed($query)
     {
-        return $query->where('status', static::STATUS_PASS);
+        return $query->where('status', static::STATUS_PASSED);
     }
 
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeFail($query)
+    public function scopeFailure($query)
     {
-        return $query->where('status', static::STATUS_FAIL);
+        return $query->where('status', static::STATUS_FAILURE);
     }
 
     /**
@@ -150,14 +145,6 @@ class TestRun extends Model
     public function scopeCompleted($query)
     {
         return $query->whereNotNull('completed_at');
-    }
-
-    /**
-     * @return int
-     */
-    public function getDurationAttribute()
-    {
-        return $this->results()->sum('time');
     }
 
     /**
@@ -174,10 +161,9 @@ class TestRun extends Model
     public static function getStatusTypes()
     {
         return [
-            static::STATUS_EXECUTING => 'secondary',
-            static::STATUS_PASS => 'success',
-            static::STATUS_FAIL => 'danger',
-            static::STATUS_TIMEOUT => 'secondary',
+            static::STATUS_PROCESSING => 'secondary',
+            static::STATUS_PASSED => 'success',
+            static::STATUS_FAILURE => 'danger',
         ];
     }
 
@@ -195,10 +181,9 @@ class TestRun extends Model
     public static function getStatusLabels()
     {
         return [
-            static::STATUS_EXECUTING => __('Executing'),
-            static::STATUS_PASS => __('Pass'),
-            static::STATUS_FAIL => __('Fail'),
-            static::STATUS_TIMEOUT => __('Timeout'),
+            static::STATUS_PROCESSING => __('Processing'),
+            static::STATUS_PASSED => __('Pass'),
+            static::STATUS_FAILURE => __('Fail'),
         ];
     }
 
@@ -219,53 +204,36 @@ class TestRun extends Model
     }
 
     /**
-     * @param array $options
      * @return bool
      */
-    public function pass(array $options = [])
+    public function passed()
     {
-        $this->status = static::STATUS_PASS;
+        $this->status = static::STATUS_PASSED;
         $this->completed_at = now();
 
-        if (!$this->save($options)) {
+        if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('pass');
+        $this->fireModelEvent('passed');
         return true;
     }
 
     /**
-     * @param array $options
+     * @param string|null $exception
      * @return bool
      */
-    public function fail(array $options = [])
+    public function failure(string $exception = null)
     {
-        $this->status = static::STATUS_FAIL;
+        $this->status = static::STATUS_FAILURE;
+        $this->exception = $exception;
         $this->completed_at = now();
 
-        if (!$this->save($options)) {
+        if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('fail');
-        return true;
-    }
-
-    /**
-     * @param array $options
-     * @return bool
-     */
-    public function timeout(array $options = [])
-    {
-        $this->status = static::STATUS_TIMEOUT;
-        $this->completed_at = now();
-
-        if (!$this->save($options)) {
-            return false;
-        }
-
-        $this->fireModelEvent('timeout');
+        $this->fireModelEvent('failure');
         return true;
     }
 }

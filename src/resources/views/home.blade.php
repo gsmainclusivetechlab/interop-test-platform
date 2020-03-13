@@ -15,7 +15,7 @@
             </div>
         @empty
             <div class="col-12">
-                <div class="card card-body bg-light">
+                <div class="card card-body">
                     {{ __('No Results') }}
                 </div>
             </div>

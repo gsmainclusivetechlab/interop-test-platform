@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\TestSession;
+use App\Models\Session;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 
 class SessionController extends Controller
 {
@@ -13,7 +14,7 @@ class SessionController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestSession::class, 'session');
+        $this->authorizeResource(Session::class, 'session');
     }
 
     /**
@@ -21,12 +22,14 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = TestSession::withoutTrashed()
-            ->whereHas('owner', function ($query) {
-                $query->when(request('q'), function ($query, $q) {
+        $sessions = Session::whereHas('owner', function (Builder $query) {
+                $query->when(request('q'), function (Builder $query, $q) {
                     $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
                         ->orWhere('name', 'like', "%{$q}%");
                 });
+            })
+            ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
+                return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
             })
             ->latest()
             ->paginate();
@@ -35,31 +38,11 @@ class SessionController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function trash()
-    {
-        $this->authorize('viewAny', TestSession::class);
-        $sessions = TestSession::onlyTrashed()
-            ->whereHas('owner', function ($query) {
-                $query->when(request('q'), function ($query, $q) {
-                    $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
-                        ->orWhere('name', 'like', "%{$q}%");
-                });
-            })
-            ->latest()
-            ->paginate();
-
-        return view('admin.sessions.index', compact('sessions'));
-    }
-
-    /**
-     * @param TestSession $session
+     * @param Session $session
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(TestSession $session)
+    public function destroy(Session $session)
     {
         $session->delete();
 
@@ -69,16 +52,14 @@ class SessionController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param Session $sessionOnlyTrashed
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function restore(int $id)
+    public function restore(Session $sessionOnlyTrashed)
     {
-        $session = TestSession::onlyTrashed()
-            ->findOrFail($id);
-        $this->authorize('restore', $session);
-        $session->restore();
+        $this->authorize('restore', $sessionOnlyTrashed);
+        $sessionOnlyTrashed->restore();
 
         return redirect()
             ->back()
@@ -86,16 +67,14 @@ class SessionController extends Controller
     }
 
     /**
-     * @param integer $id
+     * @param Session $sessionWithTrashed
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function forceDestroy(int $id)
+    public function forceDestroy(Session $sessionWithTrashed)
     {
-        $session = TestSession::withTrashed()
-            ->findOrFail($id);
-        $this->authorize('delete', $session);
-        $session->forceDelete();
+        $this->authorize('delete', $sessionWithTrashed);
+        $sessionWithTrashed->forceDelete();
 
         return redirect()
             ->back()

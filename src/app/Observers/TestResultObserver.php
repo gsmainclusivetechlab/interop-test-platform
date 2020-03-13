@@ -10,10 +10,10 @@ class TestResultObserver
      * @param TestResult $result
      * @return void
      */
-    public function pass(TestResult $result)
+    public function passed(TestResult $result)
     {
-        if ($result->run->results()->count() >= $result->run->steps()->count()/* && !$result->run->isCompleted()*/) {
-            $result->run->pass();
+        if ($result->testRun->testResults()->count() >= $result->testRun->testSteps()->count()) {
+            $result->testRun->passed();
         }
     }
 
@@ -21,17 +21,8 @@ class TestResultObserver
      * @param TestResult $result
      * @return void
      */
-    public function fail(TestResult $result)
+    public function failure(TestResult $result)
     {
-        $result->run->fail();
-    }
-
-    /**
-     * @param TestResult $result
-     * @return void
-     */
-    public function error(TestResult $result)
-    {
-        $result->run->fail();
+        $result->testRun->failure();
     }
 }
