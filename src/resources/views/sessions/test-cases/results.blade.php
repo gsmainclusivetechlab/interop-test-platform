@@ -47,205 +47,223 @@
 {{--                                @endif--}}
                             </div>
                         </div>
-                        <div class="card-body bg-light">
-                            <flow-chart>
-                                graph LR;
-                                @foreach($session->scenario->components as $component)
-                                    {{ $component->id }}({{$component->name}})@if($component->is($testResult->testStep->source) || $component->is($testResult->testStep->target)):::is-active @endif;
-                                    @foreach ($component->paths as $connection)
-                                        {{ $component->id }} @if($connection->pivot->simulated) --> @else -.-> @endif {{ $connection->id }}
+                        <div class="card-body bg-light p-0">
+                            <div class="px-4 py-6">
+                                <flow-chart>
+                                    graph LR;
+                                    @foreach($session->scenario->components as $component)
+                                        {{ $component->id }}({{$component->name}})@if($component->is($testResult->testStep->source)):::is-active @endif;
+                                        @foreach ($component->paths as $connection)
+                                            {{ $component->id }}
+                                            @if($connection->pivot->simulated) --> @else -.-> @endif
+                                            @if($component->is($testResult->testStep->source) && $connection->is($testResult->testStep->target))
+                                                |active| {{ $connection->id }}
+                                            @else
+                                                {{ $connection->id }}
+                                            @endif
+                                        @endforeach
                                     @endforeach
-                                @endforeach
-                                classDef node fill:#fff,stroke:#fff,color:#242529
-                                classDef clickable fill:#fff,stroke:#fff,color:#242529
-                            </flow-chart>
-                        </div>
-                    </div>
-                    <div class="rounded-0 bg-white">
-                        <div class="row">
-                            <div class="col-3 pr-0">
-                                <ul class="list-unstyled mb-0">
-                                    @foreach ($testRun->testSteps as $step)
-                                        @if($stepResult = $testRun->testResults()->where('test_step_id', $step->id)->first())
-                                            <li class="list-group-item-action d-flex align-items-baseline py-3 px-4 @if($step->is($testResult->testStep)) bg-light @endif">
-                                                <a href="{{ route('sessions.test_cases.results', [$session, $testCase, $testRun, $step->position]) }}" class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
-                                                    <b class="text-nowrap">
-                                                        {{ __('Step :n', ['n' => $step->position]) }}
-                                                    </b>
-                                                    @switch($stepResult->request->getMethod())
-                                                        @case('POST')
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                        @break
-
-                                                        @case('PUT')
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                        @break
-
-                                                        @case('DELETE')
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-red">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                        @break
-
-                                                        @default
-                                                        <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-blue">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                    @endswitch
-                                                    {{ $stepResult->request->getUri()->getPath() }}
-                                                </a>
-                                                <span class="flex-shrink-0 status-icon ml-auto mr-0 bg-{{ $stepResult->status_type }}"></span>
-                                            </li>
-                                        @else
-                                            <li class="d-flex align-items-baseline py-3 px-4 text-black-50">
-                                                <span class="d-flex flex-wrap align-items-center">
-                                                    <b class="text-nowrap">
-                                                        {{ __('Step :n', ['n' => $step->position]) }}
-                                                    </b>
-                                                    <span class="d-flex justify-content-center align-items-center mx-2">
-                                                        {{ $step->name }}
-                                                    </span>
-                                                </span>
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
+                                    classDef node fill:#fff,stroke:#fff,color:#242529
+                                    classDef clickable fill:#fff,stroke:#fff,color:#242529
+                                </flow-chart>
                             </div>
-                            <div class="col-9 pl-0 border-left">
-                                <div class="lead p-4">
-                                    <b class="text-nowrap">
-                                        {{ __('Step :n', ['n' => $testResult->testStep->position]) }}
-                                    </b>
-                                    <u class="mr-2">{{ $testResult->request->getMethod() }} {{ $testResult->request->getUri()->getPath() }}</u>
-                                    <span class="badge px-4 ml-3 py-2 bg-success">
-                                        {{ __('HTTP :status', ['status' => $testResult->response->getStatusCode()]) }}
-                                    </span>
-                                </div>
-                                <div class="lead alert-{{ $testResult->status_type }} p-4">
-                                    {{ $testResult->status_label }}
-                                    @if($testResult->status_message)
-                                        <p class="small">{{ $testResult->status_message }}</p>
-                                    @endif
-                                </div>
-                                @if($request = $testResult->request)
-                                    <div class="p-4">
-                                        <strong class="lead d-block mb-2 font-weight-bold">
-                                            {{ __('Request') }}
-                                        </strong>
-                                        <div class="border">
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border">
-                                                    <strong>{{ __('Url') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ $request->getUri() }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border">
-                                                    <strong>{{ __('Method') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ $request->getMethod() }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-headers-{{ $testResult->id }}>
-                                                    <strong>{{ __('Headers') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count($request->getHeaders())]) }}
-                                                </div>
-                                            </div>
-                                            <b-collapse id="request-headers-{{ $testResult->id }}">
-                                                <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border"></div>
-                                                    <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json($request->getHeaders(), JSON_PRETTY_PRINT)</code>
-                                                        </pre>
-                                                    </div>
-                                                </div>
-                                            </b-collapse>
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-body-{{ $testResult->id }}>
-                                                    <strong>{{ __('Body') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count(json_decode($request->getBody()->__toString(), true))]) }}
-                                                </div>
-                                            </div>
-                                            <b-collapse id="request-body-{{ $testResult->id }}">
-                                                <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border"></div>
-                                                    <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
-                                                        </pre>
-                                                    </div>
-                                                </div>
-                                            </b-collapse>
-                                        </div>
-                                    </div>
-                                @endif
+                            <div class="rounded-0 bg-white border-top">
+                                <div class="row">
+                                    <div class="col-3 pr-0">
+                                        <ul class="list-unstyled mb-0">
+                                            @foreach ($testRun->testSteps as $step)
+                                                @if($stepResult = $testRun->testResults()->where('test_step_id', $step->id)->first())
+                                                    <li class="list-group-item-action d-flex align-items-baseline py-3 px-4 @if($step->is($testResult->testStep)) bg-light @endif">
+                                                        <a href="{{ route('sessions.test_cases.results', [$session, $testCase, $testRun, $step->position]) }}" class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
+                                                            <b class="text-nowrap">
+                                                                {{ __('Step :n', ['n' => $step->position]) }}
+                                                            </b>
+                                                            @switch($stepResult->request->getMethod())
+                                                                @case('POST')
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-orange">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                                @break
 
-                                @if($response = $testResult->response)
-                                    <div class="p-4">
-                                        <strong class="lead d-block mb-2 font-weight-bold">
-                                            {{ __('Response') }}
-                                        </strong>
-                                        <div class="border">
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border">
-                                                    <strong>{{ __('Status') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ $response->getStatusCode() }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.response-headers-{{ $testResult->id }}>
-                                                    <strong>{{ __('Headers') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count($response->getHeaders())]) }}
-                                                </div>
-                                            </div>
-                                            <b-collapse id="response-headers-{{ $testResult->id }}">
-                                                <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border"></div>
-                                                    <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json($response->getHeaders(), JSON_PRETTY_PRINT)</code>
-                                                        </pre>
-                                                    </div>
-                                                </div>
-                                            </b-collapse>
-                                            <div class="d-flex">
-                                                <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.response-body-{{ $testResult->id }}>
-                                                    <strong>{{ __('Body') }}</strong>
-                                                </div>
-                                                <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count(json_decode($request->getBody()->__toString(), true))]) }}
-                                                </div>
-                                            </div>
-                                            <b-collapse id="response-body-{{ $testResult->id }}">
-                                                <div class="d-flex">
-                                                    <div class="w-25 px-4 py-2 border"></div>
-                                                    <div class="w-75 px-4 py-2 border">
-                                                        <pre class="mb-0 p-0 bg-transparent">
-                                                            <code v-pre>@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
-                                                        </pre>
-                                                    </div>
-                                                </div>
-                                            </b-collapse>
-                                        </div>
+                                                                @case('PUT')
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-blue">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                                @break
+
+                                                                @case('DELETE')
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-red">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                                @break
+
+                                                                @default
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-mint">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                            @endswitch
+                                                            {{ $stepResult->request->getUri()->getPath() }}
+                                                        </a>
+                                                        <span class="flex-shrink-0 status-icon ml-auto mr-0 bg-{{ $stepResult->status_type }}"></span>
+                                                    </li>
+                                                @else
+                                                    <li class="d-flex align-items-center py-3 px-4 text-black-50">
+                                                        <span class="d-flex flex-wrap align-items-baseline">
+                                                            <b class="text-nowrap">
+                                                                {{ __('Step :n', ['n' => $step->position]) }}
+                                                            </b>
+                                                            <span class="d-flex justify-content-baseline align-items-center mx-2">
+                                                                {{ $step->name }}
+                                                            </span>
+                                                        </span>
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
                                     </div>
-                                @endif
+                                    <div class="col-9 pl-0 border-left">
+                                        <div class="lead p-4">
+                                            <b class="text-nowrap">
+                                                {{ __('Step :n', ['n' => $testResult->testStep->position]) }}
+                                            </b>
+                                            <u class="mr-2">{{ $testResult->request->getMethod() }} {{ $testResult->request->getUri()->getPath() }}</u>
+                                            <span class="badge px-4 ml-3 py-2 bg-success">
+                                                {{ __('HTTP :status', ['status' => $testResult->response->getStatusCode()]) }}
+                                            </span>
+                                        </div>
+                                        <div class="lead p-4">
+                                            <ul class="m-0 p-0">
+                                                <li class="d-flex align-items-center py-2">
+                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
+                                                    <p class="small mb-0">Status test: pass</p>
+                                                </li>
+                                                <li class="d-flex align-items-center py-2">
+                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-red">fail</span>
+                                                    <p class="small mb-0">Status test: fail | Assertion error</p>
+                                                </li>
+                                                <li class="d-flex align-items-center py-2">
+                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
+                                                    <p class="small mb-0">Status test</p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        @if($request = $testResult->request)
+                                            <div class="p-4">
+                                                <strong class="lead d-block mb-2 font-weight-bold">
+                                                    {{ __('Request') }}
+                                                </strong>
+                                                <div class="border">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border">
+                                                            <strong>{{ __('Url') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ $request->getUri() }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border">
+                                                            <strong>{{ __('Method') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ $request->getMethod() }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-headers-{{ $testResult->id }}>
+                                                            <strong>{{ __('Headers') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ __('(:n) params', ['n' => count($request->getHeaders())]) }}
+                                                        </div>
+                                                    </div>
+                                                    <b-collapse id="request-headers-{{ $testResult->id }}">
+                                                        <div class="d-flex">
+                                                            <div class="w-25 px-4 py-2 border"></div>
+                                                            <div class="w-75 px-4 py-2 border">
+                                                                <pre class="mb-0 p-0 bg-transparent">
+                                                                    <code v-pre>@json($request->getHeaders(), JSON_PRETTY_PRINT)</code>
+                                                                </pre>
+                                                            </div>
+                                                        </div>
+                                                    </b-collapse>
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.request-body-{{ $testResult->id }}>
+                                                            <strong>{{ __('Body') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ __('(:n) params', ['n' => count(json_decode($request->getBody()->__toString(), true))]) }}
+                                                        </div>
+                                                    </div>
+                                                    <b-collapse id="request-body-{{ $testResult->id }}">
+                                                        <div class="d-flex">
+                                                            <div class="w-25 px-4 py-2 border"></div>
+                                                            <div class="w-75 px-4 py-2 border">
+                                                                <pre class="mb-0 p-0 bg-transparent">
+                                                                    <code v-pre>@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
+                                                                </pre>
+                                                            </div>
+                                                        </div>
+                                                    </b-collapse>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if($response = $testResult->response)
+                                            <div class="p-4">
+                                                <strong class="lead d-block mb-2 font-weight-bold">
+                                                    {{ __('Response') }}
+                                                </strong>
+                                                <div class="border">
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border">
+                                                            <strong>{{ __('Status') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ $response->getStatusCode() }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.response-headers-{{ $testResult->id }}>
+                                                            <strong>{{ __('Headers') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ __('(:n) params', ['n' => count($response->getHeaders())]) }}
+                                                        </div>
+                                                    </div>
+                                                    <b-collapse id="response-headers-{{ $testResult->id }}">
+                                                        <div class="d-flex">
+                                                            <div class="w-25 px-4 py-2 border"></div>
+                                                            <div class="w-75 px-4 py-2 border">
+                                                                <pre class="mb-0 p-0 bg-transparent">
+                                                                    <code v-pre>@json($response->getHeaders(), JSON_PRETTY_PRINT)</code>
+                                                                </pre>
+                                                            </div>
+                                                        </div>
+                                                    </b-collapse>
+                                                    <div class="d-flex">
+                                                        <div class="w-25 px-4 py-2 border dropdown-toggle" v-b-toggle.response-body-{{ $testResult->id }}>
+                                                            <strong>{{ __('Body') }}</strong>
+                                                        </div>
+                                                        <div class="w-75 px-4 py-2 border">
+                                                            {{ __('(:n) params', ['n' => count(json_decode($request->getBody()->__toString(), true))]) }}
+                                                        </div>
+                                                    </div>
+                                                    <b-collapse id="response-body-{{ $testResult->id }}">
+                                                        <div class="d-flex">
+                                                            <div class="w-25 px-4 py-2 border"></div>
+                                                            <div class="w-75 px-4 py-2 border">
+                                                                <pre class="mb-0 p-0 bg-transparent">
+                                                                    <code v-pre>@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
+                                                                </pre>
+                                                            </div>
+                                                        </div>
+                                                    </b-collapse>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
