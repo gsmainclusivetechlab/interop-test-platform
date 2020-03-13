@@ -189,8 +189,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 1</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">POST</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-orange">POST</span>
                                                         /transactions
                                                     </a>
                                                 </li>
@@ -198,17 +197,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 2</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">DELETE</span>
-                                                        /transaction
-                                                    </a>
-                                                </li>
-                                                <li class="list-group-item-action d-flex align-items-baseline py-3 px-4">
-                                                    <a href="#"
-                                                        class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
-                                                        <b class="text-nowrap">Step: 3</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">POST</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-red">DELETE</span>
                                                         /transaction
                                                     </a>
                                                 </li>
@@ -216,8 +205,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 4</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">PUT</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-blue">PUT</span>
                                                         /transaction
                                                     </a>
                                                 </li>
@@ -225,8 +213,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 5</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">PUT</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-mint">GET</span>
                                                         /quotes
                                                     </a>
                                                     <span class="flex-shrink-0 status-icon ml-auto mr-0 bg-danger"></span>
@@ -234,8 +221,7 @@
                                                 <li class="d-flex align-items-baseline py-3 px-4 text-black-50">
                                                     <span class="d-flex flex-wrap align-items-center">
                                                         <b class="text-nowrap">Step: 6</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">PUT</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-gray">PUT</span>
                                                         /quotes
                                                     </span>
                                                 </li>
@@ -249,20 +235,21 @@
                                                 <span class="badge px-4 ml-3 py-2 bg-success">HTTP 200</span>
                                             </div>
 
-                                            <div class="lead alert-success p-4">
-                                                Success
-                                            </div>
-                                            <div class="lead alert-danger p-4">
-                                                <div class="dropdown-toggle" v-b-toggle.fail aria-expanded="true">
-                                                    Fail
-                                                </div>
-                                                <b-collapse visible id="fail">
-                                                    <div class="d-flex flex-column">
-                                                        <small>Expected result validation failed:</small>
-                                                        <small>- Status code should be 200</small>
-                                                        <small>- Body cannot be empty</small>
-                                                    </div>
-                                                </b-collapse>
+                                            <div class="lead p-4">
+                                                <ul class="m-0 p-0">
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
+                                                        <p class="small mb-0">Status test: pass</p>
+                                                    </li>
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-red">fail</span>
+                                                        <p class="small mb-0">Status test: fail | Assertion error</p>
+                                                    </li>
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
+                                                        <p class="small mb-0">Status test</p>
+                                                    </li>
+                                                </ul>
                                             </div>
 
                                             <div class="p-4">
@@ -298,7 +285,40 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                some query
+                                                                <div class="json-tree">
+                                                                    <code class="json-tree-code">{
+                                                                        "Server": [
+                                                                            "nginx\/1.14.0 (Ubuntu)"
+                                                                        ],
+                                                                        "Date": [
+                                                                            "Thu, 12 Mar 2020 08:47:04 GMT"
+                                                                        ],
+                                                                        "Content-Type": [
+                                                                            "application\/json"
+                                                                        ],
+                                                                        "Transfer-Encoding": [
+                                                                            "chunked"
+                                                                        ],
+                                                                        "Connection": [
+                                                                            "close"
+                                                                        ],
+                                                                        "X-Powered-By": [
+                                                                            "PHP\/7.4.1"
+                                                                        ],
+                                                                        "X-Date": [
+                                                                            "Thu, 12 Mar 2020 08:47:04 GMT"
+                                                                        ],
+                                                                        "Cache-Control": [
+                                                                            "no-cache, private"
+                                                                        ],
+                                                                        "X-RateLimit-Limit": [
+                                                                            "60"
+                                                                        ],
+                                                                        "X-RateLimit-Remaining": [
+                                                                            "58"
+                                                                        ]
+                                                                    }</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
@@ -315,15 +335,56 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-<code>{
-    "url": "https://api.github.com/repos/vmg/redcarpet/issues/683",
-    "repository_url": "https://api.github.com/repos/vmg/redcarpet",
-    "labels_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/labels{/name}",
-    "comments_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/comments",
-    "events_url": "https://api.github.com/repos/vmg/redcarpet/issues/683/events",
-    "html_url": "https://github.com/vmg/redcarpet/issues/683",
-}</code></pre>
+                                                                <div class="mb-0 p-0 bg-transparent json-tree">
+<code class="json-tree-code">{
+    "transactionRequestId": "4f538ef0-927b-4a4d-873b-d9fe399a9c78",
+    "payee": {
+        "partyIdInfo": {
+            "partyIdType": "MSISDN",
+            "partyIdentifier": "+33555123457"
+        },
+        "name": null,
+        "personalInfo": {
+            "complexName": {
+                "firstName": null,
+                "middleName": null,
+                "lastName": null
+            },
+            "dateOfBirth": null
+        }
+    },
+    "payer": {
+        "partyIdType": "MSISDN",
+        "partyIdentifier": "+33555123456"
+    },
+    "amount": {
+        "currency": "USD",
+        "amount": "10.1"
+    },
+    "transactionType": {
+        "scenario": "MERCHANTPAY",
+        "subScenario": null,
+        "initiator": "PAYEE",
+        "initiatorType": "BUSINESS",
+        "refundInfo": {
+            "originalTransactionId": null
+        }
+    },
+    "note": null,
+    "geoCode": {
+        "latitude": null,
+        "longitude": null
+    },
+    "authenticationType": null,
+    "extensionList": {
+        "extension": [
+            {
+                "key": null,
+                "value": null
+            }
+        ]
+    }
+}</code></div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
