@@ -2,20 +2,18 @@
 
 namespace App\Casts;
 
-use cebe\openapi\Reader;
-use cebe\openapi\spec\OpenApi;
-use cebe\openapi\Writer;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Psr\Http\Message\ResponseInterface;
 
-class OpenApiCast implements CastsAttributes
+class ResponseCast implements CastsAttributes
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return OpenApi
-     * @throws \cebe\openapi\exceptions\TypeErrorException
+     * @return Response|mixed
      */
     public function get($model, string $key, $value, array $attributes)
     {
@@ -23,7 +21,7 @@ class OpenApiCast implements CastsAttributes
             return $value;
         }
 
-        return Reader::readFromJson($value);
+        return new Response(...json_decode($value, true));
     }
 
     /**
@@ -31,14 +29,20 @@ class OpenApiCast implements CastsAttributes
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return string
+     * @return array|false|mixed|string
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        if (!$value instanceof OpenApi) {
+        if (!$value instanceof ResponseInterface) {
             return $value;
         }
 
-        return Writer::writeToJson($value);
+        return json_encode([
+            $value->getStatusCode(),
+            $value->getHeaders(),
+            $value->getBody()->__toString(),
+            $value->getProtocolVersion(),
+            $value->getReasonPhrase(),
+        ]);
     }
 }

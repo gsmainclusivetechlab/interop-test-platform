@@ -25,6 +25,9 @@ class TestCaseController extends Controller
      */
     public function show(Session $session, TestCase $testCase)
     {
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
         $testRuns = $session->testRuns()
             ->where('test_case_id', $testCase->id)
             ->latest()
@@ -42,11 +45,14 @@ class TestCaseController extends Controller
      */
     public function results(Session $session, TestCase $testCase, TestRun $testRun, int $position = 1)
     {
-        $result = $testRun->testResults()
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
+        $testResult = $testRun->testResults()
             ->whereHas('testStep', function (Builder $query) use ($position) {
                 $query->where('position', $position);
             })->firstOrFail();
 
-        return view('sessions.test-cases.results', compact('session', 'case', 'run', 'result'));
+        return view('sessions.test-cases.results', compact('session', 'testCase', 'testRun', 'testResult'));
     }
 }

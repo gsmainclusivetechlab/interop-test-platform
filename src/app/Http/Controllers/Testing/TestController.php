@@ -37,32 +37,31 @@ class TestController extends Controller
             ->whereNull('completed_at')
             ->firstOrFail();
 
-        $testStep = $testRun->testSteps()
-            ->offset($testRun->testResults()->count())
-            ->firstOrFail();
+        try {
+            $testStep = $testRun->testSteps()
+                ->whereHas('target', function ($query) use ($apiService) {
+                    $query->where('api_service_id', $apiService->id);
+                })
+                ->offset($testRun->testResults()
+                    ->whereHas('testStep', function ($query) use ($apiService) {
+                        $query->whereHas('target', function ($query) use ($apiService) {
+                            $query->where('api_service_id', $apiService->id);
+                        });
+                    })->count())
+                ->firstOrFail();
+            $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+            $request = $request->withUri($uri);
+            $response = (new Client(['http_errors' => false]))->send($request);
+            $testResult = $testRun->testResults()->create([
+                'test_step_id' => $testStep->id,
+                'request' => $request,
+                'response' => $response,
+            ]);
 
-        $testResult = $testRun->testResults()->make([
-            'test_step_id' => $testStep->id,
-            'request' => [],
-            'response' => [],
-            'total' => 0,
-            'passed' => 0,
-            'errors' => 0,
-            'failures' => 0,
-            'time' => 0,
-        ]);
-
-        $uri = (new Uri($testStep->target->apiService->server))
-            ->withPath($path);
-
-        $request = $request->withUri($uri);
-
-        $response = (new Client(['http_errors' => false]))->send($request);
-        $testResult->save();
-
-        return $response;
-        dd(1);
-
-        return $this->doTest($request, $testRun, $testStep);
+            return $this->doTest($testResult);
+        } catch (Throwable $e) {
+            $testRun->failure($e->getMessage());
+            return $e;
+        }
     }
 }

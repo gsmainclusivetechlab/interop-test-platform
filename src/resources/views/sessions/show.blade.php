@@ -88,7 +88,6 @@
                                         <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                                         <th class="text-nowrap w-auto">{{ __('Date') }}</th>
-                                        <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
                                         <th class="text-nowrap w-1"></th>
                                     </tr>
                                 </thead>
@@ -112,14 +111,11 @@
                                             <td>
                                                 {{ $testRun->completed_at }}
                                             </td>
-                                            <td>
-                                                {{ __(':n ms', ['n' => $testRun->duration]) }}
-                                            </td>
                                             <td></td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td class="text-center" colspan="6">
+                                            <td class="text-center" colspan="5">
                                                 {{ __('No Results') }}
                                             </td>
                                         </tr>

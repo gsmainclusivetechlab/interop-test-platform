@@ -20,15 +20,7 @@ class TestRunner
      */
     public function run(Test $test): TestResult
     {
-        $result = $this->createResult();
-        $listener = $this->createListener();
-
-        foreach ($this->extensions as $extension) {
-            $listener->add($extension);
-        }
-
-        $result->addListener($listener);
-        $test->run($result);
+        $result = $test->run($this->buildResult());
 
         return $result;
     }
@@ -36,17 +28,18 @@ class TestRunner
     /**
      * @return TestResult
      */
-    protected function createResult(): TestResult
+    protected function buildResult(): TestResult
     {
-        return new TestResult();
-    }
+        $result = new TestResult();
+        $listener = new TestListenerAdapter();
 
-    /**
-     * @return TestListenerAdapter
-     */
-    protected function createListener(): TestListenerAdapter
-    {
-        return new TestListenerAdapter();
+        foreach ($this->extensions as $extension) {
+            $listener->add($extension);
+        }
+
+        $result->addListener($listener);
+
+        return $result;
     }
 
     /**

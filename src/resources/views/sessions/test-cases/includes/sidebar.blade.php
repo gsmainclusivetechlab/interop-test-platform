@@ -5,24 +5,24 @@
                 <a href="{{ route('sessions.show', $session) }}" class="text-decoration-none">
                     <i class="fe fe-chevron-left"></i>
                 </a>
-                {{ $case->name }}
+                {{ $testCase->name }}
             </h3>
         </div>
         <div class="card-body p-0">
             <ul class="list-unstyled">
                 <li class="py-3 px-4 border-bottom">
                     <div class="input-group">
-                        <input id="run-url-{{ $case->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', [$case->pivot]) }}">
+                        <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
                         <span class="input-group-append">
-                            <button class="btn border" type="button" data-clipboard-target="#run-url-{{ $case->id }}">
+                            <button class="btn border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
                                 <i class="fe fe-copy"></i>
                             </button>
                         </span>
                     </div>
                 </li>
-                @if ($case->description)
+                @if ($testCase->description)
                     <li class="py-3 px-4 border-bottom" v-pre>
-                        {{ \Illuminate\Mail\Markdown::parse($case->description) }}
+                        {{ \Illuminate\Mail\Markdown::parse($testCase->description) }}
                     </li>
                 @endif
             </ul>
