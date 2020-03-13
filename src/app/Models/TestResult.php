@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -54,6 +55,26 @@ class TestResult extends Model
         'passed',
         'failure',
     ];
+
+    /**
+     * @return array
+     */
+    public static function getStatusTypes()
+    {
+        return [
+            static::STATUS_PROCESSING => 'secondary',
+            static::STATUS_PASSED => 'success',
+            static::STATUS_FAILURE => 'danger',
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusTypeAttribute()
+    {
+        return Arr::get(static::getStatusTypes(), $this->status);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

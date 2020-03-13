@@ -49,20 +49,18 @@ class TestController extends Controller
                         });
                     })->count())
                 ->firstOrFail();
-        } catch (Throwable $e) {
-            $testRun->failure($e->getMessage());
-            return $e;
-        }
+            $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+            $request = $request->withUri($uri);
+            $response = (new Client(['http_errors' => false]))->send($request);
+            $testResult = $testRun->testResults()->create([
+                'test_step_id' => $testStep->id,
+                'request' => $request,
+                'response' => $response,
+            ]);
 
-        $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
-        $testResult->request = $request->withUri($uri);
-
-        try {
-            $testResult->response = (new Client(['http_errors' => false]))->send($testResult->request);
             return $this->doTest($testResult);
         } catch (Throwable $e) {
-            $testResult->failure($e->getMessage());
+            $testRun->failure($e->getMessage());
             return $e;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -34,6 +35,44 @@ class TestExecution extends Model
         'passed',
         'failure',
     ];
+
+    /**
+     * @return array
+     */
+    public static function getStatusTypes()
+    {
+        return [
+            static::STATUS_PASSED => 'success',
+            static::STATUS_FAILURE => 'danger',
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusTypeAttribute()
+    {
+        return Arr::get(static::getStatusTypes(), $this->status);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getStatusLabels()
+    {
+        return [
+            static::STATUS_PASSED => __('Pass'),
+            static::STATUS_FAILURE => __('Fail'),
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusLabelAttribute()
+    {
+        return Arr::get(static::getStatusLabels(), $this->status);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

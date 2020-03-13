@@ -133,18 +133,17 @@
                                         </div>
                                         <div class="lead p-4">
                                             <ul class="m-0 p-0">
-                                                <li class="d-flex align-items-center py-2">
-                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
-                                                    <p class="small mb-0">Status test: pass</p>
-                                                </li>
-                                                <li class="d-flex align-items-center py-2">
-                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-red">fail</span>
-                                                    <p class="small mb-0">Status test: fail | Assertion error</p>
-                                                </li>
-                                                <li class="d-flex align-items-center py-2">
-                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
-                                                    <p class="small mb-0">Status test</p>
-                                                </li>
+                                                @foreach($testResult->testExecutions as $testExecution)
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
+                                                            {{ $testExecution->status_label }}
+                                                        </span>
+                                                        <p class="small mb-0">
+                                                            {{ $testExecution->name }}
+                                                            @if ($testExecution->exception): {{ $testExecution->exception }}@endif
+                                                        </p>
+                                                    </li>
+                                                @endforeach
                                             </ul>
                                         </div>
                                         @if($request = $testResult->request)
