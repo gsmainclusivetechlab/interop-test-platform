@@ -7,7 +7,6 @@ use App\Models\TestResult;
 use App\Testing\Extensions\TestExecutionExtension;
 use App\Testing\TestRunner;
 use App\Testing\TestSuiteLoader;
-use GuzzleHttp\Client;
 use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ResponseInterface;
 
