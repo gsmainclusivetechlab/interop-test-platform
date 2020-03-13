@@ -49,16 +49,21 @@
                         </div>
                         <div class="card-body bg-light p-0">
                             <div class="px-4 py-6">
-                                <flow-chart>
+                                <flow-chart v-cloak>
                                     graph LR;
-                                    @foreach($session->scenario->components as $component)
-                                        {{ $component->id }}({{$component->name}})@if($component->is($result->step->source) || $component->is($result->step->target)):::is-active @endif;
-                                        @foreach ($component->connections as $connection)
-                                            {{ $component->id }} @if($connection->pivot->simulated) --> @else -.-> @endif {{ $connection->id }}
+                                        @foreach($session->scenario->components as $component)
+                                            {{ $component->id }}({{$component->name}})@if($component->name == 'Service Provider'):::is-active @endif;
+                                            @foreach ($component->connections as $connection)
+                                                {{ $component->id }}
+                                                @if($connection->pivot->simulated) --> @else -.-> @endif
+                                                @if($component->is($result->step->source) && $connection->is($result->step->target))
+                                                    |active| {{ $connection->id }}
+                                                @else
+                                                    {{ $connection->id }}
+                                                @endif
+                                            @endforeach
                                         @endforeach
-                                    @endforeach
-                                    classDef node fill:#fff,stroke:#fff,color:#242529
-                                    classDef clickable fill:#fff,stroke:#fff,color:#242529
+                                        classDef node fill:#fff,stroke:#fff,color:#242529
                                 </flow-chart>
                             </div>
                             <div class="rounded-0 bg-white border-top">
@@ -68,31 +73,28 @@
                                             @foreach ($run->steps as $step)
                                                 @if($stepResult = $run->results()->where('step_id', $step->id)->first())
                                                     <li class="list-group-item-action d-flex align-items-baseline py-3 px-4 @if($step->is($result->step)) bg-light @endif">
-                                                        <a href="{{ route('sessions.cases.runs.show', [$session, $case, $run, $step->position]) }}" class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
+                                                        <a href="{{ route('sessions.cases.runs.show', [$session, $case, $run, $step->position]) }}" class="d-flex flex-wrap align-items-baseline text-reset text-decoration-none">
                                                             <b class="text-nowrap">
                                                                 {{ __('Step :n', ['n' => $step->position]) }}
                                                             </b>
                                                             @switch($step->method)
                                                                 @case('POST')
-                                                                <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-orange">
                                                                     {{ $step->method }}
                                                                 </span>
                                                                 @break
-
                                                                 @case('PUT')
-                                                                <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-blue">
                                                                     {{ $step->method }}
                                                                 </span>
                                                                 @break
-
                                                                 @case('DELETE')
-                                                                <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-red">
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-red">
                                                                     {{ $step->method }}
                                                                 </span>
                                                                 @break
-
                                                                 @default
-                                                                <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-blue">
+                                                                <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-mint">
                                                                     {{ $step->method }}
                                                                 </span>
                                                             @endswitch
@@ -106,7 +108,7 @@
                                                             <b class="text-nowrap">
                                                                 {{ __('Step :n', ['n' => $step->position]) }}
                                                             </b>
-                                                            <span class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-gray">
+                                                            <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-gray">
                                                                 {{ $step->method }}
                                                             </span>
                                                             /{{ $step->path }}
