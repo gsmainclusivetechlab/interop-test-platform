@@ -35,16 +35,16 @@ class Session extends Model
         'testCases',
         'lastTestRun',
     ];
-//
-//    /**
-//     * @var array
-//     */
-//    protected $withCount = [
-//        'runs',
-//        'passRuns',
-//        'failRuns',
-//    ];
-//
+
+    /**
+     * @var array
+     */
+    protected $withCount = [
+        'testRuns',
+        'passedTestRuns',
+        'failureTestRuns',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -76,23 +76,23 @@ class Session extends Model
     {
         return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
     }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function passRuns()
-//    {
-//        return $this->runs()->pass();
-//    }
-//
-//    /**
-//     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-//     */
-//    public function failRuns()
-//    {
-//        return $this->runs()->fail();
-//    }
-//
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function passedTestRuns()
+    {
+        return $this->testRuns()->passed();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function failureTestRuns()
+    {
+        return $this->testRuns()->failure();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
