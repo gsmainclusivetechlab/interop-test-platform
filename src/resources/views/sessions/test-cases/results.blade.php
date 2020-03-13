@@ -181,9 +181,9 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-                                                                    <code v-pre>@json($request->getHeaders(), JSON_PRETTY_PRINT)</code>
-                                                                </pre>
+                                                                <div class="mb-0 p-0 bg-transparent json-tree">
+                                                                    <code v-pre class="json-tree-code">@json($request->getHeaders(), JSON_PRETTY_PRINT)</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
@@ -199,9 +199,9 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-                                                                    <code v-pre>@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
-                                                                </pre>
+                                                                <div class="mb-0 p-0 bg-transparent json-tree">
+                                                                    <code v-pre class="json-tree-code">@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
@@ -235,9 +235,9 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-                                                                    <code v-pre>@json($response->getHeaders(), JSON_PRETTY_PRINT)</code>
-                                                                </pre>
+                                                                <div class="mb-0 p-0 bg-transparent json-tree">
+                                                                    <code v-pre class="json-tree-code">@json($response->getHeaders(), JSON_PRETTY_PRINT)</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
@@ -253,9 +253,9 @@
                                                         <div class="d-flex">
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
-                                                                <pre class="mb-0 p-0 bg-transparent">
-                                                                    <code v-pre>@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
-                                                                </pre>
+                                                                <div class="mb-0 p-0 bg-transparent json-tree">
+                                                                    <code v-pre class="json-tree-code">@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </b-collapse>
