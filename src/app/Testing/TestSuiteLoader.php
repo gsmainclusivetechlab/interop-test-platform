@@ -44,7 +44,7 @@ class TestSuiteLoader
      * @param ResponseInterface $response
      * @return TestSuite
      */
-    public function loadResponseTests(ServerRequestInterface $response)
+    public function loadResponseTests(ResponseInterface $response)
     {
         $suite = new TestSuite();
         $scripts = $this->step->testResponseScripts;

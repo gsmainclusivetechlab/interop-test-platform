@@ -32,30 +32,34 @@ class RunController extends Controller
      */
     public function __invoke(ServerRequestInterface $request, TestPlan $testPlan, string $path)
     {
-        $testStep = $testPlan->testSteps()->firstOrFail();
         $testRun = TestRun::create([
             'session_id' => $testPlan->session_id,
             'test_case_id' => $testPlan->test_case_id,
         ]);
 
-//        ProcessTimeoutTestRun::dispatch($run)
-//            ->delay(now()->addMinutes(1));
+        ProcessTimeoutTestRun::dispatch($testRun)
+            ->delay(now()->addMinutes(1));
 
-        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
-        $traceparent = (new TraceparentHeader())
-            ->withTraceId($testRun->trace_id)
-            ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $request->withUri($uri)
-            ->withMethod($request->getMethod())
-            ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
-        $response = (new Client(['http_errors' => false]))->send($request);
+        try {
+            $testStep = $testPlan->testSteps()->firstOrFail();
+            $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+            $traceparent = (new TraceparentHeader())
+                ->withTraceId($testRun->trace_id)
+                ->withVersion(TraceparentHeader::DEFAULT_VERSION);
+            $request = $request->withUri($uri)
+                ->withMethod($request->getMethod())
+                ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
+            $response = (new Client(['http_errors' => false]))->send($request);
+            $testResult = $testRun->testResults()->create([
+                'test_step_id' => $testStep->id,
+                'request' => $request,
+                'response' => $response,
+            ]);
 
-        $testResult = $testRun->testResults()->create([
-            'test_step_id' => $testStep->id,
-            'request' => $request,
-            'response' => $response,
-        ]);
-
-        return $this->doTest($testResult);
+            return $this->doTest($testResult);
+        } catch (Throwable $e) {
+            $testRun->failure($e->getMessage());
+            return $e;
+        }
     }
 }

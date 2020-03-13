@@ -10,7 +10,7 @@ class TestRunObserver
      * @param TestRun $run
      * @return void
      */
-    public function pass(TestRun $run)
+    public function passed(TestRun $run)
     {
 
     }
@@ -19,16 +19,7 @@ class TestRunObserver
      * @param TestRun $run
      * @return void
      */
-    public function fail(TestRun $run)
-    {
-
-    }
-
-    /**
-     * @param TestRun $run
-     * @return void
-     */
-    public function timeout(TestRun $run)
+    public function failure(TestRun $run)
     {
 
     }

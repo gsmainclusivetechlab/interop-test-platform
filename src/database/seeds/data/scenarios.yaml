@@ -81,7 +81,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -98,7 +98,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
                 - name: Server Correlation Id is specified correctly
                   rules:
                     body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
@@ -133,7 +133,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transactionRequests
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -159,7 +159,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -174,7 +174,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -189,7 +189,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: POST /quotes
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -219,7 +219,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /quotes
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -249,7 +249,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /quotes/{ID}
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
@@ -279,7 +279,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /quotes/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -309,7 +309,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: POST /transfers
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -339,7 +339,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transfers
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -369,14 +369,14 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             #            - name: PUT /X-Callback-URL
             #              source_id: Mobile Money Operator 1
             #              target_id: Service Provider
             #              test_request_scripts:
             #                - name: Header has the Url Callback
             #                  rules:
-            #                    header.X-Callback-URL: 'regex:/.*/'
+            #                    headers.X-Callback-URL: 'regex:/.*/'
             #                - name: Debit and credit party is valid
             #                  rules:
             #                    body.debitParty.*.key: 'in:msisdn'
@@ -396,7 +396,7 @@
             #              test_response_scripts:
             #                - name: Transaction was successfully accepted
             #                  rules:
-            #                    status: 204
+            #                    status: 'in:204'
             - name: PUT /transfers/{ID}
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
@@ -416,7 +416,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transfers/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -436,7 +436,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
         - name: Authorized Transaction (only reponse validation)
           behavior: positive
           description: |
@@ -483,98 +483,98 @@
               test_response_scripts:
                 - name: Transaction was succeful acepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transactionRequests
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transactionRequests
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: POST /quotes
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /quotes
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /quotes/{ID}
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /quotes/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: POST /transfers
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transfers
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             #            - name: PUT /X-Callback-URL
             #              source_id: Mobile Money Operator 1
             #              target_id: Service Provider
             #              test_response_scripts:
             #                - name: Transaction was successfully accepted
             #                  rules:
-            #                    status: 204
+            #                    status: 'in:204'
             - name: PUT /transfers/{ID}
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transfers/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
         - name: Overriding Example
           behavior: positive
           description: |
@@ -609,16 +609,16 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
               test_response_scripts:
                 - name: Transaction was succeful acepted
                   rules:
-                    status: 202
+                    status: 'in:202'
               test_request_prescripts:
                 - name: Override amount, currency and both msisdns
                   values:
                     body:
-                      amount: 77.77
+                      amount: '77.77'
                       currency: 'GBP'
                       debitParty:
                         value: '11111111'
@@ -673,7 +673,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -690,7 +690,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
                 - name: Server Correlation Id is specified correctly
                   rules:
                     body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
@@ -725,7 +725,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transactionRequests
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -751,7 +751,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -766,7 +766,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -781,14 +781,14 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             # - name: PUT /X-Callback-URL
             #   source_id: Mobile Money Operator 1
             #   target_id: Service Provider
             #   test_request_scripts:
             #     - name: Header has the Url Callback
             #       rules:
-            #         header.X-Callback-URL: 'regex:/.*/'
+            #         headers.X-Callback-URL: 'regex:/.*/'
             #     - name: Debit and credit party is valid
             #       rules:
             #         body.debitParty.*.key: 'in:msisdn'
@@ -808,7 +808,7 @@
             #   test_response_scripts:
             #     - name: Transaction was successfully declined
             #       rules:
-            #         status: 204
+            #         status: 'in:204'
         - name: Decline Transaction Error 400
           behavior: negative
           description: |
@@ -856,7 +856,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -873,7 +873,7 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 400
+                    status: 'in:400'
                 - name: Error is specified correctly
                   rules:
                     body.errorCategory: 'in:businessRule'
@@ -925,7 +925,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -942,7 +942,7 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 401
+                    status: 'in:401'
                 - name: Error is specified correctly
                   rules:
                     body.errorCategory: 'in:authorisation'
@@ -994,7 +994,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -1011,7 +1011,7 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 404
+                    status: 'in:404'
                 - name: Error is specified correctly
                   rules:
                     body.errorCategory: 'in:validation'
@@ -1063,7 +1063,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -1080,7 +1080,7 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 500
+                    status: 'in:500'
                 - name: Error is specified correctly
                   rules:
                     body.errorCategory: 'in:internal'
@@ -1132,7 +1132,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -1149,7 +1149,7 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 503
+                    status: 'in:503'
                 - name: Error is specified correctly
                   rules:
                     body.errorCategory: 'in:internal'
@@ -1201,7 +1201,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -1218,7 +1218,7 @@
               test_response_scripts:
                 - name: Transaction was succeful acepted
                   rules:
-                    status: 202
+                    status: 'in:202'
                 - name: Server Correlation Id is specified correctly
                   rules:
                     body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
@@ -1253,7 +1253,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transactionRequests
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -1279,7 +1279,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -1294,7 +1294,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -1309,7 +1309,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: POST /quotes
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -1339,7 +1339,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /quotes
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -1369,7 +1369,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /quotes/{ID}
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
@@ -1393,7 +1393,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /quotes/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -1417,7 +1417,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -1432,7 +1432,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -1447,14 +1447,14 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             # - name: PUT /X-Callback-URL
             #   source_id: Mobile Money Operator 1
             #   target_id: Service Provider
             #   test_request_scripts:
             #     - name: Header has the Url Callback
             #       rules:
-            #         header.X-Callback-URL: 'regex:/.*/'
+            #         headers.X-Callback-URL: 'regex:/.*/'
             #     - name: Debit and credit party is valid
             #       rules:
             #         body.debitParty.*.key: 'in:msisdn'
@@ -1474,7 +1474,7 @@
             #   test_response_scripts:
             #     - name: Transaction was successfully declined
             #       rules:
-            #         status: 204
+            #         status: 'in:204'
         - name: Quote Rejected by MMO1
           behavior: positive
           description: |
@@ -1522,7 +1522,7 @@
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
-                    header.X-Callback-URL: 'regex:/.*/'
+                    headers.X-Callback-URL: 'regex:/.*/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
                     body.debitParty.*.key: 'in:msisdn'
@@ -1539,7 +1539,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
                 - name: Server Correlation Id is specified correctly
                   rules:
                     body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
@@ -1574,7 +1574,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /transactionRequests
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -1600,7 +1600,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /transactionRequests/{ID}
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -1615,7 +1615,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -1630,7 +1630,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: POST /quotes
               source_id: Mobile Money Operator 2
               target_id: Mojaloop
@@ -1660,7 +1660,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: POST /quotes
               source_id: Mojaloop
               target_id: Mobile Money Operator 1
@@ -1690,7 +1690,7 @@
               test_response_scripts:
                 - name: Transaction was successfully accepted
                   rules:
-                    status: 202
+                    status: 'in:202'
             - name: PUT /quotes/{ID}/error
               source_id: Mobile Money Operator 1
               target_id: Mojaloop
@@ -1705,7 +1705,7 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 200
+                    status: 'in:200'
             - name: PUT /quotes/{ID}/error
               source_id: Mojaloop
               target_id: Mobile Money Operator 2
@@ -1720,14 +1720,14 @@
               test_response_scripts:
                 - name: Transaction was successfully declined
                   rules:
-                    status: 200
+                    status: 'in:200'
             # - name: PUT /X-Callback-URL
             #   source_id: Mobile Money Operator 1
             #   target_id: Service Provider
             #   test_request_scripts:
             #     - name: Header has the Url Callback
             #       rules:
-            #         header.X-Callback-URL: 'regex:/.*/'
+            #         headers.X-Callback-URL: 'regex:/.*/'
             #     - name: Debit and credit party is valid
             #       rules:
             #         body.debitParty.*.key: 'in:msisdn'
@@ -1747,4 +1747,4 @@
             #   test_response_scripts:
             #     - name: Transaction was successfully declined
             #       rules:
-            #         status: 204
+            #         status: 'in:204'
