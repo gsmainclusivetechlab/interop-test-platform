@@ -49,16 +49,21 @@
                         </div>
                         <div class="card-body bg-light p-0">
                             <div class="px-4 py-6">
-                                <flow-chart>
+                                <flow-chart v-cloak>
                                     graph LR;
-                                    @foreach($session->scenario->components as $component)
-                                        {{ $component->id }}({{$component->name}})@if($component->is($result->step->source) || $component->is($result->step->target)):::is-active @endif;
-                                        @foreach ($component->connections as $connection)
-                                            {{ $component->id }} @if($connection->pivot->simulated) --> @else -.-> @endif {{ $connection->id }}
+                                        @foreach($session->scenario->components as $component)
+                                            {{ $component->id }}({{$component->name}})@if($component->name == 'Service Provider'):::is-active @endif;
+                                            @foreach ($component->connections as $connection)
+                                                {{ $component->id }}
+                                                @if($connection->pivot->simulated) --> @else -.-> @endif
+                                                @if($component->is($result->step->source) && $connection->is($result->step->target))
+                                                    |active| {{ $connection->id }}
+                                                @else
+                                                    {{ $connection->id }}
+                                                @endif
+                                            @endforeach
                                         @endforeach
-                                    @endforeach
-                                    classDef node fill:#fff,stroke:#fff,color:#242529
-                                    classDef clickable fill:#fff,stroke:#fff,color:#242529
+                                        classDef node fill:#fff,stroke:#fff,color:#242529
                                 </flow-chart>
                             </div>
                             <div class="rounded-0 bg-white border-top">
