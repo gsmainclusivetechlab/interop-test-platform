@@ -2,23 +2,50 @@
 
 namespace App\Testing\Tests;
 
-use App\Testing\RequestTestCase;
+use App\Models\TestRequestScript;
+use App\Testing\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
 
-class ValidateRequestTest extends RequestTestCase
+class ValidateRequestTest extends TestCase
 {
-    public function test()
-    {
-        $this->assertFalse(false);
+    /**
+     * @var TestRequestScript
+     */
+    protected $script;
 
-        return 333;
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request;
+
+    /**
+     * @param TestRequestScript $script
+     * @param ServerRequestInterface $request
+     */
+    public function __construct(TestRequestScript $script, ServerRequestInterface $request)
+    {
+        $this->script = $script;
+        $this->request = $request;
     }
 
-//    public function getName(bool $withDataSet = true): string
-//    {
-//        if ($withDataSet) {
-//            return (string)  microtime(true) . $this->getDataSetAsString(false);
-//        }
-//
-//        return (string) microtime(true);
-//    }
+    /**
+     * @return void
+     */
+    public function doTest()
+    {
+        $this->assertValidationPassed([
+            'uri' => $this->request->getUri()->__toString(),
+            'method' => $this->request->getMethod(),
+            'headers' => $this->request->getHeaders(),
+            'body' => json_decode($this->request->getBody()->getContents(), true),
+        ], $this->script->rules);
+    }
+
+    /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->script->name;
+    }
 }

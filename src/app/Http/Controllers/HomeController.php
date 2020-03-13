@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Testing\RequestTestSuite;
-use App\Testing\Tests\ValidateRequestTest;
+use App\Models\TestStep;
+use App\Testing\Extensions\TestExecutionExtension;
 use App\Testing\TestSuiteLoader;
-use PHPUnit\Framework\TestResult;
-use PHPUnit\Framework\TestSuite;
+use App\Testing\TestRunner;
 use Psr\Http\Message\ServerRequestInterface;
 
 class HomeController extends Controller
@@ -24,20 +23,13 @@ class HomeController extends Controller
      */
     public function index(ServerRequestInterface $request)
     {
-        $suite = new TestSuite();
-        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
-        $requestSuite->setRequest($request);
-        $suite->addTestSuite($requestSuite);
-        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
-        $requestSuite->setRequest($request);
-        $suite->addTestSuite($requestSuite);
+        $loader = new TestSuiteLoader(TestStep::firstWhere('id', 6));
+        $runner = new TestRunner();
+        $runner->addExtension(new TestExecutionExtension());
 
-//        $loader = new TestSuiteLoader();
+        dd($runner->run($loader->loadRequestTests($request)));
 
-        $result = new TestResult();
-        $suite->run($result);
-
-        dd($result);
+//        dd($result);
 //
 //        dd($loader->load());
 //

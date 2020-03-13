@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Casts\RequestCast;
-use App\Casts\ResponsetCast;
+use App\Casts\ResponseCast;
 use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -41,7 +41,7 @@ class TestResult extends Model
      */
     protected $casts = [
         'request' => RequestCast::class,
-        'response' => ResponsetCast::class,
+        'response' => ResponseCast::class,
     ];
 
     protected $attributes = [

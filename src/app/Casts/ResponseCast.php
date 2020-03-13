@@ -6,7 +6,7 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Psr\Http\Message\ResponseInterface;
 
-class ResponsetCast implements CastsAttributes
+class ResponseCast implements CastsAttributes
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model $model

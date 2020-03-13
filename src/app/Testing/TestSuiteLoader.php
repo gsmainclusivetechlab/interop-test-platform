@@ -4,6 +4,7 @@ namespace App\Testing;
 
 use App\Models\TestStep;
 use App\Testing\Tests\ValidateRequestTest;
+use App\Testing\Tests\ValidateResponseTest;
 use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,18 +26,32 @@ class TestSuiteLoader
 
     /**
      * @param ServerRequestInterface $request
+     * @return TestSuite
+     */
+    public function loadRequestTests(ServerRequestInterface $request)
+    {
+        $suite = new TestSuite();
+        $scripts = $this->step->testRequestScripts;
+
+        foreach ($scripts as $script) {
+            $suite->addTest(new ValidateRequestTest($script, $request));
+        }
+
+        return $suite;
+    }
+
+    /**
      * @param ResponseInterface $response
      * @return TestSuite
      */
-    public function load(ServerRequestInterface $request, ResponseInterface $response)
+    public function loadResponseTests(ServerRequestInterface $response)
     {
         $suite = new TestSuite();
-        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
-        $requestSuite->setRequest($request);
-        $suite->addTestSuite($requestSuite);
-        $requestSuite = new RequestTestSuite(ValidateRequestTest::class);
-        $requestSuite->setRequest($request);
-        $suite->addTestSuite($requestSuite);
+        $scripts = $this->step->testResponseScripts;
+
+        foreach ($scripts as $script) {
+            $suite->addTest(new ValidateResponseTest($script, $response));
+        }
 
         return $suite;
     }

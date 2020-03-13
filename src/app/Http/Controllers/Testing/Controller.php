@@ -7,6 +7,9 @@ use App\Models\TestResult;
 use App\Models\TestRun;
 use App\Models\TestStep;
 use App\Testing\Constraints\ValidationPasses;
+use App\Testing\Extensions\TestExecutionExtension;
+use App\Testing\RequestTestSuiteLoader;
+use App\Testing\TestRunner;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
@@ -19,6 +22,12 @@ class Controller extends BaseController
 {
     protected function doTest(TestResult $testResult)
     {
+        $loader = new RequestTestSuiteLoader($testResult->testStep);
+        $runner = new TestRunner();
+        $runner->addExtension(new TestExecutionExtension());
+
+        dd($runner->run($loader->load($testResult->request)));
+
         dd($testResult);
 //        $result = $run->results()->make([
 //            'step_id' => $step->id,
