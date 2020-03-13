@@ -189,8 +189,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 1</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">POST</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-orange">POST</span>
                                                         /transactions
                                                     </a>
                                                 </li>
@@ -198,17 +197,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 2</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">DELETE</span>
-                                                        /transaction
-                                                    </a>
-                                                </li>
-                                                <li class="list-group-item-action d-flex align-items-baseline py-3 px-4">
-                                                    <a href="#"
-                                                        class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
-                                                        <b class="text-nowrap">Step: 3</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-mint">POST</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-red">DELETE</span>
                                                         /transaction
                                                     </a>
                                                 </li>
@@ -216,8 +205,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 4</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">PUT</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-blue">PUT</span>
                                                         /transaction
                                                     </a>
                                                 </li>
@@ -225,8 +213,7 @@
                                                     <a href="#"
                                                         class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
                                                         <b class="text-nowrap">Step: 5</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">PUT</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-mint">GET</span>
                                                         /quotes
                                                     </a>
                                                     <span class="flex-shrink-0 status-icon ml-auto mr-0 bg-danger"></span>
@@ -234,8 +221,7 @@
                                                 <li class="d-flex align-items-baseline py-3 px-4 text-black-50">
                                                     <span class="d-flex flex-wrap align-items-center">
                                                         <b class="text-nowrap">Step: 6</b>
-                                                        <span
-                                                            class="badge d-flex justify-content-center align-items-center mx-2 w-8 h-5 bg-orange">PUT</span>
+                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-gray">PUT</span>
                                                         /quotes
                                                     </span>
                                                 </li>
@@ -249,20 +235,21 @@
                                                 <span class="badge px-4 ml-3 py-2 bg-success">HTTP 200</span>
                                             </div>
 
-                                            <div class="lead alert-success p-4">
-                                                Success
-                                            </div>
-                                            <div class="lead alert-danger p-4">
-                                                <div class="dropdown-toggle" v-b-toggle.fail aria-expanded="true">
-                                                    Fail
-                                                </div>
-                                                <b-collapse visible id="fail">
-                                                    <div class="d-flex flex-column">
-                                                        <small>Expected result validation failed:</small>
-                                                        <small>- Status code should be 200</small>
-                                                        <small>- Body cannot be empty</small>
-                                                    </div>
-                                                </b-collapse>
+                                            <div class="lead p-4">
+                                                <ul class="m-0 p-0">
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
+                                                        <p class="small mb-0">Status test: pass</p>
+                                                    </li>
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-red">fail</span>
+                                                        <p class="small mb-0">Status test: fail | Assertion error</p>
+                                                    </li>
+                                                    <li class="d-flex align-items-center py-2">
+                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-mint">pass</span>
+                                                        <p class="small mb-0">Status test</p>
+                                                    </li>
+                                                </ul>
                                             </div>
 
                                             <div class="p-4">
