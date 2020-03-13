@@ -36,7 +36,7 @@ class ValidateResponseTest extends TestCase
         $this->assertValidationPassed([
             'status' => $this->response->getStatusCode(),
             'headers' => $this->response->getHeaders(),
-            'body' => json_decode($this->response->getBody()->getContents(), true),
+            'body' => json_decode($this->request->getBody()->__toString(), true),
         ], $this->script->rules);
     }
 

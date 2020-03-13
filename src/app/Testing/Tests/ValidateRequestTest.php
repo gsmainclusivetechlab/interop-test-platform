@@ -37,7 +37,7 @@ class ValidateRequestTest extends TestCase
             'uri' => $this->request->getUri()->__toString(),
             'method' => $this->request->getMethod(),
             'headers' => $this->request->getHeaders(),
-            'body' => json_decode($this->request->getBody()->getContents(), true),
+            'body' => json_decode($this->request->getBody()->__toString(), true),
         ], $this->script->rules);
     }
 
