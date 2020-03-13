@@ -37,8 +37,7 @@ class RunController extends Controller
             'test_case_id' => $testPlan->test_case_id,
         ]);
 
-        ProcessTimeoutTestRun::dispatch($testRun)
-            ->delay(now()->addMinutes(1));
+        ProcessTimeoutTestRun::dispatch($testRun)->delay(now()->addMinutes(1));
 
         try {
             $testStep = $testPlan->testSteps()->firstOrFail();
