@@ -78,6 +78,21 @@
             - name: POST /transactions
               source_id: Service Provider
               target_id: Mobile Money Operator 1
+              test_request_setups:
+                - name: Override request
+                  values:
+                    headers:
+                      x-test: aaa
+                    body:
+                      test.test2: 123
+              test_response_setups:
+                - name: Override response
+                  values:
+                    status: 500
+                    headers:
+                      x-test: aaa
+                    body:
+                      test.test2: 123
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:

@@ -7,7 +7,12 @@ use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\ProcessTimeoutTestRun;
 use App\Models\TestPlan;
 use App\Models\TestRun;
+use App\Testing\Middlewares\RequestMiddleware;
+use App\Testing\Middlewares\ResponseMiddleware;
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
@@ -48,7 +53,13 @@ class RunController extends Controller
             $request = $request->withUri($uri)
                 ->withMethod($request->getMethod())
                 ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
-            $response = (new Client(['http_errors' => false]))->send($request);
+
+            $stack = new HandlerStack();
+            $stack->setHandler(new CurlHandler());
+            $stack->push(new RequestMiddleware($testStep->testRequestSetups()->first()));
+//            $stack->push(new ResponseMiddleware($testStep->testResponseSetups()->first()));
+
+            $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
             $testResult = $testRun->testResults()->create([
                 'test_step_id' => $testStep->id,
                 'request' => $request,

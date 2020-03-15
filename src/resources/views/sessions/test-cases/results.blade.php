@@ -15,7 +15,7 @@
                                 <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}" class="text-decoration-none">
                                     <i class="fe fe-chevron-left"></i>
                                 </a>
-                                {{ $testRun->uuid }} ({{ $testCase->name }})
+                                {{ $testRun->uuid }}
                             </h3>
                             <div class="card-options">
 {{--                                @if ($run->pass_results_count)--}}
@@ -139,8 +139,7 @@
                                                             {{ $testExecution->status_label }}
                                                         </span>
                                                         <p class="small mb-0">
-                                                            {{ $testExecution->name }}
-                                                            @if ($testExecution->exception): {{ $testExecution->exception }}@endif
+                                                            {{ $testExecution->name }}@if ($testExecution->exception): {{ $testExecution->exception }}@endif
                                                         </p>
                                                     </li>
                                                 @endforeach
@@ -245,7 +244,7 @@
                                                             <strong>{{ __('Body') }}</strong>
                                                         </div>
                                                         <div class="w-75 px-4 py-2 border">
-                                                            {{ __('(:n) params', ['n' => count(json_decode($request->getBody()->__toString(), true))]) }}
+                                                            {{ __('(:n) params', ['n' => count(json_decode($response->getBody()->__toString(), true))]) }}
                                                         </div>
                                                     </div>
                                                     <b-collapse id="response-body-{{ $testResult->id }}">
@@ -253,7 +252,7 @@
                                                             <div class="w-25 px-4 py-2 border"></div>
                                                             <div class="w-75 px-4 py-2 border">
                                                                 <div class="mb-0 p-0 bg-transparent json-tree">
-                                                                    <code v-pre class="json-tree-code">@json(json_decode($request->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
+                                                                    <code v-pre class="json-tree-code">@json(json_decode($response->getBody()->__toString(), true), JSON_PRETTY_PRINT)</code>
                                                                 </div>
                                                             </div>
                                                         </div>
