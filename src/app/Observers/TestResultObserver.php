@@ -12,9 +12,7 @@ class TestResultObserver
      */
     public function passed(TestResult $result)
     {
-        if ($result->testRun->testResults()->count() >= $result->testRun->testSteps()->count()) {
-            $result->testRun->passed();
-        }
+
     }
 
     /**
@@ -23,6 +21,6 @@ class TestResultObserver
      */
     public function failure(TestResult $result)
     {
-        $result->testRun->failure();
+
     }
 }

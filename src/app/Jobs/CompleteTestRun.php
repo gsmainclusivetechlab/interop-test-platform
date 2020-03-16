@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProcessTimeoutTestRun implements ShouldQueue
+class CompleteTestRun implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,9 +31,10 @@ class ProcessTimeoutTestRun implements ShouldQueue
      */
     public function handle()
     {
-        if (!$this->run->isCompleted()) {
-            $this->run->complete();
-//            $this->run->failure(__('Timeout expired'));
+        if ($this->run->passedTestResults()->count() >= $this->run->testSteps()->count()) {
+            $this->run->passed();
+        } else {
+            $this->run->failure();
         }
     }
 }

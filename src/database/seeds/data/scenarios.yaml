@@ -377,7 +377,7 @@
             #                    body.creditParty.*.value: 'in:+33555789123'
             #                - name: Amount and currency are specified correctly
             #                  rules:
-            #                    body.amount: 'regex:/ˆ([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+            #                    body.amount: 'regex:/Ë†([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
             #                    body.currency: 'regex:/^[A-Z]{3}/'
             #                - name: Transaction is a Merchant Payment
             #                  rules:
@@ -432,48 +432,40 @@
         - name: Authorized Transaction (only reponse validation)
           behavior: positive
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction simulating an approved transaction.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
             Payee and Payer exist in Mojaloop as Parties.
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"100.00",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '100.00'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
               target_id: Mobile Money Operator 1
               test_response_scripts:
-                - name: Transaction was succeful acepted
+                - name: Transaction was successfully accepted
                   rules:
                     status: 'in:202'
             - name: POST /transactionRequests
@@ -570,30 +562,27 @@
         - name: Overriding Example
           behavior: positive
           description: |
-            **Description**
-
             Send data from example below and see that amount, currency and both msisdns are different from what you sent.
-
-
-            **Test data headers**
-
-            {
-                  "Accept": "application/json",
-                  "Content-Type": "application/json",
-                  "X-Callback-URL": "http://example.com/example",
-                  "X-Date": "2020-02-20T10:28:44.466Z"
-            }
-
-
-            **Test data body**
-
-            {
-                  "amount":"100.00",
-                  "currency":"USD",
-                  "type":"merchantpay",
-                  "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                  "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-            }
+          precondition: |
+            N/A
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '100.00'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -603,7 +592,7 @@
                   rules:
                     headers.X-Callback-URL: 'regex:/.*/'
               test_response_scripts:
-                - name: Transaction was succeful acepted
+                - name: Transaction was successfully accepted
                   rules:
                     status: 'in:202'
               test_request_setups:
@@ -621,42 +610,35 @@
         - name: Transaction Request Rejected by Payer FSP
           behavior: positive
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction, simulating an rejection by the Payer.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
             Payee and Payer exist in Mojaloop as Parties.
+            Amount should be the value "15.15".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"15.15",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '15.15'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -803,15 +785,10 @@
         - name: Decline Transaction Error 400
           behavior: negative
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction, simulating a 400 Error.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -819,27 +796,24 @@
             Amount should be the value "4.00".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"4.00",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '4.00'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -872,15 +846,10 @@
         - name: Decline Transaction Error 401
           behavior: negative
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction, simulating a 401 Error.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -888,27 +857,24 @@
             Amount should be the value "4.01".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"4.01",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '4.01'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -941,15 +907,10 @@
         - name: Decline Transaction Error 404
           behavior: negative
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction, simulating a 404 Error.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -957,27 +918,24 @@
             Amount should be the value "4.04".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"4.04",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '4.04'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -1010,15 +968,10 @@
         - name: Decline Transaction Error 500
           behavior: negative
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction, simulating a 500 Error.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -1026,27 +979,24 @@
             Amount should be the value "5.00".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"5.00",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '5.00'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -1079,15 +1029,10 @@
         - name: Decline Transaction Error 503
           behavior: negative
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction, simulating a 503 Error.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -1095,27 +1040,24 @@
             Amount should be the value "5.03".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"5.03",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '5.03'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -1148,15 +1090,10 @@
         - name: Rejected Transaction
           behavior: positive
           description: |
-            **Description**
-
-            The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
+            The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction simulating an rejected transaction after the quote by the Payer.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -1164,27 +1101,24 @@
             Amount should be the value "10.10".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"10.10",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '10.10'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
@@ -1207,7 +1141,7 @@
                   rules:
                     body.type: 'in:merchantpay'
               test_response_scripts:
-                - name: Transaction was succeful acepted
+                - name: Transaction was successfully accepted
                   rules:
                     status: 'in:202'
                 - name: Server Correlation Id is specified correctly
@@ -1469,15 +1403,10 @@
         - name: Quote Rejected by MMO1
           behavior: positive
           description: |
-            **Description**
-
-            The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
+            The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction simulating an rejected quote by MMO1.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -1485,27 +1414,24 @@
             Amount should be the value "51.03".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"51.03",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '51.03'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
