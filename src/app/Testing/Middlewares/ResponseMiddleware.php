@@ -38,7 +38,7 @@ class ResponseMiddleware
 
     protected function modifyResponse(ResponseInterface $response)
     {
-        $response->withStatus(Arr::get($this->setup->values, 'status', $response->getStatusCode()));
+        $response = $response->withStatus(Arr::get($this->setup->values, 'status', $response->getStatusCode()));
         $contents = json_decode($response->getBody()->__toString(), true);
 
         foreach (Arr::get($this->setup->values, 'body', []) as $key => $value) {
