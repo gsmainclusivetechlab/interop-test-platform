@@ -124,26 +124,26 @@
                                                     @switch($stepResult->request->getMethod())
                                                         @case('POST')
                                                         <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-orange">
-                                                                    {{ $stepResult->request->getMethod() }}
-                                                                </span>
+                                                            {{ $stepResult->request->getMethod() }}
+                                                        </span>
                                                         @break
 
                                                         @case('PUT')
                                                         <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-blue">
-                                                                    {{ $stepResult->request->getMethod() }}
-                                                                </span>
+                                                            {{ $stepResult->request->getMethod() }}
+                                                        </span>
                                                         @break
 
                                                         @case('DELETE')
                                                         <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-red">
-                                                                    {{ $stepResult->request->getMethod() }}
-                                                                </span>
+                                                            {{ $stepResult->request->getMethod() }}
+                                                        </span>
                                                         @break
 
                                                         @default
                                                         <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-mint">
-                                                                    {{ $stepResult->request->getMethod() }}
-                                                                </span>
+                                                            {{ $stepResult->request->getMethod() }}
+                                                        </span>
                                                     @endswitch
                                                     {{ $stepResult->request->getUri()->getPath() }}
                                                 </a>

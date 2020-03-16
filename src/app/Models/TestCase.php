@@ -43,6 +43,16 @@ class TestCase extends Model
         return $this->hasMany(TestStep::class, 'test_case_id');
     }
 
+    public function testRuns()
+    {
+        return $this->hasMany(TestRun::class, 'test_case_id');
+    }
+
+    public function lastTestRun()
+    {
+        return $this->hasOne(TestRun::class, 'test_case_id')->completed();
+    }
+
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder

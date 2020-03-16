@@ -24,35 +24,7 @@
                                             <h3 class="card-title">@yield('title')</h3>
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group">
-                                                <h5>
-                                                    {{ __('Service Provider') }} > {{ __('Mobile Money Operator 1') }}
-                                                </h5>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">
-                                                    {{ __('URL') }}
-                                                </label>
-                                                <input type="text" disabled class="form-control" value="https://sandbox.mobilemoneyapi.io/v1.0/passthrough/mm">
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">
-                                                    {{ __('Key') }}
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
-                                            <hr>
-                                            <div class="form-group">
-                                                <h5>
-                                                    {{ __('Mobile Money Operator 1') }} < {{ __('Service Provider') }}
-                                                </h5>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">
-                                                    {{ __('Key') }}
-                                                </label>
-                                                <input type="text" class="form-control">
-                                            </div>
+                                            {{ __('No configuration needed') }}
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between">
