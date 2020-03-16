@@ -203,13 +203,24 @@ class TestRun extends Model
         return $this->completed_at != null;
     }
 
+    public function complete()
+    {
+        $this->completed_at = now();
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @return bool
      */
     public function passed()
     {
         $this->status = static::STATUS_PASSED;
-        $this->completed_at = now();
+//        $this->completed_at = now();
 
         if (!$this->save()) {
             return false;
@@ -227,7 +238,7 @@ class TestRun extends Model
     {
         $this->status = static::STATUS_FAILURE;
         $this->exception = $exception;
-        $this->completed_at = now();
+//        $this->completed_at = now();
 
         if (!$this->save()) {
             return false;

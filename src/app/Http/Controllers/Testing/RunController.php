@@ -42,7 +42,7 @@ class RunController extends Controller
             'test_case_id' => $testPlan->test_case_id,
         ]);
 
-        ProcessTimeoutTestRun::dispatch($testRun)->delay(now()->addMinutes(1));
+        ProcessTimeoutTestRun::dispatch($testRun)->delay(now()->addSeconds(5));
 
         try {
             $testStep = $testPlan->testSteps()->firstOrFail();
@@ -56,8 +56,14 @@ class RunController extends Controller
 
             $stack = new HandlerStack();
             $stack->setHandler(new CurlHandler());
-            $stack->push(new RequestMiddleware($testStep->testRequestSetups()->first()));
-//            $stack->push(new ResponseMiddleware($testStep->testResponseSetups()->first()));
+
+            foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
+                $stack->push(new RequestMiddleware($testRequestSetup));
+            }
+
+            foreach ($testStep->testResponseSetup()->get() as $testResponseSetup) {
+                $stack->push(new ResponseMiddleware($testResponseSetup));
+            }
 
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
             $testResult = $testRun->testResults()->create([

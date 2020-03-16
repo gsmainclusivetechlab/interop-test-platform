@@ -38,61 +38,38 @@
         - name: Authorized Transaction
           behavior: positive
           description: |
-            **Description**
-
             The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
             In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
             This flow shows the necessary steps for this transaction simulating an approved transaction.
-
-
-            **Pre-conditions**
-
+          precondition: |
             Service Provider has GSMA Mobile Money API Implemented.
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
             Payee and Payer exist in Mojaloop as Parties.
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
-
-
-            **Test data headers**
-
-              {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "X-Callback-URL": "http://example.com/example",
-                    "X-Date": "2020-02-20T10:28:44.466Z"
-              }
-
-
-            **Test data body**
-
-              {
-                    "amount":"100.00",
-                    "currency":"USD",
-                    "type":"merchantpay",
-                    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
-                    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
-              }
+          test_data_example:
+            uri: /transactions
+            method: POST
+            headers:
+              accept: 'application/json'
+              content-type: 'application/json'
+              x-callback-url: 'http://example.com/example'
+              x-date: '2020-02-20T10:28:44.466Z'
+            body:
+              amount: '100.00'
+              currency: 'USD'
+              type: 'merchantpay'
+              debitParty:
+                key: "msisdn"
+                value: "+33555123456"
+              creditParty:
+                key: "msisdn"
+                value: "+33555789123"
           test_steps:
             - name: POST /transactions
               source_id: Service Provider
               target_id: Mobile Money Operator 1
-              test_request_setups:
-                - name: Override request
-                  values:
-                    headers:
-                      x-test: aaa
-                    body:
-                      test.test2: 123
-              test_response_setups:
-                - name: Override response
-                  values:
-                    status: 500
-                    headers:
-                      x-test: aaa
-                    body:
-                      test.test2: 123
               test_request_scripts:
                 - name: Header has the Url Callback
                   rules:
@@ -629,19 +606,18 @@
                 - name: Transaction was succeful acepted
                   rules:
                     status: 'in:202'
-              test_request_prescripts:
+              test_request_setups:
                 - name: Override amount, currency and both msisdns
                   values:
                     body:
                       amount: '77.77'
                       currency: 'GBP'
-                      debitParty:
-                        value: '11111111'
-                      creditParty:
-                        value: '22222222'
-              test_response_prescripts:
+                      debitParty.value: '11111111'
+                      creditParty.value: '22222222'
+              test_response_setups:
                 - name: Override response status
-                  status_code: 500
+                  values:
+                    status: 500
         - name: Transaction Request Rejected by Payer FSP
           behavior: positive
           description: |
