@@ -6,7 +6,9 @@ use App\Models\ComponentPath;
 use App\Models\Scenario;
 use App\Models\TestCase;
 use App\Models\TestRequestScript;
+use App\Models\TestRequestSetup;
 use App\Models\TestResponseScript;
+use App\Models\TestResponseSetup;
 use App\Models\TestStep;
 use App\Models\UseCase;
 use Illuminate\Database\Seeder;
@@ -57,6 +59,15 @@ class ScenariosTableSeeder extends Seeder
                                 ]);
                             }))
                             ->each(function (TestStep $testStep, $key) use ($testStepsData) {
+                                $testStep->testRequestSetups()
+                                    ->createMany(collect(Arr::get($testStepsData, "{$key}.test_request_setups", []))->map(function ($item) {
+                                        return Arr::only($item, TestRequestSetup::make()->getFillable());
+                                    }));
+                                $testStep->testResponseSetups()
+                                    ->createMany(collect(Arr::get($testStepsData, "{$key}.test_response_setups", []))->map(function ($item) {
+                                        return Arr::only($item, TestResponseSetup::make()->getFillable());
+                                    }));
+
                                 $testStep->testRequestScripts()
                                     ->createMany(collect(Arr::get($testStepsData, "{$key}.test_request_scripts", []))->map(function ($item) {
                                         return Arr::only($item, TestRequestScript::make()->getFillable());

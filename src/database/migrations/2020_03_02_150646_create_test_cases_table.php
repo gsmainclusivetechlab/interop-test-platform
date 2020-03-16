@@ -20,6 +20,7 @@ class CreateTestCasesTable extends Migration
             $table->string('name');
             $table->string('behavior');
             $table->text('description')->nullable();
+            $table->text('precondition')->nullable();
             $table->timestamps();
         });
     }
