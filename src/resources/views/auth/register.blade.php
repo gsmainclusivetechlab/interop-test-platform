@@ -61,6 +61,15 @@
                 @enderror
             </div>
             <div class="form-group">
+                <label class="form-label">{{ __('Code') }}</label>
+                <input name="code" value="{{ old('code') }}" type="text" class="form-control @error('code') is-invalid @enderror" placeholder="{{ __('e.g., :value', ['value' => 'CODE']) }}">
+                @error('code')
+                    <span class="invalid-feedback">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            <div class="form-group">
                 <label class="custom-control custom-checkbox @error('terms') is-invalid @enderror">
                     <input name="terms" type="checkbox" class="custom-control-input"  {{ old('terms') ? 'checked' : '' }}>
                     <span class="custom-control-label">

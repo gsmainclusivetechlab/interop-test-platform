@@ -1222,7 +1222,7 @@
                     status: 'in:200'
             - name: PUT /transactionRequests/{ID}
               source_id: Mojaloop
-              target_id: Mobile Money Operator 2
+              target_id: Mobile Money Operator 1
               test_request_scripts:
                 - name: ID is Valid
                   rules:
