@@ -95,7 +95,7 @@
                         <flow-chart>
                             graph LR;
                             @foreach($session->scenario->components as $component)
-                                {{ $component->id }}({{$component->name}})@if($component->is($testResult->testStep->source)):::is-active @endif;
+                                {{ $component->id }}({{$component->name}})@if($component->name == 'Service Provider'):::is-active @endif;
                                 @foreach ($component->paths as $connection)
                                     {{ $component->id }}
                                     @if($connection->pivot->simulated) --> @else -.-> @endif
