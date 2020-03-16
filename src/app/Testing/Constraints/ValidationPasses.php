@@ -52,7 +52,16 @@ class ValidationPasses extends Constraint
      */
     public function failureDescription($data): string
     {
-        return $this->toString() . ' (' . implode(PHP_EOL, $this->errors) . ')';
+        return $this->toString();
+    }
+
+    /**
+     * @param mixed $other
+     * @return string
+     */
+    protected function additionalFailureDescription($other): string
+    {
+        return implode(PHP_EOL, $this->errors);
     }
 
     /**

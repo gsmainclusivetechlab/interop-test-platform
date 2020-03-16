@@ -5,8 +5,14 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
-use App\Models\Specification;
+use App\Models\ApiService;
 use App\Models\TestRun;
+use App\Testing\Middlewares\RequestMiddleware;
+use App\Testing\Middlewares\ResponseMiddleware;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
@@ -25,27 +31,57 @@ class TestController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param Specification $specification
+     * @param ApiService $specification
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, Specification $specification, string $path)
+    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $path)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
-        $run = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
+        $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
+            ->whereNull('completed_at')
             ->firstOrFail();
-        $step = $run->steps()
-            ->whereRaw('? like path', $path)
-            ->where('method', $request->getMethod())
-            ->whereHas('platform', function ($query) use ($specification) {
-                $query->where('specification_id', $specification->id);
+        $testStep = $testRun->testSteps()
+            ->whereHas('target', function ($query) use ($apiService) {
+                $query->where('api_service_id', $apiService->id);
             })
+            ->offset($testRun->testResults()
+                ->whereHas('testStep', function ($query) use ($apiService) {
+                    $query->whereHas('target', function ($query) use ($apiService) {
+                        $query->where('api_service_id', $apiService->id);
+                    });
+                })->count())
             ->firstOrFail();
 
-        $uri = (new Uri($step->platform->server))
-            ->withPath($path);
+        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
         $request = $request->withUri($uri);
 
-        return $this->doTest($request, $run, $step);
+        $stack = new HandlerStack();
+        $stack->setHandler(new CurlHandler());
+
+        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
+            $stack->push(new RequestMiddleware($testRequestSetup));
+        }
+
+        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
+            $stack->push(new ResponseMiddleware($testResponseSetup));
+        }
+
+        $testResult = $testRun->testResults()->create([
+            'test_step_id' => $testStep->id,
+            'request' => $request,
+        ]);
+
+        try {
+            $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
+            $testResult->update([
+                'response' => $response,
+            ]);
+
+            return $this->doTest($testResult);
+        } catch (RequestException $e) {
+            $testResult->failure($e->getMessage());
+            return $e;
+        }
     }
 }

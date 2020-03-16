@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestCase extends Model
 {
@@ -24,23 +23,34 @@ class TestCase extends Model
     protected $fillable = [
         'name',
         'description',
+        'precondition',
         'behavior',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function steps()
+    public function useCase()
     {
-        return $this->hasMany(TestStep::class, 'case_id');
+        return $this->belongsTo(UseCase::class, 'use_case_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function suite()
+    public function testSteps()
     {
-        return $this->belongsTo(TestSuite::class, 'suite_id');
+        return $this->hasMany(TestStep::class, 'test_case_id');
+    }
+
+    public function testRuns()
+    {
+        return $this->hasMany(TestRun::class, 'test_case_id');
+    }
+
+    public function lastTestRun()
+    {
+        return $this->hasOne(TestRun::class, 'test_case_id')->completed();
     }
 
     /**

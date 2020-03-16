@@ -2,21 +2,17 @@
 
 namespace App\Providers;
 
-use App\Mixins\PsrHttpRequestMixin;
-use App\Mixins\PsrHttpResponseMixin;
+use App\Models\TestExecution;
 use App\Models\TestResult;
 use App\Models\TestRun;
+use App\Observers\TestExecutionObserver;
 use App\Observers\TestResultObserver;
 use App\Observers\TestRunObserver;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
-     *
      * @return void
      */
     public function register()
@@ -25,23 +21,20 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
-     *
      * @return void
      */
     public function boot()
     {
-        $this->registerMixins();
-        TestRun::observe(TestRunObserver::class);
-        TestResult::observe(TestResultObserver::class);
+        $this->registerObservers();
     }
 
     /**
      * @return void
      */
-    protected function registerMixins()
+    protected function registerObservers()
     {
-        Request::mixin(new PsrHttpRequestMixin);
-        Response::mixin(new PsrHttpResponseMixin());
+        TestRun::observe(TestRunObserver::class);
+        TestResult::observe(TestResultObserver::class);
+        TestExecution::observe(TestExecutionObserver::class);
     }
 }

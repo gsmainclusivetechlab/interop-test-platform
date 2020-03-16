@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
-use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin Eloquent
+ * @mixin \Eloquent
  */
 class TestStep extends Model
 {
@@ -22,34 +21,16 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
-        'path',
-        'method',
-        'expected_request',
-        'expected_response',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'expected_request' => 'array',
-        'expected_response' => 'array',
+        'name',
+        'description',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function case()
+    public function testCase()
     {
-        return $this->belongsTo(TestCase::class, 'case_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function platform()
-    {
-        return $this->belongsTo(TestPlatform::class, 'target_id');
+        return $this->belongsTo(TestCase::class, 'test_case_id');
     }
 
     /**
@@ -57,7 +38,7 @@ class TestStep extends Model
      */
     public function source()
     {
-        return $this->belongsTo(TestComponent::class, 'source_id');
+        return $this->belongsTo(Component::class, 'source_id');
     }
 
     /**
@@ -65,7 +46,47 @@ class TestStep extends Model
      */
     public function target()
     {
-        return $this->belongsTo(TestComponent::class, 'target_id');
+        return $this->belongsTo(Component::class, 'target_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function targetApiService()
+    {
+        return $this->hasOneThrough(ApiService::class, Component::class, 'id', 'id', 'target_id', 'api_service_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testRequestScripts()
+    {
+        return $this->hasMany(TestRequestScript::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResponseScripts()
+    {
+        return $this->hasMany(TestResponseScript::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testRequestSetups()
+    {
+        return $this->hasMany(TestRequestSetup::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResponseSetups()
+    {
+        return $this->hasMany(TestResponseSetup::class, 'test_step_id');
     }
 
     /**
@@ -73,6 +94,6 @@ class TestStep extends Model
      */
     public function getPositionGroupColumn()
     {
-        return ['case_id'];
+        return ['test_case_id'];
     }
 }

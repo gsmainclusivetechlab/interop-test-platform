@@ -1,9 +1,9 @@
 @if(session('success'))
-    <notification :options="{text: '{{ session('success') }}', type: 'success'}"></notification>
+    <notification :options='@json(['text' => session('success'), 'type' => 'success'])'></notification>
 @elseif(session('danger'))
-    <notification :options="{text: '{{ session('danger') }}', type: 'danger'}"></notification>
+    <notification :options='@json(['text' => session('danger'), 'type' => 'danger'])'></notification>
 @elseif(session('warning'))
-    <notification :options="{text: '{{ session('warning') }}', type: 'warning'}"></notification>
+    <notification :options='@json(['text' => session('warning'), 'type' => 'warning'])'></notification>
 @elseif(session('info'))
-    <notification :options="{text: '{{ session('info') }}', type: 'info'}"></notification>
+    <notification :options='@json(['text' => session('info'), 'type' => 'info'])'></notification>
 @endif

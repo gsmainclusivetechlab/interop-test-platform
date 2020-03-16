@@ -45,26 +45,26 @@
                             </div>
                             <div class="card-body pl-0">
                                 <ul class="list-group overflow-auto" style="height: 320px">
-                                    @foreach($suites as $suite)
+                                    @foreach($useCases as $useCase)
                                         <li class="list-group-item">
-                                            <b class="dropdown-toggle" v-b-toggle.suite-{{ $suite->id }}>
-                                                {{ $suite->name }}
+                                            <b class="dropdown-toggle" v-b-toggle.use-case-{{ $useCase->id }}>
+                                                {{ $useCase->name }}
                                             </b>
-                                            @if ($suite->positiveCases->count())
-                                                <b-collapse id="suite-{{ $suite->id }}" visible>
+                                            @if ($useCase->positiveTestCases->count())
+                                                <b-collapse id="use-case-{{ $useCase->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-cases-{{ $suite->id }}>
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-test-cases-{{ $useCase->id }}>
                                                                 {{ __('Happy flow') }}
                                                             </span>
-                                                            <b-collapse id="positive-cases-{{ $suite->id }}" visible>
+                                                            <b-collapse id="positive-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-group">
-                                                                    @foreach($suite->positiveCases as $case)
+                                                                    @foreach($useCase->positiveTestCases as $testCase)
                                                                         <li class="list-group-item">
                                                                             <label class="custom-control custom-checkbox mb-0">
-                                                                                <input name="cases[{{ $case->id }}]" value="{{ $case->id }}" type="checkbox" class="custom-control-input" {{ old("cases.{$case->id}") ? 'checked' : '' }}>
+                                                                                <input name="test_cases[{{ $testCase->id }}]" value="{{ $testCase->id }}" type="checkbox" class="custom-control-input" {{ old("test_cases.{$testCase->id}") ? 'checked' : '' }}>
                                                                                 <span class="custom-control-label">
-                                                                                    {{ $case->name }}
+                                                                                    {{ $testCase->name }}
                                                                                 </span>
                                                                             </label>
                                                                         </li>
@@ -76,21 +76,21 @@
                                                 </b-collapse>
                                             @endif
 
-                                            @if ($suite->negativeCases->count())
-                                                <b-collapse id="suite-{{ $suite->id }}" visible>
+                                            @if ($useCase->negativeTestCases->count())
+                                                <b-collapse id="use-case-{{ $useCase->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-cases-{{ $suite->id }}>
+                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-test-cases-{{ $useCase->id }}>
                                                                 {{ __('Unhappy flow') }}
                                                             </span>
-                                                            <b-collapse id="negative-cases-{{ $suite->id }}" visible>
+                                                            <b-collapse id="negative-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-group">
-                                                                    @foreach($suite->negativeCases as $case)
+                                                                    @foreach($useCase->negativeTestCases as $testCase)
                                                                         <li class="list-group-item">
                                                                             <label class="custom-control custom-checkbox mb-0">
-                                                                                <input name="cases[{{ $case->id }}]" value="{{ $case->id }}" type="checkbox" class="custom-control-input" {{ old("cases.{$case->id}") ? 'checked' : '' }}>
+                                                                                <input name="test_cases[{{ $testCase->id }}]" value="{{ $testCase->id }}" type="checkbox" class="custom-control-input" {{ old("test_cases.{$testCase->id}") ? 'checked' : '' }}>
                                                                                 <span class="custom-control-label">
-                                                                                    {{ $case->name }}
+                                                                                    {{ $testCase->name }}
                                                                                 </span>
                                                                             </label>
                                                                         </li>
@@ -104,7 +104,7 @@
                                         </li>
                                     @endforeach
                                 </ul>
-                                @error('cases')
+                                @error('test_cases')
                                     <div class="text-danger small mt-3">
                                         <strong>{{ $message }}</strong>
                                     </div>

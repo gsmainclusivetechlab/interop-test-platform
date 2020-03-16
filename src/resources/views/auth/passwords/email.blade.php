@@ -3,7 +3,7 @@
 @section('title', __('Forgot password'))
 @section('content')
     @if (session('status'))
-        <b-alert show variant="success" dismissible>{{ session('status') }}</b-alert>
+        <notification :options='@json(['text' => session('status'), 'type' => 'success'])'></notification>
     @endif
     <form class="card" action="{{ route('password.email') }}" method="POST">
         @csrf

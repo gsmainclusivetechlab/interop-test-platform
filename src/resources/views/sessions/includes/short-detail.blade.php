@@ -53,11 +53,11 @@
         <ul class="list-unstyled">
             <li>
                 <i class="fe fe-briefcase"></i>
-                {{ $session->cases->unique('suite_id')->count() }}
+                {{ $session->testCases->unique('use_case_id')->count() }}
             </li>
             <li>
                 <i class="fe fe-file-text"></i>
-                {{ $session->cases->count() }}
+                {{ $session->testCases->count() }}
             </li>
             @if($session->lastRun)
                 <li>

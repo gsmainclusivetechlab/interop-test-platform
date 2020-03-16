@@ -4,9 +4,15 @@ namespace App\Http\Controllers\Testing;
 
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
-use App\Jobs\ProcessTimeoutTestRun;
+use App\Jobs\CompleteTestRun;
 use App\Models\TestPlan;
 use App\Models\TestRun;
+use App\Testing\Middlewares\RequestMiddleware;
+use App\Testing\Middlewares\ResponseMiddleware;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
@@ -26,28 +32,53 @@ class RunController extends Controller
     /**
      * @param ServerRequestInterface $request
      * @param TestPlan $plan
+     * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $plan)
+    public function __invoke(ServerRequestInterface $request, TestPlan $testPlan, string $path)
     {
-        $step = $plan->steps()->firstOrFail();
-        $run = TestRun::create([
-            'case_id' => $plan->case_id,
-            'session_id' => $plan->session_id,
+        $testRun = TestRun::create([
+            'session_id' => $testPlan->session_id,
+            'test_case_id' => $testPlan->test_case_id,
         ]);
+        $testStep = $testPlan->testSteps()->firstOrFail();
 
-        ProcessTimeoutTestRun::dispatch($run)
-            ->delay(now()->addMinutes(1));
+        CompleteTestRun::dispatch($testRun)->delay(now()->addSeconds(5));
 
-        $uri = (new Uri($step->platform->server))
-            ->withPath($step->path);
+        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
         $traceparent = (new TraceparentHeader())
-            ->withTraceId($run->trace_id)
+            ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withUri($uri)
-            ->withMethod($step->method)
+            ->withMethod($request->getMethod())
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
-        return $this->doTest($request, $run, $step);
+        $stack = new HandlerStack();
+        $stack->setHandler(new CurlHandler());
+
+        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
+            $stack->push(new RequestMiddleware($testRequestSetup));
+        }
+
+        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
+            $stack->push(new ResponseMiddleware($testResponseSetup));
+        }
+
+        $testResult = $testRun->testResults()->create([
+            'test_step_id' => $testStep->id,
+            'request' => $request,
+        ]);
+
+        try {
+            $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
+            $testResult->update([
+                'response' => $response,
+            ]);
+
+            return $this->doTest($testResult);
+        } catch (RequestException $e) {
+            $testResult->failure($e->getMessage());
+            return $e;
+        }
     }
 }
