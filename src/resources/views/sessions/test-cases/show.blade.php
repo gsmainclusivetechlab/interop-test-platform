@@ -99,6 +99,7 @@
                     @include('components.grid.pagination', ['paginator' => $testRuns])
                 </div>
             </div>
+            @include('sessions.includes.test-case-flow-chart', $testCase)
         </div>
     </div>
 @endsection

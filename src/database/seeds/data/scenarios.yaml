@@ -57,7 +57,7 @@
               x-callback-url: 'http://example.com/example'
               x-date: '2020-02-20T10:28:44.466Z'
             body:
-              amount: '100.00'
+              amount: '100'
               currency: 'USD'
               type: 'merchantpay'
               debitParty:
@@ -451,7 +451,7 @@
               x-callback-url: 'http://example.com/example'
               x-date: '2020-02-20T10:28:44.466Z'
             body:
-              amount: '100.00'
+              amount: '100'
               currency: 'USD'
               type: 'merchantpay'
               debitParty:
@@ -574,7 +574,7 @@
               x-callback-url: 'http://example.com/example'
               x-date: '2020-02-20T10:28:44.466Z'
             body:
-              amount: '100.00'
+              amount: '100'
               currency: 'USD'
               type: 'merchantpay'
               debitParty:
@@ -601,8 +601,8 @@
                     body:
                       amount: '77.77'
                       currency: 'GBP'
-                      debitParty.value: '11111111'
-                      creditParty.value: '22222222'
+                      debitParty.0.value: '11111111'
+                      creditParty.0.value: '22222222'
               test_response_setups:
                 - name: Override response status
                   values:
@@ -805,7 +805,7 @@
               x-callback-url: 'http://example.com/example'
               x-date: '2020-02-20T10:28:44.466Z'
             body:
-              amount: '4.00'
+              amount: '4'
               currency: 'USD'
               type: 'merchantpay'
               debitParty:
@@ -988,7 +988,7 @@
               x-callback-url: 'http://example.com/example'
               x-date: '2020-02-20T10:28:44.466Z'
             body:
-              amount: '5.00'
+              amount: '5'
               currency: 'USD'
               type: 'merchantpay'
               debitParty:
@@ -1013,7 +1013,7 @@
                     body.creditParty.*.value: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount: 'in:5.00'
+                    body.amount: 'in:5'
                     body.currency: 'regex:/^[A-Z]{3}/'
                 - name: Transaction is a Merchant Payment
                   rules:
@@ -1110,7 +1110,7 @@
               x-callback-url: 'http://example.com/example'
               x-date: '2020-02-20T10:28:44.466Z'
             body:
-              amount: '10.10'
+              amount: '10.1'
               currency: 'USD'
               type: 'merchantpay'
               debitParty:
@@ -1135,7 +1135,7 @@
                     body.creditParty.*.value: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount: 'in:10.10'
+                    body.amount: 'in:10.1'
                     body.currency: 'regex:/^[A-Z]{3}/'
                 - name: Transaction is a Merchant Payment
                   rules:
@@ -1173,7 +1173,7 @@
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'in:10.10'
+                    body.amount.amount: 'in:10.1'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -1199,7 +1199,7 @@
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'in:10.10'
+                    body.amount.amount: 'in:10.1'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -1259,7 +1259,7 @@
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'in:10.10'
+                    body.amount.amount: 'in:10.1'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -1289,7 +1289,7 @@
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'in:10.10'
+                    body.amount.amount: 'in:10.1'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -1304,7 +1304,7 @@
                     uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.transferAmount.amount: 'in:10.10'
+                    body.transferAmount.amount: 'in:10.1'
                     body.transferAmount.currency: 'regex:/^[A-Z]{3}/'
                 - name: Expiration is specified correctly
                   rules:
@@ -1328,7 +1328,7 @@
                     uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.transferAmount.amount: 'in:10.10'
+                    body.transferAmount.amount: 'in:10.1'
                     body.transferAmount.currency: 'regex:/^[A-Z]{3}/'
                 - name: Expiration is specified correctly
                   rules:
@@ -1388,7 +1388,7 @@
             #         body.creditParty.*.value: 'in:+33555789123'
             #     - name: Amount and currency are specified correctly
             #       rules:
-            #         body.amount: 'in:10.10'
+            #         body.amount: 'in:10.1'
             #         body.currency: 'regex:/^[A-Z]{3}/'
             #     - name: Transaction is a Merchant Payment
             #       rules:
