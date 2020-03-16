@@ -1,4 +1,11 @@
 <b-progress class="w-100 h-3 rounded-0 progress">
-    <b-progress-bar :value={{ $session->test_runs_count ? $session->passed_test_runs_count / $session->test_runs_count * 100 : 0 }} variant="success" v-b-tooltip.hover title="{{ __(':n Pass', ['n' => $session->passed_test_runs_count]) }}"></b-progress-bar>
-    <b-progress-bar :value={{ $session->test_runs_count ? $session->failure_test_runs_count / $session->test_runs_count * 100 : 0 }} variant="danger" v-b-tooltip.hover title="{{ __(':n Fail', ['n' => $session->failure_test_runs_count]) }}"></b-progress-bar>
+    @php
+        $totalCount = $session->testCases()->count();
+        $passedCount = $session->testRuns()->latest()->get()->unique('test_case_id')->where('status', \App\Models\TestRun::STATUS_PASSED)->count();
+        $failureCount = $session->testRuns()->latest()->get()->unique('test_case_id')->where('status', \App\Models\TestRun::STATUS_FAILURE)->count();
+        $notExecutedCount = $totalCount - $passedCount - $failureCount;
+    @endphp
+    <b-progress-bar :value={{ $totalCount ? $passedCount / $totalCount * 100 : 0 }} variant="success" v-b-tooltip.hover title="{{ __(':n Pass', ['n' => $passedCount]) }}"></b-progress-bar>
+    <b-progress-bar :value={{ $totalCount ? $failureCount / $totalCount * 100 : 0 }} variant="danger" v-b-tooltip.hover title="{{ __(':n Fail', ['n' => $failureCount]) }}"></b-progress-bar>
+    <b-progress-bar :value={{ $totalCount ? $notExecutedCount / $totalCount * 100 : 0 }} variant="secondary" v-b-tooltip.hover title="{{ __(':n Not executed', ['n' => $notExecutedCount]) }}"></b-progress-bar>
 </b-progress>
