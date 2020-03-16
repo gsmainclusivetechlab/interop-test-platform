@@ -89,6 +89,7 @@
 @section('session-content')
     <div class="row">
         <div class="col-12">
+            <x-test-runs-chart :session="$session" />
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
