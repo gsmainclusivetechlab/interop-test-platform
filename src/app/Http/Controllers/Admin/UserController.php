@@ -23,15 +23,15 @@ class UserController extends Controller
     public function index()
     {
         $users = User::when(request('q'), function (Builder $query, $q) {
-                $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
-                    ->orWhere('email', 'like', "%{$q}%")
-                    ->orWhere('company', 'like', "%{$q}%");
-            })
-            ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
-                return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
-            })
-            ->latest()
-            ->paginate();
+            $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                ->orWhere('email', 'like', "%{$q}%")
+                ->orWhere('company', 'like', "%{$q}%");
+        })
+        ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
+            return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
+        })
+        ->latest()
+        ->paginate();
 
         return view('admin.users.index', compact('users'));
     }

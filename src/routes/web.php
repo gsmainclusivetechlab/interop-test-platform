@@ -38,6 +38,24 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
 });
 
 /**
+ * Settings Routes
+ */
+Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
+    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::post('profile', 'ProfileController@update')->name('profile.update');
+    Route::get('password', 'PasswordController@edit')->name('password.edit');
+    Route::post('password', 'PasswordController@update')->name('password.update');
+});
+
+/**
+ * Testing Routes
+ */
+Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
+    Route::any('{testPlan:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
+    Route::any('{apiService:uuid}/test/{path?}', 'TestController')->name('test')->where('path', '.*');
+});
+
+/**
  * Admin Routes
  */
 Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
@@ -55,22 +73,8 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{sessionOnlyTrashed}/restore', 'SessionController@restore')->name('restore');
         Route::delete('{sessionWithTrashed}/force-destroy', 'SessionController@forceDestroy')->name('force_destroy');
     });
-});
-
-/**
- * Settings Routes
- */
-Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
-    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
-    Route::post('profile', 'ProfileController@update')->name('profile.update');
-    Route::get('password', 'PasswordController@edit')->name('password.edit');
-    Route::post('password', 'PasswordController@update')->name('password.update');
-});
-
-/**
- * Testing Routes
- */
-Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{testPlan:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
-    Route::any('{apiService:uuid}/test/{path?}', 'TestController')->name('test')->where('path', '.*');
+    Route::resource('scenarios', 'ScenarioController');
+    Route::resource('scenarios.components', 'ComponentController')->shallow();
+    Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
+    Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
 });
