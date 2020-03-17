@@ -13,13 +13,26 @@
             <div class="col-3 d-flex justify-content-end ml-auto">
                 <b-dropdown variant="link" toggle-class="text-decoration-none text-secondary" menu-class="dropdown-menu-arrow" right no-caret>
                     <template v-slot:button-content>
-                        <i class="fe fe-shield"></i>
+                        <i class="fe fe-settings"></i>
                     </template>
-                    <b-dropdown-item href="#">An item</b-dropdown-item>
-                    <b-dropdown-item href="#">Another item</b-dropdown-item>
+                    @can('viewAny', \App\Models\User::class)
+                        <b-dropdown-item href="{{ route('admin.users.index') }}">
+                            {{ __('Users') }}
+                        </b-dropdown-item>
+                    @endcan
+                    @can('viewAny', \App\Models\Session::class)
+                        <b-dropdown-item href="{{ route('admin.sessions.index') }}">
+                            {{ __('Sessions') }}
+                        </b-dropdown-item>
+                    @endcan
+                    @can('viewAny', \App\Models\Scenario::class)
+                        <b-dropdown-item href="{{ route('admin.scenarios.index') }}">
+                            {{ __('Scenarios') }}
+                        </b-dropdown-item>
+                    @endcan
                 </b-dropdown>
                 <b-navbar-nav class="ml-2">
-                    <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
+                    <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" no-caret right toggle-class="pr-0 leading-none">
                         <template v-slot:button-content>
                             <span class="avatar flex-shrink-0">
                                 <i class="fe fe-user"></i>
@@ -28,19 +41,13 @@
                                 <span class="text-default">{{ auth()->user()->name }}</span>
                             </span>
                         </template>
-                        {{--                        <b-dropdown-item href="#">--}}
-                        {{--                            <i class="dropdown-icon fe fe-user"></i>--}}
-                        {{--                            {{ __('Profile') }}--}}
-                        {{--                        </b-dropdown-item>--}}
-                        <b-dropdown-item href="{{ route('settings.profile.edit') }}" @if (request()->routeIs('settings.profile.edit')) active @endif>
-                            <i class="dropdown-icon fe fe-settings"></i>
+                        <b-dropdown-item href="{{ route('settings.profile.edit') }}">
                             {{ __('Settings') }}
                         </b-dropdown-item>
                         <b-dropdown-divider></b-dropdown-divider>
                         <b-dropdown-form action="{{ route('logout') }}" method="POST" form-class="p-0">
                             @csrf
                             <button class="dropdown-item" type="submit">
-                                <i class="dropdown-icon fe fe-log-out"></i>
                                 {{ __('Logout') }}
                             </button>
                         </b-dropdown-form>
@@ -76,38 +83,18 @@
                             {{ __('Sessions') }}
                         </a>
                     </li>
-                    {{--                    <li class="nav-item">--}}
-                    {{--                        <a href="#" class="nav-link">--}}
-                    {{--                            <i class="fe fe-help-circle"></i>--}}
-                    {{--                            {{ __('Tutorial') }}--}}
-                    {{--                        </a>--}}
-                    {{--                    </li>--}}
+{{--                    <li class="nav-item">--}}
+{{--                        <a href="#" class="nav-link">--}}
+{{--                            <i class="fe fe-help-circle"></i>--}}
+{{--                            {{ __('Tutorial') }}--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <li class="nav-item">
                         <a href="{{ env('APP_COMPANY_LAB_URL') }}" class="nav-link" target="_blank">
                             <i class="fe fe-link"></i>
                             {{ __('The Lab') }}
                         </a>
                     </li>
-                    @if(auth()->user()->can('viewAny', \App\Models\User::class) ||
-                        auth()->user()->can('viewAny', \App\Models\Session::class))
-                        <b-nav-item-dropdown menu-class="dropdown-menu-arrow" toggle-class="@if (request()->routeIs('admin.*')) active @endif">
-                            <template v-slot:button-content>
-                                <i class="fe fe-lock"></i>
-                                {{ __('Administration') }}
-                            </template>
-                            @can('viewAny', \App\Models\User::class)
-                                <b-dropdown-item href="{{ route('admin.users.index') }}" @if (request()->routeIs('admin.users.*')) active @endif>
-                                    {{ __('Users') }}
-                                </b-dropdown-item>
-                            @endcan
-
-                            @can('viewAny', \App\Models\Session::class)
-                                <b-dropdown-item href="{{ route('admin.sessions.index') }}" @if (request()->routeIs('admin.sessions.*')) active @endif>
-                                    {{ __('Sessions') }}
-                                </b-dropdown-item>
-                            @endcan
-                        </b-nav-item-dropdown>
-                    @endif
                 </ul>
             </div>
         </div>

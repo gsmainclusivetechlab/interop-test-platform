@@ -77,4 +77,5 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.components', 'ComponentController')->shallow();
     Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
+    Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });
