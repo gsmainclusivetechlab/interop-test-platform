@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+    <Worksheet ss:Name="Merchant-Initiated Merchant Payment">
+        <Table>
+            <Row>
+                <Cell>
+                    <Data ss:Type="String">Employee No</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Employee Name</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">Job</Data>
+                </Cell>
+            </Row>
+            <Row>
+                <Cell>
+                    <Data ss:Type="Number">7839</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">KING</Data>
+                </Cell>
+                <Cell>
+                    <Data ss:Type="String">PRESIDENT</Data>
+                </Cell>
+            </Row>
+        </Table>
+    </Worksheet>
+</Workbook>

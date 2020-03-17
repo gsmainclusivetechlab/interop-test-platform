@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Imports\UseCasesImport;
 use App\Models\Scenario;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +38,9 @@ class ScenarioController extends Controller
      */
     public function show(Scenario $scenario)
     {
+        $import = new UseCasesImport($scenario);
+//        dd($import->import(database_path('seeds/data/use-cases.xml')));
+
         return view('admin.scenarios.show', compact('scenario'));
     }
 }
