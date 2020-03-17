@@ -10,8 +10,15 @@
                 <h1 class="col-login__title mb-1">{{ env('APP_COMPANY_LAB') }}</h1>
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
-            <div class="col-3 d-flex ml-auto">
-                <b-navbar-nav class="ml-auto">
+            <div class="col-3 d-flex justify-content-end ml-auto">
+                <b-dropdown variant="link" toggle-class="text-decoration-none text-secondary" menu-class="dropdown-menu-arrow" right no-caret>
+                    <template v-slot:button-content>
+                        <i class="fe fe-shield"></i>
+                    </template>
+                    <b-dropdown-item href="#">An item</b-dropdown-item>
+                    <b-dropdown-item href="#">Another item</b-dropdown-item>
+                </b-dropdown>
+                <b-navbar-nav class="ml-2">
                     <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" right toggle-class="pr-0 leading-none">
                         <template v-slot:button-content>
                             <span class="avatar flex-shrink-0">

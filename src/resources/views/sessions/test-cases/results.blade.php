@@ -106,8 +106,6 @@
                                     @endif
                                 @endforeach
                             @endforeach
-                            classDef node fill:#fff,stroke:#fff,color:#242529
-                            classDef clickable fill:#fff,stroke:#fff,color:#242529
                         </flow-chart>
                     </div>
                     <div class="rounded-0 bg-white border-top">

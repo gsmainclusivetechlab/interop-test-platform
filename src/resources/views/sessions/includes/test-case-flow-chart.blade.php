@@ -4,7 +4,7 @@
             <b>{{ __('Flow diagram') }}</b>
         </h2>
     </div>
-    <div class="card-body">
+    <div class="card-body bg-light">
         <flow-chart>
             sequenceDiagram;
             @foreach ($testCase->testSteps as $testStep)
