@@ -12,32 +12,26 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="text-nowrap w-25">{{ __('Name') }}</th>
-                        <th class="text-nowrap w-auto">{{ __('API Service') }}</th>
                         <th class="text-nowrap w-auto">{{ __('Description') }}</th>
                         <th class="text-nowrap w-auto">{{ __('Created') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                @forelse ($components as $component)
+                @forelse ($useCases as $useCase)
                     <tr>
                         <td class="text-break">
-                            <a href="{{ route('admin.components.show', $component) }}">{{ $component->name }}</a>
+                            <a href="{{ route('admin.test-cases.show', $useCase) }}">{{ $useCase->name }}</a>
                         </td>
                         <td class="text-break">
-                            @if ($component->apiService)
-                                {{ $component->apiService->name }} {{ $component->apiService->version }}
-                            @endif
-                        </td>
-                        <td class="text-break">
-                            {{ \Illuminate\Support\Str::limit($component->description) }}
+                            {{ \Illuminate\Support\Str::limit($useCase->description, 50) }}
                         </td>
                         <td>
-                            {{ $component->created_at }}
+                            {{ $useCase->created_at }}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="4">
+                        <td class="text-center" colspan="3">
                             {{ __('No Results') }}
                         </td>
                     </tr>
@@ -46,7 +40,7 @@
             </table>
         </div>
         <div class="card-footer">
-            @include('components.grid.pagination', ['paginator' => $components])
+            @include('components.grid.pagination', ['paginator' => $useCases])
         </div>
     </div>
 @endsection

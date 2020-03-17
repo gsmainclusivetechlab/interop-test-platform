@@ -31,6 +31,10 @@ class ScenarioController extends Controller
         return view('admin.scenarios.index', compact('scenarios'));
     }
 
+    /**
+     * @param Scenario $scenario
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show(Scenario $scenario)
     {
         return view('admin.scenarios.show', compact('scenario'));

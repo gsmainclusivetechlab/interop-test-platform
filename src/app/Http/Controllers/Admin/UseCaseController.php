@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Scenario;
-use App\Models\TestCase;
+use App\Models\UseCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 
-class TestCaseController extends Controller
+class UseCaseController extends Controller
 {
     /**
-     * TestCaseController constructor.
+     * UseCaseController constructor.
      */
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestCase::class, 'test_case');
+        $this->authorizeResource(UseCase::class, 'use_case');
     }
 
     /**
@@ -23,22 +23,22 @@ class TestCaseController extends Controller
      */
     public function index(Scenario $scenario)
     {
-        $testCases = $scenario->testCases()
+        $useCases = $scenario->useCases()
             ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
             ->latest()
             ->paginate();
 
-        return view('admin.test-cases.index', compact('scenario', 'testCases'));
+        return view('admin.use-cases.index', compact('scenario', 'useCases'));
     }
 
     /**
-     * @param TestCase $testCase
+     * @param UseCase $useCase
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(TestCase $testCase)
+    public function show(UseCase $useCase)
     {
-        return view('admin.test-cases.show', compact('testCase'));
+        return view('admin.use-cases.show', compact('useCase'));
     }
 }

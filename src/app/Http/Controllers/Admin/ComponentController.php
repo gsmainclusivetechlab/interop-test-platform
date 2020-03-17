@@ -23,7 +23,8 @@ class ComponentController extends Controller
      */
     public function index(Scenario $scenario)
     {
-        $components = Component::when(request('q'), function (Builder $query, $q) {
+        $components =$scenario->components()
+            ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
             ->latest()
@@ -32,6 +33,10 @@ class ComponentController extends Controller
         return view('admin.components.index', compact('scenario', 'components'));
     }
 
+    /**
+     * @param Component $component
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show(Component $component)
     {
         return view('admin.components.show', compact('component'));
