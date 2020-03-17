@@ -1,3 +1,17 @@
+## v0.4
+- Task: Save to DB fields from POST transactions and put them into PUT callback_url  [@jc_ssenokosov]
+- Task: Move project to AWS [@jc_mbabuta]
+- Task: MMO1 -> transactionRequests: do not send 'null' values to Mojaloop #2 [@jc_ssenokosov]
+- Task: [6] MMO1 simulator -> Missing Callback step from MMO1 to Service Provider [@jc_ssenokosov]
+- Tesk: Laravel version update code with new features (casts/route bindings/zhttp etc.) [@jc_akokorev]
+- Task: DB updates (Assertions, Use Case steps, Specifications versioning)[@jc_akokorev]
+- Task: Test Case Seed via YAML [@jc_akokorev]
+- Task: [[BUG] MMO1 simulator -> response message for 202 shows body of 201 #1 [@jc_ssenokosov]
+- Task: Session -> Test Run: collapsible messages's json [@jc_ohladkov]
+- Task: Session -> Scenario schema should show SUT and active step's arrows [@jc_ohladkov]
+- Task: Update test run view [@jc_ohladkov]
+- Task: [BUG] - Simulator issue - Simulator fails to retrieve "transactionRequestState" when amount is 1000.00 [@jc_ohladkov]
+
 ## v0.3
 - Task: Session execution - pages (Markup) [@jc_ohladkov]
 - Task: Session execution - Session page [@jc_akokorev]
