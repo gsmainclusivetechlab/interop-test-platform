@@ -181,17 +181,29 @@
                                                 {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->getStatusCode() : __('Unknown')]) }}
                                             </span>
                                 </div>
-                                <div class="lead p-4">
+                                <div class="px-4 py-2">
                                     <ul class="m-0 p-0">
                                         @foreach($testResult->testExecutions as $testExecution)
-                                            <li class="d-flex align-items-center py-2">
-                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
-                                                            {{ $testExecution->status_label }}
-                                                        </span>
-                                                <p class="small mb-0">
-                                                    {{ $testExecution->name }}@if ($testExecution->exception): {{ $testExecution->exception }}@endif
-                                                </p>
-                                            </li>
+                                        <li class="d-flex flex-wrap py-2">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
+                                                    {{ $testExecution->status_label }}
+                                                </span>
+
+                                                <span
+                                                    class="d-flex align-items-center"
+                                                    @if ($testExecution->exception) v-b-toggle="'{{ $testExecution['id'] }}'" @endif
+                                                >
+                                                    {{ $testExecution->name }}
+                                                </span>
+                                            </div>
+
+                                            <b-collapse id="{{ $testExecution['id'] }}" class="w-100 ml-8 pl-2">
+                                                @if ($testExecution->exception)
+                                                    <p class="mb-0 small">{{ $testExecution->exception }}</p>
+                                                @endif
+                                            </b-collapse>
+                                        </li>
                                         @endforeach
                                     </ul>
                                 </div>
