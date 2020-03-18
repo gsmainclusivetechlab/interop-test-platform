@@ -20,10 +20,9 @@ Route::get('/', 'HomeController@index')->name('home');
  */
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::get('/{trashed?}', 'OverviewController@index')->name('index')->where('trashed', 'trashed');
-    Route::delete('{session}/destroy', 'SessionController@destroy')->name('destroy');
-    Route::post('{sessionOnlyTrashed}/restore', 'SessionController@restore')->name('restore');
-    Route::delete('{sessionWithTrashed}/force-destroy', 'SessionController@forceDestroy')->name('force_destroy');
-
+    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
+    Route::post('{sessionOnlyTrashed}/restore', 'OverviewController@restore')->name('restore');
+    Route::delete('{sessionWithTrashed}/force-destroy', 'OverviewController@forceDestroy')->name('force_destroy');
     Route::get('{session}', 'OverviewController@show')->name('show');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test_cases.show');
     Route::get('{session}/test-cases/{testCase}/results/{testRun}/{position?}', 'TestCaseController@results')->name('test_cases.results');
@@ -78,4 +77,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
     Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
+    Route::get('test-cases/{testCase}/test-steps/import', 'TestStepController@showImportForm')->name('test-cases.test-steps.import');
+    Route::post('test-cases/{testCase}/test-steps/import', 'TestStepController@import')->name('test-cases.test-steps.import');
 });

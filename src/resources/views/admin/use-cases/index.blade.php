@@ -20,7 +20,7 @@
                 @forelse ($useCases as $useCase)
                     <tr>
                         <td class="text-break">
-                            <a href="{{ route('admin.test-cases.show', $useCase) }}">{{ $useCase->name }}</a>
+                            <a href="{{ route('admin.use-cases.show', $useCase) }}">{{ $useCase->name }}</a>
                         </td>
                         <td class="text-break">
                             {{ \Illuminate\Support\Str::limit($useCase->description, 50) }}

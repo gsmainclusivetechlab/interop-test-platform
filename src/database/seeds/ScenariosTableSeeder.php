@@ -1,5 +1,6 @@
 <?php
 
+use App\Imports\TestCasesImport;
 use App\Models\ApiService;
 use App\Models\Component;
 use App\Models\ComponentPath;
@@ -22,6 +23,11 @@ class ScenariosTableSeeder extends Seeder
      */
     public function run()
     {
+        $import = new TestCasesImport(UseCase::first());
+        $data = $import->import(Yaml::parseFile(database_path('seeds/data/authorized-transaction.yaml')));
+
+        dd($data);
+
         $data = Yaml::parseFile(database_path('seeds/data/scenarios.yaml'), Yaml::PARSE_CUSTOM_TAGS);
 
         foreach ($data as $item) {

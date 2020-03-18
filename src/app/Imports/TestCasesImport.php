@@ -2,12 +2,13 @@
 
 namespace App\Imports;
 
+use App\Imports\Concerns\Importable;
 use App\Models\TestCase;
 use App\Models\UseCase;
-use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
-class TestCasesImport implements ToModel
+class TestCasesImport
 {
     use Importable;
 
@@ -27,12 +28,14 @@ class TestCasesImport implements ToModel
 
     /**
      * @param array $row
-     * @return TestCase|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Model[]|null
+     * @return Model
      */
-    public function model(array $row)
+    protected function doImport(array $row): Model
     {
-        return new TestCase([
-            //
-        ]);
+        $model = $this->useCase->testCases()->make(Arr::only($row, TestCase::make()->getFillable()));
+        $model->created(function ($model) use ($row) {
+            (new TestStepsImport($model))->import(Arr::get($row, 'test_steps', []));
+        });
+        return $model;
     }
 }
