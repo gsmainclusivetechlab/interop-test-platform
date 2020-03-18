@@ -30,12 +30,13 @@ class TestCasesImport
      * @param array $row
      * @return Model
      */
-    protected function doImport(array $row): Model
+    protected function toModel(array $row): Model
     {
         $model = $this->useCase->testCases()->make(Arr::only($row, TestCase::make()->getFillable()));
         $model->created(function ($model) use ($row) {
-            (new TestStepsImport($model))->import(Arr::get($row, 'test_steps', []));
+            (new TestStepsImport($model))->importMany(Arr::get($row, 'test_steps', []));
         });
+
         return $model;
     }
 }

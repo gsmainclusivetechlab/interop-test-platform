@@ -11,10 +11,8 @@
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
                     <tr>
-                        <th class="text-nowrap w-25">{{ __('Name') }}</th>
-                        <th class="text-nowrap w-auto">{{ __('API Service') }}</th>
-                        <th class="text-nowrap w-auto">{{ __('Description') }}</th>
-                        <th class="text-nowrap w-auto">{{ __('Created') }}</th>
+                        <th class="text-nowrap">{{ __('Name') }}</th>
+                        <th class="text-nowrap">{{ __('API Service') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,16 +26,10 @@
                                 {{ $component->apiService->name }} {{ $component->apiService->version }}
                             @endif
                         </td>
-                        <td class="text-break">
-                            {{ \Illuminate\Support\Str::limit($component->description) }}
-                        </td>
-                        <td>
-                            {{ $component->created_at }}
-                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="4">
+                        <td class="text-center" colspan="2">
                             {{ __('No Results') }}
                         </td>
                     </tr>

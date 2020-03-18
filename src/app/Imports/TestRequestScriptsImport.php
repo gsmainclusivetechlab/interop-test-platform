@@ -30,7 +30,7 @@ class TestRequestScriptsImport
      * @param array $row
      * @return Model
      */
-    public function doImport(array $row): Model
+    public function toModel(array $row): Model
     {
         $model = $this->testStep->testRequestScripts()
             ->make(Arr::only($row, TestRequestScript::make()->getFillable()))

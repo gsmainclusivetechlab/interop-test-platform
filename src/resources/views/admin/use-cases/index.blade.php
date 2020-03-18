@@ -12,8 +12,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="text-nowrap w-25">{{ __('Name') }}</th>
-                        <th class="text-nowrap w-auto">{{ __('Description') }}</th>
-                        <th class="text-nowrap w-auto">{{ __('Created') }}</th>
+                        <th class="text-nowrap w-auto">{{ __('Test Cases') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,16 +21,13 @@
                         <td class="text-break">
                             <a href="{{ route('admin.use-cases.show', $useCase) }}">{{ $useCase->name }}</a>
                         </td>
-                        <td class="text-break">
-                            {{ \Illuminate\Support\Str::limit($useCase->description, 50) }}
-                        </td>
                         <td>
-                            {{ $useCase->created_at }}
+
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="3">
+                        <td class="text-center" colspan="2">
                             {{ __('No Results') }}
                         </td>
                     </tr>

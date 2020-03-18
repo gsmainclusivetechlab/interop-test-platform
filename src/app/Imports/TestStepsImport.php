@@ -30,15 +30,15 @@ class TestStepsImport
      * @param array $row
      * @return Model
      */
-    public function doImport(array $row): Model
+    protected function toModel(array $row): Model
     {
-        $model = $this->testCase->testSteps()
-            ->make(Arr::only($row, TestStep::make()->getFillable()))
-            ->setAttribute('source_id', $this->testCase->useCase->scenario->components()->where('name', Arr::get($row, 'source_id'))->value('id'))
-            ->setAttribute('target_id', $this->testCase->useCase->scenario->components()->where('name', Arr::get($row, 'target_id'))->value('id'));
+        $model = $this->testCase->testSteps()->make(Arr::only($row, TestStep::make()->getFillable()));
+        $model->setAttribute('source_id', $this->testCase->useCase->scenario->components()->where('name', Arr::get($row, 'source'))->value('id'));
+        $model->setAttribute('target_id', $this->testCase->useCase->scenario->components()->where('name', Arr::get($row, 'target'))->value('id'));
         $model->created(function ($model) use ($row) {
-            (new TestRequestScriptsImport($model))->import(Arr::get($row, 'test_request_scripts', []));
+//            (new TestRequestScriptsImport($model))->importMany(Arr::get($row, 'test_request_scripts', []));
         });
+
         return $model;
     }
 }

@@ -3,17 +3,29 @@
 namespace App\Imports\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 trait Importable
 {
     /**
+     * @param array $row
+     * @throws \Throwable
+     */
+    public function import(array $row)
+    {
+        $this->toModel($row)->saveOrFail();
+    }
+
+    /**
      * @param array $rows
      * @throws \Throwable
      */
-    public function import(array $rows)
+    public function importMany(array $rows)
     {
-        collect($rows)->each(function ($row) {
-            $this->doImport($row)->saveOrFail();
+        DB::transaction(function () use ($rows) {
+            collect($rows)->each(function ($row) {
+                $this->import($row);
+            });
         });
     }
 
@@ -21,5 +33,5 @@ trait Importable
      * @param array $row
      * @return Model
      */
-    abstract protected function doImport(array $row): Model;
+    abstract protected function toModel(array $row): Model;
 }
