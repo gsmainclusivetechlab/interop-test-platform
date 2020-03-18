@@ -3,7 +3,7 @@
 @section('title', $session->name)
 
 @section('session-sidebar')
-    <div class="card mb-0 p-0 border-0 rounded-0 shadow-none">
+    <div class="card mb-0">
         <div class="card-header px-4">
             <h3 class="card-title">{{ __('Select use cases') }}</h3>
         </div>
