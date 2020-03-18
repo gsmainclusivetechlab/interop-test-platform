@@ -43,7 +43,9 @@
             </b-dropdown>
         </div>
         <h2 class="card-title w-100 text-truncate">
-            <b>{{ $session->name }}</b>
+            <a href="{{ route('sessions.show', $session) }}" class="text-decoration-none">
+                <b>{{ $session->name }}</b>
+            </a>
         </h2>
         <p class="mb-0">
             {{ \Illuminate\Support\Str::limit($session->description) }}
