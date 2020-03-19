@@ -1,0 +1,131 @@
+name: Authorized Transaction (only reponse validation)
+use_case: Merchant-Initiated Merchant Payment
+behavior: positive
+description: |
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
+  In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
+  This flow shows the necessary steps for this transaction simulating an approved transaction.
+precondition: |
+  Service Provider has GSMA Mobile Money API Implemented.
+  Service Provider is capable to handled async calls.
+  Payee and Payer MMOs exist in Mojaloop as Participants.
+  Payee and Payer exist in Mojaloop as Parties.
+  Debit party should be identified by account identier "msisdn" with the value "+33555123456".
+  Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
+test_data_example:
+  uri: /transactions
+  method: POST
+  headers:
+    accept: 'application/json'
+    content-type: 'application/json'
+    x-callback-url: 'http://example.com/example'
+    x-date: '2020-02-20T10:28:44.466Z'
+  body:
+    amount: '100'
+    currency: 'USD'
+    type: 'merchantpay'
+    debitParty:
+      key: "msisdn"
+      value: "+33555123456"
+    creditParty:
+      key: "msisdn"
+      value: "+33555789123"
+test_steps:
+  - name: POST /transactions
+    source: Service Provider
+    target: Mobile Money Operator 1
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  - name: POST /transactionRequests
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  - name: POST /transactionRequests
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  - name: PUT /transactionRequests/{ID}
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:200'
+  - name: PUT /transactionRequests/{ID}
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:200'
+  - name: POST /quotes
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  - name: POST /quotes
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  - name: PUT /quotes/{ID}
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:200'
+  - name: PUT /quotes/{ID}
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:200'
+  - name: POST /transfers
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  - name: POST /transfers
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+  #            - name: PUT /X-Callback-URL
+  #              source: Mobile Money Operator 1
+  #              target: Service Provider
+  #              test_response_scripts:
+  #                - name: Transaction was successfully accepted
+  #                  rules:
+  #                    status: 'in:204'
+  - name: PUT /transfers/{ID}
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:200'
+  - name: PUT /transfers/{ID}
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:200'

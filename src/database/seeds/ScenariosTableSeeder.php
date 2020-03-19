@@ -1,31 +1,40 @@
 <?php
 
+use App\Imports\TestCaseImport;
 use App\Models\ApiService;
 use App\Models\Component;
 use App\Models\Scenario;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Yaml;
 
 class ScenariosTableSeeder extends Seeder
 {
     /**
      * @return void
+     * @throws Throwable
      */
     public function run()
     {
         $scenario = Scenario::create(['name' => 'Mobile Money API v1.1.0 and Mojaloop FSPIOP API v1.0']);
         $scenario->useCases()->createMany($this->getUseCasesData());
-        $scenario->components()->createMany($this->getComponentsData())->each(function (Component $component, $key) {
-            $component->paths()->attach(Arr::get($this->getComponentPathsData(), $key));
+        $scenario->components()->createMany($this->getComponentsData())->each(function (Component $component, $key) use ($scenario) {
+            $component->paths()->attach(Arr::get($this->getComponentPathsData($scenario), $key));
         });
 
-//        $finder = new Finder();
-//        $finder->files()->name('*.yaml')->in(database_path('seeds/test-cases'));
-//
-//        foreach ($finder as $item) {
-//            dd($item->getContents());
-//        }
+        $finder = (new Finder())
+            ->files()
+            ->name('*.yaml')
+            ->in(database_path('seeds/test-cases'));
+
+        foreach ($finder as $file) {
+            /**
+             * @var SplFileInfo $file
+             */
+            (new TestCaseImport($scenario))->import(Yaml::parse($file->getContents()));
+        }
     }
 
     /**
@@ -69,46 +78,46 @@ class ScenariosTableSeeder extends Seeder
     }
 
     /**
+     * @param Scenario $scenario
      * @return array
      */
-    protected function getComponentPathsData()
+    protected function getComponentPathsData(Scenario $scenario)
     {
         return [
             [],
-            [],
             [
                 [
-                    'target_id' => Component::where('name', 'Payer')->value('id'),
+                    'target_id' => $scenario->components()->where('name', 'Payer')->value('id'),
                     'simulated' => false,
                 ],
                 [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
                     'simulated' => true,
                 ],
             ],
             [
                 [
-                    'target_id' => Component::where('name', 'Service Provider')->value('id'),
+                    'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
                     'simulated' => true,
                 ],
                 [
-                    'target_id' => Component::where('name', 'Mojaloop')->value('id'),
-                    'simulated' => true,
-                ],
-            ],
-            [
-                [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
-                    'simulated' => true,
-                ],
-                [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 2')->value('id'),
+                    'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
                     'simulated' => true,
                 ],
             ],
             [
                 [
-                    'target_id' => Component::where('name', 'Mojaloop')->value('id'),
+                    'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
+                    'simulated' => true,
+                ],
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 2')->value('id'),
+                    'simulated' => true,
+                ],
+            ],
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
                     'simulated' => true,
                 ],
             ],
