@@ -82,7 +82,8 @@
                     body.creditParty.*.value: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.currency: 'regex:/^[A-Z]{3}/'
                 - name: Transaction is a Merchant Payment
                   rules:
@@ -114,13 +115,14 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -140,13 +142,14 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                    - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -200,13 +203,14 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -230,13 +234,14 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -260,13 +265,14 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -290,13 +296,14 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
               test_response_scripts:
                 - name: Transaction was successfully accepted
@@ -317,11 +324,13 @@
                     body.payerFsp: 'regex:/[0-9a-z]{1,32}$/'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
                 - name: Expiration is specified correctly
                   rules:
-                    body.expiration: 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+                    body.expiration:
+                      - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
                 - name: ilpPacket is specified correctly
                   rules:
                     body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
@@ -347,11 +356,13 @@
                     body.payerFsp: 'regex:/[0-9a-z]{1,32}$/'
                 - name: Amount and currency are specified correctly
                   rules:
-                    body.amount.amount: 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+                    body.amount.amount:
+                      - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
                     body.amount.currency: 'regex:/^[A-Z]{3}/'
                 - name: Expiration is specified correctly
                   rules:
-                    body.expiration: 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+                    body.expiration:
+                      - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
                 - name: ilpPacket is specified correctly
                   rules:
                     body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
@@ -377,7 +388,8 @@
             #                    body.creditParty.*.value: 'in:+33555789123'
             #                - name: Amount and currency are specified correctly
             #                  rules:
-            #                    body.amount: 'regex:/Ë†([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+            #                    body.amount:
+            #                        - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
             #                    body.currency: 'regex:/^[A-Z]{3}/'
             #                - name: Transaction is a Merchant Payment
             #                  rules:
@@ -401,7 +413,8 @@
                     body.transactionRequestState: 'in:COMMITTED'
                 - name: completedTimestamp is specified correctly
                   rules:
-                    body.completedTimestamp: 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+                    body.completedTimestamp:
+                      - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
                 - name: fulfilment is specified correctly
                   rules:
                     body.fulfilment: 'regex:/^[A-Za-z0-9-_]{43}$/'
@@ -421,7 +434,8 @@
                     body.transactionRequestState: 'in:COMMITTED'
                 - name: completedTimestamp is specified correctly
                   rules:
-                    body.completedTimestamp: 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+                    body.completedTimestamp:
+                      - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
                 - name: fulfilment is specified correctly
                   rules:
                     body.fulfilment: 'regex:/^[A-Za-z0-9-_]{43}$/'
@@ -687,9 +701,9 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -713,9 +727,9 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1167,9 +1181,9 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1193,9 +1207,9 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1253,9 +1267,9 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1283,9 +1297,9 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1308,7 +1322,8 @@
                     body.transferAmount.currency: 'regex:/^[A-Z]{3}/'
                 - name: Expiration is specified correctly
                   rules:
-                    body.expiration: 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+                    body.expiration:
+                      - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
                 - name: ilpPacket is specified correctly
                   rules:
                     body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
@@ -1332,7 +1347,8 @@
                     body.transferAmount.currency: 'regex:/^[A-Z]{3}/'
                 - name: Expiration is specified correctly
                   rules:
-                    body.expiration: 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+                    body.expiration:
+                      - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
                 - name: ilpPacket is specified correctly
                   rules:
                     body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
@@ -1480,9 +1496,9 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1506,9 +1522,9 @@
                     body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1566,9 +1582,9 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1596,9 +1612,9 @@
                     body.amountType: 'in:SEND'
                 - name: Debit and Credit party is present and is a Valid Party in the network
                   rules:
-                    body.payer.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-                    body.payee.partyIdInfo.partyIdType: 'in:msisdn'
+                    body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
                     body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
                 - name: Amount and currency are specified correctly
                   rules:
@@ -1614,10 +1630,10 @@
               test_request_scripts:
                 - name: ID is Valid
                   rules:
-                    uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+                    uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
                 - name: Error Code is specified correctly
                   rules:
-                    body.errorInformation.errorCode: 'in:51.03'
+                    body.errorInformation.errorCode: 'in:5103'
                     body.errorInformation.errorDescription: 'regex:/^.{1,128}$/'
               test_response_scripts:
                 - name: Transaction was successfully declined
@@ -1629,10 +1645,10 @@
               test_request_scripts:
                 - name: ID is Valid
                   rules:
-                    uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+                    uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
                 - name: Error Code is specified correctly
                   rules:
-                    body.errorInformation.errorCode: 'in:51.03'
+                    body.errorInformation.errorCode: 'in:5103'
                     body.errorInformation.errorDescription: 'regex:/^.{1,128}$/'
               test_response_scripts:
                 - name: Transaction was successfully declined
