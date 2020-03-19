@@ -7,19 +7,19 @@ use App\Models\TestResult;
 class TestResultObserver
 {
     /**
-     * @param TestResult $result
+     * @param TestResult $testResult
      * @return void
      */
-    public function passed(TestResult $result)
+    public function passed(TestResult $testResult)
     {
 
     }
 
     /**
-     * @param TestResult $result
+     * @param TestResult $testResult
      * @return void
      */
-    public function failure(TestResult $result)
+    public function failure(TestResult $testResult)
     {
 
     }

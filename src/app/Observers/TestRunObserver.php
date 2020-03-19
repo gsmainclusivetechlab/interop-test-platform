@@ -7,19 +7,19 @@ use App\Models\TestRun;
 class TestRunObserver
 {
     /**
-     * @param TestRun $run
+     * @param TestRun $testRun
      * @return void
      */
-    public function passed(TestRun $run)
+    public function passed(TestRun $testRun)
     {
 
     }
 
     /**
-     * @param TestRun $run
+     * @param TestRun $testRun
      * @return void
      */
-    public function failure(TestRun $run)
+    public function failure(TestRun $testRun)
     {
 
     }

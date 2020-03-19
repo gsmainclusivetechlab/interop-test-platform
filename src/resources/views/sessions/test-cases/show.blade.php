@@ -4,7 +4,7 @@
 
 @section('session-header-right')
     <div class="input-group">
-        <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
+        <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['session' => $session, 'testCase' => $testCase]) }}">
         <span class="input-group-append">
             <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
                 <i class="fe fe-copy"></i>

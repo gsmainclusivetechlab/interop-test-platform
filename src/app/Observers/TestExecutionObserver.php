@@ -7,29 +7,29 @@ use App\Models\TestExecution;
 class TestExecutionObserver
 {
     /**
-     * @param TestExecution $execution
+     * @param TestExecution $testExecution
      * @return void
      */
-    public function pass(TestExecution $execution)
+    public function pass(TestExecution $testExecution)
     {
-
+        $testExecution->testResult()->increment('passed');
     }
 
     /**
-     * @param TestExecution $execution
+     * @param TestExecution $testExecution
      * @return void
      */
-    public function fail(TestExecution $execution)
+    public function fail(TestExecution $testExecution)
     {
-
+        $testExecution->testResult()->increment('failures');
     }
 
     /**
-     * @param TestExecution $execution
+     * @param TestExecution $testExecution
      * @return void
      */
-    public function error(TestExecution $execution)
+    public function error(TestExecution $testExecution)
     {
-
+        $testExecution->testResult()->increment('errors');
     }
 }

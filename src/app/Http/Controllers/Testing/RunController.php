@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\CompleteTestRun;
+use App\Models\Session;
+use App\Models\TestCase;
 use App\Models\TestPlan;
 use App\Models\TestRun;
 use App\Testing\Middlewares\RequestMiddleware;
@@ -31,17 +33,17 @@ class RunController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param TestPlan $plan
+     * @param Session $session
+     * @param TestCase $testCase
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $testPlan, string $path)
+    public function __invoke(ServerRequestInterface $request, Session $session, TestCase $testCase, string $path)
     {
-        $testRun = TestRun::create([
-            'session_id' => $testPlan->session_id,
-            'test_case_id' => $testPlan->test_case_id,
+        $testRun = $session->testRuns()->create([
+            'test_case_id' => $testCase->id,
         ]);
-        $testStep = $testPlan->testSteps()->firstOrFail();
+        $testStep = $testCase->testSteps()->firstOrFail();
 
         CompleteTestRun::dispatch($testRun)->delay(now()->addSeconds(30));
 
