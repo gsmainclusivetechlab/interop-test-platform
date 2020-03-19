@@ -23,16 +23,15 @@ class ApiService extends Model
      */
     protected $fillable = [
         'name',
-        'version',
         'description',
         'server',
-        'openapi',
+        'scheme',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'openapi' => OpenApiCast::class,
+        'scheme' => OpenApiCast::class,
     ];
 }

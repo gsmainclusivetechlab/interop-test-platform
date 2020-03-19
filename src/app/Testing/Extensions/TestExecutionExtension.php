@@ -28,7 +28,7 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
      */
     public function executeAfterSuccessfulTest(string $test, float $time): void
     {
-        $this->result->testExecutions()->make()->passed($test);
+        $this->result->testExecutions()->make()->pass($test);
     }
 
     /**
@@ -38,7 +38,7 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
      */
     public function executeAfterTestFailure(string $test, string $message, float $time): void
     {
-        $this->result->testExecutions()->make()->failure($test, $message);
+        $this->result->testExecutions()->make()->fail($test, $message);
     }
 
     /**
@@ -48,6 +48,6 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
      */
     public function executeAfterTestError(string $test, string $message, float $time): void
     {
-        $this->result->testExecutions()->make()->failure($test, $message);
+        $this->result->testExecutions()->make()->error($test, $message);
     }
 }

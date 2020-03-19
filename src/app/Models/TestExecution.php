@@ -12,8 +12,9 @@ class TestExecution extends Model
 {
     const UPDATED_AT = null;
 
-    const STATUS_PASSED = 'passed';
-    const STATUS_FAILURE = 'failure';
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
+    const STATUS_ERROR = 'error';
 
     /**
      * @var string
@@ -32,8 +33,9 @@ class TestExecution extends Model
      * @var array
      */
     protected $observables = [
-        'passed',
-        'failure',
+        'pass',
+        'fail',
+        'error',
     ];
 
     /**
@@ -42,8 +44,9 @@ class TestExecution extends Model
     public static function getStatusTypes()
     {
         return [
-            static::STATUS_PASSED => 'success',
-            static::STATUS_FAILURE => 'danger',
+            static::STATUS_PASS => 'success',
+            static::STATUS_FAIL => 'danger',
+            static::STATUS_ERROR => 'danger',
         ];
     }
 
@@ -61,8 +64,9 @@ class TestExecution extends Model
     public static function getStatusLabels()
     {
         return [
-            static::STATUS_PASSED => __('Pass'),
-            static::STATUS_FAILURE => __('Fail'),
+            static::STATUS_PASS => __('Pass'),
+            static::STATUS_FAIL => __('Fail'),
+            static::STATUS_ERROR => __('Error'),
         ];
     }
 
@@ -86,16 +90,16 @@ class TestExecution extends Model
      * @param string $name
      * @return bool
      */
-    public function passed(string $name)
+    public function pass(string $name)
     {
         $this->name = $name;
-        $this->status = static::STATUS_PASSED;
+        $this->status = static::STATUS_PASS;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('passed');
+        $this->fireModelEvent('pass');
         return true;
     }
 
@@ -104,17 +108,36 @@ class TestExecution extends Model
      * @param string|null $exception
      * @return bool
      */
-    public function failure(string $name, string $exception = null)
+    public function fail(string $name, string $exception = null)
     {
         $this->name = $name;
-        $this->status = static::STATUS_FAILURE;
+        $this->status = static::STATUS_FAIL;
         $this->exception = $exception;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('failure');
+        $this->fireModelEvent('fail');
+        return true;
+    }
+
+    /**
+     * @param string $name
+     * @param string|null $exception
+     * @return bool
+     */
+    public function error(string $name, string $exception = null)
+    {
+        $this->name = $name;
+        $this->status = static::STATUS_ERROR;
+        $this->exception = $exception;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('error');
         return true;
     }
 }

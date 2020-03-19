@@ -1959,7 +1959,7 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/responseStatementEntries"
+                $ref: "#/components/schemas/responseStatementEntries"
           headers:
             'X-Date':
               $ref: '#/components/headers/X-Date'
@@ -5082,7 +5082,7 @@ paths:
             put:
               summary: Authorisation Code Update Success Callback
               description: This callback communicates a simple message to communicate that the Authorisation Code update
-                 completed successfully.
+                completed successfully.
               operationId: "authorisationCodeUpdateIdentifierTypeIdentifierSuccessPUT"
               parameters:
                 - $ref: '#/components/parameters/X-Date'
@@ -5683,7 +5683,7 @@ components:
     subType:
       type: "string"
       description: A non-harmonised sub-classification of the type of transaction.
-          Values are not fixed, and usage will vary according to Provider.
+        Values are not fixed, and usage will vary according to Provider.
       minLength: 0
       maxLength: 256
     descriptionText:
@@ -5699,14 +5699,14 @@ components:
     requestingOrganisationTransactionReference:
       type: "string"
       description: A reference provided by the requesting organisation that is
-          to be associated with the transaction.
+        to be associated with the transaction.
       minLength: 0
       maxLength: 256
     oneTimeCode:
       type: "string"
       description: A one-time code that can be supplied in the request or can be
-          generated in the response depending upon the use case.
-          An authorisation code can be supplied in this property for requests that have been pre-authorised."
+        generated in the response depending upon the use case.
+        An authorisation code can be supplied in this property for requests that have been pre-authorised."
       minLength: 0
       maxLength: 256
     geoCode:
@@ -5802,8 +5802,8 @@ components:
     party:
       type: "object"
       required:
-      - "key"
-      - "value"
+        - "key"
+        - "value"
       properties:
         key:
           type: "string"
@@ -5847,9 +5847,9 @@ components:
     fees:
       type: "object"
       required:
-      - "feeType"
-      - "feeCurrency"
-      - "feeAmount"
+        - "feeType"
+        - "feeCurrency"
+        - "feeAmount"
       properties:
         feeType:
           type: "string"
@@ -5868,8 +5868,8 @@ components:
     metadata:
       type: "object"
       required:
-      - "key"
-      - "value"
+        - "key"
+        - "value"
       properties:
         key:
           type: "string"
@@ -6169,7 +6169,7 @@ components:
       type: "object"
       description: A collection of properties detailing information specifically used for international transfers.
       required:
-      - "originCountry"
+        - "originCountry"
       properties:
         originCountry:
           allOf:
@@ -6194,7 +6194,7 @@ components:
     internationalTransferInformationResponse:
       type: "object"
       required:
-      - "originCountry"
+        - "originCountry"
       properties:
         originCountry:
           allOf:
@@ -6288,7 +6288,7 @@ components:
     postalAddress:
       type: "object"
       required:
-      - "country"
+        - "country"
       properties:
         addressLine1:
           type: "string"
@@ -6551,8 +6551,8 @@ components:
     paymentType:
       type: "string"
       enum:
-      - "partialpayment"
-      - "fullpayment"
+        - "partialpayment"
+        - "fullpayment"
     supplementaryBillReferenceDetailsArray:
       type: "array"
       description: In some cases, a single reference is not sufficient to identify
@@ -6563,8 +6563,8 @@ components:
     supplementaryBillReferenceDetails:
       type: "object"
       required:
-      - "paymentReferenceType"
-      - "paymentReferenceValue"
+        - "paymentReferenceType"
+        - "paymentReferenceValue"
       properties:
         paymentReferenceType:
           type: "string"
@@ -6594,9 +6594,9 @@ components:
     billStatus:
       type: "string"
       enum:
-      - "unpaid"
-      - "paid"
-      - "partialpaid"
+        - "unpaid"
+        - "paid"
+        - "partialpaid"
     startDate:
       type: "string"
       format: "date"
@@ -6671,11 +6671,11 @@ components:
     quotes:
       type: "object"
       required:
-      - "quoteId"
-      - "receivingAmount"
-      - "receivingCurrency"
-      - "sendingAmount"
-      - "sendingCurrency"
+        - "quoteId"
+        - "receivingAmount"
+        - "receivingCurrency"
+        - "sendingAmount"
+        - "sendingCurrency"
       properties:
         quoteId:
           $ref: '#/components/schemas/quoteId'
@@ -6721,7 +6721,7 @@ components:
     fxRate:
       type: "string"
       description: The conversion rate applicable between the sending and the receiving
-         currency for the requested transaction.
+        currency for the requested transaction.
       minLength: 4
       maxLength: 256
       pattern: ^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,10}[1-9])?$
@@ -6779,7 +6779,7 @@ components:
             minLength: 1
             maxLength: 256
         required:
-        - "channelType"
+          - "channelType"
       maxItems: 50
     redemptionTransactionTypes:
       type: "array"
@@ -6817,7 +6817,7 @@ components:
       format: "date-time"
       description: Where the planned restoration time is known (e.g. scheduled maintenance), it can be provided in this property.
 
-# All the GSMA Mobile Money API Request Schemas are defined here.
+    # All the GSMA Mobile Money API Request Schemas are defined here.
 
     requestStateObject:
       type: "object"
@@ -6829,16 +6829,16 @@ components:
         serverCorrelationId:
           type: "string"
           description: A unique identifier issued by the provider to enable the client
-             to identify the RequestState resource on subsequent polling requests. Must be supplied as a UUID.
+            to identify the RequestState resource on subsequent polling requests. Must be supplied as a UUID.
           minLength: 1
           maxLength: 256
           pattern: "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$"
         status:
           type: "string"
           enum:
-          - "pending"
-          - "completed"
-          - "failed"
+            - "pending"
+            - "completed"
+            - "failed"
           description: Indicates the status of the request.
         pendingReason:
           type: "string"
@@ -6848,8 +6848,8 @@ components:
         notificationMethod:
           type: "string"
           enum:
-          - "callback"
-          - "polling"
+            - "callback"
+            - "polling"
           description: Indicates whether a callback will be issued or whether the client will need to poll.
         objectReference:
           type: "string"
@@ -6874,71 +6874,71 @@ components:
     genericUpdateSuccess:
       type: "object"
       required:
-      - "result"
+        - "result"
       properties:
         result:
           type: "string"
           description: The success message provided in a callback to communicate the success of an update operation.
           enum:
-          - "success"
+            - "success"
     errorObject:
       type: "object"
       required:
-      - "errorCategory"
-      - "errorCode"
+        - "errorCategory"
+        - "errorCode"
       properties:
         errorCategory:
           type: "string"
           description: The category grouping for the error.
           enum:
-          - "businessRule"
-          - "validation"
-          - "authorisation"
-          - "identification"
-          - "internal"
-          - "serviceUnavailable"
+            - "businessRule"
+            - "validation"
+            - "authorisation"
+            - "identification"
+            - "internal"
+            - "serviceUnavailable"
         errorCode:
           type: "string"
           description: The harmonised error code identifying the reason for error.
           enum:
-          - "genericError"
-          - "dailyVolumeLimitExceeded"
-          - "dailyValueLimitExceeded"
-          - "weeklyVolumeLimitExceeded"
-          - "weeklyValueLimitExceeded"
-          - "monthlyVolumeLimitExceeded"
-          - "monthlyValueLimitExceeded"
-          - "accountMaxTotalVolumeExceeded"
-          - "accountMaxTotalValueExceeded"
-          - "lessThanTransactionMinValue"
-          - "greaterThanTransactionMaxValue"
-          - "maxBalanceExceeded"
-          - "samePartiesError"
-          - "duplicateRequest"
-          - "insufficientFunds"
-          - "incorrectState"
-          - "underPaymentNotAllowed"
-          - "overPaymentNotAllowed"
-          - "rateLimitError"
-          - "transactionTypeError"
-          - "noMandateAuthority"
-          - "linkViolation"
-          - "countryofOriginNotPermitted"
-          - "nationalityNotPermitted"
-          - "idDocumentNotSupported"
-          - "issuingCountryNotSupported"
-          - "quoteHasExpired"
-          - "identifierError"
-          - "lengthError"
-          - "formatError"
-          - "negativeValue"
-          - "currencyNotSupported"
-          - "mandatoryValueNotSupplied"
-          - "invalidOffset"
-          - "clientAuthorisationError"
-          - "requestDeclined"
-          - "servicingPartyAuthorisationError"
-          - "requestingPartyAuthorisationError"
+            - "genericError"
+            - "dailyVolumeLimitExceeded"
+            - "dailyValueLimitExceeded"
+            - "weeklyVolumeLimitExceeded"
+            - "weeklyValueLimitExceeded"
+            - "monthlyVolumeLimitExceeded"
+            - "monthlyValueLimitExceeded"
+            - "accountMaxTotalVolumeExceeded"
+            - "accountMaxTotalValueExceeded"
+            - "lessThanTransactionMinValue"
+            - "greaterThanTransactionMaxValue"
+            - "maxBalanceExceeded"
+            - "samePartiesError"
+            - "duplicateRequest"
+            - "insufficientFunds"
+            - "incorrectState"
+            - "underPaymentNotAllowed"
+            - "overPaymentNotAllowed"
+            - "rateLimitError"
+            - "transactionTypeError"
+            - "noMandateAuthority"
+            - "linkViolation"
+            - "countryofOriginNotPermitted"
+            - "nationalityNotPermitted"
+            - "idDocumentNotSupported"
+            - "issuingCountryNotSupported"
+            - "quoteHasExpired"
+            - "identifierError"
+            - "lengthError"
+            - "formatError"
+            - "negativeValue"
+            - "currencyNotSupported"
+            - "mandatoryValueNotSupplied"
+            - "invalidOffset"
+            - "clientAuthorisationError"
+            - "requestDeclined"
+            - "servicingPartyAuthorisationError"
+            - "requestingPartyAuthorisationError"
         errordescription:
           type: "string"
           description: A textual description of the error."
@@ -6998,7 +6998,7 @@ components:
         servicingIdentity:
           $ref: '#/components/schemas/servicingIdentity'
         fees:
-         $ref: '#/components/schemas/feesArray'
+          $ref: '#/components/schemas/feesArray'
         requestingLei:
           $ref: '#/components/schemas/requestingLei'
         receivingLei:
@@ -7047,7 +7047,7 @@ components:
         servicingIdentity:
           $ref: '#/components/schemas/servicingIdentity'
         fees:
-         $ref: '#/components/schemas/feesArray'
+          $ref: '#/components/schemas/feesArray'
         requestingLei:
           $ref: '#/components/schemas/requestingLei'
         receivingLei:
@@ -7094,13 +7094,13 @@ components:
         servicingIdentity:
           $ref: '#/components/schemas/servicingIdentity'
         fees:
-         $ref: '#/components/schemas/feesArray'
+          $ref: '#/components/schemas/feesArray'
         metadata:
           $ref: '#/components/schemas/metadataArray'
     requestBatchTransaction:
       type: "object"
       required:
-      - "transactions"
+        - "transactions"
       properties:
         batchTitle:
           $ref: '#/components/schemas/batchTitle'
@@ -7285,8 +7285,8 @@ components:
           description: Indicates the Patch operation to be performed. 'replace' is used to update a property and 'add' is used to add a new property.
           type: "string"
           enum:
-          - "replace"
-          - "add"
+            - "replace"
+            - "add"
         path:
           description: Specify the property to be updated or added preceded by '/'.
           type: "string"
@@ -7296,7 +7296,7 @@ components:
           type: "string"
           maxLength: 256
 
-# All the GSMA Mobile Money API Response Schemas are defined here.
+    # All the GSMA Mobile Money API Response Schemas are defined here.
 
     responseTransaction:
       type: "object"
@@ -7346,7 +7346,7 @@ components:
         servicingIdentity:
           $ref: '#/components/schemas/servicingIdentity'
         fees:
-         $ref: '#/components/schemas/feesArray'
+          $ref: '#/components/schemas/feesArray'
         requestingLei:
           $ref: '#/components/schemas/requestingLei'
         receivingLei:
@@ -7414,7 +7414,7 @@ components:
         servicingIdentity:
           $ref: '#/components/schemas/servicingIdentity'
         fees:
-         $ref: '#/components/schemas/feesArray'
+          $ref: '#/components/schemas/feesArray'
         requestingLei:
           $ref: '#/components/schemas/requestingLei'
         receivingLei:
@@ -7478,7 +7478,7 @@ components:
         servicingIdentity:
           $ref: '#/components/schemas/servicingIdentity'
         fees:
-         $ref: '#/components/schemas/feesArray'
+          $ref: '#/components/schemas/feesArray'
         metadata:
           $ref: '#/components/schemas/metadataArray'
         transactionStatus:
@@ -7609,19 +7609,19 @@ components:
           example: "15.00"
         availableBalance:
           description: Indicates the balance that is able to be debited for an account.
-             This balance is only provided on some API provider systems.
+            This balance is only provided on some API provider systems.
           allOf:
             - $ref: '#/components/schemas/amount'
           example: "15.00"
         reservedBalance:
           description: Indicates the portion of the balance that is reserved, i.e.
-             intended to be debited. This balance is only provided on some API provider systems."
+            intended to be debited. This balance is only provided on some API provider systems."
           allOf:
             - $ref: '#/components/schemas/amount'
           example: "15.00"
         unclearedBalance:
           description: Indicates the sum of uncleared funds in an account, i.e. the funds
-             that are awaiting a credit confirmation.
+            that are awaiting a credit confirmation.
           allOf:
             - $ref: '#/components/schemas/amount'
           example: "15.00"
@@ -7942,7 +7942,7 @@ components:
         link:
           $ref: '#/components/schemas/link'
 
-# All the GSMA Mobile Money API Request Bodies are defined here.
+  # All the GSMA Mobile Money API Request Bodies are defined here.
 
   requestBodies:
     updateError:
@@ -8122,8 +8122,8 @@ components:
       name: "X-Date"
       in: "header"
       description: Header parameter to indicate the date and time that the message
-         was originated. It is used for basic message integrity checks, to ensure the request is not stale.
-         Note that the header was previously referenced as 'Date' in version 1.0 of the Mobile Money API.
+        was originated. It is used for basic message integrity checks, to ensure the request is not stale.
+        Note that the header was previously referenced as 'Date' in version 1.0 of the Mobile Money API.
       required: false
       schema:
         type: "string"
@@ -8155,7 +8155,7 @@ components:
       name: "X-User-Credential-1"
       in: "header"
       description: The end-users encrypted security credential.
-         Should only be used when OAuth 2.0/OIDC authorisation framework has not been implemented by the API Provider.
+        Should only be used when OAuth 2.0/OIDC authorisation framework has not been implemented by the API Provider.
       required: false
       schema:
         type: "string"
@@ -8163,7 +8163,7 @@ components:
       name: "X-User-Credential-2"
       in: "header"
       description: The end-users encrypted security credential
-         Should only be used when OAuth 2.0/OIDC authorisation framework has not been implemented by the API Provider.
+        Should only be used when OAuth 2.0/OIDC authorisation framework has not been implemented by the API Provider.
       required: false
       schema:
         type: "string"
@@ -8214,7 +8214,7 @@ components:
       name: "limit"
       in: "query"
       description: Supports pagination. If this is not supplied, then the server
-         will apply a limit of 50 records returned for each request.
+        will apply a limit of 50 records returned for each request.
       required: false
       schema:
         type: "integer"
@@ -8223,8 +8223,8 @@ components:
       name: "offset"
       in: "query"
       description: Supports pagination. This value will indicate the cursor position
-         from where to retrieve the set of records. For example, a limit of 50
-         and offset of 10 will return records 11 to 60.
+        from where to retrieve the set of records. For example, a limit of 50
+        and offset of 10 will return records 11 to 60.
       required: false
       schema:
         type: "integer"
@@ -8419,8 +8419,8 @@ components:
       name: "X-Account-Holding-Institution-Identifier-Type"
       in: "header"
       description: A header variable that identifies the type of the account holding institution.
-         This header is used to support request routing and should be used in conjunction with
-         the X-Account-Holding-Institution-Identifier header.
+        This header is used to support request routing and should be used in conjunction with
+        the X-Account-Holding-Institution-Identifier header.
       required: false
       schema:
         type: "string"
@@ -8432,8 +8432,8 @@ components:
       name: "X-Account-Holding-Institution-Identifier"
       in: "header"
       description: A header variable that identifies the account holding institution.
-         This header is used to support request routing and should be used in conjunction with
-         the X-Account-Holding-Institution-Identifier-Type header.
+        This header is used to support request routing and should be used in conjunction with
+        the X-Account-Holding-Institution-Identifier-Type header.
       required: false
       schema:
         type: "string"

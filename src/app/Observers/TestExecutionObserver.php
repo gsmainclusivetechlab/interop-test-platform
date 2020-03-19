@@ -10,7 +10,7 @@ class TestExecutionObserver
      * @param TestExecution $execution
      * @return void
      */
-    public function passed(TestExecution $execution)
+    public function pass(TestExecution $execution)
     {
 
     }
@@ -19,7 +19,16 @@ class TestExecutionObserver
      * @param TestExecution $execution
      * @return void
      */
-    public function failure(TestExecution $execution)
+    public function fail(TestExecution $execution)
+    {
+
+    }
+
+    /**
+     * @param TestExecution $execution
+     * @return void
+     */
+    public function error(TestExecution $execution)
     {
 
     }

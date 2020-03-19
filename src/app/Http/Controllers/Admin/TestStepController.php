@@ -29,7 +29,6 @@ class TestStepController extends Controller
             })
             ->with(['source', 'target'])
             ->withCount(['testRequestScripts', 'testResponseScripts'])
-            ->latest()
             ->paginate();
 
         return view('admin.test-steps.index', compact('testCase', 'testSteps'));

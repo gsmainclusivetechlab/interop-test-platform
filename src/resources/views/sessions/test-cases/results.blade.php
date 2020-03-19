@@ -98,7 +98,7 @@
                                 {{ $component->id }}({{$component->name}})@if($component->name == 'Service Provider'):::is-active @endif;
                                 @foreach ($component->paths as $connection)
                                     {{ $component->id }}
-                                    @if($connection->pivot->simulated) --> @else -.-> @endif
+                                    @if($component->simulated && $connection->simulated) --> @else -.-> @endif
                                     @if($component->is($testResult->testStep->source) && $connection->is($testResult->testStep->target))
                                         |active| {{ $connection->id }}
                                     @else

@@ -23,7 +23,7 @@
                         </td>
                         <td class="text-break">
                             @if ($component->apiService)
-                                {{ $component->apiService->name }} {{ $component->apiService->version }}
+                                {{ $component->apiService->name }}
                             @endif
                         </td>
                     </tr>

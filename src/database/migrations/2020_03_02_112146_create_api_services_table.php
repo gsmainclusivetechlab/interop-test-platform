@@ -17,10 +17,9 @@ class CreateApiServicesTable extends Migration
             $table->bigIncrements('id');
             $table->uuid('uuid')->unique();
             $table->string('name');
-            $table->string('version');
             $table->text('description')->nullable();
             $table->string('server');
-            $table->longText('openapi');
+            $table->longText('scheme');
             $table->timestamps();
         });
     }

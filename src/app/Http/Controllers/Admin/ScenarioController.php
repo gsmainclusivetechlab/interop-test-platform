@@ -25,6 +25,7 @@ class ScenarioController extends Controller
         $scenarios = Scenario::when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
+            ->withCount(['components', 'useCases', 'testCases'])
             ->latest()
             ->paginate();
 

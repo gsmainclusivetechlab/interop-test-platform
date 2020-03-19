@@ -56,8 +56,6 @@ Access your site via URL: http://localhost:8084
 
 Mail catcher: http://localhost:8086
 
-Admin login: admin@gsma.com / password
-
 Superadmin login: superadmin@gsma.com / password
 
 You're ready to write your code!

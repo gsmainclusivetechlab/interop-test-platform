@@ -31,29 +31,28 @@ class TestController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param ApiService $specification
-     * @param string $path
+     * @param ApiService $apiService
+     * @param string $uri
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $path)
+    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $uri)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
-        $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
-            ->whereNull('completed_at')
-            ->firstOrFail();
+        $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
+
         $testStep = $testRun->testSteps()
-            ->whereHas('target', function ($query) use ($apiService) {
+            ->whereHas('source', function ($query) use ($apiService) {
                 $query->where('api_service_id', $apiService->id);
             })
             ->offset($testRun->testResults()
                 ->whereHas('testStep', function ($query) use ($apiService) {
-                    $query->whereHas('target', function ($query) use ($apiService) {
+                    $query->whereHas('source', function ($query) use ($apiService) {
                         $query->where('api_service_id', $apiService->id);
                     });
                 })->count())
             ->firstOrFail();
 
-        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+        $uri = (new Uri($uri));
         $request = $request->withUri($uri);
 
         $stack = new HandlerStack();
