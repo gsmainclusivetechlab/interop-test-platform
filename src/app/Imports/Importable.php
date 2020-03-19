@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 interface Importable
 {
     /**
-     * @param array $row
+     * @param array $rows
      * @return Model
      */
-    public function import(array $row): Model;
+    public function import(array $rows): Model;
 }

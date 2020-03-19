@@ -76,7 +76,7 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.components', 'ComponentController')->shallow();
     Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
+    Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
+    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import');
     Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
-    Route::get('test-cases/{testCase}/test-steps/import', 'TestStepController@showImportForm')->name('test-cases.test-steps.import');
-    Route::post('test-cases/{testCase}/test-steps/import', 'TestStepController@import')->name('test-cases.test-steps.import');
 });

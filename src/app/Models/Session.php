@@ -29,23 +29,6 @@ class Session extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $with = [
-        'testCases',
-        'lastTestRun',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $withCount = [
-        'testRuns',
-        'passedTestRuns',
-        'failureTestRuns',
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function owner()

@@ -28,18 +28,18 @@ class TestCaseImport implements Importable
     }
 
     /**
-     * @param array $row
+     * @param array $rows
      * @return Model
      * @throws \Throwable
      */
-    public function import(array $row): Model
+    public function import(array $rows): Model
     {
-        return DB::transaction(function () use ($row) {
-            $testCase = TestCase::make(Arr::only($row, TestCase::make()->getFillable()));
-            $testCase->setAttribute('use_case_id', $this->scenario->useCases()->where('name', Arr::get($row, 'use_case'))->value('id'));
+        return DB::transaction(function () use ($rows) {
+            $testCase = TestCase::make(Arr::only($rows, TestCase::make()->getFillable()));
+            $testCase->setAttribute('use_case_id', $this->scenario->useCases()->where('name', Arr::get($rows, 'use_case'))->value('id'));
             $testCase->saveOrFail();
 
-            if ($testStepRows = Arr::get($row, 'test_steps', [])) {
+            if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
                 foreach ($testStepRows as $testStepRow) {
                     /**
                      * @var TestStep $testStep

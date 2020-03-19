@@ -84,7 +84,12 @@ class ScenariosTableSeeder extends Seeder
     protected function getComponentPathsData(Scenario $scenario)
     {
         return [
-            [],
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
+                    'simulated' => false,
+                ],
+            ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Payer')->value('id'),

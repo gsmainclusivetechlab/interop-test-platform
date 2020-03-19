@@ -19,7 +19,7 @@
                 @forelse ($components as $component)
                     <tr>
                         <td class="text-break">
-                            <a href="{{ route('admin.components.show', $component) }}">{{ $component->name }}</a>
+                            <a href="#">{{ $component->name }}</a>
                         </td>
                         <td class="text-break">
                             @if ($component->apiService)

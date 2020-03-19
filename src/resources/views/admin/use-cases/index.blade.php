@@ -19,10 +19,10 @@
                 @forelse ($useCases as $useCase)
                     <tr>
                         <td class="text-break">
-                            <a href="{{ route('admin.use-cases.show', $useCase) }}">{{ $useCase->name }}</a>
+                            <a href="#">{{ $useCase->name }}</a>
                         </td>
                         <td>
-
+                            {{ $useCase->test_cases_count }}
                         </td>
                     </tr>
                 @empty

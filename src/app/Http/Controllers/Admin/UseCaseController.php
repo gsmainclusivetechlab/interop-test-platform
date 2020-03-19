@@ -27,18 +27,10 @@ class UseCaseController extends Controller
             ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
+            ->withCount('testCases')
             ->latest()
             ->paginate();
 
         return view('admin.use-cases.index', compact('scenario', 'useCases'));
-    }
-
-    /**
-     * @param UseCase $useCase
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function show(UseCase $useCase)
-    {
-        return view('admin.use-cases.show', compact('useCase'));
     }
 }

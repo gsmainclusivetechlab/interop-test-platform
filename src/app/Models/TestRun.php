@@ -49,25 +49,6 @@ class TestRun extends Model
     /**
      * @var array
      */
-//    protected $with = [
-//        'session',
-//        'testCase',
-//    ];
-
-//    /**
-//     * @var array
-//     */
-//    protected $withCount = [
-//        'steps',
-//        'results',
-//        'passResults',
-//        'failResults',
-//        'errorResults',
-//    ];
-
-    /**
-     * @var array
-     */
     protected $observables = [
         'passed',
         'failure',
