@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="row align-items-start">
-                    <div class="col-3 flex-fill bg-white p-0">
+                    <div class="col-3 mt-3 pr-0">
                         @yield('session-sidebar')
                     </div>
                     <div class="col-9 mt-3">

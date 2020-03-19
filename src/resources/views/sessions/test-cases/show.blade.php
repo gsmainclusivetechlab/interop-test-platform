@@ -6,7 +6,7 @@
     <div class="input-group">
         <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
         <span class="input-group-append">
-            <button class="btn border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
+            <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
                 <i class="fe fe-copy"></i>
             </button>
         </span>
@@ -14,7 +14,7 @@
 @endsection
 
 @section('session-sidebar')
-    <div class="card mb-0 p-0 border-0 rounded-0 shadow-none">
+    <div class="card mb-0">
         <div class="card-header px-4">
             <h3 class="card-title">
                 <a href="{{ route('sessions.show', $session) }}" class="text-decoration-none">
