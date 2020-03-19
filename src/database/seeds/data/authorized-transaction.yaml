@@ -1,4 +1,5 @@
 name: Authorized Transaction
+use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
   The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.

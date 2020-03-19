@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Imports\TestCaseImport;
 use App\Models\Scenario;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Symfony\Component\Yaml\Yaml;
 
 class TestCaseController extends Controller
 {
@@ -23,6 +25,11 @@ class TestCaseController extends Controller
      */
     public function index(Scenario $scenario)
     {
+        $import = new TestCaseImport($scenario);
+        $import->import(Yaml::parseFile(database_path('seeds/data/authorized-transaction.yaml')));
+
+        dd(1);
+
         $testCases = $scenario->testCases()
             ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
