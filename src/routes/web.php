@@ -19,10 +19,8 @@ Route::get('/', 'HomeController@index')->name('home');
  * Sessions Routes
  */
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
-    Route::get('/{trashed?}', 'OverviewController@index')->name('index')->where('trashed', 'trashed');
+    Route::get('/', 'OverviewController@index')->name('index');
     Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
-    Route::post('{sessionOnlyTrashed}/restore', 'OverviewController@restore')->name('restore');
-    Route::delete('{sessionWithTrashed}/force-destroy', 'OverviewController@forceDestroy')->name('force_destroy');
     Route::get('{session}', 'OverviewController@show')->name('show');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test_cases.show');
     Route::get('{session}/test-cases/{testCase}/results/{testRun}/{position?}', 'TestCaseController@results')->name('test_cases.results');
@@ -67,10 +65,7 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate_admin');
     });
     Route::name('sessions.')->prefix('sessions')->group(function () {
-        Route::get('/{trashed?}', 'SessionController@index')->name('index')->where('trashed', 'trashed');
-        Route::delete('{session}/destroy', 'SessionController@destroy')->name('destroy');
-        Route::post('{sessionOnlyTrashed}/restore', 'SessionController@restore')->name('restore');
-        Route::delete('{sessionWithTrashed}/force-destroy', 'SessionController@forceDestroy')->name('force_destroy');
+        Route::get('/', 'SessionController@index')->name('index');
     });
     Route::resource('scenarios', 'ScenarioController');
     Route::resource('scenarios.components', 'ComponentController')->shallow();

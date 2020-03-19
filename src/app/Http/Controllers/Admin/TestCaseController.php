@@ -30,6 +30,7 @@ class TestCaseController extends Controller
             ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
+            ->with('useCase')
             ->withCount('testSteps')
             ->latest()
             ->paginate();

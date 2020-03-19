@@ -18,6 +18,7 @@ class HomeController extends Controller
     public function index()
     {
         $sessions = auth()->user()->sessions()
+            ->with(['testCases', 'lastTestRun'])
             ->latest()
             ->paginate(12);
 

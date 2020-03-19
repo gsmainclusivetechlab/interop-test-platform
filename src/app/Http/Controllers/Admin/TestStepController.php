@@ -27,6 +27,8 @@ class TestStepController extends Controller
             ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
+            ->with(['source', 'target'])
+            ->withCount(['testRequestScripts', 'testResponseScripts'])
             ->latest()
             ->paginate();
 

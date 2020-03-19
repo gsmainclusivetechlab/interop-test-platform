@@ -19,6 +19,8 @@
                         <th class="text-nowrap">{{ __('Name') }}</th>
                         <th class="text-nowrap">{{ __('Source') }}</th>
                         <th class="text-nowrap">{{ __('Target') }}</th>
+                        <th class="text-nowrap">{{ __('Test Request Scripts') }}</th>
+                        <th class="text-nowrap">{{ __('Test Response Scripts') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,10 +41,16 @@
                                 {{ $testStep->target->name }}
                             </a>
                         </td>
+                        <td>
+                            {{ $testStep->test_request_scripts_count }}
+                        </td>
+                        <td>
+                            {{ $testStep->test_response_scripts_count }}
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="3">
+                        <td class="text-center" colspan="5">
                             {{ __('No Results') }}
                         </td>
                     </tr>

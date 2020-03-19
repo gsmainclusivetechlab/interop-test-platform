@@ -9,16 +9,6 @@
     <div class="card">
         <div class="card-header">
             @include('components.grid.search')
-            <div class="card-options">
-                <div class="btn-group">
-                    <a href="{{ route('sessions.index') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index') && !request()->route()->hasParameter('trashed')) active @endif">
-                        {{ __('Active') }}
-                    </a>
-                    <a href="{{ route('sessions.index', 'trashed') }}" class="btn btn-outline-primary @if (request()->routeIs('sessions.index') && request()->route()->hasParameter('trashed')) active @endif">
-                        {{ __('Deactivated') }}
-                    </a>
-                </div>
-            </div>
         </div>
         <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
@@ -36,11 +26,7 @@
                 @forelse ($sessions as $session)
                     <tr>
                         <td>
-                            @if($session->trashed())
-                                {{ $session->name }}
-                            @else
-                                <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
-                            @endif
+                            <a href="{{ route('sessions.show', $session) }}">{{ $session->name }}</a>
                         </td>
                         <td>
                             {{ $session->testCases->unique('use_case_id')->count() }}
@@ -52,39 +38,17 @@
                             @include('sessions.includes.runs-progress', $session)
                         </td>
                         <td>
-                            @if($session->lastRun)
-                                {{ $session->lastRun->completed_at->diffForHumans() }}
+                            @if($session->lastTestRun)
+                                {{ $session->lastTestRun->completed_at->diffForHumans() }}
                             @endif
                         </td>
                         <td class="text-center">
-                            @canany(['delete', 'restore'], $session)
+                            @canany(['delete'], $session)
                                 @component('components.grid.actions')
-                                    @if ($session->trashed())
-                                        @can('restore', $session)
-                                            @include('components.grid.actions.form', [
-                                                'method' => 'POST',
-                                                'route' => route('sessions.restore', $session),
-                                                'label' => __('Activate'),
-                                                'confirmTitle' => __('Confirm activate'),
-                                                'confirmText' => __('Are you sure you want to activate :name?', ['name' => $session->name]),
-                                            ])
-                                        @endcan
-                                    @else
-                                        @can('delete', $session)
-                                            @include('components.grid.actions.form', [
-                                                'method' => 'DELETE',
-                                                'route' => route('sessions.destroy', $session),
-                                                'label' => __('Deactivate'),
-                                                'confirmTitle' => __('Confirm deactivate'),
-                                                'confirmText' => __('Are you sure you want to deactivate :name?', ['name' => $session->name]),
-                                            ])
-                                        @endcan
-                                    @endif
-
                                     @can('delete', $session)
                                         @include('components.grid.actions.form', [
                                             'method' => 'DELETE',
-                                            'route' => route('sessions.force_destroy', $session),
+                                            'route' => route('sessions.destroy', $session),
                                             'label' => __('Delete'),
                                             'confirmTitle' => __('Confirm delete'),
                                             'confirmText' => __('Are you sure you want to delete :name?', ['name' => $session->name]),

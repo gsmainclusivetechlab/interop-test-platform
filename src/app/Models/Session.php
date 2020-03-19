@@ -3,17 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @mixin \Eloquent
  */
 class Session extends Model
 {
-    use SoftDeletes;
-
-    const DELETED_AT = 'deactivated_at';
-
     /**
      * @var string
      */
