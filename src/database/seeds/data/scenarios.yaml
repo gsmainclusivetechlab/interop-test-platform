@@ -1098,7 +1098,7 @@
             Service Provider is capable to handled async calls.
             Payee and Payer MMOs exist in Mojaloop as Participants.
             Payee and Payer exist in Mojaloop as Parties.
-            Amount should be the value "10.10".
+            Amount should be the value "10.1".
             Debit party should be identified by account identier "msisdn" with the value "+33555123456".
             Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
           test_data_example:
