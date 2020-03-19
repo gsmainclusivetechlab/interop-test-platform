@@ -6,7 +6,7 @@
     <div class="input-group">
         <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
         <span class="input-group-append">
-            <button class="btn border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
+            <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
                 <i class="fe fe-copy"></i>
             </button>
         </span>
@@ -14,7 +14,7 @@
 @endsection
 
 @section('session-sidebar')
-    <div class="card mb-0 p-0 border-0 rounded-0 shadow-none">
+    <div class="card mb-0">
         <div class="card-header px-4">
             <h3 class="card-title">
                 <a href="{{ route('sessions.show', $session) }}" class="text-decoration-none">
@@ -106,8 +106,6 @@
                                     @endif
                                 @endforeach
                             @endforeach
-                            classDef node fill:#fff,stroke:#fff,color:#242529
-                            classDef clickable fill:#fff,stroke:#fff,color:#242529
                         </flow-chart>
                     </div>
                     <div class="rounded-0 bg-white border-top">
@@ -116,49 +114,58 @@
                                 <ul class="list-unstyled mb-0">
                                     @foreach ($testRun->testSteps as $step)
                                         @if($stepResult = $testRun->testResults()->where('test_step_id', $step->id)->first())
-                                            <li class="list-group-item-action d-flex align-items-baseline py-3 px-4 @if($step->is($testResult->testStep)) bg-light @endif">
-                                                <a href="{{ route('sessions.test_cases.results', [$session, $testCase, $testRun, $step->position]) }}" class="d-flex flex-wrap align-items-center text-reset text-decoration-none">
-                                                    <b class="text-nowrap">
-                                                        {{ __('Step :n', ['n' => $step->position]) }}
-                                                    </b>
-                                                    @switch($stepResult->request->getMethod())
-                                                        @case('POST')
-                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-orange">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                        @break
+                                            <li class="list-group-item-action @if($step->is($testResult->testStep)) bg-light @endif">
+                                                <a href="{{ route('sessions.test_cases.results', [$session, $testCase, $testRun, $step->position]) }}" class="d-flex justify-content-between align-items-center py-2 px-4 text-reset text-decoration-none">
+                                                    <div class="mr-1 text-truncate">
+                                                        <b>
+                                                            {{ __('Step :n', ['n' => $step->position]) }}
+                                                        </b>
 
-                                                        @case('PUT')
-                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-blue">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                        @break
+                                                        <div class="d-flex align-items-baseline text-truncate">
+                                                            @switch($stepResult->request->getMethod())
+                                                                @case('POST')
+                                                                <span class="font-weight-bold text-orange">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                                @break
 
-                                                        @case('DELETE')
-                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-red">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                        @break
+                                                                @case('PUT')
+                                                                <span class="font-weight-bold text-blue">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                                @break
 
-                                                        @default
-                                                        <span class="d-inline-block w-8 mx-2 text-center font-weight-bold text-mint">
-                                                            {{ $stepResult->request->getMethod() }}
-                                                        </span>
-                                                    @endswitch
-                                                    {{ $stepResult->request->getUri()->getPath() }}
+                                                                @case('DELETE')
+                                                                <span class="font-weight-bold text-red">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                                @break
+
+                                                                @default
+                                                                <span class="font-weight-bold text-mint">
+                                                                    {{ $stepResult->request->getMethod() }}
+                                                                </span>
+                                                            @endswitch
+
+                                                            <span class="d-inline-block ml-1 text-truncate" title="{{ $stepResult->request->getMethod() }} {{ $stepResult->request->getUri()->getPath() }}">
+                                                                {{ $stepResult->request->getUri()->getPath() }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <span class="flex-shrink-0 status-icon mr-0 bg-{{ $stepResult->status_type }}"></span>
                                                 </a>
-                                                <span class="flex-shrink-0 status-icon ml-auto mr-0 bg-{{ $stepResult->status_type }}"></span>
                                             </li>
                                         @else
-                                            <li class="d-flex align-items-center py-3 px-4 text-black-50">
-                                                        <span class="d-flex flex-wrap align-items-baseline">
-                                                            <b class="text-nowrap">
-                                                                {{ __('Step :n', ['n' => $step->position]) }}
-                                                            </b>
-                                                            <span class="d-flex justify-content-baseline align-items-center mx-2">
-                                                                {{ $step->name }}
-                                                            </span>
-                                                        </span>
+                                            <li class="d-flex align-items-center py-2 px-4 text-black-50">
+                                                <div class="text-truncate">
+                                                    <b>
+                                                        {{ __('Step :n', ['n' => $step->position]) }}
+                                                    </b>
+                                                    <div class="text-truncate" title="{{ $step->name }}">
+                                                        {{ $step->name }}
+                                                    </div>
+                                                </div>
                                             </li>
                                         @endif
                                     @endforeach
@@ -174,17 +181,29 @@
                                                 {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->getStatusCode() : __('Unknown')]) }}
                                             </span>
                                 </div>
-                                <div class="lead p-4">
+                                <div class="px-4 py-2">
                                     <ul class="m-0 p-0">
                                         @foreach($testResult->testExecutions as $testExecution)
-                                            <li class="d-flex align-items-center py-2">
-                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
-                                                            {{ $testExecution->status_label }}
-                                                        </span>
-                                                <p class="small mb-0">
-                                                    {{ $testExecution->name }}@if ($testExecution->exception): {{ $testExecution->exception }}@endif
-                                                </p>
-                                            </li>
+                                        <li class="d-flex flex-wrap py-2">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
+                                                    {{ $testExecution->status_label }}
+                                                </span>
+
+                                                <span
+                                                    class="d-flex align-items-center"
+                                                    @if ($testExecution->exception) v-b-toggle="'{{ $testExecution['id'] }}'" @endif
+                                                >
+                                                    {{ $testExecution->name }}
+                                                </span>
+                                            </div>
+
+                                            <b-collapse id="{{ $testExecution['id'] }}" class="w-100 ml-8 pl-2">
+                                                @if ($testExecution->exception)
+                                                    <p class="mb-0 small">{{ $testExecution->exception }}</p>
+                                                @endif
+                                            </b-collapse>
+                                        </li>
                                         @endforeach
                                     </ul>
                                 </div>

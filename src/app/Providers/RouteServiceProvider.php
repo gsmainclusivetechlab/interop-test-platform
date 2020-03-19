@@ -58,12 +58,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('userWithTrashed', function ($value) {
             return User::withTrashed()->firstOrFail();
         });
-        Route::bind('sessionOnlyTrashed', function ($value) {
-            return Session::onlyTrashed()->firstOrFail();
-        });
-        Route::bind('sessionWithTrashed', function ($value) {
-            return Session::withTrashed()->firstOrFail();
-        });
     }
 
     /**

@@ -23,14 +23,6 @@ class TestPlan extends Pivot
     public $timestamps = false;
 
     /**
-     * @var array
-     */
-    protected $with = [
-        'session',
-        'testCase',
-    ];
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function testCase()

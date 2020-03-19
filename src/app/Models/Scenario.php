@@ -31,6 +31,14 @@ class Scenario extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function testCases()
+    {
+        return $this->hasManyThrough(TestCase::class, UseCase::class, 'scenario_id', 'use_case_id', 'id', 'id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function components()

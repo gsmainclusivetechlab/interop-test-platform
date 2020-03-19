@@ -23,3 +23,12 @@
         </div>
     </div>
 </footer>
+@if(session('success'))
+    <notification :options='@json(['text' => session('success'), 'type' => 'success'])'></notification>
+@elseif(session('error'))
+    <notification :options='@json(['text' => session('error'), 'type' => 'error'])'></notification>
+@elseif(session('warning'))
+    <notification :options='@json(['text' => session('warning'), 'type' => 'warning'])'></notification>
+@elseif(session('info'))
+    <notification :options='@json(['text' => session('info'), 'type' => 'info'])'></notification>
+@endif

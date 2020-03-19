@@ -1,84 +1,131 @@
 <?php
 
+use App\Imports\TestCaseImport;
 use App\Models\ApiService;
 use App\Models\Component;
-use App\Models\ComponentPath;
 use App\Models\Scenario;
-use App\Models\TestCase;
-use App\Models\TestRequestScript;
-use App\Models\TestRequestSetup;
-use App\Models\TestResponseScript;
-use App\Models\TestResponseSetup;
-use App\Models\TestStep;
-use App\Models\UseCase;
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Seeder;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 
 class ScenariosTableSeeder extends Seeder
 {
     /**
      * @return void
+     * @throws Throwable
      */
     public function run()
     {
-        $data = Yaml::parseFile(database_path('seeds/data/scenarios.yaml'), Yaml::PARSE_CUSTOM_TAGS);
+        $scenario = Scenario::create(['name' => 'Mobile Money API v1.1.0 and Mojaloop FSPIOP API v1.0']);
+        $scenario->useCases()->createMany($this->getUseCasesData());
+        $scenario->components()->createMany($this->getComponentsData())->each(function (Component $component, $key) use ($scenario) {
+            $component->paths()->attach(Arr::get($this->getComponentPathsData($scenario), $key));
+        });
 
-        foreach ($data as $item) {
-            $scenario = Scenario::create(Arr::only($item, Scenario::make()->getFillable()));
+        $finder = (new Finder())
+            ->files()
+            ->name('*.yaml')
+            ->in(database_path('seeds/test-cases'));
 
-            $componentsData = Arr::get($item, 'components', []);
-            $scenario->components()->createMany(collect($componentsData)->map(function ($item) {
-                return array_merge(Arr::only($item, Component::make()->getFillable()), [
-                    'api_service_id' => ApiService::whereRaw('CONCAT(name, " ", version) = ?', [Arr::get($item, 'api_service_id')])->value('id'),
-                ]);
-            }))->each(function (Component  $component, $key) use ($componentsData) {
-                $component->paths()->attach(collect(Arr::get($componentsData, "{$key}.paths", []))->map(function ($item) use ($component) {
-                    return array_merge(Arr::only($item, ComponentPath::make()->getFillable()), [
-                        'target_id' => $component->scenario->components()->where('name', Arr::get($item, 'target_id'))->value('id'),
-                    ]);
-                }));
-            });
-
-            $useCasesData = Arr::get($item, 'use_cases', []);
-            $scenario->useCases()->createMany(collect($useCasesData)->map(function ($item) {
-                return Arr::only($item, UseCase::make()->getFillable());
-            }))->each(function (UseCase $useCase, $key) use ($useCasesData) {
-                $testCasesData = Arr::get($useCasesData, "{$key}.test_cases", []);
-                $useCase->testCases()
-                    ->createMany(collect($testCasesData)->map(function ($item) {
-                        return Arr::only($item, TestCase::make()->getFillable());
-                    }))
-                    ->each(function (TestCase $testCase, $key) use ($testCasesData) {
-                        $testStepsData = Arr::get($testCasesData, "{$key}.test_steps", []);
-                        $testCase->testSteps()
-                            ->createMany(collect($testStepsData)->map(function ($item) use ($testCase) {
-                                return array_merge(Arr::only($item, TestStep::make()->getFillable()), [
-                                    'source_id' => $testCase->useCase->scenario->components()->where('name', Arr::get($item, 'source_id'))->value('id'),
-                                    'target_id' => $testCase->useCase->scenario->components()->where('name', Arr::get($item, 'target_id'))->value('id'),
-                                ]);
-                            }))
-                            ->each(function (TestStep $testStep, $key) use ($testStepsData) {
-                                $testStep->testRequestSetups()
-                                    ->createMany(collect(Arr::get($testStepsData, "{$key}.test_request_setups", []))->map(function ($item) {
-                                        return Arr::only($item, TestRequestSetup::make()->getFillable());
-                                    }));
-                                $testStep->testResponseSetups()
-                                    ->createMany(collect(Arr::get($testStepsData, "{$key}.test_response_setups", []))->map(function ($item) {
-                                        return Arr::only($item, TestResponseSetup::make()->getFillable());
-                                    }));
-
-                                $testStep->testRequestScripts()
-                                    ->createMany(collect(Arr::get($testStepsData, "{$key}.test_request_scripts", []))->map(function ($item) {
-                                        return Arr::only($item, TestRequestScript::make()->getFillable());
-                                    }));
-                                $testStep->testResponseScripts()
-                                    ->createMany(collect(Arr::get($testStepsData, "{$key}.test_response_scripts", []))->map(function ($item) {
-                                        return Arr::only($item, TestResponseScript::make()->getFillable());
-                                    }));
-                            });
-                    });
-            });
+        foreach ($finder as $file) {
+            /**
+             * @var SplFileInfo $file
+             */
+            (new TestCaseImport($scenario))->import(Yaml::parse($file->getContents()));
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getUseCasesData()
+    {
+        return [
+            [
+              'name' => 'Merchant-Initiated Merchant Payment',
+              'description' => 'A Merchant-Initiated Merchant Payment is typically a receive amount, where the Payer FSP is not disclosing any fees to the Payee FSP. Please refer to 5.1.6.8 in "Open API for FSP Interoperability Specification" for more details'
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getComponentsData()
+    {
+        return [
+            [
+                'name' => 'Payer',
+            ],
+            [
+                'name' => 'Service Provider',
+            ],
+            [
+                'name' => 'Mobile Money Operator 1',
+                'api_service_id' => ApiService::where(['name' => 'Mobile Money', 'version' => 'v1.1.0'])->value('id'),
+            ],
+            [
+                'name' => 'Mojaloop',
+                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub', 'version' => 'v1.0'])->value('id'),
+            ],
+            [
+                'name' => 'Mobile Money Operator 2',
+                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub', 'version' => 'v1.0'])->value('id'),
+            ],
+        ];
+    }
+
+    /**
+     * @param Scenario $scenario
+     * @return array
+     */
+    protected function getComponentPathsData(Scenario $scenario)
+    {
+        return [
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
+                    'simulated' => false,
+                ],
+            ],
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Payer')->value('id'),
+                    'simulated' => false,
+                ],
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
+                    'simulated' => true,
+                ],
+            ],
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
+                    'simulated' => true,
+                ],
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
+                    'simulated' => true,
+                ],
+            ],
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
+                    'simulated' => true,
+                ],
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 2')->value('id'),
+                    'simulated' => true,
+                ],
+            ],
+            [
+                [
+                    'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
+                    'simulated' => true,
+                ],
+            ],
+        ];
     }
 }
