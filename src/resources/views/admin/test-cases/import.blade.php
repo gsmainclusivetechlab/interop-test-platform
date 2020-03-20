@@ -15,7 +15,7 @@
                 <div class="form-group">
                     <div class="form-label">{{ __('File') }}</div>
                     <div class="custom-file">
-                        <input type="file" name="file" class="custom-file-input @error('file') is-invalid @enderror">
+                        <input type="file" name="file" class="custom-file-input @error('file') is-invalid @enderror" onchange="this.form.submit()">
                         <label class="custom-file-label">
                             {{ __('Choose file') }}
                         </label>

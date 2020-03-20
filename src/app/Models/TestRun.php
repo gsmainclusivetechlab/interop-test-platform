@@ -107,6 +107,6 @@ class TestRun extends Model
      */
     public function isSuccessful()
     {
-        return !$this->unsuccessful;
+        return $this->successful >= $this->total && !$this->unsuccessful;
     }
 }

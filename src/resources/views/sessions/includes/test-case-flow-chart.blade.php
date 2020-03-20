@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h2 class="card-title">
-            <b>{{ __('Flow diagram') }}</b>
+            <b>{{ __('Use case flow') }}</b>
         </h2>
     </div>
     <div class="card-body bg-light">
