@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -12,12 +11,6 @@ use Illuminate\Support\Arr;
 class TestRun extends Model
 {
     use HasUuid;
-
-    const UPDATED_AT = null;
-
-    const STATUS_PROCESSING = 'processing';
-    const STATUS_PASSED = 'passed';
-    const STATUS_FAILURE = 'failure';
 
     /**
      * @var string
@@ -28,7 +21,6 @@ class TestRun extends Model
      * @var array
      */
     protected $fillable = [
-        'session_id',
         'test_case_id',
     ];
 
@@ -36,42 +28,22 @@ class TestRun extends Model
      * @var array
      */
     protected $attributes = [
-        'status' => self::STATUS_PROCESSING,
+        'total' => 0,
+        'successful' => 0,
+        'unsuccessful' => 0,
     ];
 
     /**
-     * @var array
+     * @return void
      */
-    protected $casts = [
-        'completed_at' => 'datetime',
-    ];
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function (self $model) {
+            $model->total = $model->testSteps()->count();
+        });
+    }
 
-    /**
-     * @var array
-     */
-//    protected $with = [
-//        'session',
-//        'testCase',
-//    ];
-
-//    /**
-//     * @var array
-//     */
-//    protected $withCount = [
-//        'steps',
-//        'results',
-//        'passResults',
-//        'failResults',
-//        'errorResults',
-//    ];
-
-    /**
-     * @var array
-     */
-    protected $observables = [
-        'passed',
-        'failure',
-    ];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -105,46 +77,21 @@ class TestRun extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function passedTestResults()
-    {
-        return $this->testResults()->passed();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function failureTestResults()
-    {
-        return $this->testResults()->failure();
-    }
-
-    /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopePassed($query)
     {
-        return $query->where('status', static::STATUS_PASSED);
+        return $query->whereColumn('total', '=', 'successful');
     }
 
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeFailure($query)
+    public function scopeFailures($query)
     {
-        return $query->where('status', static::STATUS_FAILURE);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeCompleted($query)
-    {
-        return $query->whereNotNull('completed_at');
+        return $query->whereColumn('total', '!=', 'successful');
     }
 
     /**
@@ -156,84 +103,10 @@ class TestRun extends Model
     }
 
     /**
-     * @return array
-     */
-    public static function getStatusTypes()
-    {
-        return [
-            static::STATUS_PROCESSING => 'secondary',
-            static::STATUS_PASSED => 'success',
-            static::STATUS_FAILURE => 'danger',
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusTypeAttribute()
-    {
-        return Arr::get(static::getStatusTypes(), $this->status);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getStatusLabels()
-    {
-        return [
-            static::STATUS_PROCESSING => __('Processing'),
-            static::STATUS_PASSED => __('Pass'),
-            static::STATUS_FAILURE => __('Fail'),
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusLabelAttribute()
-    {
-        return Arr::get(static::getStatusLabels(), $this->status);
-    }
-
-    /**
      * @return bool
      */
-    public function isCompleted()
+    public function isSuccessful()
     {
-        return $this->completed_at != null;
-    }
-
-    /**
-     * @return bool
-     */
-    public function passed()
-    {
-        $this->status = static::STATUS_PASSED;
-        $this->completed_at = now();
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('passed');
-        return true;
-    }
-
-    /**
-     * @param string|null $exception
-     * @return bool
-     */
-    public function failure(string $exception = null)
-    {
-        $this->status = static::STATUS_FAILURE;
-        $this->exception = $exception;
-        $this->completed_at = now();
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('failure');
-        return true;
+        return $this->successful >= $this->total && !$this->unsuccessful;
     }
 }

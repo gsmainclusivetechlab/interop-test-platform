@@ -4,13 +4,16 @@ namespace App\Testing;
 
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestResult;
+use PHPUnit\Runner\AfterLastTestHook;
+use PHPUnit\Runner\BeforeFirstTestHook;
+use PHPUnit\Runner\Hook;
 use PHPUnit\Runner\TestHook;
 use PHPUnit\Runner\TestListenerAdapter;
 
 class TestRunner
 {
     /**
-     * @var TestHook[]
+     * @var Hook[]
      */
     protected $extensions = [];
 
@@ -20,7 +23,19 @@ class TestRunner
      */
     public function run(Test $test): TestResult
     {
+        foreach ($this->extensions as $extension) {
+            if ($extension instanceof BeforeFirstTestHook) {
+                $extension->executeBeforeFirstTest();
+            }
+        }
+
         $result = $test->run($this->buildResult());
+
+        foreach ($this->extensions as $extension) {
+            if ($extension instanceof AfterLastTestHook) {
+                $extension->executeAfterLastTest();
+            }
+        }
 
         return $result;
     }
@@ -34,7 +49,9 @@ class TestRunner
         $listener = new TestListenerAdapter();
 
         foreach ($this->extensions as $extension) {
-            $listener->add($extension);
+            if ($extension instanceof TestHook) {
+                $listener->add($extension);
+            }
         }
 
         $result->addListener($listener);
@@ -43,9 +60,9 @@ class TestRunner
     }
 
     /**
-     * @param TestHook $extension
+     * @param Hook $extension
      */
-    public function addExtension(TestHook $extension): void
+    public function addExtension(Hook $extension): void
     {
         $this->extensions[] = $extension;
     }

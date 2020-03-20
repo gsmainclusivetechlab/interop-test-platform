@@ -12,8 +12,9 @@ class TestExecution extends Model
 {
     const UPDATED_AT = null;
 
-    const STATUS_PASSED = 'passed';
-    const STATUS_FAILURE = 'failure';
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
+    const STATUS_ERROR = 'error';
 
     /**
      * @var string
@@ -25,15 +26,8 @@ class TestExecution extends Model
      */
     protected $fillable = [
         'name',
-        'exception',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $observables = [
-        'passed',
-        'failure',
+        'message',
+        'status',
     ];
 
     /**
@@ -42,8 +36,9 @@ class TestExecution extends Model
     public static function getStatusTypes()
     {
         return [
-            static::STATUS_PASSED => 'success',
-            static::STATUS_FAILURE => 'danger',
+            static::STATUS_PASS => 'success',
+            static::STATUS_FAIL => 'danger',
+            static::STATUS_ERROR => 'danger',
         ];
     }
 
@@ -61,8 +56,9 @@ class TestExecution extends Model
     public static function getStatusLabels()
     {
         return [
-            static::STATUS_PASSED => __('Pass'),
-            static::STATUS_FAILURE => __('Fail'),
+            static::STATUS_PASS => __('Pass'),
+            static::STATUS_FAIL => __('Fail'),
+            static::STATUS_ERROR => __('Error'),
         ];
     }
 
@@ -83,38 +79,29 @@ class TestExecution extends Model
     }
 
     /**
-     * @param string $name
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function passed(string $name)
+    public function scopePassed($query)
     {
-        $this->name = $name;
-        $this->status = static::STATUS_PASSED;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('passed');
-        return true;
+        return $query->where('status', static::STATUS_PASS);
     }
 
     /**
-     * @param string $name
-     * @param string|null $exception
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function failure(string $name, string $exception = null)
+    public function scopeFailures($query)
     {
-        $this->name = $name;
-        $this->status = static::STATUS_FAILURE;
-        $this->exception = $exception;
+        return $query->where('status', static::STATUS_FAIL);
+    }
 
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('failure');
-        return true;
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeErrors($query)
+    {
+        return $query->where('status', static::STATUS_ERROR);
     }
 }

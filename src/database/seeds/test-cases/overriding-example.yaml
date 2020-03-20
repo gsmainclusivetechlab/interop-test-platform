@@ -1,0 +1,49 @@
+name: Overriding Example
+use_case: Merchant-Initiated Merchant Payment
+behavior: positive
+description: |
+  Send data from example below and see that amount, currency and both msisdns are different from what you sent.
+precondition: |
+  N/A
+test_data_example:
+  uri: /transactions
+  method: POST
+  headers:
+    accept: 'application/json'
+    content-type: 'application/json'
+    x-callback-url: 'http://example.com/example'
+    x-date: '2020-02-20T10:28:44.466Z'
+  body:
+    amount: '100'
+    currency: 'USD'
+    type: 'merchantpay'
+    debitParty:
+      key: "msisdn"
+      value: "+33555123456"
+    creditParty:
+      key: "msisdn"
+      value: "+33555789123"
+test_steps:
+  - name: POST /transactions
+    source: Service Provider
+    target: Mobile Money Operator 1
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL: 'regex:/.*/'
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+    test_request_setups:
+      - name: Override amount, currency and both msisdns
+        values:
+          body:
+            amount: '77.77'
+            currency: 'GBP'
+            debitParty.0.value: '11111111'
+            creditParty.0.value: '22222222'
+    test_response_setups:
+      - name: Override response status
+        values:
+          status: 500

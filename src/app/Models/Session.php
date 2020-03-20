@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @mixin \Eloquent
  */
 class Session extends Model
 {
-    use SoftDeletes;
-
-    const DELETED_AT = 'deactivated_at';
+    use HasUuid;
 
     /**
      * @var string
@@ -26,23 +24,6 @@ class Session extends Model
         'name',
         'description',
         'scenario_id',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $with = [
-        'testCases',
-        'lastTestRun',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $withCount = [
-        'testRuns',
-        'passedTestRuns',
-        'failureTestRuns',
     ];
 
     /**
@@ -66,7 +47,7 @@ class Session extends Model
      */
     public function testRuns()
     {
-        return $this->hasMany(TestRun::class, 'session_id')->completed();
+        return $this->hasMany(TestRun::class, 'session_id');
     }
 
     /**
@@ -74,7 +55,7 @@ class Session extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
+        return $this->hasOne(TestRun::class, 'session_id')->latest();
     }
 
     /**
@@ -98,9 +79,7 @@ class Session extends Model
      */
     public function testCases()
     {
-        return $this->belongsToMany(TestCase::class, 'test_plans', 'session_id', 'test_case_id')
-            ->using(TestPlan::class)
-            ->withPivot(['uuid']);
+        return $this->belongsToMany(TestCase::class, 'session_test_cases', 'session_id', 'test_case_id');
     }
 
     /**

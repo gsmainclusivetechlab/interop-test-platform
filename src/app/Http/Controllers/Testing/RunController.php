@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Testing;
 
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
-use App\Jobs\CompleteTestRun;
-use App\Models\TestPlan;
-use App\Models\TestRun;
+use App\Models\Session;
+use App\Models\TestCase;
 use App\Testing\Middlewares\RequestMiddleware;
 use App\Testing\Middlewares\ResponseMiddleware;
+use App\Testing\TestRequest;
+use App\Testing\TestResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
@@ -31,19 +32,17 @@ class RunController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param TestPlan $plan
+     * @param Session $session
+     * @param TestCase $testCase
      * @param string $path
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, TestPlan $testPlan, string $path)
+    public function __invoke(ServerRequestInterface $request, Session $session, TestCase $testCase, string $path)
     {
-        $testRun = TestRun::create([
-            'session_id' => $testPlan->session_id,
-            'test_case_id' => $testPlan->test_case_id,
+        $testRun = $session->testRuns()->create([
+            'test_case_id' => $testCase->id,
         ]);
-        $testStep = $testPlan->testSteps()->firstOrFail();
-
-        CompleteTestRun::dispatch($testRun)->delay(now()->addSeconds(30));
+        $testStep = $testCase->testSteps()->firstOrFail();
 
         $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
         $traceparent = (new TraceparentHeader())
@@ -66,18 +65,17 @@ class RunController extends Controller
 
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
-            'request' => $request,
+            'request' => new TestRequest($request),
         ]);
 
         try {
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
             $testResult->update([
-                'response' => $response,
+                'response' => new TestResponse($response),
             ]);
 
             return $this->doTest($testResult);
         } catch (RequestException $e) {
-            $testResult->failure($e->getMessage());
             return $e;
         }
     }

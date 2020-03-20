@@ -3,7 +3,7 @@
 @section('title', $session->name)
 
 @section('session-sidebar')
-    <div class="card mb-0 p-0 border-0 rounded-0 shadow-none">
+    <div class="card mb-0">
         <div class="card-header px-4">
             <h3 class="card-title">{{ __('Select use cases') }}</h3>
         </div>
@@ -26,18 +26,11 @@
                                                 @foreach($session->positiveTestCases->where('use_case_id', $useCase->id) as $testCase)
                                                     <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                         <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
-                                                        @switch($session->testRuns()->latest()->where('test_case_id', $testCase->id)->value('status'))
-                                                            @case(\App\Models\TestRun::STATUS_PASSED)
-                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-success"></span>
-                                                            @break
-
-                                                            @case(\App\Models\TestRun::STATUS_FAILURE)
-                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-danger"></span>
-                                                            @break
-
-                                                            @default
+                                                        @if($lastRun = $session->testRuns()->latest()->where('test_case_id', $testCase->id)->first())
+                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon @if($lastRun->isSuccessful()) bg-success @else bg-danger @endif"></span>
+                                                        @else
                                                             <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-secondary"></span>
-                                                        @endswitch
+                                                        @endif
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -59,18 +52,11 @@
                                                 @foreach($session->negativeTestCases->where('use_case_id', $useCase->id) as $testCase)
                                                     <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                         <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
-                                                        @switch($session->testRuns()->latest()->where('test_case_id', $testCase->id)->value('status'))
-                                                            @case(\App\Models\TestRun::STATUS_PASSED)
-                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-success"></span>
-                                                            @break
-
-                                                            @case(\App\Models\TestRun::STATUS_FAILURE)
-                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-danger"></span>
-                                                            @break
-
-                                                            @default
+                                                        @if($lastRun = $session->testRuns()->latest()->where('test_case_id', $testCase->id)->first())
+                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon @if($lastRun->isSuccessful()) bg-success @else bg-danger @endif"></span>
+                                                        @else
                                                             <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-secondary"></span>
-                                                        @endswitch
+                                                        @endif
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -101,9 +87,10 @@
                         <tr>
                             <th class="text-nowrap w-auto">{{ __('Test Case') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Status') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Total') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
-                            <th class="text-nowrap w-1"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -120,17 +107,21 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <span class="status-icon bg-{{ $testRun->status_type }}"></span>
-                                    {{ $testRun->status_label }}
+                                    {{ $testRun->total }}
                                 </td>
                                 <td>
-                                    {{ $testRun->completed_at }}
+                                    {{ $testRun->successful }}
                                 </td>
-                                <td></td>
+                                <td>
+                                    {{ $testRun->unsuccessful }}
+                                </td>
+                                <td>
+                                    {{ $testRun->created_at }}
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="5">
+                                <td class="text-center" colspan="6">
                                     {{ __('No Results') }}
                                 </td>
                             </tr>

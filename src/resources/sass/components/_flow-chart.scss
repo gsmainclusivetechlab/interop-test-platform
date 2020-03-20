@@ -11,6 +11,24 @@
         text-align: center;
     }
 
+    .node {
+        rect {
+            fill: #fff !important;
+            stroke: #fff !important;
+            color: $body-color;
+        }
+
+        &.is-active {
+            rect {
+                fill: $red !important;
+            }
+
+            .label {
+                color: #fff !important;
+            }
+        }
+    }
+
     .edgePath {
         .path {
             stroke: $gray-300 !important;
@@ -21,15 +39,29 @@
         }
     }
 
-    .clickable {
-        cursor: pointer;
+    .actor {
+        fill: #fff !important;
+        stroke: #fff !important;
+    }
 
-        .label {
-            transition: color 0.15s;
-        }
+    text.actor {
+        font-size: 13px !important;
+        stroke: none !important;
+        fill: $body-color !important;
+    }
 
-        rect {
-            transition: fill 0.15s;
+    .messageText {
+        font-size: 13px !important;
+        fill: $body-color !important;
+    }
+
+    #arrowhead {
+        path {
+            fill: $gray-300 !important;
         }
+    }
+
+    [class^="messageLine"] {
+        stroke: $gray-300 !important;
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestRequestExamplesTable extends Migration
+class CreateSessionTestCasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateTestRequestExamplesTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_request_examples', function (Blueprint $table) {
+        Schema::create('session_test_cases', function (Blueprint $table) {
+            $table->unsignedBigInteger('session_id');
+            $table->foreign('session_id')->references('id')->on('sessions')->onDelete('cascade');
             $table->unsignedBigInteger('test_case_id');
             $table->foreign('test_case_id')->references('id')->on('test_cases')->onDelete('cascade');
-            $table->primary('test_case_id');
-            $table->string('method');
-            $table->string('uri');
-            $table->longText('headers');
-            $table->longText('body');
-            $table->timestamps();
+            $table->primary(['session_id', 'test_case_id']);
         });
     }
 
@@ -32,6 +29,6 @@ class CreateTestRequestExamplesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_request_examples');
+        Schema::dropIfExists('session_test_cases');
     }
 }

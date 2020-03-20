@@ -38,7 +38,7 @@
     cursor: default;
 }
 .jsontree_node_marked > .jsontree_label-wrapper > .jsontree_label {
-    background: #fff2aa;
+    background: $yellow;
 }
 
 .jsontree_value-wrapper {
@@ -52,21 +52,12 @@
     vertical-align: top;
     display: inline;
 }
-.jsontree_value_null {
-    color: #777;
-    font-weight: bold;
-}
-.jsontree_value_string {
-    color: #025900;
-    font-weight: bold;
-}
-.jsontree_value_number {
-    color: #000E59;
-    font-weight: bold;
-}
+.jsontree_value_null,
+.jsontree_value_string,
+.jsontree_value_number,
 .jsontree_value_boolean {
-    color: #600100;
     font-weight: bold;
+    color: $body-color;
 }
 
 .jsontree_expand-button {

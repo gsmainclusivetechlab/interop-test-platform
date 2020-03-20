@@ -1,0 +1,62 @@
+name: Decline Transaction with Error 400 by Payee FSP
+use_case: Merchant-Initiated Merchant Payment
+behavior: negative
+description: |
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet.
+  In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
+  This flow shows the necessary steps for this transaction, simulating a decline transaction with error 400 by the Payee.
+precondition: |
+  Service Provider has GSMA Mobile Money API Implemented.
+  Service Provider is capable of handled async calls.
+  Payee and Payer MMOs exist in Mojaloop as Participants.
+  Payee and Payer exist in Mojaloop as Parties.
+  Amount should be the value "4".
+  Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+test_data_example:
+  uri: /transactions
+  method: POST
+  headers:
+    accept: 'application/json'
+    content-type: 'application/json'
+    x-callback-url: 'http://example.com/example'
+    x-date: '2020-02-20T10:28:44.466Z'
+  body:
+    amount: '4'
+    currency: 'USD'
+    type: 'merchantpay'
+    debitParty:
+      key: "msisdn"
+      value: "+33555123456"
+    creditParty:
+      key: "msisdn"
+      value: "+33555789123"
+test_steps:
+  - name: POST /transactions
+    source: Service Provider
+    target: Mobile Money Operator 1
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL: 'regex:/.*/'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        rules:
+          body.debitParty.*.key: 'in:msisdn'
+          body.debitParty.*.value: 'in:+33555123456'
+          body.creditParty.*.key: 'in:msisdn'
+          body.creditParty.*.value: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount: 'in:4'
+          body.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction is a Merchant Payment
+        rules:
+          body.type: 'in:merchantpay'
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'in:400'
+      - name: Error is specified correctly
+        rules:
+          body.errorCategory: 'in:businessRule'
+          body.errorCode: 'in:genericError'
