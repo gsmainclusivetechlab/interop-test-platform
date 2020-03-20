@@ -1,18 +1,18 @@
-name: Decline Transaction Error 500
+name: Decline Transaction with Error 500 by Payee FSP
 use_case: Merchant-Initiated Merchant Payment
 behavior: negative
 description: |
-  The Service Provider wants to test if he is capable to receive a transaction from a different wallet.
-  In this case we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
-  This flow shows the necessary steps for this transaction, simulating a 500 Error.
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet.
+  In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
+  This flow shows the necessary steps for this transaction, simulating a decline transaction with error 500 by the Payee.
 precondition: |
   Service Provider has GSMA Mobile Money API Implemented.
-  Service Provider is capable to handled async calls.
+  Service Provider is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
   Payee and Payer exist in Mojaloop as Parties.
-  Amount should be the value "5.00".
-  Debit party should be identified by account identier "msisdn" with the value "+33555123456".
-  Credit party should be identified by account identier "msisdn" with the value  value "+33555789123".
+  Amount should be the value "5".
+  Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 test_data_example:
   uri: /transactions
   method: POST
