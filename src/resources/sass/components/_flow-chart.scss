@@ -13,55 +13,54 @@
 
     .node {
         rect {
-            fill: #fff !important;
-            stroke: #fff !important;
+            fill: #fff;
+            stroke: #fff;
             color: $body-color;
         }
 
         &.is-active {
             rect {
-                fill: $red !important;
+                fill: $red;
             }
 
             .label {
-                color: #fff !important;
+                color: #fff;
             }
         }
     }
 
     .edgePath {
         .path {
-            stroke: $gray-300 !important;
+            stroke: $gray-300;
+            stroke-width: 1.5px;
         }
 
         .arrowheadPath {
-            fill: $gray-300 !important;
+            fill: $gray-300;
         }
     }
 
     .actor {
-        fill: #fff !important;
-        stroke: #fff !important;
+        fill: #fff;
+        stroke: #fff;
     }
 
     text.actor {
-        font-size: 13px !important;
-        stroke: none !important;
-        fill: $body-color !important;
+        stroke: none;
+        fill: $body-color;
     }
 
     .messageText {
-        font-size: 13px !important;
-        fill: $body-color !important;
+        fill: $body-color;
     }
 
     #arrowhead {
         path {
-            fill: $gray-300 !important;
+            fill: $gray-300;
         }
     }
 
     [class^="messageLine"] {
-        stroke: $gray-300 !important;
+        stroke: $gray-300;
     }
 }
