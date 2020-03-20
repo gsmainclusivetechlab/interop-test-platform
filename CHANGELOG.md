@@ -1,3 +1,15 @@
+## v0.4.1
+Added TC management (custom TCs import / deletion)
+Added Service Provider simulator
+Implemented transaction type and status mapping for MMO1
+Added registration code for beta users
+Removed session deactivation
+MMO1 transaction request mapping updates
+Test run view and flow diagram updates
+Admin links hidden for common user
+Bug fixes and performance improvements
+
+
 ## v0.4
 - Task: Save to DB fields from POST transactions and put them into PUT callback_url  [@jc_ssenokosov]
 - Task: Move project to AWS [@jc_mbabuta]
