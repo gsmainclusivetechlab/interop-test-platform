@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import '@fancyapps/fancybox';
+$.fancybox.defaults.touch = false;
 
 import {
     AlertPlugin,

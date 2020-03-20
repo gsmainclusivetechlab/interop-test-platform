@@ -3,13 +3,61 @@
 @section('title', $session->name)
 
 @section('session-header-right')
-    <div class="input-group">
-        <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
-        <span class="input-group-append">
-            <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
-                <i class="fe fe-copy"></i>
-            </button>
-        </span>
+    <div class="d-flex">
+        <div class="flex-shrink-0 btn-group btn-group-sm mr-2" role="group" aria-label="Test case data controls">
+            <button type="button" class="btn btn-secondary border" data-fancybox data-src="#flow-diagram">Flow diagram</button>
+            <button type="button" class="btn btn-secondary border" data-fancybox data-src="#test-data">Test data</button>
+        </div>
+        <div class="input-group">
+            <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
+            <span class="input-group-append">
+                <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
+                    <i class="fe fe-copy"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+
+    <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
+        @include('sessions.includes.test-case-flow-chart', $testCase)
+    </div>
+
+    <div id="test-data" class="col-6 p-0 rounded" style="display: none">
+        <div class="card mb-0">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <b>{{ $testCase->name }}</b>
+                </h2>
+            </div>
+            <div class="card-body bg-light p-0">
+                <div class="py-3 px-4">
+                    <p><strong>Precondition</strong></p>
+                    <p class="mb-0">
+                        <b>Headers</b>
+                        <pre class="mb-0 p-0">
+<code>{
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "X-Callback-URL": "http://example.com/example",
+    "X-Date": "2020-02-20T10:28:44.466Z"
+}</code>
+                        </pre>
+                    </p>
+                    <p class="mb-0">
+                        <b>Data body</b>
+                        <pre class="mb-0 p-0">
+<code>{
+    "amount":"100.00",
+    "currency":"USD",
+    "type":"merchantpay",
+    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],
+    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]
+}</code>
+                        </pre>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -99,7 +147,7 @@
                     @include('components.grid.pagination', ['paginator' => $testRuns])
                 </div>
             </div>
-            @include('sessions.includes.test-case-flow-chart', $testCase)
+            <!-- @include('sessions.includes.test-case-flow-chart', $testCase) -->
         </div>
     </div>
 @endsection
