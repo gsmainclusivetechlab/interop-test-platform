@@ -84,7 +84,7 @@
                             <div class="col-3 pr-0">
                                 <ul class="list-unstyled mb-0">
                                     @foreach ($testRun->testSteps as $step)
-                                        @if($stepResult = $testRun->testResults()->where('test_step_id', $step->id)->first())
+                                        @if($stepResult = $testRun->testResults->where('test_step_id', $step->id)->first())
                                             <li class="list-group-item-action @if($step->is($testResult->testStep)) bg-light @endif">
                                                 <a href="{{ route('sessions.test_cases.results', [$session, $testCase, $testRun, $step->position]) }}" class="d-flex justify-content-between align-items-center py-2 px-4 text-reset text-decoration-none">
                                                     <div class="mr-1 text-truncate">

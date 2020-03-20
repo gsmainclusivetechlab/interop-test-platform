@@ -11,26 +11,28 @@
                 <h2 class="col-login__subtitle mb-0">{{ config('app.name') }}</h2>
             </div>
             <div class="col-3 d-flex justify-content-end ml-auto">
-                <b-dropdown variant="link" toggle-class="text-decoration-none text-secondary" menu-class="dropdown-menu-arrow" right no-caret>
-                    <template v-slot:button-content>
-                        <i class="fe fe-settings"></i>
-                    </template>
-                    @can('viewAny', \App\Models\User::class)
-                        <b-dropdown-item href="{{ route('admin.users.index') }}">
-                            {{ __('Users') }}
-                        </b-dropdown-item>
-                    @endcan
-                    @can('viewAny', \App\Models\Session::class)
-                        <b-dropdown-item href="{{ route('admin.sessions.index') }}">
-                            {{ __('Sessions') }}
-                        </b-dropdown-item>
-                    @endcan
-                    @can('viewAny', \App\Models\Scenario::class)
-                        <b-dropdown-item href="{{ route('admin.scenarios.index') }}">
-                            {{ __('Scenarios') }}
-                        </b-dropdown-item>
-                    @endcan
-                </b-dropdown>
+                @if(auth()->user()->can('viewAny', \App\Models\User::class) || auth()->user()->can('viewAny', \App\Models\Session::class) || auth()->user()->can('viewAny', \App\Models\Scenario::class))
+                    <b-dropdown variant="link" toggle-class="text-decoration-none text-secondary" menu-class="dropdown-menu-arrow" right no-caret>
+                        <template v-slot:button-content>
+                            <i class="fe fe-settings"></i>
+                        </template>
+                        @can('viewAny', \App\Models\User::class)
+                            <b-dropdown-item href="{{ route('admin.users.index') }}">
+                                {{ __('Users') }}
+                            </b-dropdown-item>
+                        @endcan
+                        @can('viewAny', \App\Models\Session::class)
+                            <b-dropdown-item href="{{ route('admin.sessions.index') }}">
+                                {{ __('Sessions') }}
+                            </b-dropdown-item>
+                        @endcan
+                        @can('viewAny', \App\Models\Scenario::class)
+                            <b-dropdown-item href="{{ route('admin.scenarios.index') }}">
+                                {{ __('Scenarios') }}
+                            </b-dropdown-item>
+                        @endcan
+                    </b-dropdown>
+                @endif
                 <b-navbar-nav class="ml-2">
                     <b-nav-item-dropdown class="ml-auto p-0" menu-class="dropdown-menu-arrow" no-caret right toggle-class="pr-0 leading-none">
                         <template v-slot:button-content>
