@@ -22,6 +22,7 @@ class CreateTestRunsTable extends Migration
             $table->unsignedInteger('total');
             $table->unsignedInteger('successful');
             $table->unsignedInteger('unsuccessful');
+            $table->unsignedInteger('duration');
             $table->timestamps();
         });
     }

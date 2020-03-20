@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SebastianBergmann\Timer\Timer;
 use Throwable;
 
 class TestController extends Controller
@@ -70,6 +71,7 @@ class TestController extends Controller
             $stack->push(new ResponseMiddleware($testResponseSetup));
         }
 
+        Timer::start();
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
             'request' => new TestRequest($request),
@@ -81,8 +83,10 @@ class TestController extends Controller
                 'response' => new TestResponse($response),
             ]);
 
+            $testRun->increment('duration', floor(Timer::stop() * 1000));
             return $this->doTest($testResult);
         } catch (RequestException $e) {
+            $testRun->increment('duration', floor(Timer::stop() * 1000));
             return $e;
         }
     }

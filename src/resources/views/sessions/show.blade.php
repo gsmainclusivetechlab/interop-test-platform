@@ -90,6 +90,7 @@
                             <th class="text-nowrap w-auto">{{ __('Total') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                         </tr>
                         </thead>
@@ -114,6 +115,9 @@
                                 </td>
                                 <td>
                                     {{ $testRun->unsuccessful }}
+                                </td>
+                                <td>
+                                    {{ __(':n ms', ['n' => $testRun->duration]) }}
                                 </td>
                                 <td>
                                     {{ $testRun->created_at }}

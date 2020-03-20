@@ -31,6 +31,7 @@ class TestRun extends Model
         'total' => 0,
         'successful' => 0,
         'unsuccessful' => 0,
+        'duration' => 0,
     ];
 
     /**
