@@ -71,7 +71,7 @@
                                     {{ $component->id }}
                                     @if($component->simulated && $connection->simulated) --> @else -.-> @endif
                                     @if($component->is($testResult->testStep->source) && $connection->is($testResult->testStep->target))
-                                        |active| {{ $connection->id }}
+                                        |{{ __('Step :n', ['n' => $testResult->testStep->position]) }}| {{ $connection->id }}
                                     @else
                                         {{ $connection->id }}
                                     @endif
