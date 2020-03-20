@@ -100,9 +100,24 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer">
-                    @include('components.grid.pagination', ['paginator' => $testRuns])
-                </div>
+                @if ($testRuns->count())
+                    <div class="card-footer">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                {{ __('Showing :from to :to of :total entries', [
+                                    'from' => (($testRuns->currentPage() - 1) * $testRuns->perPage()) + 1,
+                                    'to' => (($testRuns->currentPage() - 1) * $testRuns->perPage()) + $testRuns->count(),
+                                    'total' => $testRuns->total(),
+                                ]) }}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="justify-content-end d-flex">
+                                    {{ $testRuns->appends(request()->all())->links() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
             @include('sessions.includes.test-case-flow-chart', $testCase)
         </div>
