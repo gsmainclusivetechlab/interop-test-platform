@@ -42,10 +42,7 @@ class TestResponse implements Arrayable
      */
     public function headers()
     {
-        return collect($this->response->getHeaders())
-            ->mapWithKeys(function ($values, $header) {
-                return [$header => $values];
-            })->all();
+        return $this->response->getHeaders();
     }
 
     /**
@@ -61,7 +58,7 @@ class TestResponse implements Arrayable
      */
     public function json()
     {
-        return json_decode($this->body(), true);
+        return json_decode($this->body(), true) ?? [];
     }
 
     /**

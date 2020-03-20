@@ -60,35 +60,6 @@
                         </a>
                         {{ $testRun->uuid }}
                     </h3>
-                    <div class="card-options">
-                        {{--                                @if ($run->pass_results_count)--}}
-                        {{--                                    <span class="text-success mr-2">--}}
-                        {{--                                        <i class="fe fe-check"></i>--}}
-                        {{--                                        {{ __(':n Pass', ['n' => $run->pass_results_count]) }}--}}
-                        {{--                                    </span>--}}
-                        {{--                                @endif--}}
-
-                        {{--                                @if ($run->fail_results_count)--}}
-                        {{--                                    <span class="text-danger mr-2">--}}
-                        {{--                                        <i class="fe fe-alert-circle"></i>--}}
-                        {{--                                        {{ __(':n Fail', ['n' => $run->fail_results_count]) }}--}}
-                        {{--                                    </span>--}}
-                        {{--                                @endif--}}
-
-                        {{--                                @if ($run->error_results_count)--}}
-                        {{--                                    <span class="text-warning mr-2">--}}
-                        {{--                                        <i class="fe fe-alert-triangle"></i>--}}
-                        {{--                                        {{ __(':n Error', ['n' => $run->error_results_count]) }}--}}
-                        {{--                                    </span>--}}
-                        {{--                                @endif--}}
-
-                        {{--                                @if ($run->steps_count - $run->results_count)--}}
-                        {{--                                    <span class="text-secondary mr-2">--}}
-                        {{--                                        <i class="fe fe-alert-octagon"></i>--}}
-                        {{--                                        {{ __(':n Not Executed', ['n' => $run->steps_count - $run->results_count]) }}--}}
-                        {{--                                    </span>--}}
-                        {{--                                @endif--}}
-                    </div>
                 </div>
                 <div class="card-body bg-light p-0">
                     <div class="px-4 py-6">
@@ -203,7 +174,6 @@
                                         @endforeach
                                     </ul>
                                 </div>
-
                                 @if($request = $testResult->request)
                                     <div class="p-4">
                                         <strong class="lead d-block mb-2 font-weight-bold">

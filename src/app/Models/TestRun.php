@@ -101,4 +101,12 @@ class TestRun extends Model
     {
         return str_replace('-', '', $this->uuid);
     }
+
+    /**
+     * @return bool
+     */
+    public function isSuccessful()
+    {
+        return !$this->unsuccessful;
+    }
 }

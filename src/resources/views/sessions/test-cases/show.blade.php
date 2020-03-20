@@ -64,8 +64,8 @@
                         <tr>
                             <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Total') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Successful') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Unsuccessful') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                         </tr>
                         </thead>

@@ -50,10 +50,7 @@ class TestRequest implements Arrayable
      */
     public function headers()
     {
-        return collect($this->request->getHeaders())
-            ->mapWithKeys(function ($values, $header) {
-                return [$header => $values];
-            })->all();
+        return $this->request->getHeaders();
     }
 
     /**
@@ -69,7 +66,7 @@ class TestRequest implements Arrayable
      */
     public function json()
     {
-        return json_decode($this->body(), true);
+        return json_decode($this->body(), true) ?? [];
     }
 
     /**

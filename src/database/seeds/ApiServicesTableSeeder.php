@@ -28,7 +28,7 @@ class ApiServicesTableSeeder extends Seeder
             [
                 'name' => 'Mobile Money v1.1.0',
                 'server' => env('FSIOP_MM_SIMULATOR_URL'),
-                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mobile-money.yaml'))),
+                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mm.yaml'))),
             ],
             [
                 'name' => 'Mojaloop Hub v1.0',
