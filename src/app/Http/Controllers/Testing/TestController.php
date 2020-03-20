@@ -9,6 +9,8 @@ use App\Models\ApiService;
 use App\Models\TestRun;
 use App\Testing\Middlewares\RequestMiddleware;
 use App\Testing\Middlewares\ResponseMiddleware;
+use App\Testing\TestRequest;
+use App\Testing\TestResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
@@ -68,18 +70,17 @@ class TestController extends Controller
 
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
-            'request' => $request,
+            'request' => new TestRequest($request),
         ]);
 
         try {
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
             $testResult->update([
-                'response' => $response,
+                'response' => new TestResponse($response),
             ]);
 
             return $this->doTest($testResult);
         } catch (RequestException $e) {
-            $testResult->failure($e->getMessage());
             return $e;
         }
     }

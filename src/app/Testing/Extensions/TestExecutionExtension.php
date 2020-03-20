@@ -2,6 +2,7 @@
 
 namespace App\Testing\Extensions;
 
+use App\Models\TestExecution;
 use App\Models\TestResult;
 use PHPUnit\Runner\AfterSuccessfulTestHook;
 use PHPUnit\Runner\AfterTestErrorHook;
@@ -28,7 +29,11 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
      */
     public function executeAfterSuccessfulTest(string $test, float $time): void
     {
-        $this->result->testExecutions()->make()->pass($test);
+        $this->result->testExecutions()->create([
+            'name' => $test,
+            'status' => TestExecution::STATUS_PASS,
+        ]);
+        $this->result->increment('passed');
     }
 
     /**
@@ -38,7 +43,12 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
      */
     public function executeAfterTestFailure(string $test, string $message, float $time): void
     {
-        $this->result->testExecutions()->make()->fail($test, $message);
+        $this->result->testExecutions()->create([
+            'name' => $test,
+            'message' => $message,
+            'status' => TestExecution::STATUS_FAIL
+        ]);
+        $this->result->increment('failures');
     }
 
     /**
@@ -48,6 +58,11 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
      */
     public function executeAfterTestError(string $test, string $message, float $time): void
     {
-        $this->result->testExecutions()->make()->error($test, $message);
+        $this->result->testExecutions()->create([
+            'name' => $test,
+            'message' => $message,
+            'status' => TestExecution::STATUS_ERROR
+        ]);
+        $this->result->increment('errors');
     }
 }

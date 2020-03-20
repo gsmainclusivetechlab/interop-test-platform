@@ -30,6 +30,14 @@ class TestResponse implements Arrayable
     }
 
     /**
+     * @return bool
+     */
+    public function successful()
+    {
+        return $this->status() >= 200 && $this->status() < 300;
+    }
+
+    /**
      * @return array
      */
     public function headers()
@@ -51,9 +59,17 @@ class TestResponse implements Arrayable
     /**
      * @return array
      */
-    protected function json()
+    public function json()
     {
         return json_decode($this->body(), true);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function toResponse()
+    {
+        return $this->response;
     }
 
     /**

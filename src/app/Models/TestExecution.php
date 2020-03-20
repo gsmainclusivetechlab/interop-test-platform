@@ -27,15 +27,7 @@ class TestExecution extends Model
     protected $fillable = [
         'name',
         'message',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $observables = [
-        'pass',
-        'fail',
-        'error',
+        'status',
     ];
 
     /**
@@ -111,60 +103,5 @@ class TestExecution extends Model
     public function scopeErrors($query)
     {
         return $query->where('status', static::STATUS_ERROR);
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function pass(string $name)
-    {
-        $this->name = $name;
-        $this->status = static::STATUS_PASS;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('pass');
-        return true;
-    }
-
-    /**
-     * @param string $name
-     * @param string|null $message
-     * @return bool
-     */
-    public function fail(string $name, string $message = null)
-    {
-        $this->name = $name;
-        $this->status = static::STATUS_FAIL;
-        $this->message = $message;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('fail');
-        return true;
-    }
-
-    /**
-     * @param string $name
-     * @param string|null $message
-     * @return bool
-     */
-    public function error(string $name, string $message = null)
-    {
-        $this->name = $name;
-        $this->status = static::STATUS_ERROR;
-        $this->message = $message;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('error');
-        return true;
     }
 }

@@ -38,6 +38,14 @@ class TestRequest implements Arrayable
     }
 
     /**
+     * @return string
+     */
+    public function path()
+    {
+        return $this->request->getUri()->getPath();
+    }
+
+    /**
      * @return array
      */
     public function headers()
@@ -59,9 +67,17 @@ class TestRequest implements Arrayable
     /**
      * @return array
      */
-    protected function json()
+    public function json()
     {
         return json_decode($this->body(), true);
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    public function toRequest()
+    {
+        return $this->request;
     }
 
     /**

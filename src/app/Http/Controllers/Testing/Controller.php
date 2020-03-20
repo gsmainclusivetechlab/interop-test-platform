@@ -8,7 +8,6 @@ use App\Testing\Extensions\TestExecutionExtension;
 use App\Testing\Extensions\TestResultExtension;
 use App\Testing\TestRunner;
 use App\Testing\TestSuiteLoader;
-use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ResponseInterface;
 
 class Controller extends BaseController
@@ -19,21 +18,18 @@ class Controller extends BaseController
      */
     protected function doTest(TestResult $testResult)
     {
-        $suite = new TestSuite();
-        $loader = new TestSuiteLoader($testResult->testStep);
-        $suite->addTestSuite($loader->loadRequestTests($testResult->request));
-        $suite->addTestSuite($loader->loadResponseTests($testResult->response));
+        $loader = new TestSuiteLoader();
         $runner = new TestRunner();
         $runner->addExtension(new TestResultExtension($testResult));
         $runner->addExtension(new TestExecutionExtension($testResult));
-        $result = $runner->run($suite);
+        $result = $runner->run($loader->load($testResult));
 
-        if ($result->wasSuccessful()) {
-            $testResult->passed();
-        } else {
-            $testResult->failure();
-        }
+//        if ($result->wasSuccessful()) {
+//            $testResult->passed();
+//        } else {
+//            $testResult->failure();
+//        }
 
-        return $testResult->response;
+        return $testResult->response->toResponse();
     }
 }

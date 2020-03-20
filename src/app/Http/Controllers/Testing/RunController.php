@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Testing;
 
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
-use App\Jobs\CompleteTestRun;
 use App\Models\Session;
 use App\Models\TestCase;
-use App\Models\TestPlan;
-use App\Models\TestRun;
 use App\Testing\Middlewares\RequestMiddleware;
 use App\Testing\Middlewares\ResponseMiddleware;
+use App\Testing\TestRequest;
+use App\Testing\TestResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
@@ -45,8 +44,6 @@ class RunController extends Controller
         ]);
         $testStep = $testCase->testSteps()->firstOrFail();
 
-//        CompleteTestRun::dispatch($testRun)->delay(now()->addSeconds(5));
-
         $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
@@ -68,18 +65,17 @@ class RunController extends Controller
 
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
-            'request' => $request,
+            'request' => new TestRequest($request),
         ]);
 
         try {
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
             $testResult->update([
-                'response' => $response,
+                'response' => new TestResponse($response),
             ]);
 
             return $this->doTest($testResult);
         } catch (RequestException $e) {
-            $testResult->failure($e->getMessage());
             return $e;
         }
     }
