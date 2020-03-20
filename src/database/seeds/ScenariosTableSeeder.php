@@ -58,10 +58,10 @@ class ScenariosTableSeeder extends Seeder
         return [
             [
                 'name' => 'Payer',
-                'simulated' => false,
             ],
             [
                 'name' => 'Service Provider',
+                'sut' => true,
                 'simulated' => true,
             ],
             [

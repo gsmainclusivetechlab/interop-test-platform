@@ -45,7 +45,7 @@ class RunController extends Controller
         ]);
         $testStep = $testCase->testSteps()->firstOrFail();
 
-        CompleteTestRun::dispatch($testRun)->delay(now()->addSeconds(30));
+//        CompleteTestRun::dispatch($testRun)->delay(now()->addSeconds(5));
 
         $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
         $traceparent = (new TraceparentHeader())

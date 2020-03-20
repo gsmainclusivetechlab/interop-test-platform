@@ -18,8 +18,8 @@ class CreateTestExecutionsTable extends Migration
             $table->unsignedBigInteger('test_result_id');
             $table->foreign('test_result_id')->references('id')->on('test_results')->onDelete('cascade');
             $table->string('name');
-            $table->string('status')->index();
-            $table->text('exception')->nullable();
+            $table->string('status');
+            $table->text('message')->nullable();
             $table->timestamp('created_at');
         });
     }

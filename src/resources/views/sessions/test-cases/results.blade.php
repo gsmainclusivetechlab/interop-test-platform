@@ -95,7 +95,7 @@
                         <flow-chart>
                             graph LR;
                             @foreach($session->scenario->components as $component)
-                                {{ $component->id }}({{$component->name}})@if($component->name == 'Service Provider'):::is-active @endif;
+                                {{ $component->id }}({{$component->name}})@if($component->sut):::is-active @endif;
                                 @foreach ($component->paths as $connection)
                                     {{ $component->id }}
                                     @if($component->simulated && $connection->simulated) --> @else -.-> @endif
@@ -192,15 +192,15 @@
 
                                                 <span
                                                     class="d-flex align-items-center"
-                                                    @if ($testExecution->exception) v-b-toggle="'{{ $testExecution['id'] }}'" @endif
+                                                    @if ($testExecution->message) v-b-toggle="'{{ $testExecution['id'] }}'" @endif
                                                 >
                                                     {{ $testExecution->name }}
                                                 </span>
                                             </div>
 
                                             <b-collapse id="{{ $testExecution['id'] }}" class="w-100 ml-8 pl-2">
-                                                @if ($testExecution->exception)
-                                                    <p class="mb-0 small">{{ $testExecution->exception }}</p>
+                                                @if ($testExecution->message)
+                                                    <p class="mb-0 small">{{ $testExecution->message }}</p>
                                                 @endif
                                             </b-collapse>
                                         </li>

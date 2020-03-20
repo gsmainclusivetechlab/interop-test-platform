@@ -81,7 +81,7 @@
                                     {{ $testRun->status_label }}
                                 </td>
                                 <td>
-                                    {{ $testRun->completed_at }}
+                                    {{ $testRun->created_at }}
                                 </td>
                                 <td></td>
                             </tr>

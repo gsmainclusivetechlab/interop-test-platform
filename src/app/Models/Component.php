@@ -23,8 +23,17 @@ class Component extends Model
     protected $fillable = [
         'name',
         'description',
+        'sut',
         'simulated',
         'api_service_id',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'sut' => false,
+        'simulated' => false,
     ];
 
     /**

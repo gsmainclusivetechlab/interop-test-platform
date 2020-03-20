@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Controllers\Controller as BaseController;
 use App\Models\TestResult;
 use App\Testing\Extensions\TestExecutionExtension;
+use App\Testing\Extensions\TestResultExtension;
 use App\Testing\TestRunner;
 use App\Testing\TestSuiteLoader;
 use PHPUnit\Framework\TestSuite;
@@ -23,6 +24,7 @@ class Controller extends BaseController
         $suite->addTestSuite($loader->loadRequestTests($testResult->request));
         $suite->addTestSuite($loader->loadResponseTests($testResult->response));
         $runner = new TestRunner();
+        $runner->addExtension(new TestResultExtension($testResult));
         $runner->addExtension(new TestExecutionExtension($testResult));
         $result = $runner->run($suite);
 

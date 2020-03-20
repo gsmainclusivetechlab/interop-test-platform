@@ -26,7 +26,7 @@ class TestExecution extends Model
      */
     protected $fillable = [
         'name',
-        'exception',
+        'message',
     ];
 
     /**
@@ -87,6 +87,33 @@ class TestExecution extends Model
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePassed($query)
+    {
+        return $query->where('status', static::STATUS_PASS);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFailures($query)
+    {
+        return $query->where('status', static::STATUS_FAIL);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeErrors($query)
+    {
+        return $query->where('status', static::STATUS_ERROR);
+    }
+
+    /**
      * @param string $name
      * @return bool
      */
@@ -105,14 +132,14 @@ class TestExecution extends Model
 
     /**
      * @param string $name
-     * @param string|null $exception
+     * @param string|null $message
      * @return bool
      */
-    public function fail(string $name, string $exception = null)
+    public function fail(string $name, string $message = null)
     {
         $this->name = $name;
         $this->status = static::STATUS_FAIL;
-        $this->exception = $exception;
+        $this->message = $message;
 
         if (!$this->save()) {
             return false;
@@ -124,14 +151,14 @@ class TestExecution extends Model
 
     /**
      * @param string $name
-     * @param string|null $exception
+     * @param string|null $message
      * @return bool
      */
-    public function error(string $name, string $exception = null)
+    public function error(string $name, string $message = null)
     {
         $this->name = $name;
         $this->status = static::STATUS_ERROR;
-        $this->exception = $exception;
+        $this->message = $message;
 
         if (!$this->save()) {
             return false;

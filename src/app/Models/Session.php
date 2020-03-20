@@ -47,7 +47,7 @@ class Session extends Model
      */
     public function testRuns()
     {
-        return $this->hasMany(TestRun::class, 'session_id')->completed();
+        return $this->hasMany(TestRun::class, 'session_id');
     }
 
     /**
@@ -55,7 +55,7 @@ class Session extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
+        return $this->hasOne(TestRun::class, 'session_id')->latest();
     }
 
     /**

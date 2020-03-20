@@ -43,7 +43,7 @@
                         </td>
                         <td>
                             @if($session->lastTestRun)
-                                {{ $session->lastTestRun->completed_at->diffForHumans() }}
+                                {{ $session->lastTestRun->created_at->diffForHumans() }}
                             @endif
                         </td>
                         <td class="text-center">
