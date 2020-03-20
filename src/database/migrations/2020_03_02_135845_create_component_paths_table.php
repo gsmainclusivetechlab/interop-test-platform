@@ -19,7 +19,6 @@ class CreateComponentPathsTable extends Migration
             $table->unsignedBigInteger('target_id');
             $table->foreign('target_id')->references('id')->on('components')->onDelete('cascade');
             $table->primary(['source_id', 'target_id']);
-            $table->boolean('simulated');
         });
     }
 

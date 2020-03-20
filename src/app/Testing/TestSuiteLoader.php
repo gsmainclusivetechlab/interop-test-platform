@@ -2,55 +2,31 @@
 
 namespace App\Testing;
 
-use App\Models\TestStep;
+use App\Models\TestResult;
 use App\Testing\Tests\ValidateRequestTest;
 use App\Testing\Tests\ValidateResponseTest;
 use PHPUnit\Framework\TestSuite;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class TestSuiteLoader
 {
-    /**
-     * @var TestStep
-     */
-    protected $step;
 
     /**
-     * @param TestStep $step
-     */
-    public function __construct(TestStep $step)
-    {
-        $this->step = $step;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
+     * @param TestResult $result
      * @return TestSuite
      */
-    public function loadRequestTests(ServerRequestInterface $request)
+    public function load(TestResult $result)
     {
         $suite = new TestSuite();
-        $scripts = $this->step->testRequestScripts;
+        $requestScripts = $result->testStep->testRequestScripts;
 
-        foreach ($scripts as $script) {
-            $suite->addTest(new ValidateRequestTest($script, $request));
+        foreach ($requestScripts as $requestScript) {
+            $suite->addTest(new ValidateRequestTest($requestScript, $result->request));
         }
 
-        return $suite;
-    }
+        $responseScripts = $result->testStep->testResponseScripts;
 
-    /**
-     * @param ResponseInterface $response
-     * @return TestSuite
-     */
-    public function loadResponseTests(ResponseInterface $response)
-    {
-        $suite = new TestSuite();
-        $scripts = $this->step->testResponseScripts;
-
-        foreach ($scripts as $script) {
-            $suite->addTest(new ValidateResponseTest($script, $response));
+        foreach ($responseScripts as $responseScript) {
+            $suite->addTest(new ValidateResponseTest($responseScript, $result->response));
         }
 
         return $suite;

@@ -61,18 +61,23 @@ class ScenariosTableSeeder extends Seeder
             ],
             [
                 'name' => 'Service Provider',
+                'sut' => true,
+                'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 1',
-                'api_service_id' => ApiService::where(['name' => 'Mobile Money', 'version' => 'v1.1.0'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'Mobile Money v1.1.0'])->value('id'),
+                'simulated' => true,
             ],
             [
                 'name' => 'Mojaloop',
-                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub', 'version' => 'v1.0'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub v1.0'])->value('id'),
+                'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 2',
-                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub', 'version' => 'v1.0'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'Mojaloop FSP v1.0'])->value('id'),
+                'simulated' => true,
             ],
         ];
     }
@@ -87,43 +92,35 @@ class ScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
-                    'simulated' => false,
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Payer')->value('id'),
-                    'simulated' => false,
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
-                    'simulated' => true,
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
-                    'simulated' => true,
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
-                    'simulated' => true,
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
-                    'simulated' => true,
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 2')->value('id'),
-                    'simulated' => true,
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
-                    'simulated' => true,
                 ],
             ],
         ];

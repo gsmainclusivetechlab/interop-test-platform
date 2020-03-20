@@ -27,13 +27,13 @@
                             <a href="{{ route('admin.scenarios.show', $scenario) }}">{{ $scenario->name }}</a>
                         </td>
                         <td>
-
+                            {{ $scenario->components_count }}
                         </td>
                         <td>
-
+                            {{ $scenario->use_cases_count }}
                         </td>
                         <td>
-
+                            {{ $scenario->test_cases_count }}
                         </td>
                     </tr>
                 @empty

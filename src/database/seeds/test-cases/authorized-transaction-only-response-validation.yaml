@@ -108,13 +108,13 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-  #            - name: PUT /X-Callback-URL
-  #              source: Mobile Money Operator 1
-  #              target: Service Provider
-  #              test_response_scripts:
-  #                - name: Transaction was successfully accepted
-  #                  rules:
-  #                    status: 'in:204'
+  - name: PUT /X-Callback-URL
+    source: Mobile Money Operator 1
+    target: Service Provider
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:204'
   - name: PUT /transfers/{ID}
     source: Mobile Money Operator 1
     target: Mojaloop

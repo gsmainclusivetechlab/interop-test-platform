@@ -4,7 +4,7 @@
 
 @section('session-header-right')
     <div class="input-group">
-        <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['testPlan' => $testCase->pivot]) }}">
+        <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['session' => $session, 'testCase' => $testCase]) }}">
         <span class="input-group-append">
             <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
                 <i class="fe fe-copy"></i>
@@ -63,9 +63,10 @@
                         <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Status') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Total') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
-                            <th class="text-nowrap w-1"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -77,17 +78,21 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <span class="status-icon bg-{{ $testRun->status_type }}"></span>
-                                    {{ $testRun->status_label }}
+                                    {{ $testRun->total }}
                                 </td>
                                 <td>
-                                    {{ $testRun->completed_at }}
+                                    {{ $testRun->successful }}
                                 </td>
-                                <td></td>
+                                <td>
+                                    {{ $testRun->unsuccessful }}
+                                </td>
+                                <td>
+                                    {{ $testRun->created_at }}
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="4">
+                                <td class="text-center" colspan="5">
                                     {{ __('No Results') }}
                                 </td>
                             </tr>

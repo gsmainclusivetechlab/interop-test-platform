@@ -4,7 +4,7 @@ namespace App\Testing\Tests;
 
 use App\Models\TestRequestScript;
 use App\Testing\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
+use App\Testing\TestRequest;
 
 class ValidateRequestTest extends TestCase
 {
@@ -14,15 +14,15 @@ class ValidateRequestTest extends TestCase
     protected $script;
 
     /**
-     * @var ServerRequestInterface
+     * @var TestRequest
      */
     protected $request;
 
     /**
      * @param TestRequestScript $script
-     * @param ServerRequestInterface $request
+     * @param TestRequest $request
      */
-    public function __construct(TestRequestScript $script, ServerRequestInterface $request)
+    public function __construct(TestRequestScript $script, TestRequest $request)
     {
         $this->script = $script;
         $this->request = $request;
@@ -33,12 +33,7 @@ class ValidateRequestTest extends TestCase
      */
     public function doTest()
     {
-        $this->assertValidationPassed([
-            'uri' => $this->request->getUri()->__toString(),
-            'method' => $this->request->getMethod(),
-            'headers' => $this->request->getHeaders(),
-            'body' => json_decode($this->request->getBody()->__toString(), true),
-        ], $this->script->rules);
+        $this->assertValidationPassed($this->request->toArray(), $this->script->rules);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Casts;
 
+use App\Testing\TestResponse;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Psr\Http\Message\ResponseInterface;
 
 class ResponseCast implements CastsAttributes
 {
@@ -21,7 +21,7 @@ class ResponseCast implements CastsAttributes
             return $value;
         }
 
-        return new Response(...json_decode($value, true));
+        return new TestResponse(new Response(...json_decode($value, true)));
     }
 
     /**
@@ -33,16 +33,14 @@ class ResponseCast implements CastsAttributes
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        if (!$value instanceof ResponseInterface) {
+        if (!$value instanceof TestResponse) {
             return $value;
         }
 
         return json_encode([
-            $value->getStatusCode(),
-            $value->getHeaders(),
-            $value->getBody()->__toString(),
-            $value->getProtocolVersion(),
-            $value->getReasonPhrase(),
+            $value->status(),
+            $value->headers(),
+            $value->body(),
         ]);
     }
 }

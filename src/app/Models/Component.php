@@ -23,7 +23,17 @@ class Component extends Model
     protected $fillable = [
         'name',
         'description',
+        'sut',
+        'simulated',
         'api_service_id',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'sut' => false,
+        'simulated' => false,
     ];
 
     /**
@@ -47,9 +57,7 @@ class Component extends Model
      */
     public function paths()
     {
-        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id')
-            ->using(ComponentPath::class)
-            ->withPivot('simulated');
+        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id');
     }
 
     /**

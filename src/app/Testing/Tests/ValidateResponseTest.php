@@ -4,7 +4,7 @@ namespace App\Testing\Tests;
 
 use App\Models\TestResponseScript;
 use App\Testing\TestCase;
-use Psr\Http\Message\ResponseInterface;
+use App\Testing\TestResponse;
 
 class ValidateResponseTest extends TestCase
 {
@@ -14,15 +14,15 @@ class ValidateResponseTest extends TestCase
     protected $script;
 
     /**
-     * @var ResponseInterface
+     * @var TestResponse
      */
     protected $response;
 
     /**
      * @param TestResponseScript $script
-     * @param ResponseInterface $request
+     * @param TestResponse $request
      */
-    public function __construct(TestResponseScript $script, ResponseInterface $response)
+    public function __construct(TestResponseScript $script, TestResponse $response)
     {
         $this->script = $script;
         $this->response = $response;
@@ -33,11 +33,7 @@ class ValidateResponseTest extends TestCase
      */
     public function doTest()
     {
-        $this->assertValidationPassed([
-            'status' => $this->response->getStatusCode(),
-            'headers' => $this->response->getHeaders(),
-            'body' => json_decode($this->response->getBody()->__toString(), true),
-        ], $this->script->rules);
+        $this->assertValidationPassed($this->response->toArray(), $this->script->rules);
     }
 
     /**

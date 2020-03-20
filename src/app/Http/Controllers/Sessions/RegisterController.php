@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSessionRequest;
 use App\Models\UseCase;
 use App\Models\Scenario;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -72,14 +73,18 @@ class RegisterController extends Controller
      */
     public function storeInformation(StoreSessionRequest $request)
     {
-        $user = auth()->user();
-        $scenario = Scenario::firstOrFail();
-        $session = $user->sessions()->create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'scenario_id' => $scenario->id,
-        ]);
-        $session->testCases()->attach($request->input('test_cases'));
+        $session = DB::transaction(function () use ($request) {
+            $user = auth()->user();
+            $scenario = Scenario::firstOrFail();
+            $session = $user->sessions()->create([
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+                'scenario_id' => $scenario->id,
+            ]);
+            $session->testCases()->attach($request->input('test_cases'));
+
+            return $session;
+        });
 
         return redirect()
             ->route('sessions.show', $session)

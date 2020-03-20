@@ -337,34 +337,34 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-  #            - name: PUT /X-Callback-URL
-  #              source: Mobile Money Operator 1
-  #              target: Service Provider
-  #              test_request_scripts:
-  #                - name: Header has the Url Callback
-  #                  rules:
-  #                    headers.X-Callback-URL: 'regex:/.*/'
-  #                - name: Debit and credit party is valid
-  #                  rules:
-  #                    body.debitParty.*.key: 'in:msisdn'
-  #                    body.debitParty.*.value: 'in:+33555123456'
-  #                    body.creditParty.*.key: 'in:msisdn'
-  #                    body.creditParty.*.value: 'in:+33555789123'
-  #                - name: Amount and currency are specified correctly
-  #                  rules:
-  #                    body.amount:
-  #                        - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-  #                    body.currency: 'regex:/^[A-Z]{3}/'
-  #                - name: Transaction is a Merchant Payment
-  #                  rules:
-  #                    body.type: 'in:merchantpay'
-  #                - name: Transaction was approved
-  #                  rules:
-  #                    body.transactionStatus: 'in:approved'
-  #              test_response_scripts:
-  #                - name: Transaction was successfully accepted
-  #                  rules:
-  #                    status: 'in:204'
+  - name: PUT /X-Callback-URL
+    source: Mobile Money Operator 1
+    target: Service Provider
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL: 'regex:/.*/'
+      - name: Debit and credit party is valid
+        rules:
+          body.debitParty.*.key: 'in:msisdn'
+          body.debitParty.*.value: 'in:+33555123456'
+          body.creditParty.*.key: 'in:msisdn'
+          body.creditParty.*.value: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount:
+              - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction is a Merchant Payment
+        rules:
+          body.type: 'in:merchantpay'
+      - name: Transaction was approved
+        rules:
+          body.transactionStatus: 'in:approved'
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:204'
   - name: PUT /transfers/{ID}
     source: Mobile Money Operator 1
     target: Mojaloop

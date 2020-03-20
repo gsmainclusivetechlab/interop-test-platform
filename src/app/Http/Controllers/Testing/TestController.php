@@ -9,6 +9,8 @@ use App\Models\ApiService;
 use App\Models\TestRun;
 use App\Testing\Middlewares\RequestMiddleware;
 use App\Testing\Middlewares\ResponseMiddleware;
+use App\Testing\TestRequest;
+use App\Testing\TestResponse;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
@@ -31,29 +33,30 @@ class TestController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param ApiService $specification
-     * @param string $path
+     * @param ApiService $apiService
+     * @param string $uri
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $path)
+    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $uri)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
-        $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())
-            ->whereNull('completed_at')
-            ->firstOrFail();
-        $testStep = $testRun->testSteps()
-            ->whereHas('target', function ($query) use ($apiService) {
-                $query->where('api_service_id', $apiService->id);
-            })
-            ->offset($testRun->testResults()
-                ->whereHas('testStep', function ($query) use ($apiService) {
-                    $query->whereHas('target', function ($query) use ($apiService) {
-                        $query->where('api_service_id', $apiService->id);
-                    });
-                })->count())
-            ->firstOrFail();
+        $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
 
-        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+//        $testStep = $testRun->testSteps()
+//            ->whereHas('source', function ($query) use ($apiService) {
+//                $query->where('api_service_id', $apiService->id);
+//            })
+//            ->offset($testRun->testResults()
+//                ->whereHas('testStep', function ($query) use ($apiService) {
+//                    $query->whereHas('source', function ($query) use ($apiService) {
+//                        $query->where('api_service_id', $apiService->id);
+//                    });
+//                })->count())
+//            ->firstOrFail();
+
+        $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();
+
+        $uri = (new Uri($uri));
         $request = $request->withUri($uri);
 
         $stack = new HandlerStack();
@@ -69,18 +72,17 @@ class TestController extends Controller
 
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
-            'request' => $request,
+            'request' => new TestRequest($request),
         ]);
 
         try {
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
             $testResult->update([
-                'response' => $response,
+                'response' => new TestResponse($response),
             ]);
 
             return $this->doTest($testResult);
         } catch (RequestException $e) {
-            $testResult->failure($e->getMessage());
             return $e;
         }
     }

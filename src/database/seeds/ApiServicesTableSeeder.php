@@ -3,7 +3,6 @@
 use App\Models\ApiService;
 use cebe\openapi\spec\OpenApi;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
 use Symfony\Component\Yaml\Yaml;
 
 class ApiServicesTableSeeder extends Seeder
@@ -27,22 +26,19 @@ class ApiServicesTableSeeder extends Seeder
     {
         return [
             [
-                'name' => 'Mobile Money',
-                'version' => 'v1.1.0',
-                'openapi' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mm-v1.1.0.yaml'))),
+                'name' => 'Mobile Money v1.1.0',
                 'server' => env('FSIOP_MM_SIMULATOR_URL'),
+                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mm.yaml'))),
             ],
             [
-                'name' => 'Mojaloop Hub',
-                'version' => 'v1.0',
-                'openapi' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mojaloop-v1.0.yaml'))),
+                'name' => 'Mojaloop Hub v1.0',
                 'server' => env('FSIOP_MOJALOOP_HUB_URL'),
+                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mojaloop.yaml'))),
             ],
             [
-                'name' => 'Mojaloop FSP',
-                'version' => 'v1.0',
-                'openapi' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mojaloop-v1.0.yaml'))),
+                'name' => 'Mojaloop FSP v1.0',
                 'server' => env('FSIOP_MOJALOOP_SIMULATOR_URL'),
+                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mojaloop.yaml'))),
             ],
         ];
     }

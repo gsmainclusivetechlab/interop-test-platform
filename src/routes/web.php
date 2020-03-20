@@ -48,8 +48,8 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
  * Testing Routes
  */
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{testPlan:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
-    Route::any('{apiService:uuid}/test/{path?}', 'TestController')->name('test')->where('path', '.*');
+    Route::any('{session:uuid}/{testCase:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
+    Route::any('{apiService:uuid}/test@{uri}', 'TestController')->name('test')->where('uri', '.*');
 });
 
 /**

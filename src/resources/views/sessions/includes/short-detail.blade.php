@@ -25,7 +25,7 @@
             @if($session->lastTestRun)
                 <li>
                     <i class="fe fe-calendar"></i>
-                    {{ $session->lastTestRun->completed_at->diffForHumans() }}
+                    {{ $session->lastTestRun->created_at->diffForHumans() }}
                 </li>
             @endif
         </ul>

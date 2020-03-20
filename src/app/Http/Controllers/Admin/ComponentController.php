@@ -27,7 +27,6 @@ class ComponentController extends Controller
             ->when(request('q'), function (Builder $query, $q) {
                 $query->where('name', 'like', "%{$q}%");
             })
-            ->latest()
             ->paginate();
 
         return view('admin.components.index', compact('scenario', 'components'));
