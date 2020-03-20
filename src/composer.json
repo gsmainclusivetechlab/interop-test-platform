@@ -9,11 +9,9 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "^7.0",
-        "laravel/telescope": "^3.1",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "league/openapi-psr7-validator": "^0.7.0",
-        "maatwebsite/excel": "^3.1",
         "nyholm/psr7": "^1.2",
         "phpunit/phpunit": "^8.5",
         "symfony/psr-http-message-bridge": "^2.0"
