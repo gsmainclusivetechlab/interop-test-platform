@@ -42,17 +42,19 @@ class TestController extends Controller
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
 
-        $testStep = $testRun->testSteps()
-            ->whereHas('source', function ($query) use ($apiService) {
-                $query->where('api_service_id', $apiService->id);
-            })
-            ->offset($testRun->testResults()
-                ->whereHas('testStep', function ($query) use ($apiService) {
-                    $query->whereHas('source', function ($query) use ($apiService) {
-                        $query->where('api_service_id', $apiService->id);
-                    });
-                })->count())
-            ->firstOrFail();
+//        $testStep = $testRun->testSteps()
+//            ->whereHas('source', function ($query) use ($apiService) {
+//                $query->where('api_service_id', $apiService->id);
+//            })
+//            ->offset($testRun->testResults()
+//                ->whereHas('testStep', function ($query) use ($apiService) {
+//                    $query->whereHas('source', function ($query) use ($apiService) {
+//                        $query->where('api_service_id', $apiService->id);
+//                    });
+//                })->count())
+//            ->firstOrFail();
+
+        $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();
 
         $uri = (new Uri($uri));
         $request = $request->withUri($uri);
