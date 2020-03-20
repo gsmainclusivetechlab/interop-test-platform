@@ -88,6 +88,6 @@ class TestResult extends Model
      */
     public function isSuccessful()
     {
-        return !$this->failures && !$this->errors;
+        return $this->passed >= $this->total && !$this->failures && !$this->errors;
     }
 }
