@@ -60,6 +60,21 @@
                         </a>
                         {{ $testRun->uuid }}
                     </h3>
+                    <div class="card-options">
+                        @if ($sucessful = $testRun->testResults()->where('successful', true)->count())
+                            <span class="text-success mr-2">
+                                <i class="fe fe-check"></i>
+                                {{ __(':n Pass', ['n' => $sucessful]) }}
+                            </span>
+                        @endif
+
+                            @if ($unsucessful = $testRun->testResults()->where('successful', false)->count())
+                            <span class="text-danger mr-2">
+                                <i class="fe fe-alert-circle"></i>
+                                {{ __(':n Fail', ['n' => $unsucessful]) }}
+                            </span>
+                        @endif
+                    </div>
                 </div>
                 <div class="card-body bg-light p-0">
                     <div class="px-4 py-6">
@@ -123,7 +138,7 @@
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <span class="flex-shrink-0 status-icon mr-0 @if($stepResult->isSuccessful()) bg-success @else bg-danger @endif"></span>
+                                                    <span class="flex-shrink-0 status-icon mr-0 @if($stepResult->successful) bg-success @else bg-danger @endif"></span>
                                                 </a>
                                             </li>
                                         @else
@@ -153,16 +168,25 @@
                                         </span>
                                     </div>
                                 </div>
+                                @if($testResult->successful)
+                                    <div class="lead alert-success p-4">
+                                        {{ __('Pass') }}
+                                    </div>
+                                @else
+                                    <div class="lead alert-danger p-4">
+                                        {{ __('Fail') }}
+                                    </div>
+                                @endif
                                 <div class="px-4 py-2">
                                     <ul class="m-0 p-0">
-                                        @foreach($testResult->testExecutions as $testExecution)
+                                        @foreach($testResult->testRequestExecutions as $testExecution)
                                         <li class="d-flex flex-wrap py-2">
                                             <div class="d-flex align-items-center">
                                                 <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
                                                     {{ $testExecution->status_label }}
                                                 </span>
                                                 <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
-                                                    {{ $testExecution->name }}
+                                                    {{ $testExecution->testScript->name }}
                                                 </span>
                                             </div>
                                             <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
@@ -235,6 +259,28 @@
                                         </div>
                                     </div>
                                 @endif
+
+                                <div class="px-4 py-2">
+                                    <ul class="m-0 p-0">
+                                        @foreach($testResult->testResponseExecutions as $testExecution)
+                                            <li class="d-flex flex-wrap py-2">
+                                                <div class="d-flex align-items-center">
+                                                <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
+                                                    {{ $testExecution->status_label }}
+                                                </span>
+                                                    <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
+                                                    {{ $testExecution->testScript->name }}
+                                                </span>
+                                                </div>
+                                                <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
+                                                    @if ($testExecution->message)
+                                                        <p class="mb-0 small">{{ $testExecution->message }}</p>
+                                                    @endif
+                                                </b-collapse>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
 
                                 @if($response = $testResult->response)
                                     <div class="p-4">

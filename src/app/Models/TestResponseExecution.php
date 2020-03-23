@@ -7,15 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * @mixin \Eloquent
  */
-class TestRequestScript extends TestScript
+class TestResponseExecution extends TestExecution
 {
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'type' => self::TYPE_REQUEST,
-    ];
-
     /**
      * @return void
      */
@@ -23,7 +16,7 @@ class TestRequestScript extends TestScript
     {
         parent::boot();
         static::addGlobalScope(function (Builder $builder) {
-            $builder->where('type', static::TYPE_REQUEST);
+            $builder->whereHas('testResponseStep');
         });
     }
 }

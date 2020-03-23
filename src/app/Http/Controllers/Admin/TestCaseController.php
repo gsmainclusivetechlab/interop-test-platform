@@ -28,7 +28,7 @@ class TestCaseController extends Controller
     {
         $testCases = $scenario->testCases()
             ->when(request('q'), function (Builder $query, $q) {
-                $query->where('name', 'like', "%{$q}%");
+                $query->where('test_cases.name', 'like', "%{$q}%");
             })
             ->with('useCase')
             ->withCount('testSteps')

@@ -1,0 +1,475 @@
+name: Authorized Transaction by Payer FSP
+use_case: Merchant-Initiated Merchant Payment
+behavior: positive
+description: |
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
+  In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
+  This flow shows the necessary steps for this transaction simulating an approved transaction.
+precondition: |
+  Service Provider has GSMA Mobile Money API Implemented.
+  Service Provider is capable of handled async calls.
+  Payee and Payer MMOs exist in Mojaloop as Participants.
+  Payee and Payer exist in Mojaloop as Parties.
+  Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  Credit party should be identified by account identifier "msisdn" with the value  "+33555789123".
+test_data_example:
+  uri: /transactions
+  method: POST
+  headers:
+    accept: 'application/json'
+    content-type: 'application/json'
+    x-callback-url: 'http://example.com/example'
+    x-date: '2020-02-20T10:28:44.466Z'
+  body:
+    amount: '100'
+    currency: 'USD'
+    type: 'merchantpay'
+    debitParty:
+      key: "msisdn"
+      value: "+33555123456"
+    creditParty:
+      key: "msisdn"
+      value: "+33555789123"
+test_steps:
+  - name: POST /transactions
+    source: Service Provider
+    target: Mobile Money Operator 1
+    test_scripts:
+      - name: Header has the Url Callback
+        type: request
+        rules:
+          headers.X-Callback-URL: 'regex:/.*/'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.debitParty.*.key: 'in:msisdn'
+          body.debitParty.*.value: 'in:+33555123456'
+          body.creditParty.*.key: 'in:msisdn'
+          body.creditParty.*.value: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction is a Merchant Payment
+        type: request
+        rules:
+          body.type: 'in:merchantpay'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+      - name: Server Correlation Id is specified correctly
+        type: response
+        rules:
+          body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
+      - name: Status is specified correctly
+        type: response
+        rules:
+          body.status: 'in:pending'
+      - name: Notification Method is specified correctly
+        type: response
+        rules:
+          body.notificationMethod: 'in:callback'
+  - name: POST /transactionRequests
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_scripts:
+      - name: Transaction Type is a Merchant Payment
+        type: request
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Transaction Request Id created
+        type: request
+        rules:
+          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+  - name: POST /transactionRequests
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    test_scripts:
+      - name: Transaction Type is a Merchant Payment
+        type: request
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Transaction Request Id created
+        type: request
+        rules:
+          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+  - name: PUT /transactionRequests/{ID}
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    test_scripts:
+      - name: ID is Valid
+        type: request
+        rules:
+          uri: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Status is Received
+        type: request
+        rules:
+          body.transactionRequestState: 'in:RECEIVED'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:200'
+  - name: PUT /transactionRequests/{ID}
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    test_scripts:
+      - name: ID is Valid
+        type: request
+        rules:
+          uri: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Status is Received
+        type: request
+        rules:
+          body.transactionRequestState: 'in:RECEIVED'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:200'
+  - name: POST /quotes
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    test_scripts:
+      - name: Mandatory IDs is present
+        type: request
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a Merchant Payment
+        type: request
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Payer wants to send money to Payee
+        type: request
+        rules:
+          body.amountType: 'in:SEND'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+  - name: POST /quotes
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    test_scripts:
+      - name: Mandatory IDs is present
+        type: request
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a Merchant Payment
+        type: request
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Payer wants to send money to Payee
+        type: request
+        rules:
+          body.amountType: 'in:SEND'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+  - name: PUT /quotes/{ID}
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_scripts:
+      - name: Mandatory IDs is present
+        type: request
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a Merchant Payment
+        type: request
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Payer wants to send money to Payee
+        type: request
+        rules:
+          body.amountType: 'in:SEND'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:200'
+  - name: PUT /quotes/{ID}
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    test_scripts:
+      - name: Mandatory IDs is present
+        type: request
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a Merchant Payment
+        type: request
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Payer wants to send money to Payee
+        type: request
+        rules:
+          body.amountType: 'in:SEND'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        type: request
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:200'
+  - name: POST /transfers
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    test_scripts:
+      - name: Transfer ID is present
+        type: request
+        rules:
+          body.transferId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Payee Fsp is specified correctly
+        type: request
+        rules:
+          body.payeeFsp: 'regex:/[0-9a-z]{1,32}$/'
+      - name: Payer Fsp Fsp is specified correctly
+        type: request
+        rules:
+          body.payerFsp: 'regex:/[0-9a-z]{1,32}$/'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Expiration is specified correctly
+        type: request
+        rules:
+          body.expiration:
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: ilpPacket is specified correctly
+        type: request
+        rules:
+          body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+      - name: condition is specified correctly
+        type: request
+        rules:
+          body.condition: 'regex:/^[A-Za-z0-9-_]{43}$/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+  - name: POST /transfers
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    test_scripts:
+      - name: Transfer ID is present
+        type: request
+        rules:
+          body.transferId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Payee Fsp is specified correctly
+        type: request
+        rules:
+          body.payeeFsp: 'regex:/[0-9a-z]{1,32}$/'
+      - name: Payer Fsp Fsp is specified correctly
+        type: request
+        rules:
+          body.payerFsp: 'regex:/[0-9a-z]{1,32}$/'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+      - name: Expiration is specified correctly
+        type: request
+        rules:
+          body.expiration:
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: ilpPacket is specified correctly
+        type: request
+        rules:
+          body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+      - name: condition is specified correctly
+        type: request
+        rules:
+          body.condition: 'regex:/^[A-Za-z0-9-_]{43}$/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:202'
+  - name: PUT /X-Callback-URL
+    source: Mobile Money Operator 1
+    target: Service Provider
+    test_scripts:
+      - name: Header has the Url Callback
+        type: request
+        rules:
+          headers.X-Callback-URL: 'regex:/.*/'
+      - name: Debit and credit party is valid
+        type: request
+        rules:
+          body.debitParty.*.key: 'in:msisdn'
+          body.debitParty.*.value: 'in:+33555123456'
+          body.creditParty.*.key: 'in:msisdn'
+          body.creditParty.*.value: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        type: request
+        rules:
+          body.amount:
+              - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.currency: 'regex:/^[A-Z]{3}/'
+      - name: Transaction is a Merchant Payment
+        type: request
+        rules:
+          body.type: 'in:merchantpay'
+      - name: Transaction was approved
+        type: request
+        rules:
+          body.transactionStatus: 'in:approved'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:204'
+  - name: PUT /transfers/{ID}
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_scripts:
+      - name: ID is Valid
+        type: request
+        rules:
+          uri: 'regex:/transfer\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+      - name: Transfer State is COMMITTED
+        type: request
+        rules:
+          body.transactionRequestState: 'in:COMMITTED'
+      - name: completedTimestamp is specified correctly
+        type: request
+        rules:
+          body.completedTimestamp:
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: fulfilment is specified correctly
+        type: request
+        rules:
+          body.fulfilment: 'regex:/^[A-Za-z0-9-_]{43}$/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:200'
+  - name: PUT /transfers/{ID}
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    test_scripts:
+      - name: ID is Valid
+        type: request
+        rules:
+          uri: 'regex:/transfer\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+      - name: Transfer State is COMMITTED
+        type: request
+        rules:
+          body.transactionRequestState: 'in:COMMITTED'
+      - name: completedTimestamp is specified correctly
+        type: request
+        rules:
+          body.completedTimestamp:
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: fulfilment is specified correctly
+        type: request
+        rules:
+          body.fulfilment: 'regex:/^[A-Za-z0-9-_]{43}$/'
+      - name: Transaction was successfully accepted
+        type: response
+        rules:
+          status: 'in:200'

@@ -63,9 +63,7 @@
                         <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Total') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                         </tr>
@@ -79,13 +77,18 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $testRun->total }}
-                                </td>
-                                <td>
-                                    {{ $testRun->successful }}
-                                </td>
-                                <td>
-                                    {{ $testRun->unsuccessful }}
+                                    @if($testRun->completed_at)
+                                        @if ($testRun->successful)
+                                            <span class="status-icon bg-success"></span>
+                                            {{ __('Pass') }}
+                                        @else
+                                            <span class="status-icon bg-danger"></span>
+                                            {{ __('Fail') }}
+                                        @endif
+                                    @else
+                                        <span class="status-icon bg-secondary"></span>
+                                        {{ __('Incomplete') }}
+                                    @endif
                                 </td>
                                 <td>
                                     {{ __(':n ms', ['n' => $testRun->duration]) }}

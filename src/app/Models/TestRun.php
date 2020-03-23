@@ -12,6 +12,8 @@ class TestRun extends Model
 {
     use HasUuid;
 
+    const UPDATED_AT = null;
+
     /**
      * @var string
      */
@@ -27,23 +29,16 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $attributes = [
-        'total' => 0,
-        'successful' => 0,
-        'unsuccessful' => 0,
-        'duration' => 0,
+    protected $casts = [
+        'completed_at' => 'datetime',
     ];
 
     /**
-     * @return void
+     * @var array
      */
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function (self $model) {
-            $model->total = $model->testSteps()->count();
-        });
-    }
+    protected $observables = [
+        'complete',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -81,18 +76,9 @@ class TestRun extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePassed($query)
+    public function scopeCompleted($query)
     {
-        return $query->whereColumn('total', '=', 'successful');
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeFailures($query)
-    {
-        return $query->whereColumn('total', '!=', 'successful');
+        return $query->whereNotNull('completed_at');
     }
 
     /**
@@ -104,10 +90,26 @@ class TestRun extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function getDurationAttribute()
+    {
+        return $this->testResults()->sum('time');
+    }
+
+    /**
      * @return bool
      */
-    public function isSuccessful()
+    public function complete()
     {
-        return $this->successful >= $this->total && !$this->unsuccessful;
+        $this->successful = $this->testResults()->where('successful', true)->count() == $this->testSteps()->count();
+        $this->completed_at = now();
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('complete');
+        return true;
     }
 }

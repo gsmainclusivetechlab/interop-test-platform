@@ -1,12 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Testing\Tests;
+namespace App\Testing;
 
 use App\Models\TestScript;
-use App\Testing\TestCase;
-use App\Testing\TestRequest;
 
-class ValidateRequestTest extends TestCase
+abstract class TestRequestCase extends TestCase
 {
     /**
      * @var TestScript
@@ -29,18 +27,10 @@ class ValidateRequestTest extends TestCase
     }
 
     /**
-     * @return void
+     * @return string
      */
-    public function doTest()
+    public function toString(): string
     {
-        $this->assertValidationPassed($this->request->toArray(), $this->script->rules);
-    }
-
-    /**
-     * @return TestScript
-     */
-    public function getScript(): TestScript
-    {
-        return $this->script;
+        return $this->script->name;
     }
 }

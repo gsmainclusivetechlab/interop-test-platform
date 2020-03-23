@@ -2,16 +2,16 @@
 
 namespace App\Testing;
 
+use App\Models\TestScript;
 use App\Testing\Concerns\InteractsWithValidation;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\SelfDescribing;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestResult;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
 
-abstract class TestCase extends Assert implements Test, SelfDescribing
+abstract class TestCase extends Assert implements Test
 {
     use InteractsWithValidation;
 
@@ -22,6 +22,11 @@ abstract class TestCase extends Assert implements Test, SelfDescribing
     {
         return 1;
     }
+
+    /**
+     * @return TestScript
+     */
+    abstract public function getScript(): TestScript;
 
     /**
      * @return void

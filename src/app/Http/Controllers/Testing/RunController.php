@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Testing;
 
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
+use App\Jobs\CompleteTestRunJob;
 use App\Models\Session;
 use App\Models\TestCase;
 use App\Testing\Middlewares\RequestMiddleware;
@@ -18,7 +19,6 @@ use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\AssertionFailedError;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use SebastianBergmann\Timer\Timer;
 use Throwable;
 
 class RunController extends Controller
@@ -45,6 +45,8 @@ class RunController extends Controller
         ]);
         $testStep = $testCase->testSteps()->firstOrFail();
 
+        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
+
         $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
@@ -56,15 +58,14 @@ class RunController extends Controller
         $stack = new HandlerStack();
         $stack->setHandler(new CurlHandler());
 
-        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
-            $stack->push(new RequestMiddleware($testRequestSetup));
-        }
+//        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
+//            $stack->push(new RequestMiddleware($testRequestSetup));
+//        }
+//
+//        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
+//            $stack->push(new ResponseMiddleware($testResponseSetup));
+//        }
 
-        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
-            $stack->push(new ResponseMiddleware($testResponseSetup));
-        }
-
-        Timer::start();
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
             'request' => new TestRequest($request),
@@ -72,13 +73,12 @@ class RunController extends Controller
 
         try {
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
-            $testResult->update([
-                'response' => new TestResponse($response),
-            ]);
-            $testRun->increment('duration', floor(Timer::stop() * 1000));
-            return $this->doTest($testResult);
+            $testResult->response = new TestResponse($response);
+            $this->doTest($testResult);
+            $testResult->complete();
+
+            return $response;
         } catch (RequestException $e) {
-            $testRun->increment('duration', floor(Timer::stop() * 1000));
             return $e;
         }
     }

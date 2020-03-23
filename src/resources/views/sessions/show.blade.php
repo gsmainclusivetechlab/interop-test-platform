@@ -26,8 +26,8 @@
                                                 @foreach($session->positiveTestCases->where('use_case_id', $useCase->id) as $testCase)
                                                     <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                         <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
-                                                        @if($lastRun = $session->testRuns()->latest()->where('test_case_id', $testCase->id)->first())
-                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon @if($lastRun->isSuccessful()) bg-success @else bg-danger @endif"></span>
+                                                        @if($lastRun = $session->testRuns()->latest()->completed()->where('test_case_id', $testCase->id)->first())
+                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon @if($lastRun->successful) bg-success @else bg-danger @endif"></span>
                                                         @else
                                                             <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-secondary"></span>
                                                         @endif
@@ -52,8 +52,8 @@
                                                 @foreach($session->negativeTestCases->where('use_case_id', $useCase->id) as $testCase)
                                                     <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                         <a href="{{ route('sessions.test_cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
-                                                        @if($lastRun = $session->testRuns()->latest()->where('test_case_id', $testCase->id)->first())
-                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon @if($lastRun->isSuccessful()) bg-success @else bg-danger @endif"></span>
+                                                        @if($lastRun = $session->testRuns()->latest()->completed()->where('test_case_id', $testCase->id)->first())
+                                                            <span class="flex-shrink-0 mr-0 ml-1 status-icon @if($lastRun->successful) bg-success @else bg-danger @endif"></span>
                                                         @else
                                                             <span class="flex-shrink-0 mr-0 ml-1 status-icon bg-secondary"></span>
                                                         @endif
@@ -87,9 +87,7 @@
                         <tr>
                             <th class="text-nowrap w-auto">{{ __('Test Case') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Total') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Status') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                         </tr>
@@ -108,13 +106,18 @@
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $testRun->total }}
-                                </td>
-                                <td>
-                                    {{ $testRun->successful }}
-                                </td>
-                                <td>
-                                    {{ $testRun->unsuccessful }}
+                                    @if($testRun->completed_at)
+                                        @if ($testRun->successful)
+                                            <span class="status-icon bg-success"></span>
+                                            {{ __('Pass') }}
+                                        @else
+                                            <span class="status-icon bg-danger"></span>
+                                            {{ __('Fail') }}
+                                        @endif
+                                    @else
+                                        <span class="status-icon bg-secondary"></span>
+                                        {{ __('Incomplete') }}
+                                    @endif
                                 </td>
                                 <td>
                                     {{ __(':n ms', ['n' => $testRun->duration]) }}
@@ -125,7 +128,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td class="text-center" colspan="6">
+                                <td class="text-center" colspan="5">
                                     {{ __('No Results') }}
                                 </td>
                             </tr>
