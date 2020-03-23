@@ -23,6 +23,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
     Route::get('{session}', 'OverviewController@show')->name('show');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test_cases.show');
+    Route::get('{session}/test-cases/{testCase}/flow', 'TestCaseController@flow')->name('test_cases.flow');
     Route::get('{session}/test-cases/{testCase}/results/{testRun}/{position?}', 'TestCaseController@results')->name('test_cases.results');
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')->name('selection.create');

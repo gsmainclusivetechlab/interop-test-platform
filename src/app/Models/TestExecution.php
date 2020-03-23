@@ -24,10 +24,10 @@ class TestExecution extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'message',
-        'status',
+    protected $observables = [
+        'pass',
+        'fail',
+        'error',
     ];
 
     /**
@@ -79,6 +79,14 @@ class TestExecution extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function testScript()
+    {
+        return $this->belongsTo(TestScript::class, 'test_script_id');
+    }
+
+    /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -103,5 +111,60 @@ class TestExecution extends Model
     public function scopeErrors($query)
     {
         return $query->where('status', static::STATUS_ERROR);
+    }
+
+    /**
+     * @param TestScript $script
+     * @return bool
+     */
+    public function pass(TestScript $script)
+    {
+        $this->test_script_id = $script->id;
+        $this->status = static::STATUS_PASS;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('pass');
+        return true;
+    }
+
+    /**
+     * @param TestScript $script
+     * @param string $message
+     * @return bool
+     */
+    public function fail(TestScript $script, string $message)
+    {
+        $this->test_script_id = $script->id;
+        $this->status = static::STATUS_FAIL;
+        $this->message = $message;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('fail');
+        return true;
+    }
+
+    /**
+     * @param TestScript $script
+     * @param string $message
+     * @return bool
+     */
+    public function error(TestScript $script, string $message)
+    {
+        $this->test_script_id = $script->id;
+        $this->status = static::STATUS_ERROR;
+        $this->message = $message;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('error');
+        return true;
     }
 }

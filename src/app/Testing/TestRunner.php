@@ -3,19 +3,15 @@
 namespace App\Testing;
 
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestResult;
-use PHPUnit\Runner\AfterLastTestHook;
-use PHPUnit\Runner\BeforeFirstTestHook;
-use PHPUnit\Runner\Hook;
-use PHPUnit\Runner\TestHook;
-use PHPUnit\Runner\TestListenerAdapter;
 
 class TestRunner
 {
     /**
-     * @var Hook[]
+     * @var TestListener[]
      */
-    protected $extensions = [];
+    protected $listeners = [];
 
     /**
      * @param Test $test
@@ -23,21 +19,7 @@ class TestRunner
      */
     public function run(Test $test): TestResult
     {
-        foreach ($this->extensions as $extension) {
-            if ($extension instanceof BeforeFirstTestHook) {
-                $extension->executeBeforeFirstTest();
-            }
-        }
-
-        $result = $test->run($this->buildResult());
-
-        foreach ($this->extensions as $extension) {
-            if ($extension instanceof AfterLastTestHook) {
-                $extension->executeAfterLastTest();
-            }
-        }
-
-        return $result;
+        return $test->run($this->buildResult());
     }
 
     /**
@@ -46,24 +28,19 @@ class TestRunner
     protected function buildResult(): TestResult
     {
         $result = new TestResult();
-        $listener = new TestListenerAdapter();
 
-        foreach ($this->extensions as $extension) {
-            if ($extension instanceof TestHook) {
-                $listener->add($extension);
-            }
+        foreach ($this->listeners as $listener) {
+            $result->addListener($listener);
         }
-
-        $result->addListener($listener);
 
         return $result;
     }
 
     /**
-     * @param Hook $extension
+     * @param TestListener $listener
      */
-    public function addExtension(Hook $extension): void
+    public function addListener(TestListener $listener): void
     {
-        $this->extensions[] = $extension;
+        $this->listeners[] = $listener;
     }
 }

@@ -62,13 +62,13 @@ class TestController extends Controller
         $stack = new HandlerStack();
         $stack->setHandler(new CurlHandler());
 
-        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
-            $stack->push(new RequestMiddleware($testRequestSetup));
-        }
-
-        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
-            $stack->push(new ResponseMiddleware($testResponseSetup));
-        }
+//        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
+//            $stack->push(new RequestMiddleware($testRequestSetup));
+//        }
+//
+//        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
+//            $stack->push(new ResponseMiddleware($testResponseSetup));
+//        }
 
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
@@ -77,11 +77,11 @@ class TestController extends Controller
 
         try {
             $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
-            $testResult->update([
-                'response' => new TestResponse($response),
-            ]);
+            $testResult->response = new TestResponse($response);
+            $this->doTest($testResult);
+            $testResult->complete();
 
-            return $this->doTest($testResult);
+            return $response;
         } catch (RequestException $e) {
             return $e;
         }

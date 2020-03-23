@@ -5,7 +5,12 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            @include('components.grid.search')
+            <form action="{{ url()->current() }}" method="GET" class="input-icon">
+                <input type="text" class="form-control" name="q" value="{{ request('q') }}" placeholder="{{ __('Search') }}...">
+                <span class="input-icon-addon">
+                    <i class="fe fe-search"></i>
+                </span>
+            </form>
         </div>
         <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
@@ -35,8 +40,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            @include('components.grid.pagination', ['paginator' => $useCases])
-        </div>
+        @if ($useCases->count())
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        {{ __('Showing :from to :to of :total entries', [
+                            'from' => (($useCases->currentPage() - 1) * $useCases->perPage()) + 1,
+                            'to' => (($useCases->currentPage() - 1) * $useCases->perPage()) + $useCases->count(),
+                            'total' => $useCases->total(),
+                        ]) }}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="justify-content-end d-flex">
+                            {{ $useCases->appends(request()->all())->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

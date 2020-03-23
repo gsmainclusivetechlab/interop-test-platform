@@ -33,7 +33,6 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
             'name' => $test,
             'status' => TestExecution::STATUS_PASS,
         ]);
-        $this->result->increment('passed');
     }
 
     /**
@@ -48,7 +47,6 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
             'message' => $message,
             'status' => TestExecution::STATUS_FAIL
         ]);
-        $this->result->increment('failures');
     }
 
     /**
@@ -63,6 +61,5 @@ class TestExecutionExtension implements AfterSuccessfulTestHook, AfterTestFailur
             'message' => $message,
             'status' => TestExecution::STATUS_ERROR
         ]);
-        $this->result->increment('errors');
     }
 }
