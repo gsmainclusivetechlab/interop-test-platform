@@ -13,7 +13,7 @@ class TestResultObserver
     public function complete(TestResult $testResult)
     {
         if ($testResult->isLast()) {
-            $testResult->testRun()->complete();
+            $testResult->testRun->complete();
         }
     }
 }

@@ -39,6 +39,20 @@ class TestCaseController extends Controller
     /**
      * @param Session $session
      * @param TestCase $testCase
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function flow(Session $session, TestCase $testCase)
+    {
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
+
+        return view('sessions.test-cases.flow', compact('session', 'testCase'));
+    }
+
+    /**
+     * @param Session $session
+     * @param TestCase $testCase
      * @param TestRun $testRun
      * @param int $position
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

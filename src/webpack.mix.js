@@ -2,6 +2,9 @@ const mix = require('laravel-mix');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
+mix.autoload({
+    jquery: ['$', 'jQuery', 'window.jQuery'],
+});
 mix.setPublicPath('public/assets');
 mix.babelConfig({
     plugins: ['@babel/plugin-syntax-dynamic-import'],
