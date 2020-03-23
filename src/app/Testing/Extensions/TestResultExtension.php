@@ -34,6 +34,6 @@ class TestResultExtension implements BeforeFirstTestHook, AfterLastTestHook
      */
     public function executeAfterLastTest(): void
     {
-        $this->result->testRun()->increment($this->result->isSuccessful() ? 'successful' : 'unsuccessful');
+        $this->result->complete();
     }
 }

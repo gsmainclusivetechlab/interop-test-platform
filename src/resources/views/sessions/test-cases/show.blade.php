@@ -63,9 +63,8 @@
                         <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap w-auto">{{ __('Run ID') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Total') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Passed') }}</th>
-                            <th class="text-nowrap w-auto">{{ __('Failures') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Status') }}</th>
+                            <th class="text-nowrap w-auto">{{ __('Duration') }}</th>
                             <th class="text-nowrap w-auto">{{ __('Date') }}</th>
                         </tr>
                         </thead>
@@ -73,18 +72,26 @@
                         @forelse ($testRuns as $testRun)
                             <tr>
                                 <td>
-                                    <a href="{{ route('sessions.test_cases.results', ['session' => $testRun->session, 'testCase' => $testRun->testCase, 'testRun' => $testRun]) }}">
+                                    <a href="{{ route('sessions.test_cases.results', ['session' => $session, 'testCase' => $testCase, 'testRun' => $testRun]) }}">
                                         {{ $testRun->uuid }}
                                     </a>
                                 </td>
                                 <td>
-                                    {{ $testRun->total }}
+                                    @if($testRun->completed_at)
+                                        @if ($testRun->successful)
+                                            <span class="status-icon bg-success"></span>
+                                            {{ __('Pass') }}
+                                        @else
+                                            <span class="status-icon bg-danger"></span>
+                                            {{ __('Fail') }}
+                                        @endif
+                                    @else
+                                        <span class="status-icon bg-secondary"></span>
+                                        {{ __('Incomplete') }}
+                                    @endif
                                 </td>
                                 <td>
-                                    {{ $testRun->successful }}
-                                </td>
-                                <td>
-                                    {{ $testRun->unsuccessful }}
+                                    {{ __(':n ms', ['n' => $testRun->duration]) }}
                                 </td>
                                 <td>
                                     {{ $testRun->created_at }}
@@ -100,9 +107,24 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer">
-                    @include('components.grid.pagination', ['paginator' => $testRuns])
-                </div>
+                @if ($testRuns->count())
+                    <div class="card-footer">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                {{ __('Showing :from to :to of :total entries', [
+                                    'from' => (($testRuns->currentPage() - 1) * $testRuns->perPage()) + 1,
+                                    'to' => (($testRuns->currentPage() - 1) * $testRuns->perPage()) + $testRuns->count(),
+                                    'total' => $testRuns->total(),
+                                ]) }}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="justify-content-end d-flex">
+                                    {{ $testRuns->appends(request()->all())->links() }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
             @include('sessions.includes.test-case-flow-chart', $testCase)
         </div>

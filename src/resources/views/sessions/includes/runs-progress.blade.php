@@ -1,8 +1,8 @@
 <b-progress class="w-100 h-3 rounded-0 progress">
     @php
         $totalCount = $session->testCases()->count();
-        $passedCount = $session->testRuns()->latest()->get()->unique('test_case_id')->where('total', '=', 'successful')->count();
-        $failureCount = $session->testRuns()->latest()->get()->unique('test_case_id')->where('total', '!=', 'successful')->count();
+        $passedCount = $session->testRuns()->latest()->completed()->get()->unique('test_case_id')->where('successful', true)->count();
+        $failureCount = $session->testRuns()->latest()->completed()->get()->unique('test_case_id')->where('successful', false)->count();
         $notExecutedCount = $totalCount - $passedCount - $failureCount;
     @endphp
     <b-progress-bar :value={{ $totalCount ? $passedCount / $totalCount * 100 : 0 }} variant="success" v-b-tooltip.hover title="{{ __(':n Pass', ['n' => $passedCount]) }}"></b-progress-bar>

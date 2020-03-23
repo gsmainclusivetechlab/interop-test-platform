@@ -8,7 +8,12 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            @include('components.grid.search')
+            <form action="{{ url()->current() }}" method="GET" class="input-icon">
+                <input type="text" class="form-control" name="q" value="{{ request('q') }}" placeholder="{{ __('Search') }}...">
+                <span class="input-icon-addon">
+                    <i class="fe fe-search"></i>
+                </span>
+            </form>
             <div class="card-options">
                 <div class="btn-group">
                     <a href="{{ route('admin.users.index') }}" class="btn btn-outline-primary @if (request()->routeIs('admin.users.index') && !request()->route()->hasParameter('trashed')) active @endif">
@@ -54,59 +59,62 @@
                         </td>
                         <td class="text-center text-break">
                             @canany(['promoteAdmin', 'relegateAdmin', 'delete', 'restore'], $user)
-                                @component('components.grid.actions')
-                                        @if ($user->trashed())
-                                            @can('restore', $user)
-                                                @include('components.grid.actions.form', [
-                                                    'method' => 'POST',
-                                                    'route' => route('admin.users.restore', $user),
-                                                    'label' => __('Unblock'),
-                                                    'confirmTitle' => __('Confirm unblock'),
-                                                    'confirmText' => __('Are you sure you want to unblock :name?', ['name' => $user->name]),
-                                                ])
-                                            @endcan
-                                        @else
-                                            @can('promoteAdmin', $user)
-                                                @include('components.grid.actions.form', [
-                                                    'method' => 'POST',
-                                                    'route' => route('admin.users.promote_admin', $user),
-                                                    'label' => __('Promote admin'),
-                                                    'confirmTitle' => __('Confirm promote admin'),
-                                                    'confirmText' => __('Are you sure you want to promote :name to admin?', ['name' => $user->name]),
-                                                ])
-                                            @endcan
+                                <b-dropdown class="item-action" no-caret right toggle-class="icon text-decoration-none py-0" variant="link" boundary="window">
+                                    <template v-slot:button-content>
+                                        <i class="fe fe-more-vertical"></i>
+                                    </template>
+                                    @if ($user->trashed())
+                                        @can('restore', $user)
+                                            <b-dropdown-form action="{{ route('admin.users.restore', $user) }}" method="POST" form-class="p-0">
+                                                @csrf
+                                                @method('POST')
+                                                <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm unblock') }}" text="{{ __('Are you sure you want to unblock :name?', ['name' => $user->name]) }}">
+                                                    {{ __('Unblock') }}
+                                                </confirm-button>
+                                            </b-dropdown-form>
+                                        @endcan
+                                    @else
+                                        @can('promoteAdmin', $user)
+                                            <b-dropdown-form action="{{ route('admin.users.promote_admin', $user) }}" method="POST" form-class="p-0">
+                                                @csrf
+                                                @method('POST')
+                                                <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm promote admin') }}" text="{{ __('Are you sure you want to promote :name to admin?', ['name' => $user->name]) }}">
+                                                    {{ __('Promote admin') }}
+                                                </confirm-button>
+                                            </b-dropdown-form>
+                                        @endcan
 
-                                            @can('relegateAdmin', $user)
-                                                @include('components.grid.actions.form', [
-                                                    'method' => 'POST',
-                                                    'route' => route('admin.users.relegate_admin', $user),
-                                                    'label' => __('Relegate admin'),
-                                                    'confirmTitle' => __('Confirm relegate admin'),
-                                                    'confirmText' => __('Are you sure you want to relegate :name from admin?', ['name' => $user->name]),
-                                                ])
-                                            @endcan
-
-                                            @can('delete', $user)
-                                                @include('components.grid.actions.form', [
-                                                    'method' => 'DELETE',
-                                                    'route' => route('admin.users.destroy', $user),
-                                                    'label' => __('Block'),
-                                                    'confirmTitle' => __('Confirm block'),
-                                                    'confirmText' => __('Are you sure you want to block :name?', ['name' => $user->name]),
-                                                ])
-                                            @endcan
-                                        @endif
+                                        @can('relegateAdmin', $user)
+                                            <b-dropdown-form action="{{ route('admin.users.relegate_admin', $user) }}" method="POST" form-class="p-0">
+                                                @csrf
+                                                @method('POST')
+                                                <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm relegate admin') }}" text="{{ __('Are you sure you want to relegate :name from admin?', ['name' => $user->name]) }}">
+                                                    {{ __('Relegate admin') }}
+                                                </confirm-button>
+                                            </b-dropdown-form>
+                                        @endcan
 
                                         @can('delete', $user)
-                                            @include('components.grid.actions.form', [
-                                                'method' => 'DELETE',
-                                                'route' => route('admin.users.force_destroy', $user),
-                                                'label' => __('Delete'),
-                                                'confirmTitle' => __('Confirm delete'),
-                                                'confirmText' => __('Are you sure you want to delete :name?', ['name' => $user->name]),
-                                            ])
+                                            <b-dropdown-form action="{{ route('admin.users.destroy', $user) }}" method="POST" form-class="p-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm block') }}" text="{{ __('Are you sure you want to block :name?', ['name' => $user->name]) }}">
+                                                    {{ __('Block') }}
+                                                </confirm-button>
+                                            </b-dropdown-form>
                                         @endcan
-                                 @endcomponent
+                                    @endif
+
+                                    @can('delete', $user)
+                                        <b-dropdown-form action="{{ route('admin.users.force_destroy', $user) }}" method="POST" form-class="p-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm delete') }}" text="{{ __('Are you sure you want to delete :name?', ['name' => $user->name]) }}">
+                                                {{ __('Delete') }}
+                                            </confirm-button>
+                                        </b-dropdown-form>
+                                    @endcan
+                                </b-dropdown>
                             @endcanany
                         </td>
                     </tr>
@@ -120,8 +128,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            @include('components.grid.pagination', ['paginator' => $users])
-        </div>
+        @if ($users->count())
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        {{ __('Showing :from to :to of :total entries', [
+                            'from' => (($users->currentPage() - 1) * $users->perPage()) + 1,
+                            'to' => (($users->currentPage() - 1) * $users->perPage()) + $users->count(),
+                            'total' => $users->total(),
+                        ]) }}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="justify-content-end d-flex">
+                            {{ $users->appends(request()->all())->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

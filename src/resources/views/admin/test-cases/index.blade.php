@@ -67,8 +67,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            @include('components.grid.pagination', ['paginator' => $testCases])
-        </div>
+        @if ($testCases->count())
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        {{ __('Showing :from to :to of :total entries', [
+                            'from' => (($testCases->currentPage() - 1) * $testCases->perPage()) + 1,
+                            'to' => (($testCases->currentPage() - 1) * $testCases->perPage()) + $testCases->count(),
+                            'total' => $testCases->total(),
+                        ]) }}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="justify-content-end d-flex">
+                            {{ $testCases->appends(request()->all())->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

@@ -8,7 +8,12 @@
     </h1>
     <div class="card">
         <div class="card-header">
-            @include('components.grid.search')
+            <form action="{{ url()->current() }}" method="GET" class="input-icon">
+                <input type="text" class="form-control" name="q" value="{{ request('q') }}" placeholder="{{ __('Search') }}...">
+                <span class="input-icon-addon">
+                    <i class="fe fe-search"></i>
+                </span>
+            </form>
         </div>
         <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
@@ -48,17 +53,20 @@
                         </td>
                         <td class="text-center">
                             @canany(['delete'], $session)
-                                @component('components.grid.actions')
+                                <b-dropdown class="item-action" no-caret right toggle-class="icon text-decoration-none py-0" variant="link" boundary="window">
+                                    <template v-slot:button-content>
+                                        <i class="fe fe-more-vertical"></i>
+                                    </template>
                                     @can('delete', $session)
-                                        @include('components.grid.actions.form', [
-                                            'method' => 'DELETE',
-                                            'route' => route('sessions.destroy', $session),
-                                            'label' => __('Delete'),
-                                            'confirmTitle' => __('Confirm delete'),
-                                            'confirmText' => __('Are you sure you want to delete :name?', ['name' => $session->name]),
-                                        ])
+                                        <b-dropdown-form action="{{ route('sessions.destroy', $session) }}" method="POST" form-class="p-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm delete') }}" text="{{ __('Are you sure you want to delete :name?', ['name' => $session->name]) }}">
+                                                {{ __('Delete') }}
+                                            </confirm-button>
+                                        </b-dropdown-form>
                                     @endcan
-                                @endcomponent
+                                </b-dropdown>
                             @endcanany
                         </td>
                     </tr>
@@ -72,8 +80,23 @@
                 </tbody>
             </table>
         </div>
-        <div class="card-footer">
-            @include('components.grid.pagination', ['paginator' => $sessions])
-        </div>
+        @if ($sessions->count())
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        {{ __('Showing :from to :to of :total entries', [
+                            'from' => (($sessions->currentPage() - 1) * $sessions->perPage()) + 1,
+                            'to' => (($sessions->currentPage() - 1) * $sessions->perPage()) + $sessions->count(),
+                            'total' => $sessions->total(),
+                        ]) }}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="justify-content-end d-flex">
+                            {{ $sessions->appends(request()->all())->links() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 @endsection
