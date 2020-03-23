@@ -231,7 +231,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'in:200'
   - name: PUT /quotes/{ID}
     source: Mojaloop
     target: Mobile Money Operator 2
@@ -256,7 +256,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'in:200'
   - name: PUT /transactionRequests/{ID}
     source: Mobile Money Operator 2
     target: Mojaloop
