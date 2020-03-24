@@ -12,7 +12,7 @@ precondition: |
   Payee and Payer exist in Mojaloop as Parties.
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value  "+33555789123".
-test_data_example:
+data_example:
   uri: /transactions
   method: POST
   headers:

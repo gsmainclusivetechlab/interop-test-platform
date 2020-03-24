@@ -2,8 +2,10 @@
 
 namespace App\Testing;
 
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Support\Arrayable;
 use Psr\Http\Message\RequestInterface;
+use function GuzzleHttp\Psr7\stream_for;
 
 class TestRequest implements Arrayable
 {
@@ -78,15 +80,37 @@ class TestRequest implements Arrayable
     }
 
     /**
-     * @return array|void
+     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
-            'uri' => $this->url(),
             'method' => $this->method(),
+            'uri' => $this->url(),
             'headers' => $this->headers(),
             'body' => $this->json(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return json_encode($this->toArray());
+    }
+
+    /**
+     * @param array $parts
+     * @return self
+     */
+    public static function fromParts(array $parts)
+    {
+        return new self(new Request(
+            $parts['method'] ?? '',
+            $parts['uri'] ?? '',
+            $parts['headers'] ?? [],
+            $parts['body'] ? stream_for(json_encode($parts['body'])) : ''
+        ));
     }
 }

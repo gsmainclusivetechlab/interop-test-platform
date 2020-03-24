@@ -3,7 +3,6 @@
 namespace App\Casts;
 
 use App\Testing\TestResponse;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class ResponseCast implements CastsAttributes
@@ -13,15 +12,15 @@ class ResponseCast implements CastsAttributes
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return Response|mixed
+     * @return TestResponse|mixed
      */
     public function get($model, string $key, $value, array $attributes)
     {
-        if (!is_string($value)) {
+        if (is_string($value)) {
+            return TestResponse::fromParts(json_decode($value, true));
+        } else {
             return $value;
         }
-
-        return new TestResponse(new Response(...json_decode($value, true)));
     }
 
     /**
@@ -29,18 +28,14 @@ class ResponseCast implements CastsAttributes
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return array|false|mixed|string
+     * @return TestResponse|array|mixed
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        if (!$value instanceof TestResponse) {
+        if (is_array($value)) {
+            return TestResponse::fromParts($value);
+        } else {
             return $value;
         }
-
-        return json_encode([
-            $value->status(),
-            $value->headers(),
-            $value->body(),
-        ]);
     }
 }
