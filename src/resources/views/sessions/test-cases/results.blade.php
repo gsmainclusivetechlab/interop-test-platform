@@ -8,16 +8,10 @@
             <button type="button" class="btn btn-secondary border" data-fancybox data-src="#flow-diagram">
                 {{ __('Use case flow') }}
             </button>
-            <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
-                @include('sessions.includes.use-case-flow', $testCase)
-            </div>
             @if($testCase->data_example)
                 <button type="button" class="btn btn-secondary border" data-fancybox data-src="#test-data">
                     {{ __('Test data example') }}
                 </button>
-                <div id="test-data" class="col-8 p-0 rounded" style="display: none">
-                    @include('sessions.includes.test-data-example', $testCase)
-                </div>
             @endif
         </div>
         <div class="input-group">
@@ -29,6 +23,14 @@
             </span>
         </div>
     </div>
+    <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
+        @include('sessions.includes.use-case-flow', $testCase)
+    </div>
+    @if($testCase->data_example)
+        <div id="test-data" class="col-8 p-0 rounded" style="display: none">
+            @include('sessions.includes.test-data-example', $testCase)
+        </div>
+    @endif
 @endsection
 
 @section('session-sidebar')
@@ -79,14 +81,14 @@
                         {{ $testRun->uuid }}
                     </h3>
                     <div class="card-options">
-                        @if ($sucessful = $testRun->testResults()->where('successful', true)->count())
+                        @if ($sucessful = $testRun->passed)
                             <span class="text-success mr-2">
                                 <i class="fe fe-check"></i>
                                 {{ __(':n Pass', ['n' => $sucessful]) }}
                             </span>
                         @endif
 
-                            @if ($unsucessful = $testRun->testResults()->where('successful', false)->count())
+                        @if ($unsucessful = $testRun->failures)
                             <span class="text-danger mr-2">
                                 <i class="fe fe-alert-circle"></i>
                                 {{ __(':n Fail', ['n' => $unsucessful]) }}
@@ -165,8 +167,8 @@
                                                     <b>
                                                         {{ __('Step :n', ['n' => $step->position]) }}
                                                     </b>
-                                                    <div class="text-truncate" title="{{ $step->name }}">
-                                                        {{ $step->name }}
+                                                    <div class="text-truncate" title="{{ $step->forward }}">
+                                                        {{ $step->forward }}
                                                     </div>
                                                 </div>
                                             </li>

@@ -32,7 +32,8 @@ data_example:
       key: "msisdn"
       value: "+33555789123"
 test_steps:
-  - name: POST /transactions
+  - forward: POST /transactions
+    backward: HTTP 503
     source: Service Provider
     target: Mobile Money Operator 1
     test_request_scripts:

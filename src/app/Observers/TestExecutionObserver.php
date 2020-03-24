@@ -12,7 +12,7 @@ class TestExecutionObserver
      */
     public function pass(TestExecution $testExecution)
     {
-
+//        $testExecution->testResult->increment('passed');
     }
 
     /**
@@ -21,7 +21,7 @@ class TestExecutionObserver
      */
     public function fail(TestExecution $testExecution)
     {
-
+//        $testExecution->testResult->increment('failures');
     }
 
     /**
@@ -30,6 +30,6 @@ class TestExecutionObserver
      */
     public function error(TestExecution $testExecution)
     {
-
+//        $testExecution->testResult->increment('errors');
     }
 }
