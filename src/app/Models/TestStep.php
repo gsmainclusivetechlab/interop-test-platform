@@ -21,8 +21,8 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'description',
+        'forward',
+        'backward',
     ];
 
     /**

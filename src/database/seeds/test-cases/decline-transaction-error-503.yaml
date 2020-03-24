@@ -13,7 +13,7 @@ precondition: |
   Amount should be the value "5.03".
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
-test_data_example:
+data_example:
   uri: /transactions
   method: POST
   headers:
@@ -26,13 +26,14 @@ test_data_example:
     currency: 'USD'
     type: 'merchantpay'
     debitParty:
-      key: "msisdn"
-      value: "+33555123456"
+      - key: "msisdn"
+        value: "+33555123456"
     creditParty:
-      key: "msisdn"
-      value: "+33555789123"
+      - key: "msisdn"
+        value: "+33555789123"
 test_steps:
-  - name: POST /transactions
+  - forward: POST /transactions
+    backward: HTTP 503
     source: Service Provider
     target: Mobile Money Operator 1
     test_request_scripts:

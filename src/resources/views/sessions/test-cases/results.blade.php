@@ -8,9 +8,11 @@
             <button type="button" class="btn btn-secondary border" data-fancybox data-src="#flow-diagram">
                 {{ __('Use case flow') }}
             </button>
-{{--            <button type="button" class="btn btn-secondary border" data-fancybox data-src="#test-data">--}}
-{{--                {{ __('Diagram') }}--}}
-{{--            </button>--}}
+            @if($testCase->data_example)
+                <button type="button" class="btn btn-secondary border" data-fancybox data-src="#test-data">
+                    {{ __('Test data example') }}
+                </button>
+            @endif
         </div>
         <div class="input-group">
             <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['session' => $session, 'testCase' => $testCase]) }}">
@@ -21,48 +23,14 @@
             </span>
         </div>
     </div>
-
     <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
-        @include('sessions.includes.test-case-flow-chart', $testCase)
+        @include('sessions.includes.use-case-flow', $testCase)
     </div>
-
-{{--    <div id="test-data" class="col-6 p-0 rounded" style="display: none">--}}
-{{--        <div class="card mb-0">--}}
-{{--            <div class="card-header">--}}
-{{--                <h2 class="card-title">--}}
-{{--                    <b>{{ $testCase->name }}</b>--}}
-{{--                </h2>--}}
-{{--            </div>--}}
-{{--            <div class="card-body bg-light p-0">--}}
-{{--                <div class="py-3 px-4">--}}
-{{--                    <p><strong>Precondition</strong></p>--}}
-{{--                    <p class="mb-0">--}}
-{{--                        <b>Headers</b>--}}
-{{--                        <pre class="mb-0 p-0">--}}
-{{--<code>{--}}
-{{--    "Accept": "application/json",--}}
-{{--    "Content-Type": "application/json",--}}
-{{--    "X-Callback-URL": "http://example.com/example",--}}
-{{--    "X-Date": "2020-02-20T10:28:44.466Z"--}}
-{{--}</code>--}}
-{{--                        </pre>--}}
-{{--                    </p>--}}
-{{--                    <p class="mb-0">--}}
-{{--                        <b>Data body</b>--}}
-{{--                        <pre class="mb-0 p-0">--}}
-{{--<code>{--}}
-{{--    "amount":"100.00",--}}
-{{--    "currency":"USD",--}}
-{{--    "type":"merchantpay",--}}
-{{--    "debitParty": [{"key":"msisdn", "value":"+33555123456"}],--}}
-{{--    "creditParty": [{"key":"msisdn", "value":"+33555789123"}]--}}
-{{--}</code>--}}
-{{--                        </pre>--}}
-{{--                    </p>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    @if($testCase->data_example)
+        <div id="test-data" class="col-8 p-0 rounded" style="display: none">
+            @include('sessions.includes.test-data-example', $testCase)
+        </div>
+    @endif
 @endsection
 
 @section('session-sidebar')
@@ -113,14 +81,14 @@
                         {{ $testRun->uuid }}
                     </h3>
                     <div class="card-options">
-                        @if ($sucessful = $testRun->testResults()->where('successful', true)->count())
+                        @if ($sucessful = $testRun->passed)
                             <span class="text-success mr-2">
                                 <i class="fe fe-check"></i>
                                 {{ __(':n Pass', ['n' => $sucessful]) }}
                             </span>
                         @endif
 
-                            @if ($unsucessful = $testRun->testResults()->where('successful', false)->count())
+                        @if ($unsucessful = $testRun->failures)
                             <span class="text-danger mr-2">
                                 <i class="fe fe-alert-circle"></i>
                                 {{ __(':n Fail', ['n' => $unsucessful]) }}
@@ -199,8 +167,8 @@
                                                     <b>
                                                         {{ __('Step :n', ['n' => $step->position]) }}
                                                     </b>
-                                                    <div class="text-truncate" title="{{ $step->name }}">
-                                                        {{ $step->name }}
+                                                    <div class="text-truncate" title="{{ $step->forward }}">
+                                                        {{ $step->forward }}
                                                     </div>
                                                 </div>
                                             </li>

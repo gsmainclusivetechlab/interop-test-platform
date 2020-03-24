@@ -13,7 +13,7 @@ precondition: |
   Amount should be the value "15.15".
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
-test_data_example:
+data_example:
   uri: /transactions
   method: POST
   headers:
@@ -26,13 +26,14 @@ test_data_example:
     currency: 'USD'
     type: 'merchantpay'
     debitParty:
-      key: "msisdn"
-      value: "+33555123456"
+      - key: "msisdn"
+        value: "+33555123456"
     creditParty:
-      key: "msisdn"
-      value: "+33555789123"
+      - key: "msisdn"
+        value: "+33555789123"
 test_steps:
-  - name: POST /transactions
+  - forward: POST /transactions
+    backward: HTTP 202
     source: Service Provider
     target: Mobile Money Operator 1
     test_request_scripts:
@@ -65,7 +66,8 @@ test_steps:
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'in:callback'
-  - name: POST /transactionRequests
+  - forward: POST /transactionRequests
+    backward: HTTP 202
     source: Mobile Money Operator 1
     target: Mojaloop
     test_request_scripts:
@@ -91,7 +93,8 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-  - name: POST /transactionRequests
+  - forward: POST /transactionRequests
+    backward: HTTP 202
     source: Mojaloop
     target: Mobile Money Operator 2
     test_request_scripts:
@@ -117,7 +120,8 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-  - name: PUT /transactionRequests/{ID}
+  - forward: PUT /transactionRequests/{ID}
+    backward: HTTP 200
     source: Mobile Money Operator 2
     target: Mojaloop
     test_request_scripts:
@@ -132,7 +136,8 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-  - name: PUT /transactionRequests/{ID}
+  - forward: PUT /transactionRequests/{ID}
+    backward: HTTP 200
     source: Mojaloop
     target: Mobile Money Operator 1
     test_request_scripts:
@@ -147,7 +152,8 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-  - name: PUT /X-Callback-URL
+  - forward: PUT /X-Callback-URL
+    backward: HTTP 204
     source: Mobile Money Operator 1
     target: Service Provider
     test_request_scripts:

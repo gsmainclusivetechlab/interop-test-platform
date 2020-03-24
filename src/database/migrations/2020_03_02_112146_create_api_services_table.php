@@ -15,7 +15,6 @@ class CreateApiServicesTable extends Migration
     {
         Schema::create('api_services', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('server');

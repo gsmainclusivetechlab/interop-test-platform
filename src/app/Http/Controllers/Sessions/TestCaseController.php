@@ -65,7 +65,8 @@ class TestCaseController extends Controller
         $testResult = $testRun->testResults()
             ->whereHas('testStep', function (Builder $query) use ($position) {
                 $query->where('position', $position);
-            })->firstOrFail();
+            })
+            ->firstOrFail();
 
         return view('sessions.test-cases.results', compact('session', 'testCase', 'testRun', 'testResult'));
     }

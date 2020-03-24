@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class UsersTableSeeder extends Seeder
             'role' => User::ROLE_SUPERADMIN,
             'email' => 'superadmin@gsma.com',
             'company' => 'GSMA',
+            'password' => Hash::make('qzRBHEzStdG8XWhy'),
         ]);
     }
 }

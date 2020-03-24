@@ -22,6 +22,7 @@ class CreateTestCasesTable extends Migration
             $table->string('behavior');
             $table->text('description')->nullable();
             $table->text('precondition')->nullable();
+            $table->longText('data_example')->nullable();
             $table->timestamps();
         });
     }

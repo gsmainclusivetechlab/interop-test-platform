@@ -41,6 +41,7 @@ class TestExecutionListener implements TestListener
     {
         if ($test instanceof TestCase) {
             $this->result->testExecutions()->make()->error($test->getScript(), $e->getMessage());
+            $this->result->increment('errors');
         }
 
         $this->lastTestWasNotSuccessful = true;
@@ -50,6 +51,7 @@ class TestExecutionListener implements TestListener
     {
         if ($test instanceof TestCase) {
             $this->result->testExecutions()->make()->fail($test->getScript(), $e->getMessage());
+            $this->result->increment('failures');
         }
 
         $this->lastTestWasNotSuccessful = true;
@@ -60,6 +62,7 @@ class TestExecutionListener implements TestListener
         if (!$this->lastTestWasNotSuccessful) {
             if ($test instanceof TestCase) {
                 $this->result->testExecutions()->make()->pass($test->getScript());
+                $this->result->increment('passed');
             }
         }
     }

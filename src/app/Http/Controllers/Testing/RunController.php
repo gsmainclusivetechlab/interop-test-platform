@@ -79,6 +79,7 @@ class RunController extends Controller
 
             return $response;
         } catch (RequestException $e) {
+            $testResult->complete();
             return $e;
         }
     }

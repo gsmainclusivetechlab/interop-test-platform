@@ -40,6 +40,16 @@ class TestResult extends Model
     /**
      * @var array
      */
+    protected $attributes = [
+        'total' => 0,
+        'passed' => 0,
+        'failures' => 0,
+        'errors' => 0,
+    ];
+
+    /**
+     * @var array
+     */
     protected $observables = [
         'complete',
     ];
@@ -94,11 +104,38 @@ class TestResult extends Model
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereNotNull('completed_at');
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSuccessful($query)
+    {
+        return $query->where('failures', '=', 0)->where('errors', '=', 0);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnsuccessful($query)
+    {
+        return $query->where('failures', '!=', 0)->orWhere('errors', '!=', 0);
+    }
+
+    /**
      * @return bool
      */
-    public function isLast()
+    public function getSuccessfulAttribute()
     {
-        return $this->testStep->isLastPosition();
+        return $this->total == $this->passed;
     }
 
     /**
@@ -106,11 +143,6 @@ class TestResult extends Model
      */
     public function complete()
     {
-        $this->successful = !$this->testExecutions()
-            ->where('status', TestExecution::STATUS_FAIL)
-            ->orWhere('status', TestExecution::STATUS_ERROR)
-            ->exists();
-        $this->time = floor((microtime(true) - LARAVEL_START) * 1000);
         $this->completed_at = now();
 
         if (!$this->save()) {
