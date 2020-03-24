@@ -239,7 +239,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'in:200'
   - forward: PUT /quotes/{ID}
     backward: HTTP 200
     source: Mojaloop
@@ -265,7 +265,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'in:200'
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
     source: Mobile Money Operator 2
@@ -281,7 +281,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'in:200'
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
     source: Mojaloop
@@ -297,7 +297,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'in:200'
   - forward: PUT /X-Callback-URL
     backward: HTTP 204
     source: Mobile Money Operator 1
