@@ -8,7 +8,7 @@
         @if($request = $testCase->data_example)
             <div class="d-flex">
                 <div class="w-25 px-4 py-2 border">
-                    <strong>{{ __('Url') }}</strong>
+                    <strong>{{ __('Endpoint') }}</strong>
                 </div>
                 <div class="w-75 px-4 py-2 border">
                     {{ $request->url() }}
