@@ -5,7 +5,7 @@ description: |
   Send data from example below and see that amount, currency and both msisdns are different from what you sent.
 precondition: |
   N/A
-test_data_example:
+data_example:
   uri: /transactions
   method: POST
   headers:

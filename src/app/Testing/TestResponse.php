@@ -2,8 +2,10 @@
 
 namespace App\Testing;
 
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Support\Arrayable;
 use Psr\Http\Message\ResponseInterface;
+use function GuzzleHttp\Psr7\stream_for;
 
 class TestResponse implements Arrayable
 {
@@ -79,5 +81,26 @@ class TestResponse implements Arrayable
             'headers' => $this->headers(),
             'body' => $this->json(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return json_encode($this->toArray());
+    }
+
+    /**
+     * @param array $parts
+     * @return self
+     */
+    public static function fromParts(array $parts)
+    {
+        return new self(new Response(
+            $parts['status'] ?? 200,
+            $parts['headers'] ?? [],
+            $parts['body'] ? stream_for(json_encode($parts['body'])) : ''
+        ));
     }
 }
