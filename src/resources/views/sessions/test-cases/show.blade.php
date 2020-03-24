@@ -8,16 +8,10 @@
             <button type="button" class="btn btn-secondary border" data-fancybox data-src="#flow-diagram">
                 {{ __('Use case flow') }}
             </button>
-            <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
-                @include('sessions.includes.use-case-flow', $testCase)
-            </div>
             @if($testCase->data_example)
                 <button type="button" class="btn btn-secondary border" data-fancybox data-src="#test-data">
                     {{ __('Test data example') }}
                 </button>
-                <div id="test-data" class="col-8 p-0 rounded" style="display: none">
-                    @include('sessions.includes.test-data-example', $testCase)
-                </div>
             @endif
         </div>
         <div class="input-group">
@@ -29,10 +23,14 @@
             </span>
         </div>
     </div>
-
-    <div id="test-data" class="col-6 p-0 rounded" style="display: none">
-
+    <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
+        @include('sessions.includes.use-case-flow', $testCase)
     </div>
+    @if($testCase->data_example)
+        <div id="test-data" class="col-8 p-0 rounded" style="display: none">
+            @include('sessions.includes.test-data-example', $testCase)
+        </div>
+    @endif
 @endsection
 
 @section('session-sidebar')
