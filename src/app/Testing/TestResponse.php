@@ -48,6 +48,16 @@ class TestResponse implements Arrayable
     }
 
     /**
+     * @return array
+     */
+    public function headerLines()
+    {
+        return collect($this->headers())->mapWithKeys(function ($values, $header) {
+            return [$header => $this->response->getHeaderLine($header)];
+        })->all();
+    }
+
+    /**
      * @return string
      */
     public function body()
