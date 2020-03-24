@@ -107,6 +107,15 @@ class TestResult extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
+    public function scopeCompleted($query)
+    {
+        return $query->whereNotNull('completed_at');
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeSuccessful($query)
     {
         return $query->where('failures', '=', 0)->where('errors', '=', 0);
@@ -126,7 +135,7 @@ class TestResult extends Model
      */
     public function getSuccessfulAttribute()
     {
-        return !$this->failures && !$this->errors;
+        return $this->total == $this->passed;
     }
 
     /**

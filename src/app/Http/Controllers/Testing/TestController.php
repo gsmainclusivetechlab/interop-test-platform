@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
-use App\Models\ApiService;
 use App\Models\TestRun;
 use App\Testing\Middlewares\RequestMiddleware;
 use App\Testing\Middlewares\ResponseMiddleware;
@@ -33,27 +32,13 @@ class TestController extends Controller
 
     /**
      * @param ServerRequestInterface $request
-     * @param ApiService $apiService
      * @param string $uri
      * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
      */
-    public function __invoke(ServerRequestInterface $request, ApiService $apiService, string $uri)
+    public function __invoke(ServerRequestInterface $request, string $uri)
     {
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
-
-//        $testStep = $testRun->testSteps()
-//            ->whereHas('source', function ($query) use ($apiService) {
-//                $query->where('api_service_id', $apiService->id);
-//            })
-//            ->offset($testRun->testResults()
-//                ->whereHas('testStep', function ($query) use ($apiService) {
-//                    $query->whereHas('source', function ($query) use ($apiService) {
-//                        $query->where('api_service_id', $apiService->id);
-//                    });
-//                })->count())
-//            ->firstOrFail();
-
         $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();
 
         $uri = (new Uri($uri));
@@ -83,6 +68,7 @@ class TestController extends Controller
 
             return $response;
         } catch (RequestException $e) {
+            $testResult->complete();
             return $e;
         }
     }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Casts\OpenApiCast;
-use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiService extends Model
 {
-    use HasUuid;
-
     /**
      * @var string
      */
