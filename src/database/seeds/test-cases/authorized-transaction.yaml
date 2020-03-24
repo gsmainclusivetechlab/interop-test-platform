@@ -372,7 +372,7 @@ test_steps:
           body.type: 'in:merchantpay'
       - name: Transaction was approved
         rules:
-          body.transactionStatus: 'in:approved'
+          body.transactionStatus: 'in:Completed'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -384,7 +384,7 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri: 'regex:/transfer\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri: 'regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
           body.transactionRequestState: 'in:COMMITTED'
@@ -406,7 +406,7 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri: 'regex:/transfer\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri: 'regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
           body.transactionRequestState: 'in:COMMITTED'
