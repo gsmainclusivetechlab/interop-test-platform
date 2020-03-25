@@ -1,13 +1,18 @@
+## v0.4.2
+- MMO2 -> Rejected Transaction Test Case: steps 10 - 12 are not being performed
+- Test Case YAML updates
+- ITP copy change "URL" to "Endpoint"
+
 ## v0.4.1
-Added TC management (custom TCs import / deletion)
-Added Service Provider simulator
-Implemented transaction type and status mapping for MMO1
-Added registration code for beta users
-Removed session deactivation
-MMO1 transaction request mapping updates
-Test run view and flow diagram updates
-Admin links hidden for common user
-Bug fixes and performance improvements
+- Added TC management (custom TCs import / deletion)
+- Added Service Provider simulator
+- Implemented transaction type and status mapping for MMO1
+- Added registration code for beta users
+- Removed session deactivation
+- MMO1 transaction request mapping updates
+- Test run view and flow diagram updates
+- Admin links hidden for common user
+- Bug fixes and performance improvements
 
 
 ## v0.4
