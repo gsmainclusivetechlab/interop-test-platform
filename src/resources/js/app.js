@@ -44,6 +44,22 @@ Vue.component('notification', () =>
 
 const app = new Vue({
     el: '#app',
+    methods: {
+        toggleCheckboxes(e) {
+            const btn = e.target;
+            const closestParentList = btn.closest('.list-group-item');
+            const checkboxes = Array.from(
+                closestParentList.querySelectorAll('input[type="checkbox"]'),
+            );
+            const isChecked = checkboxes.every(
+                (checkbox) => checkbox.checked === true,
+            );
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = !isChecked;
+            });
+        },
+    },
 });
 
 hljs.initHighlightingOnLoad();
