@@ -1,13 +1,28 @@
+## v0.4.2
+- Bug: MMO2 -> Rejected Transaction Test Case: steps 10 - 12 are not being performed [@jc_ohladkov]
+- Task: Test Case YAML updates [@jc_akokorev]
+- Task: ITP copy change "URL" to "Endpoint" [@jc_akokorev]
+
 ## v0.4.1
-Added TC management (custom TCs import / deletion)
-Added Service Provider simulator
-Implemented transaction type and status mapping for MMO1
-Added registration code for beta users
-Removed session deactivation
-MMO1 transaction request mapping updates
-Test run view and flow diagram updates
-Admin links hidden for common user
-Bug fixes and performance improvements
+- Task: Added TC management (custom TCs import / deletion) [@jc_akokorev]
+- Task: Added Service Provider simulator [@jc_ssenokosov]
+- Task: Implemented transaction type and status mapping for MMO1 [@jc_ssenokosov]
+- Task: Added registration code for beta users [@jc_akokorev]
+- Task: Removed session deactivation [@jc_akokorev]
+- Task: MMO1 transaction request mapping updates [@jc_ssenokosov]
+- Task: Test run view and flow diagram updates [@jc_ohladkov]
+- Task: Admin links hidden for common user [@jc_akokorev]
+- Bug: Bug fixes and performance improvements [@jc_akokorev]
+- Task: Test Case/Run pages -> Flow: Diagram: Add step # and Response [@jc_akokorev]
+- Bug: Transaction Request Rejected by Payer FSP TC - incorrect run status [@jc_akokorev]
+- Bug: Test Run -> add back the overview of pass and fail on the top of the test run [@jc_akokorev]
+- Bug: Session Test Case pages -> retun Status and Duration [@jc_akokorev]
+- Task: Test Case/Run -> Move test assertions for request and reposne below [@jc_akokorev]
+- Bug: Test management - Test cases - Search issue 500 [@jc_akokorev]
+- Task: Test Case/Run page -> add Flow schema as a poup [@jc_akokorev]
+- Task: Test Run/Case page -> Test Data and Test header to become a popup [@jc_akokorev]
+- Task: Test data - Make contents as plain json [@jc_akokorev]
+- Test Case/Run page -> add Flow schema as a popup [@jc_akokorev]
 
 
 ## v0.4
