@@ -321,7 +321,7 @@ test_steps:
           body.type: 'in:merchantpay'
       - name: Transaction was declined
         rules:
-          body.transactionStatus: 'in:declined'
+          body.transactionStatus: 'in:Failed'
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
