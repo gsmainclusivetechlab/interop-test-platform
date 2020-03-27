@@ -14,6 +14,7 @@
 
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index')->name('home');
+Route::any('/test', 'HomeController@test')->name('test');
 
 /**
  * Sessions Routes

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestExecutionsTable extends Migration
+class CreateTestResponsesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateTestExecutionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_executions', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('test_responses', function (Blueprint $table) {
             $table->unsignedBigInteger('test_result_id');
             $table->foreign('test_result_id')->references('id')->on('test_results')->onDelete('cascade');
-            $table->unsignedBigInteger('test_script_id');
-            $table->foreign('test_script_id')->references('id')->on('test_scripts')->onDelete('cascade');
-            $table->string('status')->index();
-            $table->text('message')->nullable();
+            $table->primary('test_result_id');
+            $table->unsignedInteger('status');
+            $table->longText('headers');
+            $table->longText('body');
             $table->timestamp('created_at');
         });
     }
@@ -32,6 +31,6 @@ class CreateTestExecutionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_executions');
+        Schema::dropIfExists('test_responses');
     }
 }

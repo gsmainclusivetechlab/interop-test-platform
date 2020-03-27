@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestSuite;
 
 class TestSuiteLoader
 {
-
     /**
      * @param TestResult $result
      * @return TestSuite

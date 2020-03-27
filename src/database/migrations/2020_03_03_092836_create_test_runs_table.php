@@ -19,10 +19,7 @@ class CreateTestRunsTable extends Migration
             $table->unsignedBigInteger('session_id');
             $table->unsignedBigInteger('test_case_id');
             $table->foreign(['session_id', 'test_case_id'])->references(['session_id', 'test_case_id'])->on('session_test_cases')->onDelete('cascade');
-            $table->unsignedInteger('total');
-            $table->unsignedInteger('passed');
-            $table->unsignedInteger('failures');
-            $table->unsignedInteger('duration');
+            $table->boolean('successful')->nullable();;
             $table->timestamp('created_at');
             $table->timestamp('completed_at')->nullable();
         });
