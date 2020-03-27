@@ -36,6 +36,11 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
 });
 
 /**
+ * Tutorial Routes
+ */
+Route::get('/tutorials', 'Tutorials\TutorialsController@index')->name('tutorials');
+
+/**
  * Settings Routes
  */
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {

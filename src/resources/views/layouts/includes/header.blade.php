@@ -85,12 +85,12 @@
                             {{ __('Sessions') }}
                         </a>
                     </li>
-{{--                    <li class="nav-item">--}}
-{{--                        <a href="#" class="nav-link">--}}
-{{--                            <i class="fe fe-help-circle"></i>--}}
-{{--                            {{ __('Tutorial') }}--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
+                    <li class="nav-item">
+                        <a href="{{ route('tutorials') }}" class="nav-link @if (request()->routeIs('tutorials')) active @endif">
+                            <i class="fe fe-help-circle"></i>
+                            {{ __('Tutorials') }}
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="{{ env('APP_COMPANY_LAB_URL') }}" class="nav-link" target="_blank">
                             <i class="fe fe-link"></i>
