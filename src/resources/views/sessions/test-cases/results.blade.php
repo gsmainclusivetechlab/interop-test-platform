@@ -178,14 +178,19 @@
                             </div>
                             <div class="col-9 pl-0 border-left">
                                 <div class="lead p-4">
-                                    <b class="text-nowrap">
-                                        {{ __('Step :n', ['n' => $testResult->testStep->position]) }}
-                                    </b>
-                                    <div class="d-flex align-items-baseline text-truncate">
+                                    <div class="d-flex justigy-content-between">
+                                        <b class="text-nowrap">
+                                            {{ __('Step :n', ['n' => $testResult->testStep->position]) }}
+                                        </b>
+                                        <small class="d-inline-block ml-auto">
+                                            Status:
+                                            <span class="text-success">
+                                                {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->status() : __('Unknown')]) }}
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="text-truncate">
                                         <u class="mr-2">{{ $testResult->request->method() }} {{ $testResult->request->path() }}</u>
-                                        <span class="badge px-4 ml-3 py-2 bg-success">
-                                            {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->status() : __('Unknown')]) }}
-                                        </span>
                                     </div>
                                 </div>
                                 @if($testResult->successful)
@@ -197,32 +202,30 @@
                                         {{ __('Fail') }}
                                     </div>
                                 @endif
-                                <div class="px-4 py-2">
-                                    <ul class="m-0 p-0">
-                                        @foreach($testResult->testRequestExecutions as $testExecution)
-                                        <li class="d-flex flex-wrap py-2">
-                                            <div class="d-flex align-items-center">
-                                                <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
-                                                    {{ $testExecution->status_label }}
-                                                </span>
-                                                <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
-                                                    {{ $testExecution->testScript->name }}
-                                                </span>
-                                            </div>
-                                            <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
-                                                @if ($testExecution->message)
-                                                    <p class="mb-0 small">{{ $testExecution->message }}</p>
-                                                @endif
-                                            </b-collapse>
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
                                 @if($request = $testResult->request)
                                     <div class="p-4">
                                         <strong class="lead d-block mb-2 font-weight-bold">
                                             {{ __('Request') }}
                                         </strong>
+                                        <ul class="p-0">
+                                            @foreach($testResult->testRequestExecutions as $testExecution)
+                                                <li class="d-flex flex-wrap py-2">
+                                                    <div class="d-flex align-items-center">
+                                            <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
+                                                {{ $testExecution->status_label }}
+                                            </span>
+                                                        <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
+                                                {{ $testExecution->testScript->name }}
+                                            </span>
+                                                    </div>
+                                                    <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
+                                                        @if ($testExecution->message)
+                                                            <p class="mb-0 small">{{ $testExecution->message }}</p>
+                                                        @endif
+                                                    </b-collapse>
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                         <div class="border">
                                             <div class="d-flex">
                                                 <div class="w-25 px-4 py-2 border">
@@ -280,33 +283,30 @@
                                     </div>
                                 @endif
 
-                                <div class="px-4 py-2">
-                                    <ul class="m-0 p-0">
-                                        @foreach($testResult->testResponseExecutions as $testExecution)
-                                            <li class="d-flex flex-wrap py-2">
-                                                <div class="d-flex align-items-center">
-                                                <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
-                                                    {{ $testExecution->status_label }}
-                                                </span>
-                                                    <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
-                                                    {{ $testExecution->testScript->name }}
-                                                </span>
-                                                </div>
-                                                <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
-                                                    @if ($testExecution->message)
-                                                        <p class="mb-0 small">{{ $testExecution->message }}</p>
-                                                    @endif
-                                                </b-collapse>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
                                 @if($response = $testResult->response)
                                     <div class="p-4">
                                         <strong class="lead d-block mb-2 font-weight-bold">
                                             {{ __('Response') }}
                                         </strong>
+                                        <ul class="p-0">
+                                            @foreach($testResult->testResponseExecutions as $testExecution)
+                                                <li class="d-flex flex-wrap py-2">
+                                                    <div class="d-flex align-items-center">
+                                                <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase bg-{{ $testExecution->status_type }}">
+                                                    {{ $testExecution->status_label }}
+                                                </span>
+                                                        <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
+                                                    {{ $testExecution->testScript->name }}
+                                                </span>
+                                                    </div>
+                                                    <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
+                                                        @if ($testExecution->message)
+                                                            <p class="mb-0 small">{{ $testExecution->message }}</p>
+                                                        @endif
+                                                    </b-collapse>
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                         <div class="border">
                                             <div class="d-flex">
                                                 <div class="w-25 px-4 py-2 border">
