@@ -82,30 +82,7 @@
                     </h2>
                 </div>
                 <div class="card-body">
-                    <chart
-                        :series="[
-                            {
-                                name: 'Passed',
-                                data: [
-                                    {x: '22 Mar', y: 44},
-                                    {x: '23 Mar', y: 12},
-                                    {x: '24 Mar', y: 32},
-                                    {x: '25 Mar', y: 7},
-                                    {x: '26 Mar', y: 14}
-                                ],
-                            },
-                            {
-                                name: 'Failed',
-                                data: [
-                                    {x: '22 Mar', y: 2},
-                                    {x: '23 Mar', y: 22},
-                                    {x: '24 Mar', y: 11},
-                                    {x: '25 Mar', y: 21},
-                                    {x: '26 Mar', y: 4}
-                                ],
-                            },
-                        ]"
-                    ></chart>
+                    <chart ajax-url="http://demo0735844.mockable.io/data"></chart>
                 </div>
             </div>
         </div>
