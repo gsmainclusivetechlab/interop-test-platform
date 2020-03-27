@@ -303,25 +303,12 @@ test_steps:
     source: Mobile Money Operator 1
     target: Service Provider
     test_request_scripts:
-      - name: Header has the Url Callback
+      - name: Error category is valid
         rules:
-          headers.X-Callback-URL: 'regex:/.*/'
-      - name: Debit and credit party is valid
+          body.errorCategory: 'in:businessRule'
+      - name: Error code is valid
         rules:
-          body.debitParty.*.key: 'in:msisdn'
-          body.debitParty.*.value: 'in:+33555123456'
-          body.creditParty.*.key: 'in:msisdn'
-          body.creditParty.*.value: 'in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount: 'in:10.1'
-          body.currency: 'regex:/^[A-Z]{3}/'
-      - name: Transaction is a Merchant Payment
-        rules:
-          body.type: 'in:merchantpay'
-      - name: Transaction was declined
-        rules:
-          body.transactionStatus: 'in:Failed'
+          body.errorCode: 'in:genericError'
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
