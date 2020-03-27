@@ -1,0 +1,125 @@
+
+div[role=tablist] {
+    padding-top: 20px;
+}
+
+.scenario-card {
+    width: 300px;
+    height: 150px;
+    color: #de002b;
+    text-align: center;
+}
+
+#scenario-heading {
+    margin:auto;
+    line-height:50px;
+    vertical-align:middle;
+}
+
+#scenario-desc {
+    text-align: left;
+    font-weight: 200;
+    color: #23272b;
+}
+
+.scenario-accordion {
+    color: #de002b;
+}
+
+.icon {
+    height: 30px;
+    width: 30px;
+    color: #de002b;
+    position: relative;
+    margin-top: -0.325em;
+}
+
+#session-icon:hover {
+    filter: saturate(0);
+}
+
+.tutorial-text {
+    font-family: inherit;
+    font-weight: 400;
+    text-decoration: none;
+    padding-left: 15px;
+}
+
+.cards {
+    display: flex;
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    justify-content: space-between;
+    color: #de002b;
+}
+
+.demo-outer-container {
+    height: 65%;
+    width: 60%;
+    margin:auto;
+    vertical-align:middle;
+}
+
+.demo-inner-container img {
+    width: 100%;
+}
+
+.circle {
+    border: solid 3px #d87070;
+    cursor: pointer;
+    position: absolute;
+}
+
+.demo-inner-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-holder {
+    position: relative;
+}
+
+.circle-label {
+    position: absolute;
+
+    text-align: center;
+    font-weight: 500;
+    background-color: #222;
+    color: #fff;
+    padding: 10px;
+    width: 100px;
+    border-radius: 5px;
+}
+
+.demo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    background-color: #000;
+    opacity: 0.75;
+    border-radius: 5px;
+    border: 1px solid #000;
+    cursor: pointer;
+}
+
+.start-demo-btn {
+    position: absolute;
+    z-index: 6;
+    left: 50%;
+    top: 40%;
+    margin-left: -7.2em;
+    color: #de002b;
+    font-weight: 600;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 1px 3px 0px black;
+}
+
+.start-demo-btn:hover {
+    color: #fff;
+    background: #de002b;
+}

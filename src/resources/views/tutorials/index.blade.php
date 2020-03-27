@@ -7,5 +7,10 @@
         <b>@yield('title')</b>
     </h1>
     <div class="card">
+        @include('tutorials.includes.scenario-card')
+        @include('tutorials.includes.scenario-accordion')
     </div>
+    @push('scripts')
+        <link href="{{ asset('assets/tutorials/css/tutorials.css') }}" rel="stylesheet">
+    @endpush
 @endsection
