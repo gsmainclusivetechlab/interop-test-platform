@@ -12,5 +12,6 @@
     </div>
     @push('scripts')
         <link href="{{ asset('assets/tutorials/css/tutorials.css') }}" rel="stylesheet">
+        <script src="{{ asset('assets/js/tutorials/tutorials-demo.js') }}"></script>
     @endpush
 @endsection

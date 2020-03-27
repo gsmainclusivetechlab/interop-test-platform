@@ -17,7 +17,7 @@
                                 <div class="circle">
                                     <div class="circle-label">this is a label</div>
                                 </div>
-                                <img class="screenshot" src=""/>
+                                <img class="screenshot" src="{{ asset('images/tutorials/create-session/dashboard.png') }}"/>
                             </div>
                             <div class="demo-overlay"></div>
                             <div class="btn border-primary start-demo-btn">Start interactive demo</div>
