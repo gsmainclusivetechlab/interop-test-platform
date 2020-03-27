@@ -178,14 +178,19 @@
                             </div>
                             <div class="col-9 pl-0 border-left">
                                 <div class="lead p-4">
-                                    <b class="text-nowrap">
-                                        {{ __('Step :n', ['n' => $testResult->testStep->position]) }}
-                                    </b>
-                                    <div class="d-flex align-items-baseline text-truncate">
+                                    <div class="d-flex justigy-content-between">
+                                        <b class="text-nowrap">
+                                            {{ __('Step :n', ['n' => $testResult->testStep->position]) }}
+                                        </b>
+                                        <small class="d-inline-block ml-auto">
+                                            Status:
+                                            <span class="text-success">
+                                                {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->status() : __('Unknown')]) }}
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="text-truncate">
                                         <u class="mr-2">{{ $testResult->request->method() }} {{ $testResult->request->path() }}</u>
-                                        <span class="badge px-4 ml-3 py-2 bg-success">
-                                            {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->status() : __('Unknown')]) }}
-                                        </span>
                                     </div>
                                 </div>
                                 @if($testResult->successful)

@@ -230,22 +230,22 @@ test_steps:
       - name: Transaction was successfully declined
         rules:
           status: 'in:200'
-  - forward: PUT /quotes/{ID}/error
-    backward: HTTP 200
-    source: Mojaloop
-    target: Mobile Money Operator 2
-    test_request_scripts:
-      - name: ID is Valid
-        rules:
-          uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
-      - name: Error Code is specified correctly
-        rules:
-          body.errorInformation.errorCode: 'in:5103'
-          body.errorInformation.errorDescription: 'regex:/^.{1,128}$/'
-    test_response_scripts:
-      - name: Transaction was successfully declined
-        rules:
-          status: 'in:200'
+#  - forward: PUT /quotes/{ID}/error
+#    backward: HTTP 200
+#    source: Mojaloop
+#    target: Mobile Money Operator 2
+#    test_request_scripts:
+#      - name: ID is Valid
+#        rules:
+#          uri: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
+#      - name: Error Code is specified correctly
+#        rules:
+#          body.errorInformation.errorCode: 'in:5103'
+#          body.errorInformation.errorDescription: 'regex:/^.{1,128}$/'
+#    test_response_scripts:
+#      - name: Transaction was successfully declined
+#        rules:
+#          status: 'in:200'
   - forward: PUT /X-Callback-URL
     backward: HTTP 204
     source: Mobile Money Operator 1
@@ -269,7 +269,7 @@ test_steps:
         body.type: 'in:merchantpay'
     - name: Transaction was declined
       rules:
-        body.transactionStatus: 'in:declined'
+        body.transactionStatus: 'in:Failed'
     test_response_scripts:
     - name: Transaction was successfully declined
       rules:

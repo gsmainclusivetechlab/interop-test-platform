@@ -255,7 +255,6 @@ export default (function() {
 
         if (e.shiftKey) {
           document.getSelection().removeAllRanges();
-          alert(self.getJSONPath());
           return;
         }
       },
@@ -502,7 +501,6 @@ export default (function() {
 
           if (e.shiftKey) {
             document.getSelection().removeAllRanges();
-            alert(self.getJSONPath());
             return;
           }
 
