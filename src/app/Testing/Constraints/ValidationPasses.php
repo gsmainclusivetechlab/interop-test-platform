@@ -10,24 +10,32 @@ class ValidationPasses extends Constraint
     /**
      * @var array
      */
-    protected $rules;
+    protected $rules = [];
+
     /**
      * @var array
      */
-    protected $messages;
+    protected $messages = [];
+
     /**
      * @var array
      */
-    protected $errors = [];
+    protected $attributes = [];
+
+    /**
+     * @var Validator
+     */
+    protected $validator;
 
     /**
      * @param array $rules
      * @param array $messages
      */
-    public function __construct(array $rules, array $messages = [])
+    public function __construct(array $rules, array $messages = [], array $attributes = [])
     {
         $this->rules = $rules;
         $this->messages = $messages;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -36,14 +44,9 @@ class ValidationPasses extends Constraint
      */
     public function matches($data): bool
     {
-        $validator = Validator::make($data, $this->rules, $this->messages);
-        $passes = $validator->passes();
+        $this->validator = Validator::make($data, $this->rules, $this->messages, $this->attributes);
 
-        if (!$passes) {
-            $this->errors = $validator->errors()->all();
-        }
-
-        return $passes;
+        return $this->validator->passes();
     }
 
     /**
@@ -61,7 +64,7 @@ class ValidationPasses extends Constraint
      */
     protected function additionalFailureDescription($other): string
     {
-        return implode(PHP_EOL, $this->errors);
+        return implode(PHP_EOL, $this->validator->errors()->all());
     }
 
     /**
