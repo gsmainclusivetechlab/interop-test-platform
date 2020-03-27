@@ -53,10 +53,10 @@ class RouteServiceProvider extends ServiceProvider
     protected function addBindings()
     {
         Route::bind('userOnlyTrashed', function ($value) {
-            return User::onlyTrashed()->firstOrFail();
+            return User::onlyTrashed()->where('id', $value)->firstOrFail();
         });
         Route::bind('userWithTrashed', function ($value) {
-            return User::withTrashed()->firstOrFail();
+            return User::withTrashed()->where('id', $value)->firstOrFail();
         });
     }
 
