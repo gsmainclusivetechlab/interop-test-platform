@@ -15,8 +15,6 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Request;
-use PhpOption\Some;
 use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -47,16 +45,12 @@ class HomeController extends Controller
 
     public function test(ServerRequestInterface $request)
     {
-        $validator = Validator::make([
-            'uri' => 'test',
-        ]);
-
         $suite = new TestSuite(SomeTest::class);
 //        $suite->addTest(new SomeTest());
         $runner = new TestRunner();
         $result = $runner->run($suite);
 
-        dd($suite);
+        dd($result);
 
 //        dd($request1);
 

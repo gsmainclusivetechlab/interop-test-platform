@@ -2,6 +2,7 @@
 
 namespace App\Testing;
 
+use App\Testing\Listeners\TestListenerAdapter;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestResult;
@@ -28,6 +29,7 @@ class TestRunner
     protected function buildResult(): TestResult
     {
         $result = new TestResult();
+        $result->addListener(new TestListenerAdapter());
 
         foreach ($this->listeners as $listener) {
             $result->addListener($listener);
