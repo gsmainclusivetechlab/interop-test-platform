@@ -47,16 +47,22 @@
                                 <ul class="list-group overflow-auto" style="height: 320px">
                                     @foreach($useCases as $useCase)
                                         <li class="list-group-item">
-                                            <b class="dropdown-toggle" v-b-toggle.use-case-{{ $useCase->id }}>
-                                                {{ $useCase->name }}
-                                            </b>
+                                            <div class="d-flex align-items-baseline">
+                                                <b class="dropdown-toggle" v-b-toggle.use-case-{{ $useCase->id }}>
+                                                    {{ $useCase->name }}
+                                                </b>
+                                                <button type="button" class="btn btn-link py-0 font-weight-normal" @click.prevent="toggleCheckboxes">Select all</button>
+                                            </div>
                                             @if ($useCase->positiveTestCases->count())
                                                 <b-collapse id="use-case-{{ $useCase->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-test-cases-{{ $useCase->id }}>
-                                                                {{ __('Happy flow') }}
-                                                            </span>
+                                                            <div class="d-flex align-items-baseline">
+                                                                <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-test-cases-{{ $useCase->id }}>
+                                                                    {{ __('Happy flow') }}
+                                                                </span>
+                                                                <button type="button" class="btn btn-link py-0 font-weight-normal" @click.prevent="toggleCheckboxes">Select all</button>
+                                                            </div>
                                                             <b-collapse id="positive-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-group">
                                                                     @foreach($useCase->positiveTestCases as $testCase)
@@ -80,9 +86,12 @@
                                                 <b-collapse id="use-case-{{ $useCase->id }}" visible>
                                                     <ul class="list-group">
                                                         <li class="list-group-item border-0 py-0">
-                                                            <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-test-cases-{{ $useCase->id }}>
-                                                                {{ __('Unhappy flow') }}
-                                                            </span>
+                                                            <div class="d-flex align-items-baseline">
+                                                                <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-test-cases-{{ $useCase->id }}>
+                                                                    {{ __('Unhappy flow') }}
+                                                                </span>
+                                                                <button type="button" class="btn btn-link py-0 font-weight-normal" @click.prevent="toggleCheckboxes">Select all</button>
+                                                            </div>
                                                             <b-collapse id="negative-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-group">
                                                                     @foreach($useCase->negativeTestCases as $testCase)
