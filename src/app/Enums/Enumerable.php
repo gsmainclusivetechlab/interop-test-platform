@@ -13,4 +13,14 @@ interface Enumerable
      * @return array
      */
     public static function values();
+
+    /**
+     * @return mixed
+     */
+    public function label();
+
+    /**
+     * @return array
+     */
+    public static function labels();
 }

@@ -2,28 +2,37 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Concerns\HasPosition;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
  */
-class TestResponseScript extends TestScript
+class TestResponseScript extends Model
 {
+    use HasPosition;
+
+    /**
+     * @var string
+     */
+    protected $table = 'test_response_scripts';
+
     /**
      * @var array
      */
-    protected $attributes = [
-        'type' => self::TYPE_RESPONSE,
+    protected $fillable = [
+        'name',
+        'rule',
+        'param',
+        'value',
+        'message',
     ];
 
     /**
-     * @return void
+     * @return array
      */
-    protected static function boot()
+    public function getPositionGroupColumn()
     {
-        parent::boot();
-        static::addGlobalScope(function (Builder $builder) {
-            $builder->where('type', static::TYPE_RESPONSE);
-        });
+        return ['test_step_id'];
     }
 }

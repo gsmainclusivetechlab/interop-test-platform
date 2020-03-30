@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TestStatusEnum;
 use App\Models\TestResult;
 use App\Testing\Listeners\TestExecutionListener;
 use App\Testing\TestRequest;
@@ -29,7 +30,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified']);
     }
 
     /**

@@ -2,6 +2,9 @@
 
 namespace App\Enums;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 abstract class Enum implements Enumerable
 {
     /**
@@ -27,11 +30,37 @@ abstract class Enum implements Enumerable
 
     /**
      * @return array
-     * @throws \ReflectionException
      */
     public static function values()
     {
-        return array_values((new \ReflectionClass(static::class))->getConstants());
+        try {
+            return array_values((new \ReflectionClass(static::class))->getConstants());
+        } catch (\ReflectionException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function label()
+    {
+        return Arr::get($this->labels(), $this->value, $this->value);
+    }
+
+    /**
+     * @return array
+     */
+    public static function labels()
+    {
+        $labels = [];
+        $values = static::values();
+
+        foreach ($values as $value) {
+            $labels[$value] = Str::title($value);
+        }
+
+        return $labels;
     }
 
     /**

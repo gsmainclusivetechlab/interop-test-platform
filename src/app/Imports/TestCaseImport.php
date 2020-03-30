@@ -4,7 +4,7 @@ namespace App\Imports;
 
 use App\Models\Scenario;
 use App\Models\TestCase;
-use App\Models\TestScript;
+use App\Models\TestRequestScript;
 use App\Models\TestResponseScript;
 use App\Models\TestStep;
 use Illuminate\Database\Eloquent\Model;
@@ -49,12 +49,12 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute('target_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'target'))->value('id'));
                     $testStep->saveOrFail();
 
-                    if ($testRequestScriptsRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
-                        foreach ($testRequestScriptsRows as $testRequestScriptRow) {
+                    if ($testRequestScriptRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
+                        foreach ($testRequestScriptRows as $testRequestScriptRow) {
                             /**
-                             * @var TestScript $testRequestScript
+                             * @var TestRequestScript $testRequestScript
                              */
-                            $testRequestScript = $testStep->testRequestScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
+                            $testRequestScript = $testStep->testRequestScripts()->make(Arr::only($testRequestScriptRow, TestRequestScript::make()->getFillable()));
                             $testRequestScript->saveOrFail();
                         }
                     }

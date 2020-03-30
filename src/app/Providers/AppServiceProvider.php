@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerObservers();
+//        $this->registerObservers();
     }
 
     protected function registerObservers()
