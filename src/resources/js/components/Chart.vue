@@ -1,17 +1,22 @@
 <template>
-    <apexchart
-        height="360"
-        type="bar"
-        :options="this.getOptions"
-        :series="this.$props.series"
-    ></apexchart>
+    <div>
+        <apexchart
+            ref="chart"
+            height="360"
+            type="bar"
+            :options="options"
+            :series="chartData"
+        ></apexchart>
+    </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            chartOptions: {
+            options: {
                 chart: {
                     stacked: true,
                     fontFamily: 'gotham',
@@ -47,26 +52,50 @@ export default {
                     },
                 },
                 noData: {
-                    text: 'No filters selected',
+                    text: null,
                 },
+            },
+            chartData: [],
+            noDataList: {
+                loading: 'Loading...',
+                error: 'Failed to load data',
+                success: 'No filters selected',
             },
         };
     },
     props: {
-        options: {
-            type: Object,
-        },
-        series: {
-            type: Array,
+        ajaxUrl: {
+            type: String,
             required: true,
         },
     },
-    computed: {
-        getOptions() {
-            return {
-                ...this.chartOptions,
-                ...this.$props.options,
-            };
+    async mounted() {
+        this.options.noData.text = this.noDataList.loading;
+
+        await this.fetchData(this.$props.ajaxUrl);
+    },
+    methods: {
+        fetchData(url) {
+            return axios
+                .get(url)
+                .then(({ data }) => {
+                    this.chartData = data;
+
+                    this.$refs.chart.updateOptions({
+                        ...this.options,
+                        noData: {
+                            text: this.noDataList.success,
+                        },
+                    });
+                })
+                .catch((error) => {
+                    this.$refs.chart.updateOptions({
+                        ...this.options,
+                        noData: {
+                            text: this.noDataList.error,
+                        },
+                    });
+                });
         },
     },
     components: {

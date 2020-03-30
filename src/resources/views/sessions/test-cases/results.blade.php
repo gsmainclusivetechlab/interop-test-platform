@@ -204,9 +204,15 @@
                                 @endif
                                 @if($request = $testResult->request)
                                     <div class="p-4">
-                                        <strong class="lead d-block mb-2 font-weight-bold">
-                                            {{ __('Request') }}
-                                        </strong>
+                                        <div class="d-flex mb-2">
+                                            <strong class="lead d-block mr-auto font-weight-bold">
+                                                {{ __('Request') }}
+                                            </strong>
+                                            <span class="tag">
+                                                schema
+                                                <span class="tag-addon tag-danger">failed</span>
+                                            </span>
+                                        </div>
                                         <ul class="p-0">
                                             @foreach($testResult->testRequestExecutions as $testExecution)
                                                 <li class="d-flex flex-wrap py-2">
@@ -285,9 +291,15 @@
 
                                 @if($response = $testResult->response)
                                     <div class="p-4">
-                                        <strong class="lead d-block mb-2 font-weight-bold">
-                                            {{ __('Response') }}
-                                        </strong>
+                                        <div class="d-flex mb-2">
+                                            <strong class="lead d-block mr-auto font-weight-bold">
+                                                {{ __('Response') }}
+                                            </strong>
+                                            <span class="tag">
+                                                schema
+                                                <span class="tag-addon tag-success">pass</span>
+                                            </span>
+                                        </div>
                                         <ul class="p-0">
                                             @foreach($testResult->testResponseExecutions as $testExecution)
                                                 <li class="d-flex flex-wrap py-2">
