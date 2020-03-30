@@ -81,18 +81,7 @@
                         <b>{{ __('Latest test runs') }}</b>
                     </h2>
                 </div>
-                <div class="card-body">
-                    <chart ajax-url="http://demo0735844.mockable.io/data"></chart>
-                </div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <b>{{ __('Latest test runs') }}</b>
-                    </h2>
-                </div>
+{{--                <x-charts.latest-test-runs :session="$session"/>--}}
                 <div class="table-responsive mb-0">
                     <table class="table table-striped table-hover card-table">
                         <thead class="thead-light">

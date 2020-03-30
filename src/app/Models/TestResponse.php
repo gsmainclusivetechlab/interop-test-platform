@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @mixin \Eloquent
@@ -32,4 +33,25 @@ class TestResponse extends Model
         'headers' => 'array',
         'body' => 'array'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function testResult()
+    {
+        return $this->belongsTo(TestResult::class, 'test_result_id');
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return self
+     */
+    public static function makeFromResponse(ResponseInterface $response)
+    {
+        return static::make([
+            'status' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'body' => json_decode((string) $response->getBody(), true),
+        ]);
+    }
 }

@@ -22,10 +22,16 @@ class TestResponseScript extends Model
      */
     protected $fillable = [
         'name',
-        'rule',
-        'param',
-        'value',
-        'message',
+        'rules',
+        'messages',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'rules' => 'array',
+        'messages' => 'array',
     ];
 
     /**

@@ -36,16 +36,6 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $attributes = [
-        'total' => 0,
-        'passed' => 0,
-        'failures' => 0,
-        'duration' => 0,
-    ];
-
-    /**
-     * @var array
-     */
     protected $observables = [
         'complete',
     ];
@@ -100,18 +90,12 @@ class TestRun extends Model
     }
 
     /**
+     * @param bool $successful
      * @return bool
      */
-    public function getSuccessfulAttribute()
+    public function complete(bool $successful)
     {
-        return $this->total == $this->passed;
-    }
-
-    /**
-     * @return bool
-     */
-    public function complete()
-    {
+        $this->successful = $successful;
         $this->completed_at = now();
 
         if (!$this->save()) {

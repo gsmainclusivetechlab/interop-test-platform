@@ -27,8 +27,7 @@ class ScenariosTableSeeder extends Seeder
         $finder = (new Finder())
             ->files()
             ->name('*.yaml')
-            ->in(database_path('seeds/tc'));
-//            ->in(database_path('seeds/test-cases'));
+            ->in(database_path('seeds/test-cases'));
 
         foreach ($finder as $file) {
             /**

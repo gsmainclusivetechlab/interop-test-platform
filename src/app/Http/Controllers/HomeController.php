@@ -71,35 +71,5 @@ class HomeController extends Controller
         $result = $runner->run($suite);
 
         dd($result);
-
-//        dd($request1);
-
-//        $testResult = TestResult::first();
-//        $testStep = $testResult->testStep;
-
-        $stack = new HandlerStack();
-        $stack->setHandler(new CurlHandler());
-        $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($customOptions) {
-            $options = TestRequestOptions::fromRequest($request)->merge($customOptions);
-
-            dd($options->getJson());
-
-            $testRequest = new TestRequest($request);
-
-            return $request;
-        }));
-        $stack->push(Middleware::mapResponse(function (ResponseInterface $response) {
-            $testResponse = new TestResponse($response);
-            return $response;
-        }));
-
-        $promise = (new Client(['handler' => $stack, 'http_errors' => false]))->sendAsync($request);
-        $promise->then(function (ResponseInterface $response) {
-//            dd($response);
-        }, function (RequestException $e) {
-//            dd($e);
-        })->wait();
-
-        dd($promise);
     }
 }
