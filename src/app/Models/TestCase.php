@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\RequestCast;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,15 +27,7 @@ class TestCase extends Model
         'name',
         'description',
         'precondition',
-        'data_example',
         'behavior',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'data_example' => RequestCast::class,
     ];
 
     /**

@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
+use App\Enums\TestGroupEnum;
 use App\Models\Scenario;
 use App\Models\TestCase;
 use App\Models\TestScript;
-use App\Models\TestResponseScript;
 use App\Models\TestStep;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -49,12 +49,13 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute('target_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'target'))->value('id'));
                     $testStep->saveOrFail();
 
-                    if ($testRequestScriptsRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
-                        foreach ($testRequestScriptsRows as $testRequestScriptRow) {
+                    if ($testRequestScriptRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
+                        foreach ($testRequestScriptRows as $testRequestScriptRow) {
                             /**
                              * @var TestScript $testRequestScript
                              */
-                            $testRequestScript = $testStep->testRequestScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
+                            $testRequestScript = $testStep->testScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
+                            $testRequestScript->group = TestGroupEnum::REQUEST;
                             $testRequestScript->saveOrFail();
                         }
                     }
@@ -62,9 +63,10 @@ class TestCaseImport implements Importable
                     if ($testResponseScriptRows = Arr::get($testStepRow, 'test_response_scripts', [])) {
                         foreach ($testResponseScriptRows as $testResponseScriptRow) {
                             /**
-                             * @var TestResponseScript $testResponseScript
+                             * @var TestScript $testResponseScript
                              */
-                            $testResponseScript = $testStep->testResponseScripts()->make(Arr::only($testResponseScriptRow, TestResponseScript::make()->getFillable()));
+                            $testResponseScript = $testStep->testScripts()->make(Arr::only($testResponseScriptRow, TestScript::make()->getFillable()));
+                            $testResponseScript->group = TestGroupEnum::RESPONSE;
                             $testResponseScript->saveOrFail();
                         }
                     }

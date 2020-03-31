@@ -12,9 +12,6 @@ class TestScript extends Model
 {
     use HasPosition;
 
-    const TYPE_REQUEST = 'request';
-    const TYPE_RESPONSE = 'response';
-
     /**
      * @var string
      */
@@ -25,8 +22,10 @@ class TestScript extends Model
      */
     protected $fillable = [
         'name',
-        'type',
+        'group',
         'rules',
+        'messages',
+        'attributes',
     ];
 
     /**
@@ -34,6 +33,8 @@ class TestScript extends Model
      */
     protected $casts = [
         'rules' => 'array',
+        'messages' => 'array',
+        'attributes' => 'array',
     ];
 
     /**

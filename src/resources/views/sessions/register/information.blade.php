@@ -51,7 +51,7 @@
                                                 <b class="dropdown-toggle" v-b-toggle.use-case-{{ $useCase->id }}>
                                                     {{ $useCase->name }}
                                                 </b>
-                                                <button type="button" class="btn btn-link py-0 font-weight-normal" @click.prevent="toggleCheckboxes">Select all</button>
+                                                <button type="button" class="btn btn-link py-0 font-weight-normal text-decoration-none" @click.prevent="toggleCheckboxes"><i class="fe fe-check-square"></i></button>
                                             </div>
                                             @if ($useCase->positiveTestCases->count())
                                                 <b-collapse id="use-case-{{ $useCase->id }}" visible>
@@ -61,7 +61,7 @@
                                                                 <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.positive-test-cases-{{ $useCase->id }}>
                                                                     {{ __('Happy flow') }}
                                                                 </span>
-                                                                <button type="button" class="btn btn-link py-0 font-weight-normal" @click.prevent="toggleCheckboxes">Select all</button>
+                                                                <button type="button" class="btn btn-link py-0 font-weight-normal text-decoration-none" @click.prevent="toggleCheckboxes"><i class="fe fe-check-square"></i></button>
                                                             </div>
                                                             <b-collapse id="positive-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-group">
@@ -90,7 +90,7 @@
                                                                 <span class="d-inline-block dropdown-toggle py-2 font-weight-medium" v-b-toggle.negative-test-cases-{{ $useCase->id }}>
                                                                     {{ __('Unhappy flow') }}
                                                                 </span>
-                                                                <button type="button" class="btn btn-link py-0 font-weight-normal" @click.prevent="toggleCheckboxes">Select all</button>
+                                                                <button type="button" class="btn btn-link py-0 font-weight-normal text-decoration-none" @click.prevent="toggleCheckboxes"><i class="fe fe-check-square"></i></button>
                                                             </div>
                                                             <b-collapse id="negative-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-group">
