@@ -11,7 +11,7 @@
         @include('tutorials.includes.scenario-accordion')
     </div>
     @push('scripts')
-        <link href="{{ asset('assets/tutorials/css/tutorials.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/css/tutorials/tutorials.css') }}" rel="stylesheet">
         <script src="{{ asset('assets/js/tutorials/tutorials-demo.js') }}"></script>
     @endpush
 @endsection

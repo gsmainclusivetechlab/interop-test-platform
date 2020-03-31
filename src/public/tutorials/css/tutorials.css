@@ -1,10 +1,13 @@
+html {
+    scroll-behavior: smooth;
+}
 
 div[role=tablist] {
     padding-top: 20px;
 }
 
 .scenario-card {
-    width: 300px;
+    width: 350px;
     height: 150px;
     color: #de002b;
     text-align: center;
@@ -17,9 +20,17 @@ div[role=tablist] {
 }
 
 #scenario-desc {
+    color: #0a0c0d;
     text-align: left;
     font-weight: 200;
-    color: #23272b;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+#demo-desc {
+    color: #0a0c0d;
+    padding-top: 10px;
+    padding-left: 10px;
 }
 
 .scenario-accordion {
@@ -59,6 +70,8 @@ div[role=tablist] {
     width: 60%;
     margin:auto;
     vertical-align:middle;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .demo-inner-container img {

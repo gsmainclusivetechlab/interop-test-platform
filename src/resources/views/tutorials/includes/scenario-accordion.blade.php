@@ -1,15 +1,15 @@
 <template>
     <div role="tablist" >
         <b-card no-body class="mb-0 card">
-            <b-card-header header-tag="header" class="p-1 card-header" role="tab">
+            <b-card-header id="create-session" header-tag="header" class="p-1 card-header" role="tab">
                 <b-button block href="#" v-b-toggle.accordion-1 variant="info" class="btn">
                     <h5 class="mb-0 scenario-accordion">How do I create a new session?</h5>
                 </b-button>
             </b-card-header>
-            <b-collapse id="accordion-1" accordion="my-accordion" role="tabpanel">
+            <b-collapse visible id="accordion-1" accordion="my-accordion" role="tabpanel">
                 <b-card-body>
-                    <div id="scenario-desc">
-                        Use the interactive demo below which shows a step by step guide to creating a new session:
+                    <div id="demo-desc">
+                        To start the interactive demo, simply press the "Start interactive demo" below and follow the red circle which will indicate where to click and give you additional information.
                     </div>
                     <div class="demo-outer-container">
                         <div class="demo-inner-container">
@@ -28,12 +28,12 @@
         </b-card>
 
         <b-card no-body class="mb-0 card">
-            <b-card-header header-tag="header" class="p-1 card-header" role="tab">
+            <b-card-header id="service-provider" header-tag="header" class="p-1 card-header" role="tab">
                 <b-button block href="#" v-b-toggle.accordion-2 variant="info" class="btn btn-link">
-                    <h5 class="mb-0">Tutorial #2</h5>
+                    <h5 class="mb-0">How do I simulate a Service Provider?</h5>
                 </b-button>
             </b-card-header>
-            <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+            <b-collapse visible id="accordion-2" accordion="my-accordion" role="tabpanel">
                 <b-card-body>
                     <b-card-text>Text here...</b-card-text>
                 </b-card-body>
