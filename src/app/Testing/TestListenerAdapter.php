@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace App\Testing\Listeners;
+namespace App\Testing;
 
+use App\Enums\TestStatusEnum;
 use App\Models\TestResult;
-use App\Testing\TestCase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestListenerDefaultImplementation;
 use Throwable;
 
-class TestExecutionListener implements TestListener
+class TestListenerAdapter implements TestListener
 {
     use TestListenerDefaultImplementation;
 
@@ -22,14 +22,14 @@ class TestExecutionListener implements TestListener
     /**
      * @var TestResult
      */
-    protected $result;
+    protected $testResult;
 
     /**
-     * @param TestResult $result
+     * @param TestResult $testResult
      */
-    public function __construct(TestResult $result)
+    public function __construct(TestResult $testResult)
     {
-        $this->result = $result;
+        $this->testResult = $testResult;
     }
 
     public function startTest(Test $test): void
@@ -40,8 +40,12 @@ class TestExecutionListener implements TestListener
     public function addError(Test $test, Throwable $e, float $time): void
     {
         if ($test instanceof TestCase) {
-            $this->result->testExecutions()->make()->error($test->getScript(), $e->getMessage());
-            $this->result->increment('errors');
+            $this->testResult->testExecutions()->create([
+                'name' => $test->getName(),
+                'group' => $test->getGroup(),
+                'message' => $e->getMessage(),
+                'successful' => false,
+            ]);
         }
 
         $this->lastTestWasNotSuccessful = true;
@@ -50,8 +54,12 @@ class TestExecutionListener implements TestListener
     public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
         if ($test instanceof TestCase) {
-            $this->result->testExecutions()->make()->fail($test->getScript(), $e->getMessage());
-            $this->result->increment('failures');
+            $this->testResult->testExecutions()->create([
+                'name' => $test->getName(),
+                'group' => $test->getGroup(),
+                'message' => $e->getMessage(),
+                'successful' => false,
+            ]);
         }
 
         $this->lastTestWasNotSuccessful = true;
@@ -61,8 +69,11 @@ class TestExecutionListener implements TestListener
     {
         if (!$this->lastTestWasNotSuccessful) {
             if ($test instanceof TestCase) {
-                $this->result->testExecutions()->make()->pass($test->getScript());
-                $this->result->increment('passed');
+                $this->testResult->testExecutions()->create([
+                    'name' => $test->getName(),
+                    'group' => $test->getGroup(),
+                    'successful' => true,
+                ]);
             }
         }
     }

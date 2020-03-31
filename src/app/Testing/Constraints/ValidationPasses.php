@@ -3,7 +3,9 @@
 namespace App\Testing\Constraints;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class ValidationPasses extends Constraint
 {
@@ -23,13 +25,9 @@ class ValidationPasses extends Constraint
     protected $attributes = [];
 
     /**
-     * @var Validator
-     */
-    protected $validator;
-
-    /**
      * @param array $rules
      * @param array $messages
+     * @param array $attributes
      */
     public function __construct(array $rules, array $messages = [], array $attributes = [])
     {
@@ -39,32 +37,19 @@ class ValidationPasses extends Constraint
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
      * @return bool
      */
     public function matches($data): bool
     {
-        $this->validator = Validator::make($data, $this->rules, $this->messages, $this->attributes);
+        $validator = Validator::make($data, $this->rules, $this->messages, $this->attributes);
 
-        return $this->validator->passes();
-    }
-
-    /**
-     * @param  string $data
-     * @return string
-     */
-    public function failureDescription($data): string
-    {
-        return $this->toString();
-    }
-
-    /**
-     * @param mixed $other
-     * @return string
-     */
-    protected function additionalFailureDescription($other): string
-    {
-        return implode(PHP_EOL, $this->validator->errors()->all());
+        try {
+            $validator->validate();
+            return true;
+        } catch (ValidationException $e) {
+            throw new ExpectationFailedException(implode(PHP_EOL, $validator->errors()->all()));
+        }
     }
 
     /**

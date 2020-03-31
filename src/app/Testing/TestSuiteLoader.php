@@ -2,32 +2,57 @@
 
 namespace App\Testing;
 
+use App\Enums\TestGroupEnum;
 use App\Models\TestResult;
-use App\Testing\Tests\ValidateRequestTest;
-use App\Testing\Tests\ValidateResponseTest;
+use App\Testing\Tests\ValidateRequestSchemaTest;
+use App\Testing\Tests\ValidateRequestScriptTest;
+use App\Testing\Tests\ValidateResponseSchemaTest;
+use App\Testing\Tests\ValidateResponseScriptTest;
 use PHPUnit\Framework\TestSuite;
 
 class TestSuiteLoader
 {
     /**
-     * @param TestResult $result
+     * @var TestResult
+     */
+    protected $testResult;
+
+    /**
+     * @param TestResult $testResult
+     */
+    public function __construct(TestResult $testResult)
+    {
+        $this->testResult = $testResult;
+    }
+
+    /**
      * @return TestSuite
      */
-    public function load(TestResult $result)
+    public function load()
     {
-        $suite = new TestSuite();
-        $requestScripts = $result->testStep->testRequestScripts;
+        $testSuite = new TestSuite();
+        $testResult = $this->testResult;
 
-        foreach ($requestScripts as $requestScript) {
-            $suite->addTest(new ValidateRequestTest($requestScript, $result->request));
+        if ($apiService = $testResult->testStep->targetApiService) {
+            $testSuite->addTest(new ValidateRequestSchemaTest($testResult, $apiService));
         }
 
-        $responseScripts = $result->testStep->testResponseScripts;
-
-        foreach ($responseScripts as $responseScript) {
-            $suite->addTest(new ValidateResponseTest($responseScript, $result->response));
+        if ($testRequestScripts = $testResult->testStep->testScripts()->where('group', TestGroupEnum::REQUEST)->get()) {
+            foreach ($testRequestScripts as $testRequestScript) {
+                $testSuite->addTest(new ValidateRequestScriptTest($testResult, $testRequestScript));
+            }
         }
 
-        return $suite;
+        if ($apiService = $testResult->testStep->targetApiService) {
+            $testSuite->addTest(new ValidateResponseSchemaTest($testResult, $apiService));
+        }
+
+        if ($testResponseScripts = $testResult->testStep->testScripts()->where('group', TestGroupEnum::RESPONSE)->get()) {
+            foreach ($testResponseScripts as $testResponseScript) {
+                $testSuite->addTest(new ValidateResponseScriptTest($testResult, $testResponseScript));
+            }
+        }
+
+        return $testSuite;
     }
 }

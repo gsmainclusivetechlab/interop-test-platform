@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TestGroupEnum;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -40,9 +41,75 @@ class TestResult extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function testRun()
+    {
+        return $this->belongsTo(TestRun::class, 'test_run_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function testStep()
     {
         return $this->belongsTo(TestStep::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function testRequest()
+    {
+        return $this->hasOne(TestRequest::class, 'test_result_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function testResponse()
+    {
+        return $this->hasOne(TestResponse::class, 'test_result_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testExecutions()
+    {
+        return $this->hasMany(TestExecution::class, 'test_result_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testRequestExecutions()
+    {
+        return $this->testExecutions()->where('group', TestGroupEnum::REQUEST);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResponseExecutions()
+    {
+        return $this->testExecutions()->where('group', TestGroupEnum::RESPONSE);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSuccessful($query)
+    {
+        return $query->where('successful', true);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnsuccessful($query)
+    {
+        return $query->where('successful', false);
     }
 
     /**
@@ -61,6 +128,7 @@ class TestResult extends Model
     public function complete(bool $successful)
     {
         $this->successful = $successful;
+        $this->duration = (int) floor((microtime(true) - LARAVEL_START) * 1000);
         $this->completed_at = now();
 
         if (!$this->save()) {

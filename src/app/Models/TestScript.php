@@ -8,22 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestRequestScript extends Model
+class TestScript extends Model
 {
     use HasPosition;
 
     /**
      * @var string
      */
-    protected $table = 'test_request_scripts';
+    protected $table = 'test_scripts';
 
     /**
      * @var array
      */
     protected $fillable = [
         'name',
+        'group',
         'rules',
         'messages',
+        'attributes',
     ];
 
     /**
@@ -32,6 +34,7 @@ class TestRequestScript extends Model
     protected $casts = [
         'rules' => 'array',
         'messages' => 'array',
+        'attributes' => 'array',
     ];
 
     /**

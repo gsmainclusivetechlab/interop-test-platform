@@ -18,8 +18,8 @@ class CreateTestResponsesTable extends Migration
             $table->foreign('test_result_id')->references('id')->on('test_results')->onDelete('cascade');
             $table->primary('test_result_id');
             $table->string('status');
-            $table->longText('headers');
-            $table->longText('body');
+            $table->longText('headers')->nullable();
+            $table->longText('body')->nullable();
             $table->timestamp('created_at');
         });
     }

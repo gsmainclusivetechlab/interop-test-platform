@@ -19,8 +19,9 @@ class CreateTestRequestsTable extends Migration
             $table->primary('test_result_id');
             $table->string('method');
             $table->string('uri');
-            $table->longText('headers');
-            $table->longText('body');
+            $table->string('path')->nullable();
+            $table->longText('headers')->nullable();
+            $table->longText('body')->nullable();
             $table->timestamp('created_at');
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestRequestScriptsTable extends Migration
+class CreateTestScriptsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateTestRequestScriptsTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_request_scripts', function (Blueprint $table) {
+        Schema::create('test_scripts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('test_step_id');
             $table->foreign('test_step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->string('name');
-            $table->longText('rules')->nullable();
+            $table->string('group')->index();
+            $table->longText('rules');
             $table->longText('messages')->nullable();
+            $table->longText('attributes')->nullable();
             $table->unsignedInteger('position');
             $table->timestamps();
         });
@@ -32,6 +34,6 @@ class CreateTestRequestScriptsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_request_scripts');
+        Schema::dropIfExists('test_scripts');
     }
 }

@@ -76,6 +76,24 @@ class TestRun extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
+    public function scopeSuccessful($query)
+    {
+        return $query->where('successful', true);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnsuccessful($query)
+    {
+        return $query->where('successful', false);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeCompleted($query)
     {
         return $query->whereNotNull('completed_at');
@@ -90,12 +108,27 @@ class TestRun extends Model
     }
 
     /**
-     * @param bool $successful
+     * @return mixed
+     */
+    public function getDurationAttribute()
+    {
+        return $this->testResults()->sum('duration');
+    }
+
+    /**
      * @return bool
      */
-    public function complete(bool $successful)
+    public function wasSuccessful()
     {
-        $this->successful = $successful;
+        return $this->testSteps()->count() === $this->testResults()->successful()->count();
+    }
+
+    /**
+     * @return bool
+     */
+    public function complete()
+    {
+        $this->successful = $this->wasSuccessful();
         $this->completed_at = now();
 
         if (!$this->save()) {
