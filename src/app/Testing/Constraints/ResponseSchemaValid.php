@@ -43,7 +43,7 @@ class ResponseSchemaValid extends Constraint
 
         try {
             $operationAddress = $requestValidator->validate($this->request);
-            $responseValidator->validate($this->operationAddress, $data);
+            $responseValidator->validate($operationAddress, $data);
             return true;
         } catch (ValidationFailed $e) {
             throw new ExpectationFailedException($e->getMessage());

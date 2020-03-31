@@ -7,14 +7,14 @@ info:
   license:
     name: Open API for FSP Interoperability (FSPIOP) (Implementation Friendly Version)
     url: https://github.com/mojaloop/mojaloop-specification/blob/develop/LICENSE.md
-servers:
-  - url: '{protocol}://hostname:<port>/switch/'
-    variables:
-      protocol:
-        enum:
-          - http
-          - https
-        default: https
+#servers:
+#  - url: '{protocol}://hostname:<port>/switch/'
+#    variables:
+#      protocol:
+#        enum:
+#          - http
+#          - https
+#        default: https
 
 paths:
   #Participants
