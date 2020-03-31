@@ -1,4 +1,4 @@
-name: Transaction Request Rejected by Payer FSP
+name: Rejected Transaction Request by Payer FSP
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
@@ -164,6 +164,6 @@ test_steps:
         rules:
           body.errorCode: 'in:genericError'
     test_response_scripts:
-    - name: Transaction was successfully declined
-      rules:
-        status: 'in:204'
+      - name: Transaction was successfully declined
+        rules:
+          status: 'in:204'

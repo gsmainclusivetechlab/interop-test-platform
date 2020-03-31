@@ -3,65 +3,53 @@
 namespace App\Testing\Constraints;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use PHPUnit\Framework\Constraint\Constraint;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class ValidationPasses extends Constraint
 {
     /**
      * @var array
      */
-    protected $rules;
+    protected $rules = [];
+
     /**
      * @var array
      */
-    protected $messages;
+    protected $messages = [];
+
     /**
      * @var array
      */
-    protected $errors = [];
+    protected $attributes = [];
 
     /**
      * @param array $rules
      * @param array $messages
+     * @param array $attributes
      */
-    public function __construct(array $rules, array $messages = [])
+    public function __construct(array $rules, array $messages = [], array $attributes = [])
     {
         $this->rules = $rules;
         $this->messages = $messages;
+        $this->attributes = $attributes;
     }
 
     /**
-     * @param array $data
+     * @param mixed $data
      * @return bool
      */
     public function matches($data): bool
     {
-        $validator = Validator::make($data, $this->rules, $this->messages);
-        $passes = $validator->passes();
+        $validator = Validator::make($data, $this->rules, $this->messages, $this->attributes);
 
-        if (!$passes) {
-            $this->errors = $validator->errors()->all();
+        try {
+            $validator->validate();
+            return true;
+        } catch (ValidationException $e) {
+            throw new ExpectationFailedException(implode(PHP_EOL, $validator->errors()->all()));
         }
-
-        return $passes;
-    }
-
-    /**
-     * @param  string $data
-     * @return string
-     */
-    public function failureDescription($data): string
-    {
-        return $this->toString();
-    }
-
-    /**
-     * @param mixed $other
-     * @return string
-     */
-    protected function additionalFailureDescription($other): string
-    {
-        return implode(PHP_EOL, $this->errors);
     }
 
     /**

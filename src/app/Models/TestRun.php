@@ -36,16 +36,6 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $attributes = [
-        'total' => 0,
-        'passed' => 0,
-        'failures' => 0,
-        'duration' => 0,
-    ];
-
-    /**
-     * @var array
-     */
     protected $observables = [
         'complete',
     ];
@@ -86,6 +76,24 @@ class TestRun extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
+    public function scopeSuccessful($query)
+    {
+        return $query->where('successful', true);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnsuccessful($query)
+    {
+        return $query->where('successful', false);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeCompleted($query)
     {
         return $query->whereNotNull('completed_at');
@@ -100,11 +108,19 @@ class TestRun extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function getDurationAttribute()
+    {
+        return $this->testResults()->sum('duration');
+    }
+
+    /**
      * @return bool
      */
-    public function getSuccessfulAttribute()
+    public function wasSuccessful()
     {
-        return $this->total == $this->passed;
+        return $this->testSteps()->count() === $this->testResults()->successful()->count();
     }
 
     /**
@@ -112,6 +128,7 @@ class TestRun extends Model
      */
     public function complete()
     {
+        $this->successful = $this->wasSuccessful();
         $this->completed_at = now();
 
         if (!$this->save()) {

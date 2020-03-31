@@ -7,7 +7,6 @@ use App\Models\Scenario;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\UploadedFile;
 use Symfony\Component\Yaml\Yaml;
 
 class TestCaseController extends Controller

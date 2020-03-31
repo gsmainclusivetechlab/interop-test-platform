@@ -1,22 +1,12 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Charts;
 
 use App\Models\Session;
 use Illuminate\View\Component;
 
-class TestRunsChart extends Component
+class LatestTestRuns extends Component
 {
-    /**
-     * @var array
-     */
-    public $chartSeries = [];
-
-    /**
-     * @var array
-     */
-    public $chartOptions = [];
-
     /**
      * @param Session $session
      */
@@ -30,6 +20,6 @@ class TestRunsChart extends Component
      */
     public function render()
     {
-        return view('components.test-runs-chart');
+        return view('components.charts.latest-test-runs');
     }
 }
