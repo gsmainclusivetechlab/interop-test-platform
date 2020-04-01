@@ -74,6 +74,22 @@ class TestStep extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testRequestSetups()
+    {
+        return $this->hasMany(TestRequestSetup::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResponseSetups()
+    {
+        return $this->hasMany(TestResponseSetup::class, 'test_step_id');
+    }
+
+    /**
      * @return array
      */
     public function getPositionGroupColumn()

@@ -10,11 +10,19 @@ class UriCast implements CastsAttributes
 
     public function get($model, string $key, $value, array $attributes)
     {
-        return new Uri($value);
+        if (is_array($value)) {
+            return Uri::fromParts($value);
+        } else {
+            return new Uri($value);
+        }
     }
 
     public function set($model, string $key, $value, array $attributes)
     {
+        if (is_array($value)) {
+            $value = Uri::fromParts($value);
+        }
+
         return $value;
     }
 }

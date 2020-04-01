@@ -288,7 +288,7 @@
                                                     <strong>{{ __('Body') }}</strong>
                                                 </div>
                                                 <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count($request->json)]) }}
+                                                    {{ __('(:n) params', ['n' => count($request->bodyToArray())]) }}
                                                 </div>
                                             </div>
                                             <b-collapse id="request-body-{{ $testResult->id }}">
@@ -296,7 +296,7 @@
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($request->json, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre class="json-tree-code">@json($request->bodyToArray(), JSON_PRETTY_PRINT)</code>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -348,7 +348,7 @@
                                                     <strong>{{ __('Body') }}</strong>
                                                 </div>
                                                 <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count($response->json)]) }}
+                                                    {{ __('(:n) params', ['n' => count($response->bodyToArray())]) }}
                                                 </div>
                                             </div>
                                             <b-collapse id="response-body-{{ $testResult->id }}">
@@ -356,7 +356,7 @@
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($response->json, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre class="json-tree-code">@json($response->bodyToArray(), JSON_PRETTY_PRINT)</code>
                                                         </div>
                                                     </div>
                                                 </div>

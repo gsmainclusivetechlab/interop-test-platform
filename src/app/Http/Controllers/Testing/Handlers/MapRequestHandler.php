@@ -29,9 +29,16 @@ class MapRequestHandler
     {
         return function (RequestInterface $request, array $options) use ($handler) {
             $testRequest = TestRequest::makeFromRequest($request)->testResult()->associate($this->testResult);
+
+            if ($testRequestSetups = $this->testResult->testStep->testRequestSetups) {
+                foreach ($testRequestSetups as $testRequestSetup) {
+                    $testRequest->mergeSetup($testRequestSetup);
+                }
+            }
+
             $testRequest->save();
 
-            return $handler($request, $options);
+            return $handler($testRequest->toRequest(), $options);
         };
     }
 }

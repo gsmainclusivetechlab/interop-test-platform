@@ -10,11 +10,19 @@ class StreamCast implements CastsAttributes
 
     public function get($model, string $key, $value, array $attributes)
     {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
         return stream_for($value);
     }
 
     public function set($model, string $key, $value, array $attributes)
     {
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
+
         return $value;
     }
 }

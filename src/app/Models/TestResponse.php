@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Casts\StreamCast;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
-use function GuzzleHttp\Psr7\stream_for;
 
 /**
  * @mixin \Eloquent
@@ -46,9 +46,9 @@ class TestResponse extends Model
     }
 
     /**
-     * @return array|false|string
+     * @return array|mixed
      */
-    public function getJsonAttribute()
+    public function bodyToArray()
     {
         return json_decode((string) $this->body, true) ?? [];
     }
@@ -72,5 +72,33 @@ class TestResponse extends Model
     public function toResponse()
     {
         return new Response($this->status, $this->headers, $this->body);
+    }
+
+    /**
+     * @return array
+     */
+    public function attributesToArrayResponse()
+    {
+        return [
+            'status' => $this->status,
+            'headers' => $this->headers,
+            'body' => $this->bodyToArray(),
+        ];
+    }
+
+    /**
+     * @param TestResponseSetup $testResponseSetup
+     */
+    public function mergeSetup(TestResponseSetup $testResponseSetup)
+    {
+        $attributes = $this->attributesToArrayResponse();
+
+        foreach ($testResponseSetup->values as $key => $value) {
+            Arr::set($attributes, $key, $value);
+        }
+
+        $this->setAttribute('status', $attributes['status']);
+        $this->setAttribute('headers', $attributes['headers']);
+        $this->setAttribute('body', $attributes['body']);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Imports;
 use App\Enums\TestGroupEnum;
 use App\Models\Scenario;
 use App\Models\TestCase;
+use App\Models\TestRequestSetup;
+use App\Models\TestResponseSetup;
 use App\Models\TestScript;
 use App\Models\TestStep;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +51,16 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute('target_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'target'))->value('id'));
                     $testStep->saveOrFail();
 
+                    if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {
+                        foreach ($testRequestSetupRows as $testRequestSetupRow) {
+                            /**
+                             * @var TestRequestSetup $testRequestSetup
+                             */
+                            $testRequestSetup = $testStep->testRequestSetups()->make(Arr::only($testRequestSetupRow, TestRequestSetup::make()->getFillable()));
+                            $testRequestSetup->saveOrFail();
+                        }
+                    }
+
                     if ($testRequestScriptRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
                         foreach ($testRequestScriptRows as $testRequestScriptRow) {
                             /**
@@ -57,6 +69,16 @@ class TestCaseImport implements Importable
                             $testRequestScript = $testStep->testScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
                             $testRequestScript->group = TestGroupEnum::REQUEST;
                             $testRequestScript->saveOrFail();
+                        }
+                    }
+
+                    if ($testResponseSetupRows = Arr::get($testStepRow, 'test_response_setups', [])) {
+                        foreach ($testResponseSetupRows as $testResponseSetupRow) {
+                            /**
+                             * @var TestResponseSetup $testResponseSetup
+                             */
+                            $testResponseSetup = $testStep->testResponseSetups()->make(Arr::only($testResponseSetupRow, TestResponseSetup::make()->getFillable()));
+                            $testResponseSetup->saveOrFail();
                         }
                     }
 
