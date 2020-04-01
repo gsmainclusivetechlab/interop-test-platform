@@ -23,5 +23,6 @@
             </div>
         </div>
     </div>
+    @include('layouts.includes.gtag')
 </body>
 </html>
