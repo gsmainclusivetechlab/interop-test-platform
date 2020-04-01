@@ -13,7 +13,6 @@ use App\Http\Middleware\ValidateTraceContext;
 use App\Jobs\CompleteTestRunJob;
 use App\Models\Session;
 use App\Models\TestCase;
-use App\Models\TestRequest;
 use App\Models\TestRun;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;

@@ -39,7 +39,7 @@ test_steps:
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.X-Callback-URL: 'regex:/.*/'
+          headers.X-Callback-URL.*: 'regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'in:msisdn'

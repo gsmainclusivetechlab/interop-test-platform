@@ -22,7 +22,7 @@ class TestScript extends Model
      */
     protected $fillable = [
         'name',
-        'group',
+        'type',
         'rules',
         'messages',
         'attributes',
@@ -36,6 +36,16 @@ class TestScript extends Model
         'messages' => 'array',
         'attributes' => 'array',
     ];
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
 
     /**
      * @return array

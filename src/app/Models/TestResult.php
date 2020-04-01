@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\TestGroupEnum;
 use Illuminate\Database\Eloquent\Model;
 
 /**

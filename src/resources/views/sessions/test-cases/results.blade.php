@@ -221,9 +221,6 @@
                                                         @endif
                                                     </span>
                                                     <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
-                                                        <span class="text-muted mr-1">
-                                                            {{ $testExecution->group->label() }}:
-                                                        </span>
                                                         {{ $testExecution->name }}
                                                     </span>
                                                 </div>

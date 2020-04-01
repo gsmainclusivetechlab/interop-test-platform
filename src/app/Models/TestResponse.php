@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\StreamCast;
+use App\Casts\HttpStreamCast;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -34,7 +34,7 @@ class TestResponse extends Model
      */
     protected $casts = [
         'headers' => 'array',
-        'body' => StreamCast::class,
+        'body' => HttpStreamCast::class,
     ];
 
     /**
@@ -87,9 +87,9 @@ class TestResponse extends Model
     }
 
     /**
-     * @param TestResponseSetup $testResponseSetup
+     * @param TestSetup $testResponseSetup
      */
-    public function mergeSetup(TestResponseSetup $testResponseSetup)
+    public function mergeSetup(TestSetup $testResponseSetup)
     {
         $attributes = $this->attributesToArrayResponse();
 

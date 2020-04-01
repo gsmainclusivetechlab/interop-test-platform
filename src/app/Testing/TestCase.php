@@ -17,11 +17,6 @@ abstract class TestCase extends Assert implements Test
     abstract public function getName(): string;
 
     /**
-     * @return string
-     */
-    abstract public function getGroup(): string;
-
-    /**
      * @return void
      */
     abstract protected function test();

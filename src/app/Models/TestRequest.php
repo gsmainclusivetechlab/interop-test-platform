@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Casts\StreamCast;
-use App\Casts\UriCast;
+use App\Casts\HttpStreamCast;
+use App\Casts\HttpUriCast;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -40,9 +40,9 @@ class TestRequest extends Model
      * @var array
      */
     protected $casts = [
-        'uri' => UriCast::class,
+        'uri' => HttpUriCast::class,
         'headers' => 'array',
-        'body' => StreamCast::class,
+        'body' => HttpStreamCast::class,
     ];
 
     /**
@@ -112,9 +112,9 @@ class TestRequest extends Model
     }
 
     /**
-     * @param TestRequestSetup $testRequestSetup
+     * @param TestSetup $testRequestSetup
      */
-    public function mergeSetup(TestRequestSetup $testRequestSetup)
+    public function mergeSetup(TestSetup $testRequestSetup)
     {
         $attributes = $this->attributesToArrayRequest();
 

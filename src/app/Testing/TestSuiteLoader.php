@@ -2,7 +2,7 @@
 
 namespace App\Testing;
 
-use App\Enums\TestGroupEnum;
+use App\Enums\HttpTypeEnum;
 use App\Models\TestResult;
 use App\Testing\Tests\ValidateOpenApiSchemaTest;
 use App\Testing\Tests\ValidateRequestScriptTest;
@@ -36,13 +36,13 @@ class TestSuiteLoader
             $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiService));
         }
 
-        if ($testRequestScripts = $testResult->testStep->testScripts()->where('group', TestGroupEnum::REQUEST)->get()) {
+        if ($testRequestScripts = $testResult->testStep->testScripts()->ofType(HttpTypeEnum::REQUEST)->get()) {
             foreach ($testRequestScripts as $testRequestScript) {
                 $testSuite->addTest(new ValidateRequestScriptTest($testResult, $testRequestScript));
             }
         }
 
-        if ($testResponseScripts = $testResult->testStep->testScripts()->where('group', TestGroupEnum::RESPONSE)->get()) {
+        if ($testResponseScripts = $testResult->testStep->testScripts()->ofType(HttpTypeEnum::RESPONSE)->get()) {
             foreach ($testResponseScripts as $testResponseScript) {
                 $testSuite->addTest(new ValidateResponseScriptTest($testResult, $testResponseScript));
             }

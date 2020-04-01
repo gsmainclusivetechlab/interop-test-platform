@@ -20,8 +20,9 @@ Route::get('/', 'HomeController@index')->name('home');
  */
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::get('/', 'OverviewController@index')->name('index');
-    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
     Route::get('{session}', 'OverviewController@show')->name('show');
+    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
+    Route::get('{session}/chart', 'OverviewController@showChartData')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test_cases.show');
     Route::get('{session}/test-cases/{testCase}/flow', 'TestCaseController@flow')->name('test_cases.flow');
     Route::get('{session}/test-cases/{testCase}/results/{testRun}/{position?}', 'TestCaseController@results')->name('test_cases.results');

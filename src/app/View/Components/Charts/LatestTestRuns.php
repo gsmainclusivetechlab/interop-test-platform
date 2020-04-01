@@ -3,16 +3,19 @@
 namespace App\View\Components\Charts;
 
 use App\Models\Session;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\View\Component;
 
-class LatestTestRuns extends Component
+class LatestTestRuns extends Component implements Arrayable
 {
+    public $session;
+
     /**
      * @param Session $session
      */
     public function __construct(Session $session)
     {
-//        dd($session);
+        $this->session = $session;
     }
 
     /**
@@ -21,5 +24,13 @@ class LatestTestRuns extends Component
     public function render()
     {
         return view('components.charts.latest-test-runs');
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [];
     }
 }

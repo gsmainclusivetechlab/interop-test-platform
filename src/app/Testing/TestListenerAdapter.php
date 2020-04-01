@@ -2,7 +2,6 @@
 
 namespace App\Testing;
 
-use App\Enums\TestStatusEnum;
 use App\Models\TestResult;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
@@ -42,7 +41,6 @@ class TestListenerAdapter implements TestListener
         if ($test instanceof TestCase) {
             $this->testResult->testExecutions()->create([
                 'name' => $test->getName(),
-                'group' => $test->getGroup(),
                 'message' => $e->getMessage(),
                 'successful' => false,
             ]);
@@ -56,7 +54,6 @@ class TestListenerAdapter implements TestListener
         if ($test instanceof TestCase) {
             $this->testResult->testExecutions()->create([
                 'name' => $test->getName(),
-                'group' => $test->getGroup(),
                 'message' => $e->getMessage(),
                 'successful' => false,
             ]);
@@ -71,7 +68,6 @@ class TestListenerAdapter implements TestListener
             if ($test instanceof TestCase) {
                 $this->testResult->testExecutions()->create([
                     'name' => $test->getName(),
-                    'group' => $test->getGroup(),
                     'successful' => true,
                 ]);
             }

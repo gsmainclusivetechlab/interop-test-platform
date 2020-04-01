@@ -8,20 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class TestRequestSetup extends Model
+class TestSetup extends Model
 {
     use HasPosition;
 
     /**
      * @var string
      */
-    protected $table = 'test_request_setups';
+    protected $table = 'test_setups';
 
     /**
      * @var array
      */
     protected $fillable = [
         'name',
+        'type',
         'values',
     ];
 
@@ -31,6 +32,16 @@ class TestRequestSetup extends Model
     protected $casts = [
         'values' => 'array',
     ];
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
 
     /**
      * @return array

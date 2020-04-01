@@ -76,17 +76,9 @@ class TestStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function testRequestSetups()
+    public function testSetups()
     {
-        return $this->hasMany(TestRequestSetup::class, 'test_step_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testResponseSetups()
-    {
-        return $this->hasMany(TestResponseSetup::class, 'test_step_id');
+        return $this->hasMany(TestSetup::class, 'test_step_id');
     }
 
     /**
