@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Casts\StreamCast;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Psr\Http\Message\ResponseInterface;
-use function GuzzleHttp\Psr7\stream_for;
 
 /**
  * @mixin \Eloquent
@@ -33,7 +34,7 @@ class TestResponse extends Model
      */
     protected $casts = [
         'headers' => 'array',
-        'body' => 'array'
+        'body' => StreamCast::class,
     ];
 
     /**
@@ -45,23 +46,59 @@ class TestResponse extends Model
     }
 
     /**
+     * @return array|mixed
+     */
+    public function bodyToArray()
+    {
+        return json_decode((string) $this->body, true) ?? [];
+    }
+
+    /**
      * @param ResponseInterface $response
      * @return self
      */
-    public static function makeFromPsr(ResponseInterface $response)
+    public static function makeFromResponse(ResponseInterface $response)
     {
         return static::make([
             'status' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
-            'body' => json_decode((string) $response->getBody(), true) ?? [],
+            'body' => $response->getBody(),
         ]);
     }
 
     /**
      * @return Response
      */
-    public function toPsr()
+    public function toResponse()
     {
-        return new Response($this->status, $this->headers, stream_for(json_encode($this->body)));
+        return new Response($this->status, $this->headers, $this->body);
+    }
+
+    /**
+     * @return array
+     */
+    public function attributesToArrayResponse()
+    {
+        return [
+            'status' => $this->status,
+            'headers' => $this->headers,
+            'body' => $this->bodyToArray(),
+        ];
+    }
+
+    /**
+     * @param TestResponseSetup $testResponseSetup
+     */
+    public function mergeSetup(TestResponseSetup $testResponseSetup)
+    {
+        $attributes = $this->attributesToArrayResponse();
+
+        foreach ($testResponseSetup->values as $key => $value) {
+            Arr::set($attributes, $key, $value);
+        }
+
+        $this->setAttribute('status', $attributes['status']);
+        $this->setAttribute('headers', $attributes['headers']);
+        $this->setAttribute('body', $attributes['body']);
     }
 }

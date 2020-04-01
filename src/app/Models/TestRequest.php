@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Casts\StreamCast;
+use App\Casts\UriCast;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Uri;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Psr\Http\Message\RequestInterface;
-use function GuzzleHttp\Psr7\stream_for;
 
 /**
  * @mixin \Eloquent
@@ -31,7 +32,6 @@ class TestRequest extends Model
     protected $fillable = [
         'method',
         'uri',
-        'path',
         'headers',
         'body',
     ];
@@ -40,8 +40,9 @@ class TestRequest extends Model
      * @var array
      */
     protected $casts = [
+        'uri' => UriCast::class,
         'headers' => 'array',
-        'body' => 'array'
+        'body' => StreamCast::class,
     ];
 
     /**
@@ -53,25 +54,77 @@ class TestRequest extends Model
     }
 
     /**
+     * @return array
+     */
+    public function uriToArray()
+    {
+        return [
+            'scheme' => $this->uri->getScheme(),
+            'host' => $this->uri->getHost(),
+            'port' => $this->uri->getPort(),
+            'path' => $this->uri->getPath(),
+            'query' => $this->uri->getQuery(),
+            'fragment' => $this->uri->getFragment(),
+        ];
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function bodyToArray()
+    {
+        return json_decode((string) $this->body, true) ?? [];
+    }
+
+    /**
      * @param RequestInterface $request
      * @return self
      */
-    public static function makeFromPsr(RequestInterface $request)
+    public static function makeFromRequest(RequestInterface $request)
     {
         return static::make([
             'method' => $request->getMethod(),
-            'uri' => (string) $request->getUri(),
-            'path' => $request->getUri()->getPath(),
+            'uri' => $request->getUri(),
             'headers' => $request->getHeaders(),
-            'body' => json_decode((string) $request->getBody(), true) ?? [],
+            'body' => $request->getBody(),
         ]);
     }
 
     /**
      * @return Request
      */
-    public function toPsr()
+    public function toRequest()
     {
-        return new Request($this->method, $this->uri, $this->headers, stream_for(json_encode($this->body)));
+        return new Request($this->method, $this->uri, $this->headers, $this->body);
+    }
+
+    /**
+     * @return array
+     */
+    public function attributesToArrayRequest()
+    {
+        return [
+            'method' => $this->method,
+            'uri' => $this->uriToArray(),
+            'headers' => $this->headers,
+            'body' => $this->bodyToArray(),
+        ];
+    }
+
+    /**
+     * @param TestRequestSetup $testRequestSetup
+     */
+    public function mergeSetup(TestRequestSetup $testRequestSetup)
+    {
+        $attributes = $this->attributesToArrayRequest();
+
+        foreach ($testRequestSetup->values as $key => $value) {
+            Arr::set($attributes, $key, $value);
+        }
+
+        $this->setAttribute('method', $attributes['method']);
+        $this->setAttribute('uri', $attributes['uri']);
+        $this->setAttribute('headers', $attributes['headers']);
+        $this->setAttribute('body', $attributes['body']);
     }
 }

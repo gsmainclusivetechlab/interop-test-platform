@@ -4,8 +4,10 @@ namespace App\Testing\Tests;
 
 use App\Models\TestScript;
 use App\Models\TestResult;
-use App\Testing\Constraints\ValidationPasses;
 use App\Testing\TestCase;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use PHPUnit\Framework\AssertionFailedError;
 
 class ValidateResponseScriptTest extends TestCase
 {
@@ -34,10 +36,18 @@ class ValidateResponseScriptTest extends TestCase
      */
     public function test()
     {
-        $this->assertThat(
-            $this->testResult->testResponse->attributesToArray(),
-            new ValidationPasses((array) $this->testScript->rules, (array) $this->testScript->messages, (array) $this->testScript->attributes)
+        $validator = Validator::make(
+            $this->testResult->testResponse->attributesToArrayResponse(),
+            (array) $this->testScript->rules,
+            (array) $this->testScript->messages,
+            (array) $this->testScript->attributes
         );
+
+        try {
+            $validator->validate();
+        } catch (ValidationException $e) {
+            throw new AssertionFailedError(implode(PHP_EOL, $validator->errors()->all()));
+        }
     }
 
     /**

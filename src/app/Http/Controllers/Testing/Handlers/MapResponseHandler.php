@@ -30,10 +30,17 @@ class MapResponseHandler
     {
         return function (RequestInterface $request, array $options) use ($handler) {
             return $handler($request, $options)->then(function (ResponseInterface $response) {
-                $testResponse = TestResponse::makeFromPsr($response)->testResult()->associate($this->testResult);
+                $testResponse = TestResponse::makeFromResponse($response)->testResult()->associate($this->testResult);
+
+                if ($testResponseSetups = $this->testResult->testStep->testResponseSetups) {
+                    foreach ($testResponseSetups as $testResponseSetup) {
+                        $testResponse->mergeSetup($testResponseSetup);
+                    }
+                }
+
                 $testResponse->save();
 
-                return $response;
+                return $testResponse->toResponse();
             });
         };
     }

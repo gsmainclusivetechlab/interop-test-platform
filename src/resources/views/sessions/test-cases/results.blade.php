@@ -153,8 +153,8 @@
                                                                 </span>
                                                             @endswitch
 
-                                                            <span class="d-inline-block ml-1 text-truncate" title="{{ $stepResult->testRequest->method }} {{ $stepResult->testRequest->path }}">
-                                                                {{ $stepResult->testRequest->path }}
+                                                            <span class="d-inline-block ml-1 text-truncate" title="{{ $stepResult->testRequest->method }} {{ $stepResult->testRequest->uri->getPath() }}">
+                                                                {{ $stepResult->testRequest->uri->getPath() }}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -190,7 +190,7 @@
                                         </small>
                                     </div>
                                     <div class="text-truncate">
-                                        <u class="mr-2">{{ $testResult->testRequest->method }} {{ $testResult->testRequest->path }}</u>
+                                        <u class="mr-2">{{ $testResult->testRequest->method }} {{ $testResult->testRequest->uri->getPath() }}</u>
                                     </div>
                                 </div>
                                 @if($testResult->successful)
@@ -202,6 +202,41 @@
                                         {{ __('Fail') }}
                                     </div>
                                 @endif
+
+                                <div class="p-4">
+                                    <div class="d-flex mb-2">
+                                        <strong class="lead d-block mr-auto font-weight-bold">
+                                            {{ __('Performed tests') }}
+                                        </strong>
+                                    </div>
+                                    <ul class="m-0 p-0">
+                                        @foreach($testResult->testExecutions as $testExecution)
+                                            <li class="d-flex flex-wrap py-2">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase @if($testExecution->successful) bg-success @else bg-danger @endif">
+                                                        @if ($testExecution->successful)
+                                                            {{ __('Pass') }}
+                                                        @else
+                                                            {{ __('Fail') }}
+                                                        @endif
+                                                    </span>
+                                                    <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
+                                                        <span class="text-muted mr-1">
+                                                            {{ $testExecution->group->label() }}:
+                                                        </span>
+                                                        {{ $testExecution->name }}
+                                                    </span>
+                                                </div>
+                                                <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
+                                                    @if ($testExecution->message)
+                                                        <p class="mb-0 small">{{ $testExecution->message }}</p>
+                                                    @endif
+                                                </b-collapse>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
                                 @if($request = $testResult->testRequest)
                                     <div class="p-4">
                                         <div class="d-flex mb-2">
@@ -213,29 +248,6 @@
 {{--                                                <span class="tag-addon tag-danger">failed</span>--}}
 {{--                                            </span>--}}
                                         </div>
-                                        <ul class="p-0">
-                                            @foreach($testResult->testRequestExecutions as $testExecution)
-                                                <li class="d-flex flex-wrap py-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase @if($testExecution->successful) bg-success @else bg-danger @endif">
-                                                            @if ($testExecution->successful)
-                                                                {{ __('Pass') }}
-                                                            @else
-                                                                {{ __('Fail') }}
-                                                            @endif
-                                                        </span>
-                                                        <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
-                                                            {{ $testExecution->name }}
-                                                        </span>
-                                                    </div>
-                                                    <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
-                                                        @if ($testExecution->message)
-                                                            <p class="mb-0 small">{{ $testExecution->message }}</p>
-                                                        @endif
-                                                    </b-collapse>
-                                                </li>
-                                            @endforeach
-                                        </ul>
                                         <div class="border">
                                             <div class="d-flex">
                                                 <div class="w-25 px-4 py-2 border">
@@ -276,7 +288,7 @@
                                                     <strong>{{ __('Body') }}</strong>
                                                 </div>
                                                 <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count($request->body)]) }}
+                                                    {{ __('(:n) params', ['n' => count($request->bodyToArray())]) }}
                                                 </div>
                                             </div>
                                             <b-collapse id="request-body-{{ $testResult->id }}">
@@ -284,7 +296,7 @@
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($request->body, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre class="json-tree-code">@json($request->bodyToArray(), JSON_PRETTY_PRINT)</code>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -304,29 +316,6 @@
 {{--                                                <span class="tag-addon tag-success">pass</span>--}}
 {{--                                            </span>--}}
                                         </div>
-                                        <ul class="p-0">
-                                            @foreach($testResult->testResponseExecutions as $testExecution)
-                                                <li class="d-flex flex-wrap py-2">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase @if($testExecution->successful) bg-success @else bg-danger @endif">
-                                                            @if ($testExecution->successful)
-                                                                {{ __('Pass') }}
-                                                            @else
-                                                                {{ __('Fail') }}
-                                                            @endif
-                                                        </span>
-                                                        <span class="d-flex align-items-center" @if ($testExecution->message) v-b-toggle="'{{ $testExecution->id }}'" @endif>
-                                                            {{ $testExecution->name }}
-                                                        </span>
-                                                    </div>
-                                                    <b-collapse id="{{ $testExecution->id }}" class="w-100 ml-8 pl-2">
-                                                        @if ($testExecution->message)
-                                                            <p class="mb-0 small">{{ $testExecution->message }}</p>
-                                                        @endif
-                                                    </b-collapse>
-                                                </li>
-                                            @endforeach
-                                        </ul>
                                         <div class="border">
                                             <div class="d-flex">
                                                 <div class="w-25 px-4 py-2 border">
@@ -359,7 +348,7 @@
                                                     <strong>{{ __('Body') }}</strong>
                                                 </div>
                                                 <div class="w-75 px-4 py-2 border">
-                                                    {{ __('(:n) params', ['n' => count($response->body)]) }}
+                                                    {{ __('(:n) params', ['n' => count($response->bodyToArray())]) }}
                                                 </div>
                                             </div>
                                             <b-collapse id="response-body-{{ $testResult->id }}">
@@ -367,7 +356,7 @@
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
                                                         <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($response->body, JSON_PRETTY_PRINT)</code>
+                                                            <code v-pre class="json-tree-code">@json($response->bodyToArray(), JSON_PRETTY_PRINT)</code>
                                                         </div>
                                                     </div>
                                                 </div>

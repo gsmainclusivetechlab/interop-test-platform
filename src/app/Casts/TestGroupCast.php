@@ -2,20 +2,19 @@
 
 namespace App\Casts;
 
-use App\Enums\TestStatusEnum;
+use App\Enums\TestGroupEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class TestStatusCast implements CastsAttributes
+class TestGroupCast implements CastsAttributes
 {
 
     public function get($model, string $key, $value, array $attributes)
     {
-        return new TestStatusEnum($value);
+        return new TestGroupEnum($value);
     }
-
 
     public function set($model, string $key, $value, array $attributes)
     {
-        return $value->toString();
+        return $value;
     }
 }

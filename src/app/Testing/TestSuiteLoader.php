@@ -4,9 +4,8 @@ namespace App\Testing;
 
 use App\Enums\TestGroupEnum;
 use App\Models\TestResult;
-use App\Testing\Tests\ValidateRequestSchemaTest;
+use App\Testing\Tests\ValidateOpenApiSchemaTest;
 use App\Testing\Tests\ValidateRequestScriptTest;
-use App\Testing\Tests\ValidateResponseSchemaTest;
 use App\Testing\Tests\ValidateResponseScriptTest;
 use PHPUnit\Framework\TestSuite;
 
@@ -34,17 +33,13 @@ class TestSuiteLoader
         $testResult = $this->testResult;
 
         if ($apiService = $testResult->testStep->targetApiService) {
-            $testSuite->addTest(new ValidateRequestSchemaTest($testResult, $apiService));
+            $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiService));
         }
 
         if ($testRequestScripts = $testResult->testStep->testScripts()->where('group', TestGroupEnum::REQUEST)->get()) {
             foreach ($testRequestScripts as $testRequestScript) {
                 $testSuite->addTest(new ValidateRequestScriptTest($testResult, $testRequestScript));
             }
-        }
-
-        if ($apiService = $testResult->testStep->targetApiService) {
-            $testSuite->addTest(new ValidateResponseSchemaTest($testResult, $apiService));
         }
 
         if ($testResponseScripts = $testResult->testStep->testScripts()->where('group', TestGroupEnum::RESPONSE)->get()) {
