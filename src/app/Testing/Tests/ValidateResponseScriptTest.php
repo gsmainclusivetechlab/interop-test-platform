@@ -55,14 +55,6 @@ class ValidateResponseScriptTest extends TestCase
      */
     public function getName(): string
     {
-        return $this->testScript->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGroup(): string
-    {
-        return $this->testScript->group;
+        return __('Response: :name', ['name' => $this->testScript->name]);
     }
 }

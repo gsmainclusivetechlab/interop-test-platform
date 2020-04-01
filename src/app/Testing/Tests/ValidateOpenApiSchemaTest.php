@@ -2,7 +2,6 @@
 
 namespace App\Testing\Tests;
 
-use App\Enums\TestGroupEnum;
 use App\Models\ApiService;
 use App\Models\TestResult;
 use App\Testing\TestCase;
@@ -53,13 +52,5 @@ class ValidateOpenApiSchemaTest extends TestCase
     public function getName(): string
     {
         return __(':name API Schema Validation', ['name' => $this->apiService->name]);
-    }
-
-    /**
-     * @return string
-     */
-    public function getGroup(): string
-    {
-        return TestGroupEnum::GENERAL;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\TestGroupCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,16 +21,8 @@ class TestExecution extends Model
      */
     protected $fillable = [
         'name',
-        'group',
         'message',
         'successful',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'group' => TestGroupCast::class,
     ];
 
     /**

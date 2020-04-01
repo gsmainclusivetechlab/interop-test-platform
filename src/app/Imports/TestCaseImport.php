@@ -2,12 +2,11 @@
 
 namespace App\Imports;
 
-use App\Enums\TestGroupEnum;
+use App\Enums\HttpTypeEnum;
 use App\Models\Scenario;
 use App\Models\TestCase;
-use App\Models\TestRequestSetup;
-use App\Models\TestResponseSetup;
 use App\Models\TestScript;
+use App\Models\TestSetup;
 use App\Models\TestStep;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -54,9 +53,10 @@ class TestCaseImport implements Importable
                     if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {
                         foreach ($testRequestSetupRows as $testRequestSetupRow) {
                             /**
-                             * @var TestRequestSetup $testRequestSetup
+                             * @var TestSetup $testRequestSetup
                              */
-                            $testRequestSetup = $testStep->testRequestSetups()->make(Arr::only($testRequestSetupRow, TestRequestSetup::make()->getFillable()));
+                            $testRequestSetup = $testStep->testSetups()->make(Arr::only($testRequestSetupRow, TestSetup::make()->getFillable()));
+                            $testRequestSetup->type = HttpTypeEnum::RESPONSE;
                             $testRequestSetup->saveOrFail();
                         }
                     }
@@ -67,7 +67,7 @@ class TestCaseImport implements Importable
                              * @var TestScript $testRequestScript
                              */
                             $testRequestScript = $testStep->testScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
-                            $testRequestScript->group = TestGroupEnum::REQUEST;
+                            $testRequestScript->type = HttpTypeEnum::REQUEST;
                             $testRequestScript->saveOrFail();
                         }
                     }
@@ -75,9 +75,10 @@ class TestCaseImport implements Importable
                     if ($testResponseSetupRows = Arr::get($testStepRow, 'test_response_setups', [])) {
                         foreach ($testResponseSetupRows as $testResponseSetupRow) {
                             /**
-                             * @var TestResponseSetup $testResponseSetup
+                             * @var TestSetup $testResponseSetup
                              */
-                            $testResponseSetup = $testStep->testResponseSetups()->make(Arr::only($testResponseSetupRow, TestResponseSetup::make()->getFillable()));
+                            $testResponseSetup = $testStep->testSetups()->make(Arr::only($testResponseSetupRow, TestSetup::make()->getFillable()));
+                            $testResponseSetup->type = HttpTypeEnum::RESPONSE;
                             $testResponseSetup->saveOrFail();
                         }
                     }
@@ -88,7 +89,7 @@ class TestCaseImport implements Importable
                              * @var TestScript $testResponseScript
                              */
                             $testResponseScript = $testStep->testScripts()->make(Arr::only($testResponseScriptRow, TestScript::make()->getFillable()));
-                            $testResponseScript->group = TestGroupEnum::RESPONSE;
+                            $testResponseScript->type = HttpTypeEnum::RESPONSE;
                             $testResponseScript->saveOrFail();
                         }
                     }

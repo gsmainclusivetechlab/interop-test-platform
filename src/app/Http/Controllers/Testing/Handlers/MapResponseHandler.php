@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
+use App\Enums\HttpTypeEnum;
 use App\Models\TestResponse;
 use App\Models\TestResult;
 use Psr\Http\Message\RequestInterface;
@@ -32,7 +33,7 @@ class MapResponseHandler
             return $handler($request, $options)->then(function (ResponseInterface $response) {
                 $testResponse = TestResponse::makeFromResponse($response)->testResult()->associate($this->testResult);
 
-                if ($testResponseSetups = $this->testResult->testStep->testResponseSetups) {
+                if ($testResponseSetups = $this->testResult->testStep->testSetups()->ofType(HttpTypeEnum::RESPONSE)->get()) {
                     foreach ($testResponseSetups as $testResponseSetup) {
                         $testResponse->mergeSetup($testResponseSetup);
                     }

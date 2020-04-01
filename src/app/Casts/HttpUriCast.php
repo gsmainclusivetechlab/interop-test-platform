@@ -5,9 +5,15 @@ namespace App\Casts;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class UriCast implements CastsAttributes
+class HttpUriCast implements CastsAttributes
 {
-
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string $key
+     * @param mixed $value
+     * @param array $attributes
+     * @return Uri|mixed|\Psr\Http\Message\UriInterface
+     */
     public function get($model, string $key, $value, array $attributes)
     {
         if (is_array($value)) {
@@ -17,6 +23,13 @@ class UriCast implements CastsAttributes
         }
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string $key
+     * @param mixed $value
+     * @param array $attributes
+     * @return array|mixed|\Psr\Http\Message\UriInterface
+     */
     public function set($model, string $key, $value, array $attributes)
     {
         if (is_array($value)) {
