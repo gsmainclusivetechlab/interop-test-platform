@@ -2,20 +2,19 @@
 
 namespace App\Casts;
 
-use App\Enums\TestStatusEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use function GuzzleHttp\Psr7\stream_for;
 
-class TestStatusCast implements CastsAttributes
+class StreamCast implements CastsAttributes
 {
 
     public function get($model, string $key, $value, array $attributes)
     {
-        return new TestStatusEnum($value);
+        return stream_for($value);
     }
-
 
     public function set($model, string $key, $value, array $attributes)
     {
-        return $value->toString();
+        return $value;
     }
 }

@@ -28,7 +28,7 @@ class ApiServicesTableSeeder extends Seeder
     {
         return [
             [
-                'name' => 'Mobile Money v1.1.0',
+                'name' => 'Mobile Money v1.1.2',
                 'server' => env('FSIOP_MM_SIMULATOR_URL'),
                 'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),
             ],

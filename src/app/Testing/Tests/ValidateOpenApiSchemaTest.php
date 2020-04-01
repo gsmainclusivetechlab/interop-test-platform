@@ -5,13 +5,12 @@ namespace App\Testing\Tests;
 use App\Enums\TestGroupEnum;
 use App\Models\ApiService;
 use App\Models\TestResult;
-use App\Testing\Constraints\RequestSchemaValid;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use PHPUnit\Framework\AssertionFailedError;
 
-class ValidateRequestSchemaTest extends TestCase
+class ValidateOpenApiSchemaTest extends TestCase
 {
     /**
      * @var TestResult
@@ -36,10 +35,16 @@ class ValidateRequestSchemaTest extends TestCase
     /**
      * @return void
      */
-    protected function test()
+    public function test()
     {
-        $psrRequest = $this->testResult->testRequest->toPsr();
-        $this->assertThat($psrRequest, new RequestSchemaValid($this->apiService->scheme));
+        $validator = (new ValidatorBuilder)->fromSchema($this->apiService->scheme);
+
+        try {
+            $operationAddress = $validator->getRequestValidator()->validate($this->testResult->testRequest->toRequest());
+            $validator->getResponseValidator()->validate($operationAddress, $this->testResult->testResponse->toResponse());
+        } catch (ValidationFailed $e) {
+            throw new AssertionFailedError($e->getMessage());
+        }
     }
 
     /**
@@ -55,6 +60,6 @@ class ValidateRequestSchemaTest extends TestCase
      */
     public function getGroup(): string
     {
-        return TestGroupEnum::REQUEST;
+        return TestGroupEnum::GENERAL;
     }
 }

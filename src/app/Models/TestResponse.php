@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\StreamCast;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Database\Eloquent\Model;
 use Psr\Http\Message\ResponseInterface;
@@ -33,7 +34,7 @@ class TestResponse extends Model
      */
     protected $casts = [
         'headers' => 'array',
-        'body' => 'array'
+        'body' => StreamCast::class,
     ];
 
     /**
@@ -45,23 +46,31 @@ class TestResponse extends Model
     }
 
     /**
+     * @return array|false|string
+     */
+    public function getJsonAttribute()
+    {
+        return json_decode((string) $this->body, true) ?? [];
+    }
+
+    /**
      * @param ResponseInterface $response
      * @return self
      */
-    public static function makeFromPsr(ResponseInterface $response)
+    public static function makeFromResponse(ResponseInterface $response)
     {
         return static::make([
             'status' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
-            'body' => json_decode((string) $response->getBody(), true) ?? [],
+            'body' => $response->getBody(),
         ]);
     }
 
     /**
      * @return Response
      */
-    public function toPsr()
+    public function toResponse()
     {
-        return new Response($this->status, $this->headers, stream_for(json_encode($this->body)));
+        return new Response($this->status, $this->headers, $this->body);
     }
 }

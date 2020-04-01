@@ -28,7 +28,7 @@ class MapRequestHandler
     public function __invoke(callable $handler)
     {
         return function (RequestInterface $request, array $options) use ($handler) {
-            $testRequest = TestRequest::makeFromPsr($request)->testResult()->associate($this->testResult);
+            $testRequest = TestRequest::makeFromRequest($request)->testResult()->associate($this->testResult);
             $testRequest->save();
 
             return $handler($request, $options);

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\StreamCast;
+use App\Casts\UriCast;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +33,6 @@ class TestRequest extends Model
     protected $fillable = [
         'method',
         'uri',
-        'path',
         'headers',
         'body',
     ];
@@ -40,8 +41,9 @@ class TestRequest extends Model
      * @var array
      */
     protected $casts = [
+        'uri' => UriCast::class,
         'headers' => 'array',
-        'body' => 'array'
+        'body' => StreamCast::class,
     ];
 
     /**
@@ -53,25 +55,40 @@ class TestRequest extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getPathAttribute()
+    {
+        return $this->uri->getPath();
+    }
+
+    /**
+     * @return array|false|string
+     */
+    public function getJsonAttribute()
+    {
+        return json_decode((string) $this->body, true) ?? [];
+    }
+
+    /**
      * @param RequestInterface $request
      * @return self
      */
-    public static function makeFromPsr(RequestInterface $request)
+    public static function makeFromRequest(RequestInterface $request)
     {
         return static::make([
             'method' => $request->getMethod(),
-            'uri' => (string) $request->getUri(),
-            'path' => $request->getUri()->getPath(),
+            'uri' => $request->getUri(),
             'headers' => $request->getHeaders(),
-            'body' => json_decode((string) $request->getBody(), true) ?? [],
+            'body' => $request->getBody(),
         ]);
     }
 
     /**
      * @return Request
      */
-    public function toPsr()
+    public function toRequest()
     {
-        return new Request($this->method, $this->uri, $this->headers, stream_for(json_encode($this->body)));
+        return new Request($this->method, $this->uri, $this->headers, $this->body);
     }
 }

@@ -79,22 +79,6 @@ class TestResult extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testRequestExecutions()
-    {
-        return $this->testExecutions()->where('group', TestGroupEnum::REQUEST);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testResponseExecutions()
-    {
-        return $this->testExecutions()->where('group', TestGroupEnum::RESPONSE);
-    }
-
-    /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
