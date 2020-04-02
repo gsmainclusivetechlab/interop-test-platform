@@ -78,6 +78,24 @@
 @section('session-content')
     <div class="row">
         <div class="col">
+            <div class="d-flex align-items-start border-bottom mb-4">
+                <ul class="nav nav-tabs mx-0 border-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Test runs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Other</a>
+                    </li>
+                </ul>
+
+                <div class="col-5 ml-auto pr-0 pt-1">
+                    @yield('session-header-right')
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
