@@ -2,21 +2,33 @@
 
 namespace App\Casts;
 
-use App\Enums\HttpTypeEnum;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class HttpTypeCast implements CastsAttributes
+class EnumCast implements CastsAttributes
 {
+    /**
+     * @var string
+     */
+    protected $enum;
+
+    /**
+     * @param string $enum
+     */
+    public function __construct(string $enum)
+    {
+        $this->enum = $enum;
+    }
+
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return HttpTypeEnum|mixed
+     * @return mixed
      */
     public function get($model, string $key, $value, array $attributes)
     {
-        return new HttpTypeEnum($value);
+        return new $this->enum($value);
     }
 
     /**

@@ -171,10 +171,6 @@
                                     <strong class="lead d-block mr-auto font-weight-bold">
                                         {{ __('Request') }}
                                     </strong>
-{{--                                            <span class="tag">--}}
-{{--                                                schema--}}
-{{--                                                <span class="tag-addon tag-danger">failed</span>--}}
-{{--                                            </span>--}}
                                 </div>
                                 <div class="border">
                                     <div class="d-flex">
@@ -239,10 +235,6 @@
                                     <strong class="lead d-block mr-auto font-weight-bold">
                                         {{ __('Response') }}
                                     </strong>
-{{--                                            <span class="tag">--}}
-{{--                                                schema--}}
-{{--                                                <span class="tag-addon tag-success">pass</span>--}}
-{{--                                            </span>--}}
                                 </div>
                                 <div class="border">
                                     <div class="d-flex">

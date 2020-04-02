@@ -22,8 +22,8 @@ class CreateTestDataTable extends Migration
             $table->string('name');
             $table->string('method');
             $table->string('uri');
-            $table->longText('headers')->nullable();
-            $table->longText('body')->nullable();
+            $table->longText('headers');
+            $table->longText('body');
 //            $table->boolean('default');
             $table->timestamps();
         });

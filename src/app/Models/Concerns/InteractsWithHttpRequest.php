@@ -51,6 +51,19 @@ trait InteractsWithHttpRequest
     }
 
     /**
+     * @return array
+     */
+    public function attributesToArrayRequest()
+    {
+        return [
+            'method' => $this->method,
+            'uri' => $this->uriToArray(),
+            'headers' => $this->headers,
+            'body' => $this->bodyToArray(),
+        ];
+    }
+
+    /**
      * @param RequestInterface $request
      * @return self
      */

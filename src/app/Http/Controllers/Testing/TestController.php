@@ -15,10 +15,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
-use Psr\Http\Message\ServerRequestInterface;
 
 class TestController extends Controller
 {
+    use HasPsrRequest;
+
     /**
      * RunController constructor.
      */
@@ -28,12 +29,12 @@ class TestController extends Controller
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @param string $uri
      * @return mixed
      */
-    public function __invoke(ServerRequestInterface $request, string $uri)
+    public function __invoke(string $uri)
     {
+        $request = $this->getRequest();
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();

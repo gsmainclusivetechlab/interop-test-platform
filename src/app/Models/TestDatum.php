@@ -18,7 +18,26 @@ class TestDatum extends Model
     protected $table = 'test_data';
 
     /**
-     * @var bool
+     * @var array
      */
-    public $incrementing = false;
+    protected $fillable = [
+        'test_case_id',
+        'name',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function session()
+    {
+        return $this->belongsTo(Session::class, 'session_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function testCase()
+    {
+        return $this->belongsTo(TestCase::class, 'test_case_id');
+    }
 }

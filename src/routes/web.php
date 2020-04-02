@@ -16,6 +16,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
+Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'Sessions\TestDatumController@run')->name('sessions.test-cases.test-data.run');
 
 /**
  * Sessions Routes

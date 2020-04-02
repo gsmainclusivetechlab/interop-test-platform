@@ -46,11 +46,17 @@ class TestCase extends Model
         return $this->hasMany(TestStep::class, 'test_case_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function testRuns()
     {
         return $this->hasMany(TestRun::class, 'test_case_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function lastTestRun()
     {
         return $this->hasOne(TestRun::class, 'test_case_id')->completed();

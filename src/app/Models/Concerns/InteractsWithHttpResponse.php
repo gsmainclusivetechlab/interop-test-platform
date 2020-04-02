@@ -25,6 +25,26 @@ trait InteractsWithHttpResponse
     }
 
     /**
+     * @return array|mixed
+     */
+    public function bodyToArray()
+    {
+        return json_decode((string) $this->body, true) ?? [];
+    }
+
+    /**
+     * @return array
+     */
+    public function attributesToArrayResponse()
+    {
+        return [
+            'status' => $this->status,
+            'headers' => $this->headers,
+            'body' => $this->bodyToArray(),
+        ];
+    }
+
+    /**
      * @param ResponseInterface $response
      * @return self
      */

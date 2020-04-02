@@ -1,8 +1,8 @@
-@extends('layouts.session', $session)
+@extends('layouts.sessions.test-case', [$session, $testCase])
 
-@section('title', __('Create test data'))
+@section('title', $session->name)
 
-@section('session-content')
+@section('content')
     <form action="{{ route('sessions.test-cases.test-data.store', [$session, $testCase]) }}" method="POST">
         @csrf
         <div class="form-group">
@@ -33,7 +33,7 @@
         </div>
         <div class="form-group">
             <label class="form-label">
-                {{ __('Uri') }}
+                {{ __('URI') }}
             </label>
             <input name="uri" value="{{ old('uri') }}" type="text" class="form-control @error('uri') is-invalid @enderror">
             @error('uri')

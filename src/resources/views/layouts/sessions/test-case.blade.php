@@ -90,11 +90,11 @@
                                                     </button>
                                                 </span>
                                             </div>
-                                            <form action="#" class="flex-shrink-0 ml-2">
-                                                <button class="btn btn-primary">
-                                                    {{ __('Run') }}
-                                                </button>
-                                            </form>
+{{--                                            <form action="#" class="flex-shrink-0 ml-2">--}}
+{{--                                                <button class="btn btn-primary">--}}
+{{--                                                    {{ __('Run') }}--}}
+{{--                                                </button>--}}
+{{--                                            </form>--}}
                                         </div>
                                         <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
                                             <div class="card mb-0 bg-light">
