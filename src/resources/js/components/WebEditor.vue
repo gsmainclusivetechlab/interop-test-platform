@@ -65,7 +65,6 @@ export default {
             ...this.$props.options,
         });
 
-
         this.onChange();
 
         await this.validateSyntax();
@@ -86,7 +85,9 @@ export default {
                     break;
 
                 case JSON_MODE:
-                    this.editorSubject.value = JSON.stringify(value);
+                    this.editorSubject.value = value
+                        ? JSON.stringify(value)
+                        : value;
                     break;
             }
 
