@@ -75,7 +75,7 @@
                                         @endcan
                                     @else
                                         @can('promoteAdmin', $user)
-                                            <b-dropdown-form action="{{ route('admin.users.promote_admin', $user) }}" method="POST" form-class="p-0">
+                                            <b-dropdown-form action="{{ route('admin.users.promote-admin', $user) }}" method="POST" form-class="p-0">
                                                 @csrf
                                                 @method('POST')
                                                 <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm promote admin') }}" text="{{ __('Are you sure you want to promote :name to admin?', ['name' => $user->name]) }}">
@@ -85,7 +85,7 @@
                                         @endcan
 
                                         @can('relegateAdmin', $user)
-                                            <b-dropdown-form action="{{ route('admin.users.relegate_admin', $user) }}" method="POST" form-class="p-0">
+                                            <b-dropdown-form action="{{ route('admin.users.relegate-admin', $user) }}" method="POST" form-class="p-0">
                                                 @csrf
                                                 @method('POST')
                                                 <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm relegate admin') }}" text="{{ __('Are you sure you want to relegate :name from admin?', ['name' => $user->name]) }}">
@@ -106,7 +106,7 @@
                                     @endif
 
                                     @can('delete', $user)
-                                        <b-dropdown-form action="{{ route('admin.users.force_destroy', $user) }}" method="POST" form-class="p-0">
+                                        <b-dropdown-form action="{{ route('admin.users.force-destroy', $user) }}" method="POST" form-class="p-0">
                                             @csrf
                                             @method('DELETE')
                                             <confirm-button class="dropdown-item" type="submit" title="{{ __('Confirm delete') }}" text="{{ __('Are you sure you want to delete :name?', ['name' => $user->name]) }}">
