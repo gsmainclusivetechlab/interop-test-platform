@@ -9,19 +9,25 @@
                 {{ __('Use case flow') }}
             </button>
             @if($testCase->data_example)
-                <button type="button" class="btn btn-secondary border" data-fancybox data-src="#test-data">
-                    {{ __('Test data example') }}
-                </button>
+                <b-dropdown text="{{ __('Test data') }}" toggle-class="border h-100" right>
+                    <b-dropdown-item data-fancybox href="#test-data">View</b-dropdown-item>
+                    <b-dropdown-item>Edit</b-dropdown-item>
+                </b-dropdown>
             @endif
         </div>
         <div class="input-group">
-            <input id="run-url-{{ $testCase->id }}" type="text" class="form-control" readonly value="{{ route('testing.run', ['session' => $session, 'testCase' => $testCase]) }}">
+            <input id="run-url-{{ $testCase->id }}" type="text" class="form-control h-100" readonly value="{{ route('testing.run', ['session' => $session, 'testCase' => $testCase]) }}">
             <span class="input-group-append">
                 <button class="btn btn-white border" type="button" data-clipboard-target="#run-url-{{ $testCase->id }}">
                     <i class="fe fe-copy"></i>
                 </button>
             </span>
         </div>
+        <form action="#" class="flex-shrink-0 ml-2">
+            <button class="btn btn-primary">
+                {{ __('Run') }}
+            </button>
+        </form>
     </div>
     <div id="flow-diagram" class="col-8 p-0 rounded" style="display: none">
         @include('sessions.includes.use-case-flow', $testCase)
@@ -72,6 +78,24 @@
 @section('session-content')
     <div class="row">
         <div class="col">
+            <div class="d-flex align-items-start border-bottom mb-4">
+                <ul class="nav nav-tabs mx-0 border-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Test runs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Other</a>
+                    </li>
+                </ul>
+
+                <div class="col-5 ml-auto pr-0 pt-1">
+                    @yield('session-header-right')
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
