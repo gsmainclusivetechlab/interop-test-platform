@@ -274,8 +274,8 @@
                                                 <div class="d-flex">
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($request->headers, JSON_PRETTY_PRINT)</code>
+                                                        <div class="mb-0 p-0 bg-transparent">
+                                                            <json-tree :code='@json($request->headers, JSON_PRETTY_PRINT)'></json-tree>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -292,8 +292,8 @@
                                                 <div class="d-flex">
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($request->bodyToArray(), JSON_PRETTY_PRINT)</code>
+                                                        <div class="mb-0 p-0 bg-transparent">
+                                                            <json-tree :code='@json($request->bodyToArray(), JSON_PRETTY_PRINT)'></json-tree>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -334,8 +334,8 @@
                                                 <div class="d-flex">
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($response->headers, JSON_PRETTY_PRINT)</code>
+                                                        <div class="mb-0 p-0 bg-transparent">
+                                                            <json-tree :code='@json($response->headers, JSON_PRETTY_PRINT)'></json-tree>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -352,8 +352,8 @@
                                                 <div class="d-flex">
                                                     <div class="w-25 px-4 py-2 border"></div>
                                                     <div class="w-75 px-4 py-2 border">
-                                                        <div class="mb-0 p-0 bg-transparent json-tree">
-                                                            <code v-pre class="json-tree-code">@json($response->bodyToArray(), JSON_PRETTY_PRINT)</code>
+                                                        <div class="mb-0 p-0 bg-transparent">
+                                                            <json-tree :code='@json($response->bodyToArray(), JSON_PRETTY_PRINT)'></json-tree>
                                                         </div>
                                                     </div>
                                                 </div>
