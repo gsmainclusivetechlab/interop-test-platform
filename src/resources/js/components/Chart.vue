@@ -2,9 +2,9 @@
     <div>
         <apexchart
             ref="chart"
-            height="360"
-            type="bar"
-            :options="options"
+            :type="this.$props.type"
+            :height="this.$props.height"
+            :options="chartOptions"
             :series="chartData"
         ></apexchart>
     </div>
@@ -16,7 +16,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            options: {
+            defaultOptions: {
                 chart: {
                     stacked: true,
                     fontFamily: 'gotham',
@@ -68,9 +68,20 @@ export default {
             type: String,
             required: true,
         },
+        options: {
+            type: Object,
+        },
+        type: {
+            type: String,
+            default: 'bar',
+        },
+        height: {
+            type: Number,
+            default: 360,
+        },
     },
     async mounted() {
-        this.options.noData.text = this.noDataList.loading;
+        this.defaultOptions.noData.text = this.noDataList.loading;
 
         await this.fetchData(this.$props.ajaxUrl);
     },
@@ -82,7 +93,7 @@ export default {
                     this.chartData = data;
 
                     this.$refs.chart.updateOptions({
-                        ...this.options,
+                        ...this.chartOptions,
                         noData: {
                             text: this.noDataList.success,
                         },
@@ -90,12 +101,20 @@ export default {
                 })
                 .catch((error) => {
                     this.$refs.chart.updateOptions({
-                        ...this.options,
+                        ...this.chartOptions,
                         noData: {
                             text: this.noDataList.error,
                         },
                     });
                 });
+        },
+    },
+    computed: {
+        chartOptions() {
+            return {
+                ...this.defaultOptions,
+                ...this.$props.options,
+            };
         },
     },
     components: {
