@@ -65,7 +65,6 @@ export default {
             ...this.$props.options,
         });
 
-
         this.onChange();
 
         await this.validateSyntax();
@@ -80,16 +79,7 @@ export default {
             return this.editor.getSession().getMode().$id;
         },
         setEditorSubjectValue(value = this.getValue()) {
-            switch (this.editor.getOption('mode')) {
-                case YAML_MODE:
-                    this.editorSubject.value = value;
-                    break;
-
-                case JSON_MODE:
-                    this.editorSubject.value = JSON.stringify(value);
-                    break;
-            }
-
+            this.editorSubject.value = value;
             return this;
         },
         onChange() {
