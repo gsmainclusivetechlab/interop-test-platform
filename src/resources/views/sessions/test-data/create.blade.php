@@ -46,23 +46,33 @@
             <label class="form-label">
                 {{ __('Headers') }}
             </label>
-            <web-editor editor-subject-name="headers" editor-class="form-control @error('uri') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>{{ old('headers') }}</web-editor>
-            @error('headers')
-            <span class="invalid-feedback">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+            <web-editor name="headers" editor-class="@error('uri') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
+                <template v-slot:content>{{ old('headers') }}</template>
+
+                <template v-slot:validation>
+                    @error('headers')
+                        <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </template>
+            </web-editor>
         </div>
         <div class="form-group">
             <label class="form-label">
                 {{ __('Body') }}
             </label>
-            <web-editor editor-subject-name="body" editor-class="form-control @error('uri') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>{{ old('body') }}</web-editor>
-            @error('body')
-            <span class="invalid-feedback">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
+            <web-editor name="body" editor-class="@error('uri') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/yaml'])'>
+                <template v-slot:content>{{ old('body') }}</template>
+
+                <template v-slot:validation>
+                    @error('body')
+                        <span class="invalid-feedback">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </template>
+            </web-editor>
         </div>
         <div class="mt-4 d-flex justify-content-between">
 {{--            <a href="{{ route('sessions.test-cases.show') }}" class="btn btn-outline-primary">{{ __('Cancel') }}</a>--}}
