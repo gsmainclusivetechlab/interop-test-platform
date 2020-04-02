@@ -79,18 +79,7 @@ export default {
             return this.editor.getSession().getMode().$id;
         },
         setEditorSubjectValue(value = this.getValue()) {
-            switch (this.editor.getOption('mode')) {
-                case YAML_MODE:
-                    this.editorSubject.value = value;
-                    break;
-
-                case JSON_MODE:
-                    this.editorSubject.value = value
-                        ? JSON.stringify(value)
-                        : value;
-                    break;
-            }
-
+            this.editorSubject.value = value;
             return this;
         },
         onChange() {
