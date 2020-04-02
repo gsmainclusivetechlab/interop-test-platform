@@ -60,6 +60,7 @@ class TestDatumController extends Controller
      */
     public function store(Session $session, TestCase $testCase, StoreTestDatumRequest $request)
     {
+        dd($request->input());
         $session->testData()->create(array_merge([
             'test_case_id' => $testCase->id,
         ], $request->input()));

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Sessions;
 
-use App\Rules\YamlRule;
+use App\Rules\JsonRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateTestDatumRequest extends FormRequest
@@ -28,8 +28,8 @@ class UpdateTestDatumRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'method' => ['required'],
             'uri' => ['required', 'string', 'max:255'],
-            'headers' => ['required', new YamlRule()],
-            'body' => ['required', new YamlRule()],
+            'headers' => ['required', new JsonRule()],
+            'body' => ['required', new JsonRule()],
         ];
     }
 }
