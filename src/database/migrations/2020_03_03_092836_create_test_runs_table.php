@@ -14,7 +14,7 @@ class CreateTestRunsTable extends Migration
     public function up()
     {
         Schema::create('test_runs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('session_id');
             $table->unsignedBigInteger('test_case_id');

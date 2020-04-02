@@ -4,7 +4,7 @@ namespace App\Models\Concerns;
 
 use App\Scopes\PositionScope;
 
-trait HasPosition
+trait HasPositionAttribute
 {
     /**
      * @return void

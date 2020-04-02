@@ -14,7 +14,7 @@ class CreateTestResultsTable extends Migration
     public function up()
     {
         Schema::create('test_results', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('test_run_id');
             $table->foreign('test_run_id')->references('id')->on('test_runs')->onDelete('cascade');
             $table->unsignedBigInteger('test_step_id');

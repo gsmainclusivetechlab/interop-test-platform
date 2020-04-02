@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\HasUuidAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Session extends Model
 {
-    use HasUuid;
+    use HasUuidAttribute;
 
     /**
      * @var string

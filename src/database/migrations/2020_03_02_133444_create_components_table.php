@@ -14,7 +14,7 @@ class CreateComponentsTable extends Migration
     public function up()
     {
         Schema::create('components', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('scenario_id');
             $table->foreign('scenario_id')->references('id')->on('scenarios')->onDelete('cascade');
             $table->unsignedBigInteger('api_service_id')->nullable();

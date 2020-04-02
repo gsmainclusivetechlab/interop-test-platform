@@ -1,19 +1,17 @@
 <template>
     <div>
-        <div class="form-group">
-            <textarea
-                :name="this.$props.editorSubjectName"
-                ref="editorSubject"
-                class="form-control"
-                hidden
-            ></textarea>
-            <div
-                class="web-editor form-control pr-0"
-                :class="this.$props.editorClass"
-                ref="editor"
-            >
-                <slot></slot>
-            </div>
+        <textarea
+            :name="this.$props.editorSubjectName"
+            ref="editorSubject"
+            class="form-control"
+            hidden
+        ></textarea>
+        <div
+            class="web-editor form-control pr-0"
+            :class="this.$props.editorClass"
+            ref="editor"
+        >
+            <slot></slot>
         </div>
     </div>
 </template>
