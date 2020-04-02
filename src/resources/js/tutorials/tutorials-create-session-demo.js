@@ -1,4 +1,5 @@
 window.onload = function () {
+
     var steps = [
         ['../../images/tutorials/create-session/dashboard.png', [1335, 40], 'Start by creating a new session', true],
         ['../../images/tutorials/create-session/select_sut.png', [535, 390], 'Select the System Under Test', true],
@@ -16,17 +17,18 @@ window.onload = function () {
     var step = 0;
 
     function adjusted(length) {
-        if ($(".screenshot[src*='session_info']").length == 1) { // height of these screenshots slightly higher
+
+        if ($(".create-session-screenshot[src*='session_info']").length == 1) { // height of these screenshots slightly higher
             var originalHeight = 699;
-        } else if ($(".screenshot[src*='usecase_page']").length == 1) {
+        } else if ($(".create-session-screenshot[src*='usecase_page']").length == 1) {
             var originalHeight = 940;
         } else {
             var originalHeight = 653;
         }
 
-        var currentHeight = $('.screenshot').height();
+        var currentHeight = $('.create-session-screenshot').height();
         var ratio = currentHeight / originalHeight;
-        return length * ratio
+        return length * ratio;
     }
 
     function getRadius() {
@@ -36,32 +38,31 @@ window.onload = function () {
     function animateCircle(circleRadius, ms, animateLabel, cb) {
         var radius = getRadius();
         var coordinates = steps[step][1];
-        $('.circle')
+        $('.create-session-circle')
             .animate({
                 top: adjusted(coordinates[1]) - (circleRadius - radius),
                 left: adjusted(coordinates[0]) - (circleRadius - radius),
                 width: circleRadius * 2,
                 height: circleRadius * 2,
-                borderRadius: circleRadius
+                borderTopLeftRadius: circleRadius,
+                borderTopRightRadius: circleRadius,
+                borderBottomLeftRadius: circleRadius,
+                borderBottomRightRadius: circleRadius
             }, {
                 complete: cb,
                 duration: ms,
                 step: function() {
-                    $('.circle').css("overflow", "visible");
+                    //jquery.animate sets overflow: hidden during animation, so need to override that (otherwise label disappears)
+                    $('.create-session-circle').css("overflow","visible");
                 }
             });
         var labelText = steps[step][2];
-        if ($(".screenshot[src*='session_created']").length == 1) {
-            var leftLabel = (radius * 1.8) + (circleRadius - radius)
-        } else {
-            var leftLabel = (radius * 1.8) - 180 + (circleRadius - radius) // - 180 so the label is on the left side
-        }
-        if (animateLabel){
-            $('.circle-label')
+        if(animateLabel) { //when the big circle shrinks, we want the label to swoop in with it
+            $('.create-session-circle-label')
                 .text(labelText)
                 .animate({
                     top: radius * 1.8 + (circleRadius - radius),
-                    left: leftLabel
+                    left: radius * 1.8 + (circleRadius - radius)
                 }, {
                     duration: ms
                 });
@@ -71,7 +72,8 @@ window.onload = function () {
     var containerWidth = $('.demo-container').width();
     var isMobile = containerWidth <= 480;
 
-    if (isMobile) {
+    if(isMobile) {
+        //to stop vertical overflow
         $('.demo-container').css({
             height: 400
         })
@@ -79,31 +81,35 @@ window.onload = function () {
 
     function updateCircle() {
         stopPulsate();
+        //hide the circle
+        $('.create-session-circle').hide();
 
-        $('.circle').hide();
-
+        //calculate end position of zoom
         var coordinates = steps[step][1];
         var left = -1 * adjusted(coordinates[0]) + (containerWidth/2) - getRadius();
-        if (left>0) {
+        if(left > 0) {
             left = 0;
         }
 
+        //zoom out
         var zoomOut = steps[step][3];
-        $('.image-holder').animate((!isMobile || !zoomOut ? {} : {
+        $('.image-holder').animate((!isMobile || !zoomOut ? {} : { //only zoom out if step requires it
             width: containerWidth,
             left: 0,
             top: 0
         }), 1000, function() {
+            //change image
             var image = steps[step][0];
-            $('.screenshot').attr('src', image);
+            $('.create-session-screenshot').attr('src', image);
+            //zoom in
             $('.image-holder').animate((!isMobile ? {} : {
-                width: containerWidth * 2,
+                width: containerWidth*2,
                 left: left
             }), 2000, function() {
-                $('.circle').show();
+                $('.create-session-circle').show();//show the circle again
                 var radius = getRadius();
-                animateCircle(adjusted(1000), 0, false, function() { // makes circle bigger
-                    animateCircle(radius, 750, true, function() { // shrinks circle
+                animateCircle(adjusted(2000), 0, false, function() {
+                    animateCircle(radius, 750, true, function() {
                         startPulsate();
                     })
                 })
@@ -123,15 +129,19 @@ window.onload = function () {
     }
 
     function stopPulsate() {
-        $('.circle').stop(); // stop running animations
+        $('.create-session-circle').stop();//stop any running animations
         clearInterval(interval);
     }
 
     updateCircle();
 
-    $('.circle').click(function() {
+    $('.create-session-circle').click(function() {
         step = (step + 1) % steps.length;
         updateCircle();
     })
 };
 
+$('.create-session-start-demo-btn').click(function() {
+    $('.create-session-start-demo-btn').hide();
+    $('.create-session-demo-overlay').hide();
+})

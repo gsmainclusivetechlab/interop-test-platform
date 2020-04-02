@@ -11,6 +11,11 @@ div[role=tablist] {
     height: 150px;
     color: #de002b;
     text-align: center;
+    border: solid 2px #de002b;
+}
+
+.scenario-card:hover {
+
 }
 
 #scenario-heading {
@@ -45,9 +50,6 @@ div[role=tablist] {
     margin-top: -0.325em;
 }
 
-#session-icon:hover {
-    filter: saturate(0);
-}
 
 .tutorial-text {
     font-family: inherit;
@@ -61,11 +63,11 @@ div[role=tablist] {
     padding-top: 20px;
     padding-left: 40px;
     padding-right: 40px;
-    justify-content: space-between;
+    justify-content: space-around;
     color: #de002b;
 }
 
-.demo-outer-container {
+.demo-create-session, .demo-service-provider {
     height: 65%;
     width: 60%;
     margin:auto;
@@ -78,7 +80,7 @@ div[role=tablist] {
     width: 100%;
 }
 
-.circle {
+.service-provider-circle, .create-session-circle {
     border: solid 3px #d87070;
     cursor: pointer;
     position: absolute;
@@ -93,7 +95,7 @@ div[role=tablist] {
     position: relative;
 }
 
-.circle-label {
+[class*='circle-label'] {
     position: absolute;
 
     text-align: center;
@@ -105,7 +107,7 @@ div[role=tablist] {
     border-radius: 5px;
 }
 
-.demo-overlay {
+[class*='demo-overlay'] {
     position: absolute;
     top: 0;
     left: 0;
@@ -116,10 +118,9 @@ div[role=tablist] {
     opacity: 0.75;
     border-radius: 5px;
     border: 1px solid #000;
-    cursor: pointer;
 }
 
-.start-demo-btn {
+[class*='start-demo-btn'] {
     position: absolute;
     z-index: 6;
     left: 50%;
@@ -130,6 +131,7 @@ div[role=tablist] {
     background: #fff;
     border: 1px solid #ccc;
     box-shadow: 0px 1px 3px 0px black;
+    cursor: pointer;
 }
 
 .start-demo-btn:hover {

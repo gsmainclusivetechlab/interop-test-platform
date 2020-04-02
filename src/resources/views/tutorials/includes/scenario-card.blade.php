@@ -3,7 +3,7 @@
         <tr>
             <section class="cards">
 
-                <a class=" btn btn-outline-primary scenario-card" href="#create-session">
+                <a class=" btn scenario-card" href="#create-session" v-b-toggle.accordion-1>
                     <h6 id="scenario-heading" class="border-bottom border-primary">
                         <img id="session-icon" src="{{ asset('images/tutorials/Gizmo_RED_Stack.png') }}" class="icon" style="vertical-align: middle"/>
                         How do I create a new session?
@@ -15,10 +15,9 @@
                     </div>
                 </a><!-- /card-one -->
 
-                <a class=" btn btn-outline-primary scenario-card" href="#service-provider" >
+                <a class=" btn scenario-card" href="#service-provider" v-b-toggle.accordion-2>
                     <h6 id="scenario-heading" class="border-bottom border-primary">
-                        <img id="session-icon" src="{{ asset('images/tutorials/logo-postman.png') }}" class="icon" style="vertical-align: middle"/>
-                        How do I simulate a Service Provider?
+                        How do I execute a session?
                     </h6>
                     <div id="scenario-desc">
                         <h7>
@@ -27,25 +26,47 @@
                     </div>
                 </a><!-- /card-two -->
 
-                <button class=" btn btn-outline-primary scenario-card" href="#" v-b-toggle.accordion-3 >
-                    <h6 id="scenario-heading">Tutorial #3</h6>
-                </button><!-- /card-three -->
+                <a class=" btn scenario-card" href="#postman-collections" v-b-toggle.accordion-3 >
+                    <h6 id="scenario-heading"  class="border-bottom border-primary">
+                        <img id="session-icon" src="{{ asset('images/tutorials/logo-postman.png') }}" class="icon" style="vertical-align: middle"/>
+                        Postman Collections
+                    </h6>
+                    <div id="scenario-desc">
+                        <h7>
+                            Click here to be taken to a list of Postman collections you can use on the test platform.
+                        </h7>
+                    </div>
+                </a>
             </section>
         </tr>
         <tr>
             <section class="cards">
 
-                <button class=" btn btn-outline-primary scenario-card" href="#" v-b-toggle.accordion-4 >
-                    <h6 id="scenario-heading">Tutorial #4</h6>
-                </button><!-- /card-one -->
+                <a class=" btn scenario-card" href="#mojaloop-info" v-b-toggle.accordion-4 >
+                    <h6 id="scenario-heading"  class="border-bottom border-primary">
+                        Learn more about Mojaloop
+                    </h6>
+                    <div id="scenario-desc">
+                        <h7>
+                            Click here to learn more about Mojaloop with links to documentations and specifications
+                        </h7>
+                    </div>
+                </a>
 
-                <button class=" btn btn-outline-primary scenario-card" href="#" v-b-toggle.accordion-5 >
-                    <h6 id="scenario-heading">Tutorial #5</h6>
-                </button><!-- /card-two -->
+                <a class=" btn scenario-card" href="#mobile-money-api-info" v-b-toggle.accordion-5 >
+                    <h6 id="scenario-heading"  class="border-bottom border-primary">
+                        Learn more about Mobile Money API
+                    </h6>
+                    <div id="scenario-desc">
+                        <h7>
+                            Click here to learn more about the Mobile Money API with links to documentations and specifications
+                        </h7>
+                    </div>
+                </a>
 
-                <button class=" btn btn-outline-primary scenario-card" href="#" v-b-toggle.accordion-6 >
+<!--                <a class=" btn scenario-card" href="#" v-b-toggle.accordion-6 >
                     <h6 id="scenario-heading">Tutorial #6</h6>
-                </button><!-- /card-three -->
+                </a> -->
             </section>
         </tr>
     </table>
