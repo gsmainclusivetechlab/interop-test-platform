@@ -9,7 +9,7 @@ trait HasUuidAttribute
     /**
      * @return void
      */
-    protected static function bootHasUuid()
+    protected static function bootHasUuidAttribute()
     {
         static::creating(function ($model) {
             $model->generateUuid();

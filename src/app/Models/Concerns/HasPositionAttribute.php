@@ -9,7 +9,7 @@ trait HasPositionAttribute
     /**
      * @return void
      */
-    protected static function bootHasPosition()
+    protected static function bootHasPositionAttribute()
     {
         static::addGlobalScope(new PositionScope());
         static::creating(function ($model) {
