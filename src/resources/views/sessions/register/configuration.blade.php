@@ -33,9 +33,9 @@
                                                     <div class="row">
                                                         <div class="col-5">
                                                             <label class="form-label font-weight-normal" for="sp">{{ __('Type') }}</label>
-                                                            <select class="form-control custom-select" id="sp" name="sp">
+                                                            <select class="form-control custom-select" id="sp" name="sp" @change="handleSessionComponentsSelect">
                                                                 <option value="simulator">Simulator</option>
-                                                                <option value="sut">SUT</option>
+                                                                <option value="">SUT</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-7">
@@ -50,8 +50,8 @@
                                                     <div class="row">
                                                         <div class="col-5">
                                                             <label class="form-label font-weight-normal" for="mmo1">{{ __('Type') }}</label>
-                                                            <select class="form-control custom-select" id="mmo1" name="mmo1">
-                                                                <option value="sut">SUT</option>
+                                                            <select class="form-control custom-select" id="mmo1" name="mmo1" @change="handleSessionComponentsSelect">
+                                                                <option value="">SUT</option>
                                                                 <option value="malawi">Malawi v.1.0.0</option>
                                                                 <option value="mtn">MTN v.1.2.0</option>
                                                                 <option value="vodafone">Vodafone v.2.2.0</option>
@@ -69,11 +69,11 @@
                                                     <div class="row">
                                                         <div class="col-5">
                                                             <label class="form-label font-weight-normal" for="mojaloop">{{ __('Type') }}</label>
-                                                            <select class="form-control custom-select" id="mojaloop" name="mojaloop">
+                                                            <select class="form-control custom-select" id="mojaloop" name="mojaloop" @change="handleSessionComponentsSelect">
                                                                 <option value="mojaloop v.7.0.0">Mojaloop v.7.0.0</option>
                                                                 <option value="mojaloop v.8.8.0">Mojaloop v.8.8.0</option>
                                                                 <option value="mojaloop v.9.2.0">Mojaloop v.9.2.0</option>
-                                                                <option value="sut">SUT</option>
+                                                                <option value="">SUT</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-7">
@@ -88,11 +88,11 @@
                                                     <div class="row">
                                                         <div class="col-5">
                                                             <label class="form-label font-weight-normal" for="mmo2">{{ __('Type') }}</label>
-                                                            <select class="form-control custom-select" id="mmo2" name="mmo2">
+                                                            <select class="form-control custom-select" id="mmo2" name="mmo2" @change="handleSessionComponentsSelect">
                                                                 <option value="mtn">MTN v.1.2.0</option>
                                                                 <option value="malawi">Malawi v.1.0.0</option>
                                                                 <option value="vodafone">Vodafone v.2.2.0</option>
-                                                                <option value="sut">SUT</option>
+                                                                <option value="">SUT</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-7">
