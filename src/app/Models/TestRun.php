@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -39,6 +40,44 @@ class TestRun extends Model
     protected $observables = [
         'complete',
     ];
+
+    public function getChartHourAttribute()
+	{
+		$format = 'H\h';
+
+		if (!$this->created_at->isToday()) {
+			$format = 'j M ' . $format;
+		}
+
+		return $this->created_at->format($format);
+	}
+
+    public function getChartDayAttribute()
+	{
+		$format = 'j M';
+
+		if (!$this->created_at->isCurrentUnit('month')) {
+			$format .= ' Y';
+		}
+
+		return $this->created_at->format($format);
+	}
+
+    public function getChartMonthAttribute()
+	{
+		$format = 'M';
+
+		if (!$this->created_at->isCurrentUnit('year')) {
+			$format .= ' Y';
+		}
+
+		return $this->created_at->format('M');
+	}
+
+    public function getChartYearAttribute()
+	{
+		return $this->created_at->format('Y');
+	}
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -98,6 +137,11 @@ class TestRun extends Model
     {
         return $query->whereNotNull('completed_at');
     }
+
+    public function scopeFailures($query)
+	{
+		return $query->whereFailures('>', 0);
+	}
 
     /**
      * @return string

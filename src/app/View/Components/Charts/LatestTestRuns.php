@@ -8,14 +8,14 @@ use Illuminate\View\Component;
 
 class LatestTestRuns extends Component implements Arrayable
 {
-    public $session;
+	public $session;
 
     /**
      * @param Session $session
      */
     public function __construct(Session $session)
     {
-        $this->session = $session;
+    	$this->session = $session;
     }
 
     /**
@@ -31,6 +31,6 @@ class LatestTestRuns extends Component implements Arrayable
      */
     public function toArray()
     {
-        return [];
+        return (new \App\Charts\LatestTestRuns($this->session))->getData();
     }
 }

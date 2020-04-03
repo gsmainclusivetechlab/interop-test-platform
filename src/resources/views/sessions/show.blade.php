@@ -81,9 +81,9 @@
                         <b>{{ __('Latest test runs') }}</b>
                     </h2>
                 </div>
-{{--                @if ($testRuns->count())--}}
-{{--                    <x-charts.latest-test-runs :session="$session"/>--}}
-{{--                @endif--}}
+                @if ($testRuns->count())
+                    <x-charts.latest-test-runs :session="$session"/>
+                @endif
                 <div class="table-responsive mb-0">
                     <table class="table table-striped table-hover card-table">
                         <thead class="thead-light">
