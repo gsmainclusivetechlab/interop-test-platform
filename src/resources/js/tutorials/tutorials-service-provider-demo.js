@@ -10,12 +10,11 @@ var steps = [
 ];
 
 var step = 0;
-$('.service-provider-circle-label').text("Test");
 
 // adjust the coordinates to match the actual height of the image
 function adjusted(length) {
     var originalHeight = 805; // the coordinates above were calculated assuming an arbitrary image height of 785px
-    var currentHeight = $('.screenshot').height();
+    var currentHeight = $('.service-provider-screenshot').height();
     var ratio = currentHeight / originalHeight;
     return length * ratio;
 }
@@ -43,7 +42,7 @@ function updateCircle() {
         animateCircle(radius, 750/*ms*/, function() { // 3. animate it shrinking
             startPulsate(); // 4. start pulsating again
         })
-    });
+    })
 
     var labelText = steps[step][2];
     $('.service-provider-circle-label').text(labelText);
@@ -71,7 +70,7 @@ $('.service-provider-circle').click(function() {
     var image = steps[step][0]; //image is 0th item in array
     $('.service-provider-screenshot').attr('src', image);
     updateCircle();
-})
+});
 
 $('.service-provider-start-demo-btn').click(function() {
     $('.service-provider-start-demo-btn').hide();
