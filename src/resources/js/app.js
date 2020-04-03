@@ -42,7 +42,7 @@ Vue.component('notification', () =>
 );
 Vue.component('json-tree', () =>
     import(
-        /* webpackChunkName: "json-tree" */ './components/jsonTree.vue'
+        /* webpackChunkName: "json-tree" */ './components/JsonTree.vue'
     ),
 );
 

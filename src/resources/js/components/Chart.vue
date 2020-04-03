@@ -12,6 +12,7 @@
 
 <script>
 import axios from 'axios';
+import merge from 'lodash/merge';
 
 export default {
     data() {
@@ -111,15 +112,11 @@ export default {
     },
     computed: {
         chartOptions() {
-            return {
-                ...this.defaultOptions,
-                ...this.$props.options,
-            };
+            return merge(this.defaultOptions, this.$props.options);
         },
     },
     components: {
-        apexchart: () =>
-            import(/* webpackChunkName: "apexchart" */ 'vue-apexcharts'),
+        apexchart: () => import('vue-apexcharts'),
     },
 };
 </script>
