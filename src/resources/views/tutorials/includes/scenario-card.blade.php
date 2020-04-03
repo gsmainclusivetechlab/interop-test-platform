@@ -17,6 +17,7 @@
 
                 <a class=" btn scenario-card" href="#service-provider" v-b-toggle.accordion-2>
                     <h6 id="scenario-heading" class="border-bottom border-primary">
+                        <img id="session-icon" src="{{ asset('images/tutorials/Gizmo_RED_Press.png') }}" class="icon" style="vertical-align: middle"/>
                         How do I execute a session?
                     </h6>
                     <div id="scenario-desc">
@@ -44,6 +45,7 @@
 
                 <a class=" btn scenario-card" href="#mojaloop-info" v-b-toggle.accordion-4 >
                     <h6 id="scenario-heading"  class="border-bottom border-primary">
+                        <img id="session-icon" src="{{ asset('images/tutorials/Gizmo_RED_World.png') }}" class="icon" style="vertical-align: middle"/>
                         Learn more about Mojaloop
                     </h6>
                     <div id="scenario-desc">
@@ -55,6 +57,7 @@
 
                 <a class=" btn scenario-card" href="#mobile-money-api-info" v-b-toggle.accordion-5 >
                     <h6 id="scenario-heading"  class="border-bottom border-primary">
+                        <img id="session-icon" src="{{ asset('images/tutorials/Gizmo_RED_Mobile_Operator.png') }}" class="icon" style="vertical-align: middle"/>
                         Learn more about Mobile Money API
                     </h6>
                     <div id="scenario-desc">

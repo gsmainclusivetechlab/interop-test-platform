@@ -85,7 +85,7 @@
             <b-collapse id="accordion-5" accordion="my-accordion" role="tabpanel">
                 <b-card-body>
                     <div id="demo-desc">
-                        To learn more about Mojaloop, you can follow the links below:
+                        To learn more about the GSMA Mobile Money API, you can follow the links below:
                         <br><br><br>
                         <li>
                             <a href="https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API website</a>

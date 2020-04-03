@@ -2,7 +2,7 @@
     <div class="demo-inner-container">
         <div class="image-holder">
             <div class="create-session-circle">
-                <div class="create-session-circle-label">this is a label</div>
+                <div class="create-session-circle-label">.</div>
             </div>
             <img class="create-session-screenshot" src="{{ asset('images/tutorials/create-session/dashboard.png') }}"/>
         </div>
