@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
 use GuzzleHttp\Exception\RequestException;
+use SebastianBergmann\Timer\Timer;
 
 class SendingRejectedHandler
 {
@@ -26,7 +27,7 @@ class SendingRejectedHandler
      */
     public function __invoke(RequestException $exception)
     {
-        $this->testResult->complete(false);
+        $this->testResult->complete(false, Timer::stop());
         return $exception;
     }
 }

@@ -7,6 +7,7 @@ use App\Testing\TestListenerAdapter;
 use App\Testing\TestSuiteLoader;
 use App\Testing\TestRunner;
 use Psr\Http\Message\ResponseInterface;
+use SebastianBergmann\Timer\Timer;
 
 class SendingFulfilledHandler
 {
@@ -32,7 +33,8 @@ class SendingFulfilledHandler
         $loader = new TestSuiteLoader($this->testResult);
         $runner = new TestRunner();
         $runner->addListener(new TestListenerAdapter($this->testResult));
-        $this->testResult->complete($runner->run($loader->load())->wasSuccessful());
+        $time = Timer::stop();
+        $this->testResult->complete($runner->run($loader->load())->wasSuccessful(), $time);
 
         return $response;
     }

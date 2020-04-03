@@ -56,7 +56,7 @@ class TestCaseImport implements Importable
                              * @var TestSetup $testRequestSetup
                              */
                             $testRequestSetup = $testStep->testSetups()->make(Arr::only($testRequestSetupRow, TestSetup::make()->getFillable()));
-                            $testRequestSetup->type = HttpTypeEnum::RESPONSE;
+                            $testRequestSetup->type = HttpTypeEnum::REQUEST;
                             $testRequestSetup->saveOrFail();
                         }
                     }
