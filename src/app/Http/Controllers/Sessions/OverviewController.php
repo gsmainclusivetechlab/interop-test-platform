@@ -44,11 +44,8 @@ class OverviewController extends Controller
         $testRuns = $session->testRuns()
             ->latest()
             ->paginate();
-        $useCases = $session->testCases->mapWithKeys(function ($item) {
-            return [$item->useCase];
-        });
 
-        return view('sessions.show', compact('session', 'testRuns', 'useCases'));
+        return view('sessions.show', compact('session', 'testRuns'));
     }
 
     /**

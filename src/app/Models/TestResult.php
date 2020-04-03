@@ -106,12 +106,13 @@ class TestResult extends Model
 
     /**
      * @param bool $successful
+     * @param float $time
      * @return bool
      */
-    public function complete(bool $successful)
+    public function complete(bool $successful, float $time)
     {
         $this->successful = $successful;
-        $this->duration = (int) floor((microtime(true) - LARAVEL_START) * 1000);
+        $this->duration = (int) floor($time * 1000);
         $this->completed_at = now();
 
         if (!$this->save()) {

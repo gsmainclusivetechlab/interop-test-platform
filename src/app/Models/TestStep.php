@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPosition;
+use App\Models\Concerns\HasPositionAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestStep extends Model
 {
-    use HasPosition;
+    use HasPositionAttribute;
 
     /**
      * @var string
