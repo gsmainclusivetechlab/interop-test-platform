@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Sessions;
 
-use App\Rules\JsonRule;
 use Illuminate\Foundation\Http\FormRequest;
+use JsonException;
 
 class UpdateTestDatumRequest extends FormRequest
 {
@@ -28,8 +28,32 @@ class UpdateTestDatumRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'method' => ['required'],
             'uri' => ['required', 'string', 'max:255'],
-            'headers' => ['required', new JsonRule()],
-            'body' => ['required', new JsonRule()],
+            'headers' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    try {
+                        $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                    } catch (JsonException $e) {
+                        $fail(__('The :attribute is invalid'));
+                    }
+
+                    array_map(function ($value) use ($fail) {
+                        if (!is_scalar($value)) {
+                            $fail(__('The :attribute is invalid'));
+                        }
+                    }, $value);
+                },
+            ],
+            'body' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    try {
+                        json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                    } catch (JsonException $e) {
+                        $fail(__('The :attribute is invalid'));
+                    }
+                },
+            ],
         ];
     }
 }

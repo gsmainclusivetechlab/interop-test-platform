@@ -16,6 +16,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
+use SebastianBergmann\Timer\Timer;
 
 class RunController extends Controller
 {
@@ -54,6 +55,7 @@ class RunController extends Controller
         $request = $this->getRequest()->withUri($uri)
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
+        Timer::start();
         $stack = new HandlerStack();
         $stack->setHandler(new CurlHandler());
         $stack->push(new MapRequestHandler($testResult));

@@ -3,7 +3,8 @@
 @section('title', $session->name)
 
 @section('content')
-    <form class="card" action="{{ route('sessions.test-cases.test-data.store', [$session, $testCase]) }}" method="POST">
+    <form class="card" action="{{ route('sessions.test-cases.test-data.update', [$session, $testCase, $testDatum]) }}" method="POST">
+        @method('PATCH')
         @csrf
         <div class="card-header">
             <h3 class="card-title">
@@ -53,7 +54,7 @@
                     {{ __('Headers') }}
                 </label>
                 <web-editor name="headers" editor-class="@error('headers') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
-                    <template v-slot:content>{{ old('headers', $testDatum->headers) }}</template>
+                    <template v-slot:content>{{ old('headers', json_encode($testDatum->headers, JSON_PRETTY_PRINT)) }}</template>
                     <template v-slot:validation>
                         @error('headers')
                         <span class="invalid-feedback">
@@ -68,7 +69,7 @@
                     {{ __('Body') }}
                 </label>
                 <web-editor name="body" editor-class="@error('body') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
-                    <template v-slot:content>{{ old('body', $testDatum->body) }}</template>
+                    <template v-slot:content>{{ old('body', json_encode($testDatum->bodyToArray(), JSON_PRETTY_PRINT)) }}</template>
                     <template v-slot:validation>
                         @error('body')
                         <span class="invalid-feedback">
@@ -81,7 +82,7 @@
         </div>
         <div class="card-footer text-right">
             <a href="{{ route('sessions.test-cases.test-data.index', [$session, $testCase]) }}" class="btn btn-link">{{ __('Cancel') }}</a>
-            <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
+            <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
         </div>
     </form>
 @endsection

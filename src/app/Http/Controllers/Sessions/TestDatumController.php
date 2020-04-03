@@ -60,10 +60,10 @@ class TestDatumController extends Controller
      */
     public function store(Session $session, TestCase $testCase, StoreTestDatumRequest $request)
     {
-        dd($request->input());
-        $session->testData()->create(array_merge([
+        $session->testData()->create(array_merge($request->except(['headers']), [
             'test_case_id' => $testCase->id,
-        ], $request->input()));
+            'headers' => json_decode($request->input('headers'), true),
+        ]));
 
         return redirect()
             ->route('sessions.test-cases.test-data.index', [$session, $testCase])
@@ -90,7 +90,9 @@ class TestDatumController extends Controller
      */
     public function update(Session $session, TestCase $testCase, TestDatum $testDatum, UpdateTestDatumRequest $request)
     {
-        $session->testData()->create($request->input());
+        $testDatum->update(array_merge($request->input(), [
+            'headers' => json_decode($request->input('headers'), true),
+        ]));
 
         return redirect()
             ->route('sessions.test-cases.test-data.index', [$session, $testCase])

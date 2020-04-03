@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\InteractsWithHttpRequest;
+use GuzzleHttp\Psr7\Uri;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -45,8 +46,8 @@ class TestRequest extends Model
         }
 
         $this->setAttribute('method', $attributes['method']);
-        $this->setAttribute('uri', $attributes['uri']);
+        $this->setAttribute('uri', Uri::fromParts($attributes['uri']));
         $this->setAttribute('headers', $attributes['headers']);
-        $this->setAttribute('body', $attributes['body']);
+        $this->setAttribute('body', json_encode($attributes['body']));
     }
 }

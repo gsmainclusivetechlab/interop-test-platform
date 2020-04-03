@@ -41,6 +41,6 @@ class TestResponse extends Model
 
         $this->setAttribute('status', $attributes['status']);
         $this->setAttribute('headers', $attributes['headers']);
-        $this->setAttribute('body', $attributes['body']);
+        $this->setAttribute('body', json_encode($attributes['body']));
     }
 }
