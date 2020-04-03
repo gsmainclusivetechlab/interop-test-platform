@@ -824,7 +824,7 @@ paths:
         description: Transaction request to be created.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.transactionRequests+json:
             schema:
               $ref: '#/components/schemas/TransactionRequestsPostRequest'
       responses:
@@ -901,7 +901,7 @@ paths:
         description: Transaction request information returned.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.transactionRequests+json:
             schema:
               $ref: '#/components/schemas/TransactionRequestsIDPutResponse'
       responses:
@@ -948,7 +948,7 @@ paths:
         description: Details of the error returned.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.transactionRequests+json:
             schema:
               $ref: '#/components/schemas/ErrorInformationObject'
       responses:
@@ -996,7 +996,7 @@ paths:
         description: Details of the quote to be created.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.quotes+json:
             schema:
               $ref: '#/components/schemas/QuotesPostRequest'
       responses:
@@ -1073,7 +1073,7 @@ paths:
         description: Quote information returned.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.quotes+json:
             schema:
               $ref: '#/components/schemas/QuotesIDPutResponse'
       responses:
@@ -1120,7 +1120,7 @@ paths:
         description: Details of the error returned.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.quotes+json:
             schema:
               $ref: '#/components/schemas/ErrorInformationObject'
       responses:
@@ -1300,7 +1300,7 @@ paths:
         description: Details of the transfer to be created.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.transfers+json:
             schema:
               $ref: '#/components/schemas/TransfersPostRequest'
       responses:
@@ -1377,7 +1377,7 @@ paths:
         description: Transfer information returned.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.transfers+json:
             schema:
               $ref: '#/components/schemas/TransfersIDPutResponse'
       responses:
@@ -1424,7 +1424,7 @@ paths:
         description: Details of the error returned.
         required: true
         content:
-          application/json:
+          application/vnd.interoperability.transfers+json:
             schema:
               $ref: '#/components/schemas/ErrorInformationObject'
       responses:
