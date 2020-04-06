@@ -33,15 +33,14 @@ class UpdateTestDatumRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     try {
                         $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                        array_map(function ($value) use ($fail) {
+                            if (!is_scalar($value)) {
+                                $fail(__('The :attribute is invalid'));
+                            }
+                        }, $value);
                     } catch (JsonException $e) {
                         $fail(__('The :attribute is invalid'));
                     }
-
-                    array_map(function ($value) use ($fail) {
-                        if (!is_scalar($value)) {
-                            $fail(__('The :attribute is invalid'));
-                        }
-                    }, $value);
                 },
             ],
             'body' => [

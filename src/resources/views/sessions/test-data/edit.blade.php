@@ -54,7 +54,7 @@
                     {{ __('Headers') }}
                 </label>
                 <web-editor name="headers" editor-class="@error('headers') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
-                    <template v-slot:content>{{ old('headers', json_encode($testDatum->headers, JSON_PRETTY_PRINT)) }}</template>
+                    <template v-slot:content>{{ old('headers', json_encode($testDatum->headers, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)) }}</template>
                     <template v-slot:validation>
                         @error('headers')
                         <span class="invalid-feedback">
@@ -69,7 +69,7 @@
                     {{ __('Body') }}
                 </label>
                 <web-editor name="body" editor-class="@error('body') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
-                    <template v-slot:content>{{ old('body', json_encode($testDatum->bodyToArray(), JSON_PRETTY_PRINT)) }}</template>
+                    <template v-slot:content>{{ old('body', json_encode($testDatum->bodyToArray(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)) }}</template>
                     <template v-slot:validation>
                         @error('body')
                         <span class="invalid-feedback">
