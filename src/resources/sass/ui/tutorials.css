@@ -14,10 +14,6 @@ div[role=tablist] {
     border: solid 2px #de002b;
 }
 
-.scenario-card:hover {
-
-}
-
 #scenario-heading {
     margin:auto;
     line-height:50px;
@@ -96,15 +92,15 @@ div[role=tablist] {
 }
 
 [class*='circle-label'] {
-    position: absolute;
-
+    position: relative;
+    left: 0;
+    bottom: 0;
+    height: 5%;
+    width: 100%;
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
     background-color: #222;
     color: #fff;
-    padding: 10px;
-    width: 100px;
-    border-radius: 5px;
 }
 
 [class*='demo-overlay'] {
