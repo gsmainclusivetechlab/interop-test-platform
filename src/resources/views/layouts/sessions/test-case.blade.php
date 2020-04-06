@@ -74,6 +74,11 @@
                                                 {{ __('Test Data') }}
                                             </a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('sessions.test-cases.test-steps', [$session, $testCase]) }}" class="nav-link @if (request()->routeIs('sessions.test-cases.test-steps')) active @endif">
+                                                {{ __('Test Steps') }}
+                                            </a>
+                                        </li>
                                     </ul>
                                     <div class="col-5 ml-auto pr-0 pt-1">
                                         <div class="d-flex">
