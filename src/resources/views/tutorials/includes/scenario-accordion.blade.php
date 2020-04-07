@@ -1,8 +1,8 @@
 <template>
     <div role="tablist" >
         <b-card no-body class="mb-0 card">
-            <b-card-header id="create-session" header-tag="header" class="p-1 card-header" role="tab">
-                <b-button block href="#" v-b-toggle.accordion-1 variant="info" class="btn">
+            <b-card-header id="create-session" header-tag="header" class="p-1 card-header demo1" role="tab">
+                <b-button block href="#" v-b-toggle.accordion-1 variant="info" class="btn demo1">
                     <h5 class="mb-0 scenario-accordion">How do I create a new session?</h5>
                 </b-button>
             </b-card-header>
@@ -17,8 +17,8 @@
         </b-card>
 
         <b-card no-body class="mb-0 card">
-            <b-card-header id="service-provider" header-tag="header" class="p-1 card-header" role="tab">
-                <b-button block href="#" v-b-toggle.accordion-2 variant="info" class="btn">
+            <b-card-header id="service-provider" header-tag="header" class="p-1 card-header demo2" role="tab">
+                <b-button block href="#" v-b-toggle.accordion-2 variant="info" class="btn demo2">
                     <h5 class="mb-0 scenario-accordion">How do I execute a session?</h5>
                 </b-button>
             </b-card-header>

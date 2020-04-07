@@ -10,7 +10,6 @@
     <link href="{{ mix('css/vendor.css', 'assets') }}" rel="stylesheet">
     <link href="{{ mix('css/app.css', 'assets') }}" rel="stylesheet">
     <script src="{{ mix('js/app.js', 'assets') }}" defer></script>
-    <script src="{{ asset('assets/js/tutorials/jquery-3.2.1.min.js') }}"></script>
 </head>
 <body>
     <div id="app" class="page">

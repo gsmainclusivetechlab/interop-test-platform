@@ -15,7 +15,7 @@
                     </div>
                 </a><!-- /card-one -->
 
-                <a class=" btn scenario-card" href="#service-provider" v-b-toggle.accordion-2>
+                <a class=" btn scenario-card demo2" href="#service-provider" v-b-toggle.accordion-2>
                     <h6 id="scenario-heading" class="border-bottom border-primary">
                         <img id="session-icon" src="{{ asset('images/tutorials/Gizmo_RED_Press.png') }}" class="icon" style="vertical-align: middle"/>
                         How do I execute a session?

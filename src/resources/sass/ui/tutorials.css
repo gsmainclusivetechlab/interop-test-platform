@@ -76,7 +76,7 @@ div[role=tablist] {
     width: 100%;
 }
 
-.service-provider-circle, .create-session-circle {
+.create-session-circle, .service-provider-circle {
     border: solid 3px #d87070;
     cursor: pointer;
     position: absolute;
@@ -92,7 +92,7 @@ div[role=tablist] {
 }
 
 [class*='circle-label'] {
-    position: relative;
+    position: absolute;
     left: 0;
     bottom: 0;
     height: 5%;
@@ -130,7 +130,7 @@ div[role=tablist] {
     cursor: pointer;
 }
 
-.start-demo-btn:hover {
+[class*='start-demo-btn']:hover {
     color: #fff;
     background: #de002b;
 }

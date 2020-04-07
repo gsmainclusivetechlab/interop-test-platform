@@ -26,6 +26,7 @@ mix.babelConfig({
     })
     .js('resources/js/app.js', 'js')
     .js([
+        'resources/js/tutorials/tutorials-create-session-demo.js',
         'resources/js/tutorials/tutorials-service-provider-demo.js'
     ], './js/tutorials.js')
     .sass('resources/sass/vendor.scss', 'css')

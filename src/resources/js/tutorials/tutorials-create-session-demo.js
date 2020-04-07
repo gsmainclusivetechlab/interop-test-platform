@@ -16,7 +16,7 @@ window.onload = function () {
 
     var step = 0;
 
-    function adjusted(length) {
+    function demo1_adjusted(length) {
 
         if ($(".create-session-screenshot[src*='session_info']").length == 1) { // height of these screenshots slightly higher
             var originalHeight = 699;
@@ -31,117 +31,62 @@ window.onload = function () {
         return length * ratio;
     }
 
-    function getRadius() {
-        return adjusted(40);
-    }
+    var radius = demo1_adjusted(40);
 
-    function animateCircle(circleRadius, ms, animateLabel, cb) {
-        var radius = getRadius();
+    function demo1_animateCircle(circleRadius, ms, cb) {
         var coordinates = steps[step][1];
         $('.create-session-circle')
             .animate({
-                top: adjusted(coordinates[1]) - (circleRadius - radius),
-                left: adjusted(coordinates[0]) - (circleRadius - radius),
+                top: demo1_adjusted(coordinates[1]) - (circleRadius - radius),
+                left: demo1_adjusted(coordinates[0]) - (circleRadius - radius),
                 width: circleRadius * 2,
                 height: circleRadius * 2,
-                borderTopLeftRadius: circleRadius,
-                borderTopRightRadius: circleRadius,
-                borderBottomLeftRadius: circleRadius,
-                borderBottomRightRadius: circleRadius
+                borderRadius: circleRadius
             }, {
                 complete: cb,
-                duration: ms,
-                step: function() {
-                    //jquery.animate sets overflow: hidden during animation, so need to override that (otherwise label disappears)
-                    $('.create-session-circle').css("overflow","visible");
-                }
+                duration: ms
             });
-        var labelText = steps[step][2];
-        if(animateLabel) { //when the big circle shrinks, we want the label to swoop in with it
-            $('.create-session-circle-label')
-                .text(labelText)
-                .animate({
-                    top: radius * 1.8 + (circleRadius - radius),
-                    left: radius * 1.8 + (circleRadius - radius)
-                }, {
-                    duration: ms
-                });
-        }
     }
 
-    var containerWidth = $('.demo-container').width();
-    var isMobile = containerWidth <= 480;
-
-    if(isMobile) {
-        //to stop vertical overflow
-        $('.demo-container').css({
-            height: 400
+    function demo1_updateCircle() {
+        demo1_stopPulsate(); // 1. stop pulsating temporarily
+        demo1_animateCircle(demo1_adjusted(2000), 0/*ms*/, function() { // 2. make circle big
+            demo1_animateCircle(radius, 750/*ms*/, function() { // 3. animate it shrinking
+                demo1_startPulsate(); // 4. start pulsating again
+            })
         })
+
+        var labelText = steps[step][2];
+        $('.create-session-circle-label').text(labelText);
     }
 
-    function updateCircle() {
-        stopPulsate();
-        //hide the circle
-        $('.create-session-circle').hide();
-
-        //calculate end position of zoom
-        var coordinates = steps[step][1];
-        var left = -1 * adjusted(coordinates[0]) + (containerWidth/2) - getRadius();
-        if(left > 0) {
-            left = 0;
-        }
-
-        //zoom out
-        var zoomOut = steps[step][3];
-        $('.image-holder').animate((!isMobile || !zoomOut ? {} : { //only zoom out if step requires it
-            width: containerWidth,
-            left: 0,
-            top: 0
-        }), 1000, function() {
-            //change image
-            var image = steps[step][0];
-            $('.create-session-screenshot').attr('src', image);
-            //zoom in
-            $('.image-holder').animate((!isMobile ? {} : {
-                width: containerWidth*2,
-                left: left
-            }), 2000, function() {
-                $('.create-session-circle').show();//show the circle again
-                var radius = getRadius();
-                animateCircle(adjusted(2000), 0, false, function() {
-                    animateCircle(radius, 750, true, function() {
-                        startPulsate();
-                    })
-                })
-            });
-        });
-    }
-
+//pulsate
     var interval = null;
 
-    function startPulsate() {
+    function demo1_startPulsate() {
         interval = setInterval(function() {
-            var radius = getRadius();
-            animateCircle(radius+adjusted(20), 200, true, function() {
-                animateCircle(radius, 200, true)
+            demo1_animateCircle(radius+demo1_adjusted(20), 250, function() { //grow the circle
+                demo1_animateCircle(radius, 200) //shrink the circle
             })
-        }, 1500);
+        }, 2000);
     }
 
-    function stopPulsate() {
-        $('.create-session-circle').stop();//stop any running animations
+    function demo1_stopPulsate() {
         clearInterval(interval);
     }
 
-    updateCircle();
+    demo1_updateCircle(); //init circle at beginning of demo
 
     $('.create-session-circle').click(function() {
         step = (step + 1) % steps.length;
-        updateCircle();
-    })
-};
+        var image = steps[step][0]; //image is 0th item in array
+        $('.create-session-screenshot').attr('src', image);
+        demo1_updateCircle();
+    });
 
-$('.create-session-start-demo-btn').click(function() {
-    $('.create-session-start-demo-btn').hide();
-    $('.create-session-demo-overlay').hide();
-});
+    $('.create-session-start-demo-btn').click(function() {
+        $('.create-session-start-demo-btn').hide();
+        $('.create-session-demo-overlay').hide();
+    });
+
+};
