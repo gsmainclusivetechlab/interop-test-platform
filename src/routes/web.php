@@ -15,9 +15,6 @@
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
-Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'Sessions\TestDatumController@run')->name('sessions.test-cases.test-data.run');
-
 /**
  * Sessions Routes
  */
@@ -29,14 +26,17 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
-        Route::post('selection', 'RegisterController@storeSelection')->name('selection.store');
-        Route::get('configuration', 'RegisterController@createConfiguration')->name('configuration.create');
-        Route::post('configuration', 'RegisterController@storeConfiguration')->name('configuration.store');
-        Route::get('information', 'RegisterController@createInformation')->name('information.create');
-        Route::post('information', 'RegisterController@storeInformation')->name('information.store');
+        Route::get('info', 'RegisterController@create')->name('create');
+        Route::post('info', 'RegisterController@store')->name('store');
+        Route::get('{session}/info', 'RegisterController@edit')->name('edit');
+        Route::patch('{session}/info', 'RegisterController@update')->name('update');
+        Route::get('{session}/config', 'RegisterController@showConfig')->name('config');
+        Route::post('{session}/config', 'RegisterController@updateConfig')->name('config');
     });
 });
+Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
+Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'Sessions\TestDatumController@run')
+    ->name('sessions.test-cases.test-data.run');
 
 /**
  * Settings Routes
