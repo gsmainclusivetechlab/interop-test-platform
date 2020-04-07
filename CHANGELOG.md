@@ -1,3 +1,10 @@
+## v0.5
+- Task: Add test runs chart on session page [@jc_ohladkov]
+- Bug: Test Run -> Messages Overriding: Request message is shown as not overriden [@jc_akokorev]
+- Bug: Test data - Symbol escaping issue [@jc_akokorev]
+- Bug: Test data - Invalid json issue [@jc_akokorev]
+- Task: MMO1 or 2 as SUT -> Allow users to create own Test Data based on our examples [@jc_akokorev]
+
 ## v0.4.2
 - Bug: MMO2 -> Rejected Transaction Test Case: steps 10 - 12 are not being performed [@jc_ohladkov]
 - Task: Test Case YAML updates [@jc_akokorev]
