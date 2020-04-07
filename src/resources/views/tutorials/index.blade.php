@@ -7,7 +7,6 @@
         <b>@yield('title')</b>
     </h1>
     <div class="card">
-        <p>test</p>
         @include('tutorials.includes.scenario-card')
         @include('tutorials.includes.scenario-accordion')
     </div>

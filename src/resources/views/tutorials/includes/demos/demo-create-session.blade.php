@@ -1,8 +1,7 @@
 <div class="demo-create-session">
     <div class="demo-inner-container">
         <div class="image-holder">
-            <div class="create-session-circle">
-            </div>
+            <div class="create-session-circle"></div>
             <div class="create-session-circle-label">.</div>
             <img class="create-session-screenshot" src="{{ asset('images/tutorials/create-session/dashboard.png') }}"/>
         </div>

@@ -1,5 +1,4 @@
-window.onload = function () {
-
+$('.demo1').click(function() {
     var steps = [
         ['../../images/tutorials/create-session/dashboard.png', [1335, 40], 'Start by creating a new session', true],
         ['../../images/tutorials/create-session/select_sut.png', [535, 390], 'Select the System Under Test', true],
@@ -17,7 +16,6 @@ window.onload = function () {
     var step = 0;
 
     function demo1_adjusted(length) {
-
         if ($(".create-session-screenshot[src*='session_info']").length == 1) { // height of these screenshots slightly higher
             var originalHeight = 699;
         } else if ($(".create-session-screenshot[src*='usecase_page']").length == 1) {
@@ -25,7 +23,6 @@ window.onload = function () {
         } else {
             var originalHeight = 653;
         }
-
         var currentHeight = $('.create-session-screenshot').height();
         var ratio = currentHeight / originalHeight;
         return length * ratio;
@@ -41,7 +38,10 @@ window.onload = function () {
                 left: demo1_adjusted(coordinates[0]) - (circleRadius - radius),
                 width: circleRadius * 2,
                 height: circleRadius * 2,
-                borderRadius: circleRadius
+                borderTopLeftRadius: circleRadius,
+                borderTopRightRadius: circleRadius,
+                borderBottomLeftRadius: circleRadius,
+                borderBottomRightRadius: circleRadius
             }, {
                 complete: cb,
                 duration: ms
@@ -54,7 +54,7 @@ window.onload = function () {
             demo1_animateCircle(radius, 750/*ms*/, function() { // 3. animate it shrinking
                 demo1_startPulsate(); // 4. start pulsating again
             })
-        })
+        });
 
         var labelText = steps[step][2];
         $('.create-session-circle-label').text(labelText);
@@ -89,4 +89,4 @@ window.onload = function () {
         $('.create-session-demo-overlay').hide();
     });
 
-};
+});

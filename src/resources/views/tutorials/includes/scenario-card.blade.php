@@ -3,7 +3,7 @@
         <tr>
             <section class="cards">
 
-                <a class=" btn scenario-card" href="#create-session" v-b-toggle.accordion-1>
+                <a class=" btn scenario-card demo1" href="#create-session" v-b-toggle.accordion-1>
                     <h6 id="scenario-heading" class="border-bottom border-primary">
                         <img id="session-icon" src="{{ asset('images/tutorials/Gizmo_RED_Stack.png') }}" class="icon" style="vertical-align: middle"/>
                         How do I create a new session?

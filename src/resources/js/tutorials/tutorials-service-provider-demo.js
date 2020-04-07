@@ -30,7 +30,10 @@ $('.demo2').click(function() {
                 left: demo2_adjusted(coordinates[0]) - (circleRadius - radius),
                 width: circleRadius * 2,
                 height: circleRadius * 2,
-                borderRadius: circleRadius
+                borderTopLeftRadius: circleRadius,
+                borderTopRightRadius: circleRadius,
+                borderBottomLeftRadius: circleRadius,
+                borderBottomRightRadius: circleRadius
             }, {
                 complete: cb,
                 duration: ms
