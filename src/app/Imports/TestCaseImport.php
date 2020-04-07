@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Enums\HttpTypeEnum;
 use App\Models\Scenario;
 use App\Models\TestCase;
+use App\Models\TestDataExample;
 use App\Models\TestScript;
 use App\Models\TestSetup;
 use App\Models\TestStep;
@@ -92,6 +93,12 @@ class TestCaseImport implements Importable
                             $testResponseScript->type = HttpTypeEnum::RESPONSE;
                             $testResponseScript->saveOrFail();
                         }
+                    }
+
+                    if ($testDataExampleRow = Arr::get($testStepRow, 'data_example')) {
+                        $dataExample = $testStep->testDataExample()
+                            ->make(Arr::only($testDataExampleRow, TestDataExample::make()->getFillable()));
+                        $dataExample->saveOrFail();
                     }
                 }
             }

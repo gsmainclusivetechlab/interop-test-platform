@@ -81,6 +81,11 @@ class TestStep extends Model
         return $this->hasMany(TestSetup::class, 'test_step_id');
     }
 
+    public function testDataExample()
+    {
+        return $this->hasOne(TestDataExample::class, 'test_step_id');
+    }
+
     /**
      * @return array
      */

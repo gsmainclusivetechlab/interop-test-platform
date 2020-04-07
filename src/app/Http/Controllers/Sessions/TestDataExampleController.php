@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Session;
 use App\Models\TestCase;
 
-class TestStepsController extends Controller
+class TestDataExampleController extends Controller
 {
     /**
      * TestDatumController constructor.
@@ -18,8 +18,6 @@ class TestStepsController extends Controller
 
     public function __invoke(Session $session, TestCase $testCase)
     {
-        $testSteps = $testCase->testSteps;
-
-        return view('sessions.test-steps.index', compact('session', 'testCase', 'testSteps'));
+        return view('sessions.test-data-examples.index', compact('session', 'testCase'));
     }
 }
