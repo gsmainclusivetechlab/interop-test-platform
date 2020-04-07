@@ -1,7 +1,7 @@
 <?php
 
 use App\Imports\TestCaseImport;
-use App\Models\ApiService;
+use App\Models\Api;
 use App\Models\Component;
 use App\Models\Scenario;
 use Illuminate\Support\Arr;
@@ -61,22 +61,23 @@ class ScenariosTableSeeder extends Seeder
             ],
             [
                 'name' => 'Service Provider',
+                'api_id' => Api::where(['name' => 'Service Provider v1.0'])->value('id'),
                 'sut' => true,
                 'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 1',
-                'api_service_id' => ApiService::where(['name' => 'Mobile Money v1.1.2'])->value('id'),
+                'api_id' => Api::where(['name' => 'Mobile Money v1.1.2'])->value('id'),
                 'simulated' => true,
             ],
             [
                 'name' => 'Mojaloop',
-                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub v1.0'])->value('id'),
+                'api_id' => Api::where(['name' => 'Mojaloop Hub v1.0'])->value('id'),
                 'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 2',
-                'api_service_id' => ApiService::where(['name' => 'Mojaloop FSP v1.0'])->value('id'),
+                'api_id' => Api::where(['name' => 'Mojaloop FSP v1.0'])->value('id'),
                 'simulated' => true,
             ],
         ];

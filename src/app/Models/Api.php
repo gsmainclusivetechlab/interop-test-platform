@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class ApiService extends Model
+class Api extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'api_services';
+    protected $table = 'apis';
 
     /**
      * @var array
@@ -21,7 +21,6 @@ class ApiService extends Model
     protected $fillable = [
         'name',
         'description',
-        'server',
         'scheme',
     ];
 
@@ -31,4 +30,12 @@ class ApiService extends Model
     protected $casts = [
         'scheme' => OpenApiCast::class,
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function apiServers()
+    {
+        return $this->hasMany(ApiServer::class, 'api_id');
+    }
 }

@@ -32,9 +32,9 @@ class TestSuiteLoader
         $testSuite = new TestSuite();
         $testResult = $this->testResult;
 
-        if ($apiService = $testResult->testStep->targetApiService) {
-            $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiService));
-        }
+//        if ($apiService = $testResult->testStep->targetApiService) {
+//            $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiService));
+//        }
 
         if ($testRequestScripts = $testResult->testStep->testScripts()->ofType(HttpTypeEnum::REQUEST)->get()) {
             foreach ($testRequestScripts as $testRequestScript) {

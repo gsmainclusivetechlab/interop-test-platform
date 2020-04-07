@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Session;
-use App\Models\TestCase;
-
 class HomeController extends Controller
 {
     /**
@@ -20,7 +17,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-//        dd(route('sessions.test-cases.test-data.destroy', [Session::first(), TestCase::first()]));
         $sessions = auth()->user()->sessions()
             ->with(['testCases', 'lastTestRun'])
             ->latest()

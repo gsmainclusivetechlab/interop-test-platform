@@ -25,7 +25,7 @@ class Component extends Model
         'description',
         'sut',
         'simulated',
-        'api_service_id',
+        'api_id',
     ];
 
     /**
@@ -47,9 +47,9 @@ class Component extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function apiService()
+    public function api()
     {
-        return $this->belongsTo(ApiService::class, 'api_service_id');
+        return $this->belongsTo(Api::class, 'api_id');
     }
 
     /**

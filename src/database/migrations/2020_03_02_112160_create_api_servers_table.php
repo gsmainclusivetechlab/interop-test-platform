@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiServicesTable extends Migration
+class CreateApiServersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateApiServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_services', function (Blueprint $table) {
+        Schema::create('api_servers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('api_id');
+            $table->foreign('api_id')->references('id')->on('apis')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('server');
-            $table->longText('scheme');
+            $table->string('base_url');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateApiServicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_services');
+        Schema::dropIfExists('api_servers');
     }
 }

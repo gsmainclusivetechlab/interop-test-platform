@@ -2,7 +2,7 @@
 
 namespace App\Testing\Tests;
 
-use App\Models\ApiService;
+use App\Models\ApiServer;
 use App\Models\TestResult;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
@@ -17,15 +17,15 @@ class ValidateOpenApiSchemaTest extends TestCase
     protected $testResult;
 
     /**
-     * @var ApiService
+     * @var ApiServer
      */
     protected $apiService;
 
     /**
      * @param TestResult $testResult
-     * @param ApiService $apiService
+     * @param ApiServer $apiService
      */
-    public function __construct(TestResult $testResult, ApiService $apiService)
+    public function __construct(TestResult $testResult, ApiServer $apiService)
     {
         $this->testResult = $testResult;
         $this->apiService = $apiService;

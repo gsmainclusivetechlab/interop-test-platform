@@ -50,22 +50,6 @@ class TestStep extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
-     */
-    public function sourceApiService()
-    {
-        return $this->hasOneThrough(ApiService::class, Component::class, 'id', 'id', 'source_id', 'api_service_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
-     */
-    public function targetApiService()
-    {
-        return $this->hasOneThrough(ApiService::class, Component::class, 'id', 'id', 'target_id', 'api_service_id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testScripts()

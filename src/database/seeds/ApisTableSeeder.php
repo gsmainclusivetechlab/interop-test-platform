@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
-use App\Models\ApiService;
+use App\Models\Api;
 use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
-class ApiServicesTableSeeder extends Seeder
+class ApisTableSeeder extends Seeder
 {
     /**
      * @throws \cebe\openapi\exceptions\IOException
@@ -14,7 +15,8 @@ class ApiServicesTableSeeder extends Seeder
     public function run()
     {
         foreach ($this->getData() as $key => $attributes) {
-            ApiService::create($attributes);
+            Api::create(Arr::only($attributes, Api::make()->getFillable()))
+                ->apiServers()->createMany(Arr::get($attributes, 'servers', []));
         }
     }
 
@@ -28,19 +30,37 @@ class ApiServicesTableSeeder extends Seeder
     {
         return [
             [
+                'name' => 'Service Provider v1.0',
+            ],
+            [
                 'name' => 'Mobile Money v1.1.2',
-                'server' => env('FSIOP_MM_SIMULATOR_URL'),
                 'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),
+                'servers' => [
+                    [
+                        'name' => 'MM Simulator',
+                        'base_url' => env('FSIOP_MM_SIMULATOR_URL'),
+                    ],
+                ],
             ],
             [
                 'name' => 'Mojaloop Hub v1.0',
-                'server' => env('FSIOP_MOJALOOP_HUB_URL'),
                 'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
+                'servers' => [
+                    [
+                        'name' => 'Mojaloop Hub',
+                        'base_url' => env('FSIOP_MOJALOOP_HUB_URL'),
+                    ],
+                ],
             ],
             [
                 'name' => 'Mojaloop FSP v1.0',
-                'server' => env('FSIOP_MOJALOOP_SIMULATOR_URL'),
                 'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
+                'servers' => [
+                    [
+                        'name' => 'Mojaloop Simulator',
+                        'base_url' => env('FSIOP_MOJALOOP_SIMULATOR_URL'),
+                    ],
+                ],
             ],
         ];
     }

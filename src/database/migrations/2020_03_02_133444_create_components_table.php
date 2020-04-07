@@ -17,8 +17,8 @@ class CreateComponentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('scenario_id');
             $table->foreign('scenario_id')->references('id')->on('scenarios')->onDelete('cascade');
-            $table->unsignedBigInteger('api_service_id')->nullable();
-            $table->foreign('api_service_id')->references('id')->on('api_services')->onDelete('set null');
+            $table->unsignedBigInteger('api_id')->nullable();
+            $table->foreign('api_id')->references('id')->on('apis')->onDelete('set null');
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('sut');
