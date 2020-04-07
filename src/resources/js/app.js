@@ -41,9 +41,7 @@ Vue.component('notification', () =>
     ),
 );
 Vue.component('json-tree', () =>
-    import(
-        /* webpackChunkName: "json-tree" */ './components/JsonTree.vue'
-    ),
+    import(/* webpackChunkName: "json-tree" */ './components/JsonTree.vue'),
 );
 
 const app = new Vue({
@@ -62,6 +60,17 @@ const app = new Vue({
             checkboxes.forEach((checkbox) => {
                 checkbox.checked = !isChecked;
             });
+        },
+        handleSessionComponentsSelect(e) {
+            const select = e.target;
+            const selectValue = select.value;
+            const closestFormGroup = select.closest('.form-group');
+            const input = closestFormGroup.querySelector('input.form-control');
+
+            const isSutSelected = selectValue === '';
+
+            input.value = selectValue;
+            input.disabled = !isSutSelected;
         },
     },
 });
