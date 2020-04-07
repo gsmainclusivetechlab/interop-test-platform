@@ -66,7 +66,7 @@ class ScenariosTableSeeder extends Seeder
             ],
             [
                 'name' => 'Mobile Money Operator 1',
-                'api_service_id' => ApiService::where(['name' => 'Mobile Money v1.1.0'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'Mobile Money v1.1.2'])->value('id'),
                 'simulated' => true,
             ],
             [

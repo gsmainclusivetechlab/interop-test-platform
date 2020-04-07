@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\HasUuidAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestRun extends Model
 {
-    use HasUuid;
+    use HasUuidAttribute;
 
     const UPDATED_AT = null;
 
@@ -31,16 +31,6 @@ class TestRun extends Model
      */
     protected $casts = [
         'completed_at' => 'datetime',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'total' => 0,
-        'passed' => 0,
-        'failures' => 0,
-        'duration' => 0,
     ];
 
     /**
@@ -86,6 +76,24 @@ class TestRun extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
+    public function scopeSuccessful($query)
+    {
+        return $query->where('successful', true);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnsuccessful($query)
+    {
+        return $query->where('successful', false);
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeCompleted($query)
     {
         return $query->whereNotNull('completed_at');
@@ -100,11 +108,19 @@ class TestRun extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function getDurationAttribute()
+    {
+        return $this->testResults()->sum('duration');
+    }
+
+    /**
      * @return bool
      */
-    public function getSuccessfulAttribute()
+    public function wasSuccessful()
     {
-        return $this->total == $this->passed;
+        return $this->testSteps()->count() === $this->testResults()->successful()->count();
     }
 
     /**
@@ -112,6 +128,7 @@ class TestRun extends Model
      */
     public function complete()
     {
+        $this->successful = $this->wasSuccessful();
         $this->completed_at = now();
 
         if (!$this->save()) {

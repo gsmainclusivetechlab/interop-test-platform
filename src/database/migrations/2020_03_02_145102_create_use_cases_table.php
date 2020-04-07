@@ -14,7 +14,7 @@ class CreateUseCasesTable extends Migration
     public function up()
     {
         Schema::create('use_cases', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('scenario_id');
             $table->foreign('scenario_id')->references('id')->on('scenarios')->onDelete('cascade');
             $table->string('name');

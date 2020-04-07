@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPosition;
+use App\Models\Concerns\HasPositionAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,10 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestScript extends Model
 {
-    use HasPosition;
-
-    const TYPE_REQUEST = 'request';
-    const TYPE_RESPONSE = 'response';
+    use HasPositionAttribute;
 
     /**
      * @var string
@@ -27,6 +24,8 @@ class TestScript extends Model
         'name',
         'type',
         'rules',
+        'messages',
+        'attributes',
     ];
 
     /**
@@ -34,7 +33,19 @@ class TestScript extends Model
      */
     protected $casts = [
         'rules' => 'array',
+        'messages' => 'array',
+        'attributes' => 'array',
     ];
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
 
     /**
      * @return array

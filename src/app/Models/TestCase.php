@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\RequestCast;
-use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\HasUuidAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestCase extends Model
 {
-    use HasUuid;
+    use HasUuidAttribute;
 
     const BEHAVIOR_NEGATIVE = 'negative';
     const BEHAVIOR_POSITIVE = 'positive';
@@ -28,15 +27,7 @@ class TestCase extends Model
         'name',
         'description',
         'precondition',
-        'data_example',
         'behavior',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'data_example' => RequestCast::class,
     ];
 
     /**
@@ -55,11 +46,17 @@ class TestCase extends Model
         return $this->hasMany(TestStep::class, 'test_case_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function testRuns()
     {
         return $this->hasMany(TestRun::class, 'test_case_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function lastTestRun()
     {
         return $this->hasOne(TestRun::class, 'test_case_id')->completed();

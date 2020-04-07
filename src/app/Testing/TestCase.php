@@ -2,8 +2,6 @@
 
 namespace App\Testing;
 
-use App\Models\TestScript;
-use App\Testing\Concerns\InteractsWithValidation;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
@@ -13,25 +11,15 @@ use Throwable;
 
 abstract class TestCase extends Assert implements Test
 {
-    use InteractsWithValidation;
-
     /**
-     * @return int
+     * @return string
      */
-    public function count()
-    {
-        return 1;
-    }
-
-    /**
-     * @return TestScript
-     */
-    abstract public function getScript(): TestScript;
+    abstract public function getName(): string;
 
     /**
      * @return void
      */
-    abstract protected function doTest();
+    abstract protected function test();
 
     /**
      * @param TestResult|null $result
@@ -44,7 +32,7 @@ abstract class TestCase extends Assert implements Test
         Timer::start();
 
         try {
-            $this->doTest();
+            $this->test();
         } catch (AssertionFailedError $e) {
             $result->addFailure($this, $e, Timer::stop());
         } catch (Throwable $e) {
@@ -54,5 +42,13 @@ abstract class TestCase extends Assert implements Test
         }
 
         return $result;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return 1;
     }
 }

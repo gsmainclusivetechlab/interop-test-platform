@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPosition;
+use App\Models\Concerns\HasPositionAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestStep extends Model
 {
-    use HasPosition;
+    use HasPositionAttribute;
 
     /**
      * @var string
@@ -52,6 +52,14 @@ class TestStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
      */
+    public function sourceApiService()
+    {
+        return $this->hasOneThrough(ApiService::class, Component::class, 'id', 'id', 'source_id', 'api_service_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
     public function targetApiService()
     {
         return $this->hasOneThrough(ApiService::class, Component::class, 'id', 'id', 'target_id', 'api_service_id');
@@ -60,33 +68,17 @@ class TestStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function testRequestScripts()
+    public function testScripts()
     {
-        return $this->hasMany(TestRequestScript::class, 'test_step_id');
+        return $this->hasMany(TestScript::class, 'test_step_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function testResponseScripts()
+    public function testSetups()
     {
-        return $this->hasMany(TestResponseScript::class, 'test_step_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testRequestSetups()
-    {
-        return $this->hasMany(TestRequestSetup::class, 'test_step_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testResponseSetups()
-    {
-        return $this->hasMany(TestResponseSetup::class, 'test_step_id');
+        return $this->hasMany(TestSetup::class, 'test_step_id');
     }
 
     /**

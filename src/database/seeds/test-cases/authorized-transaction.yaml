@@ -38,7 +38,7 @@ test_steps:
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.X-Callback-URL: 'regex:/.*/'
+          headers.X-Callback-URL.*: 'regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'in:msisdn'
@@ -129,7 +129,7 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
@@ -145,7 +145,7 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
@@ -355,7 +355,7 @@ test_steps:
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.X-Callback-URL: 'regex:/.*/'
+          headers.X-Callback-URL.*: 'regex:/.*/'
       - name: Debit and credit party is valid
         rules:
           body.debitParty.*.key: 'in:msisdn'
@@ -365,7 +365,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount:
-              - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.currency: 'regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -384,7 +384,7 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri: 'regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri.path: 'regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
           body.transactionRequestState: 'in:COMMITTED'
@@ -406,7 +406,7 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri: 'regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri.path: 'regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
           body.transactionRequestState: 'in:COMMITTED'

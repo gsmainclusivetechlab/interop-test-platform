@@ -1,90 +1,122 @@
 <template>
-    <div id="chart"></div>
+    <div>
+        <apexchart
+            ref="chart"
+            :type="this.$props.type"
+            :height="this.$props.height"
+            :options="chartOptions"
+            :series="chartData"
+        ></apexchart>
+    </div>
 </template>
 
 <script>
+import axios from 'axios';
+import merge from 'lodash/merge';
+
 export default {
     data() {
-        return {};
+        return {
+            defaultOptions: {
+                chart: {
+                    stacked: true,
+                    fontFamily: 'gotham',
+                    toolbar: {
+                        show: false,
+                    },
+                    animations: {
+                        speed: 300,
+                        animateGradually: {
+                            delay: 100,
+                        },
+                    },
+                    zoom: {
+                        enabled: false,
+                    },
+                },
+                colors: ['#9cb227', '#de002b'],
+                fill: {
+                    opacity: 1,
+                },
+                legend: {
+                    position: 'top',
+                    markers: {
+                        radius: 100,
+                    },
+                },
+                xaxis: {
+                    labels: {
+                        padding: 0,
+                    },
+                    tooltip: {
+                        enabled: false,
+                    },
+                },
+                noData: {
+                    text: null,
+                },
+            },
+            chartData: [],
+            noDataList: {
+                loading: 'Loading...',
+                error: 'Failed to load data',
+                success: 'No filters selected',
+            },
+        };
     },
     props: {
-        data: {
-            type: Object,
-            default() {
-                return {
-                    columns: [
-                        ['passed', 4, 3, 1, 0, 9, 2, 7, 2, 1, 1, 5, 9, 2, 6],
-                        ['blocked', 1, 9, 6, 3, 4, 0, 4, 9, 3, 4, 7, 9, 8, 4],
-                        ['retest', 7, 4, 7, 3, 5, 5, 3, 0, 2, 8, 4, 1, 3, 8],
-                        ['failed', 0, 1, 1, 0, 9, 2, 9, 9, 9, 1, 7, 9, 7, 5],
-                    ],
-                    colors: {
-                        passed: '#9cb227',
-                        blocked: '#7c7c7c',
-                        retest: '#fcbb2c',
-                        failed: '#de002b',
-                    },
-                };
-            },
+        ajaxUrl: {
+            type: String,
+            required: true,
         },
-        axis: {
+        options: {
             type: Object,
-            default() {
-                return {
-                    x: {
-                        type: 'category',
-                        categories: [
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6,
-                            7,
-                            8,
-                            9,
-                            10,
-                            11,
-                            12,
-                            13,
-                            14,
-                        ],
-                    },
-                };
-            },
         },
-        legend: {
-            type: Object,
-            default() {
-                return {
-                    position: 'right',
-                };
-            },
+        type: {
+            type: String,
+            default: 'bar',
         },
-        padding: {
-            type: Object,
-            default() {
-                return {
-                    top: 0,
-                    bottom: 0,
-                };
-            },
+        height: {
+            type: Number,
+            default: 360,
         },
     },
-    mounted() {
-        const { data, axis, legend, padding } = this.$props;
+    async mounted() {
+        this.defaultOptions.noData.text = this.noDataList.loading;
 
-        import(/* webpackChunkName: "c3" */ 'c3').then(
-            ({ default: c3 }) =>
-                c3.generate({
-                    bindto: this.$el,
-                    data,
-                    axis,
-                    legend,
-                    padding,
-                }),
-        );
+        await this.fetchData(this.$props.ajaxUrl);
     },
-    methods: {},
+    methods: {
+        fetchData(url) {
+            return axios
+                .get(url)
+                .then(({ data }) => {
+                    this.chartData = data;
+
+                    this.$refs.chart.updateOptions({
+                        ...this.chartOptions,
+                        noData: {
+                            text: this.noDataList.success,
+                        },
+                    });
+                })
+                .catch((error) => {
+                    this.$refs.chart.updateOptions({
+                        ...this.chartOptions,
+                        noData: {
+                            text: this.noDataList.error,
+                        },
+                    });
+                });
+        },
+    },
+    computed: {
+        chartOptions() {
+            return merge(this.defaultOptions, this.$props.options);
+        },
+    },
+    components: {
+        apexchart: () => import('vue-apexcharts'),
+    },
 };
 </script>
