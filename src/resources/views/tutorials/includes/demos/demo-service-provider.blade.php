@@ -8,4 +8,5 @@
         <div class="service-provider-demo-overlay"></div>
         <a class="btn border-primary service-provider-start-demo-btn" >Start interactive demo</a>
     </div>
+    <button id="service-provider-reset" class="btn border-primary">Reset Demo</button>
 </div>

@@ -1,4 +1,4 @@
-$('.demo2').click(function() {
+$('.demo2').one('click', function() {
     var steps = [
         ['../../images/tutorials/service-provider/1-session-page.png', [85, 232], 'First, select the session you would like to execute.'],
         ['../../images/tutorials/service-provider/2-session-usecase.png', [101, 270], 'Here you can see all your selected use cases, select the one you would like to test.'],
@@ -79,6 +79,19 @@ $('.demo2').click(function() {
     $('.service-provider-start-demo-btn').click(function() {
         $('.service-provider-start-demo-btn').hide();
         $('.service-provider-demo-overlay').hide();
+    });
+
+    $('#service-provider-reset').click(function() {
+        step = 0;
+        var image = steps[step][0]; //image is 0th item in array
+        $('.service-provider-screenshot').attr('src', image);
+        demo2_updateCircle();
+        if ($(".service-provider-start-demo-btn").is(":hidden")) {
+            $('.service-provider-start-demo-btn').toggle();
+        }
+        if ($(".service-provider-demo-overlay").is(":hidden")) {
+            $('.service-provider-demo-overlay').toggle();
+        }
     });
 });
 

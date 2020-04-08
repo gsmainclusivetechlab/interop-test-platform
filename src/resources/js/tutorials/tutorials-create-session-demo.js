@@ -1,4 +1,4 @@
-$('.demo1').click(function() {
+$('.demo1').one('click', function() {
     var steps = [
         ['../../images/tutorials/create-session/dashboard.png', [1335, 40], 'Start by creating a new session', true],
         ['../../images/tutorials/create-session/select_sut.png', [535, 390], 'Select the System Under Test', true],
@@ -85,8 +85,20 @@ $('.demo1').click(function() {
     });
 
     $('.create-session-start-demo-btn').click(function() {
-        $('.create-session-start-demo-btn').hide();
-        $('.create-session-demo-overlay').hide();
+        $('.create-session-start-demo-btn').toggle();
+        $('.create-session-demo-overlay').toggle();
     });
 
+    $('#create-session-reset').click(function() {
+        step = 0;
+        var image = steps[step][0]; //image is 0th item in array
+        $('.create-session-screenshot').attr('src', image);
+        demo1_updateCircle();
+        if ($(".create-session-start-demo-btn").is(":hidden")) {
+            $('.create-session-start-demo-btn').toggle();
+        }
+        if ($(".create-session-demo-overlay").is(":hidden")) {
+            $('.create-session-demo-overlay').toggle();
+        }
+    });
 });

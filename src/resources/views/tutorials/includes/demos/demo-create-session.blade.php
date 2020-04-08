@@ -8,4 +8,5 @@
         <div class="create-session-demo-overlay"></div>
         <a class="btn border-primary create-session-start-demo-btn" >Start interactive demo</a>
     </div>
+    <button id="create-session-reset" class="btn border-primary">Reset Demo</button>
 </div>

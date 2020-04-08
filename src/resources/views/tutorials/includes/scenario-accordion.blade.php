@@ -1,7 +1,7 @@
 <template>
     <div role="tablist" >
         <b-card no-body class="mb-0 card">
-            <b-card-header id="create-session" header-tag="header" class="p-1 card-header demo1" role="tab">
+            <b-card-header id="create-session" header-tag="header" class="p-1 card-header" role="tab">
                 <b-button block href="#" v-b-toggle.accordion-1 variant="info" class="btn demo1">
                     <h5 class="mb-0 scenario-accordion">How do I create a new session?</h5>
                 </b-button>
@@ -46,9 +46,11 @@
                     <div id="demo-desc">
                         Below is an updated list of Postman Collections you can use in the test platform:
                         <br><br><br>
-                        <li>
-                            <a href="https://documenter.getpostman.com/view/1386725/SzYUaM2p?version=latest" target="_blank" style="margin-left: 20px">Service Provider Simulator</a>
-                        </li>
+                        <ul>
+                            <li>
+                                <a href="https://documenter.getpostman.com/view/1386725/SzYUaM2p?version=latest" target="_blank" style="margin-left: 20px">Service Provider Simulator</a>
+                            </li>
+                        </ul>
                     </div>
                 </b-card-body>
             </b-collapse>
@@ -65,12 +67,14 @@
                     <div id="demo-desc">
                         To learn more about Mojaloop, you can follow the links below:
                         <br><br><br>
-                        <li>
-                            <a href="https://mojaloop.io/documentation/" target="_blank" style="margin-left: 20px">Mojaloop documentation</a>
-                        </li>
-                        <li>
-                            <a href="https://mojaloop.io/mojaloop-specification/" target="_blank" style="margin-left: 20px">Mojaloop specification</a>
-                        </li>
+                        <ul>
+                            <li>
+                                <a href="https://mojaloop.io/documentation/" target="_blank" style="margin-left: 20px">Mojaloop documentation</a>
+                            </li>
+                            <li>
+                                <a href="https://mojaloop.io/mojaloop-specification/" target="_blank" style="margin-left: 20px">Mojaloop specification</a>
+                            </li>
+                        </ul>
                     </div>
                 </b-card-body>
             </b-collapse>
@@ -87,12 +91,14 @@
                     <div id="demo-desc">
                         To learn more about the GSMA Mobile Money API, you can follow the links below:
                         <br><br><br>
-                        <li>
-                            <a href="https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API website</a>
-                        </li>
-                        <li>
-                            <a href="https://developer.mobilemoneyapi.io/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API developer portal</a>
-                        </li>
+                        <ul>
+                            <li>
+                                <a href="https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API website</a>
+                            </li>
+                            <li>
+                                <a href="https://developer.mobilemoneyapi.io/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API developer portal</a>
+                            </li>
+                        </ul>
                     </div>
                 </b-card-body>
             </b-collapse>
