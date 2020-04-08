@@ -1,7 +1,12 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 [v-cloak] {
     visibility: hidden;
 }
 
-[role="button"] {
+[role='button'] {
     cursor: pointer;
 }
