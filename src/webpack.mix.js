@@ -28,10 +28,6 @@ mix.babelConfig({
     .sass('resources/sass/vendor.scss', 'css')
     .sass('resources/sass/app.scss', 'css')
     .copyDirectory('resources/fonts', 'public/assets/fonts')
-    .copyDirectory(
-        'node_modules/tabler-ui/dist/assets/fonts',
-        'public/assets/fonts',
-    )
     .options({
         processCssUrls: false,
     })
