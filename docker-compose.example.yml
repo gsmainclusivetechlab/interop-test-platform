@@ -2,7 +2,7 @@ version: "3.7"
 
 x-php-defaults: &php-defaults
     #build: ./build/php-fpm
-    image: hub.jcdev.net:24000/php7.4-fpm-buster:latest
+    image: gsmainclusivetechlab/interop-php-fpm:latest
     cap_add:
         - SYS_PTRACE
     security_opt:
@@ -79,7 +79,7 @@ services:
             - ./build/my.cnf:/etc/mysql/my.cnf
 
     nodejs:
-        image: hub.jcdev.net:24000/node10-stretch:latest
+        image: gsmainclusivetechlab/interop-nodejs:latest
         # enable watch poll mode if not supported by js builder.
         #    environment:
         #      CHOKIDAR_USEPOLLING: 1
