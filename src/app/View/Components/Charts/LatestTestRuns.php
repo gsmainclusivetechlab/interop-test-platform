@@ -41,24 +41,54 @@ class LatestTestRuns extends Component implements Arrayable
      */
     const TYPE = 'bar';
 
+    /**
+     * Chart height
+     */
     const HEIGHT = 360;
 
+    /**
+     * Color for passed tests
+     */
     const COLOR_PASSED = '#9cb227';
 
+    /**
+     * Color for failed tests
+     */
     const COLOR_FAILED = '#de002b';
 
+    /**
+     * Opacity for filled  parts
+     */
     const OPACITY = 1;
 
-    const POSITION = 'top';
+    /**
+     * Legend position
+     */
+    const LEGEND_POSITION = 'top';
 
+    /**
+     * Marker radius
+     */
     const MARKER_RADIUS = 100;
 
+    /**
+     * Padding for label
+     */
     const LABEL_PADDING = 0;
 
+    /**
+     * @var string
+     */
     public $ajaxUrl;
 
+    /**
+     * @var string
+     */
     public $type;
 
+    /**
+     * @var int
+     */
     public $height;
 
     /**
@@ -88,6 +118,11 @@ class LatestTestRuns extends Component implements Arrayable
         $this->height = self::HEIGHT;
     }
 
+    /**
+     * Chart options
+     *
+     * @return false|string
+     */
     public function options()
     {
         return json_encode([
@@ -105,7 +140,7 @@ class LatestTestRuns extends Component implements Arrayable
                 'opacity' => self::OPACITY,
             ],
             'legend' => [
-                'position' => self::POSITION,
+                'position' => self::LEGEND_POSITION,
                 'markers' => [
                     'radius' => self::MARKER_RADIUS,
                 ]
