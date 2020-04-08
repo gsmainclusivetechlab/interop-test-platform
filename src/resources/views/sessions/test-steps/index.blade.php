@@ -15,7 +15,7 @@
 			</tr>
 			</thead>
 			<tbody>
-				@foreach ($testCase->testSteps as $step)
+				@foreach ($steps as $step)
 					<tr>
 						<td>
 							{{ __('Step :n', ['n' => $step->position]) }}
@@ -30,15 +30,13 @@
 							{{ $step->forward }}
 						</td>
 						<td>
-							@if ($step->testDataExample)
+							@if ($step->testRequestExample)
 								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $step->id }}-request">{{ __('Request') }}</button>
+								@include('sessions.test-steps.includes.request')
+							@endif
+							@if ($step->testResponseExample)
 								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $step->id }}-response">{{ __('Response') }}</button>
-								@if ($step->testDataExample->request)
-									@include('sessions.test-steps._request')
-								@endif
-								@if ($step->testDataExample->response)
-									@include('sessions.test-steps._response')
-								@endif
+								@include('sessions.test-steps.includes.response')
 							@endif
 						</td>
 					</tr>
@@ -46,4 +44,22 @@
 			</tbody>
 		</table>
 	</div>
+	@if ($steps->count())
+		<div class="card-footer">
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					{{ __('Showing :from to :to of :total entries', [
+						'from' => (($steps->currentPage() - 1) * $steps->perPage()) + 1,
+						'to' => (($steps->currentPage() - 1) * $steps->perPage()) + $steps->count(),
+						'total' => $steps->total(),
+					]) }}
+				</div>
+				<div class="col-md-6">
+					<div class="justify-content-end d-flex">
+						{{ $steps->appends(request()->all())->links() }}
+					</div>
+				</div>
+			</div>
+		</div>
+	@endif
 @endsection

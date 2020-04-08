@@ -66,90 +66,88 @@ test_steps:
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'in:callback'
-    data_example:
+    test_request_example:
+      method: POST
       uri: /transactions
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        x-callback-url: 'http://example.com/example'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        amount: '100'
+        currency: 'USD'
+        type: 'merchantpay'
+        debitParty:
+          - key: 'msisdn'
+            value: "+33555123456"
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
+    test_response_example:
+      status: 202
+      headers:
+        content-type: 'application/json'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
+        status: 'pending'
+        notificationMethod: 'callback'
+  - forward: POST /transactionRequests
+    backward: HTTP 202
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    test_request_scripts:
+      - name: Transaction Type is a Merchant Payment
+        rules:
+          body.transactionType.scenario: 'in:PAYMENT'
+          body.transactionType.initiator: 'in:PAYEE'
+          body.transactionType.initiatorType: 'in:BUSINESS'
+      - name: Transaction Request Id created
+        rules:
+          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+    test_request_example:
       method: POST
-      request:
-        headers:
-          accept: 'application/json'
-          content-type: 'application/json'
-          x-callback-url: 'http://example.com/example'
-          x-date: '2020-04-07T10:28:44.466Z'
-        body:
-          amount: '100'
+      uri: /transactionsRequests
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partyIdType: 'MSISDN'
+          partyIdentifier: "+33555123456"
+        amount:
+          amount: '123.45'
           currency: 'USD'
-          type: 'merchantpay'
-          debitParty:
-            - key: 'msisdn'
-              value: "+33555123456"
-          creditParty:
-            - key: 'msisdn'
-              value: '+33555789123'
-      response:
-        code: 202
-        headers:
-          content-type: 'application/json'
-          x-date: '2020-04-07T10:28:44.466Z'
-        body:
-          serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
-          status: 'pending'
-          notificationMethod: 'callback'
-  - forward: POST /transactionRequests
-    backward: HTTP 202
-    source: Mobile Money Operator 1
-    target: Mojaloop
-    test_request_scripts:
-      - name: Transaction Type is a Merchant Payment
-        rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
-      - name: Transaction Request Id created
-        rules:
-          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
-    test_response_scripts:
-      - name: Transaction was successfully accepted
-        rules:
-          status: 'in:202'
-    data_example:
-      uri: /transactionsRequests
-      method: POST
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payeefsp'
-          fspiop-destination: 'payerfsp'
-        body:
-          transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
-          payee:
-            partIdInfo:
-              partyIdType: 'MSISDN'
-              partyIdentifier: "+33555789123"
-          payer:
-            partyIdType: 'MSISDN'
-            partyIdentifier: "+33555123456"
-          amount:
-            amount: '123.45'
-            currency: 'USD'
-          type: 'merchantpay'
-          transactionType:
-            scenario: 'PAYMENT'
-            initiator: 'PAYEE'
-            initiatorType: 'BUSINESS'
-      response:
-        code: 202
+        type: 'merchantpay'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+    test_response_example:
+      status: 202
   - forward: POST /transactionRequests
     backward: HTTP 202
     source: Mojaloop
@@ -178,34 +176,33 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    data_example:
-      uri: /transactionsRequests
+    test_request_example:
       method: POST
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payeefsp'
-          fspiop-destination: 'payerfsp'
-        body:
-          transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
-          payee:
-            partIdInfo:
-              partyIdType: 'MSISDN'
-              partyIdentifier: "+33555789123"
-          payer:
+      uri: /transactionsRequests
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        payee:
+          partIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555123456"
-          amount:
-            amount: '123.45'
-            currency: 'USD'
-          type: 'merchantpay'
-          transactionType:
-            scenario: 'PAYMENT'
-            initiator: 'PAYEE'
-            initiatorType: 'BUSINESS'
-      response:
-        code: 202
+            partyIdentifier: "+33555789123"
+        payer:
+          partyIdType: 'MSISDN'
+          partyIdentifier: "+33555123456"
+        amount:
+          amount: '123.45'
+          currency: 'USD'
+        type: 'merchantpay'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+    test_response_example:
+      status: 202
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
     source: Mobile Money Operator 2
@@ -222,19 +219,18 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    data_example:
-      uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+    test_request_example:
       method: PUT
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payerfsp'
-          fspiop-destination: 'payeefsp'
-        body:
-          transactionRequestState: 'RECEIVED'
-      response:
-        code: 200
+      uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        transactionRequestState: 'RECEIVED'
+    test_response_example:
+      status: 200
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
     source: Mojaloop
@@ -251,19 +247,18 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    data_example:
-      uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+    test_request_example:
       method: PUT
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payerfsp'
-          fspiop-destination: 'payeefsp'
-        body:
-          transactionRequestState: 'RECEIVED'
-      response:
-        code: 200
+      uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        transactionRequestState: 'RECEIVED'
+    test_response_example:
+      status: 200
   - forward: POST /quotes
     backward: HTTP 202
     source: Mobile Money Operator 2
@@ -296,42 +291,41 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    data_example:
-      uri: /quotes
+    test_request_example:
       method: POST
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payerfsp'
-          fspiop-destination: 'payeefsp'
-        body:
-          quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
-          transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
-          payee:
-            partIdInfo:
-              partyIdType: 'MSISDN'
-              partyIdentifier: "+33555789123"
-          payer:
-            partIdInfo:
-              partyIdType: 'MSISDN'
-              partyIdentifier: "+33555123456"
-            personalInfo:
-              complexName:
-                firstName: 'Lars'
-                middleName: 'Per'
-                lastName: 'Bergqvist'
-              dateOfBirth: '1977-07-17'
-          amountType: 'SEND'
-          amount:
-            currency: 'USD'
-            amount: '123.45'
-          transactionType:
-            scenario: 'PAYMENT'
-            initiator: 'PAYEE'
-            initiatorType: 'BUSINESS'
-      response:
-        code: 202
+      uri: /quotes
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555123456"
+          personalInfo:
+            complexName:
+              firstName: 'Lars'
+              middleName: 'Per'
+              lastName: 'Bergqvist'
+            dateOfBirth: '1977-07-17'
+        amountType: 'SEND'
+        amount:
+          currency: 'USD'
+          amount: '123.45'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+    test_response_example:
+      status: 202
   - forward: POST /quotes
     backward: HTTP 202
     source: Mojaloop
@@ -364,42 +358,41 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    data_example:
-      uri: /quotes
+    test_request_example:
       method: POST
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payerfsp'
-          fspiop-destination: 'payeefsp'
-        body:
-          quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
-          transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
-          payee:
-            partIdInfo:
-              partyIdType: 'MSISDN'
-              partyIdentifier: "+33555789123"
-          payer:
-            partIdInfo:
-              partyIdType: 'MSISDN'
-              partyIdentifier: "+33555123456"
-            personalInfo:
-              complexName:
-                firstName: 'Lars'
-                middleName: 'Per'
-                lastName: 'Bergqvist'
-              dateOfBirth: '1977-07-17'
-          amountType: 'SEND'
-          amount:
-            currency: 'USD'
-            amount: '123.45'
-          transactionType:
-            scenario: 'PAYMENT'
-            initiator: 'PAYEE'
-            initiatorType: 'BUSINESS'
-      response:
-        code: 202
+      uri: /quotes
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555123456"
+          personalInfo:
+            complexName:
+              firstName: 'Lars'
+              middleName: 'Per'
+              lastName: 'Bergqvist'
+            dateOfBirth: '1977-07-17'
+        amountType: 'SEND'
+        amount:
+          currency: 'USD'
+          amount: '123.45'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+    test_response_example:
+      status: 202
   - forward: PUT /quotes/{ID}
     backward: HTTP 200
     source: Mobile Money Operator 1
@@ -432,24 +425,23 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    data_example:
-      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+    test_request_example:
       method: 'PUT'
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payeefsp'
-          fspiop-destination: 'payerfsp'
-        body:
-          transferAmount:
-            currency: 'USD'
-            amount: '123.45'
-          expiration: '2020-04-13T12:50:15.273Z'
-          ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-          condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-      response:
-        code: 200
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transferAmount:
+          currency: 'USD'
+          amount: '123.45'
+        expiration: '2020-04-13T12:50:15.273Z'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+    test_response_example:
+      status: 200
   - forward: PUT /quotes/{ID}
     backward: HTTP 200
     source: Mojaloop
@@ -482,24 +474,23 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    data_example:
-      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+    test_request_example:
       method: 'PUT'
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payeefsp'
-          fspiop-destination: 'payerfsp'
-        body:
-          transferAmount:
-            currency: 'USD'
-            amount: '123.45'
-          expiration: '2020-04-13T12:50:15.273Z'
-          ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-          condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-      response:
-        code: 200
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transferAmount:
+          currency: 'USD'
+          amount: '123.45'
+        expiration: '2020-04-13T12:50:15.273Z'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+    test_response_example:
+      status: 200
   - forward: POST /transfers
     backward: HTTP 202
     source: Mobile Money Operator 2
@@ -533,27 +524,26 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    data_example:
-      uri: /transfers
+    test_request_example:
       method: 'POST'
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payerfsp'
-          fspiop-destination: 'payeefsp'
-        body:
-          transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-          payeeFsp: 'payeefsp'
-          payerFsp: 'payerfsp'
-          amount:
-            currency: 'USD'
-            amount: '123.45'
-          ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-          condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-          expiration: '2020-04-13T12:50:15.273Z'
-      response:
-        code: 202
+      uri: /transfers
+      headers:
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
+        payeeFsp: 'payeefsp'
+        payerFsp: 'payerfsp'
+        amount:
+          currency: 'USD'
+          amount: '123.45'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '2020-04-13T12:50:15.273Z'
+    test_response_example:
+      status: 202
   - forward: POST /transfers
     backward: HTTP 202
     source: Mojaloop
@@ -587,27 +577,26 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    data_example:
-      uri: /transfers
+    test_request_example:
       method: 'POST'
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payerfsp'
-          fspiop-destination: 'payeefsp'
-        body:
-          transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-          payeeFsp: 'payeefsp'
-          payerFsp: 'payerfsp'
-          amount:
-            currency: 'USD'
-            amount: '123.45'
-          ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-          condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-          expiration: '2020-04-13T12:50:15.273Z'
-      response:
-        code: 202
+      uri: /transfers
+      headers:
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
+        payeeFsp: 'payeefsp'
+        payerFsp: 'payerfsp'
+        amount:
+          currency: 'USD'
+          amount: '123.45'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '2020-04-13T12:50:15.273Z'
+    test_response_example:
+      status: 202
   - forward: PUT /X-Callback-URL
     backward: HTTP 204
     source: Mobile Money Operator 1
@@ -637,27 +626,26 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:204'
-    data_example:
-      uri: 'http://example.com/example'
+    test_request_example:
       method: 'PUT'
-      request:
-        headers:
-          content-type: 'application/json'
-          x-date: '2020-04-07T10:28:44.466Z'
-        body:
-          amount: '123.45'
-          currency: 'USD'
-          type: 'merchantpay'
-          transactionReference: ''
-          transactionStatus: 'Completed'
-          debitParty:
-            - key: 'msisdn'
-              value: "+33555123456"
-          creditParty:
-            - key: 'msisdn'
-              value: '+33555789123'
-      response:
-        code: 204
+      uri: 'http://example.com/example'
+      headers:
+        content-type: 'application/json'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        amount: '123.45'
+        currency: 'USD'
+        type: 'merchantpay'
+        transactionReference: ''
+        transactionStatus: 'Completed'
+        debitParty:
+          - key: 'msisdn'
+            value: "+33555123456"
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
+    test_response_example:
+      status: 204
   - forward: PUT /transfers/{ID}
     backward: HTTP 200
     source: Mobile Money Operator 1
@@ -680,27 +668,26 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    data_example:
-      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+    test_request_example:
       method: 'PUT'
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payeefsp'
-          fspiop-destination: 'payerfsp'
-        body:
-          transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-          payeeFsp: 'payeefsp'
-          payerFsp: 'payerfsp'
-          amount:
-            currency: 'USD'
-            amount: '123.45'
-          ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-          condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-          expiration: '2020-04-13T12:50:15.273Z'
-      response:
-        code: 200
+      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+      headers:
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
+        payeeFsp: 'payeefsp'
+        payerFsp: 'payerfsp'
+        amount:
+          currency: 'USD'
+          amount: '123.45'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '2020-04-13T12:50:15.273Z'
+    test_response_example:
+      status: 200
   - forward: PUT /transfers/{ID}
     backward: HTTP 200
     source: Mojaloop
@@ -723,24 +710,23 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    data_example:
-      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+    test_request_example:
       method: 'PUT'
-      request:
-        headers:
-          content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-          date: 'Wed, 07 Apr 2020 10:28:45 GMT'
-          fspiop-source: 'payeefsp'
-          fspiop-destination: 'payerfsp'
-        body:
-          transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-          payeeFsp: 'payeefsp'
-          payerFsp: 'payerfsp'
-          amount:
-            currency: 'USD'
-            amount: '123.45'
-          ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-          condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-          expiration: '2020-04-13T12:50:15.273Z'
-      response:
-        code: 200
+      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+      headers:
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
+        payeeFsp: 'payeefsp'
+        payerFsp: 'payerfsp'
+        amount:
+          currency: 'USD'
+          amount: '123.45'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '2020-04-13T12:50:15.273Z'
+    test_response_example:
+        status: 200

@@ -84,9 +84,17 @@ class TestStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function testDataExample()
+    public function testRequestExample()
     {
-        return $this->hasOne(TestDataExample::class, 'test_step_id');
+        return $this->hasOne(TestRequestExample::class, 'test_step_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function testResponseExample()
+    {
+        return $this->hasOne(TestResponseExample::class, 'test_step_id');
     }
 
     /**
