@@ -15,13 +15,6 @@ class TestRequestExample extends Model
     use InteractsWithHttpRequest;
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * @var bool
      */
     public $incrementing = false;

@@ -22,6 +22,7 @@ class CreateTestRequestExamplesTable extends Migration
             $table->string('uri')->nullable();
             $table->longText('headers')->nullable();
             $table->longText('body')->nullable();
+            $table->timestamps();
         });
     }
 

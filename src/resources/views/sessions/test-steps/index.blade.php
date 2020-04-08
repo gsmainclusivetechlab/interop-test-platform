@@ -15,27 +15,27 @@
 			</tr>
 			</thead>
 			<tbody>
-				@foreach ($steps as $step)
+				@foreach ($testSteps as $testStep)
 					<tr>
 						<td>
-							{{ __('Step :n', ['n' => $step->position]) }}
+							{{ __('Step :n', ['n' => $testStep->position]) }}
 						</td>
 						<td>
-							{{ $step->source->name }}
+							{{ $testStep->source->name }}
 						</td>
 						<td>
-							{{ $step->target->name }}
+							{{ $testStep->target->name }}
 						</td>
 						<td>
-							{{ $step->forward }}
+							{{ $testStep->forward }}
 						</td>
 						<td>
-							@if ($step->testRequestExample)
-								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $step->id }}-request">{{ __('Request') }}</button>
+							@if ($testStep->testRequestExample)
+								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $testStep->id }}-request">{{ __('Request') }}</button>
 								@include('sessions.test-steps.includes.request')
 							@endif
-							@if ($step->testResponseExample)
-								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $step->id }}-response">{{ __('Response') }}</button>
+							@if ($testStep->testResponseExample)
+								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $testStep->id }}-response">{{ __('Response') }}</button>
 								@include('sessions.test-steps.includes.response')
 							@endif
 						</td>
@@ -44,19 +44,19 @@
 			</tbody>
 		</table>
 	</div>
-	@if ($steps->count())
+	@if ($testSteps->count())
 		<div class="card-footer">
 			<div class="row align-items-center">
 				<div class="col-md-6">
 					{{ __('Showing :from to :to of :total entries', [
-						'from' => (($steps->currentPage() - 1) * $steps->perPage()) + 1,
-						'to' => (($steps->currentPage() - 1) * $steps->perPage()) + $steps->count(),
-						'total' => $steps->total(),
+						'from' => (($testSteps->currentPage() - 1) * $testSteps->perPage()) + 1,
+						'to' => (($testSteps->currentPage() - 1) * $testSteps->perPage()) + $testSteps->count(),
+						'total' => $testSteps->total(),
 					]) }}
 				</div>
 				<div class="col-md-6">
 					<div class="justify-content-end d-flex">
-						{{ $steps->appends(request()->all())->links() }}
+						{{ $testSteps->appends(request()->all())->links() }}
 					</div>
 				</div>
 			</div>

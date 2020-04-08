@@ -29,8 +29,8 @@ class TestStepController extends Controller
      */
     public function __invoke(Session $session, TestCase $testCase)
     {
-        $steps = $testCase->testSteps()->paginate();
+        $testSteps = $testCase->testSteps()->paginate();
 
-        return view('sessions.test-steps.index', compact('session', 'testCase', 'steps'));
+        return view('sessions.test-steps.index', compact('session', 'testCase', 'testSteps'));
     }
 }

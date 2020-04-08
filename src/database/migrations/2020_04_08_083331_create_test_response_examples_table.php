@@ -21,6 +21,7 @@ class CreateTestResponseExamplesTable extends Migration
             $table->string('status')->nullable();
             $table->longText('headers')->nullable();
             $table->longText('body')->nullable();
+            $table->timestamps();
         });
     }
 
