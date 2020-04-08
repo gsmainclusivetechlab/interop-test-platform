@@ -5,24 +5,17 @@ $('.demo1').one('click', function() {
         ['../../images/tutorials/create-session/select_sut_2.png', [535, 385], "Let's select Service Provider", true],
         ['../../images/tutorials/create-session/select_sut_3.png', [1100, 473], 'Press Next', true],
         ['../../images/tutorials/create-session/configure_sut.png', [1100, 422], 'After configuration, press Next', true],
-        ['../../images/tutorials/create-session/session_info.png', [742, 355], 'Select use cases by ticking the corresponding box', true],
-        ['../../images/tutorials/create-session/session_info_2.png', [742, 395], 'Select use cases by ticking the corresponding box', true],
-        ['../../images/tutorials/create-session/session_info_3.png', [742, 460], 'Select use cases by ticking the corresponding box', true],
-        ['../../images/tutorials/create-session/session_info_4.png', [1093, 580], 'Press Create when you are finished', true],
-        ['../../images/tutorials/create-session/session_created.png', [47, 243], 'You can access use cases here', true],
-        ['../../images/tutorials/create-session/usecase_page.png', [1335, 40], 'Click here to start the demo again', true]
+        ['../../images/tutorials/create-session/session_info.png', [732, 325], 'Select use cases by ticking the corresponding box', true],
+        ['../../images/tutorials/create-session/session_info_2.png', [732, 355], 'Select use cases by ticking the corresponding box', true],
+        ['../../images/tutorials/create-session/session_info_3.png', [732, 410], 'Select use cases by ticking the corresponding box', true],
+        ['../../images/tutorials/create-session/session_info_4.png', [1050, 515], 'Press Create when you are finished', true],
+        ['../../images/tutorials/create-session/session_created.png', [47, 243], 'Your session has now been created and use cases can be accessed on the left.', true],
     ];
 
     var step = 0;
 
     function demo1_adjusted(length) {
-        if ($(".create-session-screenshot[src*='session_info']").length == 1) { // height of these screenshots slightly higher
-            var originalHeight = 699;
-        } else if ($(".create-session-screenshot[src*='usecase_page']").length == 1) {
-            var originalHeight = 940;
-        } else {
-            var originalHeight = 653;
-        }
+        var originalHeight = 653;
         var currentHeight = $('.create-session-screenshot').height();
         var ratio = currentHeight / originalHeight;
         return length * ratio;
