@@ -31,10 +31,13 @@ class TestSuiteLoader
     {
         $testSuite = new TestSuite();
         $testResult = $this->testResult;
+        $connection = $testResult->testStep->source->paths()
+            ->wherePivot('target_id', $testResult->testStep->target->id)
+            ->first();
 
-//        if ($apiService = $testResult->testStep->targetApiService) {
-//            $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiService));
-//        }
+        if ($apiScheme = $connection->pivot->apiScheme) {
+            $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiScheme));
+        }
 
         if ($testRequestScripts = $testResult->testStep->testScripts()->ofType(HttpTypeEnum::REQUEST)->get()) {
             foreach ($testRequestScripts as $testRequestScript) {

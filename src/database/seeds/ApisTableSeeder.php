@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-use App\Models\Api;
+use App\Models\ApiScheme;
+use App\Models\ApiService;
 use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
 
 class ApisTableSeeder extends Seeder
 {
@@ -14,9 +14,12 @@ class ApisTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ($this->getData() as $key => $attributes) {
-            Api::create(Arr::only($attributes, Api::make()->getFillable()))
-                ->apiServers()->createMany(Arr::get($attributes, 'servers', []));
+        foreach ($this->getApiSchemesData() as $key => $attributes) {
+            ApiScheme::create($attributes);
+        }
+
+        foreach ($this->getApiServicesData() as $key => $attributes) {
+            ApiService::create($attributes);
         }
     }
 
@@ -26,41 +29,41 @@ class ApisTableSeeder extends Seeder
      * @throws \cebe\openapi\exceptions\TypeErrorException
      * @throws \cebe\openapi\exceptions\UnresolvableReferenceException
      */
-    protected function getData()
+    protected function getApiSchemesData()
     {
         return [
             [
-                'name' => 'Service Provider v1.0',
+                'name' => 'MM v1.1.2',
+                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),
             ],
             [
-                'name' => 'Mobile Money v1.1.2',
-                'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),
-                'servers' => [
-                    [
-                        'name' => 'MM Simulator',
-                        'base_url' => env('FSIOP_MM_SIMULATOR_URL'),
-                    ],
-                ],
+                'name' => 'Mojaloop v1.0',
+                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getApiServicesData()
+    {
+        return [
+            [
+                'name' => 'SP Simulator',
+                'base_url' => env('API_SERVICE_SP_SIMULATOR_URL'),
             ],
             [
-                'name' => 'Mojaloop Hub v1.0',
-                'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
-                'servers' => [
-                    [
-                        'name' => 'Mojaloop Hub',
-                        'base_url' => env('FSIOP_MOJALOOP_HUB_URL'),
-                    ],
-                ],
+                'name' => 'MM Simulator',
+                'base_url' => env('API_SERVICE_MM_SIMULATOR_URL'),
             ],
             [
-                'name' => 'Mojaloop FSP v1.0',
-                'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
-                'servers' => [
-                    [
-                        'name' => 'Mojaloop Simulator',
-                        'base_url' => env('FSIOP_MOJALOOP_SIMULATOR_URL'),
-                    ],
-                ],
+                'name' => 'Mojaloop Hub',
+                'base_url' => env('API_SERVICE_MOJALOOP_HUB_URL'),
+            ],
+            [
+                'name' => 'Mojaloop Simulator',
+                'base_url' => env('API_SERVICE_MOJALOOP_SIMULATOR_URL'),
             ],
         ];
     }

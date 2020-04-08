@@ -43,6 +43,16 @@ class Session extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function suts()
+    {
+        return $this->belongsToMany(Component::class, 'session_suts', 'session_id', 'component_id')
+//            ->using(SessionComponent::class)
+            ->withPivot(['base_url']);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testRuns()

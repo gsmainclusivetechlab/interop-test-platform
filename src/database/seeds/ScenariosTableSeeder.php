@@ -1,7 +1,8 @@
 <?php
 
 use App\Imports\TestCaseImport;
-use App\Models\Api;
+use App\Models\ApiScheme;
+use App\Models\ApiService;
 use App\Models\Component;
 use App\Models\Scenario;
 use Illuminate\Support\Arr;
@@ -18,7 +19,7 @@ class ScenariosTableSeeder extends Seeder
      */
     public function run()
     {
-        $scenario = Scenario::create(['name' => 'Mobile Money API v1.1.0 and Mojaloop FSPIOP API v1.0']);
+        $scenario = Scenario::create(['name' => 'Mobile Money API v1.1.2 and Mojaloop FSPIOP API v1.0']);
         $scenario->useCases()->createMany($this->getUseCasesData());
         $scenario->components()->createMany($this->getComponentsData())->each(function (Component $component, $key) use ($scenario) {
             $component->paths()->attach(Arr::get($this->getComponentPathsData($scenario), $key));
@@ -61,23 +62,22 @@ class ScenariosTableSeeder extends Seeder
             ],
             [
                 'name' => 'Service Provider',
-                'api_id' => Api::where(['name' => 'Service Provider v1.0'])->value('id'),
-                'sut' => true,
+                'api_service_id' => ApiService::where(['name' => 'SP Simulator'])->value('id'),
                 'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 1',
-                'api_id' => Api::where(['name' => 'Mobile Money v1.1.2'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'MM Simulator'])->value('id'),
                 'simulated' => true,
             ],
             [
                 'name' => 'Mojaloop',
-                'api_id' => Api::where(['name' => 'Mojaloop Hub v1.0'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub'])->value('id'),
                 'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 2',
-                'api_id' => Api::where(['name' => 'Mojaloop FSP v1.0'])->value('id'),
+                'api_service_id' => ApiService::where(['name' => 'Mojaloop Simulator'])->value('id'),
                 'simulated' => true,
             ],
         ];
@@ -101,27 +101,33 @@ class ScenariosTableSeeder extends Seeder
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
+                    'api_scheme_id' => ApiScheme::where(['name' => 'MM v1.1.2'])->value('id'),
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
+                    'api_scheme_id' => ApiScheme::where(['name' => 'MM v1.1.2'])->value('id'),
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
+                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
+                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 2')->value('id'),
+                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
+                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
             ],
         ];

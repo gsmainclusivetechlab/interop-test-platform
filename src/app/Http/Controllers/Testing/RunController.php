@@ -16,6 +16,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\UriResolver;
 use SebastianBergmann\Timer\Timer;
 
 class RunController extends Controller
@@ -38,21 +39,22 @@ class RunController extends Controller
      */
     public function __invoke(Session $session, TestCase $testCase, string $path)
     {
+        $testStep = $testCase->testSteps()->firstOrFail();
         $testRun = $session->testRuns()->create([
             'test_case_id' => $testCase->id,
         ]);
-        $testStep = $testCase->testSteps()->firstOrFail();
         $testResult = $testRun->testResults()->create([
             'test_step_id' => $testStep->id,
         ]);
 
-        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
+//        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
-        $uri = (new Uri($testStep->target->apiService->server))->withPath($path);
+        $baseUrl = $session->suts()->whereKey($testStep->target->id)->value('base_url') ?? $testStep->target->apiService->base_url;
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $this->getRequest()->withUri($uri)
+        $request = $this->getRequest()
+            ->withUri(UriResolver::resolve(new Uri($baseUrl), new Uri($path)))
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
         Timer::start();
@@ -60,7 +62,7 @@ class RunController extends Controller
         $stack->setHandler(new CurlHandler());
         $stack->push(new MapRequestHandler($testResult));
         $stack->push(new MapResponseHandler($testResult));
-        $promise = (new Client(['handler' => $stack, 'http_errors' => false]))->sendAsync($request);
+        $promise = (new Client(['handler' => $stack]))->sendAsync($request);
 
         return $promise->then(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult))->wait();
     }

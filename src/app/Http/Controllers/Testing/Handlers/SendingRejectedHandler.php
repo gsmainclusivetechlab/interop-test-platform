@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
+use App\Testing\TestListenerAdapter;
+use App\Testing\TestRunner;
+use App\Testing\TestSuiteLoader;
 use GuzzleHttp\Exception\RequestException;
 use SebastianBergmann\Timer\Timer;
 
@@ -27,7 +30,13 @@ class SendingRejectedHandler
      */
     public function __invoke(RequestException $exception)
     {
-        $this->testResult->complete(false, Timer::stop());
+        $loader = new TestSuiteLoader($this->testResult);
+        $runner = new TestRunner();
+        $runner->addListener(new TestListenerAdapter($this->testResult));
+        $time = Timer::stop();
+        $this->testResult->complete($runner->run($loader->load())->wasSuccessful(), $time);
+        $this->testResult->testRun->complete();
+
         return $exception;
     }
 }

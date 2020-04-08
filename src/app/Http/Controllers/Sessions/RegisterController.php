@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Sessions\StoreSessionSutsRequest;
 use App\Http\Requests\Sessions\StoreSessionRequest;
 use App\Http\Requests\Sessions\UpdateSessionRequest;
 use App\Models\Session;
 use App\Models\UseCase;
 use App\Models\Scenario;
+use Illuminate\Support\Arr;
 
 class RegisterController extends Controller
 {
@@ -84,15 +86,22 @@ class RegisterController extends Controller
     {
         $scenario = $session->scenario;
         $useCases = $scenario->useCases()->whereHas('testCases')->get();
-        $components = $scenario->components()->whereHas('api')->get();
+        $components = $scenario->components()->whereHas('apiService')->get();
 
         return view('sessions.register.config', compact('session', 'scenario', 'useCases', 'components'));
     }
 
-    public function updateConfig(Session $session)
+    public function storeConfig(Session $session, StoreSessionSutsRequest $request)
     {
-//        return redirect()
-//            ->route('sessions.show', $session)
-//            ->with('success', __('Session created successfully'));
+        $components = collect($request->input('components'))->map(function ($item) {
+           if (Arr::get($item, 'sut', false)) {
+               return Arr::only($item, ['base_url']);
+           }
+        })->filter();
+        $session->suts()->attach($components);
+
+        return redirect()
+            ->route('sessions.show', $session)
+            ->with('success', __('Session created successfully'));
     }
 }

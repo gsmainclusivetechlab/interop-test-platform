@@ -2,7 +2,7 @@
 
 namespace App\Testing\Tests;
 
-use App\Models\ApiServer;
+use App\Models\ApiScheme;
 use App\Models\TestResult;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
@@ -17,18 +17,18 @@ class ValidateOpenApiSchemaTest extends TestCase
     protected $testResult;
 
     /**
-     * @var ApiServer
+     * @var ApiScheme
      */
-    protected $apiService;
+    protected $apiScheme;
 
     /**
      * @param TestResult $testResult
-     * @param ApiServer $apiService
+     * @param ApiScheme $apiScheme
      */
-    public function __construct(TestResult $testResult, ApiServer $apiService)
+    public function __construct(TestResult $testResult, ApiScheme $apiScheme)
     {
         $this->testResult = $testResult;
-        $this->apiService = $apiService;
+        $this->apiScheme = $apiScheme;
     }
 
     /**
@@ -36,7 +36,7 @@ class ValidateOpenApiSchemaTest extends TestCase
      */
     public function test()
     {
-        $validator = (new ValidatorBuilder)->fromSchema($this->apiService->scheme);
+        $validator = (new ValidatorBuilder)->fromSchema($this->apiScheme->openapi);
 
         try {
             $operationAddress = $validator->getRequestValidator()->validate($this->testResult->testRequest->toRequest());
@@ -51,6 +51,6 @@ class ValidateOpenApiSchemaTest extends TestCase
      */
     public function getName(): string
     {
-        return __(':name API Schema Validation', ['name' => $this->apiService->name]);
+        return __(':name API Schema Validation', ['name' => $this->apiScheme->name]);
     }
 }

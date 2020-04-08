@@ -22,16 +22,34 @@
                                     <label class="form-label font-weight-normal">
                                         {{ __('Type') }}
                                     </label>
-                                    <select class="form-control custom-select" @change="handleSessionComponentsSelect">
-                                        <option value="">{{ __('SUT') }}</option>
-                                        @foreach($component->api->apiServers as $apiServer)
-                                            <option value="{{ $apiServer->base_url }}">{{ $apiServer->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="selectgroup w-100 @error("components.{$component->id}.sut") is-invalid @enderror">
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="components[{{ $component->id }}][sut]" value="1" class="selectgroup-input" {{ old("components.{$component->id}.sut", 0) == 1 ? 'checked' : '' }}>
+                                            <span class="selectgroup-button">
+                                                {{ __('SUT') }}
+                                            </span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            <input type="radio" name="components[{{ $component->id }}][sut]" value="0" class="selectgroup-input" {{ old("components.{$component->id}.sut", 0) == 0 ? 'checked' : '' }}>
+                                            <span class="selectgroup-button">
+                                                {{ __('Simulated') }}
+                                            </span>
+                                        </label>
+                                    </div>
+                                    @error("components.{$component->id}.sut")
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                                 <div class="col-7">
                                     <label class="form-label font-weight-normal">{{ __('URL') }}</label>
-                                    <input class="form-control" value="https://sp.com" disabled>
+                                    <input class="form-control @error("components.{$component->id}.base_url") is-invalid @enderror" name="components[{{ $component->id }}][base_url]" value="{{ old("components.{$component->id}.base_url", $component->apiService->base_url) }}">
+                                    @error("components.{$component->id}.base_url")
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

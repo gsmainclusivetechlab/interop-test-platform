@@ -23,16 +23,14 @@ class Component extends Model
     protected $fillable = [
         'name',
         'description',
-        'sut',
         'simulated',
-        'api_id',
+        'api_service_id',
     ];
 
     /**
      * @var array
      */
     protected $attributes = [
-        'sut' => false,
         'simulated' => false,
     ];
 
@@ -47,9 +45,9 @@ class Component extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function api()
+    public function apiService()
     {
-        return $this->belongsTo(Api::class, 'api_id');
+        return $this->belongsTo(ApiService::class, 'api_service_id');
     }
 
     /**
@@ -57,7 +55,9 @@ class Component extends Model
      */
     public function paths()
     {
-        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id');
+        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id')
+            ->using(ComponentPath::class)
+            ->withPivot(['api_scheme_id']);
     }
 
     /**

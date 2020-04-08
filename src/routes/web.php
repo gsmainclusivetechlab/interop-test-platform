@@ -31,7 +31,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
         Route::get('{session}/info', 'RegisterController@edit')->name('edit');
         Route::patch('{session}/info', 'RegisterController@update')->name('update');
         Route::get('{session}/config', 'RegisterController@showConfig')->name('config');
-        Route::post('{session}/config', 'RegisterController@updateConfig')->name('config');
+        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config');
     });
 });
 Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
@@ -53,7 +53,7 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
  */
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
     Route::any('{session:uuid}/{testCase:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
-    Route::any('test@{uri}', 'TestController')->name('test')->where('uri', '.*');
+    Route::any('test@{path}', 'TestController')->name('test')->where('path', '.*');
 });
 
 /**

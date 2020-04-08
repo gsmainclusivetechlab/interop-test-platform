@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class ApiServer extends Model
+class ApiService extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'api_servers';
+    protected $table = 'api_services';
 
     /**
      * @var array
@@ -22,12 +22,4 @@ class ApiServer extends Model
         'description',
         'base_url',
     ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function api()
-    {
-        return $this->belongsTo(Api::class, 'api_id');
-    }
 }

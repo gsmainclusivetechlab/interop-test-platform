@@ -26,7 +26,7 @@
                         <flow-chart>
                             graph LR;
                             @foreach($scenario->components as $component)
-                                {{ $component->id }}({{$component->name}})@if($component->sut):::is-active @endif;
+                                {{ $component->id }}({{$component->name}});
                                 @foreach ($component->paths as $connection)
                                     {{ $component->id }} @if($component->simulated && $connection->simulated) --> @else -.-> @endif {{ $connection->id }};
                                 @endforeach
