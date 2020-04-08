@@ -2,10 +2,13 @@
 
 namespace App\Imports;
 
+use App\Enums\HttpTypeEnum;
 use App\Models\Scenario;
 use App\Models\TestCase;
+use App\Models\TestRequestExample;
+use App\Models\TestResponseExample;
 use App\Models\TestScript;
-use App\Models\TestResponseScript;
+use App\Models\TestSetup;
 use App\Models\TestStep;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -49,24 +52,60 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute('target_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'target'))->value('id'));
                     $testStep->saveOrFail();
 
-                    if ($testRequestScriptsRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
-                        foreach ($testRequestScriptsRows as $testRequestScriptRow) {
+                    if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {
+                        foreach ($testRequestSetupRows as $testRequestSetupRow) {
+                            /**
+                             * @var TestSetup $testRequestSetup
+                             */
+                            $testRequestSetup = $testStep->testSetups()->make(Arr::only($testRequestSetupRow, TestSetup::make()->getFillable()));
+                            $testRequestSetup->type = HttpTypeEnum::REQUEST;
+                            $testRequestSetup->saveOrFail();
+                        }
+                    }
+
+                    if ($testRequestScriptRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
+                        foreach ($testRequestScriptRows as $testRequestScriptRow) {
                             /**
                              * @var TestScript $testRequestScript
                              */
-                            $testRequestScript = $testStep->testRequestScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
+                            $testRequestScript = $testStep->testScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
+                            $testRequestScript->type = HttpTypeEnum::REQUEST;
                             $testRequestScript->saveOrFail();
+                        }
+                    }
+
+                    if ($testResponseSetupRows = Arr::get($testStepRow, 'test_response_setups', [])) {
+                        foreach ($testResponseSetupRows as $testResponseSetupRow) {
+                            /**
+                             * @var TestSetup $testResponseSetup
+                             */
+                            $testResponseSetup = $testStep->testSetups()->make(Arr::only($testResponseSetupRow, TestSetup::make()->getFillable()));
+                            $testResponseSetup->type = HttpTypeEnum::RESPONSE;
+                            $testResponseSetup->saveOrFail();
                         }
                     }
 
                     if ($testResponseScriptRows = Arr::get($testStepRow, 'test_response_scripts', [])) {
                         foreach ($testResponseScriptRows as $testResponseScriptRow) {
                             /**
-                             * @var TestResponseScript $testResponseScript
+                             * @var TestScript $testResponseScript
                              */
-                            $testResponseScript = $testStep->testResponseScripts()->make(Arr::only($testResponseScriptRow, TestResponseScript::make()->getFillable()));
+                            $testResponseScript = $testStep->testScripts()->make(Arr::only($testResponseScriptRow, TestScript::make()->getFillable()));
+                            $testResponseScript->type = HttpTypeEnum::RESPONSE;
                             $testResponseScript->saveOrFail();
                         }
+                    }
+
+                    if ($testRequestExampleRow = Arr::get($testStepRow, 'test_request_example')) {
+                        $testRequestExample = $testStep->testRequestExample()
+                            ->make(Arr::only($testRequestExampleRow, TestRequestExample::make()->getFillable()));
+                        $testRequestExample->saveOrFail();
+                    }
+
+                    if ($testResponseExampleRow = Arr::get($testStepRow, 'test_response_example')) {
+                        $testResponseExample = $testStep->testResponseExample()
+                            ->make(Arr::only($testResponseExampleRow, TestResponseExample::make()->getFillable()));
+                        $testResponseExample->saveOrFail();
                     }
                 }
             }

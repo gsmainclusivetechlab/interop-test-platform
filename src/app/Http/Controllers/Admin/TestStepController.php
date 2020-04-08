@@ -25,10 +25,10 @@ class TestStepController extends Controller
     {
         $testSteps = $testCase->testSteps()
             ->when(request('q'), function (Builder $query, $q) {
-                $query->where('name', 'like', "%{$q}%");
+                $query->whereRaw('CONCAT(forward, " ", backward) like ?', "%{$q}%");
             })
             ->with(['source', 'target'])
-            ->withCount(['testRequestScripts', 'testResponseScripts'])
+            ->withCount(['testScripts'])
             ->paginate();
 
         return view('admin.test-steps.index', compact('testCase', 'testSteps'));

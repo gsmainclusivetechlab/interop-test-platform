@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Models\Session;
+use App\View\Components\Charts\LatestTestRuns;
 use Illuminate\Database\Eloquent\Builder;
 
 class OverviewController extends Controller
@@ -43,11 +44,8 @@ class OverviewController extends Controller
         $testRuns = $session->testRuns()
             ->latest()
             ->paginate();
-        $useCases = $session->testCases->mapWithKeys(function ($item) {
-            return [$item->useCase];
-        });
 
-        return view('sessions.show', compact('session', 'testRuns', 'useCases'));
+        return view('sessions.show', compact('session', 'testRuns'));
     }
 
     /**
@@ -62,5 +60,14 @@ class OverviewController extends Controller
         return redirect()
             ->back()
             ->with('success', __('Session deleted successfully'));
+    }
+
+    /**
+     * @param Session $session
+     * @return array
+     */
+    public function showChartData(Session $session)
+    {
+        return (new LatestTestRuns($session))->toArray();
     }
 }

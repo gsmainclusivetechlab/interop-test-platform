@@ -4,7 +4,7 @@ info:
     This document defines the RESTful endpoints provided by the GSMA Mobile Money API
     You can find out more about what the API can do for your business at
     [https://developer.mobilemoneyapi.io]
-  version: "1.1.0"
+  version: "1.1.2"
   title: Mobile Money API
 #servers:
 #  - description: This url points to the GSMA Mobile Money API V1.1 Simulator.
@@ -85,6 +85,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -108,6 +109,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateTransaction' # The callback consists of the same body as a synchronous /transactions response
@@ -136,6 +138,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -229,6 +232,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -252,6 +256,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateTransaction' # The callback consists of the same body as a synchronous /transactions response
@@ -280,6 +285,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -371,6 +377,7 @@ paths:
         - $ref: '#/components/parameters/transactionReference'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -445,6 +452,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -468,6 +476,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateReversal' # The callback consists of the same body as a synchronous /reversals response
@@ -496,6 +505,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -587,6 +597,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -610,6 +621,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateBatchTransaction' # The callback consists of the same body as a synchronous /batchtransactions response
@@ -638,6 +650,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -711,6 +724,7 @@ paths:
       - $ref: '#/components/parameters/batchId'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -801,6 +815,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -829,6 +844,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -913,6 +929,7 @@ paths:
         - $ref: '#/components/parameters/batchId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -997,6 +1014,7 @@ paths:
         - $ref: '#/components/parameters/batchId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1083,6 +1101,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1157,6 +1176,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1230,6 +1250,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1304,6 +1325,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1377,6 +1399,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1451,6 +1474,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1523,6 +1547,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1596,6 +1621,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1684,6 +1710,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1771,6 +1798,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1859,6 +1887,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -1946,6 +1975,7 @@ paths:
         - $ref: '#/components/parameters/transactionReference'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2021,6 +2051,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2099,6 +2130,7 @@ paths:
         - $ref: '#/components/parameters/serviceProvider'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2172,6 +2204,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-Account-Holding-Institution-Identifier-Type'
@@ -2251,6 +2284,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2329,6 +2363,7 @@ paths:
         - $ref: '#/components/parameters/accountId'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2406,6 +2441,7 @@ paths:
         - $ref: '#/components/parameters/identifier'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2485,6 +2521,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2508,6 +2545,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateBillPayment' # The callback consists of the same body as a synchronous /bills/payments response
@@ -2536,6 +2574,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -2631,6 +2670,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2654,6 +2694,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateBillPayment' # The callback consists of the same body as a synchronous /bills/payments response
@@ -2682,6 +2723,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -2774,6 +2816,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2797,6 +2840,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateBillPayment' # The callback consists of the same body as a synchronous /bills/payments response
@@ -2825,6 +2869,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -2921,6 +2966,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -2944,6 +2990,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateDebitMandate' # The callback consists of the same body as a synchronous /debitmandates response
@@ -2972,6 +3019,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -3066,6 +3114,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -3089,6 +3138,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateDebitMandate' # The callback consists of the same body as a synchronous /debitmandates response
@@ -3117,6 +3167,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -3197,12 +3248,13 @@ paths:
           headers:
             'X-Date':
               $ref: '#/components/headers/X-Date'
-  /accounts/{accountId}/debitMandates/{debitMandateReference}:
+  /accounts/{accountId}/debitmandates/{debitMandateReference}:
     parameters:
       - $ref: '#/components/parameters/accountId'
       - $ref: '#/components/parameters/debitMandateReference'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -3294,6 +3346,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -3322,6 +3375,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -3395,13 +3449,14 @@ paths:
           headers:
             'X-Date':
               $ref: '#/components/headers/X-Date'
-  /accounts/{identifierType}/{identifier}/debitMandates/{debitMandateReference}:
+  /accounts/{identifierType}/{identifier}/debitmandates/{debitMandateReference}:
     parameters:
       - $ref: '#/components/parameters/identifierType'
       - $ref: '#/components/parameters/identifier'
       - $ref: '#/components/parameters/debitMandateReference'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -3493,6 +3548,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -3521,6 +3577,7 @@ paths:
                 - $ref: '#/components/parameters/X-Date'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -3609,6 +3666,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -3632,6 +3690,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateLink' # The callback consists of the same body as a synchronous /links response
@@ -3660,6 +3719,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -3753,6 +3813,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -3776,6 +3837,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateLink' # The callback consists of the same body as a synchronous /links response
@@ -3804,6 +3866,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -3890,6 +3953,7 @@ paths:
       - $ref: '#/components/parameters/linkReference'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -3981,6 +4045,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -4009,6 +4074,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -4089,6 +4155,7 @@ paths:
       - $ref: '#/components/parameters/linkReference'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -4181,6 +4248,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -4209,6 +4277,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -4296,6 +4365,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -4319,6 +4389,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateQuotation' # The callback consists of the same body as a synchronous /quotations response
@@ -4347,6 +4418,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -4438,6 +4510,7 @@ paths:
         - $ref: '#/components/parameters/quotationReference'
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -4517,6 +4590,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -4540,6 +4614,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateAuthorisationCode' # The callback consists of the same body as a synchronous /authorisationcodes response
@@ -4568,6 +4643,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -4662,6 +4738,7 @@ paths:
         - $ref: '#/components/parameters/X-Date'
         - $ref: '#/components/parameters/X-CorrelationID'
         - $ref: '#/components/parameters/X-API-Key'
+        - $ref: '#/components/parameters/X-User-Bearer'
         - $ref: '#/components/parameters/X-Client-Id'
         - $ref: '#/components/parameters/X-Content-Hash'
         - $ref: '#/components/parameters/X-User-Credential-1'
@@ -4685,6 +4762,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateAuthorisationCode' # The callback consists of the same body as a synchronous /authorisationcodes response
@@ -4713,6 +4791,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -4793,12 +4872,13 @@ paths:
           headers:
             'X-Date':
               $ref: '#/components/headers/X-Date'
-  /accounts/{accountId}/authorisationCodes/{authorisationCode}:
+  /accounts/{accountId}/authorisationcodes/{authorisationCode}:
     parameters:
       - $ref: '#/components/parameters/accountId'
       - $ref: '#/components/parameters/authorisationCode'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -4890,6 +4970,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -4918,6 +4999,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -4991,13 +5073,14 @@ paths:
           headers:
             'X-Date':
               $ref: '#/components/headers/X-Date'
-  /accounts/{identifierType}/{identifier}/authorisationCodes/{authorisationCode}:
+  /accounts/{identifierType}/{identifier}/authorisationcodes/{authorisationCode}:
     parameters:
       - $ref: '#/components/parameters/identifierType'
       - $ref: '#/components/parameters/identifier'
       - $ref: '#/components/parameters/authorisationCode'
       - $ref: '#/components/parameters/X-Date'
       - $ref: '#/components/parameters/X-API-Key'
+      - $ref: '#/components/parameters/X-User-Bearer'
       - $ref: '#/components/parameters/X-Client-Id'
       - $ref: '#/components/parameters/X-Content-Hash'
       - $ref: '#/components/parameters/X-User-Credential-1'
@@ -5089,6 +5172,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/genericUpdateSuccess'
@@ -5117,6 +5201,7 @@ paths:
                 - $ref: '#/components/parameters/X-CorrelationID'
                 - $ref: '#/components/parameters/X-Content-Hash'
                 - $ref: '#/components/parameters/X-API-Key'
+                - $ref: '#/components/parameters/X-User-Bearer'
                 - $ref: '#/components/parameters/X-Client-Id'
               requestBody:
                 $ref: '#/components/requestBodies/updateError' # The callback returns the error object in the event of failure
@@ -5260,7 +5345,7 @@ paths:
           headers:
             'X-Date':
               $ref: '#/components/headers/X-Date'
-  /requestStates/{serverCorrelationId}:
+  /requeststates/{serverCorrelationId}:
     get:
       tags:
         - Supporting
@@ -5475,8 +5560,8 @@ components:
   schemas:
     amount:
       type: "string"
-      minLength: 4
-      maxLength: 256
+      minLength: 1
+      maxLength: 23
       pattern: ^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$
       example: "15.21"
     currency:
@@ -8132,6 +8217,13 @@ components:
       name: "X-API-Key"
       in: "header"
       description: Used to pass pre-shared client's API key to the server.
+      required: false
+      schema:
+        type: "string"
+    X-User-Bearer:
+      name: "X-User-Bearer"
+      in: "header"
+      description: Used to pass user’s access token when OAuth 2.0/OIDC authorisation framework is used for end-user authentication
       required: false
       schema:
         type: "string"

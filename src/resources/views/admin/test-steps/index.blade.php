@@ -19,8 +19,7 @@
                         <th class="text-nowrap">{{ __('Name') }}</th>
                         <th class="text-nowrap">{{ __('Source') }}</th>
                         <th class="text-nowrap">{{ __('Target') }}</th>
-                        <th class="text-nowrap">{{ __('Test Request Scripts') }}</th>
-                        <th class="text-nowrap">{{ __('Test Response Scripts') }}</th>
+                        <th class="text-nowrap">{{ __('Test Scripts') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,7 +27,7 @@
                     <tr>
                         <td class="text-break">
                             <a href="#">
-                                {{ $testStep->name }}
+                                {{ $testStep->forward }} {{ $testStep->backward }}
                             </a>
                         </td>
                         <td>
@@ -42,15 +41,12 @@
                             </a>
                         </td>
                         <td>
-                            {{ $testStep->test_request_scripts_count }}
-                        </td>
-                        <td>
-                            {{ $testStep->test_response_scripts_count }}
+                            {{ $testStep->test_scripts_count }}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="5">
+                        <td class="text-center" colspan="4">
                             {{ __('No Results') }}
                         </td>
                     </tr>

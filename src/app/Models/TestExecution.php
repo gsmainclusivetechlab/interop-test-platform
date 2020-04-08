@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -11,10 +10,6 @@ use Illuminate\Support\Arr;
 class TestExecution extends Model
 {
     const UPDATED_AT = null;
-
-    const STATUS_PASS = 'pass';
-    const STATUS_FAIL = 'fail';
-    const STATUS_ERROR = 'error';
 
     /**
      * @var string
@@ -24,51 +19,11 @@ class TestExecution extends Model
     /**
      * @var array
      */
-    protected $observables = [
-        'pass',
-        'fail',
-        'error',
+    protected $fillable = [
+        'name',
+        'message',
+        'successful',
     ];
-
-    /**
-     * @return array
-     */
-    public static function getStatusTypes()
-    {
-        return [
-            static::STATUS_PASS => 'success',
-            static::STATUS_FAIL => 'danger',
-            static::STATUS_ERROR => 'danger',
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusTypeAttribute()
-    {
-        return Arr::get(static::getStatusTypes(), $this->status);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getStatusLabels()
-    {
-        return [
-            static::STATUS_PASS => __('Pass'),
-            static::STATUS_FAIL => __('Fail'),
-            static::STATUS_ERROR => __('Error'),
-        ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStatusLabelAttribute()
-    {
-        return Arr::get(static::getStatusLabels(), $this->status);
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -81,90 +36,26 @@ class TestExecution extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function testScript()
+    public function testResponse()
     {
-        return $this->belongsTo(TestScript::class, 'test_script_id');
+        return $this->belongsTo(TestResponse::class, 'test_result_id');
     }
 
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePassed($query)
+    public function scopeSuccessful($query)
     {
-        return $query->where('status', static::STATUS_PASS);
+        return $query->where('successful', true);
     }
 
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeFailures($query)
+    public function scopeUnsuccessful($query)
     {
-        return $query->where('status', static::STATUS_FAIL);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeErrors($query)
-    {
-        return $query->where('status', static::STATUS_ERROR);
-    }
-
-    /**
-     * @param TestScript $script
-     * @return bool
-     */
-    public function pass(TestScript $script)
-    {
-        $this->test_script_id = $script->id;
-        $this->status = static::STATUS_PASS;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('pass');
-        return true;
-    }
-
-    /**
-     * @param TestScript $script
-     * @param string $message
-     * @return bool
-     */
-    public function fail(TestScript $script, string $message)
-    {
-        $this->test_script_id = $script->id;
-        $this->status = static::STATUS_FAIL;
-        $this->message = $message;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('fail');
-        return true;
-    }
-
-    /**
-     * @param TestScript $script
-     * @param string $message
-     * @return bool
-     */
-    public function error(TestScript $script, string $message)
-    {
-        $this->test_script_id = $script->id;
-        $this->status = static::STATUS_ERROR;
-        $this->message = $message;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('error');
-        return true;
+        return $query->where('successful', false);
     }
 }

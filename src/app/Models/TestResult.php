@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\RequestCast;
-use App\Casts\ResponseCast;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,27 +21,13 @@ class TestResult extends Model
      */
     protected $fillable = [
         'test_step_id',
-        'request',
-        'response',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'request' => RequestCast::class,
-        'response' => ResponseCast::class,
         'completed_at' => 'datetime',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'total' => 0,
-        'passed' => 0,
-        'failures' => 0,
-        'errors' => 0,
     ];
 
     /**
@@ -62,17 +45,28 @@ class TestResult extends Model
         return $this->belongsTo(TestRun::class, 'test_run_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function testStep()
     {
         return $this->belongsTo(TestStep::class, 'test_step_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function testScripts()
+    public function testRequest()
     {
-        return $this->hasManyThrough(TestScript::class, TestStep::class, 'id', 'test_step_id', 'test_step_id', 'id');
+        return $this->hasOne(TestRequest::class, 'test_result_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function testResponse()
+    {
+        return $this->hasOne(TestResponse::class, 'test_result_id');
     }
 
     /**
@@ -84,23 +78,21 @@ class TestResult extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function testRequestExecutions()
+    public function scopeSuccessful($query)
     {
-        return $this->testExecutions()->whereHas('testScript', function (Builder $query) {
-            $query->where('type', TestScript::TYPE_REQUEST);
-        });
+        return $query->where('successful', true);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function testResponseExecutions()
+    public function scopeUnsuccessful($query)
     {
-        return $this->testExecutions()->whereHas('testScript', function (Builder $query) {
-            $query->where('type', TestScript::TYPE_RESPONSE);
-        });
+        return $query->where('successful', false);
     }
 
     /**
@@ -113,36 +105,14 @@ class TestResult extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSuccessful($query)
-    {
-        return $query->where('failures', '=', 0)->where('errors', '=', 0);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeUnsuccessful($query)
-    {
-        return $query->where('failures', '!=', 0)->orWhere('errors', '!=', 0);
-    }
-
-    /**
+     * @param bool $successful
+     * @param float $time
      * @return bool
      */
-    public function getSuccessfulAttribute()
+    public function complete(bool $successful, float $time)
     {
-        return $this->total == $this->passed;
-    }
-
-    /**
-     * @return bool
-     */
-    public function complete()
-    {
+        $this->successful = $successful;
+        $this->duration = (int) floor($time * 1000);
         $this->completed_at = now();
 
         if (!$this->save()) {

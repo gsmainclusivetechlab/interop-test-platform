@@ -1,14 +1,15 @@
 <?php declare(strict_types=1);
 
 use App\Models\ApiService;
-use cebe\openapi\spec\OpenApi;
+use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
-use Symfony\Component\Yaml\Yaml;
 
 class ApiServicesTableSeeder extends Seeder
 {
     /**
+     * @throws \cebe\openapi\exceptions\IOException
      * @throws \cebe\openapi\exceptions\TypeErrorException
+     * @throws \cebe\openapi\exceptions\UnresolvableReferenceException
      */
     public function run()
     {
@@ -19,25 +20,27 @@ class ApiServicesTableSeeder extends Seeder
 
     /**
      * @return array
+     * @throws \cebe\openapi\exceptions\IOException
      * @throws \cebe\openapi\exceptions\TypeErrorException
+     * @throws \cebe\openapi\exceptions\UnresolvableReferenceException
      */
     protected function getData()
     {
         return [
             [
-                'name' => 'Mobile Money v1.1.0',
+                'name' => 'Mobile Money v1.1.2',
                 'server' => env('FSIOP_MM_SIMULATOR_URL'),
-                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mm.yaml'))),
+                'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),
             ],
             [
                 'name' => 'Mojaloop Hub v1.0',
                 'server' => env('FSIOP_MOJALOOP_HUB_URL'),
-                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mojaloop.yaml'))),
+                'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
             ],
             [
                 'name' => 'Mojaloop FSP v1.0',
                 'server' => env('FSIOP_MOJALOOP_SIMULATOR_URL'),
-                'scheme' => new OpenApi(Yaml::parseFile(database_path('seeds/openapi/mojaloop.yaml'))),
+                'scheme' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
             ],
         ];
     }

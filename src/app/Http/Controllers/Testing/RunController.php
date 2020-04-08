@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
+use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
+use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
+use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\CompleteTestRunJob;
 use App\Models\Session;
 use App\Models\TestCase;
-use App\Testing\Middlewares\RequestMiddleware;
-use App\Testing\Middlewares\ResponseMiddleware;
-use App\Testing\TestRequest;
-use App\Testing\TestResponse;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
-use PHPUnit\Framework\AssertionFailedError;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Throwable;
+use SebastianBergmann\Timer\Timer;
 
 class RunController extends Controller
 {
+    use HasPsrRequest;
+
     /**
      * RunController constructor.
      */
@@ -32,18 +31,20 @@ class RunController extends Controller
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @param Session $session
      * @param TestCase $testCase
      * @param string $path
-     * @return \Exception|AssertionFailedError|ResponseInterface|Throwable
+     * @return mixed
      */
-    public function __invoke(ServerRequestInterface $request, Session $session, TestCase $testCase, string $path)
+    public function __invoke(Session $session, TestCase $testCase, string $path)
     {
         $testRun = $session->testRuns()->create([
             'test_case_id' => $testCase->id,
         ]);
         $testStep = $testCase->testSteps()->firstOrFail();
+        $testResult = $testRun->testResults()->create([
+            'test_step_id' => $testStep->id,
+        ]);
 
         CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
@@ -51,36 +52,16 @@ class RunController extends Controller
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $request->withUri($uri)
-            ->withMethod($request->getMethod())
+        $request = $this->getRequest()->withUri($uri)
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 
+        Timer::start();
         $stack = new HandlerStack();
         $stack->setHandler(new CurlHandler());
+        $stack->push(new MapRequestHandler($testResult));
+        $stack->push(new MapResponseHandler($testResult));
+        $promise = (new Client(['handler' => $stack, 'http_errors' => false]))->sendAsync($request);
 
-//        foreach ($testStep->testRequestSetups()->get() as $testRequestSetup) {
-//            $stack->push(new RequestMiddleware($testRequestSetup));
-//        }
-//
-//        foreach ($testStep->testResponseSetups()->get() as $testResponseSetup) {
-//            $stack->push(new ResponseMiddleware($testResponseSetup));
-//        }
-
-        $testResult = $testRun->testResults()->create([
-            'test_step_id' => $testStep->id,
-            'request' => new TestRequest($request),
-        ]);
-
-        try {
-            $response = (new Client(['handler' => $stack, 'http_errors' => false]))->send($request);
-            $testResult->response = new TestResponse($response);
-            $this->doTest($testResult);
-            $testResult->complete();
-
-            return $response;
-        } catch (RequestException $e) {
-            $testResult->complete();
-            return $e;
-        }
+        return $promise->then(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult))->wait();
     }
 }

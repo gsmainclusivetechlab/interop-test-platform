@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\HasUuidAttribute;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Session extends Model
 {
-    use HasUuid;
+    use HasUuidAttribute;
 
     /**
      * @var string
@@ -48,6 +48,14 @@ class Session extends Model
     public function testRuns()
     {
         return $this->hasMany(TestRun::class, 'session_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testData()
+    {
+        return $this->hasMany(TestDatum::class, 'session_id');
     }
 
     /**

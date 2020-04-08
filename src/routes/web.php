@@ -15,16 +15,20 @@
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
+Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'Sessions\TestDatumController@run')->name('sessions.test-cases.test-data.run');
+
 /**
  * Sessions Routes
  */
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
     Route::get('/', 'OverviewController@index')->name('index');
-    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
     Route::get('{session}', 'OverviewController@show')->name('show');
-    Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test_cases.show');
-    Route::get('{session}/test-cases/{testCase}/flow', 'TestCaseController@flow')->name('test_cases.flow');
-    Route::get('{session}/test-cases/{testCase}/results/{testRun}/{position?}', 'TestCaseController@results')->name('test_cases.results');
+    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
+    Route::get('{session}/chart', 'OverviewController@showChartData')->name('chart');
+    Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
+    Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
+    Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController')->name('test-cases.test-steps');
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
         Route::post('selection', 'RegisterController@storeSelection')->name('selection.store');
@@ -66,9 +70,9 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::get('/{trashed?}', 'UserController@index')->name('index')->where('trashed', 'trashed');
         Route::delete('{user}/destroy', 'UserController@destroy')->name('destroy');
         Route::post('{userOnlyTrashed}/restore', 'UserController@restore')->name('restore');
-        Route::delete('{userWithTrashed}/force-destroy', 'UserController@forceDestroy')->name('force_destroy');
-        Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote_admin');
-        Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate_admin');
+        Route::delete('{userWithTrashed}/force-destroy', 'UserController@forceDestroy')->name('force-destroy');
+        Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote-admin');
+        Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate-admin');
     });
     Route::name('sessions.')->prefix('sessions')->group(function () {
         Route::get('/', 'SessionController@index')->name('index');

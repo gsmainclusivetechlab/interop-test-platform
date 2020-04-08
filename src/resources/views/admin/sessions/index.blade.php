@@ -44,7 +44,7 @@
                             {{ $session->testCases->count() }}
                         </td>
                         <td>
-                            @include('sessions.includes.runs-progress', $session)
+                            <x-sessions.latest-test-runs-progress :session="$session" />
                         </td>
                         <td>
                             @if($session->lastTestRun)
