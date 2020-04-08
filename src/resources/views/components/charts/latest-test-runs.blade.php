@@ -1,1 +1,4 @@
-<chart ajax-url="{{ route('sessions.chart', $session) }}"></chart>
+<chart
+	ajax-url="{{ $ajaxUrl }}"
+	options="{{ $options }}"
+></chart>

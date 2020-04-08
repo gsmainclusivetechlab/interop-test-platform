@@ -37,16 +37,41 @@ class LatestTestRuns extends Component implements Arrayable
     const INTERVAL_DAY = 'Day';
 
     /**
+     * Chart type
+     */
+    const TYPE = 'bar';
+
+    const HEIGHT = 360;
+
+    const COLOR_PASSED = '#9cb227';
+
+    const COLOR_FAILED = '#de002b';
+
+    const OPACITY = 1;
+
+    const POSITION = 'top';
+
+    const MARKER_RADIUS = 100;
+
+    const LABEL_PADDING = 0;
+
+    public $ajaxUrl;
+
+    public $type;
+
+    public $height;
+
+    /**
      * @var Session
      */
-    public $session;
+    protected $session;
 
     /**
      * Array for intervals
      *
      * @var array
      */
-    private $intervals = [
+    protected $intervals = [
         'Day',
         'Month',
         'Year',
@@ -58,6 +83,42 @@ class LatestTestRuns extends Component implements Arrayable
     public function __construct(Session $session)
     {
         $this->session = $session;
+        $this->ajaxUrl = route('sessions.chart', $session);
+        $this->type = self::TYPE;
+        $this->height = self::HEIGHT;
+    }
+
+    public function options()
+    {
+        return json_encode([
+            'chart' => [
+                'stacked' => true,
+                'toolbar' => [
+                    'show'    => false,
+                ],
+                'zoom'    => [
+                    'enabled' => false,
+                ],
+            ],
+            'colors' => [self::COLOR_PASSED, self::COLOR_FAILED],
+            'fill' => [
+                'opacity' => self::OPACITY,
+            ],
+            'legend' => [
+                'position' => self::POSITION,
+                'markers' => [
+                    'radius' => self::MARKER_RADIUS,
+                ]
+            ],
+            'xaxis' => [
+                'labels' => [
+                    'padding' => self::LABEL_PADDING,
+                ],
+                'tooltip' => [
+                    'enabled' => false,
+                ]
+            ]
+        ]);
     }
 
     /**
