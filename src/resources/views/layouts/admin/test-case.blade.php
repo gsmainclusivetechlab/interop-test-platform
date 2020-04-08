@@ -14,7 +14,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.test-cases.test-data-examples.index', $testCase) }}" class="nav-link @if (request()->routeIs('admin.test-cases.test-data-examples.index')) active @endif">
+                        <a href="{{ route('admin.test-cases.test-steps.index', $testCase) }}" class="nav-link @if (request()->routeIs('admin.test-cases.test-steps.index')) active @endif">
                             {{ __('Test Steps') }}
                         </a>
                     </li>

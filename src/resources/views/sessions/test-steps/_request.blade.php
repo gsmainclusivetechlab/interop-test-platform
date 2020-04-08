@@ -7,12 +7,12 @@
 		</div>
 		<div class="card-body p-0">
 			@isset($step->testDataExample->request['headers'])
-				@include('sessions.test-data-examples.examples._headers', [
+				@include('sessions.test-steps._headers', [
     				'headers' => $step->testDataExample->request['headers']
 				])
 			@endisset
 			@isset($step->testDataExample->request['body'])
-				@include('sessions.test-data-examples.examples._body', [
+				@include('sessions.test-steps._body', [
     				'body' => $step->testDataExample->request['body']
 				])
 			@endisset

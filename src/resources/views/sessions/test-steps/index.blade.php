@@ -34,10 +34,10 @@
 								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $step->id }}-request">{{ __('Request') }}</button>
 								<button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $step->id }}-response">{{ __('Response') }}</button>
 								@if ($step->testDataExample->request)
-									@include('sessions.test-data-examples.examples.request')
+									@include('sessions.test-steps._request')
 								@endif
 								@if ($step->testDataExample->response)
-									@include('sessions.test-data-examples.examples.response')
+									@include('sessions.test-steps._response')
 								@endif
 							@endif
 						</td>

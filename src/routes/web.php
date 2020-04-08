@@ -28,8 +28,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::get('{session}/chart', 'OverviewController@showChartData')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
-    Route::get('{session}/test-cases/{testCase}/test-data-examples', 'TestDataExampleController')
-        ->name('test-cases.test-data-examples');
+    Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController')->name('test-cases.test-steps');
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('selection', 'RegisterController@createSelection')->name('selection.create');
         Route::post('selection', 'RegisterController@storeSelection')->name('selection.store');
@@ -79,5 +78,5 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
     Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
     Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import');
-    Route::resource('test-cases.test-data-examples', 'TestStepController')->shallow();
+    Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });

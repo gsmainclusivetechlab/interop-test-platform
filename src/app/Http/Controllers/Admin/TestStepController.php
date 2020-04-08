@@ -31,6 +31,6 @@ class TestStepController extends Controller
             ->withCount(['testScripts'])
             ->paginate();
 
-        return view('admin.test-data-examples.index', compact('testCase', 'testSteps'));
+        return view('admin.test-steps.index', compact('testCase', 'testSteps'));
     }
 }

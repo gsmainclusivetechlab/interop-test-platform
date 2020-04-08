@@ -19,12 +19,12 @@
 				</div>
 			@endisset
 			@isset($step->testDataExample->response['headers'])
-				@include('sessions.test-data-examples.examples._headers', [
+				@include('sessions.test-steps._headers', [
     				'headers' => $step->testDataExample->response['headers']
 				])
 			@endif
 			@isset($step->testDataExample->response['body'])
-				@include('sessions.test-data-examples.examples._body', [
+				@include('sessions.test-steps._body', [
     				'body' => $step->testDataExample->response['body']
 				])
 			@endif
