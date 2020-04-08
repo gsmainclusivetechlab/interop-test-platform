@@ -37,16 +37,71 @@ class LatestTestRuns extends Component implements Arrayable
     const INTERVAL_DAY = 'Day';
 
     /**
+     * Chart type
+     */
+    const TYPE = 'bar';
+
+    /**
+     * Chart height
+     */
+    const HEIGHT = 360;
+
+    /**
+     * Color for passed tests
+     */
+    const COLOR_PASSED = '#9cb227';
+
+    /**
+     * Color for failed tests
+     */
+    const COLOR_FAILED = '#de002b';
+
+    /**
+     * Opacity for filled  parts
+     */
+    const OPACITY = 1;
+
+    /**
+     * Legend position
+     */
+    const LEGEND_POSITION = 'top';
+
+    /**
+     * Marker radius
+     */
+    const MARKER_RADIUS = 100;
+
+    /**
+     * Padding for label
+     */
+    const LABEL_PADDING = 0;
+
+    /**
+     * @var string
+     */
+    public $ajaxUrl;
+
+    /**
+     * @var string
+     */
+    public $type;
+
+    /**
+     * @var int
+     */
+    public $height;
+
+    /**
      * @var Session
      */
-    public $session;
+    protected $session;
 
     /**
      * Array for intervals
      *
      * @var array
      */
-    private $intervals = [
+    protected $intervals = [
         'Day',
         'Month',
         'Year',
@@ -58,6 +113,47 @@ class LatestTestRuns extends Component implements Arrayable
     public function __construct(Session $session)
     {
         $this->session = $session;
+        $this->ajaxUrl = route('sessions.chart', $session);
+        $this->type = self::TYPE;
+        $this->height = self::HEIGHT;
+    }
+
+    /**
+     * Chart options
+     *
+     * @return false|string
+     */
+    public function options()
+    {
+        return json_encode([
+            'chart' => [
+                'stacked' => true,
+                'toolbar' => [
+                    'show'    => false,
+                ],
+                'zoom'    => [
+                    'enabled' => false,
+                ],
+            ],
+            'colors' => [self::COLOR_PASSED, self::COLOR_FAILED],
+            'fill' => [
+                'opacity' => self::OPACITY,
+            ],
+            'legend' => [
+                'position' => self::LEGEND_POSITION,
+                'markers' => [
+                    'radius' => self::MARKER_RADIUS,
+                ]
+            ],
+            'xaxis' => [
+                'labels' => [
+                    'padding' => self::LABEL_PADDING,
+                ],
+                'tooltip' => [
+                    'enabled' => false,
+                ]
+            ]
+        ]);
     }
 
     /**
