@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Sessions;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSessionRequest extends FormRequest
+class StoreSessionSutsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,19 @@ class StoreSessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'string|nullable',
-            'test_cases' => 'required|array|exists:test_cases,id',
+            'components.*.sut' => 'required|boolean',
+            'components.*.base_url' => 'required|url|max:255',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'components.*.sut' => __('Type'),
+            'components.*.base_url' => __('URL'),
         ];
     }
 }

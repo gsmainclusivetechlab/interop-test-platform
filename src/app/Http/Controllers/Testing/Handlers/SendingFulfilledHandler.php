@@ -36,6 +36,10 @@ class SendingFulfilledHandler
         $time = Timer::stop();
         $this->testResult->complete($runner->run($loader->load())->wasSuccessful(), $time);
 
+        if (!($response->getStatusCode() >= 200 && $response->getStatusCode() < 300)) {
+            $this->testResult->testRun->complete();
+        }
+
         return $response;
     }
 }

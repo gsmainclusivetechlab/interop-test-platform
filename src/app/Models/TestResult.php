@@ -33,6 +33,13 @@ class TestResult extends Model
     /**
      * @var array
      */
+    protected $attributes = [
+        'duration' => 0,
+    ];
+
+    /**
+     * @var array
+     */
     protected $observables = [
         'complete',
     ];

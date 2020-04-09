@@ -12,6 +12,8 @@ class TestResultObserver
      */
     public function complete(TestResult $testResult)
     {
+        $testResult->testRun()->increment('duration', (int) $testResult->duration);
+
         if ($testResult->testStep->isLastPosition()) {
             $testResult->testRun->complete();
         }

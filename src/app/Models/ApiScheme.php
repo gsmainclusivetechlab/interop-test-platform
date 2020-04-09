@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Casts\OpenApiCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
  */
-class ApiService extends Model
+class ApiScheme extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'api_services';
+    protected $table = 'api_schemes';
 
     /**
      * @var array
@@ -20,6 +21,13 @@ class ApiService extends Model
     protected $fillable = [
         'name',
         'description',
-        'base_url',
+        'openapi',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'openapi' => OpenApiCast::class,
     ];
 }

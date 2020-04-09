@@ -66,7 +66,7 @@
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-lg-3 ml-auto my-3 my-lg-0 text-lg-right">
-                <a href="{{ route('sessions.register.selection.create') }}" class="btn btn-outline-primary">
+                <a href="{{ route('sessions.register.create') }}" class="btn btn-outline-primary">
                     <i class="fe fe-plus mr-2"></i>
                     {{ __('New Session') }}
                 </a>
