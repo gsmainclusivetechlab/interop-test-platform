@@ -519,18 +519,6 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_scripts:
-      - name: ID is Valid
-        rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Status is Received
-        rules:
-          body.transactionRequestState: 'in:REJECTED'
-    test_response_scripts:
-      - name: Transaction was successfully accepted
-        rules:
-          status: 'in:200'
     test_request_example:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
