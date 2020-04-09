@@ -68,7 +68,7 @@ const app = new Vue({
             const targetInput = closestFormGroup.querySelector('input.form-control');
 
             targetInput.value = currentValue || '';
-            targetInput.disabled = !!currentValue;
+            targetInput.readOnly = !!currentValue;
         },
     },
 });
