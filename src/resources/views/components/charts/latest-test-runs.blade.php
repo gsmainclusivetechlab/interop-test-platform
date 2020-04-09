@@ -1,6 +1,6 @@
 <chart
 	ajax-url="{{ $ajaxUrl }}"
-	type="{{ $type }}"
-	:height="{{ $height }}"
-	:options="{{ $options }}"
+	type="bar"
+	height=360
+	:options="$options"
 ></chart>

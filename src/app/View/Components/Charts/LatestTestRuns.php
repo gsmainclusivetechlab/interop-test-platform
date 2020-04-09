@@ -37,59 +37,9 @@ class LatestTestRuns extends Component implements Arrayable
     const INTERVAL_DAY = 'Day';
 
     /**
-     * Chart type
-     */
-    const TYPE = 'bar';
-
-    /**
-     * Chart height
-     */
-    const HEIGHT = 360;
-
-    /**
-     * Color for passed tests
-     */
-    const COLOR_PASSED = '#9cb227';
-
-    /**
-     * Color for failed tests
-     */
-    const COLOR_FAILED = '#de002b';
-
-    /**
-     * Opacity for filled  parts
-     */
-    const OPACITY = 1;
-
-    /**
-     * Legend position
-     */
-    const LEGEND_POSITION = 'top';
-
-    /**
-     * Marker radius
-     */
-    const MARKER_RADIUS = 100;
-
-    /**
-     * Padding for label
-     */
-    const LABEL_PADDING = 0;
-
-    /**
      * @var string
      */
     public $ajaxUrl;
-
-    /**
-     * @var string
-     */
-    public $type;
-
-    /**
-     * @var int
-     */
-    public $height;
 
     /**
      * @var Session
@@ -102,9 +52,9 @@ class LatestTestRuns extends Component implements Arrayable
      * @var array
      */
     protected $intervals = [
-        'Day',
-        'Month',
-        'Year',
+        self::INTERVAL_DAY,
+        self::INTERVAL_MONTH,
+        self::INTERVAL_YEAR,
     ];
 
     /**
@@ -114,8 +64,6 @@ class LatestTestRuns extends Component implements Arrayable
     {
         $this->session = $session;
         $this->ajaxUrl = route('sessions.chart', $session);
-        $this->type = self::TYPE;
-        $this->height = self::HEIGHT;
     }
 
     /**
@@ -135,19 +83,19 @@ class LatestTestRuns extends Component implements Arrayable
                     'enabled' => false,
                 ],
             ],
-            'colors' => [self::COLOR_PASSED, self::COLOR_FAILED],
+            'colors' => ['#9cb227', '#de002b'],
             'fill' => [
-                'opacity' => self::OPACITY,
+                'opacity' => 1,
             ],
             'legend' => [
-                'position' => self::LEGEND_POSITION,
+                'position' => 'top',
                 'markers' => [
-                    'radius' => self::MARKER_RADIUS,
+                    'radius' => 100,
                 ]
             ],
             'xaxis' => [
                 'labels' => [
-                    'padding' => self::LABEL_PADDING,
+                    'padding' => 0,
                 ],
                 'tooltip' => [
                     'enabled' => false,
@@ -215,28 +163,27 @@ class LatestTestRuns extends Component implements Arrayable
 
         $interval = current($this->intervals);
 
-        if ($interval !== self::INTERVAL_YEAR) {
+        if ($interval !== static::INTERVAL_YEAR) {
             $select .= ', MONTH(created_at) AS month';
             $groupBy .= ', MONTH(created_at)';
             $orderBy .= ', month DESC';
         }
 
-        if ($interval === self::INTERVAL_DAY) {
+        if ($interval === static::INTERVAL_DAY) {
             $select .= ', DAY(created_at) AS day';
             $groupBy .= ', DAY(created_at)';
             $orderBy .= ', day DESC';
         }
 
-        $query = DB::table('test_runs')
+        $query = $this->session->testRuns()
             ->selectRaw($select)
-            ->where(['session_id' => $this->session->id])
             ->groupByRaw($groupBy);
 
-        if ($query->get()->count() > self::GROUP_LIMIT && next($this->intervals)) {
+        if ($query->get()->count() > static::GROUP_LIMIT && next($this->intervals)) {
             return $this->getTestRuns();
         }
 
-        return $query->orderByRaw($orderBy)->limit(self::GROUP_LIMIT)->get();
+        return $query->orderByRaw($orderBy)->limit(static::GROUP_LIMIT)->get();
     }
 
     /**
@@ -248,7 +195,7 @@ class LatestTestRuns extends Component implements Arrayable
     protected function getFormattedDate(Carbon $date, string $targetInterval): string
     {
         switch ($targetInterval) {
-            case self::INTERVAL_DAY:
+            case static::INTERVAL_DAY:
                 $format = 'j M';
 
                 if (!$date->isCurrentYear()) {
@@ -256,7 +203,7 @@ class LatestTestRuns extends Component implements Arrayable
                 }
 
                 break;
-            case self::INTERVAL_MONTH:
+            case static::INTERVAL_MONTH:
                 $format = 'M';
 
                 if (!$date->isCurrentYear()) {
