@@ -45,7 +45,7 @@
                                                             </span>
                                                             <b-collapse id="positive-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-unstyled">
-                                                                    @foreach($session->positiveTestCases->where('use_case_id', $useCase->id) as $testCase)
+                                                                    @foreach($session->positiveTestCases->where('use_case_id', $useCase->id)->sortBy('name') as $testCase)
                                                                         <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                             <a href="{{ route('sessions.test-cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
                                                                             @if($lastRun = $session->testRuns()->latest()->completed()->where('test_case_id', $testCase->id)->first())
@@ -71,7 +71,7 @@
                                                             </span>
                                                             <b-collapse id="negative-test-cases-{{ $useCase->id }}" visible>
                                                                 <ul class="list-unstyled">
-                                                                    @foreach($session->negativeTestCases->where('use_case_id', $useCase->id) as $testCase)
+                                                                    @foreach($session->negativeTestCases->where('use_case_id', $useCase->id)->sortBy('name') as $testCase)
                                                                         <li class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom">
                                                                             <a href="{{ route('sessions.test-cases.show', [$session, $testCase]) }}">{{ $testCase->name }}</a>
                                                                             @if($lastRun = $session->testRuns()->latest()->completed()->where('test_case_id', $testCase->id)->first())
