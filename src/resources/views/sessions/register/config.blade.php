@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="col-7">
                                     <label class="form-label font-weight-normal">{{ __('URL') }}</label>
-                                    <input class="form-control @error("components.{$component->id}.base_url") is-invalid @enderror" name="components[{{ $component->id }}][base_url]" value="{{ old("components.{$component->id}.base_url", $component->apiService->base_url) }}">
+                                    <input class="form-control @error("components.{$component->id}.base_url") is-invalid @enderror" name="components[{{ $component->id }}][base_url]" value="{{ old("components.{$component->id}.base_url", $component->apiService->base_url) }}" @if(old("components.{$component->id}.sut", 0) == 0) readonly @endif>
                                     @error("components.{$component->id}.base_url")
                                         <span class="invalid-feedback">
                                             <strong>{{ $message }}</strong>
