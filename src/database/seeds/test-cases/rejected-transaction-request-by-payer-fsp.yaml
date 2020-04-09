@@ -66,6 +66,33 @@ test_steps:
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'in:callback'
+    test_request_example:
+      method: POST
+      uri: /transactions
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        x-callback-url: 'http://example.com/example'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        amount: '15.15'
+        currency: 'USD'
+        type: 'merchantpay'
+        debitParty:
+          - key: 'msisdn'
+            value: "+33555123456"
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
+    test_response_example:
+      status: 202
+      headers:
+        content-type: 'application/json'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
+        status: 'pending'
+        notificationMethod: 'callback'
   - forward: POST /transactionRequests
     backward: HTTP 202
     source: Mobile Money Operator 1
@@ -93,6 +120,33 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
+    test_request_example:
+      method: POST
+      uri: /transactionsRequests
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partyIdType: 'MSISDN'
+          partyIdentifier: "+33555123456"
+        amount:
+          amount: '15.15'
+          currency: 'USD'
+        type: 'merchantpay'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+    test_response_example:
+      status: 202
   - forward: POST /transactionRequests
     backward: HTTP 202
     source: Mojaloop
@@ -120,6 +174,33 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
+    test_request_example:
+      method: POST
+      uri: /transactionsRequests
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partyIdType: 'MSISDN'
+          partyIdentifier: "+33555123456"
+        amount:
+          amount: '15.15'
+          currency: 'USD'
+        type: 'merchantpay'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+    test_response_example:
+      status: 202
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
     source: Mobile Money Operator 2
@@ -136,6 +217,18 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
+    test_request_example:
+      method: PUT
+      uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        transactionRequestState: 'REJECTED'
+    test_response_example:
+      status: 200
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
     source: Mojaloop
@@ -152,6 +245,18 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
+    test_request_example:
+      method: PUT
+      uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        transactionRequestState: 'REJECTED'
+    test_response_example:
+      status: 200
   - forward: PUT /X-Callback-URL
     backward: HTTP 204
     source: Mobile Money Operator 1
@@ -167,3 +272,14 @@ test_steps:
       - name: Transaction was successfully declined
         rules:
           status: 'in:204'
+    test_request_example:
+      method: 'PUT'
+      uri: 'http://example.com/example'
+      headers:
+        content-type: 'application/json'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        errorCategory: 'businessRule'
+        errorCode: 'genericError'
+    test_response_example:
+      status: 204
