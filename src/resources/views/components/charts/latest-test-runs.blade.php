@@ -2,5 +2,5 @@
 	ajax-url="{{ $ajaxUrl }}"
 	type="bar"
 	height=360
-	:options="$options"
+	:options="{{ $options }}"
 ></chart>
