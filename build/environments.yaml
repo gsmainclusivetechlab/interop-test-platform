@@ -51,9 +51,10 @@ instances:
             env_variables:
                 <<: *default-env-vars
                 APP_URL: http://gsma-itp-test-control.develop.s8.jc
-                FSIOP_MM_SIMULATOR_URL: http://gsma-itp-mmo-api.develop.s8.jc
-                FSIOP_MOJALOOP_HUB_URL: http://mojaloop.s9.jc
-                FSIOP_MOJALOOP_SIMULATOR_URL: http://moja-simulator.develop.s8.jc
+                API_SERVICE_SP_SIMULATOR_URL: http://gsma-sp.staging.s8.justcoded.com
+                API_SERVICE_MM_SIMULATOR_URL: http://gsma-itp-mmo-api.develop.s8.jc
+                API_SERVICE_MOJALOOP_HUB_URL: http://mojaloop.s9.jc
+                API_SERVICE_MOJALOOP_SIMULATOR_URL: http://moja-simulator.develop.s8.jc
         docker_server:
             <<: *default-docker-server
             vhosts:
@@ -71,9 +72,10 @@ instances:
             env_variables:
                 <<: *default-env-vars
                 APP_URL: http://gsma-itp-test-control.build.s8.jc
-                FSIOP_MM_SIMULATOR_URL: http://gsma-itp-mmo-api.staging.s8.justcoded.com
-                FSIOP_MOJALOOP_HUB_URL: http://mojaloop.s9.jc
-                FSIOP_MOJALOOP_SIMULATOR_URL: http://moja-simulator.staging.s8.justcoded.com
+                API_SERVICE_SP_SIMULATOR_URL: http://gsma-sp.staging.s8.justcoded.com
+                API_SERVICE_MM_SIMULATOR_URL: http://gsma-itp-mmo-api.staging.s8.justcoded.com
+                API_SERVICE_MOJALOOP_HUB_URL: http://mojaloop.s9.jc
+                API_SERVICE_MOJALOOP_SIMULATOR_URL: http://moja-simulator.staging.s8.justcoded.com
         docker_server:
             <<: *default-docker-server
             vhosts:
@@ -92,9 +94,10 @@ instances:
             env_variables:
                 <<: *default-env-vars
                 APP_URL: http://gsma-itp-test-control.staging.s8.justcoded.com
-                FSIOP_MM_SIMULATOR_URL: http://gsma-itp-mmo-api.staging.s8.justcoded.com
-                FSIOP_MOJALOOP_HUB_URL: http://mojaloop.s9.jc
-                FSIOP_MOJALOOP_SIMULATOR_URL: http://moja-simulator.staging.s8.justcoded.com
+                API_SERVICE_SP_SIMULATOR_URL: http://gsma-sp.staging.s8.justcoded.com
+                API_SERVICE_MM_SIMULATOR_URL: http://gsma-itp-mmo-api.staging.s8.justcoded.com
+                API_SERVICE_MOJALOOP_HUB_URL: http://mojaloop.s9.jc
+                API_SERVICE_MOJALOOP_SIMULATOR_URL: http://moja-simulator.staging.s8.justcoded.com
         docker_server:
             <<: *default-docker-server
             vhosts:

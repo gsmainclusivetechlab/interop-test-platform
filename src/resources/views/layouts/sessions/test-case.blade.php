@@ -42,7 +42,7 @@
                                                 <p>
                                                     <strong>{{ __('Description') }}</strong>
                                                 </p>
-                                                <p>{{ $testCase->description }}</p>
+                                                <p>{{ \Illuminate\Mail\Markdown::parse($testCase->description) }}</p>
                                             </li>
                                         @endif
 
@@ -51,7 +51,7 @@
                                                 <p>
                                                     <strong>{{ __('Precondition') }}</strong>
                                                 </p>
-                                                <p>{{ $testCase->precondition }}</p>
+                                                <p>{{ \Illuminate\Mail\Markdown::parse($testCase->precondition) }}</p>
                                             </li>
                                         @endif
                                     </ul>
