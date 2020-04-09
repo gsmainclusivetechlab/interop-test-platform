@@ -61,16 +61,14 @@ const app = new Vue({
                 checkbox.checked = !isChecked;
             });
         },
-        handleSessionComponentsSelect(e) {
-            const select = e.target;
-            const selectValue = select.value;
-            const closestFormGroup = select.closest('.form-group');
-            const input = closestFormGroup.querySelector('input.form-control');
+        toggleFieldAvailability(e) {
+            const currentInput = e.target;
+            const currentValue = currentInput.dataset && currentInput.dataset.value;
+            const closestFormGroup = currentInput.closest('.form-group');
+            const targetInput = closestFormGroup.querySelector('input.form-control');
 
-            const isSutSelected = selectValue === '';
-
-            input.value = selectValue;
-            input.disabled = !isSutSelected;
+            targetInput.value = currentValue || '';
+            targetInput.disabled = !!currentValue;
         },
     },
 });

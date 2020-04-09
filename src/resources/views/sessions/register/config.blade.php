@@ -3,7 +3,7 @@
 @section('title', __('Configure components'))
 
 @section('content')
-    <form class="flow-chart-content" action="{{ route('sessions.register.config', $session) }}" method="POST">
+    <form action="{{ route('sessions.register.config', $session) }}" method="POST">
         @csrf
         <div class="card">
             <div class="card-header border-0">
@@ -24,13 +24,13 @@
                                     </label>
                                     <div class="selectgroup w-100 @error("components.{$component->id}.sut") is-invalid @enderror">
                                         <label class="selectgroup-item">
-                                            <input type="radio" name="components[{{ $component->id }}][sut]" value="1" class="selectgroup-input" {{ old("components.{$component->id}.sut", 0) == 1 ? 'checked' : '' }}>
+                                            <input type="radio" name="components[{{ $component->id }}][sut]" value="1" class="selectgroup-input" {{ old("components.{$component->id}.sut", 0) == 1 ? 'checked' : '' }} @change="toggleFieldAvailability">
                                             <span class="selectgroup-button">
                                                 {{ __('SUT') }}
                                             </span>
                                         </label>
                                         <label class="selectgroup-item">
-                                            <input type="radio" name="components[{{ $component->id }}][sut]" value="0" class="selectgroup-input" {{ old("components.{$component->id}.sut", 0) == 0 ? 'checked' : '' }}>
+                                            <input type="radio" name="components[{{ $component->id }}][sut]" value="0" class="selectgroup-input" data-value="{{ $component->apiService->base_url }}" {{ old("components.{$component->id}.sut", 0) == 0 ? 'checked' : '' }} @change="toggleFieldAvailability">
                                             <span class="selectgroup-button">
                                                 {{ __('Simulated') }}
                                             </span>

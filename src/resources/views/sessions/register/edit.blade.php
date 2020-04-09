@@ -3,7 +3,7 @@
 @section('title', __('Session info'))
 
 @section('content')
-    <form class="flow-chart-content" action="{{ route('sessions.register.update', $session) }}" method="POST">
+    <form action="{{ route('sessions.register.update', $session) }}" method="POST">
         @csrf
         @method('PATCH')
         <div class="card">
@@ -121,7 +121,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">{{ __('Next') }}</button>
+            <button type="submit" class="btn btn-primary ml-auto">{{ __('Next') }}</button>
         </div>
     </form>
 @endsection
