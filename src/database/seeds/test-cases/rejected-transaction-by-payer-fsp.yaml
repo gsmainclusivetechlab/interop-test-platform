@@ -453,7 +453,7 @@ test_steps:
           body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
       - name: condition is specified correctly
         rules:
-          body.condition: '\regex:/^[A-Za-z0-9-_]{43}$/'
+          body.condition: 'regex:/^[A-Za-z0-9-_]{43}$/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
