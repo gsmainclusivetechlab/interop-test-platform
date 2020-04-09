@@ -107,7 +107,6 @@ class ScenariosTableSeeder extends Seeder
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Service Provider')->value('id'),
-                    'api_scheme_id' => ApiScheme::where(['name' => 'MM v1.1.2'])->value('id'),
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),

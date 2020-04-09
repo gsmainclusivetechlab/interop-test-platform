@@ -63,7 +63,7 @@
                                                     </div>
                                                     <b-collapse id="positive-test-cases-{{ $useCase->id }}" visible>
                                                         <ul class="list-group">
-                                                            @foreach($useCase->positiveTestCases as $testCase)
+                                                            @foreach($useCase->positiveTestCases->sortBy('name') as $testCase)
                                                                 <li class="list-group-item">
                                                                     <label class="custom-control custom-checkbox mb-0">
                                                                         <input name="test_cases[{{ $testCase->id }}]" value="{{ $testCase->id }}" type="checkbox" class="custom-control-input" {{ old("test_cases.{$testCase->id}", $session->testCases->contains($testCase)) ? 'checked' : '' }}>
@@ -92,7 +92,7 @@
                                                     </div>
                                                     <b-collapse id="negative-test-cases-{{ $useCase->id }}" visible>
                                                         <ul class="list-group">
-                                                            @foreach($useCase->negativeTestCases as $testCase)
+                                                            @foreach($useCase->negativeTestCases->sortBy('name') as $testCase)
                                                                 <li class="list-group-item">
                                                                     <label class="custom-control custom-checkbox mb-0">
                                                                         <input name="test_cases[{{ $testCase->id }}]" value="{{ $testCase->id }}" type="checkbox" class="custom-control-input" {{ old("test_cases.{$testCase->id}", $session->testCases->contains($testCase)) ? 'checked' : '' }}>

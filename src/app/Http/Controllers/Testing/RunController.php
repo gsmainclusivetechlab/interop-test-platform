@@ -47,7 +47,7 @@ class RunController extends Controller
             'test_step_id' => $testStep->id,
         ]);
 
-//        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
+        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
         $baseUrl = $session->suts()->whereKey($testStep->target->id)->value('base_url') ?? $testStep->target->apiService->base_url;
         $traceparent = (new TraceparentHeader())
