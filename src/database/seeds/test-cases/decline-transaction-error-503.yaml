@@ -70,7 +70,7 @@ test_steps:
         x-callback-url: 'http://example.com/example'
         x-date: '2020-04-07T10:28:44.466Z'
       body:
-        amount: '100'
+        amount: '5.03'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
