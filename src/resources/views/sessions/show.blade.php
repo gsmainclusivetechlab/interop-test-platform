@@ -4,16 +4,16 @@
 
 @section('content')
     <div  class="card">
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <b>{{ __('Latest test runs') }}</b>
-                    </h2>
-                </div>
-                <div class="pt-6">
-                    @if ($testRuns->count())
-                        <x-charts.latest-test-runs :session="$session"/>
-                    @endif
-                </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                <b>{{ __('Latest test runs') }}</b>
+            </h2>
+        </div>
+        <div class="pt-6">
+            @if ($testRuns->count())
+                <x-sessions.latest-test-runs-chart :session="$session"/>
+            @endif
+        </div>
         <div class="table-responsive mb-0">
             <table class="table table-striped table-hover card-table">
                 <thead class="thead-light">
