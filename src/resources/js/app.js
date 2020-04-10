@@ -43,6 +43,9 @@ Vue.component('notification', () =>
 Vue.component('json-tree', () =>
     import(/* webpackChunkName: "json-tree" */ './components/JsonTree.vue'),
 );
+Vue.component('v-icon', () =>
+    import(/* webpackChunkName: "v-icon" */ './components/VIcon.vue'),
+);
 
 const app = new Vue({
     el: '#app',
@@ -63,9 +66,12 @@ const app = new Vue({
         },
         toggleFieldAvailability(e) {
             const currentInput = e.target;
-            const currentValue = currentInput.dataset && currentInput.dataset.value;
+            const currentValue =
+                currentInput.dataset && currentInput.dataset.value;
             const closestFormGroup = currentInput.closest('.form-group');
-            const targetInput = closestFormGroup.querySelector('input.form-control');
+            const targetInput = closestFormGroup.querySelector(
+                'input.form-control',
+            );
 
             targetInput.value = currentValue || '';
             targetInput.readOnly = !!currentValue;

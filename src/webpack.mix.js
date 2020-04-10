@@ -29,6 +29,10 @@ mix.babelConfig({
     .sass('resources/sass/app.scss', 'css')
     .copyDirectory('resources/fonts', 'public/assets/fonts')
     .copyDirectory('resources/images', 'public/assets/images')
+    .copy(
+        'node_modules/tabler-icons/tabler-sprite.svg',
+        'public/assets/images/tabler-icons.svg',
+    )
     .options({
         processCssUrls: false,
     })
