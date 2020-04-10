@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserRoleEnum;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -75,7 +76,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'company' => $data['company'],
             'password' => Hash::make($data['password']),
-            'role' => User::ROLE_USER,
+            'role' => UserRoleEnum::USER,
         ]);
     }
 }
