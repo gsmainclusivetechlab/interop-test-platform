@@ -1,3 +1,12 @@
+## v0.6
+- Task: MMO1 or 2 as SUT -> FSP registration during Session creation [@jc_akokorev]
+- Task: Ordering test cases in alphabetichal order [@jc_akokorev]
+- Task: Yaml import - Markdown [@jc_akokorev]
+- Task: MMO1 or 2 as SUT -> show Test Data example for every step of TC [@jc_ssenokosov]
+- Bug: Latest test run graph - Colour issue [@jc_ssenokosov]
+- Bug: Registration causes 500 error [@jc_akokorev]
+- Bug: TCs fail with all steps passed [@jc_akokorev]
+
 ## v0.5
 - Task: Add test runs chart on session page [@jc_ohladkov]
 - Bug: Test Run -> Messages Overriding: Request message is shown as not overriden [@jc_akokorev]
