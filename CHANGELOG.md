@@ -1,4 +1,5 @@
 ## v0.6
+- Task: ITP: Schema validation [@jc_akokorev]
 - Task: MMO1 or 2 as SUT -> FSP registration during Session creation [@jc_akokorev]
 - Task: Ordering test cases in alphabetichal order [@jc_akokorev]
 - Task: Yaml import - Markdown [@jc_akokorev]
