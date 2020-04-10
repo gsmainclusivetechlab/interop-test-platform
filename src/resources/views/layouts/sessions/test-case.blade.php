@@ -42,7 +42,7 @@
                                                 <p>
                                                     <strong>{{ __('Description') }}</strong>
                                                 </p>
-                                                <p>{{ $testCase->description }}</p>
+                                                <p>{{ \Illuminate\Mail\Markdown::parse($testCase->description) }}</p>
                                             </li>
                                         @endif
 
@@ -51,7 +51,7 @@
                                                 <p>
                                                     <strong>{{ __('Precondition') }}</strong>
                                                 </p>
-                                                <p>{{ $testCase->precondition }}</p>
+                                                <p>{{ \Illuminate\Mail\Markdown::parse($testCase->precondition) }}</p>
                                             </li>
                                         @endif
                                     </ul>
@@ -72,6 +72,11 @@
                                         <li class="nav-item">
                                             <a href="{{ route('sessions.test-cases.test-data.index', [$session, $testCase]) }}" class="nav-link @if (request()->routeIs('sessions.test-cases.test-data.*')) active @endif">
                                                 {{ __('Test Data') }}
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('sessions.test-cases.test-steps', [$session, $testCase]) }}" class="nav-link @if (request()->routeIs('sessions.test-cases.test-steps')) active @endif">
+                                                {{ __('Test Steps') }}
                                             </a>
                                         </li>
                                     </ul>

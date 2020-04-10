@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerObservers();
     }
 
+    /**
+     * @return void
+     */
     protected function registerObservers()
     {
         TestRun::observe(TestRunObserver::class);

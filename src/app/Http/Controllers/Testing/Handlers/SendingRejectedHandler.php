@@ -27,7 +27,10 @@ class SendingRejectedHandler
      */
     public function __invoke(RequestException $exception)
     {
-        $this->testResult->complete(false, Timer::stop());
+        $time = Timer::stop();
+        $this->testResult->unsuccessful($time);
+        $this->testResult->testRun->complete();
+
         return $exception;
     }
 }

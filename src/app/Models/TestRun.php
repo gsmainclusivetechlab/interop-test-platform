@@ -36,6 +36,16 @@ class TestRun extends Model
     /**
      * @var array
      */
+    protected $attributes = [
+        'total' => 0,
+        'passed' => 0,
+        'failures' => 0,
+        'duration' => 0,
+    ];
+
+    /**
+     * @var array
+     */
     protected $observables = [
         'complete',
     ];
@@ -108,19 +118,11 @@ class TestRun extends Model
     }
 
     /**
-     * @return mixed
-     */
-    public function getDurationAttribute()
-    {
-        return $this->testResults()->sum('duration');
-    }
-
-    /**
      * @return bool
      */
-    public function wasSuccessful()
+    public function getSuccessfulAttribute()
     {
-        return $this->testSteps()->count() === $this->testResults()->successful()->count();
+        return $this->total === $this->passed;
     }
 
     /**
@@ -128,7 +130,6 @@ class TestRun extends Model
      */
     public function complete()
     {
-        $this->successful = $this->wasSuccessful();
         $this->completed_at = now();
 
         if (!$this->save()) {

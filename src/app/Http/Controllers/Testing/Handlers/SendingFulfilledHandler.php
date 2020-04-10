@@ -34,7 +34,17 @@ class SendingFulfilledHandler
         $runner = new TestRunner();
         $runner->addListener(new TestListenerAdapter($this->testResult));
         $time = Timer::stop();
-        $this->testResult->complete($runner->run($loader->load())->wasSuccessful(), $time);
+        $result = $runner->run($loader->load());
+
+        if ($result->wasSuccessful()) {
+            $this->testResult->successful($time);
+        } else {
+            $this->testResult->unsuccessful($time);
+        }
+
+        if ($this->testResult->testStep->isLastPosition() || !($response->getStatusCode() >= 200 && $response->getStatusCode() < 300)) {
+            $this->testResult->testRun->complete();
+        }
 
         return $response;
     }

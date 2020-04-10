@@ -19,6 +19,8 @@ class CreateComponentPathsTable extends Migration
             $table->unsignedBigInteger('target_id');
             $table->foreign('target_id')->references('id')->on('components')->onDelete('cascade');
             $table->primary(['source_id', 'target_id']);
+            $table->unsignedBigInteger('api_scheme_id')->nullable();
+            $table->foreign('api_scheme_id')->references('id')->on('api_schemes')->onDelete('set null');
         });
     }
 

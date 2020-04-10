@@ -10,35 +10,27 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class ComponentPath extends Pivot
 {
     /**
-     * @var string
-     */
-    protected $table = 'component_paths';
-
-    /**
      * @var bool
      */
     public $timestamps = false;
 
     /**
+     * @var string
+     */
+    protected $table = 'component_paths';
+
+    /**
      * @var array
      */
     protected $fillable = [
-        'simulated',
+        'api_scheme_id',
     ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function source()
+    public function apiScheme()
     {
-        return $this->belongsTo(Component::class, 'source_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function target()
-    {
-        return $this->belongsTo(Component::class, 'target_id');
+        return $this->belongsTo(ApiScheme::class, 'api_scheme_id');
     }
 }
