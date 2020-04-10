@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Models\Session;
-use App\View\Components\Charts\LatestTestRuns;
+use App\View\Components\Sessions\LatestTestRunsChart;
 use Illuminate\Database\Eloquent\Builder;
 
 class OverviewController extends Controller
@@ -68,6 +68,6 @@ class OverviewController extends Controller
      */
     public function showChartData(Session $session)
     {
-        return (new LatestTestRuns($session))->toArray();
+        return (new LatestTestRunsChart($session))->toArray();
     }
 }

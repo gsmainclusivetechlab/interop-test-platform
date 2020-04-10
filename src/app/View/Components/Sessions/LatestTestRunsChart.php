@@ -1,50 +1,25 @@
 <?php
 
-namespace App\View\Components\Charts;
+namespace App\View\Components\Sessions;
 
 use App\Models\Session;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\Component;
 
-/**
- * Class LatestTestRuns
- *
- * @package App\View\Components\Charts
- */
-class LatestTestRuns extends Component implements Arrayable
+class LatestTestRunsChart extends Component implements Arrayable
 {
-    /**
-     * Limit for number of date groups
-     */
     const GROUP_LIMIT = 20;
 
-    /**
-     * Interval year
-     */
     const INTERVAL_YEAR = 'Year';
-
-    /**
-     * Interval month
-     */
     const INTERVAL_MONTH = 'Month';
-
-    /**
-     * Interval day
-     */
     const INTERVAL_DAY = 'Day';
-
-    /**
-     * @var string
-     */
-    public $ajaxUrl;
 
     /**
      * @var Session
      */
-    protected $session;
+    public $session;
 
     /**
      * Array for intervals
@@ -63,17 +38,22 @@ class LatestTestRuns extends Component implements Arrayable
     public function __construct(Session $session)
     {
         $this->session = $session;
-        $this->ajaxUrl = route('sessions.chart', $session);
     }
 
     /**
-     * Chart options
-     *
-     * @return false|string
+     * @return \Illuminate\View\View|string
      */
-    public function options()
+    public function render()
     {
-        return json_encode([
+        return view('components.sessions.latest-test-runs-chart');
+    }
+
+    /**
+     * @return array
+     */
+    public function chartOptions()
+    {
+        return [
             'chart' => [
                 'stacked' => true,
                 'toolbar' => [
@@ -101,15 +81,7 @@ class LatestTestRuns extends Component implements Arrayable
                     'enabled' => false,
                 ]
             ]
-        ]);
-    }
-
-    /**
-     * @return \Illuminate\View\View|string
-     */
-    public function render()
-    {
-        return view('components.charts.latest-test-runs');
+        ];
     }
 
     /**
@@ -148,16 +120,11 @@ class LatestTestRuns extends Component implements Arrayable
     }
 
     /**
-     * Returns test runs eloquent collection for current session.
-     * Recursive method, called until we can get number of date groups
-     * for some interval (hour, day, month etc.)
-     * that doesn't bigger than limit
-     *
      * @return Collection
      */
     protected function getTestRuns(): Collection
     {
-        $select = 'COUNT(IF (successful = 1, 1, NULL)) AS passed, COUNT(IF (successful = 0, 1, NULL)) AS failed, YEAR(created_at) AS year';
+        $select = 'COUNT(IF (total = passed, 0, NULL)) AS passed, COUNT(IF (total != passed, 0, NULL)) AS failed, YEAR(created_at) AS year';
         $groupBy = 'YEAR(created_at)';
         $orderBy = 'year DESC';
 
@@ -177,6 +144,7 @@ class LatestTestRuns extends Component implements Arrayable
 
         $query = $this->session->testRuns()
             ->selectRaw($select)
+            ->completed()
             ->groupByRaw($groupBy);
 
         if ($query->get()->count() > static::GROUP_LIMIT && next($this->intervals)) {

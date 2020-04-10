@@ -41,7 +41,8 @@ class TestResult extends Model
      * @var array
      */
     protected $observables = [
-        'complete',
+        'successful',
+        'unsuccessful',
     ];
 
     /**
@@ -112,13 +113,12 @@ class TestResult extends Model
     }
 
     /**
-     * @param bool $successful
      * @param float $time
      * @return bool
      */
-    public function complete(bool $successful, float $time)
+    public function successful(float $time)
     {
-        $this->successful = $successful;
+        $this->successful = true;
         $this->duration = (int) floor($time * 1000);
         $this->completed_at = now();
 
@@ -126,7 +126,25 @@ class TestResult extends Model
             return false;
         }
 
-        $this->fireModelEvent('complete');
+        $this->fireModelEvent('successful');
+        return true;
+    }
+
+    /**
+     * @param float $time
+     * @return bool
+     */
+    public function unsuccessful(float $time)
+    {
+        $this->successful = false;
+        $this->duration = (int) floor($time * 1000);
+        $this->completed_at = now();
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('unsuccessful');
         return true;
     }
 }
