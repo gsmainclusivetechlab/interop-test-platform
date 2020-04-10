@@ -13,7 +13,8 @@
         "laravel/ui": "^2.0",
         "league/openapi-psr7-validator": "^0.7.0",
         "phpunit/phpunit": "^8.5",
-        "symfony/psr-http-message-bridge": "^2.0"
+        "symfony/psr-http-message-bridge": "^2.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

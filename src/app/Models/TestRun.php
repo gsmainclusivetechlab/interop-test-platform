@@ -36,6 +36,13 @@ class TestRun extends Model
     /**
      * @var array
      */
+    protected $attributes = [
+        'duration' => 0,
+    ];
+
+    /**
+     * @var array
+     */
     protected $observables = [
         'complete',
     ];
@@ -105,14 +112,6 @@ class TestRun extends Model
     public function getTraceIdAttribute()
     {
         return str_replace('-', '', $this->uuid);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDurationAttribute()
-    {
-        return $this->testResults()->sum('duration');
     }
 
     /**

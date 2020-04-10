@@ -21,7 +21,6 @@ class CreateComponentsTable extends Migration
             $table->foreign('api_service_id')->references('id')->on('api_services')->onDelete('set null');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->boolean('sut');
             $table->boolean('simulated');
             $table->unsignedInteger('position');
             $table->timestamps();

@@ -13,55 +13,17 @@
 <script>
 import axios from 'axios';
 import merge from 'lodash/merge';
+import apexchart from 'vue-apexcharts';
 
 export default {
     data() {
         return {
             defaultOptions: {
                 chart: {
-                    stacked: true,
-                    fontFamily: 'gotham',
-                    toolbar: {
-                        show: false,
-                    },
-                    animations: {
-                        speed: 300,
-                        animateGradually: {
-                            delay: 100,
-                        },
-                    },
-                    zoom: {
-                        enabled: false,
-                    },
-                },
-                colors: ['#9cb227', '#de002b'],
-                fill: {
-                    opacity: 1,
-                },
-                legend: {
-                    position: 'top',
-                    markers: {
-                        radius: 100,
-                    },
-                },
-                xaxis: {
-                    labels: {
-                        padding: 0,
-                    },
-                    tooltip: {
-                        enabled: false,
-                    },
-                },
-                noData: {
-                    text: null,
+                    fontFamily: 'inherit',
                 },
             },
             chartData: [],
-            noDataList: {
-                loading: 'Loading...',
-                error: 'Failed to load data',
-                success: 'No filters selected',
-            },
         };
     },
     props: {
@@ -74,16 +36,13 @@ export default {
         },
         type: {
             type: String,
-            default: 'bar',
         },
         height: {
             type: Number,
-            default: 360,
+            default: 380,
         },
     },
     async mounted() {
-        this.defaultOptions.noData.text = this.noDataList.loading;
-
         await this.fetchData(this.$props.ajaxUrl);
     },
     methods: {
@@ -93,20 +52,10 @@ export default {
                 .then(({ data }) => {
                     this.chartData = data;
 
-                    this.$refs.chart.updateOptions({
-                        ...this.chartOptions,
-                        noData: {
-                            text: this.noDataList.success,
-                        },
-                    });
+                    this.$refs.chart.updateOptions(this.chartOptions);
                 })
                 .catch((error) => {
-                    this.$refs.chart.updateOptions({
-                        ...this.chartOptions,
-                        noData: {
-                            text: this.noDataList.error,
-                        },
-                    });
+                    this.$refs.chart.updateOptions(this.chartOptions);
                 });
         },
     },
@@ -116,7 +65,7 @@ export default {
         },
     },
     components: {
-        apexchart: () => import('vue-apexcharts'),
+        apexchart,
     },
 };
 </script>

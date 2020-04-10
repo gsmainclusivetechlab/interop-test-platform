@@ -17,8 +17,7 @@ class CreateApiServicesTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('server');
-            $table->longText('scheme');
+            $table->string('base_url');
             $table->timestamps();
         });
     }

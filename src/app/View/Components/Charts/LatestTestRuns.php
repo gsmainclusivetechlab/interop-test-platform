@@ -37,19 +37,24 @@ class LatestTestRuns extends Component implements Arrayable
     const INTERVAL_DAY = 'Day';
 
     /**
+     * @var string
+     */
+    public $ajaxUrl;
+
+    /**
      * @var Session
      */
-    public $session;
+    protected $session;
 
     /**
      * Array for intervals
      *
      * @var array
      */
-    private $intervals = [
-        'Day',
-        'Month',
-        'Year',
+    protected $intervals = [
+        self::INTERVAL_DAY,
+        self::INTERVAL_MONTH,
+        self::INTERVAL_YEAR,
     ];
 
     /**
@@ -58,6 +63,45 @@ class LatestTestRuns extends Component implements Arrayable
     public function __construct(Session $session)
     {
         $this->session = $session;
+        $this->ajaxUrl = route('sessions.chart', $session);
+    }
+
+    /**
+     * Chart options
+     *
+     * @return false|string
+     */
+    public function options()
+    {
+        return json_encode([
+            'chart' => [
+                'stacked' => true,
+                'toolbar' => [
+                    'show'    => false,
+                ],
+                'zoom'    => [
+                    'enabled' => false,
+                ],
+            ],
+            'colors' => ['#9cb227', '#de002b'],
+            'fill' => [
+                'opacity' => 1,
+            ],
+            'legend' => [
+                'position' => 'top',
+                'markers' => [
+                    'radius' => 100,
+                ]
+            ],
+            'xaxis' => [
+                'labels' => [
+                    'padding' => 0,
+                ],
+                'tooltip' => [
+                    'enabled' => false,
+                ]
+            ]
+        ]);
     }
 
     /**
@@ -119,28 +163,27 @@ class LatestTestRuns extends Component implements Arrayable
 
         $interval = current($this->intervals);
 
-        if ($interval !== self::INTERVAL_YEAR) {
+        if ($interval !== static::INTERVAL_YEAR) {
             $select .= ', MONTH(created_at) AS month';
             $groupBy .= ', MONTH(created_at)';
             $orderBy .= ', month DESC';
         }
 
-        if ($interval === self::INTERVAL_DAY) {
+        if ($interval === static::INTERVAL_DAY) {
             $select .= ', DAY(created_at) AS day';
             $groupBy .= ', DAY(created_at)';
             $orderBy .= ', day DESC';
         }
 
-        $query = DB::table('test_runs')
+        $query = $this->session->testRuns()
             ->selectRaw($select)
-            ->where(['session_id' => $this->session->id])
             ->groupByRaw($groupBy);
 
-        if ($query->get()->count() > self::GROUP_LIMIT && next($this->intervals)) {
+        if ($query->get()->count() > static::GROUP_LIMIT && next($this->intervals)) {
             return $this->getTestRuns();
         }
 
-        return $query->orderByRaw($orderBy)->limit(self::GROUP_LIMIT)->get();
+        return $query->orderByRaw($orderBy)->limit(static::GROUP_LIMIT)->get();
     }
 
     /**
@@ -152,7 +195,7 @@ class LatestTestRuns extends Component implements Arrayable
     protected function getFormattedDate(Carbon $date, string $targetInterval): string
     {
         switch ($targetInterval) {
-            case self::INTERVAL_DAY:
+            case static::INTERVAL_DAY:
                 $format = 'j M';
 
                 if (!$date->isCurrentYear()) {
@@ -160,7 +203,7 @@ class LatestTestRuns extends Component implements Arrayable
                 }
 
                 break;
-            case self::INTERVAL_MONTH:
+            case static::INTERVAL_MONTH:
                 $format = 'M';
 
                 if (!$date->isCurrentYear()) {
