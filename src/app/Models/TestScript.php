@@ -12,6 +12,9 @@ class TestScript extends Model
 {
     use HasPosition;
 
+    const TYPE_REQUEST = 'request';
+    const TYPE_RESPONSE = 'response';
+
     /**
      * @var string
      */

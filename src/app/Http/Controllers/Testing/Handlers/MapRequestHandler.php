@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
-use App\Enums\HttpTypeEnum;
 use App\Models\TestResult;
+use App\Models\TestSetup;
 use App\Testing\TestRequest;
 use Psr\Http\Message\RequestInterface;
 
@@ -30,7 +30,7 @@ class MapRequestHandler
     {
         $testRequest = new TestRequest($request);
 
-        if ($testRequestSetups = $this->testResult->testStep->testSetups()->ofType(HttpTypeEnum::REQUEST)->get()) {
+        if ($testRequestSetups = $this->testResult->testStep->testSetups()->ofType(TestSetup::TYPE_REQUEST)->get()) {
             foreach ($testRequestSetups as $testRequestSetup) {
                 $testRequest = $testRequest->withSetup($testRequestSetup);
             }

@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use App\Casts\EnumCast;
-use App\Enums\UserRoleEnum;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -18,6 +17,10 @@ class User extends Authenticatable implements MustVerifyEmail
     use SoftDeletes;
 
     const DELETED_AT = 'blocked_at';
+
+    const ROLE_USER = 'user';
+    const ROLE_ADMIN = 'admin';
+    const ROLE_SUPERADMIN = 'superadmin';
 
     /**
      * @var string
@@ -48,7 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'role' => EnumCast::class. ':' . UserRoleEnum::class,
         'email_verified_at' => 'datetime',
     ];
 
@@ -68,12 +70,29 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Session::class, 'owner_id');
     }
 
+    public static function getRoleNames()
+    {
+        return [
+            static::ROLE_USER => __('User'),
+            static::ROLE_ADMIN => __('Admin'),
+            static::ROLE_SUPERADMIN => __('Superadmin'),
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getRoleNameAttribute()
+    {
+        return Arr::get(static::getRoleNames(), $this->role, $this->role);
+    }
+
     /**
      * @return bool
      */
     public function isAdmin()
     {
-        return $this->role->in([UserRoleEnum::ADMIN, UserRoleEnum::SUPERADMIN]);
+        return in_array($this->role, [static::ROLE_ADMIN, static::ROLE_SUPERADMIN]);
     }
 
     /**
@@ -81,6 +100,6 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isSuperadmin()
     {
-        return $this->role->is(UserRoleEnum::SUPERADMIN);
+        return in_array($this->role, [static::ROLE_SUPERADMIN]);
     }
 }

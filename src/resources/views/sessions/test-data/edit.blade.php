@@ -28,7 +28,7 @@
                     {{ __('Method') }}
                 </label>
                 <select name="request[method]" class="form-control custom-select @error('request.method') is-invalid @enderror">
-                    @foreach(\App\Enums\HttpMethodEnum::values() as $value)
+                    @foreach(['GET', 'POST', 'PUT', 'PATCH'] as $value)
                         <option value="{{ $value }}" @if($value == old('request.method', $testDatum->request->method())) selected @endif>{{ $value }}</option>
                     @endforeach
                 </select>
