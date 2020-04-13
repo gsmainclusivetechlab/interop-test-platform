@@ -36,6 +36,7 @@ test_steps:
     backward: HTTP 503
     source: Service Provider
     target: Mobile Money Operator 1
+    api_scheme: MM v1.1.2
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
