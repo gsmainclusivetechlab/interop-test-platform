@@ -15,7 +15,7 @@ use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use SebastianBergmann\Timer\Timer;
 
-class TestController extends Controller
+class StepController extends Controller
 {
     use HasPsrRequest;
 
