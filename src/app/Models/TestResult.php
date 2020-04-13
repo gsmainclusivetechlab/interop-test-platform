@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\TestRequestCast;
+use App\Casts\TestResponseCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,12 +23,16 @@ class TestResult extends Model
      */
     protected $fillable = [
         'test_step_id',
+        'request',
+        'response',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
+        'request' => TestRequestCast::class,
+        'response' => TestResponseCast::class,
         'completed_at' => 'datetime',
     ];
 
@@ -59,22 +65,6 @@ class TestResult extends Model
     public function testStep()
     {
         return $this->belongsTo(TestStep::class, 'test_step_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function testRequest()
-    {
-        return $this->hasOne(TestRequest::class, 'test_result_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function testResponse()
-    {
-        return $this->hasOne(TestResponse::class, 'test_result_id');
     }
 
     /**

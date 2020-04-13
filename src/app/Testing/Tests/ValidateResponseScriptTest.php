@@ -37,7 +37,7 @@ class ValidateResponseScriptTest extends TestCase
     public function test()
     {
         $validator = Validator::make(
-            $this->testResult->testResponse->attributesToArrayResponse(),
+            (array) $this->testResult->response,
             (array) $this->testScript->rules,
             (array) $this->testScript->messages,
             (array) $this->testScript->attributes

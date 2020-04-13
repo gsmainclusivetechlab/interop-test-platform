@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Enums\HttpTypeEnum;
-use App\Models\TestResponse;
 use App\Models\TestResult;
-use Psr\Http\Message\RequestInterface;
+use App\Testing\TestResponse;
 use Psr\Http\Message\ResponseInterface;
 
 class MapResponseHandler
@@ -24,25 +23,21 @@ class MapResponseHandler
     }
 
     /**
-     * @param callable $handler
-     * @return \Closure
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
-    public function __invoke(callable $handler)
+    public function __invoke(ResponseInterface $response)
     {
-        return function (RequestInterface $request, array $options) use ($handler) {
-            return $handler($request, $options)->then(function (ResponseInterface $response) {
-                $testResponse = TestResponse::makeFromResponse($response)->testResult()->associate($this->testResult);
+        $testResponse = new TestResponse($response);
 
-                if ($testResponseSetups = $this->testResult->testStep->testSetups()->ofType(HttpTypeEnum::RESPONSE)->get()) {
-                    foreach ($testResponseSetups as $testResponseSetup) {
-                        $testResponse->mergeSetup($testResponseSetup);
-                    }
-                }
+        if ($testResponseSetups = $this->testResult->testStep->testSetups()->ofType(HttpTypeEnum::RESPONSE)->get()) {
+            foreach ($testResponseSetups as $testResponseSetup) {
+                $testResponse = $testResponse->withSetup($testResponseSetup);
+            }
+        }
 
-                $testResponse->save();
+        $this->testResult->update(['response' => $testResponse]);
 
-                return $testResponse->toResponse();
-            });
-        };
+        return $testResponse->toPsrResponse();
     }
 }

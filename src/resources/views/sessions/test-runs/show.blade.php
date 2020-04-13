@@ -50,7 +50,7 @@
                     <div class="col-3 pr-0">
                         <ul class="list-unstyled mb-0">
                             @foreach ($testRun->testSteps as $step)
-                                @if($stepResult = $testRun->testResults->where('test_step_id', $step->id)->first())
+                                @if($stepResult = $testRun->testResults()->completed()->where('test_step_id', $step->id)->first())
                                     <li class="list-group-item-action @if($step->is($testResult->testStep)) bg-light @endif">
                                         <a href="{{ route('sessions.test-cases.test-runs.show', [$session, $testCase, $testRun, $step->position]) }}" class="d-flex justify-content-between align-items-center py-2 px-4 text-reset text-decoration-none">
                                             <div class="mr-1 text-truncate">
@@ -59,33 +59,33 @@
                                                 </b>
 
                                                 <div class="d-flex align-items-baseline text-truncate">
-                                                    @switch($stepResult->testRequest->method)
+                                                    @switch($stepResult->request->method())
                                                         @case('POST')
                                                         <span class="font-weight-bold text-orange">
-                                                            {{ $stepResult->testRequest->method }}
+                                                            {{ $stepResult->request->method() }}
                                                         </span>
                                                         @break
 
                                                         @case('PUT')
                                                         <span class="font-weight-bold text-blue">
-                                                            {{ $stepResult->testRequest->method }}
+                                                            {{ $stepResult->request->method() }}
                                                         </span>
                                                         @break
 
                                                         @case('DELETE')
                                                         <span class="font-weight-bold text-red">
-                                                            {{ $stepResult->testRequest->method }}
+                                                            {{ $stepResult->request->method() }}
                                                         </span>
                                                         @break
 
                                                         @default
                                                         <span class="font-weight-bold text-mint">
-                                                            {{ $stepResult->testRequest->method }}
+                                                            {{ $stepResult->request->method() }}
                                                         </span>
                                                     @endswitch
 
-                                                    <span class="d-inline-block ml-1 text-truncate" title="{{ $stepResult->testRequest->method }} {{ $stepResult->testRequest->uri->getPath() }}">
-                                                        {{ $stepResult->testRequest->uri->getPath() }}
+                                                    <span class="d-inline-block ml-1 text-truncate" title="{{ $stepResult->request->method() }} {{ $stepResult->request->path() }}">
+                                                        {{ $stepResult->request->path() }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -116,12 +116,12 @@
                                 <small class="d-inline-block ml-auto">
                                     Status:
                                     <span class="text-success">
-                                        {{ __('HTTP :status', ['status' => ($testResult->testResponse) ? $testResult->testResponse->status : __('Unknown')]) }}
+                                        {{ __('HTTP :status', ['status' => ($testResult->response) ? $testResult->response->status() : __('Unknown')]) }}
                                     </span>
                                 </small>
                             </div>
                             <div class="text-truncate">
-                                <u class="mr-2">{{ $testResult->testRequest->method }} {{ $testResult->testRequest->uri->getPath() }}</u>
+                                <u class="mr-2">{{ $testResult->request->method() }} {{ $testResult->request->path() }}</u>
                             </div>
                         </div>
                         @if($testResult->successful)
@@ -165,7 +165,7 @@
                             </ul>
                         </div>
 
-                        @if($request = $testResult->testRequest)
+                        @if($request = $testResult->request)
                             <div class="p-4">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">
@@ -178,7 +178,7 @@
                                             <strong>{{ __('Url') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ $request->uri }}
+                                            {{ $request->url() }}
                                         </div>
                                     </div>
                                     <div class="d-flex">
@@ -186,7 +186,7 @@
                                             <strong>{{ __('Method') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ $request->method }}
+                                            {{ $request->method() }}
                                         </div>
                                     </div>
                                     <div class="d-flex">
@@ -194,7 +194,7 @@
                                             <strong>{{ __('Headers') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ __('(:n) params', ['n' => count($request->headers)]) }}
+                                            {{ __('(:n) params', ['n' => count($request->headers())]) }}
                                         </div>
                                     </div>
                                     <b-collapse id="request-headers-{{ $testResult->id }}">
@@ -202,7 +202,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :code='@json($request->headers, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
+                                                    <json-tree :code='@json($request->headers(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,7 +212,7 @@
                                             <strong>{{ __('Body') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ __('(:n) params', ['n' => count($request->bodyToArray())]) }}
+                                            {{ __('(:n) params', ['n' => count($request->json())]) }}
                                         </div>
                                     </div>
                                     <b-collapse id="request-body-{{ $testResult->id }}">
@@ -220,7 +220,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :code='@json($request->bodyToArray(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
+                                                    <json-tree :code='@json($request->json(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -229,7 +229,7 @@
                             </div>
                         @endif
 
-                        @if($response = $testResult->testResponse)
+                        @if($response = $testResult->response)
                             <div class="p-4">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">
@@ -242,7 +242,7 @@
                                             <strong>{{ __('Status') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ $response->status }}
+                                            {{ $response->status() }}
                                         </div>
                                     </div>
                                     <div class="d-flex">
@@ -250,7 +250,7 @@
                                             <strong>{{ __('Headers') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ __('(:n) params', ['n' => count($response->headers)]) }}
+                                            {{ __('(:n) params', ['n' => count($response->headers())]) }}
                                         </div>
                                     </div>
                                     <b-collapse id="response-headers-{{ $testResult->id }}">
@@ -258,7 +258,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :code='@json($response->headers, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
+                                                    <json-tree :code='@json($response->headers(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +268,7 @@
                                             <strong>{{ __('Body') }}</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            {{ __('(:n) params', ['n' => count($response->bodyToArray())]) }}
+                                            {{ __('(:n) params', ['n' => count($response->json())]) }}
                                         </div>
                                     </div>
                                     <b-collapse id="response-body-{{ $testResult->id }}">
@@ -276,7 +276,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :code='@json($response->bodyToArray(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
+                                                    <json-tree :code='@json($response->json(), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)'></json-tree>
                                                 </div>
                                             </div>
                                         </div>

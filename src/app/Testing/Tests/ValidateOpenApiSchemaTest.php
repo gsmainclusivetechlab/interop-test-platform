@@ -39,8 +39,8 @@ class ValidateOpenApiSchemaTest extends TestCase
         $validator = (new ValidatorBuilder)->fromSchema($this->apiScheme->openapi);
 
         try {
-            $operationAddress = $validator->getRequestValidator()->validate($this->testResult->testRequest->toRequest());
-            $validator->getResponseValidator()->validate($operationAddress, $this->testResult->testResponse->toResponse());
+            $operationAddress = $validator->getRequestValidator()->validate($this->testResult->request->toPsrRequest());
+            $validator->getResponseValidator()->validate($operationAddress, $this->testResult->response->toPsrResponse());
         } catch (ValidationFailed $e) {
             throw new AssertionFailedError($e->getMessage());
         }
