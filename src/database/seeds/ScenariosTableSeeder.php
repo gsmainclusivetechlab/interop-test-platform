@@ -101,7 +101,6 @@ class ScenariosTableSeeder extends Seeder
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
-                    'api_scheme_id' => ApiScheme::where(['name' => 'MM v1.1.2'])->value('id'),
                 ],
             ],
             [
@@ -110,23 +109,19 @@ class ScenariosTableSeeder extends Seeder
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
-                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 1')->value('id'),
-                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
                 [
                     'target_id' => $scenario->components()->where('name', 'Mobile Money Operator 2')->value('id'),
-                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
             ],
             [
                 [
                     'target_id' => $scenario->components()->where('name', 'Mojaloop')->value('id'),
-                    'api_scheme_id' => ApiScheme::where(['name' => 'Mojaloop v1.0'])->value('id'),
                 ],
             ],
         ];

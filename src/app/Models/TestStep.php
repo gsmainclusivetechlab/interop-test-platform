@@ -23,6 +23,7 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
+        'api_scheme_id',
         'forward',
         'backward',
         'request_example',
@@ -59,6 +60,14 @@ class TestStep extends Model
     public function target()
     {
         return $this->belongsTo(Component::class, 'target_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function apiScheme()
+    {
+        return $this->belongsTo(ApiScheme::class, 'api_scheme_id');
     }
 
     /**

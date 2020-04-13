@@ -31,11 +31,8 @@ class TestSuiteLoader
     {
         $testSuite = new TestSuite();
         $testResult = $this->testResult;
-        $connection = $testResult->testStep->source->paths()
-            ->wherePivot('target_id', $testResult->testStep->target->id)
-            ->first();
 
-        if ($apiScheme = $connection->pivot->apiScheme) {
+        if ($apiScheme = $testResult->testStep->apiScheme) {
             $testSuite->addTest(new ValidateOpenApiSchemaTest($testResult, $apiScheme));
         }
 

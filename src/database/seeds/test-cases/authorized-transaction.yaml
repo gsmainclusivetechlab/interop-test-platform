@@ -35,6 +35,7 @@ test_steps:
     backward: HTTP 202
     source: Service Provider
     target: Mobile Money Operator 1
+    api_scheme: MM v1.1.2
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -97,6 +98,7 @@ test_steps:
     backward: HTTP 202
     source: Mobile Money Operator 1
     target: Mojaloop
+    api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:

@@ -55,9 +55,7 @@ class Component extends Model
      */
     public function paths()
     {
-        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id')
-            ->using(ComponentPath::class)
-            ->withPivot(['api_scheme_id']);
+        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id');
     }
 
     /**
