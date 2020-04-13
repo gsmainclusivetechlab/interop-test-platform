@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Casts\TestRequestCast;
 use App\Casts\TestResponseCast;
-use App\Models\Concerns\HasPositionAttribute;
+use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestStep extends Model
 {
-    use HasPositionAttribute;
+    use HasPosition;
 
     /**
      * @var string

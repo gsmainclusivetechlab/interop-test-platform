@@ -6,23 +6,23 @@
 			</h2>
 		</div>
 		<div class="card-body p-0">
-			@if($testStep->testResponseExample->status)
+			@if($testStep->response_example->status())
 				<div class="d-flex">
 					<div class="w-25 px-4 py-2 border">
 						<strong>{{ __('HTTP status code') }}</strong>
 					</div>
 					<div class="w-75 px-4 py-2 border">
 						<div class="mb-0 p-0 bg-transparent">
-							{{ $testStep->testResponseExample->status }}
+							{{ $testStep->response_example->status() }}
 						</div>
 					</div>
 				</div>
 			@endif
 			@include('sessions.test-steps.includes.headers', [
-				'headers' => $testStep->testResponseExample->headers
+				'headers' => $testStep->response_example->headerNames()
 			])
 			@include('sessions.test-steps.includes.body', [
-				'body' => $testStep->testResponseExample->bodyToArray()
+				'body' => $testStep->response_example->json()
 			])
 		</div>
 	</div>

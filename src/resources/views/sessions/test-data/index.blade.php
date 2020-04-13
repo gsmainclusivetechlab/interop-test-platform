@@ -24,7 +24,7 @@
                 <tr>
                     <th class="text-nowrap">{{ __('Name') }}</th>
                     <th class="text-nowrap">{{ __('Method') }}</th>
-                    <th class="text-nowrap">{{ __('URI') }}</th>
+                    <th class="text-nowrap">{{ __('URL') }}</th>
                     <th class="text-nowrap w-1"></th>
                 </tr>
                 </thead>
@@ -35,10 +35,10 @@
                             <a href="{{ route('sessions.test-cases.test-data.edit', [$session, $testCase, $testDatum]) }}">{{ $testDatum->name }}</a>
                         </td>
                         <td class="text-break">
-                            {{ $testDatum->method }}
+                            {{ $testDatum->request->method() }}
                         </td>
                         <td class="text-break">
-                            {{ $testDatum->uri }}
+                            {{ $testDatum->request->url() }}
                         </td>
                         <td class="text-center text-break">
                             <b-dropdown class="item-action" no-caret right toggle-class="icon text-decoration-none py-0" variant="link" boundary="window">

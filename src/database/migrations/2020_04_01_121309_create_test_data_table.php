@@ -20,10 +20,7 @@ class CreateTestDataTable extends Migration
             $table->unsignedBigInteger('test_case_id');
             $table->foreign('test_case_id')->references('test_case_id')->on('session_test_cases')->onDelete('cascade');
             $table->string('name');
-            $table->string('method');
-            $table->string('uri');
-            $table->longText('headers');
-            $table->longText('body');
+            $table->longText('request');
 //            $table->boolean('default');
             $table->timestamps();
         });

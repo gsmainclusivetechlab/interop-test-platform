@@ -61,7 +61,7 @@ test_steps:
         rules:
           body.errorCategory: 'in:authorisation'
           body.errorCode: 'in:genericError'
-    test_request_example:
+    request_example:
       method: POST
       uri: /transactions
       headers:
@@ -79,7 +79,7 @@ test_steps:
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
-    test_response_example:
+    response_example:
       status: 401
       headers:
         content-type: 'application/json'

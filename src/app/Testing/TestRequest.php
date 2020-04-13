@@ -27,6 +27,16 @@ class TestRequest extends Request implements Arrayable
     }
 
     /**
+     * @return array
+     */
+    public function headerNames()
+    {
+        return collect($this->request->getHeaders())->mapWithKeys(function ($values, $header) {
+            return [$header => implode(',', $values)];
+        })->all();
+    }
+
+    /**
      * @return RequestInterface
      */
     public function toPsrRequest()

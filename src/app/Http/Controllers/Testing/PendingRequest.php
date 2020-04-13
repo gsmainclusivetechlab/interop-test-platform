@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Testing;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
@@ -78,7 +79,8 @@ class PendingRequest
      */
     protected function buildHandlerStack()
     {
-        $stack = HandlerStack::create();
+        $stack = new HandlerStack();
+        $stack->setHandler(new CurlHandler());
 
         foreach ($this->mapRequestCallbacks as $mapRequestCallback) {
             $stack->push(Middleware::mapRequest($mapRequestCallback));

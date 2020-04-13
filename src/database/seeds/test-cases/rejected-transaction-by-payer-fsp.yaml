@@ -66,7 +66,7 @@ test_steps:
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'in:callback'
-    test_request_example:
+    request_example:
       method: POST
       uri: /transactions
       headers:
@@ -84,7 +84,7 @@ test_steps:
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
-    test_response_example:
+    response_example:
       status: 202
       headers:
         content-type: 'application/json'
@@ -120,7 +120,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    test_request_example:
+    request_example:
       method: POST
       uri: /transactionsRequests
       headers:
@@ -145,7 +145,7 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    test_response_example:
+    response_example:
       status: 202
   - forward: POST /transactionRequests
     backward: HTTP 202
@@ -174,7 +174,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    test_request_example:
+    request_example:
       method: POST
       uri: /transactionsRequests
       headers:
@@ -199,7 +199,7 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    test_response_example:
+    response_example:
       status: 202
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
@@ -217,7 +217,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_example:
+    request_example:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -227,7 +227,7 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'RECEIVED'
-    test_response_example:
+    response_example:
       status: 200
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
@@ -245,7 +245,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_example:
+    request_example:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -255,7 +255,7 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'RECEIVED'
-    test_response_example:
+    response_example:
       status: 200
   - forward: POST /quotes
     backward: HTTP 202
@@ -288,7 +288,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    test_request_example:
+    request_example:
       method: POST
       uri: /quotes
       headers:
@@ -321,7 +321,7 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    test_response_example:
+    response_example:
       status: 202
   - forward: POST /quotes
     backward: HTTP 202
@@ -354,7 +354,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    test_request_example:
+    request_example:
       method: POST
       uri: /quotes
       headers:
@@ -387,7 +387,7 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    test_response_example:
+    response_example:
       status: 202
   - forward: PUT /quotes/{ID}
     backward: HTTP 200
@@ -415,7 +415,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_example:
+    request_example:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
@@ -430,7 +430,7 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-    test_response_example:
+    response_example:
       status: 200
   - forward: PUT /quotes/{ID}
     backward: HTTP 200
@@ -458,7 +458,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_example:
+    request_example:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
@@ -473,7 +473,7 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-    test_response_example:
+    response_example:
       status: 200
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
@@ -491,7 +491,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_example:
+    request_example:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -501,7 +501,7 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'REJECTED'
-    test_response_example:
+    response_example:
       status: 200
   - forward: PUT /transactionRequests/{ID}
     backward: HTTP 200
@@ -519,7 +519,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    test_request_example:
+    request_example:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -529,7 +529,7 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'REJECTED'
-    test_response_example:
+    response_example:
       status: 200
   - forward: PUT /X-Callback-URL
     backward: HTTP 204
@@ -546,7 +546,7 @@ test_steps:
       - name: Transaction was successfully declined
         rules:
           status: 'in:204'
-    test_request_example:
+    request_example:
       method: 'PUT'
       uri: 'http://example.com/example'
       headers:
@@ -555,5 +555,5 @@ test_steps:
       body:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
-    test_response_example:
+    response_example:
       status: 204

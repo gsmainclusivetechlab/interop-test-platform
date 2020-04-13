@@ -4,12 +4,12 @@ namespace App\Models\Concerns;
 
 use App\Scopes\PositionScope;
 
-trait HasPositionAttribute
+trait HasPosition
 {
     /**
      * @return void
      */
-    protected static function bootHasPositionAttribute()
+    protected static function bootHasPosition()
     {
         static::addGlobalScope(new PositionScope());
         static::creating(function ($model) {
