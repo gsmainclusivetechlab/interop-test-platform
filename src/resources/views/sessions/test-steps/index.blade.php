@@ -31,20 +31,20 @@
                                 {{ $testStep->forward }}
                             </td>
                             <td class="align-middle">
-                                @if ($testStep->testRequestExample || $testStep->testResponseExample)
+                                @if ($testStep->request_example || $testStep->response_example)
                                     <div class="btn-group" role="group">
-                                        @if ($testStep->testRequestExample)
+                                        @if ($testStep->request_example)
                                             <button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $testStep->id }}-request">{{ __('Request') }}</button>
                                         @endif
-                                        @if ($testStep->testResponseExample)
+                                        @if ($testStep->response_example)
                                             <button type="button" class="btn btn-secondary border" data-fancybox data-src="#step-{{ $testStep->id }}-response">{{ __('Response') }}</button>
                                         @endif
                                     </div>
                                 @endif
-                                @if ($testStep->testRequestExample)
+                                @if ($testStep->request_example)
                                     @include('sessions.test-steps.includes.request')
                                 @endif
-                                @if ($testStep->testResponseExample)
+                                @if ($testStep->response_example)
                                     @include('sessions.test-steps.includes.response')
                                 @endif
                             </td>

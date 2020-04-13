@@ -36,6 +36,7 @@ test_steps:
     backward: HTTP 503
     source: Service Provider
     target: Mobile Money Operator 1
+    api_scheme: MM v1.1.2
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -61,7 +62,7 @@ test_steps:
         rules:
           body.errorCategory: 'in:internal'
           body.errorCode: 'in:genericError'
-    test_request_example:
+    request_example:
       method: POST
       uri: /transactions
       headers:
@@ -79,7 +80,7 @@ test_steps:
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
-    test_response_example:
+    response_example:
       status: 503
       headers:
         content-type: 'application/json'

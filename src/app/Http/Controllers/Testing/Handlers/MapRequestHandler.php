@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
-use App\Enums\HttpTypeEnum;
-use App\Models\TestRequest;
 use App\Models\TestResult;
+use App\Models\TestSetup;
+use App\Testing\TestRequest;
 use Psr\Http\Message\RequestInterface;
 
 class MapRequestHandler
@@ -23,23 +23,21 @@ class MapRequestHandler
     }
 
     /**
-     * @param callable $handler
-     * @return \Closure
+     * @param RequestInterface $request
+     * @return RequestInterface
      */
-    public function __invoke(callable $handler)
+    public function __invoke(RequestInterface $request)
     {
-        return function (RequestInterface $request, array $options) use ($handler) {
-            $testRequest = TestRequest::makeFromRequest($request)->testResult()->associate($this->testResult);
+        $testRequest = new TestRequest($request);
 
-            if ($testRequestSetups = $this->testResult->testStep->testSetups()->ofType(HttpTypeEnum::REQUEST)->get()) {
-                foreach ($testRequestSetups as $testRequestSetup) {
-                    $testRequest->mergeSetup($testRequestSetup);
-                }
+        if ($testRequestSetups = $this->testResult->testStep->testSetups()->ofType(TestSetup::TYPE_REQUEST)->get()) {
+            foreach ($testRequestSetups as $testRequestSetup) {
+                $testRequest = $testRequest->withSetup($testRequestSetup);
             }
+        }
 
-            $testRequest->save();
+        $this->testResult->update(['request' => $testRequest]);
 
-            return $handler($testRequest->toRequest(), $options);
-        };
+        return $testRequest->toPsrRequest();
     }
 }

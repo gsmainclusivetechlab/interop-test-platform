@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\InteractsWithHttpRequest;
+use App\Casts\TestRequestCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestDatum extends Model
 {
-    use InteractsWithHttpRequest;
-
     /**
      * @var string
      */
@@ -23,6 +21,14 @@ class TestDatum extends Model
     protected $fillable = [
         'test_case_id',
         'name',
+        'request',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'request' => TestRequestCast::class,
     ];
 
     /**

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\UserRoleEnum;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -89,7 +88,7 @@ class UserController extends Controller
     public function promoteAdmin(User $user)
     {
         $this->authorize('promoteAdmin', $user);
-        $user->update(['role' => UserRoleEnum::ADMIN]);
+        $user->update(['role' => User::ROLE_ADMIN]);
 
         return redirect()
             ->back()
@@ -104,7 +103,7 @@ class UserController extends Controller
     public function relegateAdmin(User $user)
     {
         $this->authorize('relegateAdmin', $user);
-        $user->update(['role' => UserRoleEnum::USER]);
+        $user->update(['role' => User::ROLE_USER]);
 
         return redirect()
             ->back()

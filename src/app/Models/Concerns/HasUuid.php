@@ -4,12 +4,12 @@ namespace App\Models\Concerns;
 
 use Illuminate\Support\Str;
 
-trait HasUuidAttribute
+trait HasUuid
 {
     /**
      * @return void
      */
-    protected static function bootHasUuidAttribute()
+    protected static function bootHasUuid()
     {
         static::creating(function ($model) {
             $model->generateUuid();

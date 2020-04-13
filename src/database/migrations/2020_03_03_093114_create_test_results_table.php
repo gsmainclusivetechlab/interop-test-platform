@@ -20,6 +20,8 @@ class CreateTestResultsTable extends Migration
             $table->unsignedBigInteger('test_step_id');
             $table->foreign('test_step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->boolean('successful')->nullable();
+            $table->longText('request')->nullable();
+            $table->longText('response')->nullable();
             $table->unsignedBigInteger('duration');
             $table->timestamp('created_at');
             $table->timestamp('completed_at')->nullable();

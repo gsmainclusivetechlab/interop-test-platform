@@ -2,7 +2,6 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
@@ -24,7 +23,7 @@ $factory->define(User::class, function (Faker $faker) {
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'company' => $faker->company,
-        'role' => UserRoleEnum::USER,
+        'role' => User::ROLE_USER,
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => $faker->dateTime,
         'password' => Hash::make('password'),

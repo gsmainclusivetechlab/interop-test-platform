@@ -26,9 +26,9 @@ class UpdateTestDatumRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'method' => ['required'],
-            'uri' => ['required', 'string', 'max:255'],
-            'headers' => [
+            'request.method' => ['required'],
+            'request.uri' => ['required', 'string', 'max:255'],
+            'request.headers' => [
                 'required',
                 function ($attribute, $value, $fail) {
                     try {
@@ -43,7 +43,7 @@ class UpdateTestDatumRequest extends FormRequest
                     }
                 },
             ],
-            'body' => [
+            'request.body' => [
                 'required',
                 function ($attribute, $value, $fail) {
                     try {

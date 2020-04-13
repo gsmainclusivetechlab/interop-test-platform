@@ -11,14 +11,11 @@ use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Models\TestRun;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use SebastianBergmann\Timer\Timer;
 
-class TestController extends Controller
+class StepController extends Controller
 {
     use HasPsrRequest;
 
@@ -48,12 +45,10 @@ class TestController extends Controller
         $request = $request->withUri(UriResolver::resolve(new Uri($baseUrl), new Uri($path)));
 
         Timer::start();
-        $stack = new HandlerStack();
-        $stack->setHandler(new CurlHandler());
-        $stack->push(new MapRequestHandler($testResult));
-        $stack->push(new MapResponseHandler($testResult));
-        $promise = (new Client(['handler' => $stack]))->sendAsync($request);
 
-        return $promise->then(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult))->wait();
+        return (new PendingRequest($request))
+            ->mapRequest(new MapRequestHandler($testResult))
+            ->mapResponse(new MapResponseHandler($testResult))
+            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
     }
 }

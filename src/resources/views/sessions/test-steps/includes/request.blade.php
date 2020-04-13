@@ -7,10 +7,10 @@
 		</div>
 		<div class="card-body p-0">
 			@include('sessions.test-steps.includes.headers', [
-				'headers' => $testStep->testRequestExample->headers
+				'headers' => $testStep->request_example->headerNames()
 			])
 			@include('sessions.test-steps.includes.body', [
-				'body' => $testStep->testRequestExample->bodyToArray()
+				'body' => $testStep->request_example->json()
 			])
 		</div>
 	</div>

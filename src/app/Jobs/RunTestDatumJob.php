@@ -33,7 +33,7 @@ class RunTestDatumJob implements ShouldQueue
     public function handle()
     {
         $run = app(RunController::class);
-        $run->setRequest($this->testDatum->toRequest());
-        $run($this->testDatum->session, $this->testDatum->testCase, $this->testDatum->uri->getPath());
+        $run->setRequest($this->testDatum->request->toPsrRequest());
+        $run($this->testDatum->session, $this->testDatum->testCase, $this->testDatum->request->url());
     }
 }

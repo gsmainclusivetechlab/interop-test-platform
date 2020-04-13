@@ -2,11 +2,9 @@
 
 namespace App\Imports;
 
-use App\Enums\HttpTypeEnum;
+use App\Models\ApiScheme;
 use App\Models\Scenario;
 use App\Models\TestCase;
-use App\Models\TestRequestExample;
-use App\Models\TestResponseExample;
 use App\Models\TestScript;
 use App\Models\TestSetup;
 use App\Models\TestStep;
@@ -50,6 +48,7 @@ class TestCaseImport implements Importable
                     $testStep = $testCase->testSteps()->make(Arr::only($testStepRow, TestStep::make()->getFillable()));
                     $testStep->setAttribute('source_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'source'))->value('id'));
                     $testStep->setAttribute('target_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'target'))->value('id'));
+                    $testStep->setAttribute('api_scheme_id', ApiScheme::where('name', Arr::get($testStepRow, 'api_scheme'))->value('id'));
                     $testStep->saveOrFail();
 
                     if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {
@@ -58,7 +57,7 @@ class TestCaseImport implements Importable
                              * @var TestSetup $testRequestSetup
                              */
                             $testRequestSetup = $testStep->testSetups()->make(Arr::only($testRequestSetupRow, TestSetup::make()->getFillable()));
-                            $testRequestSetup->type = HttpTypeEnum::REQUEST;
+                            $testRequestSetup->type = TestSetup::TYPE_REQUEST;
                             $testRequestSetup->saveOrFail();
                         }
                     }
@@ -69,7 +68,7 @@ class TestCaseImport implements Importable
                              * @var TestScript $testRequestScript
                              */
                             $testRequestScript = $testStep->testScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
-                            $testRequestScript->type = HttpTypeEnum::REQUEST;
+                            $testRequestScript->type = TestScript::TYPE_REQUEST;
                             $testRequestScript->saveOrFail();
                         }
                     }
@@ -80,7 +79,7 @@ class TestCaseImport implements Importable
                              * @var TestSetup $testResponseSetup
                              */
                             $testResponseSetup = $testStep->testSetups()->make(Arr::only($testResponseSetupRow, TestSetup::make()->getFillable()));
-                            $testResponseSetup->type = HttpTypeEnum::RESPONSE;
+                            $testResponseSetup->type = TestSetup::TYPE_RESPONSE;
                             $testResponseSetup->saveOrFail();
                         }
                     }
@@ -91,21 +90,9 @@ class TestCaseImport implements Importable
                              * @var TestScript $testResponseScript
                              */
                             $testResponseScript = $testStep->testScripts()->make(Arr::only($testResponseScriptRow, TestScript::make()->getFillable()));
-                            $testResponseScript->type = HttpTypeEnum::RESPONSE;
+                            $testResponseScript->type = TestScript::TYPE_RESPONSE;
                             $testResponseScript->saveOrFail();
                         }
-                    }
-
-                    if ($testRequestExampleRow = Arr::get($testStepRow, 'test_request_example')) {
-                        $testRequestExample = $testStep->testRequestExample()
-                            ->make(Arr::only($testRequestExampleRow, TestRequestExample::make()->getFillable()));
-                        $testRequestExample->saveOrFail();
-                    }
-
-                    if ($testResponseExampleRow = Arr::get($testStepRow, 'test_response_example')) {
-                        $testResponseExample = $testStep->testResponseExample()
-                            ->make(Arr::only($testResponseExampleRow, TestResponseExample::make()->getFillable()));
-                        $testResponseExample->saveOrFail();
                     }
                 }
             }

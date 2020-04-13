@@ -80,12 +80,26 @@
                                             </a>
                                         </li>
                                     </ul>
-                                    <div class="col-5 ml-auto pr-0 pt-1">
+                                    <div class="col-6 ml-auto pr-0 pt-1">
                                         <div class="d-flex">
-                                            <div class="flex-shrink-0 btn-group btn-group-sm mr-2" role="group" aria-label="Test case data controls">
+                                            <div class="flex-shrink-0 btn-group mr-2" role="group" aria-label="Test case data controls">
                                                 <button type="button" class="btn btn-secondary border" data-fancybox data-src="#flow-diagram">
-                                                    {{ __('Use case flow') }}
+                                                    {{ __('Use Case Flow') }}
                                                 </button>
+{{--                                                <button type="button" class="btn btn-secondary border" data-fancybox data-src="#flow-diagram">--}}
+{{--                                                    {{ __('Test Data') }}--}}
+{{--                                                </button>--}}
+{{--                                                <b-dropdown right toggle-class="border">--}}
+{{--                                                    <template v-slot:button-content>--}}
+{{--                                                        {{ __('Test Data') }}--}}
+{{--                                                    </template>--}}
+{{--                                                    <b-dropdown-item>--}}
+{{--                                                        {{ __('Create') }}--}}
+{{--                                                    </b-dropdown-item>--}}
+{{--                                                    <b-dropdown-item>--}}
+{{--                                                        {{ __('Delete') }}--}}
+{{--                                                    </b-dropdown-item>--}}
+{{--                                                </b-dropdown>--}}
                                             </div>
                                             <div class="input-group">
                                                 <input id="run-url-{{ $testCase->id }}" type="text" class="form-control h-100" readonly value="{{ route('testing.run', ['session' => $session, 'testCase' => $testCase]) }}">

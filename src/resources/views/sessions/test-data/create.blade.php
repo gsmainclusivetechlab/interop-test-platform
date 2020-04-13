@@ -26,12 +26,12 @@
                 <label class="form-label">
                     {{ __('Method') }}
                 </label>
-                <select name="method" class="form-control custom-select @error('method') is-invalid @enderror">
-                    @foreach(\App\Enums\HttpMethodEnum::values() as $value)
-                        <option value="{{ $value }}" @if($value == old('method')) selected @endif>{{ $value }}</option>
+                <select name="request[method]" class="form-control custom-select @error('request.method') is-invalid @enderror">
+                    @foreach(['GET', 'POST', 'PUT', 'PATCH'] as $value)
+                        <option value="{{ $value }}" @if($value == old('request.method')) selected @endif>{{ $value }}</option>
                     @endforeach
                 </select>
-                @error('method')
+                @error('request.method')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -41,8 +41,8 @@
                 <label class="form-label">
                     {{ __('URI') }}
                 </label>
-                <input name="uri" value="{{ old('uri') }}" type="text" class="form-control @error('uri') is-invalid @enderror">
-                @error('uri')
+                <input name="request[uri]" value="{{ old('request.uri') }}" type="text" class="form-control @error('request.uri') is-invalid @enderror">
+                @error('request.uri')
                 <span class="invalid-feedback">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -52,10 +52,10 @@
                 <label class="form-label">
                     {{ __('Headers') }}
                 </label>
-                <web-editor name="headers" editor-class="@error('headers') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
-                    <template v-slot:content>{{ old('headers') }}</template>
+                <web-editor name="request[headers]" editor-class="@error('request.headers') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
+                    <template v-slot:content>{{ old('request.headers') }}</template>
                     <template v-slot:validation>
-                        @error('headers')
+                        @error('request.headers')
                         <span class="invalid-feedback">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -67,10 +67,10 @@
                 <label class="form-label">
                     {{ __('Body') }}
                 </label>
-                <web-editor name="body" editor-class="@error('body') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
-                    <template v-slot:content>{{ old('body') }}</template>
+                <web-editor name="request[body]" editor-class="@error('request.body') is-invalid @enderror" :options='@json(['mode' => 'ace/mode/json'])'>
+                    <template v-slot:content>{{ old('request.body') }}</template>
                     <template v-slot:validation>
-                        @error('body')
+                        @error('request.body')
                         <span class="invalid-feedback">
                             <strong>{{ $message }}</strong>
                         </span>

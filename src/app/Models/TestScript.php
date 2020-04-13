@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPositionAttribute;
+use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestScript extends Model
 {
-    use HasPositionAttribute;
+    use HasPosition;
+
+    const TYPE_REQUEST = 'request';
+    const TYPE_RESPONSE = 'response';
 
     /**
      * @var string

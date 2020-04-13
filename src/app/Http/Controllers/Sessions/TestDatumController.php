@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Testing\RunController;
 use App\Http\Requests\Sessions\StoreTestDatumRequest;
 use App\Http\Requests\Sessions\UpdateTestDatumRequest;
 use App\Jobs\RunTestDatumJob;
@@ -60,10 +61,16 @@ class TestDatumController extends Controller
      */
     public function store(Session $session, TestCase $testCase, StoreTestDatumRequest $request)
     {
-        $session->testData()->create(array_merge($request->except(['headers']), [
-            'test_case_id' => $testCase->id,
-            'headers' => json_decode($request->input('headers'), true),
-        ]));
+        $attributes = collect(['test_case_id' => $testCase->id])
+            ->merge($request->except(['request.headers', 'request.body']))
+            ->mergeRecursive([
+                'request' => [
+                    'headers' => json_decode($request->input('request.headers'), true),
+                    'body' => json_decode($request->input('request.body'), true),
+                ]
+            ])
+            ->all();
+        $session->testData()->create($attributes);
 
         return redirect()
             ->route('sessions.test-cases.test-data.index', [$session, $testCase])
@@ -90,9 +97,15 @@ class TestDatumController extends Controller
      */
     public function update(Session $session, TestCase $testCase, TestDatum $testDatum, UpdateTestDatumRequest $request)
     {
-        $testDatum->update(array_merge($request->input(), [
-            'headers' => json_decode($request->input('headers'), true),
-        ]));
+        $attributes = collect($request->except(['request.headers', 'request.body']))
+            ->mergeRecursive([
+                'request' => [
+                    'headers' => json_decode($request->input('request.headers'), true),
+                    'body' => json_decode($request->input('request.body'), true),
+                ]
+            ])
+            ->all();
+        $testDatum->update($attributes);
 
         return redirect()
             ->route('sessions.test-cases.test-data.index', [$session, $testCase])

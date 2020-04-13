@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPositionAttribute;
+use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Component extends Model
 {
-    use HasPositionAttribute;
+    use HasPosition;
 
     /**
      * @var string
@@ -55,9 +55,7 @@ class Component extends Model
      */
     public function paths()
     {
-        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id')
-            ->using(ComponentPath::class)
-            ->withPivot(['api_scheme_id']);
+        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id');
     }
 
     /**

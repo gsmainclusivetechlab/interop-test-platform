@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPositionAttribute;
+use App\Casts\TestRequestCast;
+use App\Casts\TestResponseCast;
+use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestStep extends Model
 {
-    use HasPositionAttribute;
+    use HasPosition;
 
     /**
      * @var string
@@ -21,8 +23,19 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
+        'api_scheme_id',
         'forward',
         'backward',
+        'request_example',
+        'response_example',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'request_example' => TestRequestCast::class,
+        'response_example' => TestResponseCast::class,
     ];
 
     /**
@@ -50,6 +63,14 @@ class TestStep extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function apiScheme()
+    {
+        return $this->belongsTo(ApiScheme::class, 'api_scheme_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testScripts()
@@ -63,22 +84,6 @@ class TestStep extends Model
     public function testSetups()
     {
         return $this->hasMany(TestSetup::class, 'test_step_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function testRequestExample()
-    {
-        return $this->hasOne(TestRequestExample::class, 'test_step_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function testResponseExample()
-    {
-        return $this->hasOne(TestResponseExample::class, 'test_step_id');
     }
 
     /**
