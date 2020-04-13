@@ -19,6 +19,7 @@
                         <th class="text-nowrap">{{ __('Name') }}</th>
                         <th class="text-nowrap">{{ __('Source') }}</th>
                         <th class="text-nowrap">{{ __('Target') }}</th>
+                        <th class="text-nowrap">{{ __('Api Scheme') }}</th>
                         <th class="text-nowrap">{{ __('Test Scripts') }}</th>
                     </tr>
                 </thead>
@@ -41,12 +42,19 @@
                             </a>
                         </td>
                         <td>
+                            @if ($testStep->apiScheme)
+                                <a href="#">
+                                    {{ $testStep->apiScheme->name }}
+                                </a>
+                            @endif
+                        </td>
+                        <td>
                             {{ $testStep->test_scripts_count }}
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td class="text-center" colspan="4">
+                        <td class="text-center" colspan="5">
                             {{ __('No Results') }}
                         </td>
                     </tr>
