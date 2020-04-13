@@ -1,8 +1,5 @@
 // Typography
 $font-family-base: 'gotham', sans-serif;
-$font-size-base: 0.875rem;
-$font-size-lg: 1.125rem;
-$font-size-sm: 0.75rem;
 
 // Colors
 $gray-100: #f8f8f9;
@@ -73,13 +70,3 @@ $list-group-active-color: $primary;
 // Body
 $body-bg: $gray-100;
 $body-color: $gray-900;
-
-// Components
-$border-radius: 6px;
-$border-radius-lg: 8px;
-$border-radius-sm: 4px;
-
-// Buttons
-//
-// For each of Bootstrap's buttons, define text, background, and border color.
-$btn-border-width: 2px;
