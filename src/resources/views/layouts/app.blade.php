@@ -21,5 +21,6 @@
         </div>
         @include('layouts.includes.footer')
     </div>
+    @include('layouts.includes.gtag')
 </body>
 </html>
