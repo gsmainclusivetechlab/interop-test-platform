@@ -1,12 +1,28 @@
 import Vue from 'vue';
 import VueMeta from 'vue-meta';
 import { InertiaApp } from '@inertiajs/inertia-vue';
+import {
+    NavPlugin,
+    NavbarPlugin,
+    CollapsePlugin,
+    DropdownPlugin,
+    ProgressPlugin,
+    VBTooltipPlugin,
+} from 'bootstrap-vue';
+
+Vue.use(VueMeta);
+Vue.use(InertiaApp);
+
+Vue.use(NavPlugin);
+Vue.use(NavbarPlugin);
+Vue.use(CollapsePlugin);
+Vue.use(DropdownPlugin);
+Vue.use(ProgressPlugin);
+Vue.use(VBTooltipPlugin);
 
 Vue.mixin({
     methods: {route: window.route}
 });
-Vue.use(InertiaApp);
-Vue.use(VueMeta);
 
 const app = document.getElementById('app');
 
