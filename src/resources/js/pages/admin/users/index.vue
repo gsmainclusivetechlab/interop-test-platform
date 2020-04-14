@@ -17,10 +17,10 @@
                 </form>
                 <div class="card-options">
                     <div class="btn-group">
-                        <inertia-link :href="route('admin.users.index')" class="btn btn-outline-primary" v-bind:class="{'active': !trashed}">
+                        <inertia-link :href="route('admin.users.index')" class="btn btn-outline-primary" v-bind:class="{'active': !this.filter.trashed}">
                             Active
                         </inertia-link>
-                        <inertia-link :href="route('admin.users.index', ['trashed'])" class="btn btn-outline-primary" v-bind:class="{'active': trashed}">
+                        <inertia-link :href="route('admin.users.index', ['trashed'])" class="btn btn-outline-primary" v-bind:class="{'active': this.filter.trashed}">
                             Blocked
                         </inertia-link>
                     </div>
@@ -83,18 +83,18 @@
         },
         props: {
             users: Object,
-            trashed: Boolean,
+            filter: Object,
         },
         data() {
             return {
                 form: {
-                    q: null
+                    q: this.filter.q
                 },
             }
         },
         methods: {
             search() {
-                this.$inertia.replace(route('admin.users.index'), {data: this.form});
+                this.$inertia.replace(route('admin.users.index', (this.filter.trashed) ? ['trashed'] : []), {data: this.form});
             },
         },
     }
