@@ -2,14 +2,16 @@
 
 namespace App\Exceptions;
 
-use Throwable;
+use Illuminate\Http\Response;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that are not reported.
-     *
      * @var array
      */
     protected $dontReport = [
@@ -17,8 +19,6 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
      * @var array
      */
     protected $dontFlash = [
@@ -27,22 +27,43 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * @param Throwable $exception
-     * @throws Throwable
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param Throwable $e
+     * @return Response|\Symfony\Component\HttpFoundation\Response
      */
-    public function report(Throwable $exception)
+    protected function toIlluminateResponse($response, Throwable $e)
     {
-        parent::report($exception);
+        if ($response instanceof InertiaResponse) {
+            return $response;
+        } else {
+            return parent::toIlluminateResponse($response, $e);
+        }
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param Throwable $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws Throwable
+     * @param HttpExceptionInterface $e
+     * @return \Inertia\Response|\Symfony\Component\HttpFoundation\Response
      */
-    public function render($request, Throwable $exception)
+    protected function renderHttpException(HttpExceptionInterface $e)
     {
-        return parent::render($request, $exception);
+        if (in_array($e->getStatusCode(), [
+            400,
+            401,
+            403,
+            404,
+            419,
+            429,
+            500,
+            503,
+        ])) {
+            return Inertia::render("errors/{$e->getStatusCode()}", [
+                'exception' => [
+                    'code' => $e->getStatusCode(),
+                    'message' => $e->getMessage(),
+                ],
+            ]);
+        }
+
+        return $this->convertExceptionToResponse($e);
     }
 }
