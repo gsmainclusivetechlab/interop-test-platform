@@ -1,30 +1,31 @@
+const create_session_url = '../../images/tutorials/create-session/';
 $('.demo1').one('click', function() {
-    var steps = [
-        ['../../images/tutorials/create-session/dashboard.png', [1335, 40], 'Start by creating a new session', true],
-        ['../../images/tutorials/create-session/select_sut.png', [535, 390], 'Select the System Under Test', true],
-        ['../../images/tutorials/create-session/select_sut_2.png', [535, 385], "Let's select Service Provider", true],
-        ['../../images/tutorials/create-session/select_sut_3.png', [1100, 473], 'Press Next', true],
-        ['../../images/tutorials/create-session/configure_sut.png', [1100, 422], 'After configuration, press Next', true],
-        ['../../images/tutorials/create-session/session_info.png', [732, 325], 'Select use cases by ticking the corresponding box', true],
-        ['../../images/tutorials/create-session/session_info_2.png', [732, 355], 'Select use cases by ticking the corresponding box', true],
-        ['../../images/tutorials/create-session/session_info_3.png', [732, 410], 'Select use cases by ticking the corresponding box', true],
-        ['../../images/tutorials/create-session/session_info_4.png', [1050, 515], 'Press Create when you are finished', true],
-        ['../../images/tutorials/create-session/session_created.png', [47, 243], 'Your session has now been created and use cases can be accessed on the left.', true],
+    const steps = [
+        [`${create_session_url}dashboard.png`, [1335, 40], 'Start by creating a new session', true],
+        [`${create_session_url}select_sut.png`, [535, 390], 'Select the System Under Test', true],
+        [`${create_session_url}select_sut_2.png`, [535, 385], "Let's select Service Provider", true],
+        [`${create_session_url}select_sut_3.png`, [1100, 473], 'Press Next', true],
+        [`${create_session_url}configure_sut.png`, [1100, 422], 'After configuration, press Next', true],
+        [`${create_session_url}session_info.png`, [732, 325], 'Select use cases by ticking the corresponding box', true],
+        [`${create_session_url}session_info_2.png`, [732, 355], 'Select use cases by ticking the corresponding box', true],
+        [`${create_session_url}session_info_3.png`, [732, 410], 'Select use cases by ticking the corresponding box', true],
+        [`${create_session_url}session_info_4.png`, [1050, 515], 'Press Create when you are finished', true],
+        [`${create_session_url}session_created.png`, [47, 243], 'Your session has now been created and use cases can be accessed on the left.', true],
     ];
 
-    var step = 0;
+    let step = 0;
 
     function demo1_adjusted(length) {
-        var originalHeight = 653;
-        var currentHeight = $('.create-session-screenshot').height();
-        var ratio = currentHeight / originalHeight;
+        const originalHeight = 653;
+        let currentHeight = $('.create-session-screenshot').height();
+        let ratio = currentHeight / originalHeight;
         return length * ratio;
     }
 
-    var radius = demo1_adjusted(40);
+    let radius = demo1_adjusted(40);
 
     function demo1_animateCircle(circleRadius, ms, cb) {
-        var coordinates = steps[step][1];
+        let coordinates = steps[step][1];
         $('.create-session-circle')
             .animate({
                 top: demo1_adjusted(coordinates[1]) - (circleRadius - radius),
@@ -49,12 +50,12 @@ $('.demo1').one('click', function() {
             })
         });
 
-        var labelText = steps[step][2];
+        let labelText = steps[step][2];
         $('.create-session-circle-label').text(labelText);
     }
 
 //pulsate
-    var interval = null;
+    let interval = null;
 
     function demo1_startPulsate() {
         interval = setInterval(function() {
@@ -72,7 +73,7 @@ $('.demo1').one('click', function() {
 
     $('.create-session-circle').click(function() {
         step = (step + 1) % steps.length;
-        var image = steps[step][0]; //image is 0th item in array
+        let image = steps[step][0]; //image is 0th item in array
         $('.create-session-screenshot').attr('src', image);
         demo1_updateCircle();
     });
@@ -84,7 +85,7 @@ $('.demo1').one('click', function() {
 
     $('#create-session-reset').click(function() {
         step = 0;
-        var image = steps[step][0]; //image is 0th item in array
+        let image = steps[step][0]; //image is 0th item in array
         $('.create-session-screenshot').attr('src', image);
         demo1_updateCircle();
         if ($(".create-session-start-demo-btn").is(":hidden")) {

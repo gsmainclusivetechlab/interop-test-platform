@@ -48,7 +48,7 @@
                         <br><br><br>
                         <ul>
                             <li>
-                                <a href="https://documenter.getpostman.com/view/1386725/SzYUaM2p?version=latest" target="_blank" style="margin-left: 20px">Service Provider Simulator</a>
+                                <a href="https://documenter.getpostman.com/view/1386725/SzYUaM2p?version=latest" target="_blank" class="ml-1">Service Provider Simulator</a>
                             </li>
                         </ul>
                     </div>
@@ -69,10 +69,10 @@
                         <br><br><br>
                         <ul>
                             <li>
-                                <a href="https://mojaloop.io/documentation/" target="_blank" style="margin-left: 20px">Mojaloop documentation</a>
+                                <a href="https://mojaloop.io/documentation/" target="_blank" class="ml-1">Mojaloop documentation</a>
                             </li>
                             <li>
-                                <a href="https://mojaloop.io/mojaloop-specification/" target="_blank" style="margin-left: 20px">Mojaloop specification</a>
+                                <a href="https://mojaloop.io/mojaloop-specification/" target="_blank" class="ml-1">Mojaloop specification</a>
                             </li>
                         </ul>
                     </div>
@@ -93,28 +93,15 @@
                         <br><br><br>
                         <ul>
                             <li>
-                                <a href="https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API website</a>
+                                <a href="https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/" target="_blank" class="ml-1">GSMA Mobile Money API website</a>
                             </li>
                             <li>
-                                <a href="https://developer.mobilemoneyapi.io/" target="_blank" style="margin-left: 20px">GSMA Mobile Money API developer portal</a>
+                                <a href="https://developer.mobilemoneyapi.io/" target="_blank" class="ml-1">GSMA Mobile Money API developer portal</a>
                             </li>
                         </ul>
                     </div>
                 </b-card-body>
             </b-collapse>
         </b-card>
-
-<!--        <b-card no-body class="mb-0 card">
-            <b-card-header header-tag="header" class="p-1 card-header" role="tab">
-                <b-button block href="#" v-b-toggle.accordion-6 variant="info" class="btn btn-link">
-                    <h5 class="mb-0">Tutorial #6</h5>
-                </b-button>
-            </b-card-header>
-            <b-collapse id="accordion-6" accordion="my-accordion" role="tabpanel">
-                <b-card-body>
-                    <b-card-text>Text here...</b-card-text>
-                </b-card-body>
-            </b-collapse>
-        </b-card> -->
     </div>
 </template>
