@@ -3,7 +3,7 @@
         <div class="container-tight py-6">
             <div class="text-center mb-5">
                 <inertia-link :href="route('home')">
-                    <img src="../../../public/images/logo.png" class="mb-2" alt="Interoperability Test Platform">
+                    <img src="/assets/images/logo.png" class="mb-2" alt="Interoperability Test Platform">
                 </inertia-link>
                 <div class="text-primary">
                     <h1 class="col-login__title mb-1">

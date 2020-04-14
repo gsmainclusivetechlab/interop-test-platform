@@ -11,3 +11,5 @@ mix.webpackConfig({
         publicPath: '/assets/',
     },
 });
+mix.copyDirectory('resources/fonts', 'public/assets/fonts');
+mix.copyDirectory('resources/images', 'public/assets/images');
