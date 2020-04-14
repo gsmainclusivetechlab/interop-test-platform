@@ -7,6 +7,8 @@ use App\Models\TestRun;
 use App\Observers\TestResultObserver;
 use App\Observers\TestRunObserver;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\ViewErrorBag;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,7 +25,34 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerInertia();
         $this->registerObservers();
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerInertia()
+    {
+//        Inertia::version(function () {
+//            return md5_file(public_path('mix-manifest.json'));
+//        });
+        Inertia::share([
+            'errors' => function () {
+                return collect(session('errors', new ViewErrorBag())->getBag('default')->getMessages())
+                    ->mapWithKeys(function ($value, $key) {
+                        return [$key => implode(' ', $value)];
+                    });
+            },
+            'messages' => function () {
+                return collect()
+                    ->put('success', session('success'))
+                    ->put('error', session('error'))
+                    ->put('warning', session('warning'))
+                    ->put('info', session('info'))
+                    ->filter();
+            },
+        ]);
     }
 
     /**

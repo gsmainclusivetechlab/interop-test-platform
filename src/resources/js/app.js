@@ -1,84 +1,23 @@
 import Vue from 'vue';
-import '@fancyapps/fancybox';
-$.fancybox.defaults.touch = false;
+import VueMeta from 'vue-meta';
+import { InertiaApp } from '@inertiajs/inertia-vue';
 
-import {
-    AlertPlugin,
-    DropdownPlugin,
-    NavPlugin,
-    NavbarPlugin,
-    CollapsePlugin,
-    ProgressPlugin,
-    VBTooltipPlugin,
-} from 'bootstrap-vue';
-
-import hljs from 'highlight.js';
-import Clipboard from 'clipboard';
-
-Vue.use(AlertPlugin);
-Vue.use(DropdownPlugin);
-Vue.use(NavPlugin);
-Vue.use(NavbarPlugin);
-Vue.use(CollapsePlugin);
-Vue.use(ProgressPlugin);
-Vue.use(VBTooltipPlugin);
-
-Vue.component('confirm-button', () =>
-    import(/* webpackChunkName: "confirm" */ './components/ConfirmButton.vue'),
-);
-Vue.component('chart', () =>
-    import(/* webpackChunkName: "chart" */ './components/Chart.vue'),
-);
-Vue.component('web-editor', () =>
-    import(/* webpackChunkName: "editor" */ './components/WebEditor.vue'),
-);
-Vue.component('flow-chart', () =>
-    import(/* webpackChunkName: "flow-chart" */ './components/FlowChart.vue'),
-);
-Vue.component('notification', () =>
-    import(
-        /* webpackChunkName: "notification" */ './components/Notification.vue'
-    ),
-);
-Vue.component('json-tree', () =>
-    import(/* webpackChunkName: "json-tree" */ './components/JsonTree.vue'),
-);
-Vue.component('v-icon', () =>
-    import(/* webpackChunkName: "v-icon" */ './components/VIcon.vue'),
-);
-
-const app = new Vue({
-    el: '#app',
-    methods: {
-        toggleCheckboxes(e) {
-            const btn = e.target;
-            const closestParentList = btn.closest('.list-group-item');
-            const checkboxes = Array.from(
-                closestParentList.querySelectorAll('input[type="checkbox"]'),
-            );
-            const isChecked = checkboxes.every(
-                (checkbox) => checkbox.checked === true,
-            );
-
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = !isChecked;
-            });
-        },
-        toggleFieldAvailability(e) {
-            const currentInput = e.target;
-            const currentValue =
-                currentInput.dataset && currentInput.dataset.value;
-            const closestFormGroup = currentInput.closest('.form-group');
-            const targetInput = closestFormGroup.querySelector(
-                'input.form-control',
-            );
-
-            targetInput.value = currentValue || '';
-            targetInput.readOnly = !!currentValue;
-        },
-    },
+Vue.mixin({
+    methods: {route: window.route}
 });
+Vue.use(InertiaApp);
+Vue.use(VueMeta);
 
-hljs.initHighlightingOnLoad();
+const app = document.getElementById('app');
 
-new Clipboard('[data-clipboard-target]');
+new Vue({
+    metaInfo: {
+        titleTemplate: (title) => title ? `${title} - Interoperability Test Platform - GSMA` : 'Interoperability Test Platform - GSMA',
+    },
+    render: h => h(InertiaApp, {
+        props: {
+            initialPage: JSON.parse(app.dataset.page),
+            resolveComponent: name => import(/* webpackChunkName: "pages/[request]" */ `./pages/${name}`).then(module => module.default),
+        },
+    }),
+}).$mount(app);
