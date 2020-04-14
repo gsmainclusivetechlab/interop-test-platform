@@ -24,6 +24,10 @@ Vue.mixin({
     methods: { route: window.route }
 });
 
+Vue.component('icon', () =>
+    import(/* webpackChunkName: "icon" */ '@/components/icon.vue')
+);
+
 const app = document.getElementById('app');
 
 new Vue({
@@ -39,7 +43,7 @@ new Vue({
                 initialPage: JSON.parse(app.dataset.page),
                 resolveComponent: name =>
                     import(
-                        /* webpackChunkName: "pages/[request]" */ `./pages/${name}`
+                        /* webpackChunkName: "pages/[request]" */ `@/pages/${name}`
                     ).then(module => module.default)
             }
         })

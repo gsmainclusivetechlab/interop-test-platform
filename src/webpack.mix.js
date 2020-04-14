@@ -19,3 +19,7 @@ mix.webpackConfig({
 });
 mix.copyDirectory('resources/fonts', 'public/assets/fonts');
 mix.copyDirectory('resources/images', 'public/assets/images');
+mix.copy(
+    'node_modules/tabler-icons/tabler-sprite.svg',
+    'public/assets/images/icons.svg'
+);
