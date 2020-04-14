@@ -1,15 +1,9 @@
-//@import '~sweetalert2/dist/sweetalert2.min.css';
-//@import '~bootstrap-vue/dist/bootstrap-vue.min.css';
-//@import '~noty/src/noty';
-//@import '~highlight.js/scss/default.scss';
-//@import '~@fancyapps/fancybox/dist/jquery.fancybox.min.css';
-
-//@import '~tabler/scss/variables';
-//@import 'base/variables';
-//@import 'ui/main';
-//@import 'base/main';
-//@import 'components/main';
-
-@import '~noty/src/noty';
+@import '~bootstrap-vue/dist/bootstrap-vue.min.css';
 @import '~nprogress/nprogress.css';
-@import '~tabler/scss/tabler';
+@import '~noty/src/noty';
+
+@import '~tabler/scss/variables';
+@import 'base/variables';
+@import 'ui/main';
+@import 'base/main';
+// @import 'components/main';
