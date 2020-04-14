@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+
 class HomeController extends Controller
 {
     /**
@@ -13,15 +15,18 @@ class HomeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $sessions = auth()->user()->sessions()
-            ->with(['testCases', 'lastTestRun'])
-            ->latest()
-            ->paginate(12);
+        return Inertia::render('home', [
 
-        return view('home', compact('sessions'));
+        ]);
+//        $sessions = auth()->user()->sessions()
+//            ->with(['testCases', 'lastTestRun'])
+//            ->latest()
+//            ->paginate(12);
+//
+//        return view('home', compact('sessions'));
     }
 }

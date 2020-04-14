@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Resources\Admin\UserResource;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -18,22 +20,25 @@ class UserController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function index()
     {
         $users = User::when(request('q'), function (Builder $query, $q) {
-            $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
-                ->orWhere('email', 'like', "%{$q}%")
-                ->orWhere('company', 'like', "%{$q}%");
-        })
-        ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
-            return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
-        })
-        ->latest()
-        ->paginate();
+                $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('company', 'like', "%{$q}%");
+            })
+            ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
+                return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
+            })
+            ->latest()
+            ->paginate();
 
-        return view('admin.users.index', compact('users'));
+        return Inertia::render('admin/users/index', [
+            'users' => UserResource::collection($users),
+            'trashed' => request()->route()->hasParameter('trashed'),
+        ]);
     }
 
     /**
