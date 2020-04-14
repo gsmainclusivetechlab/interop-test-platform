@@ -6,9 +6,25 @@
         <div class="card">
             <div class="card-header">
                 <form class="input-icon" @submit.prevent="search">
-                    <input v-model="form.q" type="text" class="form-control" placeholder="Search...">
+                    <input
+                        v-model="form.q"
+                        type="text"
+                        class="form-control"
+                        placeholder="Search..."
+                    />
                     <span class="input-icon-addon">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="icon"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
                             <path stroke="none" d="M0 0h24v24H0z"></path>
                             <circle cx="10" cy="10" r="7"></circle>
                             <line x1="21" y1="21" x2="15" y2="15"></line>
@@ -17,10 +33,18 @@
                 </form>
                 <div class="card-options">
                     <div class="btn-group">
-                        <inertia-link :href="route('admin.users.index')" class="btn btn-outline-primary" v-bind:class="{'active': !trashed}">
+                        <inertia-link
+                            :href="route('admin.users.index')"
+                            :class="{ active: !trashed }"
+                            class="btn btn-outline-primary"
+                        >
                             Active
                         </inertia-link>
-                        <inertia-link :href="route('admin.users.index', ['trashed'])" class="btn btn-outline-primary" v-bind:class="{'active': trashed}">
+                        <inertia-link
+                            :href="route('admin.users.index', ['trashed'])"
+                            :class="{ active: trashed }"
+                            class="btn btn-outline-primary"
+                        >
                             Blocked
                         </inertia-link>
                     </div>
@@ -29,23 +53,25 @@
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
                     <thead class="thead-light">
-                    <tr>
-                        <th class="text-nowrap w-25">Name</th>
-                        <th class="text-nowrap w-25">Email</th>
-                        <th class="text-nowrap w-25">Company</th>
-                        <th class="text-nowrap w-auto">Role</th>
-                        <th class="text-nowrap w-auto">Verified</th>
-                        <th class="text-nowrap w-1"></th>
-                    </tr>
+                        <tr>
+                            <th class="text-nowrap w-25">Name</th>
+                            <th class="text-nowrap w-25">Email</th>
+                            <th class="text-nowrap w-25">Company</th>
+                            <th class="text-nowrap w-auto">Role</th>
+                            <th class="text-nowrap w-auto">Verified</th>
+                            <th class="text-nowrap w-1"></th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users.data">
+                        <tr v-for="user in users.data" :key="user.id">
                             <td class="text-break">
                                 <span v-if="user.trashed">{{ user.name }}</span>
                                 <a href="#" v-else>{{ user.name }}</a>
                             </td>
                             <td class="text-break">
-                                <a :href="'mailto:' + user.email">{{ user.email }}</a>
+                                <a :href="'mailto:' + user.email">{{
+                                    user.email
+                                }}</a>
                             </td>
                             <td class="text-break">
                                 {{ user.company }}
@@ -56,9 +82,7 @@
                             <td class="text-break">
                                 {{ user.email_verified_at }}
                             </td>
-                            <td class="text-center text-break">
-
-                            </td>
+                            <td class="text-center text-break"></td>
                         </tr>
                         <tr v-if="!users.data.length">
                             <td class="text-center" colspan="6">
@@ -73,29 +97,32 @@
 </template>
 
 <script>
-    import Layout from '../../../layouts/app.vue';
-    export default {
-        metaInfo: {
-            title: 'Users',
-        },
-        components: {
-            Layout,
-        },
-        props: {
-            users: Object,
-            trashed: Boolean,
-        },
-        data() {
-            return {
-                form: {
-                    q: null
-                },
+import Layout from '@/layouts/app.vue';
+
+export default {
+    metaInfo: {
+        title: 'Users'
+    },
+    components: {
+        Layout
+    },
+    props: {
+        users: Object,
+        trashed: Boolean
+    },
+    data() {
+        return {
+            form: {
+                q: null
             }
-        },
-        methods: {
-            search() {
-                this.$inertia.replace(route('admin.users.index'), {data: this.form});
-            },
-        },
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(route('admin.users.index'), {
+                data: this.form
+            });
+        }
     }
+};
 </script>

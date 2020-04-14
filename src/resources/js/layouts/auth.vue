@@ -3,7 +3,11 @@
         <div class="container-tight py-6">
             <div class="text-center mb-5">
                 <inertia-link :href="route('home')">
-                    <img src="/assets/images/logo.png" class="mb-2" alt="Interoperability Test Platform">
+                    <img
+                        src="/assets/images/logo.png"
+                        class="mb-2"
+                        alt="Interoperability Test Platform"
+                    />
                 </inertia-link>
                 <div class="text-primary">
                     <h1 class="col-login__title mb-1">
@@ -20,18 +24,19 @@
 </template>
 
 <script>
-    import Noty from 'noty';
-    export default {
-        mounted() {
-            let messages = this.$page.messages;
+import Noty from 'noty';
 
-            for (let type in messages) {
-                new Noty({
-                    type: type,
-                    text: messages[type],
-                    theme: 'bootstrap-v4',
-                }).show();
-            }
-        },
+export default {
+    mounted() {
+        const { messages } = this.$page;
+
+        for (const type in messages) {
+            new Noty({
+                type,
+                text: messages[type],
+                theme: 'bootstrap-v4'
+            }).show();
+        }
     }
+};
 </script>

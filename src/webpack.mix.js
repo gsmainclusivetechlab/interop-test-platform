@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const path = require('path');
 
 mix.version();
 mix.sourceMaps();
@@ -8,8 +9,13 @@ mix.sass('resources/sass/app.scss', 'css');
 mix.webpackConfig({
     output: {
         chunkFilename: 'js/chunks/[name].js?id=[chunkhash]',
-        publicPath: '/assets/',
+        publicPath: '/assets/'
     },
+    resolve: {
+        alias: {
+            '@': path.resolve('resources/js')
+        }
+    }
 });
 mix.copyDirectory('resources/fonts', 'public/assets/fonts');
 mix.copyDirectory('resources/images', 'public/assets/images');
