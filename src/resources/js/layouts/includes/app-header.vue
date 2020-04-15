@@ -3,13 +3,13 @@
         <div class="container-fluid py-2">
             <b-navbar-toggle target="header-nav"></b-navbar-toggle>
 
-            <a href="#" class="p-0 pr-md-3">
+            <inertia-link :href="route('home')" class="p-0 pr-md-3">
                 <img
                     src="/assets/images/logo.png"
                     class="navbar-brand-image h-5"
                     alt="Interoperability Test Platform"
                 />
-            </a>
+            </inertia-link>
 
             <div class="d-none d-md-block text-center text-primary">
                 <h1 class="col-login__title mb-1">
@@ -26,6 +26,7 @@
                     no-caret
                     menu-class="dropdown-menu-arrow"
                     toggle-class="align-items-center"
+                    v-if="$page.auth.data.can.admin"
                 >
                     <template v-slot:button-content>
                         <icon name="settings" />
@@ -33,7 +34,7 @@
 
                     <li>
                         <inertia-link
-                            :href="route('home')"
+                            :href="route('admin.users.index')"
                             class="text-reset dropdown-item"
                         >
                             Users
@@ -41,7 +42,7 @@
                     </li>
                     <li>
                         <inertia-link
-                            :href="route('home')"
+                            :href="route('admin.sessions.index')"
                             class="text-reset dropdown-item"
                         >
                             Sessions
@@ -49,7 +50,7 @@
                     </li>
                     <li>
                         <inertia-link
-                            :href="route('home')"
+                            :href="route('admin.scenarios.index')"
                             class="text-reset dropdown-item"
                         >
                             Scenarios
@@ -75,7 +76,7 @@
                     </template>
                     <li>
                         <inertia-link
-                            :href="route('home')"
+                            :href="route('settings.profile.edit')"
                             class="text-reset dropdown-item"
                         >
                             Settings
@@ -85,6 +86,7 @@
                     <li>
                         <inertia-link
                             :href="route('logout')"
+                            method="post"
                             class="text-reset dropdown-item"
                         >
                             Logout
@@ -99,7 +101,7 @@
                 class="container-fluid d-flex align-items-center justify-content-between py-1"
             >
                 <b-navbar-nav tag="nav">
-                    <li class="nav-item active">
+                    <li class="nav-item" v-bind:class="{'active': route().current('home')}">
                         <inertia-link :href="route('home')" class="nav-link">
                             <span
                                 class="nav-link-icon d-md-none d-lg-inline-block"
@@ -111,8 +113,8 @@
                             </span>
                         </inertia-link>
                     </li>
-                    <li class="nav-item">
-                        <inertia-link :href="route('home')" class="nav-link">
+                    <li class="nav-item" v-bind:class="{'active': route().current('sessions.*')}">
+                        <inertia-link :href="route('sessions.index')" class="nav-link">
                             <span
                                 class="nav-link-icon d-md-none d-lg-inline-block"
                             >
@@ -124,7 +126,7 @@
                         </inertia-link>
                     </li>
                     <li class="nav-item">
-                        <inertia-link :href="route('home')" class="nav-link">
+                        <a href="https://www.gsma.com/lab" class="nav-link" target="_blank">
                             <span
                                 class="nav-link-icon d-md-none d-lg-inline-block"
                             >
@@ -133,12 +135,12 @@
                             <span class="nav-link-title">
                                 The Lab
                             </span>
-                        </inertia-link>
+                        </a>
                     </li>
                 </b-navbar-nav>
 
                 <inertia-link
-                    :href="route('home')"
+                    :href="route('sessions.register.create')"
                     class="btn btn-outline-primary"
                 >
                     <icon name="plus" />

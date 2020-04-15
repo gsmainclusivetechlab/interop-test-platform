@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'email_verified_at' => $this->email_verified_at->toDateTimeString(),
             'trashed' => $this->trashed(),
             'can' => [
+                'admin' => $this->resource->isAdmin(),
                 'delete' => auth()->user()->can('delete', $this->resource),
                 'restore' => auth()->user()->can('restore', $this->resource),
                 'promoteAdmin' => auth()->user()->can('promoteAdmin', $this->resource),

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\UserResource;
 use App\Models\TestResult;
 use App\Models\TestRun;
 use App\Observers\TestResultObserver;
@@ -38,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
 //            return md5_file(public_path('mix-manifest.json'));
 //        });
         Inertia::share([
+            'auth' => function () {
+                return !auth()->guest() ? new UserResource(auth()->user()) : null;
+            },
             'errors' => function () {
                 return collect(session('errors', new ViewErrorBag())->getBag('default')->getMessages())
                     ->mapWithKeys(function ($value, $key) {

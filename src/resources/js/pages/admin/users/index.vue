@@ -92,7 +92,7 @@
                                         <inertia-link
                                             class="dropdown-item"
                                             :href="route('admin.users.restore', user.id)"
-                                            :method="'post'"
+                                            method="post"
                                             :confirm-title="'Confirm unblock'"
                                             :confirm-text="`Are you sure you want to unblock ${user.name}?`"
                                         >
@@ -103,7 +103,7 @@
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="route('admin.users.promote-admin', user.id)"
-                                            :method="'post'"
+                                            method="post"
                                             :confirm-title="'Confirm promote admin'"
                                             :confirm-text="`Are you sure you want to promote ${user.name} to admin?`"
                                         >
@@ -114,7 +114,7 @@
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="route('admin.users.relegate-admin', user.id)"
-                                            :method="'post'"
+                                            method="post"
                                             :confirm-title="'Confirm relegate admin'"
                                             :confirm-text="`Are you sure you want to relegate ${user.name} from admin?`"
                                         >
@@ -125,7 +125,7 @@
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="route('admin.users.destroy', user.id)"
-                                            :method="'delete'"
+                                            method="delete"
                                             :confirm-title="'Confirm block'"
                                             :confirm-text="`Are you sure you want to block ${user.name}?`"
                                         >
@@ -136,7 +136,7 @@
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="route('admin.users.force-destroy', user.id)"
-                                            :method="'delete'"
+                                            method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="`Are you sure you want to delete ${user.name}?`"
                                         >
