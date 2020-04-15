@@ -1,8 +1,17 @@
 <template>
     <layout>
-        <h1 class="page-title mb-5">
-            <b>Users</b>
-        </h1>
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="page-pretitle">
+                        Administration
+                    </div>
+                    <h2 class="page-title">
+                        Users
+                    </h2>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header">
                 <form class="input-icon" @submit.prevent="search">
