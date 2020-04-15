@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Resources\Sessions\SessionResource;
 use App\Models\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class SessionController extends Controller
 {
@@ -18,20 +20,25 @@ class SessionController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $sessions = Session::whereHas('owner', function (Builder $query) {
-                $query->when(request('q'), function (Builder $query, $q) {
-                    $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
-                        ->orWhere('name', 'like', "%{$q}%");
-                });
-            })
-            ->with(['testCases', 'lastTestRun'])
-            ->latest()
-            ->paginate();
-
-        return view('admin.sessions.index', compact('sessions'));
+        return Inertia::render('admin/sessions/index', [
+            'sessions' => SessionResource::collection(
+                Session::whereHas('owner', function (Builder $query) {
+                    $query->when(request('q'), function (Builder $query, $q) {
+                        $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                            ->orWhere('name', 'like', "%{$q}%");
+                    });
+                })
+                    ->with(['testCases', 'lastTestRun'])
+                    ->latest()
+                    ->paginate()
+            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
+        ]);
     }
 }

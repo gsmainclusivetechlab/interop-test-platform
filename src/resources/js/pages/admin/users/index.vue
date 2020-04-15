@@ -57,7 +57,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users.data" :key="user.id">
+                        <tr v-for="user in users.data">
                             <td class="text-break">
                                 <span v-if="user.trashed">{{ user.name }}</span>
                                 <a href="#" v-else>{{ user.name }}</a>
