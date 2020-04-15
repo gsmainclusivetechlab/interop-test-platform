@@ -1,11 +1,6 @@
 <template>
     <div class="page">
-<!--        HEADER-->
-<!--        NAVBAR-->
-
-        <inertia-link :href="route('logout')" method="post">
-            Logout
-        </inertia-link>
+        <app-header />
 
         <div class="content">
             <div class="container-fluid">
@@ -16,5 +11,11 @@
 </template>
 
 <script>
-export default {};
+import AppHeader from '@/layouts/includes/app-header';
+
+export default {
+    components: {
+        AppHeader
+    }
+};
 </script>
