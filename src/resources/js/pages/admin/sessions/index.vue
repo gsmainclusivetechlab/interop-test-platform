@@ -77,7 +77,7 @@
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="route('sessions.destroy', session.id)"
-                                            :method="'delete'"
+                                            method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="`Are you sure you want to delete ${session.name}?`"
                                         >

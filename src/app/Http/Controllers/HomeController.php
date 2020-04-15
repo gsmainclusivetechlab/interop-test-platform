@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Sessions\SessionResource;
+use App\Http\Resources\SessionResource;
 use Inertia\Inertia;
 
 class HomeController extends Controller
