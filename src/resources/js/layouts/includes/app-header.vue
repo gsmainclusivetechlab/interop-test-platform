@@ -76,7 +76,7 @@
                     </template>
                     <li>
                         <inertia-link
-                            :href="route('settings.profile.edit')"
+                            :href="route('settings.profile')"
                             class="text-reset dropdown-item"
                         >
                             Settings

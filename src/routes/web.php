@@ -32,7 +32,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
         Route::get('{session}/info', 'RegisterController@edit')->name('edit');
         Route::patch('{session}/info', 'RegisterController@update')->name('update');
         Route::get('{session}/config', 'RegisterController@showConfig')->name('config');
-        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config');
+        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config.store');
     });
 });
 Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
@@ -43,9 +43,9 @@ Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'S
  * Settings Routes
  */
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
-    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::get('profile', 'ProfileController@edit')->name('profile');
     Route::post('profile', 'ProfileController@update')->name('profile.update');
-    Route::get('password', 'PasswordController@edit')->name('password.edit');
+    Route::get('password', 'PasswordController@edit')->name('password');
     Route::post('password', 'PasswordController@update')->name('password.update');
 });
 
@@ -77,6 +77,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
     Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
-    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import');
+    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import.confirm');
     Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });

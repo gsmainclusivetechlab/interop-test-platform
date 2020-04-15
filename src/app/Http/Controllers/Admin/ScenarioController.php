@@ -46,7 +46,7 @@ class ScenarioController extends Controller
     public function show(Scenario $scenario)
     {
         return Inertia::render('admin/scenarios/show', [
-            'scenario' => new ScenarioResource($scenario),
+            'scenario' => (new ScenarioResource($scenario))->resolve(),
         ]);
     }
 }
