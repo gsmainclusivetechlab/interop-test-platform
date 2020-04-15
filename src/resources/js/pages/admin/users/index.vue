@@ -13,7 +13,7 @@
                         placeholder="Search..."
                     />
                     <span class="input-icon-addon">
-                        <icon name="search">
+                        <icon name="search" />
                     </span>
                 </form>
                 <div class="card-options">
