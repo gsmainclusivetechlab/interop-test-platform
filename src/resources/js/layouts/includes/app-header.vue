@@ -26,7 +26,7 @@
                     no-caret
                     menu-class="dropdown-menu-arrow"
                     toggle-class="align-items-center"
-                    v-if="$page.auth.data.can.admin"
+                    v-if="$page.auth.user.is_admin"
                 >
                     <template v-slot:button-content>
                         <icon name="settings" />
@@ -71,7 +71,7 @@
                         <span
                             class="ml-2 d-none d-lg-inline-block text-truncate"
                         >
-                            <span class="text-default">GSMA User</span>
+                            <span class="text-default">{{ $page.auth.user.name }}</span>
                         </span>
                     </template>
                     <li>

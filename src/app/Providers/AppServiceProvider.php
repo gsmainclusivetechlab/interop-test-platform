@@ -40,7 +40,12 @@ class AppServiceProvider extends ServiceProvider
 //        });
         Inertia::share([
             'auth' => function () {
-                return !auth()->guest() ? new UserResource(auth()->user()) : null;
+                return [
+                    'user' => !auth()->guest() ? [
+                        'name' => auth()->user()->name,
+                        'is_admin' => auth()->user()->isAdmin(),
+                    ] : [],
+                ];
             },
             'errors' => function () {
                 return collect(session('errors', new ViewErrorBag())->getBag('default')->getMessages())
