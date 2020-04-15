@@ -1,4 +1,4 @@
-<div class="centered">
+<div class="centered tutorial-cards">
     <table>
         <tr>
             <section class="cards">

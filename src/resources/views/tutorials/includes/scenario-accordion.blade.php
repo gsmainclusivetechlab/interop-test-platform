@@ -1,5 +1,5 @@
 <template>
-    <div role="tablist" >
+    <div role="tablist" class="tutorial-accordion">
         <b-card no-body class="mb-0 card">
             <b-card-header id="create-session" header-tag="header" class="p-1 card-header" role="tab">
                 <b-button block href="#" v-b-toggle.accordion-1 variant="info" class="btn demo1">
