@@ -38,7 +38,7 @@ $colors: (
     'teal': $teal,
     'cyan': $cyan,
     'gray': $gray-600,
-    'mint': $mint,
+    'mint': $mint
 );
 
 $theme-colors: (
@@ -47,7 +47,7 @@ $theme-colors: (
     'success': $success,
     'warning': $warning,
     'danger': $danger,
-    'light': $light,
+    'light': $light
 );
 
 $text-muted: $gray-600;
@@ -70,3 +70,6 @@ $list-group-active-color: $primary;
 // Body
 $body-bg: $gray-100;
 $body-color: $gray-900;
+
+// navbar colors
+$navbar-light-color: $gray-600;
