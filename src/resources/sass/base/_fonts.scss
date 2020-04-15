@@ -1,47 +1,47 @@
 @font-face {
   font-family: 'gotham';
-  src: url('../fonts/gotham-book.woff2') format('woff2'),
-       url('../fonts/gotham-book.woff') format('woff');
+  src: url('/assets/fonts/gotham-book.woff2') format('woff2'),
+       url('/assets/fonts/gotham-book.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
     font-family: 'gotham';
-    src: url('../fonts/gotham-bookitalic.woff2') format('woff2'),
-         url('../fonts/gotham-bookitalic.woff') format('woff');
+    src: url('/assets/fonts/gotham-bookitalic.woff2') format('woff2'),
+         url('/assets/fonts/gotham-bookitalic.woff') format('woff');
     font-weight: normal;
     font-style: italic;
   }
 
 @font-face {
   font-family: 'gotham';
-  src: url('../fonts/gotham-bold.woff2') format('woff2'),
-       url('../fonts/gotham-bold.woff') format('woff');
+  src: url('/assets/fonts/gotham-bold.woff2') format('woff2'),
+       url('/assets/fonts/gotham-bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'gotham';
-  src: url('../fonts/gotham-bolditalic.woff2') format('woff2'),
-       url('../fonts/gotham-bolditalic.woff') format('woff');
+  src: url('/assets/fonts/gotham-bolditalic.woff2') format('woff2'),
+       url('/assets/fonts/gotham-bolditalic.woff') format('woff');
   font-weight: bold;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'gotham';
-  src: url('../fonts/gotham-medium.woff2') format('woff2'),
-       url('../fonts/gotham-medium.woff') format('woff');
+  src: url('/assets/fonts/gotham-medium.woff2') format('woff2'),
+       url('/assets/fonts/gotham-medium.woff') format('woff');
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'gotham';
-  src: url('../fonts/gotham-mediumitalic.woff2') format('woff2'),
-       url('../fonts/gotham-mediumitalic.woff') format('woff');
+  src: url('/assets/fonts/gotham-mediumitalic.woff2') format('woff2'),
+       url('/assets/fonts/gotham-mediumitalic.woff') format('woff');
   font-weight: 600;
   font-style: italic;
 }

@@ -5,23 +5,22 @@
                 <b>Latest sessions</b>
             </h1>
         </div>
-        <div class="row row-cards row-deck">
-
-        </div>
+        <div class="row row-cards row-deck"></div>
     </layout>
 </template>
 
 <script>
-    import Layout from '../layouts/app.vue';
-    export default {
-        metaInfo: {
-            title: 'Dashboard',
-        },
-        components: {
-            Layout,
-        },
-        data() {
-            return {}
-        },
+import Layout from '@/layouts/app.vue';
+
+export default {
+    metaInfo: {
+        title: 'Dashboard'
+    },
+    components: {
+        Layout
+    },
+    data() {
+        return {};
     }
+};
 </script>
