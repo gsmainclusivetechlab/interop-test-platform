@@ -106,15 +106,17 @@ a {
     }
 }
 
-.c3 {
-    line,
-    path {
-        stroke: $gray-300;
+#nprogress {
+    .bar {
+        background: $primary;
     }
 
-    .c3-axis {
-        text {
-            fill: $gray-600;
-        }
+    .peg {
+        box-shadow: 0 0 10px $primary, 0 0 5px $primary;
+    }
+
+    .spinner-icon {
+        border-top-color: $primary;
+        border-left-color: $primary;
     }
 }
