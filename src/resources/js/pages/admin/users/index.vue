@@ -47,14 +47,14 @@
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-vcenter table-hover card-table">
                     <thead class="thead-light">
-                    <tr>
-                        <th class="text-nowrap w-25">Name</th>
-                        <th class="text-nowrap w-25">Email</th>
-                        <th class="text-nowrap w-25">Company</th>
-                        <th class="text-nowrap w-auto">Role</th>
-                        <th class="text-nowrap w-auto">Verified</th>
-                        <th class="text-nowrap w-1"></th>
-                    </tr>
+                        <tr>
+                            <th class="text-nowrap w-25">Name</th>
+                            <th class="text-nowrap w-25">Email</th>
+                            <th class="text-nowrap w-25">Company</th>
+                            <th class="text-nowrap w-auto">Role</th>
+                            <th class="text-nowrap w-auto">Verified</th>
+                            <th class="text-nowrap w-1"></th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr v-for="user in users.data">
@@ -170,8 +170,14 @@
             Layout,
         },
         props: {
-            users: Object,
-            filter: Object,
+            users: {
+                type: Object,
+                required: true,
+            },
+            filter: {
+                type: Object,
+                required: true,
+            },
         },
         data() {
             return {

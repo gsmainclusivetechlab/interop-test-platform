@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Resources\Sessions;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,7 +15,7 @@ class SessionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'owner_name' => $this->owner->name,
+            'owner' => new UserResource($this->whenLoaded('owner')),
             'use_cases_count' => $this->testCases->unique('use_case_id')->count(),
             'test_cases_count' => $this->testCases->count(),
             'last_run_at' => ($this->lastTestRun) ? $this->lastTestRun->created_at->diffForHumans() : '',

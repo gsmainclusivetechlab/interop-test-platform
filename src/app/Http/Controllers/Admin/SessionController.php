@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Resources\Sessions\SessionResource;
+use App\Http\Resources\SessionResource;
 use App\Models\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;

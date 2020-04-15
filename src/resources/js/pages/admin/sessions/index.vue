@@ -29,15 +29,15 @@
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-vcenter table-hover card-table">
                     <thead class="thead-light">
-                    <tr>
-                        <th class="text-nowrap w-25">Name</th>
-                        <th class="text-nowrap w-auto">Owner</th>
-                        <th class="text-nowrap w-auto">Use Cases</th>
-                        <th class="text-nowrap w-auto">Test Cases</th>
-                        <th class="text-nowrap w-25">Status</th>
-                        <th class="text-nowrap w-auto">Last Run</th>
-                        <th class="text-nowrap w-1"></th>
-                    </tr>
+                        <tr>
+                            <th class="text-nowrap w-25">Name</th>
+                            <th class="text-nowrap w-auto">Owner</th>
+                            <th class="text-nowrap w-auto">Use Cases</th>
+                            <th class="text-nowrap w-auto">Test Cases</th>
+                            <th class="text-nowrap w-25">Status</th>
+                            <th class="text-nowrap w-auto">Last Run</th>
+                            <th class="text-nowrap w-1"></th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr v-for="session in sessions.data">
@@ -88,7 +88,7 @@
                             </td>
                         </tr>
                         <tr v-if="!sessions.data.length">
-                            <td class="text-center" colspan="6">
+                            <td class="text-center" colspan="7">
                                 No Results
                             </td>
                         </tr>
@@ -111,8 +111,14 @@
             Layout,
         },
         props: {
-            sessions: Object,
-            filter: Object,
+            sessions: {
+                type: Object,
+                required: true,
+            },
+            filter: {
+                type: Object,
+                required: true,
+            },
         },
         data() {
             return {

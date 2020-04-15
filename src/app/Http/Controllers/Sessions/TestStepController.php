@@ -29,6 +29,9 @@ class TestStepController extends Controller
      */
     public function __invoke(Session $session, TestCase $testCase)
     {
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
         $testSteps = $testCase->testSteps()->paginate();
 
         return view('sessions.test-steps.index', compact('session', 'testCase', 'testSteps'));
