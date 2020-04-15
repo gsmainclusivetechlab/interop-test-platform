@@ -22,7 +22,10 @@
                 </div>
                 <div class="form-footer">
                     <button type="submit" class="btn btn-primary btn-block">
-                        <span v-if="sending" class="spinner-border spinner-border-sm mr-2"></span>
+                        <span
+                            v-if="sending"
+                            class="spinner-border spinner-border-sm mr-2"
+                        ></span>
                         Send me password reset link
                     </button>
                 </div>
@@ -37,7 +40,7 @@
 </template>
 
 <script>
-import Layout from '@/layouts/auth.vue';
+import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {

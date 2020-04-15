@@ -16,3 +16,11 @@ a {
         border-left-color: $primary;
     }
 }
+
+.noty_layout {
+    .noty_bar {
+        &:not(:last-child) {
+            margin-bottom: 0.25rem;
+        }
+    }
+}

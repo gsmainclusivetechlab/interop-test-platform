@@ -71,7 +71,9 @@
                         <span
                             class="ml-2 d-none d-lg-inline-block text-truncate"
                         >
-                            <span class="text-default">{{ $page.auth.user.name }}</span>
+                            <span class="text-default">
+                                {{ $page.auth.user.name }}
+                            </span>
                         </span>
                     </template>
                     <li>
@@ -101,7 +103,10 @@
                 class="container-fluid d-flex align-items-center justify-content-between py-1"
             >
                 <b-navbar-nav tag="nav">
-                    <li class="nav-item" v-bind:class="{'active': route().current('home')}">
+                    <li
+                        class="nav-item"
+                        v-bind:class="{ active: route().current('home') }"
+                    >
                         <inertia-link :href="route('home')" class="nav-link">
                             <span
                                 class="nav-link-icon d-md-none d-lg-inline-block"
@@ -113,8 +118,14 @@
                             </span>
                         </inertia-link>
                     </li>
-                    <li class="nav-item" v-bind:class="{'active': route().current('sessions.*')}">
-                        <inertia-link :href="route('sessions.index')" class="nav-link">
+                    <li
+                        class="nav-item"
+                        v-bind:class="{ active: route().current('sessions.*') }"
+                    >
+                        <inertia-link
+                            :href="route('sessions.index')"
+                            class="nav-link"
+                        >
                             <span
                                 class="nav-link-icon d-md-none d-lg-inline-block"
                             >
@@ -126,7 +137,11 @@
                         </inertia-link>
                     </li>
                     <li class="nav-item">
-                        <a href="https://www.gsma.com/lab" class="nav-link" target="_blank">
+                        <a
+                            href="https://www.gsma.com/lab"
+                            class="nav-link"
+                            target="_blank"
+                        >
                             <span
                                 class="nav-link-icon d-md-none d-lg-inline-block"
                             >

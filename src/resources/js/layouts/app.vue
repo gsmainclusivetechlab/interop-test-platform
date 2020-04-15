@@ -1,19 +1,22 @@
 <template>
-    <div class="page">
+    <layout>
         <app-header />
-        <div class="content">
+
+        <main class="content">
             <div class="container-fluid">
-                <slot></slot>
+                <slot />
             </div>
-        </div>
-    </div>
+        </main>
+    </layout>
 </template>
 
 <script>
+import Layout from '@/layouts/default';
 import AppHeader from '@/layouts/includes/app-header';
 
 export default {
     components: {
+        Layout,
         AppHeader
     }
 };

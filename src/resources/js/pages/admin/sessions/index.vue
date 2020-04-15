@@ -27,7 +27,9 @@
                 </form>
             </div>
             <div class="table-responsive mb-0">
-                <table class="table table-striped table-vcenter table-hover card-table">
+                <table
+                    class="table table-striped table-vcenter table-hover card-table"
+                >
                     <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
@@ -42,7 +44,9 @@
                     <tbody>
                         <tr v-for="session in sessions.data">
                             <td class="text-break">
-                                <inertia-link :href="route('sessions.show', session.id)">
+                                <inertia-link
+                                    :href="route('sessions.show', session.id)"
+                                >
                                     {{ session.name }}
                                 </inertia-link>
                             </td>
@@ -55,9 +59,7 @@
                             <td>
                                 {{ session.test_cases_count }}
                             </td>
-                            <td>
-
-                            </td>
+                            <td></td>
                             <td>
                                 {{ session.last_run_at }}
                             </td>
@@ -76,10 +78,17 @@
                                     <li v-if="session.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('sessions.destroy', session.id)"
+                                            :href="
+                                                route(
+                                                    'sessions.destroy',
+                                                    session.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${session.name}?`"
+                                            :confirm-text="
+                                                `Are you sure you want to delete ${session.name}?`
+                                            "
                                         >
                                             Delete
                                         </confirm-link>
@@ -95,44 +104,48 @@
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="sessions.meta" :links="sessions.links" class="card-footer" />
+            <pagination
+                :meta="sessions.meta"
+                :links="sessions.links"
+                class="card-footer"
+            />
         </div>
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/app.vue';
+import Layout from '@/layouts/app';
 
-    export default {
-        metaInfo: {
-            title: 'Sessions'
+export default {
+    metaInfo: {
+        title: 'Sessions'
+    },
+    components: {
+        Layout
+    },
+    props: {
+        sessions: {
+            type: Object,
+            required: true
         },
-        components: {
-            Layout,
-        },
-        props: {
-            sessions: {
-                type: Object,
-                required: true,
-            },
-            filter: {
-                type: Object,
-                required: true,
-            },
-        },
-        data() {
-            return {
-                form: {
-                    q: this.filter.q,
-                }
-            };
-        },
-        methods: {
-            search() {
-                this.$inertia.replace(route('admin.sessions.index'), {
-                    data: this.form
-                });
-            }
+        filter: {
+            type: Object,
+            required: true
         }
-    };
+    },
+    data() {
+        return {
+            form: {
+                q: this.filter.q
+            }
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(route('admin.sessions.index'), {
+                data: this.form
+            });
+        }
+    }
+};
 </script>
