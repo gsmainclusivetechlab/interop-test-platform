@@ -91,18 +91,57 @@
                                     <li v-if="user.trashed && user.can.restore">
                                         <inertia-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.restore', user)"
+                                            :href="route('admin.users.restore', user.id)"
+                                            :method="'post'"
+                                            :confirm-title="'Confirm unblock'"
+                                            :confirm-text="`Are you sure you want to unblock ${user.name}?`"
                                         >
                                             Unblock
                                         </inertia-link>
                                     </li>
-                                    <li v-if="!user.trashed && user.can.delete">
-                                        <inertia-link
+                                    <li v-if="!user.trashed && user.can.promoteAdmin">
+                                        <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.destroy', user)"
+                                            :href="route('admin.users.promote-admin', user.id)"
+                                            :method="'post'"
+                                            :confirm-title="'Confirm promote admin'"
+                                            :confirm-text="`Are you sure you want to promote ${user.name} to admin?`"
+                                        >
+                                            Promote admin
+                                        </confirm-link>
+                                    </li>
+                                    <li v-if="!user.trashed && user.can.relegateAdmin">
+                                        <confirm-link
+                                            class="dropdown-item"
+                                            :href="route('admin.users.relegate-admin', user.id)"
+                                            :method="'post'"
+                                            :confirm-title="'Confirm relegate admin'"
+                                            :confirm-text="`Are you sure you want to relegate ${user.name} from admin?`"
+                                        >
+                                            Relegate admin
+                                        </confirm-link>
+                                    </li>
+                                    <li v-if="!user.trashed && user.can.delete">
+                                        <confirm-link
+                                            class="dropdown-item"
+                                            :href="route('admin.users.destroy', user.id)"
+                                            :method="'delete'"
+                                            :confirm-title="'Confirm block'"
+                                            :confirm-text="`Are you sure you want to block ${user.name}?`"
                                         >
                                             Block
-                                        </inertia-link>
+                                        </confirm-link>
+                                    </li>
+                                    <li v-if="user.can.delete">
+                                        <confirm-link
+                                            class="dropdown-item"
+                                            :href="route('admin.users.force-destroy', user.id)"
+                                            :method="'delete'"
+                                            :confirm-title="'Confirm delete'"
+                                            :confirm-text="`Are you sure you want to delete ${user.name}?`"
+                                        >
+                                            Delete
+                                        </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>

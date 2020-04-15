@@ -15,7 +15,7 @@
             </span>
             entries
         </p>
-        <ul class="pagination m-0 ml-auto">
+        <ul v-if="meta.total > meta.per_page" class="pagination m-0 ml-auto">
             <li v-if="links.prev" class="page-item">
                 <inertia-link class="page-link" :href="links.prev">
                     <icon name="arrow-left"></icon>
