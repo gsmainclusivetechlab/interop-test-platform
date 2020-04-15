@@ -27,6 +27,9 @@ Vue.mixin({
 Vue.component('icon', () =>
     import(/* webpackChunkName: "icon" */ '@/components/icon.vue')
 );
+Vue.component('pagination', () =>
+    import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
+);
 
 const app = document.getElementById('app');
 
