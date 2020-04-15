@@ -20,7 +20,10 @@ export default {
         Layout
     },
     props: {
-        exception: Object
+        exception: {
+            type: Object,
+            required: true,
+        },
     }
 };
 </script>

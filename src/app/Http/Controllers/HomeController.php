@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Sessions\SessionResource;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -20,13 +21,12 @@ class HomeController extends Controller
     public function index()
     {
         return Inertia::render('home', [
-
+            'sessions' => SessionResource::collection(
+                auth()->user()->sessions()
+                    ->with(['testCases', 'lastTestRun'])
+                    ->latest()
+                    ->paginate(12)
+            ),
         ]);
-//        $sessions = auth()->user()->sessions()
-//            ->with(['testCases', 'lastTestRun'])
-//            ->latest()
-//            ->paginate(12);
-//
-//        return view('home', compact('sessions'));
     }
 }

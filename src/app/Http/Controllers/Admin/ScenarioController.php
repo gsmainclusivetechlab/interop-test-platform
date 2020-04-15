@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Resources\ScenarioResource;
 use App\Models\Scenario;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class ScenarioController extends Controller
 {
@@ -18,26 +20,33 @@ class ScenarioController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $scenarios = Scenario::when(request('q'), function (Builder $query, $q) {
-                $query->where('name', 'like', "%{$q}%");
-            })
-            ->withCount(['components', 'useCases', 'testCases'])
-            ->latest()
-            ->paginate();
-
-        return view('admin.scenarios.index', compact('scenarios'));
+        return Inertia::render('admin/scenarios/index', [
+            'scenarios' => ScenarioResource::collection(
+                Scenario::when(request('q'), function (Builder $query, $q) {
+                    $query->where('name', 'like', "%{$q}%");
+                })
+                    ->withCount(['components', 'useCases', 'testCases'])
+                    ->latest()
+                    ->paginate()
+            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
+        ]);
     }
 
     /**
      * @param Scenario $scenario
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function show(Scenario $scenario)
     {
-        return view('admin.scenarios.show', compact('scenario'));
+        return Inertia::render('admin/scenarios/show', [
+            'scenario' => new ScenarioResource($scenario),
+        ]);
     }
 }

@@ -25,8 +25,14 @@
 <script>
 export default {
     props: {
-        code: Number,
-        message: String
+        code: {
+            type: Number,
+            required: true,
+        },
+        message: {
+            type: String,
+            required: true,
+        },
     }
 };
 </script>
