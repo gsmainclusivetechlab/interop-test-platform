@@ -8,7 +8,7 @@
                             Administration
                         </div>
                         <h2 class="page-title">
-                            {{ testCase.data.name}}
+                            {{ testCase.name}}
                         </h2>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
             <ul class="nav nav-tabs mb-5">
                 <li class="nav-item">
                     <inertia-link
-                        :href="route('admin.test-cases.show', testCase.data.id)"
+                        :href="route('admin.test-cases.show', testCase.id)"
                         class="nav-link rounded-0"
                         v-bind:class="{'active': route().current('admin.test-cases.show')}"
                     >
@@ -25,9 +25,9 @@
                 </li>
                 <li class="nav-item">
                     <inertia-link
-                        :href="route('admin.test-cases.test-steps.index', testCase.data.id)"
+                        :href="route('admin.test-cases.test-steps.index', testCase.id)"
                         class="nav-link rounded-0"
-                        v-bind:class="{'active': route().current('admin.test-cases.test-steps.index')}"
+                        v-bind:class="{'active': route().current('admin.test-cases.test-steps.*')}"
                     >
                         Test Steps
                     </inertia-link>
@@ -44,6 +44,11 @@ import Layout from '@/layouts/app.vue';
 export default {
     components: {
         Layout,
+    },
+    metaInfo() {
+        return {
+            title: this.testCase.name,
+        }
     },
     props: {
         testCase: {

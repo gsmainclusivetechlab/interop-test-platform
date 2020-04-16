@@ -1,18 +1,18 @@
 <template>
-    <layout :scenario="scenario">
+    <layout :testCase="testCase">
 
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/admin/scenario.vue';
+    import Layout from '@/layouts/admin/test-case.vue';
 
     export default {
         components: {
             Layout,
         },
         props: {
-            scenario: {
+            testCase: {
                 type: Object,
                 required: true,
             },

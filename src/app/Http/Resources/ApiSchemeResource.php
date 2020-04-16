@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TestCaseResource extends JsonResource
+class ApiSchemeResource extends JsonResource
 {
     /**
      * @param  \Illuminate\Http\Request  $request
@@ -15,11 +15,6 @@ class TestCaseResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
-            'test_steps_count' => $this->test_steps_count,
-            'can' => [
-                'delete' => auth()->user()->can('delete', $this->resource),
-            ],
         ];
     }
 }

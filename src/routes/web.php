@@ -32,7 +32,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
         Route::get('{session}/info', 'RegisterController@edit')->name('edit');
         Route::patch('{session}/info', 'RegisterController@update')->name('update');
         Route::get('{session}/config', 'RegisterController@showConfig')->name('config');
-        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config');
+        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config.store');
     });
 });
 Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
@@ -77,6 +77,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
     Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
-    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import');
+    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import.confirm');
     Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });

@@ -8,7 +8,7 @@
                             Administration
                         </div>
                         <h2 class="page-title">
-                            {{ scenario.data.name}}
+                            {{ scenario.name}}
                         </h2>
                     </div>
                 </div>
@@ -16,7 +16,7 @@
             <ul class="nav nav-tabs mb-5">
                 <li class="nav-item">
                     <inertia-link
-                        :href="route('admin.scenarios.show', scenario.data.id)"
+                        :href="route('admin.scenarios.show', scenario.id)"
                         class="nav-link rounded-0"
                         v-bind:class="{'active': route().current('admin.scenarios.show')}"
                     >
@@ -25,26 +25,26 @@
                 </li>
                 <li class="nav-item">
                     <inertia-link
-                        :href="route('admin.scenarios.components.index', scenario.data.id)"
+                        :href="route('admin.scenarios.components.index', scenario.id)"
                         class="nav-link rounded-0"
-                        v-bind:class="{'active': route().current('admin.scenarios.components.index')}"
+                        v-bind:class="{'active': route().current('admin.scenarios.components.*')}"
                     >
                         Components
                     </inertia-link>
                 </li>
                 <li class="nav-item">
                     <inertia-link
-                        :href="route('admin.scenarios.use-cases.index', scenario.data.id)"
+                        :href="route('admin.scenarios.use-cases.index', scenario.id)"
                         class="nav-link rounded-0"
-                        v-bind:class="{'active': route().current('admin.scenarios.use-cases.index')}"
+                        v-bind:class="{'active': route().current('admin.scenarios.use-cases.*')}"
                     >
                         Use Cases
                     </inertia-link>
                 </li>
                 <li class="nav-item">
                     <inertia-link
-                        :href="route('admin.scenarios.test-cases.index', scenario.data.id)"
-                        v-bind:class="{'active': route().current('admin.scenarios.test-cases.index')}"
+                        :href="route('admin.scenarios.test-cases.index', scenario.id)"
+                        v-bind:class="{'active': route().current('admin.scenarios.test-cases.*')}"
                         class="nav-link rounded-0"
                     >
                         Test Cases
@@ -62,6 +62,11 @@ import Layout from '@/layouts/app.vue';
 export default {
     components: {
         Layout,
+    },
+    metaInfo() {
+        return {
+            title: this.scenario.name,
+        }
     },
     props: {
         scenario: {

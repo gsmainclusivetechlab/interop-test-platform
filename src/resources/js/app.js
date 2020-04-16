@@ -6,6 +6,7 @@ import {
     NavbarPlugin,
     CollapsePlugin,
     DropdownPlugin,
+    FormFilePlugin,
     ProgressPlugin,
     VBTooltipPlugin
 } from 'bootstrap-vue';
@@ -17,6 +18,7 @@ Vue.use(NavPlugin);
 Vue.use(NavbarPlugin);
 Vue.use(CollapsePlugin);
 Vue.use(DropdownPlugin);
+Vue.use(FormFilePlugin);
 Vue.use(ProgressPlugin);
 Vue.use(VBTooltipPlugin);
 
