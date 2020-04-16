@@ -1,5 +1,5 @@
 <template>
-    <layout>
+    <div class="page">
         <app-header />
         <main class="content">
             <div class="container-fluid">
@@ -7,19 +7,23 @@
             </div>
             <app-footer />
         </main>
-    </layout>
+    </div>
 </template>
 
 <script>
-import Layout from '@/layouts/default';
-import AppHeader from '@/layouts/includes/app-header';
-import AppFooter from '@/layouts/includes/app-footer';
+    import AppHeader from '@/layouts/includes/app-header';
+    import AppFooter from '@/layouts/includes/app-footer';
+    import Gtag from '@/components/gtag';
+    import Notifications from '@/components/notifications';
 
-export default {
-    components: {
-        Layout,
-        AppHeader,
-        AppFooter,
-    }
-};
+    export default {
+        mixins: [
+            Gtag,
+            Notifications,
+        ],
+        components: {
+            AppHeader,
+            AppFooter,
+        },
+    };
 </script>

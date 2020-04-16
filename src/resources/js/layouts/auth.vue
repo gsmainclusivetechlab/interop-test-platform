@@ -1,5 +1,5 @@
 <template>
-    <layout>
+    <div class="page">
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="container-tight py-6">
                 <div class="text-center mb-4">
@@ -22,15 +22,17 @@
                 <slot />
             </div>
         </div>
-    </layout>
+    </div>
 </template>
 
 <script>
-import Layout from '@/layouts/default';
+    import Gtag from '@/components/gtag';
+    import Notifications from '@/components/notifications';
 
-export default {
-    components: {
-        Layout
-    }
-};
+    export default {
+        mixins: [
+            Gtag,
+            Notifications,
+        ],
+    };
 </script>
