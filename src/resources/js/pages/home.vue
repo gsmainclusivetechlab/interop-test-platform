@@ -1,9 +1,13 @@
 <template>
     <layout>
-        <div class="page-header m-0 py-2">
-            <h1 class="page-title">
-                <b>Latest sessions</b>
-            </h1>
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <h2 class="page-title">
+                        Latest sessions
+                    </h2>
+                </div>
+            </div>
         </div>
         <div class="row row-cards row-deck"></div>
     </layout>
