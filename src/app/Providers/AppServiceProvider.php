@@ -39,10 +39,18 @@ class AppServiceProvider extends ServiceProvider
 //            return md5_file(public_path('mix-manifest.json'));
 //        });
         Inertia::share([
+            'app' => function () {
+                return [
+                    'debug' => env('APP_DEBUG'),
+                ];
+            },
             'auth' => function () {
                 return [
                     'user' => !auth()->guest() ? [
                         'name' => auth()->user()->name,
+                        'first_name' => auth()->user()->first_name,
+                        'last_name' => auth()->user()->last_name,
+                        'company' => auth()->user()->company,
                         'is_admin' => auth()->user()->isAdmin(),
                     ] : [],
                 ];
