@@ -3,9 +3,6 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">
-                        Administration
-                    </div>
                     <h2 class="page-title">
                         Sessions
                     </h2>
@@ -33,7 +30,6 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
-                            <th class="text-nowrap w-auto">Owner</th>
                             <th class="text-nowrap w-auto">Use Cases</th>
                             <th class="text-nowrap w-auto">Test Cases</th>
                             <th class="text-nowrap w-25">Status</th>
@@ -49,11 +45,6 @@
                                 >
                                     {{ session.name }}
                                 </inertia-link>
-                            </td>
-                            <td class="text-break">
-                                <a href="#" v-if="session.owner">
-                                    {{ session.owner.name }}
-                                </a>
                             </td>
                             <td>
                                 {{ session.use_cases_count }}
@@ -99,7 +90,7 @@
                             </td>
                         </tr>
                         <tr v-if="!sessions.data.length">
-                            <td class="text-center" colspan="7">
+                            <td class="text-center" colspan="6">
                                 No Results
                             </td>
                         </tr>
@@ -144,7 +135,7 @@ export default {
     },
     methods: {
         search() {
-            this.$inertia.replace(route('admin.sessions.index'), {
+            this.$inertia.replace(route('sessions.index'), {
                 data: this.form
             });
         }

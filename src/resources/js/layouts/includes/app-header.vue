@@ -73,9 +73,9 @@
                             <span
                                 class="ml-2 d-none d-lg-inline-block text-truncate"
                             >
-                                <span class="text-default">{{
-                                    $page.auth.user.name
-                                }}</span>
+                                <span class="text-default">
+                                    {{ $page.auth.user.name }}
+                                </span>
                             </span>
                         </template>
                         <li>

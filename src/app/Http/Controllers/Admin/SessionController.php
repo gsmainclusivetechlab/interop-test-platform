@@ -32,7 +32,7 @@ class SessionController extends Controller
                             ->orWhere('name', 'like', "%{$q}%");
                     });
                 })
-                    ->with(['testCases', 'lastTestRun'])
+                    ->with(['owner', 'testCases', 'lastTestRun'])
                     ->latest()
                     ->paginate()
             ),
