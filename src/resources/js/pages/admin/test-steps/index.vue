@@ -1,5 +1,5 @@
 <template>
-    <layout :scenario="scenario">
+    <layout :testCase="testCase">
         <div class="card">
             <div class="card-header">
                 <form class="input-icon" @submit.prevent="search">
@@ -19,48 +19,64 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Api Service</th>
+                            <th class="text-nowrap">Source</th>
+                            <th class="text-nowrap">Target</th>
+                            <th class="text-nowrap">Api Scheme</th>
+                            <th class="text-nowrap">Test Scripts</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="component in components.data">
+                        <tr v-for="testStep in testSteps.data">
                             <td class="text-break">
                                 <a href="#">
-                                    {{ component.name }}
+                                    {{ testStep.name }}
                                 </a>
                             </td>
                             <td>
-                                <a href="#" v-if="component.apiService">
-                                    {{ component.apiService.name }}
+                                <a href="#" v-if="testStep.source">
+                                    {{ testStep.source.name }}
                                 </a>
                             </td>
+                            <td>
+                                <a href="#" v-if="testStep.target">
+                                    {{ testStep.target.name }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="#" v-if="testStep.apiScheme">
+                                    {{ testStep.apiScheme.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ testStep.test_scripts_count }}
+                            </td>
                         </tr>
-                        <tr v-if="!components.data.length">
-                            <td class="text-center" colspan="2">
+                        <tr v-if="!testSteps.data.length">
+                            <td class="text-center" colspan="5">
                                 No Results
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="components.meta" :links="components.links" class="card-footer" />
+            <pagination :meta="testSteps.meta" :links="testSteps.links" class="card-footer" />
         </div>
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/admin/scenario.vue';
+    import Layout from '@/layouts/admin/test-case.vue';
 
     export default {
         components: {
             Layout,
         },
         props: {
-            scenario: {
+            testCase: {
                 type: Object,
                 required: true,
             },
-            components: {
+            testSteps: {
                 type: Object,
                 required: true,
             },
@@ -78,7 +94,7 @@
         },
         methods: {
             search() {
-                this.$inertia.replace(route('admin.scenarios.components.index', this.scenario.id), {
+                this.$inertia.replace(route('admin.test-cases.test-steps.index', this.testCase.id), {
                     data: this.form
                 });
             }

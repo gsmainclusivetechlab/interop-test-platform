@@ -41,8 +41,8 @@
                                 </inertia-link>
                             </td>
                             <td class="text-break">
-                                <a href="#">
-                                    {{ testCase.use_case ? testCase.use_case.name : '' }}
+                                <a href="#" v-if="testCase.useCase">
+                                    {{ testCase.useCase.name }}
                                 </a>
                             </td>
                             <td>

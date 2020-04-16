@@ -1,17 +1,19 @@
 <template>
     <b-navbar class="flex-wrap py-0" tag="header" toggleable="md">
-        <div class="container-fluid py-2">
+        <div class="container-fluid py-3">
             <b-navbar-toggle target="header-nav"></b-navbar-toggle>
 
-            <inertia-link :href="route('home')" class="p-0 pr-md-3">
-                <img
-                    src="/assets/images/logo.png"
-                    class="navbar-brand-image h-5"
-                    alt="Interoperability Test Platform"
-                />
-            </inertia-link>
+            <div class="col-3">
+                <inertia-link :href="route('home')" class="d-block p-0 pr-md-3">
+                    <img
+                        src="/assets/images/logo.png"
+                        class="navbar-brand-image h-5"
+                        alt="Interoperability Test Platform"
+                    />
+                </inertia-link>
+            </div>
 
-            <div class="d-none d-md-block text-center text-primary">
+            <div class="col d-none d-md-block text-center text-primary">
                 <h1 class="col-login__title mb-1">
                     Inclusive Tech Lab
                 </h1>
@@ -19,81 +21,82 @@
                     Interoperability Test Platform
                 </h2>
             </div>
+            <div class="col-3 d-flex justify-content-end ml-auto">
+                <b-navbar-nav>
+                    <b-nav-item-dropdown
+                        right
+                        no-caret
+                        menu-class="dropdown-menu-arrow"
+                        toggle-class="align-items-center"
+                        v-if="$page.auth.user.is_admin"
+                    >
+                        <template v-slot:button-content>
+                            <icon name="settings" />
+                        </template>
 
-            <b-navbar-nav>
-                <b-nav-item-dropdown
-                    right
-                    no-caret
-                    menu-class="dropdown-menu-arrow"
-                    toggle-class="align-items-center"
-                    v-if="$page.auth.user.is_admin"
-                >
-                    <template v-slot:button-content>
-                        <icon name="settings" />
-                    </template>
+                        <li>
+                            <inertia-link
+                                :href="route('admin.users.index')"
+                                class="text-reset dropdown-item"
+                            >
+                                Users
+                            </inertia-link>
+                        </li>
+                        <li>
+                            <inertia-link
+                                :href="route('admin.sessions.index')"
+                                class="text-reset dropdown-item"
+                            >
+                                Sessions
+                            </inertia-link>
+                        </li>
+                        <li>
+                            <inertia-link
+                                :href="route('admin.scenarios.index')"
+                                class="text-reset dropdown-item"
+                            >
+                                Scenarios
+                            </inertia-link>
+                        </li>
+                    </b-nav-item-dropdown>
 
-                    <li>
-                        <inertia-link
-                            :href="route('admin.users.index')"
-                            class="text-reset dropdown-item"
-                        >
-                            Users
-                        </inertia-link>
-                    </li>
-                    <li>
-                        <inertia-link
-                            :href="route('admin.sessions.index')"
-                            class="text-reset dropdown-item"
-                        >
-                            Sessions
-                        </inertia-link>
-                    </li>
-                    <li>
-                        <inertia-link
-                            :href="route('admin.scenarios.index')"
-                            class="text-reset dropdown-item"
-                        >
-                            Scenarios
-                        </inertia-link>
-                    </li>
-                </b-nav-item-dropdown>
-
-                <b-nav-item-dropdown
-                    right
-                    no-caret
-                    menu-class="dropdown-menu-arrow"
-                    toggle-class="align-items-center"
-                >
-                    <template v-slot:button-content>
-                        <span class="avatar flex-shrink-0">
-                            <icon name="user" />
-                        </span>
-                        <span
-                            class="ml-2 d-none d-lg-inline-block text-truncate"
-                        >
-                            <span class="text-default">{{ $page.auth.user.name }}</span>
-                        </span>
-                    </template>
-                    <li>
-                        <inertia-link
-                            :href="route('settings.profile')"
-                            class="text-reset dropdown-item"
-                        >
-                            Settings
-                        </inertia-link>
-                    </li>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <li>
-                        <inertia-link
-                            :href="route('logout')"
-                            method="post"
-                            class="text-reset dropdown-item"
-                        >
-                            Logout
-                        </inertia-link>
-                    </li>
-                </b-nav-item-dropdown>
-            </b-navbar-nav>
+                    <b-nav-item-dropdown
+                        right
+                        no-caret
+                        menu-class="dropdown-menu-arrow"
+                        toggle-class="align-items-center"
+                    >
+                        <template v-slot:button-content>
+                            <span class="avatar flex-shrink-0">
+                                <icon name="user" />
+                            </span>
+                            <span
+                                class="ml-2 d-none d-lg-inline-block text-truncate"
+                            >
+                                <span class="text-default">{{ $page.auth.user.name }}</span>
+                            </span>
+                        </template>
+                        <li>
+                            <inertia-link
+                                :href="route('settings.profile.edit')"
+                                class="text-reset dropdown-item"
+                            >
+                                Settings
+                            </inertia-link>
+                        </li>
+                        <b-dropdown-divider></b-dropdown-divider>
+                        <li>
+                            <inertia-link
+                                :href="route('logout')"
+                                method="post"
+                                class="text-reset dropdown-item"
+                            >
+                                Logout
+                            </inertia-link>
+                        </li>
+                    </b-nav-item-dropdown>
+                </b-navbar-nav>
+            </div>
         </div>
 
         <b-collapse id="header-nav" class="border-top" is-nav>

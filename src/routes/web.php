@@ -43,9 +43,9 @@ Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'S
  * Settings Routes
  */
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
-    Route::get('profile', 'ProfileController@edit')->name('profile');
+    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
     Route::post('profile', 'ProfileController@update')->name('profile.update');
-    Route::get('password', 'PasswordController@edit')->name('password');
+    Route::get('password', 'PasswordController@edit')->name('password.edit');
     Route::post('password', 'PasswordController@update')->name('password.update');
 });
 

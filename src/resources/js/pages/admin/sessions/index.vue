@@ -47,7 +47,7 @@
                                 </inertia-link>
                             </td>
                             <td class="text-break">
-                                {{ session.owner_name }}
+                                {{ session.owner ? session.owner.name : '' }}
                             </td>
                             <td>
                                 {{ session.use_cases_count }}

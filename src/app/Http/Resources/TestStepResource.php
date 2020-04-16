@@ -14,14 +14,11 @@ class TestStepResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-//            'source_name' => $this->source->name,
-//            'target_name' => $this->target->name,
-//            'api_scheme_name' => $this->target->name,
-            'test_steps_count' => $this->test_steps_count,
-            'can' => [
-                'delete' => auth()->user()->can('delete', $this->resource),
-            ],
+            'name' => implode(' ', [$this->forward, $this->backward]),
+            'source' => new ComponentResource($this->whenLoaded('source')),
+            'target' => new ComponentResource($this->whenLoaded('target')),
+            'apiScheme' => new ApiSchemeResource($this->whenLoaded('apiScheme')),
+            'test_scripts_count' => $this->test_scripts_count,
         ];
     }
 }
