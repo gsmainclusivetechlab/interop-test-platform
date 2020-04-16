@@ -40,6 +40,11 @@ Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'S
     ->name('sessions.test-cases.test-data.run');
 
 /**
+ * Tutorial Routes
+ */
+Route::get('/tutorials', 'Tutorials\TutorialsController@index')->name('tutorials');
+
+/**
  * Settings Routes
  */
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {

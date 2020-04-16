@@ -20,6 +20,7 @@
             </div>
         </div>
         @include('layouts.includes.footer')
+        @stack('scripts')
     </div>
     @include('layouts.includes.gtag')
 </body>
