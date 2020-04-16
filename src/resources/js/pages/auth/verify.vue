@@ -1,7 +1,7 @@
 <template>
     <layout>
         <form class="card card-md" @submit.prevent="submit">
-            <div class="card-body p-6">
+            <div class="card-body">
                 <div class="card-title">
                     Verify Your Email Address
                 </div>

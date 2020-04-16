@@ -19,6 +19,5 @@ class UsersTableSeeder extends Seeder
             'company' => 'GSMA',
             'password' => Hash::make('qzRBHEzStdG8XWhy'),
         ]);
-        factory(User::class, 50)->create();
     }
 }
