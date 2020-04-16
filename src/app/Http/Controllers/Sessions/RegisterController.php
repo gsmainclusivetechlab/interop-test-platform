@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Sessions\StoreSessionSutsRequest;
 use App\Http\Requests\Sessions\StoreSessionRequest;
 use App\Http\Requests\Sessions\UpdateSessionRequest;
+use App\Http\Resources\ScenarioResource;
+use App\Http\Resources\SessionResource;
+use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
-use App\Models\UseCase;
 use App\Models\Scenario;
 use Illuminate\Support\Arr;
+use Inertia\Inertia;
 
 class RegisterController extends Controller
 {
@@ -22,14 +25,21 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function create()
     {
         $scenario = Scenario::firstOrFail();
-        $useCases = $scenario->useCases()->whereHas('testCases')->get();
 
-        return view('sessions.register.create', compact('scenario', 'useCases'));
+        return Inertia::render('sessions.register.create', [
+            'scenario' => (new ScenarioResource($scenario->load(['components'])))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                $scenario->useCases()
+                    ->with(['testCases'])
+                    ->whereHas('testCases')
+                    ->get()
+            ),
+        ]);
     }
 
     /**
@@ -52,14 +62,20 @@ class RegisterController extends Controller
 
     /**
      * @param Session $session
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function edit(Session $session)
     {
-        $scenario = $session->scenario;
-        $useCases = $scenario->useCases()->whereHas('testCases')->get();
-
-        return view('sessions.register.edit', compact('session', 'scenario', 'useCases'));
+        return Inertia::render('sessions.register.edit', [
+            'scenario' => (new ScenarioResource($session->scenario->load(['components'])))->resolve(),
+            'session' => (new SessionResource($session))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                $session->scenario->useCases()
+                    ->with(['testCases'])
+                    ->whereHas('testCases')
+                    ->get()
+            ),
+        ]);
     }
 
     /**

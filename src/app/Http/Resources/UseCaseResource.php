@@ -15,6 +15,7 @@ class UseCaseResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'testCases' => TestCaseResource::collection($this->whenLoaded('testCases')),
             'test_cases_count' => $this->test_cases_count,
         ];
     }

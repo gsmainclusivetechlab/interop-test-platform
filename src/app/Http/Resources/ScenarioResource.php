@@ -15,6 +15,7 @@ class ScenarioResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'components' => ComponentResource::collection($this->whenLoaded('components')),
             'components_count' => $this->components_count,
             'use_cases_count' => $this->use_cases_count,
             'test_cases_count' => $this->test_cases_count,
