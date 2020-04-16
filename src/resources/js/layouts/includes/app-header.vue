@@ -3,8 +3,8 @@
         <div class="container-fluid py-3">
             <b-navbar-toggle target="header-nav"></b-navbar-toggle>
 
-            <div class="col-3">
-                <inertia-link :href="route('home')" class="d-block p-0 pr-md-3">
+            <div class="col-md-3 d-flex align-items-center">
+                <inertia-link :href="route('home')">
                     <img
                         src="/assets/images/logo.png"
                         class="navbar-brand-image h-5"
@@ -21,8 +21,9 @@
                     Interoperability Test Platform
                 </h2>
             </div>
-            <div class="col-3 d-flex justify-content-end ml-auto">
-                <b-navbar-nav>
+
+            <div class="col-md-3 d-flex justify-content-end">
+                <b-navbar-nav class="flex-row">
                     <b-nav-item-dropdown
                         right
                         no-caret
@@ -67,16 +68,16 @@
                         toggle-class="align-items-center"
                     >
                         <template v-slot:button-content>
-                        <span class="avatar flex-shrink-0">
-                            <icon name="user" />
-                        </span>
+                            <span class="avatar flex-shrink-0">
+                                <icon name="user" />
+                            </span>
                             <span
                                 class="ml-2 d-none d-lg-inline-block text-truncate"
                             >
-                            <span class="text-default">
-                                {{ $page.auth.user.name }}
+                                <span class="text-default">
+                                    {{ $page.auth.user.name }}
+                                </span>
                             </span>
-                        </span>
                         </template>
                         <li>
                             <inertia-link
