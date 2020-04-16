@@ -41,25 +41,6 @@ Vue.component('confirm-link', () =>
 const app = document.getElementById('app');
 
 new Vue({
-    metaInfo: {
-        link: [
-            {
-                rel: 'icon',
-                type: 'image/png',
-                sizes: '32x32',
-                href: '/assets/images/favicon/favicon.png'
-            },
-            {
-                rel: 'apple-touch-icon',
-                type: 'image/png',
-                href: '/assets/images/favicon/apple-touch-icon.png'
-            }
-        ],
-        titleTemplate: title =>
-            title
-                ? `${title} - Interoperability Test Platform - GSMA`
-                : 'Interoperability Test Platform - GSMA'
-    },
     render: h =>
         h(InertiaApp, {
             props: {

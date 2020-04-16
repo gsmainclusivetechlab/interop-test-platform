@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Resources\UserResource;
 use App\Models\TestResult;
 use App\Models\TestRun;
 use App\Observers\TestResultObserver;
@@ -46,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
             },
             'auth' => function () {
                 return [
+                    'guest' => auth()->guest(),
                     'user' => !auth()->guest() ? [
                         'name' => auth()->user()->name,
                         'first_name' => auth()->user()->first_name,

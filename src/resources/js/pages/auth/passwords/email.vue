@@ -31,7 +31,7 @@
                 </div>
             </div>
         </form>
-        <div class="text-center text-muted">
+        <div class="text-center text-muted" v-if="$page.auth.guest">
             Forget it,
             <inertia-link :href="route('login')">send me back</inertia-link>
             to the sign in screen.
