@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/admin/scenario.vue';
+    import Layout from '@/layouts/admin/scenario';
 
     export default {
         components: {

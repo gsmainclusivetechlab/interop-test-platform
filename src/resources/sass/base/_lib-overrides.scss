@@ -24,3 +24,71 @@ a {
         }
     }
 }
+
+.custom-file {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: $form-file-height;
+    margin-bottom: 0;
+    backface-visibility: hidden;
+}
+
+.custom-file-input {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: $form-file-height;
+    margin: 0;
+    opacity: 0;
+
+    &:focus ~ .custom-file-label {
+        border-color: $form-file-focus-border-color;
+        box-shadow: $form-file-focus-box-shadow;
+    }
+
+    &[disabled] ~ .custom-file-label,
+    &:disabled ~ .custom-file-label {
+        background-color: $form-file-disabled-bg;
+        border-color: $form-file-disabled-border-color;
+    }
+
+    ~ .custom-file-label[data-browse]::after {
+        content: attr(data-browse);
+    }
+}
+
+.custom-file-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: $form-file-height;
+    padding: $form-file-padding-y $form-file-padding-x;
+    font-family: $form-file-font-family;
+    font-weight: $form-file-font-weight;
+    line-height: $form-file-line-height;
+    color: $form-file-color;
+    background-color: $form-file-bg;
+    border: $border-width solid $form-file-border-color;
+    @include border-radius($form-file-border-radius);
+    @include box-shadow($form-file-box-shadow);
+
+    &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        display: block;
+        height: $form-file-height;
+        padding: $form-file-padding-y $form-file-padding-x;
+        line-height: $form-file-line-height;
+        color: $form-file-button-color;
+        content: 'Browse';
+        @include gradient-bg($form-file-button-bg);
+        border-left: inherit;
+        @include border-right-radius(inherit);
+    }
+}

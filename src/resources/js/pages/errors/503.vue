@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Layout from '@/layouts/errors.vue';
+import Layout from '@/layouts/errors';
 
 export default {
     metaInfo: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <layout>
         <div class="flex-fill d-flex align-items-center justify-content-center">
             <div class="container-tight py-6">
                 <div class="empty">
@@ -26,18 +26,16 @@
                 </div>
             </div>
         </div>
-    </div>
+    </layout>
 </template>
 
 <script>
-    import Gtag from '@/components/gtag';
-    import Notifications from '@/components/notifications';
+    import Layout from '@/layouts/app';
 
     export default {
-        mixins: [
-            Gtag,
-            Notifications,
-        ],
+        components: {
+            Layout,
+        },
         props: {
             code: {
                 type: Number,

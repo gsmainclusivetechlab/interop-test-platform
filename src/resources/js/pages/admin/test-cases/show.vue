@@ -5,7 +5,7 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/admin/test-case.vue';
+    import Layout from '@/layouts/admin/test-case';
 
     export default {
         components: {

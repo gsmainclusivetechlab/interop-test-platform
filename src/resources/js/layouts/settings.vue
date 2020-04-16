@@ -33,14 +33,14 @@
 </template>
 
 <script>
-import Layout from '@/layouts/app';
+    import Layout from '@/layouts/main';
 
-export default {
-    components: {
-        Layout,
-    },
-    metaInfo: {
-        title: 'Settings'
-    },
-};
+    export default {
+        components: {
+            Layout,
+        },
+        metaInfo: {
+            title: 'Settings'
+        },
+    };
 </script>
