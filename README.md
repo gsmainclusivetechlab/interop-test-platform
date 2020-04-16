@@ -26,9 +26,8 @@ Project can be setup with Docker.
     - src/.env
     - build/nginx-server.conf
 4. Check .env files for correct configurations.
-5. Login to JC docker hub: `docker login hub.jcdev.net:24000`
-6. Run containers with `make run`
-7. Run installation `make install`  
+5. Run containers with `make run`
+6. Run installation `make install`  
 
 ### Docker PHP Container
 

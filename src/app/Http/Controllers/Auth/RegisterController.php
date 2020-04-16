@@ -7,7 +7,6 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -33,7 +32,6 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        Session::flash('success', 'This is a message2');
         return Inertia::render('auth/register');
     }
 
