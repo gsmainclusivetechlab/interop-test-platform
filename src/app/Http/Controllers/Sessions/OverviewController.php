@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
+use App\Http\Resources\TestRunResource;
 use App\Models\Session;
 use App\View\Components\Sessions\LatestTestRunsChart;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,17 +43,21 @@ class OverviewController extends Controller
 
     /**
      * @param Session $session
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Session $session)
     {
         $this->authorize('view', $session);
-        $testRuns = $session->testRuns()
-            ->latest()
-            ->paginate();
 
-        return view('sessions.show', compact('session', 'testRuns'));
+        return Inertia::render('sessions/show', [
+            'session' => (new SessionResource($session))->resolve(),
+            'testRuns' => TestRunResource::collection(
+                $session->testRuns()
+                    ->latest()
+                    ->paginate()
+            ),
+        ]);
     }
 
     /**
