@@ -45,7 +45,9 @@
                 </div>
             </div>
             <div class="table-responsive mb-0">
-                <table class="table table-striped table-vcenter table-hover card-table">
+                <table
+                    class="table table-striped table-vcenter table-hover card-table"
+                >
                     <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
@@ -78,7 +80,12 @@
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="user.can.promoteAdmin || user.can.relegateAdmin || user.can.delete || user.can.restore"
+                                    v-if="
+                                        user.can.promoteAdmin ||
+                                            user.can.relegateAdmin ||
+                                            user.can.delete ||
+                                            user.can.restore
+                                    "
                                     no-caret
                                     right
                                     toggle-class="align-text-top"
@@ -91,32 +98,67 @@
                                     <li v-if="user.trashed && user.can.restore">
                                         <inertia-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.restore', user.id)"
+                                            :href="
+                                                route(
+                                                    'admin.users.restore',
+                                                    user.id
+                                                )
+                                            "
                                             method="post"
                                             :confirm-title="'Confirm unblock'"
-                                            :confirm-text="`Are you sure you want to unblock ${user.name}?`"
+                                            :confirm-text="
+                                                `Are you sure you want to unblock ${user.name}?`
+                                            "
                                         >
                                             Unblock
                                         </inertia-link>
                                     </li>
-                                    <li v-if="!user.trashed && user.can.promoteAdmin">
+                                    <li
+                                        v-if="
+                                            !user.trashed &&
+                                                user.can.promoteAdmin
+                                        "
+                                    >
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.promote-admin', user.id)"
+                                            :href="
+                                                route(
+                                                    'admin.users.promote-admin',
+                                                    user.id
+                                                )
+                                            "
                                             method="post"
-                                            :confirm-title="'Confirm promote admin'"
-                                            :confirm-text="`Are you sure you want to promote ${user.name} to admin?`"
+                                            :confirm-title="
+                                                'Confirm promote admin'
+                                            "
+                                            :confirm-text="
+                                                `Are you sure you want to promote ${user.name} to admin?`
+                                            "
                                         >
                                             Promote admin
                                         </confirm-link>
                                     </li>
-                                    <li v-if="!user.trashed && user.can.relegateAdmin">
+                                    <li
+                                        v-if="
+                                            !user.trashed &&
+                                                user.can.relegateAdmin
+                                        "
+                                    >
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.relegate-admin', user.id)"
+                                            :href="
+                                                route(
+                                                    'admin.users.relegate-admin',
+                                                    user.id
+                                                )
+                                            "
                                             method="post"
-                                            :confirm-title="'Confirm relegate admin'"
-                                            :confirm-text="`Are you sure you want to relegate ${user.name} from admin?`"
+                                            :confirm-title="
+                                                'Confirm relegate admin'
+                                            "
+                                            :confirm-text="
+                                                `Are you sure you want to relegate ${user.name} from admin?`
+                                            "
                                         >
                                             Relegate admin
                                         </confirm-link>
@@ -124,10 +166,17 @@
                                     <li v-if="!user.trashed && user.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.destroy', user.id)"
+                                            :href="
+                                                route(
+                                                    'admin.users.destroy',
+                                                    user.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm block'"
-                                            :confirm-text="`Are you sure you want to block ${user.name}?`"
+                                            :confirm-text="
+                                                `Are you sure you want to block ${user.name}?`
+                                            "
                                         >
                                             Block
                                         </confirm-link>
@@ -135,10 +184,17 @@
                                     <li v-if="user.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.users.force-destroy', user.id)"
+                                            :href="
+                                                route(
+                                                    'admin.users.force-destroy',
+                                                    user.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${user.name}?`"
+                                            :confirm-text="
+                                                `Are you sure you want to delete ${user.name}?`
+                                            "
                                         >
                                             Delete
                                         </confirm-link>
@@ -154,44 +210,54 @@
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="users.meta" :links="users.links" class="card-footer" />
+            <pagination
+                :meta="users.meta"
+                :links="users.links"
+                class="card-footer"
+            />
         </div>
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/app.vue';
+import Layout from '@/layouts/app';
 
-    export default {
-        metaInfo: {
-            title: 'Users'
+export default {
+    metaInfo: {
+        title: 'Users'
+    },
+    components: {
+        Layout
+    },
+    props: {
+        users: {
+            type: Object,
+            required: true
         },
-        components: {
-            Layout,
-        },
-        props: {
-            users: {
-                type: Object,
-                required: true,
-            },
-            filter: {
-                type: Object,
-                required: true,
-            },
-        },
-        data() {
-            return {
-                form: {
-                    q: this.filter.q,
-                }
-            };
-        },
-        methods: {
-            search() {
-                this.$inertia.replace(route('admin.users.index', (this.filter.trashed) ? ['trashed'] : []), {
-                    data: this.form
-                });
-            }
+        filter: {
+            type: Object,
+            required: true
         }
-    };
+    },
+    data() {
+        return {
+            form: {
+                q: this.filter.q
+            }
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(
+                route(
+                    'admin.users.index',
+                    this.filter.trashed ? ['trashed'] : []
+                ),
+                {
+                    data: this.form
+                }
+            );
+        }
+    }
+};
 </script>

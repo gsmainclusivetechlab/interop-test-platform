@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Layout from '@/layouts/app.vue';
+import Layout from '@/layouts/app';
 
 export default {
     metaInfo: {
@@ -18,9 +18,6 @@ export default {
     },
     components: {
         Layout
-    },
-    data() {
-        return {};
     }
 };
 </script>

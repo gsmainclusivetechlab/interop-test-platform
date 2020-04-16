@@ -33,7 +33,9 @@ Vue.component('pagination', () =>
     import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
 );
 Vue.component('confirm-link', () =>
-    import(/* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue')
+    import(
+        /* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue'
+    )
 );
 
 const app = document.getElementById('app');
@@ -45,13 +47,13 @@ new Vue({
                 rel: 'icon',
                 type: 'image/png',
                 sizes: '32x32',
-                href: '/assets/images/favicon/favicon.png',
+                href: '/assets/images/favicon/favicon.png'
             },
             {
                 rel: 'apple-touch-icon',
                 type: 'image/png',
-                href: '/assets/images/favicon/apple-touch-icon.png',
-            },
+                href: '/assets/images/favicon/apple-touch-icon.png'
+            }
         ],
         titleTemplate: title =>
             title
