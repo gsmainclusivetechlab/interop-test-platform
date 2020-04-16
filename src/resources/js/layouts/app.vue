@@ -1,12 +1,14 @@
 <template>
     <layout>
         <app-header />
+
         <main class="content">
             <div class="container-fluid">
                 <slot />
             </div>
-            <app-footer />
         </main>
+
+        <app-footer />
     </layout>
 </template>
 
@@ -19,7 +21,7 @@ export default {
     components: {
         Layout,
         AppHeader,
-        AppFooter,
+        AppFooter
     }
 };
 </script>

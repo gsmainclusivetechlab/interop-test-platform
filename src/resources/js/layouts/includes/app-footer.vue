@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer footer-transparent">
+    <footer class="footer m-0">
         <div class="container-fluid">
             <div class="row text-center align-items-center flex-row-reverse">
                 <div class="col-lg-auto ml-lg-auto">
