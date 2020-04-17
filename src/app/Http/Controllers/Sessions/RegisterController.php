@@ -31,7 +31,7 @@ class RegisterController extends Controller
     {
         $scenario = Scenario::firstOrFail();
 
-        return Inertia::render('sessions.register.create', [
+        return Inertia::render('sessions/register/create', [
             'scenario' => (new ScenarioResource($scenario->load(['components'])))->resolve(),
             'useCases' => UseCaseResource::collection(
                 $scenario->useCases()
