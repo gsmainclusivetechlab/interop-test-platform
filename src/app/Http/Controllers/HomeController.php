@@ -30,7 +30,8 @@ class HomeController extends Controller
                         'lastTestRun',
                     ])
                     ->latest()
-                    ->paginate(12)
+                    ->limit(12)
+                    ->get()
             ),
         ]);
     }

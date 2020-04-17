@@ -193,9 +193,7 @@
                     </div>
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         {{ `Copyright © ${new Date().getFullYear()}` }}
-                        <a href="https://www.gsma.com/" class="link-secondary" target="_blank">
-                            GSMA
-                        </a>.
+                        <a href="https://www.gsma.com/" class="link-secondary" target="_blank">GSMA</a>.
                         All rights reserved.
                     </div>
                 </div>
