@@ -15,6 +15,7 @@ class TestCaseResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'behavior' => $this->behavior,
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection($this->whenLoaded('testSteps')),
             'can' => [
