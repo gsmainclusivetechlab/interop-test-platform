@@ -8,7 +8,7 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <div class="steps steps-counter steps-primary">
+                    <div class="steps steps-counter steps-primary mb-5">
                         <span
                             class="step-item"
                             :class="{
@@ -38,20 +38,7 @@
             </div>
             <div class="row mb-5">
                 <div class="col">
-                    <diagram :components="$page.scenario.components.data" />
-
-                    <div class="d-flex justify-content-center">
-                        <div class="d-inline-flex align-items-center mx-2">
-                            <span class="ic-arrow-right mr-2"></span>
-                            <small>Simulated</small>
-                        </div>
-                        <div class="d-inline-flex align-items-center mx-2">
-                            <span
-                                class="ic-arrow-right mr-2 border-dashed"
-                            ></span>
-                            <small>Not Simulated</small>
-                        </div>
-                    </div>
+                    <diagram :components="scenario.components.data" />
                 </div>
             </div>
             <div class="row">
@@ -69,6 +56,12 @@ export default {
     components: {
         Layout,
         Diagram
+    },
+    props: {
+        scenario: {
+            type: Object,
+            required: true
+        }
     }
 };
 </script>
