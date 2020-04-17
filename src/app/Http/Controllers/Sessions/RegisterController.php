@@ -37,7 +37,7 @@ class RegisterController extends Controller
                         $query->with(['testCases'])->whereHas('testCases');
                     },
                     'components' => function ($query) {
-                        $query->with(['apiService']);
+                        $query->with(['paths', 'apiService']);
                     },
                 ])
             ))->resolve(),
@@ -75,7 +75,7 @@ class RegisterController extends Controller
                         $query->with(['testCases'])->whereHas('testCases');
                     },
                     'components' => function ($query) {
-                        $query->with(['apiService']);
+                        $query->with(['paths', 'apiService']);
                     },
                 ])
             ))->resolve(),
@@ -114,7 +114,7 @@ class RegisterController extends Controller
                         $query->with(['testCases'])->whereHas('testCases');
                     },
                     'components' => function ($query) {
-                        $query->with(['apiService']);
+                        $query->with(['paths', 'apiService']);
                     },
                 ])
             ))->resolve(),
