@@ -7,9 +7,7 @@
                 </h2>
             </div>
             <div class="pt-6" v-if="testRuns.data.length">
-<!--                @if ($testRuns->count())-->
-<!--                <x-sessions.latest-test-runs-chart :session="$session"/>-->
-<!--                @endif-->
+                <session-chart :session="session" />
             </div>
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
@@ -75,10 +73,12 @@
 
 <script>
 import Layout from '@/layouts/sessions/overview';
+import SessionChart from '@/components/sessions/chart';
 
 export default {
     components: {
-        Layout
+        Layout,
+        SessionChart
     },
     props: {
         session: {

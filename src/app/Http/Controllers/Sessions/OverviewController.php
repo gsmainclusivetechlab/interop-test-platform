@@ -83,4 +83,9 @@ class OverviewController extends Controller
             ->back()
             ->with('success', __('Session deleted successfully'));
     }
+
+    public function showChartData()
+    {
+        return [];
+    }
 }
