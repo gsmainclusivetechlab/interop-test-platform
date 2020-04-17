@@ -2,7 +2,8 @@
     <b-progress class="w-100 h-3 rounded-0 progress">
         <b-progress-bar
             v-for="option in options"
-            :variant="option.variant"
+            :key="option.key"
+            :variant="option.key"
             v-b-tooltip.hover
             :title="option.title"
             :value="option.value"
@@ -39,17 +40,17 @@ export default {
         return {
             options: [
                 {
-                    variant: 'success',
+                    key: 'success',
                     value: total ? passed / total * 100 : 0,
                     title: `${passed} Pass`,
                 },
                 {
-                    variant: 'danger',
+                    key: 'danger',
                     value: total ? failures / total * 100 : 0,
                     title: `${failures} Fail`,
                 },
                 {
-                    variant: 'secondary',
+                    key: 'secondary',
                     value: total ? skipped / total * 100 : 0,
                     title: `${skipped} Not executed`,
                 },
