@@ -30,7 +30,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ useCase.test_cases_count }}
+                                {{ useCase.testCases ? useCase.testCases.length : 0  }}
                             </td>
                         </tr>
                         <tr v-if="!useCases.data.length">

@@ -46,7 +46,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ testCase.test_steps_count }}
+                                {{ testCase.testSteps ? testCase.testSteps.length : 0  }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

@@ -17,7 +17,6 @@ class TestCaseResource extends JsonResource
             'name' => $this->name,
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection($this->whenLoaded('testSteps')),
-            'test_steps_count' => $this->test_steps_count,
             'can' => [
                 'delete' => auth()->user()->can('delete', $this->resource),
             ],

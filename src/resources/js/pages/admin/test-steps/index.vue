@@ -48,7 +48,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ testStep.test_scripts_count }}
+                                {{ testStep.testScripts ? testStep.testScripts.length : 0  }}
                             </td>
                         </tr>
                         <tr v-if="!testSteps.data.length">

@@ -10,6 +10,7 @@ import {
     ProgressPlugin,
     VBTooltipPlugin
 } from 'bootstrap-vue';
+window.collect = require('collect.js');
 
 Vue.use(VueMeta);
 Vue.use(InertiaApp);
@@ -23,7 +24,10 @@ Vue.use(ProgressPlugin);
 Vue.use(VBTooltipPlugin);
 
 Vue.mixin({
-    methods: { route: window.route }
+    methods: {
+        route: window.route,
+        collect: window.collect,
+    }
 });
 
 Vue.component('icon', () =>

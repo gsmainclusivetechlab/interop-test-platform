@@ -47,14 +47,14 @@
                                 </inertia-link>
                             </td>
                             <td>
-                                {{ session.use_cases_count }}
+                                {{ session.testCases ? collect(session.testCases).unique('use_case_id').count() : 0 }}
                             </td>
                             <td>
-                                {{ session.test_cases_count }}
+                                {{ session.testCases ? session.testCases.length : 0  }}
                             </td>
                             <td></td>
                             <td>
-                                {{ session.last_run_at }}
+                                {{ session.lastTestRun ? session.lastTestRun.created_at : '' }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

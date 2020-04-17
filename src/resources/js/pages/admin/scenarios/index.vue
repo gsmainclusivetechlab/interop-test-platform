@@ -44,13 +44,13 @@
                                 </inertia-link>
                             </td>
                             <td>
-                                {{ scenario.components_count }}
+                                {{ scenario.components ? scenario.components.length : 0  }}
                             </td>
                             <td>
-                                {{ scenario.use_cases_count }}
+                                {{ scenario.useCases ? scenario.useCases.length : 0  }}
                             </td>
                             <td>
-                                {{ scenario.test_cases_count }}
+                                {{ scenario.testCases ? scenario.testCases.length : 0  }}
                             </td>
                         </tr>
                         <tr v-if="!scenarios.data.length">

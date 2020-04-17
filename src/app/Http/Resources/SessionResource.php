@@ -17,9 +17,8 @@ class SessionResource extends JsonResource
             'name' => $this->name,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'suts' => ComponentResource::collection($this->whenLoaded('suts')),
+            'testCases' => TestCaseResource::collection($this->whenLoaded('testCases')),
             'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun')),
-            'use_cases_count' => $this->testCases->unique('use_case_id')->count(),
-            'test_cases_count' => $this->testCases->count(),
             'can' => [
                 'delete' => auth()->user()->can('delete', $this->resource),
             ],
