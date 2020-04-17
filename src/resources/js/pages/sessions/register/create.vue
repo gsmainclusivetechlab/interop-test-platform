@@ -82,6 +82,9 @@
                                             <button
                                                 type="button"
                                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
+                                                @click.prevent="
+                                                    toggleCheckboxes
+                                                "
                                             >
                                                 <icon name="checkbox" />
                                             </button>
@@ -117,6 +120,9 @@
                                                         <button
                                                             type="button"
                                                             class="btn btn-link py-0 font-weight-normal text-decoration-none"
+                                                            @click.prevent="
+                                                                toggleCheckboxes
+                                                            "
                                                         >
                                                             <icon
                                                                 name="checkbox"
@@ -194,6 +200,9 @@
                                                         <button
                                                             type="button"
                                                             class="btn btn-link py-0 font-weight-normal text-decoration-none"
+                                                            @click.prevent="
+                                                                toggleCheckboxes
+                                                            "
                                                         >
                                                             <icon
                                                                 name="checkbox"
@@ -296,6 +305,21 @@ export default {
             return collect(useCase.testCases)
                 .where('behavior', behavior)
                 .all();
+        },
+        toggleCheckboxes(e) {
+            const btn = e.target;
+            const closestParentList = btn.closest('.list-group-item');
+            const checkboxes = Array.from(
+                closestParentList.querySelectorAll('input[type="checkbox"]')
+            );
+            const isChecked = checkboxes.every(
+                checkbox => checkbox.checked === true
+            );
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !isChecked;
+                checkbox.dispatchEvent(new Event('change'));
+            });
         },
         submit() {
             this.sending = true;
