@@ -16,9 +16,6 @@ class UseCaseResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'testCases' => TestCaseResource::collection($this->whenLoaded('testCases')),
-            'positiveTestCases' => TestCaseResource::collection($this->whenLoaded('positiveTestCases')),
-            'negativeTestCases' => TestCaseResource::collection($this->whenLoaded('negativeTestCases')),
-            'test_cases_count' => $this->test_cases_count,
         ];
     }
 }

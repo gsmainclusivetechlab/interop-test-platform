@@ -34,8 +34,7 @@ class TestStepController extends Controller
                     ->when(request('q'), function (Builder $query, $q) {
                         $query->whereRaw('CONCAT(forward, " ", backward) like ?', "%{$q}%");
                     })
-                    ->with(['source', 'target', 'apiScheme'])
-                    ->withCount(['testScripts'])
+                    ->with(['source', 'target', 'apiScheme', 'testScripts'])
                     ->paginate()
             ),
             'filter' => [

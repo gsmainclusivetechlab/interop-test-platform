@@ -36,8 +36,7 @@ class TestCaseController extends Controller
                     ->when(request('q'), function (Builder $query, $q) {
                         $query->where('test_cases.name', 'like', "%{$q}%");
                     })
-                    ->with('useCase')
-                    ->withCount('testSteps')
+                    ->with(['useCase', 'testSteps'])
                     ->latest()
                     ->paginate()
             ),
@@ -89,7 +88,12 @@ class TestCaseController extends Controller
      */
     public function import(Scenario $scenario)
     {
-        request()->validate(['file' => 'required|mimes:yaml']);
+        request()->validate([
+            'file' => [
+                'required',
+                'mimetypes:text/yaml,text/plain',
+            ],
+        ]);
         $file = request()->file('file');
 
         try {

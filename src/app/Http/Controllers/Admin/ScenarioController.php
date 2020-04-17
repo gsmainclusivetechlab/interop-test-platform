@@ -29,7 +29,7 @@ class ScenarioController extends Controller
                 Scenario::when(request('q'), function (Builder $query, $q) {
                     $query->where('name', 'like', "%{$q}%");
                 })
-                    ->withCount(['components', 'useCases', 'testCases'])
+                    ->with(['components', 'useCases', 'testCases'])
                     ->latest()
                     ->paginate()
             ),

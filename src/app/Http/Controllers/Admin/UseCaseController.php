@@ -34,7 +34,7 @@ class UseCaseController extends Controller
                     ->when(request('q'), function (Builder $query, $q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
-                    ->withCount('testCases')
+                    ->with(['testCases'])
                     ->latest()
                     ->paginate()
             ),
