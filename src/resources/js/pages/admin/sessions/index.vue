@@ -62,7 +62,7 @@
                                 {{ session.testCases ? session.testCases.length : 0  }}
                             </td>
                             <td>
-
+                                <session-progress :session="session" />
                             </td>
                             <td>
                                 {{ session.lastTestRun ? session.lastTestRun.created_at : '' }}
@@ -119,13 +119,15 @@
 
 <script>
 import Layout from '@/layouts/main';
+import SessionProgress from '@/components/sessions/progress';
 
 export default {
     metaInfo: {
         title: 'Sessions'
     },
     components: {
-        Layout
+        Layout,
+        SessionProgress
     },
     props: {
         sessions: {

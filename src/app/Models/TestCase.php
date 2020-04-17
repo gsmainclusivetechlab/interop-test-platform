@@ -55,11 +55,11 @@ class TestCase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'test_case_id')->completed();
+        return $this->hasOne(TestRun::class, 'test_case_id')->latest();
     }
 
     /**

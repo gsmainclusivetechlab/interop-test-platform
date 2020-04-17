@@ -31,7 +31,12 @@ class OverviewController extends Controller
                     ->when(request('q'), function (Builder $query, $q) {
                         return $query->where('name', 'like', "%{$q}%");
                     })
-                    ->with(['testCases', 'lastTestRun'])
+                    ->with([
+                        'testCases' => function ($query) {
+                            return $query->with(['lastTestRun']);
+                        },
+                        'lastTestRun',
+                    ])
                     ->latest()
                     ->paginate()
             ),
