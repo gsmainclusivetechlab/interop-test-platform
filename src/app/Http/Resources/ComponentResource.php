@@ -15,6 +15,7 @@ class ComponentResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'simulated' => $this->simulated,
             'apiService' => (new ApiServiceResource($this->whenLoaded('apiService'))),
         ];
     }
