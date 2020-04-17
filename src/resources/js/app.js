@@ -10,6 +10,8 @@ import {
     ProgressPlugin,
     VBTooltipPlugin
 } from 'bootstrap-vue';
+
+window.string = require('string');
 window.collect = require('collect.js');
 
 Vue.use(VueMeta);
@@ -26,9 +28,12 @@ Vue.use(VBTooltipPlugin);
 Vue.mixin({
     methods: {
         route: window.route,
+        string: window.string,
         collect: window.collect,
     }
 });
+
+Vue.config.productionTip = false;
 
 Vue.component('icon', () =>
     import(/* webpackChunkName: "icon" */ '@/components/icon.vue')

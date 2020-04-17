@@ -23,7 +23,12 @@ class HomeController extends Controller
         return Inertia::render('home', [
             'sessions' => SessionResource::collection(
                 auth()->user()->sessions()
-                    ->with(['testCases', 'lastTestRun'])
+                    ->with([
+                        'testCases' => function ($query) {
+                            return $query->with(['lastTestRun']);
+                        },
+                        'lastTestRun',
+                    ])
                     ->latest()
                     ->paginate(12)
             ),
