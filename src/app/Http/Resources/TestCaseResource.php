@@ -18,6 +18,13 @@ class TestCaseResource extends JsonResource
             'behavior' => $this->behavior,
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection($this->whenLoaded('testSteps')),
+            'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun', function () {
+                return $this->whenPivotLoaded('session_test_cases', function () {
+                    return $this->lastTestRun()
+                        ->where('session_id', $this->pivot->session_id)
+                        ->first();
+                }, $this->lastTestRun);
+            })),
             'can' => [
                 'delete' => auth()->user()->can('delete', $this->resource),
             ],

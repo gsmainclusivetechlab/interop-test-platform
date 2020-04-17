@@ -29,7 +29,7 @@ class RegisterController extends Controller
      */
     public function create()
     {
-        $scenario = Scenario::firstOrFail();
+        $scenario = Scenario::firstOrFail()->load(['components']);
 
         return Inertia::render('sessions/register/create', [
             'scenario' => (new ScenarioResource($scenario->load(['components'])))->resolve(),
@@ -100,7 +100,7 @@ class RegisterController extends Controller
      */
     public function showConfig(Session $session)
     {
-        $scenario = $session->scenario;
+        $scenario = $session->scenario->load(['components']);;
         $useCases = $scenario->useCases()->whereHas('testCases')->get();
         $components = $scenario->components()->whereHas('apiService')->get();
 
