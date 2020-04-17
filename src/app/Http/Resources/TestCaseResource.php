@@ -16,6 +16,8 @@ class TestCaseResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'behavior' => $this->behavior,
+            'description' => $this->description,
+            'precondition' => $this->precondition,
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection($this->whenLoaded('testSteps')),
             'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun', function () {
