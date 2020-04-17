@@ -92,3 +92,15 @@ a {
         @include border-right-radius(inherit);
     }
 }
+
+.dropdown-toggle {
+    &::after {
+        transition: transform 0.2s;
+    }
+
+    &[aria-expanded='true'] {
+        &::after {
+            transform: scale(-1) translate(0, -3px) rotate(-45deg);
+        }
+    }
+}
