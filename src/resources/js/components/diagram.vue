@@ -49,6 +49,11 @@ export default {
             required: true
         }
     },
+    mounted() {
+        if (window.mermaid) {
+            this.initDiagram();
+        }
+    },
     methods: {
         initDiagram() {
             const graphEl = this.$refs.diagram;
