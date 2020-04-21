@@ -38,7 +38,24 @@
             </div>
             <div class="row mb-5">
                 <div class="col">
-                    <diagram :components="scenario.components.data" />
+                    <diagram>
+                        graph LR; 1(Payer); 1 -.-> 2; 2(Service Provider); 2
+                        -.-> 1; 2 --> 3; 3(Mobile Money Operator 1); 3 --> 2; 3
+                        --> 4; 4(Mojaloop); 4 --> 3; 4 --> 5; 5(Mobile Money
+                        Operator 2); 5 --> 4;
+                    </diagram>
+                    <div class="d-flex justify-content-center mt-1">
+                        <div class="d-inline-flex align-items-center mx-2">
+                            <span class="ic-arrow-right mr-2"></span>
+                            <small>Simulated</small>
+                        </div>
+                        <div class="d-inline-flex align-items-center mx-2">
+                            <span
+                                class="ic-arrow-right mr-2 border-dashed"
+                            ></span>
+                            <small>Not Simulated</small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
