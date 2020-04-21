@@ -125,9 +125,12 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <a href="#" class="btn btn-outline-primary">
+                <inertia-link
+                    :href="route('sessions.register.edit', session)"
+                    class="btn btn-outline-primary"
+                >
                     Back
-                </a>
+                </inertia-link>
                 <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"

@@ -133,7 +133,8 @@
                                                     <ul class="list-group">
                                                         <li
                                                             class="list-group-item"
-                                                            v-for="testCase in getTestCaseList(
+                                                            v-for="(testCase,
+                                                            index) in getTestCaseList(
                                                                 useCase,
                                                                 'positive'
                                                             )"
@@ -279,15 +280,21 @@ export default {
         scenario: {
             type: Object,
             required: true
+        },
+        session: {
+            type: Object,
+            required: true
         }
     },
     data() {
         return {
             sending: false,
             form: {
-                name: null,
-                description: null,
-                test_cases: []
+                name: this.session.name,
+                description: this.session.description,
+                test_cases: collect(this.session.testCases.data)
+                    .map(testCase => testCase.id)
+                    .all()
             }
         };
     },
