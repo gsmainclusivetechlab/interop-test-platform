@@ -150,7 +150,6 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
-import { collect } from 'collect.js';
 
 export default {
     components: {
