@@ -141,6 +141,24 @@
                             </span>
                             </inertia-link>
                         </li>
+                        <li
+                            class="nav-item"
+                            v-bind:class="{ active: route().current('tutorials') }"
+                        >
+                            <inertia-link
+                                :href="route('tutorials')"
+                                class="nav-link"
+                            >
+                            <span
+                                class="nav-link-icon d-md-none d-lg-inline-block"
+                            >
+                                <icon name="help" />
+                            </span>
+                                <span class="nav-link-title">
+                                Tutorials
+                            </span>
+                            </inertia-link>
+                        </li>
                         <li class="nav-item">
                             <a
                                 href="https://www.gsma.com/lab"
