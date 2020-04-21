@@ -1,5 +1,5 @@
 <template>
-    <layout>
+    <layout :scenario="scenario">
         <form method="POST" @submit.prevent="submit">
             <div class="card">
                 <div class="row">
@@ -65,7 +65,7 @@
                             >
                                 <li
                                     class="list-group-item"
-                                    v-for="useCase in $page.useCases.data"
+                                    v-for="useCase in scenario.useCases.data"
                                     :key="useCase.id"
                                 >
                                     <div class="d-flex align-items-center">
@@ -274,6 +274,12 @@ import { collect } from 'collect.js';
 export default {
     components: {
         Layout
+    },
+    props: {
+        scenario: {
+            type: Object,
+            required: true
+        }
     },
     data() {
         return {

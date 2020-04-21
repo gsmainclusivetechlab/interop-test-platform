@@ -108,3 +108,7 @@ a {
 .border-dashed {
     border-style: dashed !important;
 }
+
+.form-selectgroup-input:checked + .form-selectgroup-label {
+    border-color: currentColor;
+}
