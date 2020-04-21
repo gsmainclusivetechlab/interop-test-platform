@@ -1,6 +1,6 @@
 <template>
     <layout :scenario="scenario">
-        <form method="POST" @submit.prevent="submit">
+        <form @submit.prevent="submit">
             <div class="card">
                 <div class="card-header border-0">
                     <h3 class="card-title">Configure components</h3>
@@ -14,7 +14,7 @@
                     <div class="mt-4">
                         <div
                             class="form-group mb-3"
-                            v-for="component in scenario.components.data"
+                            v-for="component in components"
                             :key="component.id"
                         >
                             <strong class="d-inline-block mb-1">
@@ -33,11 +33,11 @@
                                         >
                                             <input
                                                 type="radio"
+                                                value="1"
+                                                class="form-selectgroup-input"
                                                 :name="
                                                     `components[${component.id}][sut]`
                                                 "
-                                                value="1"
-                                                class="form-selectgroup-input"
                                                 @change="
                                                     toggleFieldAvailability
                                                 "
@@ -53,12 +53,16 @@
                                         >
                                             <input
                                                 type="radio"
-                                                :name="
-                                                    `components[${component.id}][sut]`
-                                                "
                                                 value="0"
                                                 class="form-selectgroup-input"
                                                 checked="true"
+                                                :name="
+                                                    `components[${component.id}][sut]`
+                                                "
+                                                :data-value="
+                                                    component.apiService
+                                                        .base_url
+                                                "
                                                 @change="
                                                     toggleFieldAvailability
                                                 "
@@ -70,14 +74,7 @@
                                             </span>
                                         </label>
                                     </div>
-                                    <!-- <span
-                                        v-if="$page.errors.sut"
-                                        class="invalid-feedback"
-                                    >
-                                        <strong>
-                                            {{ $page.errors.sut }}
-                                        </strong>
-                                    </span> -->
+                                    <!-- error -->
                                 </div>
                                 <div class="col-7">
                                     <label class="form-label font-weight-normal"
@@ -85,20 +82,13 @@
                                     >
                                     <input
                                         class="form-control"
+                                        :value="component.apiService.base_url"
                                         :name="
                                             `components[${component.id}][base_url]`
                                         "
-                                        value=""
                                         readonly
                                     />
-                                    <!-- <span
-                                        v-if="$page.errors.base_url"
-                                        class="invalid-feedback"
-                                    >
-                                        <strong>
-                                            {{ $page.errors.base_url }}
-                                        </strong>
-                                    </span> -->
+                                    <!-- error -->
                                 </div>
                             </div>
                         </div>
@@ -119,6 +109,7 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
+import { collect } from 'collect.js';
 
 export default {
     components: {
@@ -140,8 +131,26 @@ export default {
             form: {}
         };
     },
+    computed: {
+        components() {
+            return collect(this.scenario.components.data)
+                .where('apiService')
+                .all();
+        }
+    },
     methods: {
-        toggleFieldAvailability(e) {},
+        toggleFieldAvailability(e) {
+            const currentInput = e.target;
+            const currentValue =
+                currentInput.dataset && currentInput.dataset.value;
+            const closestFormGroup = currentInput.closest('.form-group');
+            const targetInput = closestFormGroup.querySelector(
+                'input.form-control'
+            );
+
+            targetInput.value = currentValue || '';
+            targetInput.readOnly = !!currentValue;
+        },
         submit() {
             this.sending = true;
 
