@@ -29,10 +29,10 @@
                     <div class="col-3 mt-3 pr-0">
                         <div class="card mb-0">
                             <div class="card-header px-4">
-                                <h3 class="card-title">
+                                <h3 class="card-title d-flex align-items-center">
                                     <inertia-link
                                         :href="route('sessions.show', session.id)"
-                                        class="text-decoration-none"
+                                        class="d-inline-flex mr-1 text-decoration-none"
                                     >
                                         <icon name="chevron-left"></icon>
                                     </inertia-link>
@@ -60,7 +60,7 @@
                     <div class="col-9 mt-3">
                         <div class="row">
                             <div class="col">
-                                <div class="d-flex align-items-start border-bottom mb-4">
+                                <div class="d-flex align-items-baseline border-bottom mb-4">
                                     <ul class="nav nav-tabs mx-0 border-0">
                                         <li class="nav-item">
                                             <inertia-link
@@ -90,7 +90,7 @@
                                             </inertia-link>
                                         </li>
                                     </ul>
-                                    <div class="col-5 ml-auto pr-0 pt-1">
+                                    <div class="col-5 ml-auto">
                                         <div class="d-flex">
                                             <div class="input-group">
                                                 <input
