@@ -181,6 +181,24 @@
                                             Block
                                         </confirm-link>
                                     </li>
+                                    <li v-if="user.can.verify">
+                                        <confirm-link
+                                            class="dropdown-item"
+                                            :href="
+                                                route(
+                                                    'admin.users.verify',
+                                                    user.id
+                                                )
+                                            "
+                                            method="post"
+                                            :confirm-title="'Confirm verify'"
+                                            :confirm-text="
+                                                `Are you sure you want to verify ${user.name}?`
+                                            "
+                                        >
+                                            Verify
+                                        </confirm-link>
+                                    </li>
                                     <li v-if="user.can.delete">
                                         <confirm-link
                                             class="dropdown-item"

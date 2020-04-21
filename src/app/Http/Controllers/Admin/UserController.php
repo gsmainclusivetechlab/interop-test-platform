@@ -93,6 +93,21 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
+    public function verify(User $user)
+    {
+        $this->authorize('verify', $user);
+        $user->markEmailAsVerified();
+
+        return redirect()
+            ->back()
+            ->with('success', __('User verified successfully'));
+    }
+
+    /**
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function promoteAdmin(User $user)
     {
         $this->authorize('promoteAdmin', $user);

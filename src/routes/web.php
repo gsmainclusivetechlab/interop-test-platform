@@ -64,6 +64,7 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::delete('{user}/destroy', 'UserController@destroy')->name('destroy');
         Route::post('{userOnlyTrashed}/restore', 'UserController@restore')->name('restore');
         Route::delete('{userWithTrashed}/force-destroy', 'UserController@forceDestroy')->name('force-destroy');
+        Route::post('{user}/verify', 'UserController@verify')->name('verify');
         Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote-admin');
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate-admin');
     });

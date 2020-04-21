@@ -8,6 +8,10 @@
                 <p class="text-muted">
                     Before proceeding, please check your email for a verification link.
                 </p>
+                <p class="text-muted">
+                    If have problems to receive the verification link, please reach out our support:
+                    <a href="mailto:inclusivetechlab@gsma.com">inclusivetechlab@gsma.com</a>
+                </p>
                 <div class="form-footer">
                     <button type="submit" class="btn btn-primary btn-block">
                         <span
