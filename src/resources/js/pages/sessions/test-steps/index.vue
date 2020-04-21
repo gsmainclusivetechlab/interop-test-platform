@@ -42,6 +42,7 @@
                                 size="lg"
                                 centered
                                 hide-footer
+                                hide-header-close
                                 title="Request"
                             >
                                 <div class="d-flex" v-if="testStep.request_example.uri">
@@ -91,6 +92,7 @@
                                 size="lg"
                                 centered
                                 hide-footer
+                                hide-header-close
                                 title="Response"
                             >
                                 <div class="d-flex" v-if="testStep.response_example.status">

@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SessionResource;
+use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\TestResultResource;
+use App\Http\Resources\TestRunResource;
 use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\TestRun;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class TestRunController extends Controller
 {
@@ -23,19 +28,31 @@ class TestRunController extends Controller
      * @param TestCase $testCase
      * @param TestRun $testRun
      * @param int $position
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function show(Session $session, TestCase $testCase, TestRun $testRun, int $position = 1)
     {
-        $testCase = $session->testCases()
-            ->where('test_case_id', $testCase->id)
-            ->firstOrFail();
-        $testResult = $testRun->testResults()
-            ->whereHas('testStep', function (Builder $query) use ($position) {
-                $query->where('position', $position);
-            })
-            ->firstOrFail();
-
-        return view('sessions.test-runs.show', compact('session', 'testCase', 'testRun', 'testResult'));
+        return Inertia::render('sessions/test-runs/show', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
+            'testCase' => (new TestCaseResource(
+                $session->testCases()
+                    ->where('test_case_id', $testCase->id)
+                    ->firstOrFail()
+            ))->resolve(),
+            'testRun' => (new TestRunResource($testRun))->resolve(),
+            'testResult' => (new TestResultResource(
+                $testRun->testResults()
+                    ->whereHas('testStep', function (Builder $query) use ($position) {
+                        $query->where('position', $position);
+                    })
+                    ->firstOrFail()
+            ))->resolve(),
+        ]);
     }
 }

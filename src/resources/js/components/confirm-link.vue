@@ -37,30 +37,16 @@ export default {
         confirm(e) {
             if (!this.confirmed) {
                 e.preventDefault();
-                import(
-                    /* webpackChunkName: "sweetalert2" */ 'sweetalert2'
-                    ).then(({ default: Swal }) =>
-                    Swal.fire({
-                        icon: 'warning',
-                        title: this.confirmTitle,
-                        text: this.confirmText,
-                        buttonsStyling: false,
-                        showCancelButton: true,
-                        confirmButtonText: 'Confirm',
-                        customClass: {
-                            confirmButton: 'btn btn-primary mr-4',
-                            cancelButton: 'btn btn-secondary',
-                        },
-                        heightAuto: false,
-                    }).then(
-                        (result) => {
-                            this.confirmed = result.value;
-                            if (result.value) {
-                                this.$el.click();
-                            }
-                        },
-                    ),
-                );
+                this.$bvModal.msgBoxConfirm(this.confirmText, {
+                    title: this.confirmTitle,
+                    okTitle: 'Confirm',
+                    centered: true,
+                }).then(value => {
+                    this.confirmed = value;
+                    if (this.confirmed) {
+                        this.$el.click();
+                    }
+                });
             }
         },
     },
