@@ -38,8 +38,12 @@
                                                 :name="
                                                     `components[${component.id}][sut]`
                                                 "
+                                                v-model="form[component.id].sut"
                                                 @change="
-                                                    toggleFieldAvailability
+                                                    toggleFieldAvailability(
+                                                        $event,
+                                                        component.id
+                                                    )
                                                 "
                                             />
                                             <span
@@ -63,8 +67,12 @@
                                                     component.apiService
                                                         .base_url
                                                 "
+                                                v-model="form[component.id].sut"
                                                 @change="
-                                                    toggleFieldAvailability
+                                                    toggleFieldAvailability(
+                                                        $event,
+                                                        component.id
+                                                    )
                                                 "
                                             />
                                             <span
@@ -74,7 +82,7 @@
                                             </span>
                                         </label>
                                     </div>
-                                    <!-- error -->
+                                    <!-- at least one sut error -->
                                 </div>
                                 <div class="col-7">
                                     <label class="form-label font-weight-normal"
@@ -82,13 +90,34 @@
                                     >
                                     <input
                                         class="form-control"
-                                        :value="component.apiService.base_url"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `components.${component.id}.base_url`
+                                                ]
+                                        }"
                                         :name="
                                             `components[${component.id}][base_url]`
                                         "
+                                        v-model="form[component.id].base_url"
                                         readonly
                                     />
-                                    <!-- error -->
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `components.${component.id}.base_url`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `components.${component.id}.base_url`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -100,6 +129,10 @@
                     Back
                 </a>
                 <button type="submit" class="btn btn-primary">
+                    <span
+                        v-if="sending"
+                        class="spinner-border spinner-border-sm mr-2"
+                    ></span>
                     Finish
                 </button>
             </div>
@@ -131,6 +164,14 @@ export default {
             form: {}
         };
     },
+    created() {
+        this.components.forEach(component => {
+            this.$set(this.form, component.id, {
+                sut: 0,
+                base_url: component.apiService.base_url
+            });
+        });
+    },
     computed: {
         components() {
             return collect(this.scenario.components.data)
@@ -139,7 +180,7 @@ export default {
         }
     },
     methods: {
-        toggleFieldAvailability(e) {
+        toggleFieldAvailability(e, id) {
             const currentInput = e.target;
             const currentValue =
                 currentInput.dataset && currentInput.dataset.value;
@@ -148,17 +189,16 @@ export default {
                 'input.form-control'
             );
 
-            targetInput.value = currentValue || '';
+            this.form[id].base_url = currentValue || '';
             targetInput.readOnly = !!currentValue;
         },
-        submit() {
+        submit(e) {
+            const formData = new FormData(e.target);
+
             this.sending = true;
 
             this.$inertia
-                .post(
-                    route('sessions.register.config', this.session),
-                    this.form
-                )
+                .post(route('sessions.register.config', this.session), formData)
                 .then(() => (this.sending = false));
         }
     }
