@@ -33,11 +33,16 @@ export default {
             ]
         };
     },
+    mounted() {
+        if (window.mermaid) {
+            this.initDiagram();
+        }
+    },
     methods: {
         initDiagram() {
             const graphEl = this.$refs.diagram;
 
-            mermaid.mermaidAPI.initialize(config);
+            mermaid.initialize(config);
             mermaid.init({}, graphEl);
         }
     }
