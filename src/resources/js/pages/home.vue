@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-header flex-column align-items-start h-100 border-bottom py-4">
                         <div class="d-flex align-items-center w-100 mb-2">
-                            <session-progress :session="session" />
+                            <session-progress :testCases="session.testCases" />
                         </div>
                         <h2 class="card-title w-100 text-truncate">
                             <inertia-link
@@ -46,11 +46,6 @@
                     </div>
                 </div>
             </div>
-            <pagination
-                :meta="sessions.meta"
-                :links="sessions.links"
-                class="col-12"
-            />
         </div>
     </layout>
 </template>

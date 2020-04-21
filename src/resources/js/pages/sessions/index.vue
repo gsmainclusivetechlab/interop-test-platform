@@ -53,7 +53,7 @@
                                 {{ session.testCases ? session.testCases.length : 0  }}
                             </td>
                             <td>
-                                <session-progress :session="session" />
+                                <session-progress :testCases="session.testCases" />
                             </td>
                             <td>
                                 {{ session.lastTestRun ? session.lastTestRun.created_at : '' }}

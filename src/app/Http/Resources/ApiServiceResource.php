@@ -15,6 +15,7 @@ class ApiServiceResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'base_url' => $this->base_url,
         ];
     }
 }

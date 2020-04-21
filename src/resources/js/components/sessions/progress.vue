@@ -14,23 +14,23 @@
 <script>
 export default {
     props: {
-        session: {
-            type: Object,
-            required: true
+        testCases: {
+            type: Array,
+            required: false,
         },
     },
     data() {
-        let total = this.session.testCases ? this.session.testCases.length : 0;
-        let passed = this.session.testCases
+        let total = this.testCases ? this.testCases.length : 0;
+        let passed = this.testCases
             ?
-            collect(this.session.testCases)
+            collect(this.testCases)
                 .flatMap(value => (value.lastTestRun && value.lastTestRun.successful) ? 1 : 0)
                 .sum()
             :
             0;
-        let failures = this.session.testCases
+        let failures = this.testCases
             ?
-            collect(this.session.testCases)
+            collect(this.testCases)
                 .flatMap(value => (value.lastTestRun && !value.lastTestRun.successful) ? 1 : 0)
                 .sum()
             :
