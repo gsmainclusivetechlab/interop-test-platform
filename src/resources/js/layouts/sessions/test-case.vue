@@ -82,9 +82,9 @@
                                         </li>
                                         <li class="nav-item">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.test-steps', [session.id, testCase.id])"
+                                                :href="route('sessions.test-cases.flow', [session.id, testCase.id])"
                                                 class="nav-link rounded-0"
-                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps')}"
+                                                v-bind:class="{'active': route().current('sessions.test-cases.flow')}"
                                             >
                                                 Use Case Flow
                                             </inertia-link>

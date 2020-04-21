@@ -24,8 +24,9 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
     Route::get('{session}/chart', 'ChartController')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
+    Route::get('{session}/test-cases/{testCase}/flow', 'TestCaseController@flow')->name('test-cases.flow');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
-    Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController')->name('test-cases.test-steps');
+    Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController@index')->name('test-cases.test-steps');
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('info', 'RegisterController@create')->name('create');
         Route::post('info', 'RegisterController@store')->name('store');
