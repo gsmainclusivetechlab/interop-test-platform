@@ -1,8 +1,6 @@
 <template>
-    <div class="mermaid-diagram text-center">
-        <div id="diagram" ref="diagram">
-            <slot />
-        </div>
+    <div class="mermaid-diagram text-center" ref="diagram">
+        <slot />
     </div>
 </template>
 
@@ -35,27 +33,12 @@ export default {
             ]
         };
     },
-    mounted() {
-        if (window.mermaid) {
-            this.initDiagram();
-        }
-    },
     methods: {
         initDiagram() {
             const graphEl = this.$refs.diagram;
-            const graphParent = graphEl.parentElement;
-            const graphTemplate = graphEl.innerText;
 
             mermaid.mermaidAPI.initialize(config);
-
-            mermaid.mermaidAPI.render(
-                graphEl.getAttribute('id'),
-                graphTemplate,
-                svgGraph => {
-                    graphParent.innerHTML = svgGraph;
-                    graphParent.dataset.processed = true;
-                }
-            );
+            mermaid.init({}, graphEl);
         }
     }
 };

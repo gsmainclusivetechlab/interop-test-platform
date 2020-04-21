@@ -47,4 +47,32 @@ class TestStepController extends Controller
             ),
         ]);
     }
+
+    /**
+     * @param Session $session
+     * @param TestCase $testCase
+     * @return \Inertia\Response
+     */
+    public function flow(Session $session, TestCase $testCase)
+    {
+        return Inertia::render('sessions/test-steps/flow', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
+            'testCase' => (new TestCaseResource(
+                $session->testCases()
+                    ->where('test_case_id', $testCase->id)
+                    ->firstOrFail()
+            ))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
+        ]);
+    }
 }

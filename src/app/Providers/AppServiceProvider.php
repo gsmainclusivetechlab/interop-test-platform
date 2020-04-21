@@ -34,9 +34,6 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerInertia()
     {
-//        Inertia::version(function () {
-//            return md5_file(public_path('mix-manifest.json'));
-//        });
         Inertia::share([
             'app' => function () {
                 return [
