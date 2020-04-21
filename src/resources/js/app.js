@@ -4,6 +4,7 @@ import { InertiaApp } from '@inertiajs/inertia-vue';
 import {
     NavPlugin,
     NavbarPlugin,
+    ModalPlugin,
     CollapsePlugin,
     DropdownPlugin,
     FormFilePlugin,
@@ -19,6 +20,7 @@ Vue.use(InertiaApp);
 
 Vue.use(NavPlugin);
 Vue.use(NavbarPlugin);
+Vue.use(ModalPlugin);
 Vue.use(CollapsePlugin);
 Vue.use(DropdownPlugin);
 Vue.use(FormFilePlugin);

@@ -73,18 +73,18 @@
                                         </li>
                                         <li class="nav-item">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.test-steps', [session.id, testCase.id])"
+                                                :href="route('sessions.test-cases.test-steps.index', [session.id, testCase.id])"
                                                 class="nav-link rounded-0"
-                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps')}"
+                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps.index')}"
                                             >
                                                 Test Steps
                                             </inertia-link>
                                         </li>
                                         <li class="nav-item">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.test-steps', [session.id, testCase.id])"
+                                                :href="route('sessions.test-cases.test-steps.flow', [session.id, testCase.id])"
                                                 class="nav-link rounded-0"
-                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps')}"
+                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps.flow')}"
                                             >
                                                 Use Case Flow
                                             </inertia-link>

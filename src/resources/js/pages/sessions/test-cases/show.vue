@@ -26,15 +26,15 @@
                             </inertia-link>
                         </td>
                         <td>
-                                <span v-if="testRun.completed_at && testRun.successful" class="d-flex align-items-center">
-                                    <span class="badge bg-success mr-2"></span> Pass
-                                </span>
+                            <span v-if="testRun.completed_at && testRun.successful" class="d-flex align-items-center">
+                                <span class="badge bg-success mr-2"></span> Pass
+                            </span>
                             <span v-else-if="testRun.completed_at && !testRun.successful" class="d-flex align-items-center">
-                                    <span class="badge bg-danger mr-2"></span> Fail
-                                </span>
+                                <span class="badge bg-danger mr-2"></span> Fail
+                            </span>
                             <span v-else class="d-flex align-items-center">
-                                    <span class="badge bg-secondary mr-2"></span> Incomplete
-                                </span>
+                                <span class="badge bg-secondary mr-2"></span> Incomplete
+                            </span>
                         </td>
                         <td>
                             {{ `${testRun.duration} ms` }}

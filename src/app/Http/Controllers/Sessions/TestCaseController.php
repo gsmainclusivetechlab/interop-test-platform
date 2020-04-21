@@ -27,7 +27,7 @@ class TestCaseController extends Controller
      */
     public function show(Session $session, TestCase $testCase)
     {
-        return Inertia::render('sessions/test-case', [
+        return Inertia::render('sessions/test-cases/show', [
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
