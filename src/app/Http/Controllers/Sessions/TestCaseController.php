@@ -27,8 +27,14 @@ class TestCaseController extends Controller
      */
     public function show(Session $session, TestCase $testCase)
     {
-        return Inertia::render('sessions/test-cases/show', [
-            'session' => (new SessionResource($session))->resolve(),
+        return Inertia::render('sessions/test-case', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
             'testCase' => (new TestCaseResource(
                 $session->testCases()
                     ->where('test_case_id', $testCase->id)
@@ -37,6 +43,7 @@ class TestCaseController extends Controller
             'testRuns' => TestRunResource::collection(
                 $session->testRuns()
                     ->where('test_case_id', $testCase->id)
+                    ->with(['session', 'testCase'])
                     ->latest()
                     ->paginate()
             ),

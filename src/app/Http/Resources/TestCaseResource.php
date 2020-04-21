@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Mail\Markdown;
 
 class TestCaseResource extends JsonResource
 {
@@ -14,10 +15,11 @@ class TestCaseResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'uuid' => $this->uuid,
             'name' => $this->name,
             'behavior' => $this->behavior,
-            'description' => $this->description,
-            'precondition' => $this->precondition,
+            'description' => Markdown::parse($this->description)->toHtml(),
+            'precondition' => Markdown::parse($this->precondition)->toHtml(),
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection($this->whenLoaded('testSteps')),
             'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun', function () {
