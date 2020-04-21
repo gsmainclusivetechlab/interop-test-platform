@@ -13,6 +13,12 @@
                     </p>
                     <div class="mt-4">
                         <div
+                            class="text-danger small mb-3"
+                            v-if="$page.errors.components"
+                        >
+                            <strong>{{ $page.errors.components }}</strong>
+                        </div>
+                        <div
                             class="form-group mb-3"
                             v-for="component in components"
                             :key="component.id"
@@ -82,7 +88,6 @@
                                             </span>
                                         </label>
                                     </div>
-                                    <!-- at least one sut error -->
                                 </div>
                                 <div class="col-7">
                                     <label class="form-label font-weight-normal"
