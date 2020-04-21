@@ -12,9 +12,11 @@
                         <span
                             class="step-item"
                             :class="{
-                                active: route().current(
-                                    'sessions.register.create'
-                                )
+                                active:
+                                    route().current(
+                                        'sessions.register.create'
+                                    ) ||
+                                    route().current('sessions.register.edit')
                             }"
                         >
                             <span class="d-inline-block mt-2">
@@ -39,10 +41,19 @@
             <div class="row mb-5">
                 <div class="col">
                     <diagram>
-                        graph LR; 1(Payer); 1 -.-> 2; 2(Service Provider); 2
-                        -.-> 1; 2 --> 3; 3(Mobile Money Operator 1); 3 --> 2; 3
-                        --> 4; 4(Mojaloop); 4 --> 3; 4 --> 5; 5(Mobile Money
-                        Operator 2); 5 --> 4;
+                        graph LR;
+                        <template v-for="component in scenario.components.data">
+                            {{ component.id }}({{ component.name }});
+                            <template v-for="path in component.paths">
+                                {{ component.id }}
+                                {{
+                                    component.simulated && path.simulated
+                                        ? '-->'
+                                        : '-.->'
+                                }}
+                                {{ path.id }};
+                            </template>
+                        </template>
                     </diagram>
                     <div class="d-flex justify-content-center mt-1">
                         <div class="d-inline-flex align-items-center mx-2">
