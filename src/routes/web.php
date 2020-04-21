@@ -22,7 +22,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::get('/', 'OverviewController@index')->name('index');
     Route::get('{session}', 'OverviewController@show')->name('show');
     Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
-    Route::get('{session}/chart', 'OverviewController@showChartData')->name('chart');
+    Route::get('{session}/chart', 'ChartController')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
     Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController')->name('test-cases.test-steps');
@@ -35,9 +35,6 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
         Route::post('{session}/config', 'RegisterController@storeConfig')->name('config.store');
     });
 });
-Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
-Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'Sessions\TestDatumController@run')
-    ->name('sessions.test-cases.test-data.run');
 
 /**
  * Settings Routes

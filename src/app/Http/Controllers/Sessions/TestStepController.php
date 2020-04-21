@@ -6,11 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Session;
 use App\Models\TestCase;
 
-/**
- * Class TestStepController
- *
- * @package App\Http\Controllers\Sessions
- */
 class TestStepController extends Controller
 {
     /**

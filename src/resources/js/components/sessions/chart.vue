@@ -59,8 +59,8 @@
         async mounted() {
             await axios
                 .get(route('sessions.chart', this.session.id))
-                .then(({ series }) => {
-                    this.series = series;
+                .then(({ data }) => {
+                    this.series = data;
                     this.$refs.chart.updateOptions(this.options);
                 })
                 .catch(() => {
