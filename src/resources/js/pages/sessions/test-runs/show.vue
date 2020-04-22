@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="card-body bg-light p-0">
-                <div class="px-4 py-6">
+                <div class="p-4">
                     <diagram>
                         graph LR;
                         <template v-for="component in session.scenario.data.components">
@@ -105,8 +105,8 @@
                                 </template>
                             </ul>
                         </div>
-                        <div class="col-9 pl-0 border-left">
-                            <div class="lead p-4">
+                        <div class="col-9 pl-0 pb-4 border-left">
+                            <div class="lead py-3 px-4">
                                 <div class="d-flex justigy-content-between">
                                     <b class="text-nowrap">
                                         {{ `Step ${testResult.testStep.data.position}` }}
@@ -123,7 +123,7 @@
                                 </div>
                             </div>
                             <div
-                                class="lead p-4"
+                                class="lead mb-2 py-3 px-4"
                                 v-bind:class="{
                                     'alert-success': testResult.successful,
                                     'alert-danger': !testResult.successful,
@@ -131,7 +131,7 @@
                             >
                                 {{ testResult.successful ? 'Pass' : 'Fail' }}
                             </div>
-                            <div class="p-4" v-if="testResult.testExecutions.data.length">
+                            <div class="py-2 px-4" v-if="testResult.testExecutions.data.length">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">
                                         Performed tests
@@ -141,7 +141,7 @@
                                     <li class="d-flex flex-wrap py-2" v-for="testExecution in testResult.testExecutions.data">
                                         <div class="d-flex align-items-center">
                                             <span
-                                                class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-5 mr-2 w-8 text-uppercase"
+                                                class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-4 w-5 mr-2 text-uppercase"
                                                 v-bind:class="{
                                                     'bg-success': testExecution.successful,
                                                     'bg-danger': !testExecution.successful,
@@ -150,7 +150,7 @@
                                                 {{ testExecution.successful ? 'Pass' : 'Fail' }}
                                             </span>
                                             <span
-                                                class="d-flex align-items-center"
+                                                class="d-flex align-items-center dropdown-toggle"
                                                 v-if="testExecution.message"
                                                 v-b-toggle="`test-execution-${testExecution.id}`"
                                             >
@@ -163,14 +163,14 @@
                                         <b-collapse
                                             v-if="testExecution.message"
                                             :id="`test-execution-${testExecution.id}`"
-                                            class="w-100 ml-8 pl-2"
+                                            class="w-100 ml-5 pl-2"
                                         >
                                             <p class="mb-0 small">{{ testExecution.message }}</p>
                                         </b-collapse>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="p-4" v-if="testResult.request">
+                            <div class="py-2 px-4" v-if="testResult.request">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">
                                         Request
@@ -237,7 +237,7 @@
                                     </b-collapse>
                                 </div>
                             </div>
-                            <div class="p-4" v-if="testResult.response">
+                            <div class="py-2 px-4" v-if="testResult.response">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">
                                         Response
