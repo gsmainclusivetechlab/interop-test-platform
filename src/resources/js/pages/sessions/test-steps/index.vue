@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex" v-if="testStep.request_example.headers">
+                                <div class="d-flex" v-if="collect(testStep.request_example.headers).count()">
                                     <div class="w-25 px-4 py-2 border">
                                         <strong>Headers</strong>
                                     </div>
@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex" v-if="testStep.request_example.body">
+                                <div class="d-flex" v-if="collect(testStep.request_example.body).count()">
                                     <div class="w-25 px-4 py-2 border">
                                         <strong>Body</strong>
                                     </div>
@@ -105,7 +105,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex" v-if="testStep.response_example.headers">
+                                <div class="d-flex" v-if="collect(testStep.response_example.headers).count()">
                                     <div class="w-25 px-4 py-2 border">
                                         <strong>Headers</strong>
                                     </div>
@@ -115,7 +115,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex" v-if="testStep.response_example.body">
+                                <div class="d-flex" v-if="collect(testStep.response_example.body).count()">
                                     <div class="w-25 px-4 py-2 border">
                                         <strong>Body</strong>
                                     </div>
