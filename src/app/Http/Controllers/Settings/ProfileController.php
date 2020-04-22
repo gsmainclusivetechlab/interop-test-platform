@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateProfileRequest;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
@@ -16,11 +17,11 @@ class ProfileController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function edit()
     {
-        return view('settings.profile');
+        return Inertia::render('settings/profile');
     }
 
     /**

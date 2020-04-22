@@ -1,8 +1,10 @@
-@import '~tabler-ui/src/assets/scss/variables';
+@import '~bootstrap-vue/dist/bootstrap-vue.min.css';
+@import '~nprogress/nprogress.css';
+@import '~noty/src/noty';
+@import '~highlight.js/scss/github';
+
+@import '~tabler/scss/variables';
 @import 'base/variables';
-@import 'ui/bootstrap';
-@import 'ui/tabler';
-@import 'ui/tutorials';
-@import 'ui/noty-theme';
+@import 'ui/main';
 @import 'base/main';
 @import 'components/main';

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ChangePasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class PasswordController extends Controller
 {
@@ -18,11 +19,11 @@ class PasswordController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function edit()
     {
-        return view('settings.password');
+        return Inertia::render('settings/password');
     }
 
     /**

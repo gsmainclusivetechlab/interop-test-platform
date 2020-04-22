@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SessionResource;
+use Inertia\Inertia;
+
 class HomeController extends Controller
 {
     /**
@@ -13,15 +16,23 @@ class HomeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Inertia\Response
      */
-    public function index()
+    public function __invoke()
     {
-        $sessions = auth()->user()->sessions()
-            ->with(['testCases', 'lastTestRun'])
-            ->latest()
-            ->paginate(12);
-
-        return view('home', compact('sessions'));
+        return Inertia::render('home', [
+            'sessions' => SessionResource::collection(
+                auth()->user()->sessions()
+                    ->with([
+                        'testCases' => function ($query) {
+                            return $query->with(['lastTestRun']);
+                        },
+                        'lastTestRun',
+                    ])
+                    ->latest()
+                    ->limit(12)
+                    ->get()
+            ),
+        ]);
     }
 }

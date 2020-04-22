@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Sessions\StoreSessionSutsRequest;
 use App\Http\Requests\Sessions\StoreSessionRequest;
 use App\Http\Requests\Sessions\UpdateSessionRequest;
+use App\Http\Resources\ScenarioResource;
+use App\Http\Resources\SessionResource;
 use App\Models\Session;
-use App\Models\UseCase;
 use App\Models\Scenario;
 use Illuminate\Support\Arr;
+use Inertia\Inertia;
 
 class RegisterController extends Controller
 {
@@ -22,14 +24,24 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function create()
     {
         $scenario = Scenario::firstOrFail();
-        $useCases = $scenario->useCases()->whereHas('testCases')->get();
 
-        return view('sessions.register.create', compact('scenario', 'useCases'));
+        return Inertia::render('sessions/register/create', [
+            'scenario' => (new ScenarioResource(
+                $scenario->load([
+                    'useCases' => function ($query) {
+                        $query->with(['testCases'])->whereHas('testCases');
+                    },
+                    'components' => function ($query) {
+                        $query->with(['paths', 'apiService']);
+                    },
+                ])
+            ))->resolve(),
+        ]);
     }
 
     /**
@@ -52,14 +64,25 @@ class RegisterController extends Controller
 
     /**
      * @param Session $session
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function edit(Session $session)
     {
-        $scenario = $session->scenario;
-        $useCases = $scenario->useCases()->whereHas('testCases')->get();
-
-        return view('sessions.register.edit', compact('session', 'scenario', 'useCases'));
+        return Inertia::render('sessions/register/edit', [
+            'scenario' => (new ScenarioResource(
+                $session->scenario->load([
+                    'useCases' => function ($query) {
+                        $query->with(['testCases'])->whereHas('testCases');
+                    },
+                    'components' => function ($query) {
+                        $query->with(['paths', 'apiService']);
+                    },
+                ])
+            ))->resolve(),
+            'session' => (new SessionResource(
+                $session->load(['testCases'])
+            ))->resolve(),
+        ]);
     }
 
     /**
@@ -80,17 +103,32 @@ class RegisterController extends Controller
 
     /**
      * @param Session $session
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function showConfig(Session $session)
     {
-        $scenario = $session->scenario;
-        $useCases = $scenario->useCases()->whereHas('testCases')->get();
-        $components = $scenario->components()->whereHas('apiService')->get();
-
-        return view('sessions.register.config', compact('session', 'scenario', 'useCases', 'components'));
+        return Inertia::render('sessions/register/config', [
+            'scenario' => (new ScenarioResource(
+                $session->scenario->load([
+                    'useCases' => function ($query) {
+                        $query->with(['testCases'])->whereHas('testCases');
+                    },
+                    'components' => function ($query) {
+                        $query->with(['paths', 'apiService']);
+                    },
+                ])
+            ))->resolve(),
+            'session' => (new SessionResource(
+                $session->load(['testCases'])
+            ))->resolve(),
+        ]);
     }
 
+    /**
+     * @param Session $session
+     * @param StoreSessionSutsRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function storeConfig(Session $session, StoreSessionSutsRequest $request)
     {
         $components = collect($request->input('components'))->map(function ($item) {
