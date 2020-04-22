@@ -4,9 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Http\Response;
 use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -27,24 +25,12 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * @param \Symfony\Component\HttpFoundation\Response $response
+     * @param \Illuminate\Http\Request $request
      * @param Throwable $e
-     * @return Response|\Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
      */
-    protected function toIlluminateResponse($response, Throwable $e)
-    {
-        if ($response instanceof InertiaResponse) {
-            return $response;
-        } else {
-            return parent::toIlluminateResponse($response, $e);
-        }
-    }
-
-    /**
-     * @param HttpExceptionInterface $e
-     * @return \Inertia\Response|\Symfony\Component\HttpFoundation\Response
-     */
-    protected function renderHttpException(HttpExceptionInterface $e)
+    public function render($request, Throwable $e)
     {
         if (in_array($e->getStatusCode(), [
             400,
@@ -56,14 +42,11 @@ class Handler extends ExceptionHandler
             500,
             503,
         ])) {
-            return Inertia::render("errors/{$e->getStatusCode()}", [
-                'exception' => [
-                    'code' => $e->getStatusCode(),
-                    'message' => $e->getMessage(),
-                ],
-            ]);
+            return Inertia::render('error', [
+                'status' => $e->getStatusCode(),
+            ])->toResponse($request);
+        } else {
+            return parent::render($request, $e);
         }
-
-        return $this->convertExceptionToResponse($e);
     }
 }
