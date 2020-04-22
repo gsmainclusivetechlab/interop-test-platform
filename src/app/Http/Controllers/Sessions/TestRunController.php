@@ -35,6 +35,14 @@ class TestRunController extends Controller
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([
+                    'suts',
+                    'scenario' => function ($query) {
+                        return $query->with([
+                            'components' => function ($query) {
+                                return $query->with(['paths']);
+                            },
+                        ]);
+                    },
                     'testCases' => function ($query) {
                         return $query->with(['lastTestRun']);
                     },
@@ -44,13 +52,26 @@ class TestRunController extends Controller
                 $session->testCases()
                     ->where('test_case_id', $testCase->id)
                     ->firstOrFail()
+                    ->load(['testSteps'])
             ))->resolve(),
-            'testRun' => (new TestRunResource($testRun))->resolve(),
+            'testRun' => (new TestRunResource(
+                $testRun->load([
+                    'testResults' => function ($query) {
+                        return $query->with(['testStep']);
+                    },
+                ])
+            ))->resolve(),
             'testResult' => (new TestResultResource(
                 $testRun->testResults()
                     ->whereHas('testStep', function (Builder $query) use ($position) {
                         $query->where('position', $position);
                     })
+                    ->with([
+                        'testStep' => function ($query) {
+                            return $query->with(['source', 'target']);
+                        },
+                        'testExecutions',
+                    ])
                     ->firstOrFail()
             ))->resolve(),
         ]);
