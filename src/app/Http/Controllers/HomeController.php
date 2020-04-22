@@ -18,7 +18,7 @@ class HomeController extends Controller
     /**
      * @return \Inertia\Response
      */
-    public function index()
+    public function __invoke()
     {
         return Inertia::render('home', [
             'sessions' => SessionResource::collection(

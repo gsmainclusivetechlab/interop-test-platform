@@ -13,7 +13,8 @@
 
 
 Auth::routes(['verify' => true]);
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController')->name('home');
+Route::get('/tutorials', 'TutorialController')->name('tutorials');
 
 /**
  * Sessions Routes
