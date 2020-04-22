@@ -28,7 +28,7 @@
                 <div class="row align-items-start">
                     <div class="col-3 mt-3 pr-0">
                         <div class="card mb-0">
-                            <div class="card-header px-4">
+                            <div class="card-header px-3">
                                 <h3 class="card-title">
                                     Select use cases
                                 </h3>
@@ -36,7 +36,7 @@
                             <div class="card-body p-0">
                                 <ul class="list-unstyled">
                                     <li v-for="useCase in collect(session.testCases.data).mapWithKeys(item => [item.useCase.id, item.useCase]).all()">
-                                        <b class="d-block dropdown-toggle py-2 px-4 border-bottom" :v-b-toggle="`use-case-${useCase.id}`">
+                                        <b class="d-block dropdown-toggle py-2 px-3 border-bottom" v-b-toggle="`use-case-${useCase.id}`">
                                             {{ useCase.name }}
                                         </b>
                                         <b-collapse
@@ -47,8 +47,8 @@
                                             <ul class="list-unstyled">
                                                 <li>
                                                     <span
-                                                        class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom"
-                                                        :v-b-toggle="`positive-test-cases-${useCase.id}`"
+                                                        class="dropdown-toggle d-block pl-4 pr-3 py-2 font-weight-medium border-bottom"
+                                                        v-b-toggle="`positive-test-cases-${useCase.id}`"
                                                         >
                                                         Happy flow
                                                     </span>
@@ -56,7 +56,7 @@
                                                         <ul class="list-unstyled">
                                                             <li
                                                                 v-for="testCase in collect(session.testCases.data).where('behavior', 'positive').sortBy('name').all()"
-                                                                class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom"
+                                                                class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
                                                                     {{ testCase.name }}
@@ -87,8 +87,8 @@
                                             <ul class="list-unstyled">
                                                 <li>
                                                     <span
-                                                        class="dropdown-toggle d-block px-5 py-2 font-weight-medium border-bottom"
-                                                        :v-b-toggle="`negative-test-cases-${useCase.id}`"
+                                                        class="dropdown-toggle d-block pl-4 pr-3 py-2 font-weight-medium border-bottom"
+                                                        v-b-toggle="`negative-test-cases-${useCase.id}`"
                                                     >
                                                         Unhappy flow
                                                     </span>
@@ -96,7 +96,7 @@
                                                         <ul class="list-unstyled">
                                                             <li
                                                                 v-for="testCase in collect(session.testCases.data).where('behavior', 'negative').sortBy('name').all()"
-                                                                class="list-group-item-action d-flex justify-content-between align-items-center px-6 py-2 border-bottom"
+                                                                class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-3 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
                                                                     {{ testCase.name }}

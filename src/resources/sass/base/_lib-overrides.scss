@@ -112,3 +112,12 @@ a {
 .form-selectgroup-input:checked + .form-selectgroup-label {
     border-color: currentColor;
 }
+
+.nav-tabs {
+    .nav-link {
+        &:hover,
+        &.active {
+            color: $nav-tabs-link-active-color;
+        }
+    }
+}

@@ -18,16 +18,16 @@
                     </thead>
                     <tbody>
                     <tr v-for="testStep in testSteps.data">
-                        <td>
+                        <td class="align-middle">
                             {{ testStep.position }}
                         </td>
-                        <td>
+                        <td class="align-middle">
                             {{ testStep.source ? testStep.source.name : '' }}
                         </td>
-                        <td>
+                        <td class="align-middle">
                             {{ testStep.target ? testStep.target.name : '' }}
                         </td>
-                        <td>
+                        <td class="align-middle">
                             <div class="btn-group">
                                 <button class="btn btn-secondary" v-b-modal="`modal-request-${testStep.id}`">
                                     Request
