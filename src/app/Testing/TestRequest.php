@@ -52,6 +52,7 @@ class TestRequest extends Request implements Arrayable
         return [
             'method' => $this->method(),
             'uri' => $this->url(),
+            'path' => $this->path(),
             'headers' => $this->headers(),
             'body' => $this->json(),
         ];

@@ -73,20 +73,20 @@ class ChartController extends Controller
     {
         $select = 'COUNT(IF (total = passed, 0, NULL)) AS passed, COUNT(IF (total != passed, 0, NULL)) AS failed, YEAR(created_at) AS year';
         $groupBy = 'YEAR(created_at)';
-        $orderBy = 'year DESC';
+        $orderBy = 'year ASC';
 
         $interval = current($this->intervals);
 
         if ($interval !== static::INTERVAL_YEAR) {
             $select .= ', MONTH(created_at) AS month';
             $groupBy .= ', MONTH(created_at)';
-            $orderBy .= ', month DESC';
+            $orderBy .= ', month ASC';
         }
 
         if ($interval === static::INTERVAL_DAY) {
             $select .= ', DAY(created_at) AS day';
             $groupBy .= ', DAY(created_at)';
-            $orderBy .= ', day DESC';
+            $orderBy .= ', day ASC';
         }
 
         $query = $session->testRuns()
