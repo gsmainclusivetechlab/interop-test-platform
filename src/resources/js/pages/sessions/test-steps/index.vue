@@ -45,43 +45,45 @@
                                 hide-header-close
                                 title="Request"
                             >
-                                <div class="d-flex" v-if="testStep.request_example.uri">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Endpoint</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            {{ testStep.request_example.uri }}
+                                <div class="border">
+                                    <div class="d-flex" v-if="testStep.request_example.uri">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Endpoint</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                {{ testStep.request_example.uri }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-flex" v-if="testStep.request_example.method">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Method</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            {{ testStep.request_example.method }}
+                                    <div class="d-flex" v-if="testStep.request_example.method">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Method</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                {{ testStep.request_example.method }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-flex" v-if="collect(testStep.request_example.headers).count()">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Headers</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            <pre class="mb-0 p-0"><code>{{ testStep.request_example.headers }}</code></pre>
+                                    <div class="d-flex" v-if="collect(testStep.request_example.headers).count()">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Headers</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.request_example.headers }}</code></pre>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-flex" v-if="collect(testStep.request_example.body).count()">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Body</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            <pre class="mb-0 p-0"><code>{{ testStep.request_example.body }}</code></pre>
+                                    <div class="d-flex" v-if="collect(testStep.request_example.body).count()">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Body</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.request_example.body }}</code></pre>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -95,33 +97,35 @@
                                 hide-header-close
                                 title="Response"
                             >
-                                <div class="d-flex" v-if="testStep.response_example.status">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Status</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            {{ testStep.response_example.status }}
+                                <div class="border">
+                                    <div class="d-flex" v-if="testStep.response_example.status">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Status</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                {{ testStep.response_example.status }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-flex" v-if="collect(testStep.response_example.headers).count()">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Headers</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            <pre class="mb-0 p-0"><code>{{ testStep.response_example.headers }}</code></pre>
+                                    <div class="d-flex" v-if="collect(testStep.response_example.headers).count()">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Headers</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.response_example.headers }}</code></pre>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="d-flex" v-if="collect(testStep.response_example.body).count()">
-                                    <div class="w-25 px-4 py-2 border">
-                                        <strong>Body</strong>
-                                    </div>
-                                    <div class="w-75 px-4 py-2 border">
-                                        <div class="mb-0 p-0 bg-transparent">
-                                            <pre class="mb-0 p-0"><code>{{ testStep.response_example.body }}</code></pre>
+                                    <div class="d-flex" v-if="collect(testStep.response_example.body).count()">
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Body</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0 bg-transparent">
+                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.response_example.body }}</code></pre>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
