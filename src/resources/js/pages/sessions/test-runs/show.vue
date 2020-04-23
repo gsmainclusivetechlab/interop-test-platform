@@ -209,7 +209,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.request.headers" :deep="1" :show-line="false"></json-tree>
+                                                    <json-tree :data="testResult.request.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -230,7 +230,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.request.body" :deep="1" :show-line="false"></json-tree>
+                                                    <json-tree :data="testResult.request.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +268,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.response.headers" :deep="1" :show-line="false"></json-tree>
+                                                    <json-tree :data="testResult.response.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -288,7 +288,7 @@
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.response.body" :deep="1" :show-line="false"></json-tree>
+                                                    <json-tree :data="testResult.response.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
