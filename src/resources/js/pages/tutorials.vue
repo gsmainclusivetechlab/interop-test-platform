@@ -16,6 +16,7 @@
                         class="d-inline-block btn scenario-card demo1"
                         href="#create-session"
                         v-b-toggle.accordion-1
+                        @click="initDemo"
                     >
                         <h4
                             id="scenario-heading"
@@ -38,6 +39,7 @@
                         class="d-inline-block btn scenario-card demo2"
                         href="#service-provider"
                         v-b-toggle.accordion-2
+                        @click="initDemo"
                     >
                         <h4
                             id="scenario-heading"
@@ -138,6 +140,7 @@
                             v-b-toggle.accordion-1
                             class="btn shadow-none demo1"
                             type="button"
+                            @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
                                 How do I create a new session?
@@ -160,21 +163,23 @@
                                 <div class="demo-inner-container mb-4">
                                     <div class="image-holder">
                                         <div
-                                            class="create-session-circle"
+                                            class="demo-circle"
+                                            @click.prevent="continueDemo"
                                         ></div>
                                         <div
-                                            class="d-flex align-items-center justify-content-center create-session-circle-label"
-                                        ></div>
+                                            class="d-flex align-items-center justify-content-center circle-label"
+                                        >
+                                            {{ labelText }}
+                                        </div>
                                         <img
-                                            class="create-session-screenshot"
-                                            src="assets/images/tutorials/create-session/dashboard.png"
+                                            class="demo-screenshot"
+                                            :src="screenshotUrl"
                                         />
                                     </div>
-                                    <div
-                                        class="create-session-demo-overlay"
-                                    ></div>
+                                    <div class="demo-overlay"></div>
                                     <a
-                                        class="btn border-primary create-session-start-demo-btn"
+                                        class="btn border-primary start-demo-btn"
+                                        @click.prevent="startDemo"
                                     >
                                         Start interactive demo
                                     </a>
@@ -183,6 +188,7 @@
                                     id="create-session-reset"
                                     class="btn btn-outline-primary"
                                     type="button"
+                                    @click.prevent="resetDemo"
                                 >
                                     Reset Demo
                                 </button>
@@ -201,6 +207,7 @@
                             v-b-toggle.accordion-2
                             class="btn shadow-none demo2"
                             type="button"
+                            @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
                                 How do I execute a session?
@@ -235,28 +242,32 @@
                                 <div class="demo-inner-container mb-4">
                                     <div class="image-holder">
                                         <div
-                                            class="service-provider-circle"
+                                            class="demo-circle"
+                                            @click.prevent="continueDemo"
                                         ></div>
                                         <div
-                                            class="d-flex align-items-center justify-content-center service-provider-circle-label"
-                                        ></div>
+                                            class="d-flex align-items-center justify-content-center circle-label"
+                                        >
+                                            {{ labelText }}
+                                        </div>
                                         <img
-                                            class="service-provider-screenshot"
-                                            src="assets/images/tutorials/service-provider/1-session-page.png"
+                                            class="demo-screenshot"
+                                            :src="screenshotUrl"
                                         />
                                     </div>
-                                    <div
-                                        class="service-provider-demo-overlay"
-                                    ></div>
+                                    <div class="demo-overlay"></div>
                                     <a
-                                        class="btn border-primary service-provider-start-demo-btn"
-                                        >Start interactive demo</a
+                                        class="btn border-primary start-demo-btn"
+                                        @click.prevent="startDemo"
                                     >
+                                        Start interactive demo
+                                    </a>
                                 </div>
                                 <button
                                     id="service-provider-reset"
                                     class="btn btn-outline-primary"
                                     type="button"
+                                    @click.prevent="resetDemo"
                                 >
                                     Reset Demo
                                 </button>
@@ -412,6 +423,115 @@
 <script>
 import Layout from '@/layouts/main';
 
+const createImgPath = '/assets/images/tutorials/create-session/';
+const executeImgPath = '/assets/images/tutorials/service-provider/';
+
+const createSession = [
+    [
+        `${createImgPath}dashboard.png`,
+        [1335, 40],
+        'Start by creating a new session',
+        true
+    ],
+    [
+        `${createImgPath}select_sut.png`,
+        [535, 390],
+        'Select the System Under Test',
+        true
+    ],
+    [
+        `${createImgPath}select_sut_2.png`,
+        [535, 385],
+        "Let's select Service Provider",
+        true
+    ],
+    [`${createImgPath}select_sut_3.png`, [1100, 473], 'Press Next', true],
+    [
+        `${createImgPath}configure_sut.png`,
+        [1100, 422],
+        'After configuration, press Next',
+        true
+    ],
+    [
+        `${createImgPath}session_info.png`,
+        [732, 325],
+        'Select use cases by ticking the corresponding box',
+        true
+    ],
+    [
+        `${createImgPath}session_info_2.png`,
+        [732, 355],
+        'Select use cases by ticking the corresponding box',
+        true
+    ],
+    [
+        `${createImgPath}session_info_3.png`,
+        [732, 410],
+        'Select use cases by ticking the corresponding box',
+        true
+    ],
+    [
+        `${createImgPath}session_info_4.png`,
+        [1050, 515],
+        'Press Create when you are finished',
+        true
+    ],
+    [
+        `${createImgPath}session_created.png`,
+        [47, 243],
+        'Your session has now been created and use cases can be accessed on the left.',
+        true
+    ]
+];
+
+const serviceProvider = [
+    [
+        `${executeImgPath}1-session-page.png`,
+        [85, 232],
+        'First, select the session you would like to execute.'
+    ],
+    [
+        `${executeImgPath}2-session-usecase.png`,
+        [101, 270],
+        'Here you can see all your selected use cases, select the one you would like to test.'
+    ],
+    [
+        `${executeImgPath}3-test-runs.png`,
+        [1344, 104],
+        'This page details the use case. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.'
+    ],
+    [
+        `${executeImgPath}7-postman-1.png`,
+        [1241, 72],
+        'Here we are using Postman. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
+        true
+    ],
+    [
+        `${executeImgPath}8-postman-2.png`,
+        [412, 567],
+        'Check the response is correct, and go back to the test platform.',
+        true
+    ],
+    [
+        `${executeImgPath}9-test-runs.png`,
+        [447, 243],
+        'You should now see your test run. Click to be taken to the test run page.',
+        true
+    ],
+    [
+        `${executeImgPath}10-test-details-1.png`,
+        [618, 527],
+        'On this page are all the details about the test run. Clicking on a failed test will give you more information. ',
+        true
+    ],
+    [
+        `${executeImgPath}11-test-details-2.png`,
+        [102, 45],
+        'You can also see the request and response data for each step of the use case flow. To start the demo again click the sessions tab.',
+        true
+    ]
+];
+
 export default {
     metaInfo() {
         return {
@@ -419,330 +539,129 @@ export default {
             script: [
                 {
                     src: 'https://code.jquery.com/jquery-3.5.0.min.js',
-                    defer: true,
-                    callback() {
-                        initTutorials();
-                    }
+                    defer: true
                 }
             ]
         };
     },
     components: {
         Layout
+    },
+    data() {
+        return {
+            currentStep: 0,
+            interval: null,
+            radius: 28,
+            steps: [],
+            demoWrapper: null,
+            labelText: '',
+            screenshotUrl: '',
+            originalHeight: 0
+        };
+    },
+    methods: {
+        initDemo(e) {
+            const $target = $(e.currentTarget);
+            const wrapperId = $target.attr('aria-controls');
+
+            this.demoWrapper = $(`#${wrapperId}`);
+            this.currentStep = 0;
+
+            if ($target.hasClass('demo1')) {
+                this.steps = createSession;
+                this.screenshotUrl =
+                    'assets/images/tutorials/create-session/dashboard.png';
+                this.originalHeight = 653;
+            }
+
+            if ($target.hasClass('demo2')) {
+                this.steps = serviceProvider;
+                this.screenshotUrl =
+                    'assets/images/tutorials/service-provider/1-session-page.png';
+                this.originalHeight = 805;
+            }
+
+            this.demoUpdateCircle();
+        },
+        demoAdjusted(length) {
+            const currentHeight = this.demoWrapper
+                .find('.demo-screenshot')
+                .height();
+            const ratio = currentHeight / this.originalHeight;
+
+            return length * ratio;
+        },
+        demoAnimateCircle(circleRadius, ms, cb) {
+            const coordinates = this.steps[this.currentStep][1];
+
+            this.demoWrapper.find('.demo-circle').animate(
+                {
+                    top:
+                        this.demoAdjusted(coordinates[1]) -
+                        (circleRadius - this.radius),
+                    left:
+                        this.demoAdjusted(coordinates[0]) -
+                        (circleRadius - this.radius),
+                    width: circleRadius * 2,
+                    height: circleRadius * 2
+                },
+                {
+                    complete: cb,
+                    duration: ms
+                }
+            );
+        },
+        demoUpdateCircle() {
+            this.demoStopPulsate();
+            this.demoAnimateCircle(this.demoAdjusted(2000), 0, () => {
+                this.demoAnimateCircle(this.radius, 750, () => {
+                    this.demoStartPulsate();
+                });
+            });
+
+            this.labelText = this.steps[this.currentStep][2];
+        },
+        demoStartPulsate() {
+            this.interval = setInterval(() => {
+                this.demoAnimateCircle(
+                    this.radius + this.demoAdjusted(20),
+                    250,
+                    () => {
+                        this.demoAnimateCircle(this.radius, 200);
+                    }
+                );
+            }, 2000);
+        },
+        demoStopPulsate() {
+            clearInterval(this.interval);
+        },
+        continueDemo() {
+            this.currentStep = (this.currentStep + 1) % this.steps.length;
+            this.screenshotUrl = this.steps[this.currentStep][0];
+
+            this.demoUpdateCircle();
+        },
+        startDemo() {
+            this.demoWrapper.find('.start-demo-btn').toggle();
+            this.demoWrapper.find('.demo-overlay').toggle();
+        },
+        resetDemo() {
+            this.currentStep = 0;
+            this.screenshotUrl = this.steps[this.currentStep][0];
+
+            this.demoUpdateCircle();
+
+            if (this.demoWrapper.find('.start-demo-btn').is(':hidden')) {
+                this.demoWrapper.find('.start-demo-btn').toggle();
+            }
+
+            if (this.demoWrapper.find('.demo-overlay').is(':hidden')) {
+                this.demoWrapper.find('.demo-overlay').toggle();
+            }
+        }
+    },
+    destroyed() {
+        this.demoStopPulsate();
     }
 };
-
-function initTutorials() {
-    const create_session_url = '/assets/images/tutorials/create-session/';
-
-    $('.demo1').one('click', function() {
-        const steps = [
-            [
-                `${create_session_url}dashboard.png`,
-                [1335, 40],
-                'Start by creating a new session',
-                true
-            ],
-            [
-                `${create_session_url}select_sut.png`,
-                [535, 390],
-                'Select the System Under Test',
-                true
-            ],
-            [
-                `${create_session_url}select_sut_2.png`,
-                [535, 385],
-                "Let's select Service Provider",
-                true
-            ],
-            [
-                `${create_session_url}select_sut_3.png`,
-                [1100, 473],
-                'Press Next',
-                true
-            ],
-            [
-                `${create_session_url}configure_sut.png`,
-                [1100, 422],
-                'After configuration, press Next',
-                true
-            ],
-            [
-                `${create_session_url}session_info.png`,
-                [732, 325],
-                'Select use cases by ticking the corresponding box',
-                true
-            ],
-            [
-                `${create_session_url}session_info_2.png`,
-                [732, 355],
-                'Select use cases by ticking the corresponding box',
-                true
-            ],
-            [
-                `${create_session_url}session_info_3.png`,
-                [732, 410],
-                'Select use cases by ticking the corresponding box',
-                true
-            ],
-            [
-                `${create_session_url}session_info_4.png`,
-                [1050, 515],
-                'Press Create when you are finished',
-                true
-            ],
-            [
-                `${create_session_url}session_created.png`,
-                [47, 243],
-                'Your session has now been created and use cases can be accessed on the left.',
-                true
-            ]
-        ];
-
-        let step = 0;
-
-        function demo1_adjusted(length) {
-            const originalHeight = 653;
-            let currentHeight = $('.create-session-screenshot').height();
-            let ratio = currentHeight / originalHeight;
-            return length * ratio;
-        }
-
-        let radius = demo1_adjusted(40);
-
-        function demo1_animateCircle(circleRadius, ms, cb) {
-            let coordinates = steps[step][1];
-            $('.create-session-circle').animate(
-                {
-                    top:
-                        demo1_adjusted(coordinates[1]) -
-                        (circleRadius - radius),
-                    left:
-                        demo1_adjusted(coordinates[0]) -
-                        (circleRadius - radius),
-                    width: circleRadius * 2,
-                    height: circleRadius * 2,
-                    borderTopLeftRadius: circleRadius,
-                    borderTopRightRadius: circleRadius,
-                    borderBottomLeftRadius: circleRadius,
-                    borderBottomRightRadius: circleRadius
-                },
-                {
-                    complete: cb,
-                    duration: ms
-                }
-            );
-        }
-
-        function demo1_updateCircle() {
-            demo1_stopPulsate(); // 1. stop pulsating temporarily
-            demo1_animateCircle(demo1_adjusted(2000), 0 /*ms*/, function() {
-                // 2. make circle big
-                demo1_animateCircle(radius, 750 /*ms*/, function() {
-                    // 3. animate it shrinking
-                    demo1_startPulsate(); // 4. start pulsating again
-                });
-            });
-
-            let labelText = steps[step][2];
-            $('.create-session-circle-label').text(labelText);
-        }
-
-        //pulsate
-        let interval = null;
-
-        function demo1_startPulsate() {
-            interval = setInterval(function() {
-                demo1_animateCircle(
-                    radius + demo1_adjusted(20),
-                    250,
-                    function() {
-                        //grow the circle
-                        demo1_animateCircle(radius, 200); //shrink the circle
-                    }
-                );
-            }, 2000);
-        }
-
-        function demo1_stopPulsate() {
-            clearInterval(interval);
-        }
-
-        demo1_updateCircle(); //init circle at beginning of demo
-
-        $('.create-session-circle').click(function() {
-            step = (step + 1) % steps.length;
-            let image = steps[step][0]; //image is 0th item in array
-            $('.create-session-screenshot').attr('src', image);
-            demo1_updateCircle();
-        });
-
-        $('.create-session-start-demo-btn').click(function() {
-            $('.create-session-start-demo-btn').toggle();
-            $('.create-session-demo-overlay').toggle();
-        });
-
-        $('#create-session-reset').click(function() {
-            step = 0;
-            let image = steps[step][0]; //image is 0th item in array
-            $('.create-session-screenshot').attr('src', image);
-            demo1_updateCircle();
-            if ($('.create-session-start-demo-btn').is(':hidden')) {
-                $('.create-session-start-demo-btn').toggle();
-            }
-            if ($('.create-session-demo-overlay').is(':hidden')) {
-                $('.create-session-demo-overlay').toggle();
-            }
-        });
-    });
-
-    const service_provider_url = '/assets/images/tutorials/service-provider/';
-
-    $('.demo2').one('click', function() {
-        const steps = [
-            [
-                `${service_provider_url}1-session-page.png`,
-                [85, 232],
-                'First, select the session you would like to execute.'
-            ],
-            [
-                `${service_provider_url}2-session-usecase.png`,
-                [101, 270],
-                'Here you can see all your selected use cases, select the one you would like to test.'
-            ],
-            [
-                `${service_provider_url}3-test-runs.png`,
-                [1344, 104],
-                'This page details the use case. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.'
-            ],
-            [
-                `${service_provider_url}7-postman-1.png`,
-                [1241, 72],
-                'Here we are using Postman. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
-                true
-            ],
-            [
-                `${service_provider_url}8-postman-2.png`,
-                [412, 567],
-                'Check the response is correct, and go back to the test platform.',
-                true
-            ],
-            [
-                `${service_provider_url}9-test-runs.png`,
-                [447, 243],
-                'You should now see your test run. Click to be taken to the test run page.',
-                true
-            ],
-            [
-                `${service_provider_url}10-test-details-1.png`,
-                [618, 527],
-                'On this page are all the details about the test run. Clicking on a failed test will give you more information. ',
-                true
-            ],
-            [
-                `${service_provider_url}11-test-details-2.png`,
-                [102, 45],
-                'You can also see the request and response data for each step of the use case flow. To start the demo again click the sessions tab.',
-                true
-            ]
-        ];
-
-        let step = 0;
-
-        // adjust the coordinates to match the actual height of the image
-        function demo2_adjusted(length) {
-            const originalHeight = 805; // the coordinates above were calculated assuming an arbitrary image height of 785px
-            let currentHeight = $('.service-provider-screenshot').height();
-            let ratio = currentHeight / originalHeight;
-            return length * ratio;
-        }
-
-        let radius = demo2_adjusted(40);
-
-        function demo2_animateCircle(circleRadius, ms, cb) {
-            let coordinates = steps[step][1];
-            $('.service-provider-circle').animate(
-                {
-                    top:
-                        demo2_adjusted(coordinates[1]) -
-                        (circleRadius - radius),
-                    left:
-                        demo2_adjusted(coordinates[0]) -
-                        (circleRadius - radius),
-                    width: circleRadius * 2,
-                    height: circleRadius * 2,
-                    borderTopLeftRadius: circleRadius,
-                    borderTopRightRadius: circleRadius,
-                    borderBottomLeftRadius: circleRadius,
-                    borderBottomRightRadius: circleRadius
-                },
-                {
-                    complete: cb,
-                    duration: ms
-                }
-            );
-        }
-
-        function demo2_updateCircle() {
-            demo2_stopPulsate(); // 1. stop pulsating temporarily
-            demo2_animateCircle(demo2_adjusted(2000), 0 /*ms*/, function() {
-                // 2. make circle big
-                demo2_animateCircle(radius, 750 /*ms*/, function() {
-                    // 3. animate it shrinking
-                    demo2_startPulsate(); // 4. start pulsating again
-                });
-            });
-
-            let labelText = steps[step][2];
-            $('.service-provider-circle-label').text(labelText);
-        }
-
-        //pulsate
-        let interval = null;
-
-        function demo2_startPulsate() {
-            interval = setInterval(function() {
-                demo2_animateCircle(
-                    radius + demo2_adjusted(20),
-                    250,
-                    function() {
-                        //grow the circle
-                        demo2_animateCircle(radius, 200); //shrink the circle
-                    }
-                );
-            }, 2000);
-        }
-
-        function demo2_stopPulsate() {
-            clearInterval(interval);
-        }
-
-        demo2_updateCircle(); //init circle at beginning of demo
-
-        $('.service-provider-circle').click(function() {
-            step = (step + 1) % steps.length;
-            let image = steps[step][0]; //image is 0th item in array
-            $('.service-provider-screenshot').attr('src', image);
-            demo2_updateCircle();
-        });
-
-        $('.service-provider-start-demo-btn').click(function() {
-            $('.service-provider-start-demo-btn').hide();
-            $('.service-provider-demo-overlay').hide();
-        });
-
-        $('#service-provider-reset').click(function() {
-            step = 0;
-            let image = steps[step][0]; //image is 0th item in array
-            $('.service-provider-screenshot').attr('src', image);
-            demo2_updateCircle();
-            if ($('.service-provider-start-demo-btn').is(':hidden')) {
-                $('.service-provider-start-demo-btn').toggle();
-            }
-            if ($('.service-provider-demo-overlay').is(':hidden')) {
-                $('.service-provider-demo-overlay').toggle();
-            }
-        });
-    });
-}
 </script>
