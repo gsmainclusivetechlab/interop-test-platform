@@ -193,7 +193,7 @@
                                             :id="`test-setup-${testSetup.id}`"
                                             class="w-100"
                                         >
-                                            <json-tree :data="testSetup.values" :deep="1" :show-line="false"></json-tree>
+                                            <json-tree :data="testSetup.values" :deep="1" :show-line="false" class="p-2"></json-tree>
                                         </b-collapse>
                                     </li>
                                 </ul>
