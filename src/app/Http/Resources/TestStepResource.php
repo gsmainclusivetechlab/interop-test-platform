@@ -23,6 +23,7 @@ class TestStepResource extends JsonResource
             'source' => new ComponentResource($this->whenLoaded('source')),
             'target' => new ComponentResource($this->whenLoaded('target')),
             'apiScheme' => new ApiSchemeResource($this->whenLoaded('apiScheme')),
+            'testSetups' => TestSetupResource::collection($this->whenLoaded('testSetups')),
             'testScripts' => TestScriptResource::collection($this->whenLoaded('testScripts')),
         ];
     }
