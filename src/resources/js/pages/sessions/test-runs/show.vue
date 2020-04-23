@@ -170,6 +170,34 @@
                                     </li>
                                 </ul>
                             </div>
+                            <div class="py-2 px-4" v-if="testResult.testStep.data.testSetups.length">
+                                <div class="d-flex mb-2">
+                                    <strong class="lead d-block mr-auto font-weight-bold">
+                                        Overridden data
+                                    </strong>
+                                </div>
+                                <ul class="m-0 p-0">
+                                    <li
+                                        class="d-flex flex-wrap py-2"
+                                        v-for="testSetup in testResult.testStep.data.testSetups"
+                                    >
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center dropdown-toggle"
+                                                v-b-toggle="`test-setup-${testSetup.id}`"
+                                            >
+                                                {{ testSetup.name }}
+                                            </span>
+                                        </div>
+                                        <b-collapse
+                                            :id="`test-setup-${testSetup.id}`"
+                                            class="w-100"
+                                        >
+                                            <json-tree :data="testSetup.values" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                        </b-collapse>
+                                    </li>
+                                </ul>
+                            </div>
                             <div class="py-2 px-4" v-if="testResult.request">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">

@@ -68,7 +68,7 @@ class TestRunController extends Controller
                     })
                     ->with([
                         'testStep' => function ($query) {
-                            return $query->with(['source', 'target']);
+                            return $query->with(['source', 'target', 'testSetups']);
                         },
                         'testExecutions',
                     ])
