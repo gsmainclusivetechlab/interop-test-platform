@@ -104,7 +104,7 @@
                                                     ref="clipboard"
                                                     class="btn btn-secondary"
                                                     type="button"
-                                                    v-b-tooltip.hover
+                                                    v-b-tooltip.hover.topright.viewport
                                                     title="Copy URL"
                                                     data-clipboard-target="#testing-url"
                                                 >
