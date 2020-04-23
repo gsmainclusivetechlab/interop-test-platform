@@ -35,7 +35,7 @@
                             enabled: false,
                         },
                     },
-                    colors: ['#9cb227', '#de002b'],
+                    colors: ['#00a182', '#de002b'],
                     fill: {
                         opacity: 1,
                     },

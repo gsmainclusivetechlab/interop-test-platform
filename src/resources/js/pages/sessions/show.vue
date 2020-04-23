@@ -6,7 +6,7 @@
                     <b>Latest test runs</b>
                 </h2>
             </div>
-            <div class="pt-6" v-if="testRuns.data.length">
+            <div class="pt-4" v-if="testRuns.data.length">
                 <session-chart :session="session" />
             </div>
             <div class="table-responsive mb-0">

@@ -121,3 +121,29 @@ a {
         }
     }
 }
+
+.vjs-tree {
+    &.is-root {
+        background-color: $gray-100 !important;
+    }
+
+    .vjs-tree {
+        &__brackets {
+            &:hover {
+                color: $body-color !important;
+            }
+        }
+    }
+
+    .vjs-value {
+        &__string {
+            color: $primary !important;
+        }
+
+        &__number,
+        &__boolean,
+        &__null {
+            color: $mint !important;
+        }
+    }
+}

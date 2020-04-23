@@ -96,7 +96,7 @@
                                                         <ul class="list-unstyled">
                                                             <li
                                                                 v-for="testCase in collect(session.testCases.data).where('behavior', 'negative').sortBy('name').all()"
-                                                                class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-3 py-2 border-bottom"
+                                                                class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
                                                                     {{ testCase.name }}
