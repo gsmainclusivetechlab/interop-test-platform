@@ -38,7 +38,6 @@
                             </div>
                             <b-modal
                                 :id="`modal-request-${testStep.id}`"
-                                @shown="shownModal"
                                 size="lg"
                                 centered
                                 hide-footer
@@ -72,7 +71,7 @@
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.request_example.headers }}</code></pre>
+                                                <json-tree :data="testStep.request_example.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
@@ -82,7 +81,7 @@
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.request_example.body }}</code></pre>
+                                                <json-tree :data="testStep.request_example.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
@@ -90,7 +89,6 @@
                             </b-modal>
                             <b-modal
                                 :id="`modal-response-${testStep.id}`"
-                                @shown="shownModal"
                                 size="lg"
                                 centered
                                 hide-footer
@@ -114,7 +112,7 @@
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.response_example.headers }}</code></pre>
+                                                <json-tree :data="testStep.response_example.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
@@ -124,7 +122,7 @@
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <pre class="mb-0 p-0 text-h5"><code>{{ testStep.response_example.body }}</code></pre>
+                                                <json-tree :data="testStep.response_example.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
@@ -150,7 +148,6 @@
 </template>
 
 <script>
-    import hljs from 'highlight.js';
     import Layout from '@/layouts/sessions/test-case';
 
     export default {
@@ -170,13 +167,6 @@
                 type: Object,
                 required: true
             },
-        },
-        methods: {
-            shownModal(modal) {
-                modal.target.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightBlock(block);
-                });
-            }
         }
     };
 </script>

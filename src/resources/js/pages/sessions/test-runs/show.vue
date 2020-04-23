@@ -306,13 +306,11 @@
 <script>
 import Layout from '@/layouts/sessions/test-case';
 import Diagram from '@/components/diagram';
-import JsonTree from 'vue-json-pretty';
 
 export default {
     components: {
         Layout,
-        Diagram,
-        JsonTree
+        Diagram
     },
     props: {
         session: {

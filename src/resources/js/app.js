@@ -31,7 +31,7 @@ Vue.mixin({
     methods: {
         route: window.route,
         string: window.string,
-        collect: window.collect,
+        collect: window.collect
     }
 });
 
@@ -47,6 +47,9 @@ Vue.component('confirm-link', () =>
     import(
         /* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue'
     )
+);
+Vue.component('json-tree', () =>
+    import(/* webpackChunkName: "json-tree" */ 'vue-json-pretty')
 );
 
 const app = document.getElementById('app');
