@@ -9,7 +9,7 @@
                 </div>
             </div>
         </div>
-        <div class="row row-cards row-deck" v-if="sessions.data.length">
+        <div class="row row-cards row-deck">
             <div class="col-xl-3 col-md-4" v-for="session in sessions.data">
                 <div class="card">
                     <div class="card-header flex-column align-items-start h-100 border-bottom py-4">
@@ -44,6 +44,11 @@
                             </li>
                         </ul>
                     </div>
+                </div>
+            </div>
+            <div class="col-12" v-if="!sessions.data.length">
+                <div class="card card-body">
+                    No Results
                 </div>
             </div>
         </div>

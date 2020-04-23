@@ -193,7 +193,7 @@
                                             {{ testResult.request.method }}
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" v-if="testResult.request.headers">
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
                                             v-b-toggle="`request-headers-${testResult.id}`"
@@ -204,17 +204,17 @@
                                             {{ `(${collect(testResult.request.headers).count()}) params` }}
                                         </div>
                                     </div>
-                                    <b-collapse :id="`request-headers-${testResult.id}`">
+                                    <b-collapse :id="`request-headers-${testResult.id}`" v-if="testResult.request.headers">
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.request.headers" :level="1"></json-tree>
+                                                    <json-tree :data="testResult.request.headers" :deep="1" :show-line="false"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
                                     </b-collapse>
-                                    <div class="d-flex">
+                                    <div class="d-flex" v-if="testResult.request.body">
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
                                             v-b-toggle="`request-body-${testResult.id}`"
@@ -225,12 +225,12 @@
                                             {{ `(${collect(testResult.request.body).count()}) params` }}
                                         </div>
                                     </div>
-                                    <b-collapse :id="`request-body-${testResult.id}`">
+                                    <b-collapse :id="`request-body-${testResult.id}`" v-if="testResult.request.body">
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.request.body" :level="1"></json-tree>
+                                                    <json-tree :data="testResult.request.body" :deep="1" :show-line="false"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -252,7 +252,7 @@
                                             {{ testResult.response.status }}
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" v-if="testResult.response.headers">
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
                                             v-b-toggle="`response-headers-${testResult.id}`"
@@ -263,17 +263,17 @@
                                             {{ `(${collect(testResult.response.headers).count()}) params` }}
                                         </div>
                                     </div>
-                                    <b-collapse :id="`response-headers-${testResult.id}`">
+                                    <b-collapse :id="`response-headers-${testResult.id}`" v-if="testResult.response.headers">
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.response.headers" :level="1"></json-tree>
+                                                    <json-tree :data="testResult.response.headers" :deep="1" :show-line="false"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
                                     </b-collapse>
-                                    <div class="d-flex">
+                                    <div class="d-flex" v-if="testResult.response.body">
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
                                             v-b-toggle="`response-body-${testResult.id}`">
@@ -283,12 +283,12 @@
                                             {{ `(${collect(testResult.response.body).count()}) params` }}
                                         </div>
                                     </div>
-                                    <b-collapse :id="`response-body-${testResult.id}`">
+                                    <b-collapse :id="`response-body-${testResult.id}`" v-if="testResult.response.body">
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0 bg-transparent">
-                                                    <json-tree :data="testResult.response.body" :level="1"></json-tree>
+                                                    <json-tree :data="testResult.response.body" :deep="1" :show-line="false"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -306,7 +306,7 @@
 <script>
 import Layout from '@/layouts/sessions/test-case';
 import Diagram from '@/components/diagram';
-import JsonTree from 'vue-json-tree';
+import JsonTree from 'vue-json-pretty';
 
 export default {
     components: {
