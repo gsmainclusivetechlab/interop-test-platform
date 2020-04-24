@@ -149,24 +149,43 @@
                                             >
                                                 {{ testExecution.successful ? 'Pass' : 'Fail' }}
                                             </span>
-                                            <span
-                                                class="d-flex align-items-center dropdown-toggle"
+                                            <button
+                                                class="btn btn-link p-0 text-reset font-weight-normal"
                                                 v-if="testExecution.message"
-                                                v-b-toggle="`test-execution-${testExecution.id}`"
+                                                :id="`test-execution-${testExecution.id}`"
                                             >
                                                 {{ testExecution.name }}
-                                            </span>
+                                            </button>
                                             <span v-else class="d-flex align-items-center">
                                                 {{ testExecution.name }}
                                             </span>
                                         </div>
-                                        <b-collapse
+                                        <b-popover
                                             v-if="testExecution.message"
-                                            :id="`test-execution-${testExecution.id}`"
-                                            class="w-100 ml-5 pl-2"
+                                            :target="`test-execution-${testExecution.id}`"
+                                            triggers="click"
+                                            placement="bottom"
                                         >
-                                            <p class="mb-0 small">{{ testExecution.message }}</p>
-                                        </b-collapse>
+                                            <b-tabs
+                                                nav-class="flex-nowrap"
+                                                content-class="mt-2"
+                                                justified
+                                            >
+                                                <b-tab
+                                                    active
+                                                    title="Actual result"
+                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                >
+                                                    <p class="mb-0">{{ testExecution.message }}</p>
+                                                </b-tab>
+                                                <b-tab
+                                                    title="Expected result"
+                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                >
+                                                    <p class="mb-0">Expected result content</p>
+                                                </b-tab>
+                                            </b-tabs>
+                                        </b-popover>
                                     </li>
                                 </ul>
                             </div>
