@@ -13,7 +13,8 @@
 
 
 Auth::routes(['verify' => true]);
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController')->name('home');
+Route::get('/tutorials', 'TutorialController')->name('tutorials');
 
 /**
  * Sessions Routes
@@ -22,22 +23,20 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::get('/', 'OverviewController@index')->name('index');
     Route::get('{session}', 'OverviewController@show')->name('show');
     Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
-    Route::get('{session}/chart', 'OverviewController@showChartData')->name('chart');
+    Route::get('{session}/chart', 'ChartController')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
-    Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController')->name('test-cases.test-steps');
+    Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController@index')->name('test-cases.test-steps.index');
+    Route::get('{session}/test-cases/{testCase}/test-steps/flow', 'TestStepController@flow')->name('test-cases.test-steps.flow');
     Route::name('register.')->prefix('register')->group(function () {
         Route::get('info', 'RegisterController@create')->name('create');
         Route::post('info', 'RegisterController@store')->name('store');
         Route::get('{session}/info', 'RegisterController@edit')->name('edit');
         Route::patch('{session}/info', 'RegisterController@update')->name('update');
         Route::get('{session}/config', 'RegisterController@showConfig')->name('config');
-        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config');
+        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config.store');
     });
 });
-Route::resource('sessions.test-cases.test-data', 'Sessions\TestDatumController');
-Route::post('sessions/{session}/test-cases/{testCase}/test-data/{testDatum}', 'Sessions\TestDatumController@run')
-    ->name('sessions.test-cases.test-data.run');
 
 /**
  * Settings Routes
@@ -66,6 +65,7 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::delete('{user}/destroy', 'UserController@destroy')->name('destroy');
         Route::post('{userOnlyTrashed}/restore', 'UserController@restore')->name('restore');
         Route::delete('{userWithTrashed}/force-destroy', 'UserController@forceDestroy')->name('force-destroy');
+        Route::post('{user}/verify', 'UserController@verify')->name('verify');
         Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote-admin');
         Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate-admin');
     });
@@ -77,6 +77,6 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
     Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
-    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import');
+    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import.confirm');
     Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });

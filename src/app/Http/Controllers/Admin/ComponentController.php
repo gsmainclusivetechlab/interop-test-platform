@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Resources\ComponentResource;
+use App\Http\Resources\ScenarioResource;
 use App\Models\Component;
 use App\Http\Controllers\Controller;
 use App\Models\Scenario;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class ComponentController extends Controller
 {
@@ -19,16 +22,24 @@ class ComponentController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param Scenario $scenario
+     * @return \Inertia\Response
      */
     public function index(Scenario $scenario)
     {
-        $components =$scenario->components()
-            ->when(request('q'), function (Builder $query, $q) {
-                $query->where('name', 'like', "%{$q}%");
-            })
-            ->paginate();
-
-        return view('admin.components.index', compact('scenario', 'components'));
+        return Inertia::render('admin/components/index', [
+            'scenario' => (new ScenarioResource($scenario))->resolve(),
+            'components' => ComponentResource::collection(
+                $scenario->components()
+                    ->when(request('q'), function (Builder $query, $q) {
+                        $query->where('name', 'like', "%{$q}%");
+                    })
+                    ->with(['apiService'])
+                    ->paginate()
+            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
+        ]);
     }
 }

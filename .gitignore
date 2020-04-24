@@ -30,3 +30,6 @@ composer.phar
 
 # Mac DS_Store Files
 .DS_Store
+
+# visual studio code config
+jsconfig.json

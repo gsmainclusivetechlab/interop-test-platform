@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SessionResource;
+use App\Http\Resources\TestRunResource;
 use App\Models\Session;
-use App\View\Components\Sessions\LatestTestRunsChart;
-use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class OverviewController extends Controller
 {
@@ -18,34 +19,55 @@ class OverviewController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $sessions = auth()->user()->sessions()
-            ->when(request('q'), function (Builder $query, $q) {
-                return $query->where('name', 'like', "%{$q}%");
-            })
-            ->with(['testCases', 'lastTestRun'])
-            ->latest()
-            ->paginate();
-
-        return view('sessions.index', compact('sessions'));
+        return Inertia::render('sessions/index', [
+            'sessions' => SessionResource::collection(
+                auth()->user()->sessions()
+                    ->when(request('q'), function ($query, $q) {
+                        return $query->where('name', 'like', "%{$q}%");
+                    })
+                    ->with([
+                        'testCases' => function ($query) {
+                            return $query->with(['lastTestRun']);
+                        },
+                        'lastTestRun',
+                    ])
+                    ->latest()
+                    ->paginate()
+            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
+        ]);
     }
 
     /**
      * @param Session $session
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Session $session)
     {
         $this->authorize('view', $session);
-        $testRuns = $session->testRuns()
-            ->latest()
-            ->paginate();
 
-        return view('sessions.show', compact('session', 'testRuns'));
+        return Inertia::render('sessions/show', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['useCase', 'lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
+            'testRuns' => TestRunResource::collection(
+                $session->testRuns()
+                    ->with(['session', 'testCase'])
+                    ->latest()
+                    ->paginate()
+            ),
+        ]);
     }
 
     /**
@@ -60,14 +82,5 @@ class OverviewController extends Controller
         return redirect()
             ->back()
             ->with('success', __('Session deleted successfully'));
-    }
-
-    /**
-     * @param Session $session
-     * @return array
-     */
-    public function showChartData(Session $session)
-    {
-        return (new LatestTestRunsChart($session))->toArray();
     }
 }

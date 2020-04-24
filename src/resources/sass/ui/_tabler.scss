@@ -1,0 +1,65 @@
+@import '~bootstrap/scss/functions';
+
+@import '~tabler/scss/utilities';
+@import '~tabler/scss/mixins';
+@import '~tabler/scss/bootstrap-config';
+@import '~tabler/scss/mixins-override';
+
+@import '~tabler/scss/bootstrap-components';
+
+@import '~tabler/scss/layout/core';
+@import '~tabler/scss/layout/navbar';
+@import '~tabler/scss/layout/page';
+@import '~tabler/scss/layout/footer';
+
+@import '~tabler/scss/ui/alerts';
+@import '~tabler/scss/ui/avatars';
+@import '~tabler/scss/ui/badges';
+@import '~tabler/scss/ui/breadcrumbs';
+@import '~tabler/scss/ui/buttons';
+@import '~tabler/scss/ui/calendars';
+@import '~tabler/scss/ui/cards';
+@import '~tabler/scss/ui/close';
+@import '~tabler/scss/ui/dropdowns';
+@import '~tabler/scss/ui/empty';
+@import '~tabler/scss/ui/grid';
+@import '~tabler/scss/ui/icons';
+@import '~tabler/scss/ui/forms';
+@import '~tabler/scss/ui/forms/form-icon';
+@import '~tabler/scss/ui/forms/form-colorinput';
+@import '~tabler/scss/ui/forms/form-imagecheck';
+@import '~tabler/scss/ui/forms/form-selectgroup';
+@import '~tabler/scss/ui/forms/form-custom';
+@import '~tabler/scss/ui/forms/validation';
+@import '~tabler/scss/ui/legend';
+@import '~tabler/scss/ui/lists';
+@import '~tabler/scss/ui/loaders';
+@import '~tabler/scss/ui/login';
+@import '~tabler/scss/ui/modals';
+@import '~tabler/scss/ui/nav';
+@import '~tabler/scss/ui/stars';
+@import '~tabler/scss/ui/pagination';
+@import '~tabler/scss/ui/popovers';
+@import '~tabler/scss/ui/progress';
+@import '~tabler/scss/ui/ribbons';
+@import '~tabler/scss/ui/stamps';
+@import '~tabler/scss/ui/steps';
+@import '~tabler/scss/ui/tables';
+@import '~tabler/scss/ui/toasts';
+@import '~tabler/scss/ui/toolbar';
+@import '~tabler/scss/ui/type';
+@import '~tabler/scss/ui/markdown';
+@import '~tabler/scss/ui/charts';
+
+@import '~tabler/scss/utils/background';
+@import '~tabler/scss/utils/colors';
+@import '~tabler/scss/utils/scroll';
+@import '~tabler/scss/utils/sizing';
+@import '~tabler/scss/utils/opacity';
+@import '~tabler/scss/utils/shadow';
+@import '~tabler/scss/utils/text';
+
+@import '~tabler/scss/dark';
+@import '~tabler/scss/debug';
+
+@import '~tabler/scss/vendor/apexcharts';
