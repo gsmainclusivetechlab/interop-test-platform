@@ -163,7 +163,7 @@
                                         <b-popover
                                             v-if="testExecution.message"
                                             :target="`test-execution-${testExecution.id}`"
-                                            triggers="click"
+                                            triggers="click blur"
                                             placement="bottom"
                                         >
                                             <b-tabs
