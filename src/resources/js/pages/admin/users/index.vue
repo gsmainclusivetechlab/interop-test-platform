@@ -181,7 +181,7 @@
                                             Block
                                         </confirm-link>
                                     </li>
-                                    <li v-if="user.can.verify">
+                                    <li v-if="!user.trashed && user.can.verify">
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="
