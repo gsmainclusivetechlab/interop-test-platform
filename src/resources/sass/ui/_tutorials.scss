@@ -19,11 +19,11 @@ $tutorials-red-color: $primary;
         height: 65%;
         width: 60%;
 
-        .create-session-circle,
-        .service-provider-circle {
-            border: solid 3px #d87070;
-            cursor: pointer;
+        .demo-circle {
             position: absolute;
+            border: solid 3px #d87070;
+            border-radius: 50%;
+            cursor: pointer;
         }
 
         .demo-inner-container {
