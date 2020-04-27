@@ -123,6 +123,8 @@ a {
 }
 
 .vjs-tree {
+    word-wrap: break-word;
+
     &.is-root {
         background-color: $gray-100 !important;
     }
