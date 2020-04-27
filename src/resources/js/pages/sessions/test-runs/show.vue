@@ -150,18 +150,14 @@
                                                 {{ testExecution.successful ? 'Pass' : 'Fail' }}
                                             </span>
                                             <button
-                                                class="btn btn-link p-0 text-reset font-weight-normal"
-                                                v-if="testExecution.message"
                                                 :id="`test-execution-${testExecution.id}`"
+                                                class="btn btn-link p-0 text-reset font-weight-normal"
+                                                type="button"
                                             >
                                                 {{ testExecution.name }}
                                             </button>
-                                            <span v-else class="d-flex align-items-center">
-                                                {{ testExecution.name }}
-                                            </span>
                                         </div>
                                         <b-popover
-                                            v-if="testExecution.message"
                                             :target="`test-execution-${testExecution.id}`"
                                             triggers="click blur"
                                             placement="bottom"
@@ -176,13 +172,20 @@
                                                     title="Actual result"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <p class="mb-0">{{ testExecution.message }}</p>
+                                                    <p class="mb-0">Actual result</p>
                                                 </b-tab>
                                                 <b-tab
                                                     title="Expected result"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <p class="mb-0">Expected result content</p>
+                                                    <p class="mb-0">Expected result</p>
+                                                </b-tab>
+                                                <b-tab
+                                                    v-if="testExecution.message"
+                                                    title="Exception"
+                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                >
+                                                    <p class="mb-0">{{ testExecution.message }}</p>
                                                 </b-tab>
                                             </b-tabs>
                                         </b-popover>

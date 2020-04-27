@@ -184,3 +184,13 @@ a {
     border-width: 0 0.5rem 0.5rem;
     border-bottom-color: #fff;
 }
+
+.tabs {
+    .nav-tabs {
+        .nav-link {
+            &:focus {
+                outline: 0;
+            }
+        }
+    }
+}
