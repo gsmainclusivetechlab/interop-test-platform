@@ -2,59 +2,55 @@
 
 namespace App\Testing\Tests;
 
-use App\Models\TestScript;
 use App\Models\TestResult;
-use App\Testing\TestCase;
+use App\Models\TestScript;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-use PHPUnit\Framework\AssertionFailedError;
+use Illuminate\Validation\ValidationData;
 
-class ValidateResponseScriptTest extends TestCase
+class ValidateResponseScriptTest
 {
-    /**
-     * @var TestResult
-     */
-    protected $testResult;
-
     /**
      * @var TestScript
      */
     protected $testScript;
 
     /**
-     * @param TestResult $testResult
      * @param TestScript $testScript
      */
-    public function __construct(TestResult $testResult, TestScript $testScript)
+    public function __construct(TestScript $testScript)
     {
-        $this->testResult = $testResult;
         $this->testScript = $testScript;
     }
 
     /**
-     * @return void
+     * @param TestResult $testResult
+     * @param callable $next
+     * @return mixed
      */
-    public function test()
+    public function handle(TestResult $testResult, callable $next)
     {
+        $data = $testResult->response->toArray();
         $validator = Validator::make(
-            (array) $this->testResult->response,
+            $data,
             (array) $this->testScript->rules,
             (array) $this->testScript->messages,
             (array) $this->testScript->attributes
         );
+        $testExecution = $testResult->testExecutions()->make([
+            'name' => __('Response: :name', ['name' => $this->testScript->name]),
+            'expected' => $this->testScript->rules,
+        ]);
 
-        try {
-            $validator->validate();
-        } catch (ValidationException $e) {
-            throw new AssertionFailedError(implode(PHP_EOL, $validator->errors()->all()));
+        foreach (array_keys($this->testScript->rules) as $attribute) {
+            $testExecution->actual = array_merge((array) $testExecution->actual, ValidationData::initializeAndGatherData($attribute, $data));
         }
-    }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return __('Response: :name', ['name' => $this->testScript->name]);
+        if ($validator->passes()) {
+            $testExecution->successful();
+        } else {
+            $testExecution->unsuccessful(implode(PHP_EOL, $validator->errors()->all()));
+        }
+
+        return $next($testResult);
     }
 }

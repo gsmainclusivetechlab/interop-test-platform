@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Casts\TestRequestCast;
-use App\Casts\TestResponseCast;
+use App\Casts\RequestCast;
+use App\Casts\ResponseCast;
 use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 
@@ -34,8 +34,8 @@ class TestStep extends Model
      * @var array
      */
     protected $casts = [
-        'request_example' => TestRequestCast::class,
-        'response_example' => TestResponseCast::class,
+        'request_example' => RequestCast::class,
+        'response_example' => ResponseCast::class,
     ];
 
     /**

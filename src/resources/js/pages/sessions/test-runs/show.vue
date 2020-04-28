@@ -64,7 +64,7 @@
                                                         class="font-weight-bold"
                                                         v-bind:class="{
                                                             'text-orange': testResultStep.request.method === 'POST',
-                                                            'text-text-blue': testResultStep.request.method === 'PUT',
+                                                            'text-blue': testResultStep.request.method === 'PUT',
                                                             'text-red': testResultStep.request.method === 'DELETE',
                                                             'text-mint': testResultStep.request.method === 'GET',
                                                         }"

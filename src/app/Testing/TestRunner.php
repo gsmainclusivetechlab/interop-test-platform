@@ -2,45 +2,39 @@
 
 namespace App\Testing;
 
-use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestListener;
-use PHPUnit\Framework\TestResult;
+use App\Models\TestResult;
+use App\Models\TestScript;
+use App\Testing\Tests\ValidateRequestScriptTest;
+use App\Testing\Tests\ValidateResponseScriptTest;
+use Illuminate\Pipeline\Pipeline;
 
 class TestRunner
 {
     /**
-     * @var TestListener[]
-     */
-    protected $listeners = [];
-
-    /**
-     * @param Test $test
+     * @param TestResult $testResult
      * @return TestResult
      */
-    public function run(Test $test): TestResult
+    public function run(TestResult $testResult)
     {
-        return $test->run($this->buildResult());
-    }
+        $pipes = [];
 
-    /**
-     * @return TestResult
-     */
-    protected function buildResult(): TestResult
-    {
-        $result = new TestResult();
-
-        foreach ($this->listeners as $listener) {
-            $result->addListener($listener);
+        if ($testRequestScripts = $testResult->testStep->testScripts()->ofType(TestScript::TYPE_REQUEST)->get()) {
+            foreach ($testRequestScripts as $testRequestScript) {
+                $pipes[] = new ValidateRequestScriptTest($testRequestScript);
+            }
         }
 
-        return $result;
-    }
+        if ($testResponseScripts = $testResult->testStep->testScripts()->ofType(TestScript::TYPE_RESPONSE)->get()) {
+            foreach ($testResponseScripts as $testResponseScript) {
+                $pipes[] = new ValidateResponseScriptTest($testResponseScript);
+            }
+        }
 
-    /**
-     * @param TestListener $listener
-     */
-    public function addListener(TestListener $listener): void
-    {
-        $this->listeners[] = $listener;
+        return (new Pipeline())
+            ->send($testResult)
+            ->through($pipes)
+            ->then(function ($testResult) {
+                return $testResult->complete();
+            });
     }
 }

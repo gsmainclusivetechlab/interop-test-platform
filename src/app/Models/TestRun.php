@@ -22,13 +22,6 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'test_case_id',
-    ];
-
-    /**
-     * @var array
-     */
     protected $casts = [
         'completed_at' => 'datetime',
     ];
@@ -126,7 +119,7 @@ class TestRun extends Model
     }
 
     /**
-     * @return bool
+     * @return $this|bool
      */
     public function complete()
     {
@@ -137,6 +130,6 @@ class TestRun extends Model
         }
 
         $this->fireModelEvent('complete');
-        return true;
+        return $this;
     }
 }

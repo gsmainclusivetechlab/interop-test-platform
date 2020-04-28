@@ -13,7 +13,6 @@ use App\Http\Middleware\ValidateTraceContext;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use SebastianBergmann\Timer\Timer;
 
 class StepController extends Controller
 {
@@ -37,14 +36,14 @@ class StepController extends Controller
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();
-        $testResult = $testRun->testResults()->create([
-            'test_step_id' => $testStep->id,
-        ]);
+        $testResult = tap($testRun->testResults()->make(), function ($testResult) use ($testStep) {
+            $testResult->testStep()
+                ->associate($testStep)
+                ->save();
+        });
 
         $baseUrl = $testRun->session->suts()->whereKey($testStep->target->id)->value('base_url') ?? $testStep->target->apiService->base_url;
         $request = $request->withUri(UriResolver::resolve(new Uri($baseUrl), new Uri($path)));
-
-        Timer::start();
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))

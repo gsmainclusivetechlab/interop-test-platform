@@ -64,6 +64,7 @@ class OverviewController extends Controller
             'testRuns' => TestRunResource::collection(
                 $session->testRuns()
                     ->with(['session', 'testCase'])
+                    ->completed()
                     ->latest()
                     ->paginate()
             ),

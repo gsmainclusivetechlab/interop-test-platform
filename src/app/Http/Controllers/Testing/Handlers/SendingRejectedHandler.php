@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
-use SebastianBergmann\Timer\Timer;
+use App\Testing\TestRunner;
+use GuzzleHttp\Exception\RequestException;
 use Throwable;
 
 class SendingRejectedHandler
@@ -23,14 +24,15 @@ class SendingRejectedHandler
 
     /**
      * @param Throwable $exception
-     * @return Throwable
+     * @return RequestException|\GuzzleHttp\Promise\PromiseInterface|\Psr\Http\Message\ResponseInterface|Throwable|null
      */
     public function __invoke(Throwable $exception)
     {
-        $time = Timer::stop();
-        $this->testResult->unsuccessful($time);
-        $this->testResult->testRun->complete();
+        $testResult = (new TestRunner())->run($this->testResult);
+        $testResult->testRun->complete();
 
-        return $exception;
+        return ($exception instanceof RequestException && $exception->getResponse()) ?
+            $exception->getResponse() :
+            $exception;
     }
 }

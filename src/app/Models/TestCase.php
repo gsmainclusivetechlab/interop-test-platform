@@ -59,7 +59,7 @@ class TestCase extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'test_case_id')->latest();
+        return $this->hasOne(TestRun::class, 'test_case_id')->completed()->latest();
     }
 
     /**
