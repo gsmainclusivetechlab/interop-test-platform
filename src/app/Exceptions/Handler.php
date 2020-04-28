@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
             429,
             500,
             503,
-        ]) && !$request->expectsJson()) {
+        ]) && !$request->expectsJson() && !env('APP_DEBUG')) {
             return Inertia::render('error', [
                 'status' => $response->status(),
             ])->toResponse($request);

@@ -8,10 +8,10 @@ use App\Http\Resources\TestRunResource;
 use App\Models\Session;
 use Inertia\Inertia;
 
-class OverviewController extends Controller
+class SessionController extends Controller
 {
     /**
-     * OverviewController constructor.
+     * SessionController constructor.
      */
     public function __construct()
     {
@@ -83,5 +83,47 @@ class OverviewController extends Controller
         return redirect()
             ->back()
             ->with('success', __('Session deleted successfully'));
+    }
+
+    /**
+     * @param Session $session
+     * @return array[]
+     */
+    public function showChartData(Session $session)
+    {
+        $data = [
+            [
+                'name' => __('Passed'),
+                'data' => []
+            ],
+            [
+                'name' => __('Failed'),
+                'data' => []
+            ],
+        ];
+
+        $rows = $session->testRuns()
+            ->completed()
+            ->selectRaw('COUNT(IF (total = passed, 1, NULL)) AS pass')
+            ->selectRaw('COUNT(IF (total != passed, 1, NULL)) AS fail')
+            ->selectRaw('DATE_FORMAT(created_at, "%e %b") as date')
+            ->groupByRaw('DATE_FORMAT(created_at, "%e %b")')
+            ->orderByRaw('DATE_FORMAT(created_at, "%e %b") ASC')
+            ->limit(30)
+            ->get();
+
+        foreach ($rows as $row) {
+            $data[0]['data'][] = [
+                'x' => $row->date,
+                'y' => $row->pass
+            ];
+
+            $data[1]['data'][] = [
+                'x' => $row->date,
+                'y' => $row->fail
+            ];
+        }
+
+        return $data;
     }
 }
