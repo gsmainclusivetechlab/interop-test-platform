@@ -1,29 +1,27 @@
 <template>
     <div class="diagram-wrapper">
-        <div class="mermaid-diagram text-center" ref="diagram">
-            <slot />
-        </div>
-
-        <clipboard-copy-btn
-            v-if="showCopyBtn"
-            :data="diagramData"
-            class="px-2"
-        ></clipboard-copy-btn>
-
-        <div class="text-center text-decoration-underline mt-3 mb-2" v-if="showCopyBtn">
+        <div
+            class="text-center my-2"
+            v-if="showCopyLink"
+        >
             <a
-                href="https://mermaid-js.github.io/mermaid-live-editor/"
+                :href="editorUrl"
                 target="_blank"
                 rel="noreferrer"
-                class="text-gray"
             >
-                Link to live editor
+                Copy diagram to live editor
             </a>
+        </div>
+
+        <div class="mermaid-diagram text-center" ref="diagram">
+            <slot />
         </div>
     </div>
 </template>
 
 <script>
+import { Base64 } from 'js-base64';
+
 const config = {
     startOnLoad: false,
     fontFamily: 'gotham',
@@ -53,14 +51,18 @@ export default {
         };
     },
     props: {
-        showCopyBtn: {
+        showCopyLink: {
             type: Boolean,
             default: false
         }
     },
     data() {
         return {
-            diagramData: null
+            diagramData: {
+                code: null,
+                mermaid: config
+            },
+            baseUrl: 'https://mermaid-js.github.io/mermaid-live-editor/#/edit/'
         };
     },
     mounted() {
@@ -72,7 +74,7 @@ export default {
         initDiagram() {
             const graphEl = this.$refs.diagram;
 
-            this.diagramData = graphEl.innerText;
+            this.diagramData.code = graphEl.innerText;
 
             mermaid.initialize(config);
             mermaid.init(
@@ -80,6 +82,15 @@ export default {
                 graphEl,
                 () => (this.$el.dataset.processed = true)
             );
+        }
+    },
+    computed: {
+        editorUrl() {
+            const encodedDiagramData = Base64.encodeURI(
+                JSON.stringify(this.diagramData)
+            );
+
+            return `${this.baseUrl}${encodedDiagramData}`;
         }
     }
 };

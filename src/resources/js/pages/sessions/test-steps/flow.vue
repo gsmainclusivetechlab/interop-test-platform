@@ -6,8 +6,8 @@
                     <b>{{ `Flow of ${testCase.name}` }}</b>
                 </h2>
             </div>
-            <div class="p-2">
-                <diagram :show-copy-btn="true">
+            <div class="pt-2 pb-4">
+                <diagram :show-copy-link="true">
                     sequenceDiagram;
                     <template v-for="testStep in testSteps.data">
                         {{ testStep.source.name }}->>{{ testStep.target.name }}: {{ testStep.forward }};
