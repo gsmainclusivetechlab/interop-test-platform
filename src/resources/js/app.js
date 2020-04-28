@@ -49,7 +49,7 @@ Vue.component('confirm-link', () =>
     )
 );
 Vue.component('json-tree', () =>
-    import(/* webpackChunkName: "json-tree" */ 'vue-json-pretty')
+    import(/* webpackChunkName: "json-tree" */ '@/components/json-tree.vue')
 );
 
 const app = document.getElementById('app');

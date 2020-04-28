@@ -125,7 +125,6 @@
 </template>
 
 <script>
-    import Clipboard from 'clipboard';
     import Layout from '@/layouts/main';
     import SessionProgress from '@/components/sessions/progress';
 
@@ -150,7 +149,9 @@
             },
         },
         mounted() {
-            new Clipboard(this.$refs.clipboard);
+            import(/* webpackChunkName: "clipboard" */ 'clipboard').then(({ default: Clipboard }) => {
+                new Clipboard(this.$refs.clipboard);
+            })
         }
     };
 </script>
