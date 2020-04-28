@@ -1,11 +1,23 @@
-.mermaid-diagram {
-    min-height: 66px;
+.diagram-wrapper {
+    position: relative;
     opacity: 0;
     transition: opacity 0.1s;
 
     &[data-processed='true'] {
         opacity: 1;
     }
+
+    [data-clipboard-btn] {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 1;
+    }
+}
+
+.mermaid-diagram {
+    min-height: 66px;
+    overflow-x: auto;
 
     .label {
         color: $body-color;
@@ -46,8 +58,9 @@
     }
 
     .actor {
-        fill: #fff;
-        stroke: #fff;
+        fill: $gray-100;
+        stroke: $gray-300;
+        stroke-width: 0.5;
     }
 
     text.actor {

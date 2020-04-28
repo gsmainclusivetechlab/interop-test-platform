@@ -68,7 +68,7 @@
                                                 class="nav-link rounded-0"
                                                 v-bind:class="{'active': route().current('sessions.test-cases.show') || route().current('sessions.test-cases.test-runs.*')}"
                                             >
-                                                Overview
+                                                Test Runs
                                             </inertia-link>
                                         </li>
                                         <li class="nav-item">

@@ -2,6 +2,7 @@
     <button
         type="button"
         class="btn btn-secondary"
+        data-clipboard-btn
         v-b-tooltip.hover.topright.viewport
         :title="title"
         :data-clipboard-target="target"

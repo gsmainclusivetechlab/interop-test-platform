@@ -1,12 +1,21 @@
 <template>
     <layout :session="session" :test-case="testCase">
-        <diagram>
-            sequenceDiagram;
-            <template v-for="testStep in testSteps.data">
-                {{ testStep.source.name }}->>{{ testStep.target.name }}: {{ testStep.forward }};
-                {{ testStep.target.name }}-->>{{ testStep.source.name }}: {{ testStep.backward }};
-            </template>
-        </diagram>
+        <div class="card mb-0">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <b>{{ `Flow of ${testCase.name}` }}</b>
+                </h2>
+            </div>
+            <div class="p-2">
+                <diagram :show-copy-btn="true">
+                    sequenceDiagram;
+                    <template v-for="testStep in testSteps.data">
+                        {{ testStep.source.name }}->>{{ testStep.target.name }}: {{ testStep.forward }};
+                        {{ testStep.target.name }}-->>{{ testStep.source.name }}: {{ testStep.backward }};
+                    </template>
+                </diagram>
+            </div>
+        </div>
     </layout>
 </template>
 
