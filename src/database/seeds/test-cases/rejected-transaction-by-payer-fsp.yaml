@@ -32,15 +32,14 @@ data_example:
       - key: "msisdn"
         value: "+33555789123"
 test_steps:
-  - forward: POST /transactions
-    backward: HTTP 202
+  - name: POST /transactions
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.X-Callback-URL.*: 'regex:/.*/'
+          headers.x-callback-url.*: 'regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'in:msisdn'
@@ -67,7 +66,7 @@ test_steps:
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'in:callback'
-    request_example:
+    request:
       method: POST
       uri: /transactions
       headers:
@@ -85,7 +84,7 @@ test_steps:
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
-    response_example:
+    response:
       status: 202
       headers:
         content-type: 'application/json'
@@ -94,8 +93,7 @@ test_steps:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
         notificationMethod: 'callback'
-  - forward: POST /transactionRequests
-    backward: HTTP 202
+  - name: POST /transactionRequests
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -122,7 +120,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    request_example:
+    request:
       method: POST
       uri: /transactionsRequests
       headers:
@@ -147,10 +145,9 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    response_example:
+    response:
       status: 202
-  - forward: POST /transactionRequests
-    backward: HTTP 202
+  - name: POST /transactionRequests
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
@@ -177,7 +174,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    request_example:
+    request:
       method: POST
       uri: /transactionsRequests
       headers:
@@ -202,17 +199,16 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    response_example:
+    response:
       status: 202
-  - forward: PUT /transactionRequests/{ID}
-    backward: HTTP 200
+  - name: PUT /transactionRequests/{ID}
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
@@ -221,7 +217,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -231,17 +227,16 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'RECEIVED'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /transactionRequests/{ID}
-    backward: HTTP 200
+  - name: PUT /transactionRequests/{ID}
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
@@ -250,7 +245,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -260,10 +255,9 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'RECEIVED'
-    response_example:
+    response:
       status: 200
-  - forward: POST /quotes
-    backward: HTTP 202
+  - name: POST /quotes
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -294,7 +288,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    request_example:
+    request:
       method: POST
       uri: /quotes
       headers:
@@ -327,10 +321,9 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    response_example:
+    response:
       status: 202
-  - forward: POST /quotes
-    backward: HTTP 202
+  - name: POST /quotes
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
@@ -361,7 +354,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    request_example:
+    request:
       method: POST
       uri: /quotes
       headers:
@@ -394,17 +387,16 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    response_example:
+    response:
       status: 202
-  - forward: PUT /quotes/{ID}
-    backward: HTTP 200
+  - name: PUT /quotes/{ID}
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount: 'in:10.1'
@@ -423,7 +415,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
@@ -438,17 +430,16 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /quotes/{ID}
-    backward: HTTP 200
+  - name: PUT /quotes/{ID}
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount: 'in:10.1'
@@ -467,7 +458,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
@@ -482,17 +473,16 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /transactionRequests/{ID}
-    backward: HTTP 200
+  - name: PUT /transactionRequests/{ID}
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
@@ -501,7 +491,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -511,17 +501,16 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'REJECTED'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /transactionRequests/{ID}
-    backward: HTTP 200
+  - name: PUT /transactionRequests/{ID}
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
@@ -530,7 +519,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -540,10 +529,9 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'REJECTED'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /X-Callback-URL
-    backward: HTTP 204
+  - name: PUT /X-Callback-URL
     source: Mobile Money Operator 1
     target: Service Provider
     test_request_scripts:
@@ -557,7 +545,7 @@ test_steps:
       - name: Transaction was successfully declined
         rules:
           status: 'in:204'
-    request_example:
+    request:
       method: 'PUT'
       uri: 'http://example.com/example'
       headers:
@@ -566,5 +554,5 @@ test_steps:
       body:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
-    response_example:
+    response:
       status: 204

@@ -76,6 +76,16 @@ class TestRun extends Model
     }
 
     /**
+     * @param $query
+     * @param $traceId
+     * @return mixed
+     */
+    public function scopeWhereTraceId($query, $traceId)
+    {
+        return $query->whereRaw('REPLACE(uuid, "-", "") = ?', $traceId);
+    }
+
+    /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */

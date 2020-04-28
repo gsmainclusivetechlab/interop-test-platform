@@ -39,7 +39,7 @@ class TestRunController extends Controller
                     'scenario' => function ($query) {
                         return $query->with([
                             'components' => function ($query) {
-                                return $query->with(['paths']);
+                                return $query->with(['connections']);
                             },
                         ]);
                     },

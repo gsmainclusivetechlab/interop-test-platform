@@ -29,7 +29,7 @@ class ValidateRequestScriptTest
      */
     public function handle(TestResult $testResult, callable $next)
     {
-        $data = $testResult->request->toArray();
+        $data = $testResult->request ? $testResult->request->toArray() : [];
         $validator = Validator::make(
             $data,
             (array) $this->testScript->rules,

@@ -32,15 +32,14 @@ data_example:
       - key: "msisdn"
         value: "+33555789123"
 test_steps:
-  - forward: POST /transactions
-    backward: HTTP 404
+  - name: POST /transactions
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.X-Callback-URL.*: 'regex:/.*/'
+          headers.x-callback-url.*: 'regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'in:msisdn'
@@ -62,7 +61,7 @@ test_steps:
         rules:
           body.errorCategory: 'in:validation'
           body.errorCode: 'in:genericError'
-    request_example:
+    request:
       method: POST
       uri: /transactions
       headers:
@@ -80,7 +79,7 @@ test_steps:
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
-    response_example:
+    response:
       status: 404
       headers:
         content-type: 'application/json'

@@ -24,18 +24,17 @@ class TestStep extends Model
      */
     protected $fillable = [
         'api_scheme_id',
-        'forward',
-        'backward',
-        'request_example',
-        'response_example',
+        'name',
+        'request',
+        'response',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'request_example' => RequestCast::class,
-        'response_example' => ResponseCast::class,
+        'request' => RequestCast::class,
+        'response' => ResponseCast::class,
     ];
 
     /**

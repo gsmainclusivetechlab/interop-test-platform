@@ -28,7 +28,7 @@
                         graph LR;
                         <template v-for="component in session.scenario.data.components">
                             {{ component.id }}({{component.name}})<template v-if="collect(session.suts.data).contains('id', component.id)">:::is-active</template><template v-else></template>;
-                            <template v-for="connection in component.paths">
+                            <template v-for="connection in component.connections">
                                 {{ component.id }}
                                 <template v-if="component.simulated && connection.simulated">--></template><template v-else>-.-></template>
                                 <template v-if="component.id == testResult.testStep.data.source.id && connection.id == testResult.testStep.data.target.id">
@@ -97,8 +97,8 @@
                                             <b>
                                                 {{ `Step ${testStep.position}` }}
                                             </b>
-                                            <div class="text-truncate" :title="testStep.forward">
-                                                {{ testStep.forward }}
+                                            <div class="text-truncate" :title="testStep.name">
+                                                {{ testStep.name }}
                                             </div>
                                         </div>
                                     </li>
@@ -169,23 +169,23 @@
                                             >
                                                 <b-tab
                                                     active
-                                                    title="Actual result"
+                                                    title="Actual"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <p class="mb-0">Actual result</p>
+                                                    <json-tree :data="testExecution.actual" :deep="1" :show-line="false"></json-tree>
                                                 </b-tab>
                                                 <b-tab
-                                                    title="Expected result"
+                                                    title="Expected"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <p class="mb-0">Expected result</p>
+                                                    <json-tree :data="testExecution.expected" :deep="1" :show-line="false"></json-tree>
                                                 </b-tab>
                                                 <b-tab
-                                                    v-if="testExecution.message"
+                                                    v-if="testExecution.exception"
                                                     title="Exception"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <p class="mb-0">{{ testExecution.message }}</p>
+                                                    <p class="mb-0">{{ testExecution.exception }}</p>
                                                 </b-tab>
                                             </b-tabs>
                                         </b-popover>
