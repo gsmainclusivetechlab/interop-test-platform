@@ -100,16 +100,10 @@
                                                     readonly
                                                     :value="route('testing.run', [session.uuid, testCase.uuid])"
                                                 />
-                                                <button
-                                                    ref="clipboard"
-                                                    class="btn btn-secondary"
-                                                    type="button"
-                                                    v-b-tooltip.hover.topright.viewport
+                                                <clipboard-copy-btn
+                                                    target="#testing-url"
                                                     title="Copy URL"
-                                                    data-clipboard-target="#testing-url"
-                                                >
-                                                    <icon name="copy" class="m-0"></icon>
-                                                </button>
+                                                ></clipboard-copy-btn>
                                             </div>
                                         </div>
                                     </div>
@@ -147,11 +141,6 @@
                 type: Object,
                 required: true
             },
-        },
-        mounted() {
-            import(/* webpackChunkName: "clipboard" */ 'clipboard').then(({ default: Clipboard }) => {
-                new Clipboard(this.$refs.clipboard);
-            })
         }
     };
 </script>

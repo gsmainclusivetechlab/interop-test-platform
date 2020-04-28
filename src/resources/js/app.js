@@ -51,6 +51,11 @@ Vue.component('confirm-link', () =>
 Vue.component('json-tree', () =>
     import(/* webpackChunkName: "json-tree" */ '@/components/json-tree.vue')
 );
+Vue.component('clipboard-copy-btn', () =>
+    import(
+        /* webpackChunkName: "clipboard-copy-btn" */ '@/components/clipboard-copy-btn.vue'
+    )
+);
 
 const app = document.getElementById('app');
 

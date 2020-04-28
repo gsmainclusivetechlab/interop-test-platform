@@ -1,15 +1,10 @@
 <template>
     <div class="json-tree-wrapper">
-        <button
+        <clipboard-copy-btn
             v-if="showCopyBtn"
-            ref="clipboard"
-            v-b-tooltip.hover.topright.viewport
-            title="Copy"
-            type="button"
-            class="btn btn-secondary px-2 json-tree-copy"
-        >
-            <icon name="copy" class="m-0" />
-        </button>
+            :data="JSON.stringify(data)"
+            class="json-tree-copy px-2"
+        ></clipboard-copy-btn>
 
         <vue-json-pretty v-bind="$props"></vue-json-pretty>
     </div>
@@ -73,22 +68,6 @@ export default {
     },
     components: {
         vueJsonPretty
-    },
-    mounted() {
-        if (!this.$props.showCopyBtn) {
-            return;
-        }
-
-        const self = this;
-
-        import(/* webpackChunkName: "clipboard" */ 'clipboard').then(
-            ({ default: Clipboard }) => {
-                new Clipboard(this.$refs.clipboard, {
-                    container: self.$el,
-                    text: () => JSON.stringify(self.data)
-                });
-            }
-        );
     }
 };
 </script>
