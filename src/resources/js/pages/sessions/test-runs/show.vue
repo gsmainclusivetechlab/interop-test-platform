@@ -172,21 +172,21 @@
                                                     title="Actual"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <json-tree :data="testExecution.actual" :deep="1" :show-line="false"></json-tree>
+                                                    <json-tree :data="testExecution.actual" :show-copy-btn="false" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </b-tab>
                                                 <b-tab
                                                     title="Expected"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
                                                 >
-                                                    <json-tree :data="testExecution.expected" :deep="1" :show-line="false"></json-tree>
+                                                    <json-tree :data="testExecution.expected" :show-copy-btn="false" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </b-tab>
-                                                <b-tab
+
+                                                <div
                                                     v-if="testExecution.exception"
-                                                    title="Exception"
-                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                    class="p-2 alert-danger"
                                                 >
                                                     <p class="mb-0">{{ testExecution.exception }}</p>
-                                                </b-tab>
+                                                </div>
                                             </b-tabs>
                                         </b-popover>
                                     </li>
