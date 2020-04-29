@@ -6,6 +6,7 @@ use App\Models\ApiScheme;
 use App\Models\TestResult;
 use League\OpenAPIValidation\PSR7\Exception\ValidationFailed;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
+use Throwable;
 
 class ValidateApiScheme
 {
@@ -37,8 +38,12 @@ class ValidateApiScheme
         try {
             $operationAddress = $validator->getRequestValidator()->validate($testResult->request->toPsrRequest());
             $validator->getResponseValidator()->validate($operationAddress, $testResult->response->toPsrResponse());
+            $testResult->total++;
+            $testResult->passed++;
             $testExecution->successful();
-        } catch (ValidationFailed $e) {
+        } catch (Throwable $e) {
+            $testResult->total++;
+            $testResult->failures++;
             $testExecution->unsuccessful($e->getMessage());
         }
 
