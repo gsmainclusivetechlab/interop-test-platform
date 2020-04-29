@@ -153,34 +153,40 @@
                                                 :id="`test-execution-${testExecution.id}`"
                                                 class="btn btn-link p-0 font-weight-normal"
                                                 type="button"
+                                                v-if="testExecution.actual || testExecution.expected || testExecution.exception"
                                             >
                                                 {{ testExecution.name }}
                                             </button>
+                                            <span v-else>
+                                                {{ testExecution.name }}
+                                            </span>
                                         </div>
                                         <b-popover
                                             :target="`test-execution-${testExecution.id}`"
                                             triggers="click blur"
                                             placement="bottom"
+                                            v-if="testExecution.actual || testExecution.expected || testExecution.exception"
                                         >
                                             <b-tabs
                                                 nav-class="flex-nowrap"
                                                 content-class="mt-2"
                                                 justified
+                                                v-if="testExecution.actual || testExecution.expected"
                                             >
                                                 <b-tab
-                                                    active
                                                     title="Actual"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                    v-if="testExecution.actual"
                                                 >
                                                     <json-tree :data="testExecution.actual" :show-copy-btn="false" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </b-tab>
                                                 <b-tab
                                                     title="Expected"
                                                     title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                    v-if="testExecution.expected"
                                                 >
                                                     <json-tree :data="testExecution.expected" :show-copy-btn="false" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </b-tab>
-
                                                 <div
                                                     v-if="testExecution.exception"
                                                     class="p-2 alert-danger"
@@ -188,6 +194,12 @@
                                                     <p class="mb-0">{{ testExecution.exception }}</p>
                                                 </div>
                                             </b-tabs>
+                                            <div
+                                                v-else-if="testExecution.exception"
+                                                class="p-2 alert-danger"
+                                            >
+                                                <p class="mb-0">{{ testExecution.exception }}</p>
+                                            </div>
                                         </b-popover>
                                     </li>
                                 </ul>
