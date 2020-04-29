@@ -53,9 +53,9 @@ class Component extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function paths()
+    public function connections()
     {
-        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id');
+        return $this->belongsToMany(static::class, 'component_connections', 'source_id', 'target_id');
     }
 
     /**

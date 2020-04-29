@@ -44,14 +44,14 @@
                         graph LR;
                         <template v-for="component in scenario.components.data">
                             {{ component.id }}({{ component.name }});
-                            <template v-for="path in component.paths">
+                            <template v-for="connection in component.connections">
                                 {{ component.id }}
                                 {{
-                                    component.simulated && path.simulated
+                                    component.simulated && connection.simulated
                                         ? '-->'
                                         : '-.->'
                                 }}
-                                {{ path.id }};
+                                {{ connection.id }};
                             </template>
                         </template>
                     </diagram>

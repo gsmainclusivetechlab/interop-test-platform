@@ -15,6 +15,7 @@ class TestSetupResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'type' => $this->type,
             'values' => $this->values,
         ];
     }

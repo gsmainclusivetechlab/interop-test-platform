@@ -11,11 +11,11 @@
                     <div class="ml-auto col-2">
                         <div class="mb-1">
                             Execution:
-                            <icon name="briefcase" />
+                            <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
                             <small>
                                 {{ session.testCases ? collect(session.testCases.data).unique('use_case_id').count() : 0 }}
                             </small>
-                            <icon name="file-text" />
+                            <icon name="file-text" v-b-tooltip.hover title="Test Case" />
                             <small>
                                 {{ session.testCases ? session.testCases.data.length : 0  }}
                             </small>

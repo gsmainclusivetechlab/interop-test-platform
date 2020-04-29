@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Casts\TestRequestCast;
-use App\Casts\TestResponseCast;
+use App\Casts\RequestCast;
+use App\Casts\ResponseCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -22,7 +22,6 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
-        'test_step_id',
         'request',
         'response',
     ];
@@ -31,8 +30,8 @@ class TestResult extends Model
      * @var array
      */
     protected $casts = [
-        'request' => TestRequestCast::class,
-        'response' => TestResponseCast::class,
+        'request' => RequestCast::class,
+        'response' => ResponseCast::class,
         'completed_at' => 'datetime',
     ];
 
@@ -40,15 +39,16 @@ class TestResult extends Model
      * @var array
      */
     protected $attributes = [
-        'duration' => 0,
+        'total' => 0,
+        'passed' => 0,
+        'failures' => 0,
     ];
 
     /**
      * @var array
      */
     protected $observables = [
-        'successful',
-        'unsuccessful',
+        'complete',
     ];
 
     /**
@@ -103,38 +103,25 @@ class TestResult extends Model
     }
 
     /**
-     * @param float $time
      * @return bool
      */
-    public function successful(float $time)
+    public function getSuccessfulAttribute()
     {
-        $this->successful = true;
-        $this->duration = (int) floor($time * 1000);
-        $this->completed_at = now();
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('successful');
-        return true;
+        return $this->total === $this->passed;
     }
 
     /**
-     * @param float $time
-     * @return bool
+     * @return $this|bool
      */
-    public function unsuccessful(float $time)
+    public function complete()
     {
-        $this->successful = false;
-        $this->duration = (int) floor($time * 1000);
         $this->completed_at = now();
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('unsuccessful');
-        return true;
+        $this->fireModelEvent('complete');
+        return $this;
     }
 }

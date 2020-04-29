@@ -14,11 +14,9 @@ class TestStepResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'forward' => $this->forward,
-            'backward' => $this->backward,
-            'name' => implode(' ', [$this->forward, $this->backward]),
-            'request_example' => $this->request_example ? $this->request_example->toArray() : null,
-            'response_example' => $this->response_example ? $this->response_example->toArray() : null,
+            'name' => $this->name,
+            'request' => $this->request ? $this->request->toArray() : null,
+            'response' => $this->response ? $this->response->toArray() : null,
             'position' => $this->position,
             'source' => new ComponentResource($this->whenLoaded('source')),
             'target' => new ComponentResource($this->whenLoaded('target')),

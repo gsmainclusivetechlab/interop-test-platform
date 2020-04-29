@@ -9,7 +9,9 @@ import {
     DropdownPlugin,
     FormFilePlugin,
     ProgressPlugin,
-    VBTooltipPlugin
+    VBTooltipPlugin,
+    PopoverPlugin,
+    TabsPlugin
 } from 'bootstrap-vue';
 
 window.string = require('string');
@@ -18,14 +20,20 @@ window.collect = require('collect.js');
 Vue.use(VueMeta);
 Vue.use(InertiaApp);
 
-Vue.use(NavPlugin);
-Vue.use(NavbarPlugin);
-Vue.use(ModalPlugin);
-Vue.use(CollapsePlugin);
-Vue.use(DropdownPlugin);
-Vue.use(FormFilePlugin);
-Vue.use(ProgressPlugin);
-Vue.use(VBTooltipPlugin);
+[
+    NavPlugin,
+    NavbarPlugin,
+    ModalPlugin,
+    CollapsePlugin,
+    DropdownPlugin,
+    FormFilePlugin,
+    ProgressPlugin,
+    VBTooltipPlugin,
+    PopoverPlugin,
+    TabsPlugin
+].forEach(plugin => {
+    Vue.use(plugin);
+});
 
 Vue.mixin({
     methods: {

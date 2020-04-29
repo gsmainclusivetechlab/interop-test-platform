@@ -12,12 +12,12 @@
                     {{ `Run ID: ${testRun.uuid}` }}
                 </h3>
                 <div class="card-options">
-                    <span class="text-success mr-2" v-if="testRun.passed">
-                        <icon name="check"></icon>
+                    <span class="text-success mr-2 align-items-center d-flex" v-if="testRun.passed">
+                        <icon name="circle-check" class="icon-md mr-1"></icon>
                         {{ `${testRun.passed} Pass` }}
                     </span>
-                    <span class="text-danger mr-2" v-if="testRun.failures">
-                        <icon name="alert-circle"></icon>
+                    <span class="text-danger mr-2 align-items-center d-flex" v-if="testRun.failures">
+                        <icon name="alert-circle" class="icon-md mr-1"></icon>
                         {{ `${testRun.failures} Fail` }}
                     </span>
                 </div>
@@ -28,7 +28,7 @@
                         graph LR;
                         <template v-for="component in session.scenario.data.components">
                             {{ component.id }}({{component.name}})<template v-if="collect(session.suts.data).contains('id', component.id)">:::is-active</template><template v-else></template>;
-                            <template v-for="connection in component.paths">
+                            <template v-for="connection in component.connections">
                                 {{ component.id }}
                                 <template v-if="component.simulated && connection.simulated">--></template><template v-else>-.-></template>
                                 <template v-if="component.id == testResult.testStep.data.source.id && connection.id == testResult.testStep.data.target.id">
@@ -64,7 +64,7 @@
                                                         class="font-weight-bold"
                                                         v-bind:class="{
                                                             'text-orange': testResultStep.request.method === 'POST',
-                                                            'text-text-blue': testResultStep.request.method === 'PUT',
+                                                            'text-blue': testResultStep.request.method === 'PUT',
                                                             'text-red': testResultStep.request.method === 'DELETE',
                                                             'text-mint': testResultStep.request.method === 'GET',
                                                         }"
@@ -97,8 +97,8 @@
                                             <b>
                                                 {{ `Step ${testStep.position}` }}
                                             </b>
-                                            <div class="text-truncate" :title="testStep.forward">
-                                                {{ testStep.forward }}
+                                            <div class="text-truncate" :title="testStep.name">
+                                                {{ testStep.name }}
                                             </div>
                                         </div>
                                     </li>
@@ -149,52 +149,58 @@
                                             >
                                                 {{ testExecution.successful ? 'Pass' : 'Fail' }}
                                             </span>
-                                            <span
-                                                class="d-flex align-items-center dropdown-toggle"
-                                                v-if="testExecution.message"
-                                                v-b-toggle="`test-execution-${testExecution.id}`"
+                                            <button
+                                                :id="`test-execution-${testExecution.id}`"
+                                                class="btn btn-link p-0 font-weight-normal"
+                                                type="button"
+                                                v-if="testExecution.actual || testExecution.expected || testExecution.exception"
                                             >
                                                 {{ testExecution.name }}
-                                            </span>
-                                            <span v-else class="d-flex align-items-center">
+                                            </button>
+                                            <span v-else>
                                                 {{ testExecution.name }}
                                             </span>
                                         </div>
-                                        <b-collapse
-                                            v-if="testExecution.message"
-                                            :id="`test-execution-${testExecution.id}`"
-                                            class="w-100 ml-5 pl-2"
+                                        <b-popover
+                                            :target="`test-execution-${testExecution.id}`"
+                                            triggers="click blur"
+                                            placement="bottom"
+                                            v-if="testExecution.actual || testExecution.expected || testExecution.exception"
                                         >
-                                            <p class="mb-0 small">{{ testExecution.message }}</p>
-                                        </b-collapse>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="py-2 px-4" v-if="testResult.testStep.data.testSetups.length">
-                                <div class="d-flex mb-2">
-                                    <strong class="lead d-block mr-auto font-weight-bold">
-                                        Overridden data
-                                    </strong>
-                                </div>
-                                <ul class="m-0 p-0">
-                                    <li
-                                        class="d-flex flex-wrap py-2"
-                                        v-for="testSetup in testResult.testStep.data.testSetups"
-                                    >
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="d-flex align-items-center dropdown-toggle"
-                                                v-b-toggle="`test-setup-${testSetup.id}`"
+                                            <b-tabs
+                                                nav-class="flex-nowrap"
+                                                content-class="mt-2"
+                                                justified
+                                                v-if="testExecution.actual || testExecution.expected"
                                             >
-                                                {{ testSetup.name }}
-                                            </span>
-                                        </div>
-                                        <b-collapse
-                                            :id="`test-setup-${testSetup.id}`"
-                                            class="w-100"
-                                        >
-                                            <json-tree :data="testSetup.values" :deep="1" :show-line="false" class="p-2"></json-tree>
-                                        </b-collapse>
+                                                <b-tab
+                                                    title="Actual"
+                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                    v-if="testExecution.actual"
+                                                >
+                                                    <json-tree :data="testExecution.actual" :show-copy-btn="false" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                </b-tab>
+                                                <b-tab
+                                                    title="Expected"
+                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                    v-if="testExecution.expected"
+                                                >
+                                                    <json-tree :data="testExecution.expected" :show-copy-btn="false" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                </b-tab>
+                                                <div
+                                                    v-if="testExecution.exception"
+                                                    class="p-2 alert-danger"
+                                                >
+                                                    <p class="mb-0">{{ testExecution.exception }}</p>
+                                                </div>
+                                            </b-tabs>
+                                            <div
+                                                v-else-if="testExecution.exception"
+                                                class="p-2 alert-danger"
+                                            >
+                                                <p class="mb-0">{{ testExecution.exception }}</p>
+                                            </div>
+                                        </b-popover>
                                     </li>
                                 </ul>
                             </div>
@@ -263,6 +269,27 @@
                                             </div>
                                         </div>
                                     </b-collapse>
+                                    <div class="d-flex" v-if="testResultRequestSetups.count()">
+                                        <div
+                                            class="w-25 px-4 py-2 border dropdown-toggle"
+                                            v-b-toggle="`request-overridden-${testResult.id}`"
+                                        >
+                                            <strong>Overridden</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            {{ `(${testResultRequestSetups.count()}) params` }}
+                                        </div>
+                                    </div>
+                                    <b-collapse :id="`request-overridden-${testResult.id}`" v-if="testResultRequestSetups.count()">
+                                        <div class="d-flex">
+                                            <div class="w-25 px-4 py-2 border"></div>
+                                            <div class="w-75 px-4 py-2 border">
+                                                <div class="mb-0 p-0 bg-transparent">
+                                                    <json-tree :data="testResultRequestSetups.all()" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </b-collapse>
                                 </div>
                             </div>
                             <div class="py-2 px-4" v-if="testResult.response">
@@ -321,6 +348,27 @@
                                             </div>
                                         </div>
                                     </b-collapse>
+                                    <div class="d-flex" v-if="testResultResponseSetups.count()">
+                                        <div
+                                            class="w-25 px-4 py-2 border dropdown-toggle"
+                                            v-b-toggle="`response-overridden-${testResult.id}`"
+                                        >
+                                            <strong>Overridden</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            {{ `(${testResultResponseSetups.count()}) params` }}
+                                        </div>
+                                    </div>
+                                    <b-collapse :id="`response-overridden-${testResult.id}`" v-if="testResultResponseSetups.count()">
+                                        <div class="d-flex">
+                                            <div class="w-25 px-4 py-2 border"></div>
+                                            <div class="w-75 px-4 py-2 border">
+                                                <div class="mb-0 p-0 bg-transparent">
+                                                    <json-tree :data="testResultResponseSetups.all()" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </b-collapse>
                                 </div>
                             </div>
                         </div>
@@ -358,5 +406,25 @@ export default {
             required: true
         },
     },
+    computed: {
+        testResultRequestSetups: function () {
+            let data = collect();
+            collect(this.testResult.testStep.data.testSetups)
+                .where('type', 'request')
+                .each((item) => {
+                    data = data.mergeRecursive(item.values);
+                });
+            return data;
+        },
+        testResultResponseSetups: function () {
+            let data = collect();
+            collect(this.testResult.testStep.data.testSetups)
+                .where('type', 'response')
+                .each((item) => {
+                    data = data.mergeRecursive(item.values);
+                });
+            return data;
+        },
+    }
 };
 </script>

@@ -39,7 +39,7 @@ class TestRunController extends Controller
                     'scenario' => function ($query) {
                         return $query->with([
                             'components' => function ($query) {
-                                return $query->with(['paths']);
+                                return $query->with(['connections']);
                             },
                         ]);
                     },
@@ -57,12 +57,13 @@ class TestRunController extends Controller
             'testRun' => (new TestRunResource(
                 $testRun->load([
                     'testResults' => function ($query) {
-                        return $query->with(['testStep']);
+                        return $query->with(['testStep'])->completed();
                     },
                 ])
             ))->resolve(),
             'testResult' => (new TestResultResource(
                 $testRun->testResults()
+                    ->completed()
                     ->whereHas('testStep', function (Builder $query) use ($position) {
                         $query->where('position', $position);
                     })

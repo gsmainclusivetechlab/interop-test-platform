@@ -20,10 +20,10 @@ Route::get('/tutorials', 'TutorialController')->name('tutorials');
  * Sessions Routes
  */
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
-    Route::get('/', 'OverviewController@index')->name('index');
-    Route::get('{session}', 'OverviewController@show')->name('show');
-    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
-    Route::get('{session}/chart', 'ChartController')->name('chart');
+    Route::get('/', 'SessionController@index')->name('index');
+    Route::get('{session}', 'SessionController@show')->name('show');
+    Route::delete('{session}/destroy', 'SessionController@destroy')->name('destroy');
+    Route::get('{session}/chart', 'SessionController@showChartData')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
     Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController@index')->name('test-cases.test-steps.index');
