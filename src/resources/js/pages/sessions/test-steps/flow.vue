@@ -19,8 +19,8 @@
                 <diagram ref="diagram">
                     sequenceDiagram;
                     <template v-for="testStep in testSteps.data">
-                        {{ testStep.source.name }}->>{{ testStep.target.name }}: {{ testStep.forward }};
-                        {{ testStep.target.name }}-->>{{ testStep.source.name }}: {{ testStep.backward }};
+                        {{ testStep.source.name }}->>{{ testStep.target.name }}: {{ testStep.name }};
+                        {{ testStep.target.name }}-->>{{ testStep.source.name }}: {{ `HTTP ${testStep.response.status}` }};
                     </template>
                 </diagram>
             </div>
