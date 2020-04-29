@@ -36,9 +36,7 @@ class MapResponseHandler
             }
         }
 
-        $this->testResult->response = $testResponse;
-
-//        $this->testResult->update(['response' => $testResponse]);
+        $this->testResult->update(['response' => $testResponse]);
 
         return $testResponse->toPsrResponse();
     }

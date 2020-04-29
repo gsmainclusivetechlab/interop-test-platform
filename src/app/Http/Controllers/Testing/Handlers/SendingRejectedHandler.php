@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
-use App\Testing\TestRunner;
-use GuzzleHttp\Exception\RequestException;
 use Throwable;
 
 class SendingRejectedHandler
@@ -24,15 +22,12 @@ class SendingRejectedHandler
 
     /**
      * @param Throwable $exception
-     * @return RequestException|\GuzzleHttp\Promise\PromiseInterface|\Psr\Http\Message\ResponseInterface|Throwable|null
+     * @return Throwable
      */
     public function __invoke(Throwable $exception)
     {
-        $testResult = (new TestRunner())->run($this->testResult);
-        $testResult->testRun->complete();
+        $this->testResult->testRun->complete();
 
-        return ($exception instanceof RequestException && $exception->getResponse()) ?
-            $exception->getResponse() :
-            $exception;
+        return $exception;
     }
 }
