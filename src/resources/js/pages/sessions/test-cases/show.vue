@@ -3,7 +3,7 @@
         <div  class="card">
             <div class="card-header">
                 <h2 class="card-title">
-                    <b>{{ `Latest test runs of ${testCase.name}` }}</b>
+                    <b>{{ `Test runs of ${testCase.name}` }}</b>
                 </h2>
             </div>
             <div class="table-responsive mb-0">

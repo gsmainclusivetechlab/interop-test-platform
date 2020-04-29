@@ -1,5 +1,5 @@
 <template>
-    <div class="mermaid-diagram text-center" ref="diagram">
+    <div class="mermaid-diagram text-center">
         <slot />
     </div>
 </template>
@@ -40,7 +40,7 @@ export default {
     },
     methods: {
         initDiagram() {
-            const graphEl = this.$refs.diagram;
+            const graphEl = this.$el;
 
             mermaid.initialize(config);
             mermaid.init({}, graphEl);

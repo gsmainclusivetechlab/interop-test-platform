@@ -27,10 +27,14 @@ class SendingFulfilledHandler
      */
     public function __invoke(ResponseInterface $response)
     {
-        $testResult = (new TestRunner())->run($this->testResult);
+        (new TestRunner())->run($this->testResult);
 
-        if ($testResult->testStep->isLastPosition()) {
-            $testResult->testRun->complete();
+        if (
+            $this->testResult->testStep->isLastPosition()
+            ||
+            !($response->getStatusCode() >= 200 && $response->getStatusCode() < 300)
+        ) {
+            $this->testResult->testRun->complete();
         }
 
         return $response;
