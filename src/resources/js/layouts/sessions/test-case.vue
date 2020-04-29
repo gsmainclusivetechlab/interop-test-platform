@@ -86,7 +86,7 @@
                                                 class="nav-link rounded-0"
                                                 v-bind:class="{'active': route().current('sessions.test-cases.test-steps.flow')}"
                                             >
-                                                Use Case Flow
+                                                Flow
                                             </inertia-link>
                                         </li>
                                     </ul>

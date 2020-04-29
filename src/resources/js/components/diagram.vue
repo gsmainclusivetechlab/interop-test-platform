@@ -1,27 +1,10 @@
 <template>
-    <div class="diagram-wrapper">
-        <div
-            class="text-center my-2"
-            v-if="showCopyLink"
-        >
-            <a
-                :href="editorUrl"
-                target="_blank"
-                rel="noreferrer"
-            >
-                Copy diagram to live editor
-            </a>
-        </div>
-
-        <div class="mermaid-diagram text-center" ref="diagram">
-            <slot />
-        </div>
+    <div class="mermaid-diagram text-center">
+        <slot />
     </div>
 </template>
 
 <script>
-import { Base64 } from 'js-base64';
-
 const config = {
     startOnLoad: false,
     fontFamily: 'gotham',
@@ -50,21 +33,6 @@ export default {
             ]
         };
     },
-    props: {
-        showCopyLink: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data() {
-        return {
-            diagramData: {
-                code: null,
-                mermaid: config
-            },
-            baseUrl: 'https://mermaid-js.github.io/mermaid-live-editor/#/edit/'
-        };
-    },
     mounted() {
         if (window.mermaid) {
             this.initDiagram();
@@ -72,25 +40,10 @@ export default {
     },
     methods: {
         initDiagram() {
-            const graphEl = this.$refs.diagram;
-
-            this.diagramData.code = graphEl.innerText;
+            const graphEl = this.$el;
 
             mermaid.initialize(config);
-            mermaid.init(
-                {},
-                graphEl,
-                () => (this.$el.dataset.processed = true)
-            );
-        }
-    },
-    computed: {
-        editorUrl() {
-            const encodedDiagramData = Base64.encodeURI(
-                JSON.stringify(this.diagramData)
-            );
-
-            return `${this.baseUrl}${encodedDiagramData}`;
+            mermaid.init({}, graphEl);
         }
     }
 };
