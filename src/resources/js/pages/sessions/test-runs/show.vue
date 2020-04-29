@@ -12,12 +12,12 @@
                     {{ `Run ID: ${testRun.uuid}` }}
                 </h3>
                 <div class="card-options">
-                    <span class="text-success mr-2" v-if="testRun.passed">
-                        <icon name="check"></icon>
+                    <span class="text-success mr-2 align-items-center d-flex" v-if="testRun.passed">
+                        <icon name="circle-check" class="icon-md mr-1"></icon>
                         {{ `${testRun.passed} Pass` }}
                     </span>
-                    <span class="text-danger mr-2" v-if="testRun.failures">
-                        <icon name="alert-circle"></icon>
+                    <span class="text-danger mr-2 align-items-center d-flex" v-if="testRun.failures">
+                        <icon name="alert-circle" class="icon-md mr-1"></icon>
                         {{ `${testRun.failures} Fail` }}
                     </span>
                 </div>
@@ -192,34 +192,6 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="py-2 px-4" v-if="testResult.testStep.data.testSetups.length">
-                                <div class="d-flex mb-2">
-                                    <strong class="lead d-block mr-auto font-weight-bold">
-                                        Overridden data
-                                    </strong>
-                                </div>
-                                <ul class="m-0 p-0">
-                                    <li
-                                        class="d-flex flex-wrap py-2"
-                                        v-for="testSetup in testResult.testStep.data.testSetups"
-                                    >
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="d-flex align-items-center dropdown-toggle"
-                                                v-b-toggle="`test-setup-${testSetup.id}`"
-                                            >
-                                                {{ testSetup.name }}
-                                            </span>
-                                        </div>
-                                        <b-collapse
-                                            :id="`test-setup-${testSetup.id}`"
-                                            class="w-100"
-                                        >
-                                            <json-tree :data="testSetup.values" :deep="1" :show-line="false" class="p-2"></json-tree>
-                                        </b-collapse>
-                                    </li>
-                                </ul>
-                            </div>
                             <div class="py-2 px-4" v-if="testResult.request">
                                 <div class="d-flex mb-2">
                                     <strong class="lead d-block mr-auto font-weight-bold">
@@ -285,6 +257,27 @@
                                             </div>
                                         </div>
                                     </b-collapse>
+                                    <div class="d-flex" v-if="testResultRequestSetups.count()">
+                                        <div
+                                            class="w-25 px-4 py-2 border dropdown-toggle"
+                                            v-b-toggle="`request-overridden-${testResult.id}`"
+                                        >
+                                            <strong>Overridden</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            {{ `(${testResultRequestSetups.count()}) params` }}
+                                        </div>
+                                    </div>
+                                    <b-collapse :id="`request-overridden-${testResult.id}`" v-if="testResultRequestSetups.count()">
+                                        <div class="d-flex">
+                                            <div class="w-25 px-4 py-2 border"></div>
+                                            <div class="w-75 px-4 py-2 border">
+                                                <div class="mb-0 p-0 bg-transparent">
+                                                    <json-tree :data="testResultRequestSetups.all()" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </b-collapse>
                                 </div>
                             </div>
                             <div class="py-2 px-4" v-if="testResult.response">
@@ -343,6 +336,27 @@
                                             </div>
                                         </div>
                                     </b-collapse>
+                                    <div class="d-flex" v-if="testResultResponseSetups.count()">
+                                        <div
+                                            class="w-25 px-4 py-2 border dropdown-toggle"
+                                            v-b-toggle="`response-overridden-${testResult.id}`"
+                                        >
+                                            <strong>Overridden</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            {{ `(${testResultResponseSetups.count()}) params` }}
+                                        </div>
+                                    </div>
+                                    <b-collapse :id="`response-overridden-${testResult.id}`" v-if="testResultResponseSetups.count()">
+                                        <div class="d-flex">
+                                            <div class="w-25 px-4 py-2 border"></div>
+                                            <div class="w-75 px-4 py-2 border">
+                                                <div class="mb-0 p-0 bg-transparent">
+                                                    <json-tree :data="testResultResponseSetups.all()" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </b-collapse>
                                 </div>
                             </div>
                         </div>
@@ -380,5 +394,25 @@ export default {
             required: true
         },
     },
+    computed: {
+        testResultRequestSetups: function () {
+            let data = collect();
+            collect(this.testResult.testStep.data.testSetups)
+                .where('type', 'request')
+                .each((item) => {
+                    data = data.mergeRecursive(item.values);
+                });
+            return data;
+        },
+        testResultResponseSetups: function () {
+            let data = collect();
+            collect(this.testResult.testStep.data.testSetups)
+                .where('type', 'response')
+                .each((item) => {
+                    data = data.mergeRecursive(item.values);
+                });
+            return data;
+        },
+    }
 };
 </script>

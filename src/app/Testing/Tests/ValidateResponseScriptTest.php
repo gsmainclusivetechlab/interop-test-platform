@@ -33,8 +33,7 @@ class ValidateResponseScriptTest
         $validator = Validator::make(
             $data,
             (array) $this->testScript->rules,
-            (array) $this->testScript->messages,
-            (array) $this->testScript->attributes
+            (array) $this->testScript->messages
         );
         $testExecution = $testResult->testExecutions()->make([
             'name' => __('Response: :name', ['name' => $this->testScript->name]),

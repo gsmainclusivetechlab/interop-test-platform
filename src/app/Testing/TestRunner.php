@@ -4,6 +4,7 @@ namespace App\Testing;
 
 use App\Models\TestResult;
 use App\Models\TestScript;
+use App\Testing\Tests\ValidateApiScheme;
 use App\Testing\Tests\ValidateRequestScriptTest;
 use App\Testing\Tests\ValidateResponseScriptTest;
 use Illuminate\Pipeline\Pipeline;
@@ -17,6 +18,10 @@ class TestRunner
     public function run(TestResult $testResult)
     {
         $pipes = [];
+
+        if ($apiScheme = $testResult->testStep->apiScheme) {
+            $pipes[] = new ValidateApiScheme($apiScheme);
+        }
 
         if ($testRequestScripts = $testResult->testStep->testScripts()->ofType(TestScript::TYPE_REQUEST)->get()) {
             foreach ($testRequestScripts as $testRequestScript) {

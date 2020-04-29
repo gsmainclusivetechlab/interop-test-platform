@@ -19,9 +19,8 @@ class CreateTestScriptsTable extends Migration
             $table->foreign('test_step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->string('name');
             $table->string('type')->index();
-            $table->longText('rules');
-            $table->longText('messages')->nullable();
-            $table->longText('attributes')->nullable();
+            $table->text('rules');
+            $table->text('messages')->nullable();
             $table->unsignedInteger('position');
             $table->timestamps();
         });
