@@ -36,9 +36,7 @@ class MapRequestHandler
             }
         }
 
-        $this->testResult->request = $testRequest;
-
-//        $this->testResult->update(['request' => $testRequest]);
+        $this->testResult->update(['request' => $testRequest]);
 
         return $testRequest->toPsrRequest();
     }

@@ -80,7 +80,6 @@ class PendingRequest
     {
         $stack = new HandlerStack();
         $stack->setHandler(new CurlHandler());
-        $stack->push(Middleware::httpErrors());
 
         foreach ($this->mapRequestCallbacks as $mapRequestCallback) {
             $stack->push(Middleware::mapRequest($mapRequestCallback));
