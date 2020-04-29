@@ -1,0 +1,91 @@
+@startuml p2p-authorized-transaction-no-fees
+
+'--------------------Skin Parameters----------------------'
+skinparam SequenceMessageAlign center
+skinparam ArrowFontSize 8
+skinparam NoteFontSize 9
+skinparam Style strictuml
+skinparam ArrowColor Black
+skinparam ParticipantPadding 20
+
+!define MMAPICOLOR Red
+!define SWITCHAPICOLOR Orange
+!define SPAPICOLOR Green
+!define USSDAPICOLOR Blue
+!define FPXAPICOLOR Purple
+
+skinparam sequence {
+'ParticipantBackgroundColor DodgerBlue
+ParticipantFontSize 12
+ActorFontSize 12
+ParticipantBorderColor Black
+ActorBorderColor Black
+LifeLineBorderColor Black
+LifeLineBackgroundColor Gray
+EntityBorderColor Black
+}
+
+'----------------Constant String Values-------------------'
+!$postq = "**POST/quotes**"
+!$putq = "**PUT/quotes**"
+!$postt = "**POST/transfers**"
+!$putt = "**PUT/transfers**"
+!$http202 = "**HTTP 202** (Accepted)"
+!$http200 = "**HTTP 200** (OK)"
+!$am = "amount"
+!$amType = "amountType"
+!$transAm ="transferAmount"
+!$payeeRA = "payeeReceiveAmount"
+!$payeeFspCom = "payeefspCommission"
+
+'----------------Participant Parameters-------------------'
+actor Payer order 1
+participant "Payer\nFSP" as payerfsp order 2
+participant "Mojaloop" as Switch order 3 #FFAAAA
+participant "Payee\nFSP" as payeefsp order 5
+actor Payee order 6
+
+'------------------Sequence Messages----------------------'
+'---------------------------------------------------------'
+
+Payer -> payerfsp: I would like Payee \n to receive 100 USD
+activate payerfsp
+payerfsp -> Switch: $postq\n$amType=RECEIVE,\n$am=100)
+activate Switch #FFAAAA
+payerfsp <-- Switch: $http202
+Switch -> payeefsp: $postq\n($amType=RECEIVE,\n$am=100)
+activate payeefsp
+Switch <-- payeefsp: $http202
+Switch <- payeefsp: $putq///<ID>//\n$transAm=100 USD,\n$payeeRA=100 USD)
+Switch --> payeefsp: $http200
+deactivate payeefsp
+payerfsp <-- Switch: $putq///<ID>//\n$transAm=100 USD,\n$payeeRA=100 USD)
+payerfsp --> Switch: $http200
+deactivate Switch 
+Payer <- payerfsp: Transferirg 100USD to Payee \n will cost you 100 USD \n(No fees are included\nin this transfer)
+deactivate payerfsp
+
+
+Payer -> payerfsp: Perform Transaction
+activate payerfsp
+payerfsp -> payerfsp: Reserve 100 USD from Payer FSP\naccount to Payee FSP account
+payerfsp -> Switch: $postt\n($am=100 USD)
+activate Switch #FFAAAA
+payerfsp <-- Switch: $http202
+Switch -> Switch: Reserve 100 USD from Payer FSP\naccount to Payee FSP account
+Switch -> payeefsp: $postt\n($am=100 USD)
+activate payeefsp
+Switch <-- payeefsp: $http202
+payeefsp -> payeefsp: Transfer 100 USD from Switch\naccount to Payee account
+payeefsp -> Payee: You have received 100 USD\nfrom Payer
+Switch <- payeefsp: $putt///<ID>//
+Switch --> payeefsp: $http200
+deactivate payeefsp
+Switch -> Switch: Commit reserved transfer
+payerfsp <- Switch: $putt///<ID>//
+payerfsp --> Switch: $http200
+deactivate Switch
+Payer <- payerfsp: Transaction successful
+deactivate payerfsp
+
+@enduml

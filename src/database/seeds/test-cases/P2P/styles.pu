@@ -1,0 +1,17 @@
+skinparam SequenceMessageAlign center
+skinparam ArrowFontSize 8
+skinparam NoteFontSize 9
+skinparam Style strictuml
+skinparam ArrowColor Black
+skinparam ParticipantPadding 20
+
+skinparam sequence {
+'ParticipantBackgroundColor DodgerBlue
+ParticipantFontSize 12
+ActorFontSize 12
+ParticipantBorderColor Black
+ActorBorderColor Black
+LifeLineBorderColor Black
+LifeLineBackgroundColor Gray
+EntityBorderColor Black
+}

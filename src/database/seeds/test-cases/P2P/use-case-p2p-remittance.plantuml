@@ -1,0 +1,86 @@
+@startuml International Remittance
+
+' declaring skinparameters
+skinparam SequenceMessageAlign center
+skinparam ArrowFontSize 8
+skinparam NoteFontSize 9
+skinparam Style strictuml
+'skinparam monochrome true
+
+' declare title
+'title Mobile Money API V1.0 and Mojaloop Hub \n System Flow
+'header GSMA - Inclusive Tech Lab
+
+'Constant String Values
+!$postq = "**POST/quotes**"
+!$putq = "**PUT/quotes**"
+!$postt = "**POST/transfers**"
+!$putt = "**PUT/transfers**"
+!$http202 = "**HTTP 202** (Accepted)"
+!$http200 = "**HTTP 200** (OK)"
+!am = "amount"
+!$amType = "amountType"
+!$transAm ="transferAmount"
+!$payeeRA = "payeeReceiveAmount"
+!$payeeFSPcom = "payeeFSPCommission"
+
+'Participant Types
+actor Payer order 1
+participant "Payer\nFSP" as PayerFSP order 2
+participant "Remittance\nModule" as Switch order 3 #FFAAAA
+participant "Payee\nFSP" as PayeeFSP order 4
+actor Payee order 5
+
+
+Payer -> PayerFSP: I would like Payee \n to receive 100 USD
+activate PayerFSP
+PayerFSP -> Switch: $postq\n$amType=RECEIVE,\n$am=100)
+note right of Switch #FFAAAA
+This Participant is the
+module for international
+transaction
+end note
+activate Switch #FFAAAA
+PayerFSP <-- Switch: $http202
+Switch -> PayeeFSP: $postq\n($amType=RECEIVE,\n$am=100)
+activate PayeeFSP
+Switch <-- PayeeFSP: $http202
+PayeeFSP -> PayeeFSP: Commission is 1 USD in\nPayee FSP for P2P
+Switch <- PayeeFSP: $putq///<ID>//\n$transAm=99 USD,\n$payeeRA=100 USD,\n$payeeFSPcom=1 USD)
+Switch --> PayeeFSP: $http200
+deactivate PayeeFSP
+PayerFSP <-- Switch: $putq///<ID>//\n$transAm=99 USD,\n$payeeRA=100 USD,\n$payeeFSPcom=1 USD)
+PayerFSP --> Switch: $http200
+deactivate Switch 
+PayerFSP -> PayerFSP: Payer FSP keeps commission\nas fee, Payer should also pay\nfee of 1 USD
+Payer <- PayerFSP: Transferirg 100USD to Payee \n will cost you 101 USD \n including fees        
+deactivate PayerFSP
+
+
+Payer -> PayerFSP: Perform Transaction
+activate PayerFSP
+PayerFSP -> PayerFSP: Reserve 99 USD from Payer FSP\naccount to Payee FSP account
+PayerFSP -> Switch: $postt\n($am=99 USD)
+activate Switch #FFAAAA
+PayerFSP <-- Switch: $http202
+Switch -> Switch:
+Switch -> PayeeFSP: $postt\n($am=99 USD)
+activate PayeeFSP
+Switch <-- PayeeFSP:  $http202
+PayeeFSP -> PayeeFSP: Transfer 99 USD from Switch\naccount and 1 USD from\ncomission account\nto Payee account
+PayeeFSP -> Payee: You have received 100 USD\nfrom Payer
+Switch <- PayeeFSP: $putt///<ID>//
+Switch --> PayeeFSP: $http200
+deactivate PayeeFSP
+Switch -> Switch: Commit reserved transfer
+PayerFSP <- Switch: $putt///<ID>//
+PayerFSP --> Switch: $http200
+deactivate Switch
+Payer <- PayerFSP: Transaction successful,\nyou have paid 1 USD in fee
+deactivate PayerFSP
+'End of Second Timeline - Payer FSP
+
+'group Case 2
+'    Payer -> "Payer\nFSP" as PayerFSP: Msg 2.1
+
+@enduml
