@@ -15,7 +15,7 @@ class SessionController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
+//        $this->middleware(['auth', 'verified']);
     }
 
     /**
@@ -107,20 +107,22 @@ class SessionController extends Controller
             ->selectRaw('COUNT(IF (total = passed, 1, NULL)) AS pass')
             ->selectRaw('COUNT(IF (total != passed, 1, NULL)) AS fail')
             ->selectRaw('DATE_FORMAT(created_at, "%e %b") as date')
+            ->whereRaw('DATE_FORMAT(completed_at, "%e %b") < DATE_ADD(NOW(), INTERVAL -1 MONTH)')
             ->groupByRaw('DATE_FORMAT(created_at, "%e %b")')
             ->orderByRaw('DATE_FORMAT(created_at, "%e %b") ASC')
             ->limit(30)
-            ->get();
+            ->get()
+            ->toArray();
 
         foreach ($rows as $row) {
             $data[0]['data'][] = [
-                'x' => $row->date,
-                'y' => $row->pass
+                'x' => $row['date'],
+                'y' => $row['pass'],
             ];
 
             $data[1]['data'][] = [
-                'x' => $row->date,
-                'y' => $row->fail
+                'x' => $row['date'],
+                'y' => $row['fail'],
             ];
         }
 
