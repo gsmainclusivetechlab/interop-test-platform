@@ -21,7 +21,7 @@ test_steps:
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.x-callback-url.*: 'regex:/.*/'
+          headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'in:msisdn'
@@ -31,7 +31,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount: 'in:10.1'
-          body.currency: 'regex:/^[A-Z]{3}/'
+          body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'in:merchantpay'
@@ -41,7 +41,7 @@ test_steps:
           status: 'in:202'
       - name: Server Correlation Id is specified correctly
         rules:
-          body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
+          body.serverCorrelationId: 'required|regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
       - name: Status is specified correctly
         rules:
           body.status: 'in:pending'
@@ -87,7 +87,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:BUSINESS'
       - name: Transaction Request Id created
         rules:
-          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -97,7 +97,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'in:10.1'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -141,7 +141,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:BUSINESS'
       - name: Transaction Request Id created
         rules:
-          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -151,7 +151,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'in:10.1'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -190,8 +190,8 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
           body.transactionRequestState: 'in:RECEIVED'
@@ -218,8 +218,8 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
           body.transactionRequestState: 'in:RECEIVED'
@@ -246,8 +246,8 @@ test_steps:
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
-          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
           body.transactionType.scenario: 'in:PAYMENT'
@@ -265,7 +265,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'in:10.1'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -312,8 +312,8 @@ test_steps:
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
-          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
           body.transactionType.scenario: 'in:PAYMENT'
@@ -331,7 +331,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'in:10.1'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -378,21 +378,21 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          path: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount: 'in:10.1'
-          body.transferAmount.currency: 'regex:/^[A-Z]{3}/'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
           body.expiration:
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+            - 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: ilpPacket is specified correctly
         rules:
-          body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
       - name: condition is specified correctly
         rules:
-          body.condition: 'regex:/^[A-Za-z0-9-_]{43}$/'
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -421,21 +421,21 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          path: 'regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount: 'in:10.1'
-          body.transferAmount.currency: 'regex:/^[A-Z]{3}/'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
           body.expiration:
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+            - 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: ilpPacket is specified correctly
         rules:
-          body.ilpPacket: 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
       - name: condition is specified correctly
         rules:
-          body.condition: 'regex:/^[A-Za-z0-9-_]{43}$/'
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -464,8 +464,8 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
           body.transactionRequestState: 'in:REJECTED'
@@ -492,8 +492,8 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
           body.transactionRequestState: 'in:REJECTED'
