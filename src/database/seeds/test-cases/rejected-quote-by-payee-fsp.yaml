@@ -10,7 +10,7 @@ precondition: |
   Service Provider is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
   Payee and Payer exist in Mojaloop as Parties.
-  Amount should be the value "51.03".
+  Amount should be the value "51.01".
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 test_steps:
@@ -30,7 +30,7 @@ test_steps:
           body.creditParty.*.value: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'in:51.03'
+          body.amount: 'in:51.01'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -57,7 +57,7 @@ test_steps:
         x-callback-url: 'http://example.com/example'
         x-date: '2020-04-07T10:28:44.466Z'
       body:
-        amount: '51.03'
+        amount: '51.01'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
@@ -96,7 +96,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:51.03'
+          body.amount.amount: 'in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -120,7 +120,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '51.03'
+          amount: '51.01'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -150,7 +150,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:51.03'
+          body.amount.amount: 'in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -174,7 +174,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '51.03'
+          amount: '51.01'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -264,7 +264,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:51.03'
+          body.amount.amount: 'in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -298,7 +298,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '51.03'
+          amount: '51.01'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -330,7 +330,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:51.03'
+          body.amount.amount: 'in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -364,7 +364,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '51.03'
+          amount: '51.01'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -381,7 +381,7 @@ test_steps:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
       - name: Error Code is specified correctly
         rules:
-          body.errorInformation.errorCode: 'in:5103'
+          body.errorInformation.errorCode: 'in:5101'
           body.errorInformation.errorDescription: 'required|regex:/^.{1,128}$/'
     test_response_scripts:
       - name: Transaction was successfully declined
@@ -398,7 +398,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '51.03'
+          amount: '51.01'
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -414,7 +414,7 @@ test_steps:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
       - name: Error Code is specified correctly
         rules:
-          body.errorInformation.errorCode: 'in:5103'
+          body.errorInformation.errorCode: 'in:5101'
           body.errorInformation.errorDescription: 'required|regex:/^.{1,128}$/'
     test_response_scripts:
       - name: Transaction was successfully declined
@@ -431,7 +431,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '51.03'
+          amount: '51.01'
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
