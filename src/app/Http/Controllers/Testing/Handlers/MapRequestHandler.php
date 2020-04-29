@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
 use App\Models\TestSetup;
-use App\Testing\TestRequest;
+use App\Http\Client\Request;
 use Psr\Http\Message\RequestInterface;
 
 class MapRequestHandler
@@ -28,7 +28,7 @@ class MapRequestHandler
      */
     public function __invoke(RequestInterface $request)
     {
-        $testRequest = new TestRequest($request);
+        $testRequest = new Request($request);
 
         if ($testRequestSetups = $this->testResult->testStep->testSetups()->ofType(TestSetup::TYPE_REQUEST)->get()) {
             foreach ($testRequestSetups as $testRequestSetup) {
@@ -36,7 +36,9 @@ class MapRequestHandler
             }
         }
 
-        $this->testResult->update(['request' => $testRequest]);
+        $this->testResult->request = $testRequest;
+
+//        $this->testResult->update(['request' => $testRequest]);
 
         return $testRequest->toPsrRequest();
     }

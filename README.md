@@ -1,18 +1,6 @@
-GSMA Test Control
-===================================
+## Interoperability Test Platform
 
-BASE STRUCTURE
--------------------
-```
-  build/		contains docker container config
-  runtime/
-    |-- bash/		Bash history (composer cache, bash commands history)
-    |-- mysql/		MySQL databases for docker container
-  src/			Laravel application code (Project)
-```
-
-INSTALLATION
-------------
+### Installation
 
 Project can be setup with Docker.
 
@@ -56,6 +44,3 @@ Access your site via URL: http://localhost:8084
 Mail catcher: http://localhost:8086
 
 Superadmin login: superadmin@gsma.com / qzRBHEzStdG8XWhy
-
-You're ready to write your code!
-------------

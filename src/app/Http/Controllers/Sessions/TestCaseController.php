@@ -44,6 +44,7 @@ class TestCaseController extends Controller
                 $session->testRuns()
                     ->where('test_case_id', $testCase->id)
                     ->with(['session', 'testCase'])
+//                    ->completed()
                     ->latest()
                     ->paginate()
             ),

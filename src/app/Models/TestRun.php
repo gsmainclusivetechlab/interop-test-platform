@@ -22,13 +22,6 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'test_case_id',
-    ];
-
-    /**
-     * @var array
-     */
     protected $casts = [
         'completed_at' => 'datetime',
     ];
@@ -83,6 +76,16 @@ class TestRun extends Model
     }
 
     /**
+     * @param $query
+     * @param $traceId
+     * @return mixed
+     */
+    public function scopeWhereTraceId($query, $traceId)
+    {
+        return $query->whereRaw('REPLACE(uuid, "-", "") = ?', $traceId);
+    }
+
+    /**
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -126,7 +129,7 @@ class TestRun extends Model
     }
 
     /**
-     * @return bool
+     * @return $this|bool
      */
     public function complete()
     {
@@ -137,6 +140,6 @@ class TestRun extends Model
         }
 
         $this->fireModelEvent('complete');
-        return true;
+        return $this;
     }
 }

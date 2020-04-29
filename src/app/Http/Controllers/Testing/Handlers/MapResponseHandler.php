@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
 use App\Models\TestSetup;
-use App\Testing\TestResponse;
+use App\Http\Client\Response;
 use Psr\Http\Message\ResponseInterface;
 
 class MapResponseHandler
@@ -28,7 +28,7 @@ class MapResponseHandler
      */
     public function __invoke(ResponseInterface $response)
     {
-        $testResponse = new TestResponse($response);
+        $testResponse = new Response($response);
 
         if ($testResponseSetups = $this->testResult->testStep->testSetups()->ofType(TestSetup::TYPE_RESPONSE)->get()) {
             foreach ($testResponseSetups as $testResponseSetup) {
@@ -36,7 +36,9 @@ class MapResponseHandler
             }
         }
 
-        $this->testResult->update(['response' => $testResponse]);
+        $this->testResult->response = $testResponse;
+
+//        $this->testResult->update(['response' => $testResponse]);
 
         return $testResponse->toPsrResponse();
     }

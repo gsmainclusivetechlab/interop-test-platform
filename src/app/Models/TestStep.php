@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Casts\TestRequestCast;
-use App\Casts\TestResponseCast;
+use App\Casts\RequestCast;
+use App\Casts\ResponseCast;
 use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,18 +24,17 @@ class TestStep extends Model
      */
     protected $fillable = [
         'api_scheme_id',
-        'forward',
-        'backward',
-        'request_example',
-        'response_example',
+        'name',
+        'request',
+        'response',
     ];
 
     /**
      * @var array
      */
     protected $casts = [
-        'request_example' => TestRequestCast::class,
-        'response_example' => TestResponseCast::class,
+        'request' => RequestCast::class,
+        'response' => ResponseCast::class,
     ];
 
     /**

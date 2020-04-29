@@ -2,19 +2,19 @@
 
 namespace App\Casts;
 
-use App\Testing\TestResponse;
-use GuzzleHttp\Psr7\Response;
+use App\Http\Client\Response;
+use GuzzleHttp\Psr7\Response as PsrResponse;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Arr;
 
-class TestResponseCast implements CastsAttributes
+class ResponseCast implements CastsAttributes
 {
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return TestResponse|mixed
+     * @return Response|mixed
      */
     public function get($model, string $key, $value, array $attributes)
     {
@@ -26,7 +26,7 @@ class TestResponseCast implements CastsAttributes
             return $value;
         }
 
-        return new TestResponse(new Response(
+        return new Response(new PsrResponse(
             Arr::get($value, 'status'),
             Arr::get($value, 'headers', []),
             json_encode(Arr::get($value, 'body'))
@@ -42,7 +42,7 @@ class TestResponseCast implements CastsAttributes
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        if ($value instanceof TestResponse) {
+        if ($value instanceof Response) {
             $value = $value->toArray();
         }
 

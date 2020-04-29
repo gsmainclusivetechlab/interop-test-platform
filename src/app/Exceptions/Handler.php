@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Inertia\Inertia;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use function Psy\debug;
 
 class Handler extends ExceptionHandler
 {
@@ -43,7 +44,7 @@ class Handler extends ExceptionHandler
             429,
             500,
             503,
-        ])) {
+        ]) && !$request->expectsJson() && !env('APP_DEBUG')) {
             return Inertia::render('error', [
                 'status' => $response->status(),
             ])->toResponse($request);

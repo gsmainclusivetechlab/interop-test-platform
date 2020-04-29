@@ -12,12 +12,8 @@ use App\Http\Middleware\SetJsonHeaders;
 use App\Jobs\CompleteTestRunJob;
 use App\Models\Session;
 use App\Models\TestCase;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use SebastianBergmann\Timer\Timer;
 
 class RunController extends Controller
 {
@@ -39,13 +35,18 @@ class RunController extends Controller
      */
     public function __invoke(Session $session, TestCase $testCase, string $path)
     {
-        $testStep = $testCase->testSteps()->firstOrFail();
-        $testRun = $session->testRuns()->create([
-            'test_case_id' => $testCase->id,
-        ]);
-        $testResult = $testRun->testResults()->create([
-            'test_step_id' => $testStep->id,
-        ]);
+        $testRun = tap($session->testRuns()->make(), function ($testRun) use ($testCase) {
+            $testRun->testCase()
+                ->associate($testCase)
+                ->save();
+        });
+        $testRun->increment('total', $testCase->testSteps()->count());
+        $testStep = $testRun->testCase->testSteps()->firstOrFail();
+        $testResult = tap($testRun->testResults()->make(), function ($testResult) use ($testStep) {
+            $testResult->testStep()
+                ->associate($testStep)
+                ->save();
+        });
 
         CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
@@ -54,10 +55,9 @@ class RunController extends Controller
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $this->getRequest()
+//            ->withUri(new Uri('https://laravel.com/docs/7.x/eloquent-relationshipsddd'))
             ->withUri(UriResolver::resolve(new Uri($baseUrl), new Uri($path)))
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
-
-        Timer::start();
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))

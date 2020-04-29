@@ -21,8 +21,24 @@ class TestExecution extends Model
      */
     protected $fillable = [
         'name',
-        'message',
+        'actual',
+        'expected',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'actual' => 'array',
+        'expected' => 'array',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $observables = [
         'successful',
+        'unsuccessful',
     ];
 
     /**
@@ -31,14 +47,6 @@ class TestExecution extends Model
     public function testResult()
     {
         return $this->belongsTo(TestResult::class, 'test_result_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function testResponse()
-    {
-        return $this->belongsTo(TestResponse::class, 'test_result_id');
     }
 
     /**
@@ -57,5 +65,37 @@ class TestExecution extends Model
     public function scopeUnsuccessful($query)
     {
         return $query->where('successful', false);
+    }
+
+    /**
+     * @return $this|bool
+     */
+    public function successful()
+    {
+        $this->successful = true;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('successful');
+        return $this;
+    }
+
+    /**
+     * @param string $exception
+     * @return $this|bool
+     */
+    public function unsuccessful(string $exception)
+    {
+        $this->successful = false;
+        $this->exception = $exception;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('unsuccessful');
+        return $this;
     }
 }

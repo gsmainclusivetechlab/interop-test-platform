@@ -1,14 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace App\Testing;
+namespace App\Http\Client;
 
 use App\Models\TestSetup;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Arr;
+use Psr\Http\Message\RequestInterface;
 
-class TestResponse extends Response implements Arrayable
+class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
+    /**
+     * @return string
+     */
+    public function path()
+    {
+        return $this->request->getUri()->getPath();
+    }
+
     /**
      * @return array
      */
@@ -22,9 +30,17 @@ class TestResponse extends Response implements Arrayable
      */
     public function headerNames()
     {
-        return collect($this->response->getHeaders())->mapWithKeys(function ($values, $header) {
+        return collect($this->request->getHeaders())->mapWithKeys(function ($values, $header) {
             return [$header => implode(',', $values)];
         })->all();
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    public function toPsrRequest()
+    {
+        return $this->request;
     }
 
     /**
@@ -33,7 +49,9 @@ class TestResponse extends Response implements Arrayable
     public function toArray()
     {
         return [
-            'status' => $this->status(),
+            'method' => $this->method(),
+            'uri' => $this->url(),
+            'path' => $this->path(),
             'headers' => $this->headers(),
             'body' => $this->json(),
         ];
@@ -51,8 +69,9 @@ class TestResponse extends Response implements Arrayable
             Arr::set($data, $key, $value);
         }
 
-        return new self(new \GuzzleHttp\Psr7\Response(
-            $data['status'],
+        return new self(new \GuzzleHttp\Psr7\Request(
+            $data['method'],
+            $data['uri'],
             $data['headers'],
             json_encode($data['body'])
         ));

@@ -25,7 +25,6 @@ export default {
             default: true
         },
         data: {
-            type: Object,
             required: true
         },
         deep: {

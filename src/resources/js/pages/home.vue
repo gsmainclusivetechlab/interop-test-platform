@@ -31,15 +31,15 @@
                     <div class="card-body flex-shrink-0 py-4">
                         <ul class="list-unstyled">
                             <li>
-                                <icon name="briefcase" />
+                                <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
                                 {{ session.testCases ? collect(session.testCases).unique('use_case_id').count() : 0 }}
                             </li>
                             <li>
-                                <icon name="file-text" />
+                                <icon name="file-text" v-b-tooltip.hover title="Test Case" />
                                 {{ session.testCases ? session.testCases.length : 0 }}
                             </li>
                             <li v-if="session.lastTestRun">
-                                <icon name="clock" />
+                                <icon name="clock" v-b-tooltip.hover title="Last Run" />
                                 {{ session.lastTestRun.created_at }}
                             </li>
                         </ul>
