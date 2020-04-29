@@ -55,7 +55,6 @@ class RunController extends Controller
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $this->getRequest()
-//            ->withUri(new Uri('https://laravel.com/docs/7.x/eloquent-relationshipsddd'))
             ->withUri(UriResolver::resolve(new Uri($baseUrl), new Uri($path)))
             ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
 

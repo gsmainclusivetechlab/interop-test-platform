@@ -12,8 +12,7 @@ class TestExecutionObserver
      */
     public function successful(TestExecution $testExecution)
     {
-        $testExecution->testResult()->increment('total');
-        $testExecution->testResult()->increment('passed');
+
     }
 
     /**
@@ -22,7 +21,6 @@ class TestExecutionObserver
      */
     public function unsuccessful(TestExecution $testExecution)
     {
-        $testExecution->testResult()->increment('total');
-        $testExecution->testResult()->increment('failures');
+
     }
 }

@@ -91,7 +91,7 @@ class TestRun extends Model
      */
     public function scopeSuccessful($query)
     {
-        return $query->where('successful', true);
+        return $query->whereRaw('total = passed');
     }
 
     /**
@@ -100,7 +100,7 @@ class TestRun extends Model
      */
     public function scopeUnsuccessful($query)
     {
-        return $query->where('successful', false);
+        return $query->whereRaw('total != passed');
     }
 
     /**

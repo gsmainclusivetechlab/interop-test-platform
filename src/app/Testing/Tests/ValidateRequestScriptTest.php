@@ -6,6 +6,8 @@ use App\Models\TestResult;
 use App\Models\TestScript;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationData;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ValidateRequestScriptTest
 {
@@ -44,10 +46,19 @@ class ValidateRequestScriptTest
             $testExecution->actual = array_merge((array) $testExecution->actual, ValidationData::initializeAndGatherData($attribute, $data));
         }
 
-        if ($validator->passes()) {
+        try {
+            $validator->validate();
+            $testResult->total++;
+            $testResult->passed++;
             $testExecution->successful();
-        } else {
+        } catch (ValidationException $e) {
+            $testResult->total++;
+            $testResult->failures++;
             $testExecution->unsuccessful(implode(PHP_EOL, $validator->errors()->all()));
+        } catch (Throwable $e) {
+            $testResult->total++;
+            $testResult->failures++;
+            $testExecution->unsuccessful($e->getMessage());
         }
 
         return $next($testResult);
