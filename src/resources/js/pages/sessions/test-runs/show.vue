@@ -151,7 +151,7 @@
                                             </span>
                                             <button
                                                 :id="`test-execution-${testExecution.id}`"
-                                                class="btn btn-link p-0 text-reset font-weight-normal"
+                                                class="btn btn-link p-0 font-weight-normal"
                                                 type="button"
                                             >
                                                 {{ testExecution.name }}
