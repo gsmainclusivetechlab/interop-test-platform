@@ -3,6 +3,7 @@
 namespace App\Http\Client;
 
 use App\Models\TestSetup;
+use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\RequestInterface;
@@ -23,16 +24,6 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function json()
     {
         return parent::json() ?? [];
-    }
-
-    /**
-     * @return array
-     */
-    public function headerNames()
-    {
-        return collect($this->request->getHeaders())->mapWithKeys(function ($values, $header) {
-            return [$header => implode(',', $values)];
-        })->all();
     }
 
     /**
@@ -69,11 +60,11 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             Arr::set($data, $key, $value);
         }
 
-        return new self(new \GuzzleHttp\Psr7\Request(
-            $data['method'],
-            $data['uri'],
-            $data['headers'],
-            json_encode($data['body'])
-        ));
+        return new self(new ServerRequest(
+                $data['method'],
+                $data['uri'],
+                $data['headers'],
+                json_encode($data['body'])
+            ));
     }
 }

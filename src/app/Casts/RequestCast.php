@@ -3,7 +3,7 @@
 namespace App\Casts;
 
 use App\Http\Client\Request;
-use GuzzleHttp\Psr7\Request as PsrRequest;
+use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Arr;
 
@@ -26,12 +26,12 @@ class RequestCast implements CastsAttributes
             return $value;
         }
 
-        return new Request(new PsrRequest(
-            Arr::get($value, 'method'),
-            Arr::get($value, 'uri'),
-            Arr::get($value, 'headers', []),
-            json_encode(Arr::get($value, 'body'))
-        ));
+        return new Request(new ServerRequest(
+                Arr::get($value, 'method'),
+                Arr::get($value, 'uri'),
+                Arr::get($value, 'headers', []),
+                json_encode(Arr::get($value, 'body'))
+            ));
     }
 
     /**

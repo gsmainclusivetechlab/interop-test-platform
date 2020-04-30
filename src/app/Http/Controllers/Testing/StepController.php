@@ -13,11 +13,10 @@ use App\Http\Middleware\ValidateTraceContext;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 class StepController extends Controller
 {
-    use HasPsrRequest;
-
     /**
      * RunController constructor.
      */
@@ -27,12 +26,12 @@ class StepController extends Controller
     }
 
     /**
+     * @param ServerRequestInterface $request
      * @param string $path
      * @return mixed
      */
-    public function __invoke(string $path)
+    public function __invoke(ServerRequestInterface $request, string $path)
     {
-        $request = $this->getRequest();
         $traceparent = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $traceparent->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();
