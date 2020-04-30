@@ -26,10 +26,11 @@ class ValidateResponseScriptTest
 
     /**
      * @param TestResult $testResult
-     * @param callable $next
-     * @return mixed
+     * @return TestResult
+     * @throws ValidationException
+     * @throws Throwable
      */
-    public function handle(TestResult $testResult, callable $next)
+    public function __invoke(TestResult $testResult)
     {
         $data = $testResult->response ? $testResult->response->toArray() : [];
         $validator = Validator::make(
@@ -48,19 +49,15 @@ class ValidateResponseScriptTest
 
         try {
             $validator->validate();
-            $testResult->total++;
-            $testResult->passed++;
-            $testExecution->successful();
+            $testExecution->pass();
         } catch (ValidationException $e) {
-            $testResult->total++;
-            $testResult->failures++;
-            $testExecution->unsuccessful(implode(PHP_EOL, $validator->errors()->all()));
+            $testExecution->fail(implode(PHP_EOL, $validator->errors()->all()));
+            throw $e;
         } catch (Throwable $e) {
-            $testResult->total++;
-            $testResult->failures++;
-            $testExecution->unsuccessful($e->getMessage());
+            $testExecution->fail($e->getMessage());
+            throw $e;
         }
 
-        return $next($testResult);
+        return $testResult;
     }
 }

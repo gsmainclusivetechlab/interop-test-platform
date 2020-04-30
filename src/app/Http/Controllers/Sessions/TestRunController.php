@@ -57,13 +57,12 @@ class TestRunController extends Controller
             'testRun' => (new TestRunResource(
                 $testRun->load([
                     'testResults' => function ($query) {
-                        return $query->with(['testStep'])->completed();
+                        return $query->with(['testStep']);
                     },
                 ])
             ))->resolve(),
             'testResult' => (new TestResultResource(
                 $testRun->testResults()
-                    ->completed()
                     ->whereHas('testStep', function (Builder $query) use ($position) {
                         $query->where('position', $position);
                     })

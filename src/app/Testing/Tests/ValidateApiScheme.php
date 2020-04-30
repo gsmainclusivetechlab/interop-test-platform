@@ -25,10 +25,10 @@ class ValidateApiScheme
 
     /**
      * @param TestResult $testResult
-     * @param callable $next
-     * @return mixed
+     * @return TestResult
+     * @throws Throwable
      */
-    public function handle(TestResult $testResult, callable $next)
+    public function __invoke(TestResult $testResult)
     {
         $validator = (new ValidatorBuilder)->fromSchema($this->apiScheme->openapi);
         $testExecution = $testResult->testExecutions()->make([
@@ -38,15 +38,12 @@ class ValidateApiScheme
         try {
             $operationAddress = $validator->getRequestValidator()->validate($testResult->request->toPsrRequest());
             $validator->getResponseValidator()->validate($operationAddress, $testResult->response->toPsrResponse());
-            $testResult->total++;
-            $testResult->passed++;
-            $testExecution->successful();
+            $testExecution->pass();
         } catch (Throwable $e) {
-            $testResult->total++;
-            $testResult->failures++;
-            $testExecution->unsuccessful($e->getMessage());
+            $testExecution->fail($e->getMessage());
+            throw $e;
         }
 
-        return $next($testResult);
+        return $testResult;
     }
 }

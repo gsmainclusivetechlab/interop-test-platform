@@ -21,7 +21,7 @@ class CreateTestExecutionsTable extends Migration
             $table->text('actual')->nullable();
             $table->text('expected')->nullable();
             $table->string('exception')->nullable();
-            $table->boolean('successful');
+            $table->string('status')->index();
             $table->timestamp('created_at');
         });
     }

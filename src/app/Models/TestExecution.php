@@ -11,6 +11,9 @@ class TestExecution extends Model
 {
     const UPDATED_AT = null;
 
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
+
     /**
      * @var string
      */
@@ -37,8 +40,8 @@ class TestExecution extends Model
      * @var array
      */
     protected $observables = [
-        'successful',
-        'unsuccessful',
+        'pass',
+        'fail',
     ];
 
     /**
@@ -50,52 +53,42 @@ class TestExecution extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return bool
      */
-    public function scopeSuccessful($query)
+    public function getSuccessfulAttribute()
     {
-        return $query->where('successful', true);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeUnsuccessful($query)
-    {
-        return $query->where('successful', false);
+        return $this->status === static::STATUS_PASS;
     }
 
     /**
      * @return $this|bool
      */
-    public function successful()
+    public function pass()
     {
-        $this->successful = true;
+        $this->status = static::STATUS_PASS;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('successful');
+        $this->fireModelEvent('pass');
         return $this;
     }
 
     /**
-     * @param string $exception
+     * @param string|null $exception
      * @return $this|bool
      */
-    public function unsuccessful(string $exception)
+    public function fail(string $exception = null)
     {
-        $this->successful = false;
+        $this->status = static::STATUS_FAIL;
         $this->exception = $exception;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('unsuccessful');
+        $this->fireModelEvent('fail');
         return $this;
     }
 }
