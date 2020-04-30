@@ -19,16 +19,6 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
     /**
      * @return array
      */
-    public function headerNames()
-    {
-        return collect($this->response->getHeaders())->mapWithKeys(function ($values, $header) {
-            return [$header => implode(',', $values)];
-        })->all();
-    }
-
-    /**
-     * @return array
-     */
     public function toArray()
     {
         return [
