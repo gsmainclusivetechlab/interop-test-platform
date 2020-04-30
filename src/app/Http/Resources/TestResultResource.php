@@ -14,12 +14,13 @@ class TestResultResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'request' => $this->request ? $this->request->toArray() : null,
+            'response' => $this->response ? $this->response->toArray() : null,
+            'exception' => $this->exception,
+            'successful' => $this->successful,
             'testRun' => new TestResultResource($this->whenLoaded('testRun')),
             'testStep' => new TestStepResource($this->whenLoaded('testStep')),
             'testExecutions' => TestExecutionResource::collection($this->whenLoaded('testExecutions')),
-            'successful' => $this->successful,
-            'request' => $this->request ? $this->request->toArray() : null,
-            'response' => $this->response ? $this->response->toArray() : null,
         ];
     }
 }

@@ -13,6 +13,10 @@ class TestResult extends Model
 {
     const UPDATED_AT = null;
 
+    const STATUS_INCOMPLETE = 'incomplete';
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
+
     /**
      * @var string
      */
@@ -32,23 +36,21 @@ class TestResult extends Model
     protected $casts = [
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
-        'completed_at' => 'datetime',
     ];
 
     /**
      * @var array
      */
     protected $attributes = [
-        'total' => 0,
-        'passed' => 0,
-        'failures' => 0,
+        'status' => self::STATUS_INCOMPLETE,
     ];
 
     /**
      * @var array
      */
     protected $observables = [
-        'complete',
+        'pass',
+        'fail',
     ];
 
     /**
@@ -76,52 +78,42 @@ class TestResult extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSuccessful($query)
-    {
-        return $query->where('successful', true);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeUnsuccessful($query)
-    {
-        return $query->where('successful', false);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeCompleted($query)
-    {
-        return $query->whereNotNull('completed_at');
-    }
-
-    /**
      * @return bool
      */
     public function getSuccessfulAttribute()
     {
-        return $this->total === $this->passed;
+        return $this->status === static::STATUS_PASS;
     }
 
     /**
      * @return $this|bool
      */
-    public function complete()
+    public function pass()
     {
-        $this->completed_at = now();
+        $this->status = static::STATUS_PASS;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('complete');
+        $this->fireModelEvent('pass');
+        return $this;
+    }
+
+    /**
+     * @param string|null $exception
+     * @return $this|bool
+     */
+    public function fail(string $exception = null)
+    {
+        $this->status = static::STATUS_FAIL;
+        $this->exception = $exception;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('fail');
         return $this;
     }
 }

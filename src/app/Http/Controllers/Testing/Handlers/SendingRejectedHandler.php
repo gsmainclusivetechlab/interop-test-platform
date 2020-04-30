@@ -26,6 +26,7 @@ class SendingRejectedHandler
      */
     public function __invoke(Throwable $exception)
     {
+        $this->testResult->fail($exception->getMessage());
         $this->testResult->testRun->complete();
 
         return $exception;

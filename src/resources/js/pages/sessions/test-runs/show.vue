@@ -111,9 +111,9 @@
                                     <b class="text-nowrap">
                                         {{ `Step ${testResult.testStep.data.position}` }}
                                     </b>
-                                    <small class="d-inline-block ml-auto">
+                                    <small class="d-inline-block ml-auto" v-if="testResult.response">
                                         Status:
-                                        <span class="text-success" v-if="testResult.response">
+                                        <span class="text-success">
                                             {{ `HTTP ${testResult.response.status}` }}
                                         </span>
                                     </small>
@@ -130,6 +130,9 @@
                                 }"
                             >
                                 {{ testResult.successful ? 'Pass' : 'Fail' }}
+                                <div v-if="testResult.exception">
+                                    {{ testResult.exception }}
+                                </div>
                             </div>
                             <div class="py-2 px-4" v-if="testResult.testExecutions.data.length">
                                 <div class="d-flex mb-2">
