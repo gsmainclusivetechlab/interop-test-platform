@@ -88,9 +88,6 @@ build:
 run: xdebug-init
 	docker-compose up --force-recreate -d
 
-test-run: xdebug-init
-	docker-compose up --force-recreate
-
 xdebug-init:
 	@if [ $$USER = 'vagrant' ]; then \
 		export XDEBUG_REMOTE_HOST=`/sbin/ip route|awk '/default/ { print $$3 }'` \
