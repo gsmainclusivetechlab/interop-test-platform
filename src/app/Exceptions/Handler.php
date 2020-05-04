@@ -35,6 +35,10 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $e);
 
+        if (!$this->isHttpException($e) && config('app.debug')) {
+            return $response;
+        }
+
         if (in_array($response->status(), [
             400,
             401,
@@ -44,7 +48,7 @@ class Handler extends ExceptionHandler
             429,
             500,
             503,
-        ]) && !$request->expectsJson() && !env('APP_DEBUG')) {
+        ]) && !$request->expectsJson()) {
             return Inertia::render('error', [
                 'status' => $response->status(),
             ])->toResponse($request);

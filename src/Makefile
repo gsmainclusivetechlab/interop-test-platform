@@ -32,6 +32,8 @@ update: chmod composer-install cache-clear
 	php artisan migrate:fresh --seed
 	php artisan queue:restart
 
+test: php artisan dusk
+
 # Composer helpers
 ci: composer-install
 composer-install: composer-init
