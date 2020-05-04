@@ -27,6 +27,8 @@ class TestStepController extends Controller
      */
     public function index(Session $session, TestCase $testCase)
     {
+        $this->authorize('view', $session);
+
         return Inertia::render('sessions/test-steps/index', [
             'session' => (new SessionResource(
                 $session->load([

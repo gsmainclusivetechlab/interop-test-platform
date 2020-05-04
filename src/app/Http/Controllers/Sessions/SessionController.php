@@ -15,7 +15,7 @@ class SessionController extends Controller
      */
     public function __construct()
     {
-//        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified']);
     }
 
     /**
@@ -78,6 +78,7 @@ class SessionController extends Controller
      */
     public function destroy(Session $session)
     {
+        $this->authorize('delete', $session);
         $session->delete();
 
         return redirect()
@@ -91,6 +92,8 @@ class SessionController extends Controller
      */
     public function showChartData(Session $session)
     {
+        $this->authorize('view', $session);
+
         $data = [
             [
                 'name' => __('Passed'),

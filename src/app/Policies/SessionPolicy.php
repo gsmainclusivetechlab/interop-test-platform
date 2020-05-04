@@ -69,14 +69,4 @@ class SessionPolicy
     {
         return $model->owner->is($user);
     }
-
-    /**
-     * @param  User  $user
-     * @param  Session  $model
-     * @return mixed
-     */
-    public function restore(User $user, Session $model)
-    {
-        return $model->owner->is($user);
-    }
 }

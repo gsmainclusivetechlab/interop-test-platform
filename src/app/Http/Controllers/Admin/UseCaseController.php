@@ -19,7 +19,7 @@ class UseCaseController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(UseCase::class, 'use_case', [
-            'except' => ['index'],
+//            'except' => ['index'],
         ]);
     }
 
