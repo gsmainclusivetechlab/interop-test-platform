@@ -32,6 +32,8 @@ class TestRunController extends Controller
      */
     public function show(Session $session, TestCase $testCase, TestRun $testRun, int $position = 1)
     {
+        $this->authorize('view', $session);
+
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([

@@ -55,7 +55,7 @@
                                                     <b-collapse :id="`positive-test-cases-${useCase.id}`" visible>
                                                         <ul class="list-unstyled">
                                                             <li
-                                                                v-for="testCase in collect(session.testCases.data).where('behavior', 'positive').sortBy('name').all()"
+                                                                v-for="testCase in collect(session.testCases.data).where('behavior', 'positive').all()"
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
@@ -95,7 +95,7 @@
                                                     <b-collapse :id="`negative-test-cases-${useCase.id}`" visible>
                                                         <ul class="list-unstyled">
                                                             <li
-                                                                v-for="testCase in collect(session.testCases.data).where('behavior', 'negative').sortBy('name').all()"
+                                                                v-for="testCase in collect(session.testCases.data).where('behavior', 'negative').all()"
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">

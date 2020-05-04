@@ -5,8 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
-use function Psy\debug;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class Handler extends ExceptionHandler
 {
@@ -26,30 +25,28 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param Throwable $e
+     * @param HttpExceptionInterface $e
      * @return \Illuminate\Http\JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
-     * @throws Throwable
      */
-    public function render($request, Throwable $e)
+    protected function renderHttpException(HttpExceptionInterface $e)
     {
-        $response = parent::render($request, $e);
+        $this->registerErrorViewPaths();
 
-        if (in_array($response->status(), [
-            400,
-            401,
-            403,
-            404,
-            419,
-            429,
-            500,
-            503,
-        ]) && !$request->expectsJson() && !env('APP_DEBUG')) {
+        if (in_array($e->getStatusCode(), [
+                400,
+                401,
+                403,
+                404,
+                419,
+                429,
+                500,
+                503,
+            ])) {
             return Inertia::render('error', [
-                'status' => $response->status(),
-            ])->toResponse($request);
+                'status' => $e->getStatusCode(),
+            ])->toResponse(request());
         }
 
-        return $response;
+        return $this->convertExceptionToResponse($e);
     }
 }
