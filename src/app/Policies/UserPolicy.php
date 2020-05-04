@@ -72,6 +72,16 @@ class UserPolicy
      * @param User $model
      * @return mixed
      */
+    public function verify(User $user, User $model)
+    {
+        return ($user->isAdmin() && !$user->is($model) && !$model->hasVerifiedEmail());
+    }
+
+    /**
+     * @param User $user
+     * @param User $model
+     * @return mixed
+     */
     public function promoteAdmin(User $user, User $model)
     {
         return ($user->isSuperAdmin() && !$user->is($model) && !$model->isAdmin());

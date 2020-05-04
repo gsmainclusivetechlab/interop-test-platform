@@ -11,6 +11,9 @@ class TestExecution extends Model
 {
     const UPDATED_AT = null;
 
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
+
     /**
      * @var string
      */
@@ -21,8 +24,24 @@ class TestExecution extends Model
      */
     protected $fillable = [
         'name',
-        'message',
-        'successful',
+        'actual',
+        'expected',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'actual' => 'array',
+        'expected' => 'array',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $observables = [
+        'pass',
+        'fail',
     ];
 
     /**
@@ -34,28 +53,42 @@ class TestExecution extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return bool
      */
-    public function testResponse()
+    public function getSuccessfulAttribute()
     {
-        return $this->belongsTo(TestResponse::class, 'test_result_id');
+        return $this->status === static::STATUS_PASS;
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return $this|bool
      */
-    public function scopeSuccessful($query)
+    public function pass()
     {
-        return $query->where('successful', true);
+        $this->status = static::STATUS_PASS;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('pass');
+        return $this;
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param string|null $exception
+     * @return $this|bool
      */
-    public function scopeUnsuccessful($query)
+    public function fail(string $exception = null)
     {
-        return $query->where('successful', false);
+        $this->status = static::STATUS_FAIL;
+        $this->exception = $exception;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        $this->fireModelEvent('fail');
+        return $this;
     }
 }

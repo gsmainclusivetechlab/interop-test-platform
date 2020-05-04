@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SessionResource;
+use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\TestStepResource;
 use App\Models\Session;
 use App\Models\TestCase;
+use Inertia\Inertia;
 
-/**
- * Class TestStepController
- *
- * @package App\Http\Controllers\Sessions
- */
 class TestStepController extends Controller
 {
     /**
@@ -24,13 +23,58 @@ class TestStepController extends Controller
     /**
      * @param Session $session
      * @param TestCase $testCase
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
-    public function __invoke(Session $session, TestCase $testCase)
+    public function index(Session $session, TestCase $testCase)
     {
-        $testSteps = $testCase->testSteps()->paginate();
+        $this->authorize('view', $session);
 
-        return view('sessions.test-steps.index', compact('session', 'testCase', 'testSteps'));
+        return Inertia::render('sessions/test-steps/index', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
+            'testCase' => (new TestCaseResource(
+                $session->testCases()
+                    ->where('test_case_id', $testCase->id)
+                    ->firstOrFail()
+            ))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase->testSteps()
+                    ->with(['source', 'target'])
+                    ->paginate()
+            ),
+        ]);
+    }
+
+    /**
+     * @param Session $session
+     * @param TestCase $testCase
+     * @return \Inertia\Response
+     */
+    public function flow(Session $session, TestCase $testCase)
+    {
+        return Inertia::render('sessions/test-steps/flow', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
+            'testCase' => (new TestCaseResource(
+                $session->testCases()
+                    ->where('test_case_id', $testCase->id)
+                    ->firstOrFail()
+            ))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
+        ]);
     }
 }

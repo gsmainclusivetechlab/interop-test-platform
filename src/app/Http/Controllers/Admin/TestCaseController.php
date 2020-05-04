@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Resources\ScenarioResource;
+use App\Http\Resources\TestCaseResource;
 use App\Imports\TestCaseImport;
 use App\Models\Scenario;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 use Symfony\Component\Yaml\Yaml;
 
 class TestCaseController extends Controller
@@ -21,29 +24,37 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param Scenario $scenario
+     * @return \Inertia\Response
      */
     public function index(Scenario $scenario)
     {
-        $testCases = $scenario->testCases()
-            ->when(request('q'), function (Builder $query, $q) {
-                $query->where('test_cases.name', 'like', "%{$q}%");
-            })
-            ->with('useCase')
-            ->withCount('testSteps')
-            ->latest()
-            ->paginate();
-
-        return view('admin.test-cases.index', compact('scenario', 'testCases'));
+        return Inertia::render('admin/test-cases/index', [
+            'scenario' => (new ScenarioResource($scenario))->resolve(),
+            'testCases' => TestCaseResource::collection(
+                $scenario->testCases()
+                    ->when(request('q'), function (Builder $query, $q) {
+                        $query->where('test_cases.name', 'like', "%{$q}%");
+                    })
+                    ->with(['useCase', 'testSteps'])
+                    ->latest()
+                    ->paginate()
+            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
+        ]);
     }
 
     /**
      * @param TestCase $testCase
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function show(TestCase $testCase)
     {
-        return view('admin.test-cases.show', compact('testCase'));
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+        ]);
     }
 
     /**
@@ -62,11 +73,13 @@ class TestCaseController extends Controller
 
     /**
      * @param Scenario $scenario
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function showImportForm(Scenario $scenario)
     {
-        return view('admin.test-cases.import', compact('scenario'));
+        return Inertia::render('admin/test-cases/import', [
+            'scenario' => (new ScenarioResource($scenario))->resolve(),
+        ]);
     }
 
     /**
@@ -75,7 +88,12 @@ class TestCaseController extends Controller
      */
     public function import(Scenario $scenario)
     {
-        request()->validate(['file' => 'required']);
+        request()->validate([
+            'file' => [
+                'required',
+                'mimetypes:text/yaml,text/plain',
+            ],
+        ]);
         $file = request()->file('file');
 
         try {

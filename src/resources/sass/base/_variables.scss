@@ -1,8 +1,5 @@
 // Typography
 $font-family-base: 'gotham', sans-serif;
-$font-size-base: 0.875rem;
-$font-size-lg: 1.125rem;
-$font-size-sm: 0.75rem;
 
 // Colors
 $gray-100: #f8f8f9;
@@ -25,7 +22,7 @@ $mint: #00a182;
 
 $primary: $red;
 $secondary: $gray-600;
-$success: $green;
+$success: $mint;
 $warning: $yellow;
 $danger: $red;
 $light: $gray-100;
@@ -41,7 +38,7 @@ $colors: (
     'teal': $teal,
     'cyan': $cyan,
     'gray': $gray-600,
-    'mint': $mint,
+    'mint': $mint
 );
 
 $theme-colors: (
@@ -50,7 +47,7 @@ $theme-colors: (
     'success': $success,
     'warning': $warning,
     'danger': $danger,
-    'light': $light,
+    'light': $light
 );
 
 $text-muted: $gray-600;
@@ -74,12 +71,13 @@ $list-group-active-color: $primary;
 $body-bg: $gray-100;
 $body-color: $gray-900;
 
-// Components
-$border-radius: 6px;
-$border-radius-lg: 8px;
-$border-radius-sm: 4px;
+// navbar colors
+$navbar-light-color: $gray-600;
+$navbar-light-active-color: $primary;
+$nav-tabs-link-active-color: $primary;
 
-// Buttons
-//
-// For each of Bootstrap's buttons, define text, background, and border color.
-$btn-border-width: 2px;
+// modal colors
+$modal-content-bg: #fff;
+
+// popover
+$popover-max-width: 378px;

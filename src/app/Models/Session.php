@@ -48,7 +48,6 @@ class Session extends Model
     public function suts()
     {
         return $this->belongsToMany(Component::class, 'session_suts', 'session_id', 'component_id')
-//            ->using(SessionComponent::class)
             ->withPivot(['base_url']);
     }
 
@@ -61,19 +60,11 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testData()
-    {
-        return $this->hasMany(TestDatum::class, 'session_id');
-    }
-
-    /**
      * @return mixed
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'session_id')->latest();
+        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
     }
 
     /**

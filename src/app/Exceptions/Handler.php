@@ -2,14 +2,14 @@
 
 namespace App\Exceptions;
 
-use Throwable;
+use Illuminate\Http\Response;
+use Inertia\Inertia;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the exception types that are not reported.
-     *
      * @var array
      */
     protected $dontReport = [
@@ -17,8 +17,6 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
      * @var array
      */
     protected $dontFlash = [
@@ -27,22 +25,26 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * @param Throwable $exception
-     * @throws Throwable
+     * @param HttpExceptionInterface $e
+     * @return \Illuminate\Http\JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
      */
-    public function report(Throwable $exception)
+    protected function renderHttpException(HttpExceptionInterface $e)
     {
-        parent::report($exception);
-    }
+        if (in_array($e->getStatusCode(), [
+                400,
+                401,
+                403,
+                404,
+                419,
+                429,
+                500,
+                503,
+            ])) {
+            return Inertia::render('error', [
+                'status' => $e->getStatusCode(),
+            ])->toResponse(request());
+        }
 
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param Throwable $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws Throwable
-     */
-    public function render($request, Throwable $exception)
-    {
-        return parent::render($request, $exception);
+        return $this->renderHttpException($e);
     }
 }

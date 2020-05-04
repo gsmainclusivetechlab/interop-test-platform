@@ -1,78 +1,81 @@
 import Vue from 'vue';
-import '@fancyapps/fancybox';
-$.fancybox.defaults.touch = false;
-
+import VueMeta from 'vue-meta';
+import { InertiaApp } from '@inertiajs/inertia-vue';
 import {
-    AlertPlugin,
-    DropdownPlugin,
     NavPlugin,
     NavbarPlugin,
+    ModalPlugin,
     CollapsePlugin,
+    DropdownPlugin,
+    FormFilePlugin,
     ProgressPlugin,
     VBTooltipPlugin,
+    PopoverPlugin,
+    TabsPlugin
 } from 'bootstrap-vue';
 
-import hljs from 'highlight.js';
-import Clipboard from 'clipboard';
+window.string = require('string');
+window.collect = require('collect.js');
 
-Vue.use(AlertPlugin);
-Vue.use(DropdownPlugin);
-Vue.use(NavPlugin);
-Vue.use(NavbarPlugin);
-Vue.use(CollapsePlugin);
-Vue.use(ProgressPlugin);
-Vue.use(VBTooltipPlugin);
+Vue.use(VueMeta);
+Vue.use(InertiaApp);
 
-Vue.component('confirm-button', () =>
-    import(/* webpackChunkName: "confirm" */ './components/ConfirmButton.vue'),
-);
-Vue.component('chart', () =>
-    import(/* webpackChunkName: "chart" */ './components/Chart.vue'),
-);
-Vue.component('web-editor', () =>
-    import(/* webpackChunkName: "editor" */ './components/WebEditor.vue'),
-);
-Vue.component('flow-chart', () =>
-    import(/* webpackChunkName: "flow-chart" */ './components/FlowChart.vue'),
-);
-Vue.component('notification', () =>
-    import(
-        /* webpackChunkName: "notification" */ './components/Notification.vue'
-    ),
-);
-Vue.component('json-tree', () =>
-    import(/* webpackChunkName: "json-tree" */ './components/JsonTree.vue'),
-);
-
-const app = new Vue({
-    el: '#app',
-    methods: {
-        toggleCheckboxes(e) {
-            const btn = e.target;
-            const closestParentList = btn.closest('.list-group-item');
-            const checkboxes = Array.from(
-                closestParentList.querySelectorAll('input[type="checkbox"]'),
-            );
-            const isChecked = checkboxes.every(
-                (checkbox) => checkbox.checked === true,
-            );
-
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = !isChecked;
-            });
-        },
-        toggleFieldAvailability(e) {
-            const currentInput = e.target;
-            const currentValue = currentInput.dataset && currentInput.dataset.value;
-            const closestFormGroup = currentInput.closest('.form-group');
-            const targetInput = closestFormGroup.querySelector('input.form-control');
-
-            targetInput.value = currentValue || '';
-            targetInput.readOnly = !!currentValue;
-        },
-    },
+[
+    NavPlugin,
+    NavbarPlugin,
+    ModalPlugin,
+    CollapsePlugin,
+    DropdownPlugin,
+    FormFilePlugin,
+    ProgressPlugin,
+    VBTooltipPlugin,
+    PopoverPlugin,
+    TabsPlugin
+].forEach(plugin => {
+    Vue.use(plugin);
 });
 
-hljs.initHighlightingOnLoad();
+Vue.mixin({
+    methods: {
+        route: window.route,
+        string: window.string,
+        collect: window.collect
+    }
+});
 
-new Clipboard('[data-clipboard-target]');
+Vue.config.productionTip = false;
+
+Vue.component('icon', () =>
+    import(/* webpackChunkName: "icon" */ '@/components/icon.vue')
+);
+Vue.component('pagination', () =>
+    import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
+);
+Vue.component('confirm-link', () =>
+    import(
+        /* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue'
+    )
+);
+Vue.component('json-tree', () =>
+    import(/* webpackChunkName: "json-tree" */ '@/components/json-tree.vue')
+);
+Vue.component('clipboard-copy-btn', () =>
+    import(
+        /* webpackChunkName: "clipboard-copy-btn" */ '@/components/clipboard-copy-btn.vue'
+    )
+);
+
+const app = document.getElementById('app');
+
+new Vue({
+    render: h =>
+        h(InertiaApp, {
+            props: {
+                initialPage: JSON.parse(app.dataset.page),
+                resolveComponent: name =>
+                    import(
+                        /* webpackChunkName: "pages/[request]" */ `@/pages/${name}`
+                    ).then(module => module.default)
+            }
+        })
+}).$mount(app);

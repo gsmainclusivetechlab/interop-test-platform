@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SessionResource;
+use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\TestRunResource;
 use App\Models\TestCase;
 use App\Models\Session;
+use Inertia\Inertia;
 
 class TestCaseController extends Controller
 {
@@ -19,18 +23,33 @@ class TestCaseController extends Controller
     /**
      * @param Session $session
      * @param TestCase $testCase
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function show(Session $session, TestCase $testCase)
     {
-        $testCase = $session->testCases()
-            ->where('test_case_id', $testCase->id)
-            ->firstOrFail();
-        $testRuns = $session->testRuns()
-            ->where('test_case_id', $testCase->id)
-            ->latest()
-            ->paginate();
+        $this->authorize('view', $session);
 
-        return view('sessions.test-cases.show', compact('session', 'testCase', 'testRuns'));
+        return Inertia::render('sessions/test-cases/show', [
+            'session' => (new SessionResource(
+                $session->load([
+                    'testCases' => function ($query) {
+                        return $query->with(['lastTestRun']);
+                    },
+                ])
+            ))->resolve(),
+            'testCase' => (new TestCaseResource(
+                $session->testCases()
+                    ->where('test_case_id', $testCase->id)
+                    ->firstOrFail()
+            ))->resolve(),
+            'testRuns' => TestRunResource::collection(
+                $session->testRuns()
+                    ->where('test_case_id', $testCase->id)
+                    ->with(['session', 'testCase'])
+//                    ->completed()
+                    ->latest()
+                    ->paginate()
+            ),
+        ]);
     }
 }

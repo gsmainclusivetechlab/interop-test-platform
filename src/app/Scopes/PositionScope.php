@@ -14,6 +14,6 @@ class PositionScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->orderBy($model->getPositionColumn());
+        $builder->orderBy('position');
     }
 }

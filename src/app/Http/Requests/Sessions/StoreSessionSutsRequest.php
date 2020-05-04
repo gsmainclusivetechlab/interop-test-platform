@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Sessions;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class StoreSessionSutsRequest extends FormRequest
 {
@@ -24,6 +25,19 @@ class StoreSessionSutsRequest extends FormRequest
     public function rules()
     {
         return [
+            'components' => [
+                'required',
+                'array',
+                function ($attribute, $value, $fail) {
+                    $items = collect($value)->filter(function ($item) {
+                        return Arr::get($item, 'sut', false);
+                    });
+
+                    if (!$items->count()) {
+                        $fail(__('At least one SUT should be selected.'));
+                    }
+                },
+            ],
             'components.*.sut' => 'required|boolean',
             'components.*.base_url' => 'required|url|max:255',
         ];

@@ -1,18 +1,6 @@
-GSMA Test Control
-===================================
+## Interoperability Test Platform
 
-BASE STRUCTURE
--------------------
-```
-  build/		contains docker container config
-  runtime/
-    |-- bash/		Bash history (composer cache, bash commands history)
-    |-- mysql/		MySQL databases for docker container
-  src/			Laravel application code (Project)
-```
-
-INSTALLATION
-------------
+### Installation
 
 Project can be setup with Docker.
 
@@ -26,9 +14,8 @@ Project can be setup with Docker.
     - src/.env
     - build/nginx-server.conf
 4. Check .env files for correct configurations.
-5. Login to JC docker hub: `docker login hub.jcdev.net:24000`
-6. Run containers with `make run`
-7. Run installation `make install`  
+5. Run containers with `make run`
+6. Run installation `make install`  
 
 ### Docker PHP Container
 
@@ -57,6 +44,3 @@ Access your site via URL: http://localhost:8084
 Mail catcher: http://localhost:8086
 
 Superadmin login: superadmin@gsma.com / qzRBHEzStdG8XWhy
-
-You're ready to write your code!
-------------

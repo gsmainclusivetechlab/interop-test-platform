@@ -13,34 +13,15 @@ precondition: |
   Amount should be the value "15.15".
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
-data_example:
-  uri: /transactions
-  method: POST
-  headers:
-    accept: 'application/json'
-    content-type: 'application/json'
-    x-callback-url: 'http://example.com/example'
-    x-date: '2020-02-20T10:28:44.466Z'
-  body:
-    amount: '15.15'
-    currency: 'USD'
-    type: 'merchantpay'
-    debitParty:
-      - key: "msisdn"
-        value: "+33555123456"
-    creditParty:
-      - key: "msisdn"
-        value: "+33555789123"
 test_steps:
-  - forward: POST /transactions
-    backward: HTTP 202
+  - name: POST /transactions
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.X-Callback-URL.*: 'regex:/.*/'
+          headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'in:msisdn'
@@ -50,7 +31,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount: 'in:15.15'
-          body.currency: 'regex:/^[A-Z]{3}/'
+          body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'in:merchantpay'
@@ -60,14 +41,14 @@ test_steps:
           status: 'in:202'
       - name: Server Correlation Id is specified correctly
         rules:
-          body.serverCorrelationId: 'regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
+          body.serverCorrelationId: 'required|regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
       - name: Status is specified correctly
         rules:
           body.status: 'in:pending'
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'in:callback'
-    request_example:
+    request:
       method: POST
       uri: /transactions
       headers:
@@ -85,7 +66,7 @@ test_steps:
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
-    response_example:
+    response:
       status: 202
       headers:
         content-type: 'application/json'
@@ -94,8 +75,7 @@ test_steps:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
         notificationMethod: 'callback'
-  - forward: POST /transactionRequests
-    backward: HTTP 202
+  - name: POST /transactionRequests
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -107,7 +87,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:BUSINESS'
       - name: Transaction Request Id created
         rules:
-          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -117,12 +97,12 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'in:15.15'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    request_example:
+    request:
       method: POST
       uri: /transactionsRequests
       headers:
@@ -147,10 +127,9 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    response_example:
+    response:
       status: 202
-  - forward: POST /transactionRequests
-    backward: HTTP 202
+  - name: POST /transactionRequests
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
@@ -162,7 +141,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:BUSINESS'
       - name: Transaction Request Id created
         rules:
-          body.transactionRequestId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -172,12 +151,12 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'in:15.15'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:202'
-    request_example:
+    request:
       method: POST
       uri: /transactionsRequests
       headers:
@@ -202,18 +181,17 @@ test_steps:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
           initiatorType: 'BUSINESS'
-    response_example:
+    response:
       status: 202
-  - forward: PUT /transactionRequests/{ID}
-    backward: HTTP 200
+  - name: PUT /transactionRequests/{ID}
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Rejected
         rules:
           body.transactionRequestState: 'in:REJECTED'
@@ -221,7 +199,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -231,18 +209,17 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'REJECTED'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /transactionRequests/{ID}
-    backward: HTTP 200
+  - name: PUT /transactionRequests/{ID}
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Rejected
         rules:
           body.transactionRequestState: 'in:REJECTED'
@@ -250,7 +227,7 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'in:200'
-    request_example:
+    request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
@@ -260,10 +237,9 @@ test_steps:
         fspiop-destination: 'payeefsp'
       body:
         transactionRequestState: 'REJECTED'
-    response_example:
+    response:
       status: 200
-  - forward: PUT /X-Callback-URL
-    backward: HTTP 204
+  - name: PUT /X-Callback-URL
     source: Mobile Money Operator 1
     target: Service Provider
     test_request_scripts:
@@ -277,7 +253,7 @@ test_steps:
       - name: Transaction was successfully declined
         rules:
           status: 'in:204'
-    request_example:
+    request:
       method: 'PUT'
       uri: 'http://example.com/example'
       headers:
@@ -286,5 +262,5 @@ test_steps:
       body:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
-    response_example:
+    response:
       status: 204
