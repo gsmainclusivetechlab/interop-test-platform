@@ -19,7 +19,7 @@ class CreateTestSetupsTable extends Migration
             $table->foreign('test_step_id')->references('id')->on('test_steps')->onDelete('cascade');
             $table->string('name');
             $table->string('type')->index();
-            $table->text('values');
+            $table->json('values');
             $table->unsignedInteger('position');
             $table->timestamps();
         });

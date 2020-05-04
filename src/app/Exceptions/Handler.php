@@ -30,8 +30,6 @@ class Handler extends ExceptionHandler
      */
     protected function renderHttpException(HttpExceptionInterface $e)
     {
-        $this->registerErrorViewPaths();
-
         if (in_array($e->getStatusCode(), [
                 400,
                 401,
@@ -47,6 +45,6 @@ class Handler extends ExceptionHandler
             ])->toResponse(request());
         }
 
-        return $this->convertExceptionToResponse($e);
+        return $this->renderHttpException($e);
     }
 }
