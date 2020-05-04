@@ -63,22 +63,18 @@ class ScenariosTableSeeder extends Seeder
             [
                 'name' => 'Service Provider',
                 'api_service_id' => ApiService::where(['name' => 'SP Simulator'])->value('id'),
-                'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 1',
                 'api_service_id' => ApiService::where(['name' => 'MM Simulator'])->value('id'),
-                'simulated' => true,
             ],
             [
                 'name' => 'Mojaloop',
                 'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub'])->value('id'),
-                'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 2',
                 'api_service_id' => ApiService::where(['name' => 'Mojaloop Simulator'])->value('id'),
-                'simulated' => true,
             ],
         ];
     }

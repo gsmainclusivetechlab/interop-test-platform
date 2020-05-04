@@ -23,8 +23,8 @@ class CreateTestStepsTable extends Migration
             $table->unsignedBigInteger('api_scheme_id')->nullable();
             $table->foreign('api_scheme_id')->references('id')->on('api_schemes')->onDelete('set null');
             $table->string('name');
-            $table->text('request')->nullable();
-            $table->text('response')->nullable();
+            $table->json('request')->nullable();
+            $table->json('response')->nullable();
             $table->unsignedInteger('position');
             $table->timestamps();
         });

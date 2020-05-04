@@ -33,6 +33,7 @@ update: chmod composer-install cache-clear
 	php artisan queue:restart
 
 test:
+	php artisan dusk:chrome-driver
 	php artisan dusk
 
 # Composer helpers
