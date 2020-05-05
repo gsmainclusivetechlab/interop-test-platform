@@ -25,9 +25,10 @@ jobs:
       - run: 
           name: Check installation
           command: |
-            FILE=/runtime/installed
+            FILE=./runtime/installed
             if test -f "$FILE"; then
                 echo "Installation succesful"
             else 
                 echo "Installation fail"
+                exit 2
             fi
