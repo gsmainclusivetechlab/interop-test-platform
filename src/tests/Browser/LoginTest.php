@@ -12,7 +12,7 @@ class Login extends DuskTestCase
      * Can navigate to forgot password page.
      * @return void
      */
-    public function can_navigate_to_forgot_password_page()
+    public function canNavigateToForgotPasswordPage()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -27,7 +27,7 @@ class Login extends DuskTestCase
      * Can navigate to register page.
      * @return void
      */
-    public function can_navigate_to_register_page()
+    public function canNavigateToRegisterPage()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -42,7 +42,7 @@ class Login extends DuskTestCase
      * Can not login with empty credentials.
      * @return void
      */
-    public function can_not_login_with_empty_credentials()
+    public function canNotLoginWithEmptyCredentials()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -60,7 +60,7 @@ class Login extends DuskTestCase
      * Can not login with invalid credentials.
      * @return void
      */
-    public function can_not_login_with_invalid_credentials()
+    public function canNotLoginWithInvalidCredentials()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -78,7 +78,7 @@ class Login extends DuskTestCase
      * Can not login with valid email and invalid password.
      * @return void
      */
-    public function can_not_login_with_valid_email_and_invalid_password()
+    public function canNotLoginWithValidEmailAndInvalidPassword()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -96,7 +96,7 @@ class Login extends DuskTestCase
      * Can not login with invalid email and valid password.
      * @return void
      */
-    public function can_not_login_with_invalid_email_and_valid_password()
+    public function canNotLoginWithInvalidEmailAndValidPassword()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -114,7 +114,7 @@ class Login extends DuskTestCase
      * Can login with valid credentials.
      * @return void
      */
-    public function can_login_with_valid_credentials()
+    public function canLoginWithValidCredentials()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
@@ -132,7 +132,7 @@ class Login extends DuskTestCase
      * Can logout.
      * @return void
      */
-    public function can_logout()
+    public function canLogout()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
