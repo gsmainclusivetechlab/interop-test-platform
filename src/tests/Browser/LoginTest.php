@@ -5,7 +5,7 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
-class Login extends DuskTestCase
+class LoginTest extends DuskTestCase
 {
     /**
      * @test
@@ -114,32 +114,32 @@ class Login extends DuskTestCase
      * Can login with valid credentials.
      * @return void
      */
-    public function canLoginWithValidCredentials()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->assertSee('Login to your account')
-                ->type('email', 'superadmin@gsma.com')
-                ->type('password', 'qzRBHEzStdG8XWhy')
-                ->press('Login')
-                ->waitForLocation('/')
-                ->assertAuthenticated();
-        });
-    }
+//    public function canLoginWithValidCredentials()
+//    {
+//        $this->browse(function (Browser $browser) {
+//            $browser->visit('/login')
+//                ->assertSee('Login to your account')
+//                ->type('email', 'superadmin@gsma.com')
+//                ->type('password', 'qzRBHEzStdG8XWhy')
+//                ->press('Login')
+//                ->waitForLocation('/')
+//                ->assertAuthenticated();
+//        });
+//    }
 
     /**
      * @test
      * Can logout.
      * @return void
      */
-    public function canLogout()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                ->click('.navbar-nav .nav-item:last-child .nav-link')
-                ->clickLink('Logout')
-                ->waitForLocation('/login')
-                ->assertGuest();
-        });
-    }
+//    public function canLogout()
+//    {
+//        $this->browse(function (Browser $browser) {
+//            $browser->visit('/')
+//                ->click('.navbar-nav .nav-item:last-child .nav-link')
+//                ->clickLink('Logout')
+//                ->waitForLocation('/login')
+//                ->assertGuest();
+//        });
+//    }
 }
