@@ -3,7 +3,8 @@
 version: 2
 jobs:
   build:
-    machine: true # Use a Linux VM instead of docker environment
+    machine:
+      image: ubuntu-1604:201903-01 # Define a machine who has support for docker compose 3.7
     working_directory: ~/repo # Default working directory, where your project will be clo
 
     steps:
