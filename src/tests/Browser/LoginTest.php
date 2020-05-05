@@ -7,6 +7,35 @@ use Tests\DuskTestCase;
 
 class Login extends DuskTestCase
 {
+    /**
+     * @test
+     * Can navigate to forgot password page.
+     * @return void
+     */
+    public function can_navigate_to_forgot_password_page()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/login')
+                ->clickLink('Forgot password?')
+                ->waitForLocation('/password/reset')
+                ->assertSee('Forgot password');
+        });
+    }
+
+    /**
+     * @test
+     * Can navigate to register page.
+     * @return void
+     */
+    public function can_navigate_to_register_page()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/login')
+                ->clickLink('Register')
+                ->waitForLocation('/register')
+                ->assertSee('Create new account');
+        });
+    }
 
     /**
      * @test
@@ -38,6 +67,42 @@ class Login extends DuskTestCase
                 ->assertSee('Login to your account')
                 ->type('email', 'invalid@email.com')
                 ->type('password', 'invalid_password')
+                ->press('Login')
+                ->waitFor('.form-control.is-invalid')
+                ->assertGuest();
+        });
+    }
+
+    /**
+     * @test
+     * Can not login with valid email and invalid password.
+     * @return void
+     */
+    public function can_not_login_with_valid_email_and_invalid_password()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/login')
+                ->assertSee('Login to your account')
+                ->type('email', 'superadmin@gsma.com')
+                ->type('password', 'invalid_password')
+                ->press('Login')
+                ->waitFor('.form-control.is-invalid')
+                ->assertGuest();
+        });
+    }
+
+    /**
+     * @test
+     * Can not login with invalid email and valid password.
+     * @return void
+     */
+    public function can_not_login_with_invalid_email_and_valid_password()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit('/login')
+                ->assertSee('Login to your account')
+                ->type('email', 'invalid@email.com')
+                ->type('password', 'qzRBHEzStdG8XWhy')
                 ->press('Login')
                 ->waitFor('.form-control.is-invalid')
                 ->assertGuest();
