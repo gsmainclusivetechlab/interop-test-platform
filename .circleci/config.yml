@@ -10,16 +10,16 @@ jobs:
       - checkout
 
       - run: 
-        name: Generate configuration files
-        command: make init
+          name: Generate configuration files
+          command: make init
 
       - run: 
-        name: Run docker containers
-        command: make run
+          name: Run docker containers
+          command: make run
 
       - run: 
-        name: Install Componser and Node dependecies
-        command: make install
+          name: Install Componser and Node dependecies
+          command: make install
 
       - run: 
           name: Check installation
