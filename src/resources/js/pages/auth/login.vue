@@ -11,6 +11,7 @@
                         type="email"
                         class="form-control"
                         placeholder="e.g., john.doe@email.com"
+                        name="email"
                     />
                     <span v-if="$page.errors.email" class="invalid-feedback">
                         {{ $page.errors.email }}
@@ -31,6 +32,7 @@
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
+                        name="password"
                     />
                     <span v-if="$page.errors.password" class="invalid-feedback">
                         {{ $page.errors.password }}
