@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.7"
 
 x-php-defaults: &php-defaults
     #build: ./build/php-fpm
