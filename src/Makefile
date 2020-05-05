@@ -33,7 +33,7 @@ update: chmod composer-install cache-clear
 	php artisan queue:restart
 
 test:
-	php artisan dusk
+	php artisan dusk --testdox
 
 # Composer helpers
 ci: composer-install
