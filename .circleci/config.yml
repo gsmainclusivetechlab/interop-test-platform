@@ -1,0 +1,54 @@
+# Interop Test Platofrm CircleCI
+
+version: 2
+jobs:
+  build:
+    machine: true # Use a Linux VM instead of docker environment
+    working_directory: ~/repo # Default working directory, where your project will be clo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies for Componser and Node
+      - restore_cache:
+          keys:
+            # "composer.lock" can be used if it is committed to the repo
+            - v1-dependencies-{{ checksum "composer.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      
+      - restore_cache:
+          keys:
+            - node-v1-{{ checksum "package.json" }}
+            - node-v1-
+
+      - run: 
+        name: Generate configuration files
+        command: make init
+
+      - run: 
+        name: Run docker containers
+        command: make run
+
+      - run: 
+        name: Install Componser and Node dependecies
+        command: make install
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      
+      - run: 
+          name: Check installation
+          command: |
+            FILE=/runtime/installed
+            if test -f "$FILE"; then
+                echo "Installation succesful"
+            else 
+                echo "Installation fail"
+            fi
