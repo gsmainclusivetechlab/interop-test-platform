@@ -102,7 +102,7 @@
                                                 />
                                                 <clipboard-copy-btn
                                                     target="#testing-url"
-                                                    title="Copy URL"
+                                                    title="Copy"
                                                 ></clipboard-copy-btn>
                                             </div>
                                         </div>

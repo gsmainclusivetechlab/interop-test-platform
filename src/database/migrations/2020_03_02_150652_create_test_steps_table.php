@@ -20,8 +20,8 @@ class CreateTestStepsTable extends Migration
             $table->unsignedBigInteger('source_id');
             $table->unsignedBigInteger('target_id');
             $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('component_connections')->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('api_scheme_id')->nullable();
-            $table->foreign('api_scheme_id')->references('id')->on('api_schemes')->onDelete('set null');
+//            $table->unsignedBigInteger('api_scheme_id')->nullable();
+//            $table->foreign('api_scheme_id')->references('id')->on('api_schemes')->onDelete('set null');
             $table->string('name');
             $table->json('request')->nullable();
             $table->json('response')->nullable();

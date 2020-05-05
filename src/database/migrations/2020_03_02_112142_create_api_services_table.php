@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateApiSchemesTable extends Migration
+class CreateApiServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateApiSchemesTable extends Migration
      */
     public function up()
     {
-        Schema::create('api_schemes', function (Blueprint $table) {
+        Schema::create('api_services', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->longText('openapi');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateApiSchemesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('api_schemes');
+        Schema::dropIfExists('api_services');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ApiService extends Model
 {
+    use HasUuid;
+
     /**
      * @var string
      */
@@ -20,6 +23,13 @@ class ApiService extends Model
     protected $fillable = [
         'name',
         'description',
-        'base_url',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function apiEndpoints()
+    {
+        return $this->hasMany(ApiEndpoint::class, 'api_service_id');
+    }
 }
