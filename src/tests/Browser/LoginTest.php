@@ -5,7 +5,7 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
-class Login extends DuskTestCase
+class LoginTest extends DuskTestCase
 {
     /**
      * @test
