@@ -32,3 +32,7 @@ jobs:
                 echo "Installation fail"
                 exit 2
             fi
+            
+      - run:
+          name: Run Tests
+          command: make test
