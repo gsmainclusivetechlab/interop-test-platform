@@ -9,30 +9,27 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class UserTest extends TestCase
+class UseCaseTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * Test User creating with valid data.
+     * Test UseCase creating with valid data.
      *
      * @return void
      */
-    public function testUserStoreValidData()
+    public function testUseCaseStoreValidData()
     {
-        $user = factory(User::class)->create([
-            'email' => 'user@ggg.com',
-            'password' => Hash::make('password')
-        ]);
+        $user = factory(User::class)->create();
         $this->assertInstanceOf(User::class, $user);
     }
 
     /**
-     * Test User creating with invalid data.
+     * Test UseCase creating with invalid data.
      *
      * @return void
      */
-    public function testUserStoreInvalidData()
+    public function testUseCaseStoreInvalidData()
     {
         $emptyUser = factory(User::class)->make(self::emptyData());
         $this->assertFalse(Validator::make($emptyUser->attributesToArray(), self::rules())->passes());
@@ -48,22 +45,22 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test User updating with valid data.
+     * Test UseCase updating with valid data.
      *
      * @return void
      */
-    public function testUserUpdateValidData()
+    public function testUseCaseUpdateValidData()
     {
         $user = factory(User::class)->create();
         $this->assertTrue($user->update(factory(User::class)->make()->attributesToArray()));
     }
 
     /**
-     * Test User updating with invalid data.
+     * Test UseCase updating with invalid data.
      *
      * @return void
      */
-    public function testUserUpdateInvalidData()
+    public function testUseCaseUpdateInvalidData()
     {
         $userWithEmptyData = factory(User::class)->create();
 
@@ -81,12 +78,12 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test User soft delete.
+     * Test UseCase soft delete.
      *
      * @return void
      * @throws \Exception
      */
-    public function testUserSoftDelete()
+    public function testUseCaseSoftDelete()
     {
         $user = factory(User::class)->create();
         $user->delete();
