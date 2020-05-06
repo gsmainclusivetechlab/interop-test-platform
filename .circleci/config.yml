@@ -38,7 +38,7 @@ jobs:
           command: make test
       
       - store_test_results:
-          path: test-results
+          path: src/test-results
 
       - store_artifacts:
-          path: tests/Browser/screenshots
+          path: src/tests/Browser/screenshots
