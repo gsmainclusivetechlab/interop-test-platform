@@ -35,7 +35,7 @@ update: chmod composer-install cache-clear
 	php artisan dusk:chrome-driver
 
 test:
-	php artisan dusk --testdox
+	php artisan dusk --testdox-xml test-results/results.xml
 
 # Composer helpers
 ci: composer-install
