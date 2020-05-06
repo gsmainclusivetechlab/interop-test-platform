@@ -36,6 +36,9 @@ jobs:
       - run:
           name: Run Tests
           command: make test
+      
+      - store_test_results:
+          path: test-results
 
       - store_artifacts:
           path: tests/Browser/screenshots
