@@ -23,14 +23,16 @@ ifneq "$(NOSUDO)" ""
 endif
 
 # INSTALL AFTER CLONE
-install: chmod composer-install
+install: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
+	php artisan dusk:chrome-driver
 
 update: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
 	php artisan queue:restart
+	php artisan dusk:chrome-driver
 
 test:
 	php artisan dusk --testdox
