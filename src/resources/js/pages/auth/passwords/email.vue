@@ -15,6 +15,7 @@
                         type="email"
                         class="form-control"
                         placeholder="e.g., john.doe@email.com"
+                        name="email"
                     />
                     <span v-if="$page.errors.email" class="invalid-feedback">
                         {{ $page.errors.email }}
