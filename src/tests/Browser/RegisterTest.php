@@ -4,9 +4,12 @@ namespace Tests\Browser;
 
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterTest extends DuskTestCase
 {
+    use RefreshDatabase;
+
     /**
      * @test
      * Can navigate to login page.
@@ -33,6 +36,14 @@ class RegisterTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/register')
                 ->assertSee('Create new account')
+                ->clear('first_name')
+                ->clear('last_name')
+                ->clear('email')
+                ->clear('company')
+                ->clear('password')
+                ->clear('password_confirmation')
+                ->clear('code')
+                ->uncheck('terms')
                 ->press('Register')
                 ->waitFor('.form-control.is-invalid')
                 ->assertPresent('.form-control.is-invalid');

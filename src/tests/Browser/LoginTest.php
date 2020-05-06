@@ -4,9 +4,25 @@ namespace Tests\Browser;
 
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Hash;
 
 class LoginTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
+    /**
+     * Create user.
+     */
+    protected static function createUser()
+    {
+        return factory(User::class)->create([
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('password')
+        ]);
+    }
+
     /**
      * @test
      * Can navigate to forgot password page.
@@ -65,8 +81,8 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
                 ->assertSee('Login to your account')
-                ->type('email', 'invalid@email.com')
-                ->type('password', 'invalid_password')
+                ->type('email', 'invalidEmail@gmail.com')
+                ->type('password', 'invalidPassword')
                 ->press('Login')
                 ->waitFor('.form-control.is-invalid')
                 ->assertGuest();
@@ -80,11 +96,13 @@ class LoginTest extends DuskTestCase
      */
     public function canNotLoginWithValidEmailAndInvalidPassword()
     {
-        $this->browse(function (Browser $browser) {
+        $user = self::createUser();
+
+        $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
                 ->assertSee('Login to your account')
-                ->type('email', 'superadmin@gsma.com')
-                ->type('password', 'invalid_password')
+                ->type('email', $user->email)
+                ->type('password', 'invalidPassword')
                 ->press('Login')
                 ->waitFor('.form-control.is-invalid')
                 ->assertGuest();
@@ -101,8 +119,8 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit('/login')
                 ->assertSee('Login to your account')
-                ->type('email', 'invalid@email.com')
-                ->type('password', 'qzRBHEzStdG8XWhy')
+                ->type('email', 'invalidEmail@gmail.com')
+                ->type('password', 'password')
                 ->press('Login')
                 ->waitFor('.form-control.is-invalid')
                 ->assertGuest();
@@ -116,11 +134,13 @@ class LoginTest extends DuskTestCase
      */
     public function canLoginWithValidCredentials()
     {
-        $this->browse(function (Browser $browser) {
+        $user = self::createUser();
+
+        $this->browse(function (Browser $browser) use ($user) {
             $browser->visit('/login')
                 ->assertSee('Login to your account')
-                ->type('email', 'superadmin@gsma.com')
-                ->type('password', 'qzRBHEzStdG8XWhy')
+                ->type('email', $user->email)
+                ->type('password', 'password')
                 ->press('Login')
                 ->waitForLocation('/')
                 ->assertAuthenticated();
@@ -134,8 +154,11 @@ class LoginTest extends DuskTestCase
      */
     public function canLogout()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/')
+        $user = self::createUser();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit('/')
                 ->click('.navbar-nav .nav-item:last-child .nav-link')
                 ->clickLink('Logout')
                 ->waitForLocation('/login')
