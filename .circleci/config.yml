@@ -42,4 +42,6 @@ jobs:
 
       - store_artifacts:
           path: src/tests/Browser/screenshots
+          
+      - store_artifacts:
           path: src/test-results
