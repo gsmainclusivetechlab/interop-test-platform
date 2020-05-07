@@ -1,7 +1,7 @@
-name: P2P Rejected Quote - 5103
+name: P2P Rejected Quote
 use_case: P2P
 test_case: P2P0110
-behavior: positive
+behavior: negative
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
   This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
