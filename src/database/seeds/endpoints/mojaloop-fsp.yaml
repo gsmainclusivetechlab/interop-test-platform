@@ -1,0 +1,17 @@
+- name: Perform transaction request
+  route: transactionRequests
+  pattern: '^transactionRequests$'
+  method: POST
+  description: The HTTP request `POST /transactionRequests` is used to request the creation of a transaction request for the provided financial transaction in the server.
+
+- name: Return quote information
+  route: quotes/{ID}
+  pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+  method: PUT
+  description: The callback `PUT /quotes/{ID}` is used to inform the client of a requested or created quote. The `{ID}` in the URI should contain the `quoteId` that was used for the creation of the quote, or the `{ID}` that was used in the `GET /quotes/{ID}` request.
+
+- name: Return transfer information
+  route: /transfers/{ID}
+  pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+  method: PUT
+  description: The callback `PUT /transfers/{ID}` is used to inform the client of a requested or created transfer. The `{ID}` in the URI should contain the `transferId` that was used for the creation of the transfer, or the `{ID}` that was used in the `GET /transfers/{ID}` request.

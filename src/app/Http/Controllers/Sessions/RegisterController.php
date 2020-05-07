@@ -36,9 +36,9 @@ class RegisterController extends Controller
                     'useCases' => function ($query) {
                         $query->with(['testCases'])->whereHas('testCases');
                     },
-                    'components' => function ($query) {
+                    'components'/* => function ($query) {
                         $query->with(['connections']);
-                    },
+                    }*/,
                 ])
             ))->resolve(),
         ]);
@@ -114,7 +114,7 @@ class RegisterController extends Controller
                         $query->with(['testCases'])->whereHas('testCases');
                     },
                     'components' => function ($query) {
-                        $query->with(['connections', 'apiService']);
+                        $query->with(['connections']);
                     },
                 ])
             ))->resolve(),

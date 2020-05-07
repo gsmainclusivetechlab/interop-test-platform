@@ -23,7 +23,6 @@ class Session extends Model
     protected $fillable = [
         'name',
         'description',
-        'scenario_id',
     ];
 
     /**
@@ -32,14 +31,6 @@ class Session extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function scenario()
-    {
-        return $this->belongsTo(Scenario::class, 'scenario_id');
     }
 
     /**
@@ -70,40 +61,8 @@ class Session extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function passedTestRuns()
-    {
-        return $this->testRuns()->passed();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function failureTestRuns()
-    {
-        return $this->testRuns()->failure();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function testCases()
     {
         return $this->belongsToMany(TestCase::class, 'session_test_cases', 'session_id', 'test_case_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function positiveTestCases()
-    {
-        return $this->testCases()->positive();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function negativeTestCases()
-    {
-        return $this->testCases()->negative();
     }
 }

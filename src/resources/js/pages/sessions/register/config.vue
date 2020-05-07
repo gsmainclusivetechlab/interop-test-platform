@@ -69,10 +69,6 @@
                                                 :name="
                                                     `components[${component.id}][sut]`
                                                 "
-                                                :data-value="
-                                                    component.apiService
-                                                        .base_url
-                                                "
                                                 v-model="form[component.id].sut"
                                                 @change="
                                                     toggleFieldAvailability(
@@ -175,14 +171,13 @@ export default {
         this.components.forEach(component => {
             this.$set(this.form, component.id, {
                 sut: 0,
-                base_url: component.apiService.base_url
+                base_url: '',//component.apiService.base_url
             });
         });
     },
     computed: {
         components() {
             return collect(this.scenario.components.data)
-                .where('apiService')
                 .all();
         }
     },

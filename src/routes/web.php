@@ -52,7 +52,7 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
  * Testing Routes
  */
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{session:uuid}/{testCase:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
+    Route::any('{session:uuid}/{component:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
     Route::any('step/{path}', 'StepController')->name('step')->where('path', '.*');
 });
 

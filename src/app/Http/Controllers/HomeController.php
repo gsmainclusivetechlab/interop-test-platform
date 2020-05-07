@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SessionResource;
 use App\Models\ApiEndpoint;
 use App\Models\ApiService;
+use App\Models\Scenario;
+use App\Models\TestCase;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -22,6 +24,14 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
+//        $rows = TestCase::firstWhere('id', 7)
+//            ->testSteps()
+//            ->select(['source_id', 'target_id'])
+//            ->groupBy(['source_id', 'target_id'])
+//            ->get();
+//
+//        dd($rows);
+
 //        $endpoint = ApiEndpoint::where('method', 'PUT')
 //            ->whereRaw('REGEXP_LIKE(?, CONCAT("^", REGEXP_REPLACE(route, "\\\{(.*?)\\\}", "[[:alnum:]]|[[:punct]]"), "+$"))', ['transactionRequests/as2-das'])
 //            ->get();

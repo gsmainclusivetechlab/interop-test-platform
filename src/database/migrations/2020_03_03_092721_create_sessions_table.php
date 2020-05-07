@@ -17,9 +17,6 @@ class CreateSessionsTable extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('owner_id');
-            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('scenario_id');
-            $table->foreign('scenario_id')->references('id')->on('scenarios')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
