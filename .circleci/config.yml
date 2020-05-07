@@ -44,7 +44,7 @@ jobs:
             - vendor
       
       - save_cache:
-            - node-v1-{{ checksum "src/package-lock.json" }}
+          key: node-v1-{{ checksum "src/package-lock.json" }}
           paths:
             - node_modules
 
