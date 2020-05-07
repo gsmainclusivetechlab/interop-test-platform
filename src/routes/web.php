@@ -29,12 +29,12 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController@index')->name('test-cases.test-steps.index');
     Route::get('{session}/test-cases/{testCase}/test-steps/flow', 'TestStepController@flow')->name('test-cases.test-steps.flow');
     Route::name('register.')->prefix('register')->group(function () {
-        Route::get('info', 'RegisterController@create')->name('create');
-        Route::post('info', 'RegisterController@store')->name('store');
-        Route::get('{session}/info', 'RegisterController@edit')->name('edit');
-        Route::patch('{session}/info', 'RegisterController@update')->name('update');
-        Route::get('{session}/config', 'RegisterController@showConfig')->name('config');
-        Route::post('{session}/config', 'RegisterController@storeConfig')->name('config.store');
+        Route::get('sut', 'RegisterController@showSutForm')->name('sut');
+        Route::post('sut', 'RegisterController@storeSut')->name('sut.store');
+        Route::get('info', 'RegisterController@showInfoForm')->name('info');
+        Route::post('info', 'RegisterController@storeInfo')->name('info.store');
+        Route::get('config', 'RegisterController@showConfigForm')->name('config');
+        Route::post('config', 'RegisterController@storeConfig')->name('config.store');
     });
 });
 
@@ -42,19 +42,19 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
  * Settings Routes
  */
 Route::name('settings.')->prefix('settings')->namespace('Settings')->group(function () {
-    Route::get('profile', 'ProfileController@edit')->name('profile.edit');
-    Route::post('profile', 'ProfileController@update')->name('profile.update');
-    Route::get('password', 'PasswordController@edit')->name('password.edit');
-    Route::post('password', 'PasswordController@update')->name('password.update');
+    Route::get('profile', 'ProfileController@showProfileForm')->name('profile');
+    Route::post('profile', 'ProfileController@updateProfile')->name('profile.update');
+    Route::get('password', 'PasswordController@showPasswordForm')->name('password');
+    Route::post('password', 'PasswordController@updatePassword')->name('password.update');
 });
 
 /**
  * Testing Routes
  */
-Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{session:uuid}/{component:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
-    Route::any('step/{path}', 'StepController')->name('step')->where('path', '.*');
-});
+//Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
+//    Route::any('{session:uuid}/{component:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
+//    Route::any('step/{path}', 'StepController')->name('step')->where('path', '.*');
+//});
 
 /**
  * Admin Routes
@@ -72,11 +72,10 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     Route::name('sessions.')->prefix('sessions')->group(function () {
         Route::get('/', 'SessionController@index')->name('index');
     });
-    Route::resource('scenarios', 'ScenarioController');
-    Route::resource('scenarios.components', 'ComponentController')->shallow();
-    Route::resource('scenarios.use-cases', 'UseCaseController')->shallow()->except(['create']);
-    Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
-    Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
-    Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import.confirm');
+    Route::resource('components', 'ComponentController')->shallow();
+    Route::resource('use-cases', 'UseCaseController')->shallow()->except(['create']);
+    Route::resource('test-cases', 'TestCaseController')->shallow();
+    Route::get('test-cases/import', 'TestCaseController@showImportForm')->name('test-cases.import');
+    Route::post('test-cases/import', 'TestCaseController@import')->name('test-cases.import.confirm');
     Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });

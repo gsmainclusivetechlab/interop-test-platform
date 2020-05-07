@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\ChangePasswordRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -21,17 +21,22 @@ class PasswordController extends Controller
     /**
      * @return \Inertia\Response
      */
-    public function edit()
+    public function showPasswordForm()
     {
         return Inertia::render('settings/password');
     }
 
     /**
-     * @param ChangePasswordRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ChangePasswordRequest $request)
+    public function updatePassword(Request $request)
     {
+        $request->validate([
+            'current_password' => ['required', 'password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password_confirmation' => ['required', 'string', 'min:8'],
+        ]);
         $user = auth()->user();
         $user->password = Hash::make($request->input('password'));
         $user->setRememberToken(Str::random(60));

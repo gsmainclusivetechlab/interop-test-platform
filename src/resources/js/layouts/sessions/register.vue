@@ -14,9 +14,20 @@
                             :class="{
                                 active:
                                     route().current(
-                                        'sessions.register.create'
-                                    ) ||
-                                    route().current('sessions.register.edit')
+                                      'sessions.register.sut'
+                                    )
+                            }"
+                        >
+                            <span class="d-inline-block mt-2">
+                                Select Sut
+                            </span>
+                        </span>
+                        <span
+                            class="step-item"
+                            :class="{
+                                active: route().current(
+                                    'sessions.register.info'
+                                )
                             }"
                         >
                             <span class="d-inline-block mt-2">
@@ -26,9 +37,10 @@
                         <span
                             class="step-item"
                             :class="{
-                                active: route().current(
-                                    'sessions.register.config'
-                                )
+                                active:
+                                    route().current(
+                                      'sessions.register.config'
+                                    )
                             }"
                         >
                             <span class="d-inline-block mt-2">
@@ -42,31 +54,13 @@
                 <div class="col">
                     <diagram>
                         graph LR;
-                        <template v-for="component in scenario.components.data">
-                            {{ component.id }}({{ component.name }});
+                        <template v-for="component in components.data">
+                            {{ component.id }}({{component.name}});
                             <template v-for="connection in component.connections">
-                                {{ component.id }}
-                                {{
-                                    component.simulated && connection.simulated
-                                        ? '-->'
-                                        : '-.->'
-                                }}
-                                {{ connection.id }};
+                                {{ component.id }}-->{{ connection.id }};
                             </template>
                         </template>
                     </diagram>
-                    <div class="d-flex justify-content-center mt-1">
-                        <div class="d-inline-flex align-items-center mx-2">
-                            <span class="ic-arrow-right mr-2"></span>
-                            <small>Simulated</small>
-                        </div>
-                        <div class="d-inline-flex align-items-center mx-2">
-                            <span
-                                class="ic-arrow-right mr-2 border-dashed"
-                            ></span>
-                            <small>Not Simulated</small>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="row">
@@ -86,10 +80,10 @@ export default {
         Diagram
     },
     props: {
-        scenario: {
+        components: {
             type: Object,
             required: true
-        }
+        },
     }
 };
 </script>

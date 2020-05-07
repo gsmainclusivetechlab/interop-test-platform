@@ -6,7 +6,6 @@ use App\Http\Resources\SessionResource;
 use App\Models\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SessionController extends Controller

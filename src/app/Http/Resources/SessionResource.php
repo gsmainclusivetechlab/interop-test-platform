@@ -19,7 +19,6 @@ class SessionResource extends JsonResource
             'description' => $this->description,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'suts' => ComponentResource::collection($this->whenLoaded('suts')),
-            'scenario' => new ScenarioResource($this->whenLoaded('scenario')),
             'testCases' => TestCaseResource::collection($this->whenLoaded('testCases')),
             'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun')),
             'can' => [

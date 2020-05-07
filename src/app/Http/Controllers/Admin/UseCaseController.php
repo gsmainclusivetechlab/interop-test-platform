@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Resources\ScenarioResource;
 use App\Http\Resources\UseCaseResource;
-use App\Models\Scenario;
 use App\Models\UseCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,16 +22,13 @@ class UseCaseController extends Controller
     }
 
     /**
-     * @param Scenario $scenario
      * @return \Inertia\Response
      */
-    public function index(Scenario $scenario)
+    public function index()
     {
         return Inertia::render('admin/use-cases/index', [
-            'scenario' => (new ScenarioResource($scenario))->resolve(),
             'useCases' => UseCaseResource::collection(
-                $scenario->useCases()
-                    ->when(request('q'), function (Builder $query, $q) {
+                UseCase::when(request('q'), function (Builder $query, $q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
                     ->with(['testCases'])

@@ -16,19 +16,6 @@ use Illuminate\Support\Facades\DB;
 class TestCaseImport implements Importable
 {
     /**
-     * @var UseCase
-     */
-    protected $useCase;
-
-    /**
-     * @param UseCase $useCase
-     */
-    public function __construct(UseCase $useCase)
-    {
-        $this->useCase = $useCase;
-    }
-
-    /**
      * @param array $rows
      * @return Model
      * @throws \Throwable
@@ -36,7 +23,8 @@ class TestCaseImport implements Importable
     public function import(array $rows): Model
     {
         return DB::transaction(function () use ($rows) {
-            $testCase = $this->useCase->testCases()->make(Arr::only($rows, TestCase::make()->getFillable()));
+            $useCase = UseCase::firstOrCreate(['name' => Arr::get($rows, 'use_case')]);
+            $testCase = $useCase->testCases()->make(Arr::only($rows, TestCase::make()->getFillable()));
             $testCase->saveOrFail();
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {

@@ -52,14 +52,14 @@
                                     Sessions
                                 </inertia-link>
                             </li>
-                            <li>
-                                <inertia-link
-                                    :href="route('admin.scenarios.index')"
-                                    class="text-reset dropdown-item"
-                                >
-                                    Scenarios
-                                </inertia-link>
-                            </li>
+<!--                            <li>-->
+<!--                                <inertia-link-->
+<!--                                    :href="route('admin.scenarios.index')"-->
+<!--                                    class="text-reset dropdown-item"-->
+<!--                                >-->
+<!--                                    Scenarios-->
+<!--                                </inertia-link>-->
+<!--                            </li>-->
                         </b-nav-item-dropdown>
 
                         <b-nav-item-dropdown
@@ -82,7 +82,7 @@
                             </template>
                             <li>
                                 <inertia-link
-                                    :href="route('settings.profile.edit')"
+                                    :href="route('settings.profile')"
                                     class="text-reset dropdown-item"
                                 >
                                     Settings
@@ -178,7 +178,7 @@
                     </b-navbar-nav>
 
                     <inertia-link
-                        :href="route('sessions.register.create')"
+                        :href="route('sessions.register.sut')"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />

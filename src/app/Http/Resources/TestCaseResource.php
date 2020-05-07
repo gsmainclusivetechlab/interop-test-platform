@@ -15,7 +15,6 @@ class TestCaseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'uuid' => $this->uuid,
             'name' => $this->name,
             'behavior' => $this->behavior,
             'description' => Markdown::parse($this->description)->toHtml(),

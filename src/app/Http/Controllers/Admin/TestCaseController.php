@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Resources\ScenarioResource;
 use App\Http\Resources\TestCaseResource;
 use App\Imports\TestCaseImport;
-use App\Models\Scenario;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,16 +22,13 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @param Scenario $scenario
      * @return \Inertia\Response
      */
-    public function index(Scenario $scenario)
+    public function index()
     {
         return Inertia::render('admin/test-cases/index', [
-            'scenario' => (new ScenarioResource($scenario))->resolve(),
             'testCases' => TestCaseResource::collection(
-                $scenario->testCases()
-                    ->when(request('q'), function (Builder $query, $q) {
+                TestCase::when(request('q'), function (Builder $query, $q) {
                         $query->where('test_cases.name', 'like', "%{$q}%");
                     })
                     ->with(['useCase', 'testSteps'])
@@ -72,35 +67,25 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @param Scenario $scenario
      * @return \Inertia\Response
      */
-    public function showImportForm(Scenario $scenario)
+    public function showImportForm()
     {
-        return Inertia::render('admin/test-cases/import', [
-            'scenario' => (new ScenarioResource($scenario))->resolve(),
-        ]);
+        return Inertia::render('admin/test-cases/import');
     }
 
     /**
-     * @param Scenario $scenario
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function import(Scenario $scenario)
+    public function import()
     {
-        request()->validate([
-            'file' => [
-                'required',
-                'mimetypes:text/yaml,text/plain',
-            ],
-        ]);
-        $file = request()->file('file');
+        request()->validate(['file' => ['required', 'mimetypes:text/yaml,text/plain']]);
 
         try {
-            $rows = Yaml::parse($file->get());
-            (new TestCaseImport($scenario))->import($rows);
+            $rows = Yaml::parse(request()->file('file')->get());
+            (new TestCaseImport())->import($rows);
             return redirect()
-                ->route('admin.scenarios.test-cases.index', $scenario)
+                ->route('admin.test-cases.index')
                 ->with('success', __('Test case imported successfully'));
         } catch (\Throwable $e) {
             return redirect()

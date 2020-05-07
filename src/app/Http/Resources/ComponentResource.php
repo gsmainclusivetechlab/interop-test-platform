@@ -16,7 +16,6 @@ class ComponentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'simulated' => $this->simulated,
-            'apiService' => (new ApiServiceResource($this->whenLoaded('apiService'))),
             'connections' => static::collection($this->whenLoaded('connections')),
         ];
     }

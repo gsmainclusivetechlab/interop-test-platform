@@ -1,6 +1,6 @@
 <template>
-    <layout :scenario="scenario">
-        <form @submit.prevent="submit">
+    <layout :components="components">
+        <form @submit.prevent="submit" class="col-12">
             <div class="card">
                 <div class="row">
                     <div class="col-6">
@@ -65,8 +65,7 @@
                             >
                                 <li
                                     class="list-group-item"
-                                    v-for="useCase in scenario.useCases.data"
-                                    :key="useCase.id"
+                                    v-for="useCase in useCases.data"
                                 >
                                     <div class="d-flex align-items-center">
                                         <b
@@ -92,12 +91,7 @@
                                     >
                                         <ul
                                             class="list-group"
-                                            v-if="
-                                                getTestCaseList(
-                                                    useCase,
-                                                    'positive'
-                                                ).length
-                                            "
+                                            v-if="collect(useCase.testCases).where('behavior', 'positive').count()"
                                         >
                                             <li
                                                 class="list-group-item border-0 py-0"
@@ -133,11 +127,7 @@
                                                     <ul class="list-group">
                                                         <li
                                                             class="list-group-item"
-                                                            v-for="testCase in getTestCaseList(
-                                                                useCase,
-                                                                'positive'
-                                                            )"
-                                                            :key="testCase.id"
+                                                            v-for="testCase in collect(useCase.testCases).where('behavior', 'positive').all()"
                                                         >
                                                             <label
                                                                 class="form-check mb-0"
@@ -168,12 +158,7 @@
 
                                         <ul
                                             class="list-group"
-                                            v-if="
-                                                getTestCaseList(
-                                                    useCase,
-                                                    'negative'
-                                                ).length
-                                            "
+                                            v-if="collect(useCase.testCases).where('behavior', 'negative').count()"
                                         >
                                             <li
                                                 class="list-group-item border-0 py-0"
@@ -209,11 +194,7 @@
                                                     <ul class="list-group">
                                                         <li
                                                             class="list-group-item"
-                                                            v-for="testCase in getTestCaseList(
-                                                                useCase,
-                                                                'negative'
-                                                            )"
-                                                            :key="testCase.id"
+                                                            v-for="testCase in collect(useCase.testCases).where('behavior', 'negative').all()"
                                                         >
                                                             <label
                                                                 class="form-check mb-0"
@@ -255,7 +236,13 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary ml-auto">
+                <inertia-link
+                    :href="route('sessions.register.sut')"
+                    class="btn btn-outline-primary"
+                >
+                    Back
+                </inertia-link>
+                <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
@@ -275,7 +262,15 @@ export default {
         Layout
     },
     props: {
-        scenario: {
+        session: {
+            type: Object,
+            required: true
+        },
+        components: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         }
@@ -284,18 +279,13 @@ export default {
         return {
             sending: false,
             form: {
-                name: null,
-                description: null,
-                test_cases: []
+                name: this.session.info ? this.session.info.name : null,
+                description: this.session.info ? this.session.info.description : null,
+                test_cases: this.session.info ? this.session.info.test_cases : [],
             }
         };
     },
     methods: {
-        getTestCaseList(useCase, behavior) {
-            return collect(useCase.testCases)
-                .where('behavior', behavior)
-                .all();
-        },
         toggleCheckboxes(e) {
             const btn = e.target;
             const closestParentList = btn.closest('.list-group-item');
@@ -313,9 +303,8 @@ export default {
         },
         submit() {
             this.sending = true;
-
             this.$inertia
-                .post(route('sessions.register.store'), this.form)
+                .post(route('sessions.register.info.store'), this.form)
                 .then(() => (this.sending = false));
         }
     }

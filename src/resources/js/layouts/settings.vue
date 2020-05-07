@@ -9,16 +9,16 @@
                     <div class="subheader mb-2">General</div>
                     <div class="list-group list-group-transparent">
                         <inertia-link
-                            :href="route('settings.profile.edit')"
+                            :href="route('settings.profile')"
                             class="list-group-item list-group-item-action d-flex align-items-center"
-                            v-bind:class="{'active' : route().current('settings.profile.*')}"
+                            v-bind:class="{'active' : route().current('settings.profile')}"
                         >
                             Profile
                         </inertia-link>
                         <inertia-link
-                            :href="route('settings.password.edit')"
+                            :href="route('settings.password')"
                             class="list-group-item list-group-item-action d-flex align-items-center"
-                            v-bind:class="{'active' : route().current('settings.password.*')}"
+                            v-bind:class="{'active' : route().current('settings.password')}"
                         >
                             Change password
                         </inertia-link>
