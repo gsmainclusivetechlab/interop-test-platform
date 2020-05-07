@@ -6,7 +6,13 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01 # Define a machine who has support for docker compose 3.7
     working_directory: ~/repo # Default working directory, where your project will be clo
-
+      
+    branches:  
+      only:  
+        - master  
+        - develop
+        - circleci-project-setup
+        
     steps:
       - checkout
 
