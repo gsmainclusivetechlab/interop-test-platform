@@ -385,10 +385,6 @@ test_steps:
     target: Mojaloop
     api_scheme: Mojaloop v1.0
     test_request_scripts:
-      - name: Mandatory IDs is present
-        rules:
-          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
           body.transactionType.scenario: 'in:PAYMENT'
@@ -435,10 +431,6 @@ test_steps:
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
     test_request_scripts:
-      - name: Mandatory IDs is present
-        rules:
-          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
           body.transactionType.scenario: 'in:PAYMENT'

@@ -17,11 +17,7 @@
             </div>
             <div class="pt-2 pb-4">
                 <diagram ref="diagram">
-                    sequenceDiagram;
-                    <template v-for="testStep in testSteps.data">
-                        {{ testStep.source.name }}->>{{ testStep.target.name }}: {{ testStep.name }};
-                        {{ testStep.target.name }}-->>{{ testStep.source.name }}: {{ `HTTP ${testStep.response.status}` }};
-                    </template>
+                    {{ diagramCode }}
                 </diagram>
             </div>
         </div>
@@ -51,7 +47,7 @@ export default {
         testSteps: {
             type: Object,
             required: true
-        },
+        }
     },
     data() {
         return {
@@ -59,11 +55,12 @@ export default {
                 code: null,
                 mermaid: {}
             },
-            editorUrl: 'https://mermaid-js.github.io/mermaid-live-editor/#/edit/'
-        }
+            editorUrl:
+                'https://mermaid-js.github.io/mermaid-live-editor/#/edit/'
+        };
     },
     mounted() {
-        this.flowData.code = this.$refs.diagram.$el.innerText;
+        this.flowData.code = this.diagramCode;
     },
     computed: {
         editorLink() {
@@ -72,6 +69,15 @@ export default {
             );
 
             return `${this.editorUrl}${encodedDiagramData}`;
+        },
+        diagramCode() {
+            return this.testSteps.data.reduce((template, testStep) => {
+                template += `
+${testStep.source.name} ->> ${testStep.target.name}: ${testStep.name};
+${testStep.target.name} -->> ${testStep.source.name}: HTTP ${testStep.response.status};
+`;
+                return template;
+            }, 'sequenceDiagram;');
         }
     }
 };
