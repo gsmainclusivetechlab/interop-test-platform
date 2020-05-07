@@ -2,17 +2,14 @@
 
 namespace Tests\Unit;
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Scenario;
+use App\Models\UseCase;
 use Tests\TestCase;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UseCaseTest extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test UseCase creating with valid data.
      *
@@ -20,8 +17,9 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseStoreValidData()
     {
-        $user = factory(User::class)->create();
-        $this->assertInstanceOf(User::class, $user);
+        factory(Scenario::class)->create();
+        $useCase = factory(UseCase::class)->create();
+        $this->assertInstanceOf(UseCase::class, $useCase);
     }
 
     /**
@@ -31,17 +29,11 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseStoreInvalidData()
     {
-        $emptyUser = factory(User::class)->make(self::emptyData());
-        $this->assertFalse(Validator::make($emptyUser->attributesToArray(), self::rules())->passes());
+        $emptyUseCase = factory(UseCase::class)->make(self::emptyData());
+        $this->assertFalse(Validator::make($emptyUseCase->attributesToArray(), self::rules())->passes());
 
-        $validationFailedUser = factory(User::class)->make(self::invalidData());
-        $this->assertFalse(Validator::make($validationFailedUser->attributesToArray(), self::rules())->passes());
-
-        $existUser = factory(User::class)->create();
-        $userUniqueEmail = factory(User::class)->make([
-            'email' => $existUser->email,
-        ]);
-        $this->assertFalse(Validator::make($userUniqueEmail->attributesToArray(), self::rules())->passes());
+        $validationFailedUseCase = factory(UseCase::class)->make(self::invalidData());
+        $this->assertFalse(Validator::make($validationFailedUseCase->attributesToArray(), self::rules())->passes());
     }
 
     /**
@@ -51,8 +43,9 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseUpdateValidData()
     {
-        $user = factory(User::class)->create();
-        $this->assertTrue($user->update(factory(User::class)->make()->attributesToArray()));
+        factory(Scenario::class)->create();
+        $useCase = factory(UseCase::class)->create();
+        $this->assertTrue($useCase->update(factory(UseCase::class)->make()->attributesToArray()));
     }
 
     /**
@@ -62,37 +55,15 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseUpdateInvalidData()
     {
-        $userWithEmptyData = factory(User::class)->create();
+        factory(Scenario::class)->create();
 
-        $userWithEmptyData->setRawAttributes(self::emptyData());
-        $this->assertFalse(Validator::make($userWithEmptyData->attributesToArray(), self::rules())->passes());
+        $useCaseWithEmptyData = factory(UseCase::class)->create();
+        $useCaseWithEmptyData->setRawAttributes(self::emptyData());
+        $this->assertFalse(Validator::make($useCaseWithEmptyData->attributesToArray(), self::rules())->passes());
 
-        $userWithInvalidData = factory(User::class)->create();
-        $userWithInvalidData->setRawAttributes(self::invalidData());
-        $this->assertFalse(Validator::make($userWithInvalidData->attributesToArray(), self::rules())->passes());
-
-        $existUser = factory(User::class)->create();
-        $userWithUniqueEmail = factory(User::class)->create();
-        $userWithUniqueEmail->email = $existUser->email;
-        $this->assertFalse(Validator::make($userWithUniqueEmail->attributesToArray(), self::rules())->passes());
-    }
-
-    /**
-     * Test UseCase soft delete.
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function testUseCaseSoftDelete()
-    {
-        $user = factory(User::class)->create();
-        $user->delete();
-        $this->assertSoftDeleted(
-            $user->getTable(),
-            $user->attributesToArray(),
-            null,
-            $user->getDeletedAtColumn()
-        );
+        $useCaseWithInvalidData = factory(UseCase::class)->create();
+        $useCaseWithInvalidData->setRawAttributes(self::invalidData());
+        $this->assertFalse(Validator::make($useCaseWithInvalidData->attributesToArray(), self::rules())->passes());
     }
 
     /**
@@ -103,13 +74,9 @@ class UseCaseTest extends TestCase
     protected static function rules()
     {
         return [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'company' => ['string', 'max:255'],
-            'role' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255', 'unique:users'],
-            'remember_token' => ['string', 'max:100'],
-            'password' => ['required', 'string', 'max:255'],
+            'scenario_id' => ['required', 'exists:scenarios,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['string'],
         ];
     }
 
@@ -121,12 +88,9 @@ class UseCaseTest extends TestCase
     protected static function emptyData()
     {
         return [
-            'first_name' => '',
-            'last_name' => '',
-            'role' => '',
-            'email' => '',
-            'company' => '',
-            'password' => '',
+            'scenario_id' => null,
+            'name' => null,
+            'description' => null,
         ];
     }
 
@@ -138,13 +102,9 @@ class UseCaseTest extends TestCase
     protected static function invalidData()
     {
         return [
-            'first_name' => Str::random(500),
-            'last_name' => Str::random(500),
-            'company' => Str::random(500),
-            'role' => 'test',
-            'email' => 'test',
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(100),
+            'scenario_id' => Str::random(500),
+            'name' => Str::random(500),
+            'description' => 125,
         ];
     }
 }

@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -11,8 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
-
     /**
      * Test User creating with valid data.
      *
@@ -99,6 +96,36 @@ class UserTest extends TestCase
     }
 
     /**
+     * Test User isAdmin.
+     *
+     * @return void
+     */
+    public function testUserIsAdmin()
+    {
+        $userNormal = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $userAdmin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $userSuperAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $this->assertFalse($userNormal->isAdmin());
+        $this->assertTrue($userAdmin->isAdmin());
+        $this->assertTrue($userSuperAdmin->isAdmin());
+    }
+
+    /**
+     * Test User isSuperadmin.
+     *
+     * @return void
+     */
+    public function testUserIsSuperadmin()
+    {
+        $userNormal = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $userAdmin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $userSuperAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $this->assertFalse($userNormal->isSuperadmin());
+        $this->assertFalse($userAdmin->isSuperadmin());
+        $this->assertTrue($userSuperAdmin->isSuperadmin());
+    }
+
+    /**
      * Database validation rules.
      *
      * @return array
@@ -124,12 +151,12 @@ class UserTest extends TestCase
     protected static function emptyData()
     {
         return [
-            'first_name' => '',
-            'last_name' => '',
-            'role' => '',
-            'email' => '',
-            'company' => '',
-            'password' => '',
+            'first_name' => null,
+            'last_name' => null,
+            'role' => null,
+            'email' => null,
+            'company' => null,
+            'password' => null,
         ];
     }
 
