@@ -28,6 +28,11 @@ jobs:
           keys:
             - composer-v1-{{ checksum "src/composer.lock" }}
             - composer-v1-
+               
+      - restore_cache: 
+          keys:
+            - node-v1-{{ checksum "src/package-lock.json" }}
+            - node-v1-
 
       - run: 
           name: Install Componser and Node dependecies
@@ -37,6 +42,11 @@ jobs:
           key: composer-v1-{{ checksum "src/composer.lock" }}
           paths:
             - vendor
+      
+      - save_cache:
+            - node-v1-{{ checksum "src/package-lock.json" }}
+          paths:
+            - node_modules
 
       - run: 
           name: Check installation
