@@ -38,10 +38,10 @@ jobs:
           command: make test
       
       - store_test_results:
-          path: src/test-results
+          path: src/tests/results
 
       - store_artifacts:
           path: src/tests/Browser/screenshots
           
       - store_artifacts:
-          path: src/test-results
+          path: src/tests/results
