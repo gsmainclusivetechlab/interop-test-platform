@@ -23,10 +23,20 @@ jobs:
       - run: 
           name: Run docker containers
           command: make run
+          
+      - restore_cache: 
+          keys:
+            - composer-v1-{{ checksum "src/composer.lock" }}
+            - composer-v1-
 
       - run: 
           name: Install Componser and Node dependecies
           command: make install
+      
+      - save_cache:
+          key: composer-v1-{{ checksum "src/composer.lock" }}
+          paths:
+            - vendor
 
       - run: 
           name: Check installation
