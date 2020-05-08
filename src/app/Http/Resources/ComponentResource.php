@@ -15,6 +15,7 @@ class ComponentResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'base_url' => $this->base_url,
             'simulated' => $this->simulated,
             'connections' => static::collection($this->whenLoaded('connections')),
         ];

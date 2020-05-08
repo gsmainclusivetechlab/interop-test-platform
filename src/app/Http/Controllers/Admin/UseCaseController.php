@@ -6,6 +6,7 @@ use App\Http\Resources\UseCaseResource;
 use App\Models\UseCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UseCaseController extends Controller
@@ -17,7 +18,7 @@ class UseCaseController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(UseCase::class, 'use_case', [
-//            'except' => ['index'],
+            'except' => ['show'],
         ]);
     }
 
@@ -39,5 +40,73 @@ class UseCaseController extends Controller
                 'q' => request('q'),
             ],
         ]);
+    }
+
+    /**
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        return Inertia::render('admin/use-cases/create');
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['string', 'nullable'],
+        ]);
+        UseCase::create($request->input());
+
+        return redirect()
+            ->route('admin.use-cases.index')
+            ->with('success', __('Use case created successfully'));
+    }
+
+    /**
+     * @param UseCase $useCase
+     * @return \Inertia\Response
+     */
+    public function edit(UseCase $useCase)
+    {
+        return Inertia::render('admin/use-cases/edit', [
+            'useCase' => (new UseCaseResource($useCase))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param UseCase $useCase
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(UseCase $useCase, Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['string', 'nullable'],
+        ]);
+        $useCase->update($request->input());
+
+        return redirect()
+            ->route('admin.use-cases.index')
+            ->with('success', __('Use case updated successfully'));
+    }
+
+    /**
+     * @param UseCase $useCase
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function destroy(UseCase $useCase)
+    {
+        $useCase->delete();
+
+        return redirect()
+            ->back()
+            ->with('success', __('Use case deleted successfully'));
     }
 }

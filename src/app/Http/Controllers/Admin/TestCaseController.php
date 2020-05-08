@@ -7,6 +7,7 @@ use App\Imports\TestCaseImport;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Symfony\Component\Yaml\Yaml;
 
@@ -18,7 +19,9 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestCase::class, 'test_case');
+        $this->authorizeResource(TestCase::class, 'test_case', [
+            'only' => ['index', 'destroy'],
+        ]);
     }
 
     /**
@@ -43,17 +46,6 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return \Inertia\Response
-     */
-    public function show(TestCase $testCase)
-    {
-        return Inertia::render('admin/test-cases/show', [
-            'testCase' => (new TestCaseResource($testCase))->resolve(),
-        ]);
-    }
-
-    /**
-     * @param TestCase $testCase
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
@@ -71,6 +63,7 @@ class TestCaseController extends Controller
      */
     public function showImportForm()
     {
+        $this->authorize('import', TestCase::class);
         return Inertia::render('admin/test-cases/import');
     }
 
@@ -79,6 +72,7 @@ class TestCaseController extends Controller
      */
     public function import()
     {
+        $this->authorize('import', TestCase::class);
         request()->validate(['file' => ['required', 'mimetypes:text/yaml,text/plain']]);
 
         try {

@@ -8,7 +8,7 @@
                             <h3 class="card-title">Session info</h3>
                         </div>
                         <div class="card-body pt-0">
-                            <div class="form-group mb-2">
+                            <div class="mb-3">
                                 <label class="form-label">
                                     Name
                                 </label>
@@ -30,7 +30,7 @@
                                     </strong>
                                 </span>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label class="form-label">
                                     Description
                                 </label>

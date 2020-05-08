@@ -20,6 +20,10 @@ class TestCasePolicy
         if ($user->isAdmin()) {
             return true;
         }
+
+        if ($user->isTestCaseCreator() && in_array($ability, ['viewAny', 'view', 'create', 'import'])) {
+            return true;
+        }
     }
 
     /**
@@ -66,6 +70,16 @@ class TestCasePolicy
      * @return mixed
      */
     public function delete(User $user, TestCase $model)
+    {
+
+    }
+
+    /**
+     * @param  User  $user
+     * @param  TestCase  $model
+     * @return mixed
+     */
+    public function import(User $user, TestCase $model)
     {
 
     }

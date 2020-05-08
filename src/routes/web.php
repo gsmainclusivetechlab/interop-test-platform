@@ -60,22 +60,19 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
  * Admin Routes
  */
 Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
+    Route::resource('users', 'UserController')->only(['destroy']);
     Route::name('users.')->prefix('users')->group(function () {
-        Route::get('/{trashed?}', 'UserController@index')->name('index')->where('trashed', 'trashed');
-        Route::delete('{user}/destroy', 'UserController@destroy')->name('destroy');
+        Route::get('/{trash?}', 'UserController@index')->name('index')->where('trash', '(trash)');
         Route::post('{userOnlyTrashed}/restore', 'UserController@restore')->name('restore');
         Route::delete('{userWithTrashed}/force-destroy', 'UserController@forceDestroy')->name('force-destroy');
         Route::post('{user}/verify', 'UserController@verify')->name('verify');
-        Route::post('{user}/promote-admin', 'UserController@promoteAdmin')->name('promote-admin');
-        Route::post('{user}/relegate-admin', 'UserController@relegateAdmin')->name('relegate-admin');
+        Route::put('{user}/promote-role/{role}', 'UserController@promoteRole')->name('promote-role');
     });
-    Route::name('sessions.')->prefix('sessions')->group(function () {
-        Route::get('/', 'SessionController@index')->name('index');
+    Route::resource('sessions', 'SessionController')->only(['index']);
+    Route::resource('use-cases', 'UseCaseController')->except(['show']);
+    Route::resource('test-cases', 'TestCaseController')->only(['index', 'destroy']);
+    Route::name('test-cases.')->prefix('test-cases')->group(function () {
+        Route::get('import', 'TestCaseController@showImportForm')->name('import');
+        Route::post('import', 'TestCaseController@import')->name('import.confirm');
     });
-    Route::resource('components', 'ComponentController')->shallow();
-    Route::resource('use-cases', 'UseCaseController')->shallow()->except(['create']);
-    Route::resource('test-cases', 'TestCaseController')->shallow();
-    Route::get('test-cases/import', 'TestCaseController@showImportForm')->name('test-cases.import');
-    Route::post('test-cases/import', 'TestCaseController@import')->name('test-cases.import.confirm');
-    Route::resource('test-cases.test-steps', 'TestStepController')->shallow();
 });

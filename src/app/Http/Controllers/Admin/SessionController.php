@@ -16,7 +16,9 @@ class SessionController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(Session::class, 'session');
+        $this->authorizeResource(Session::class, 'session', [
+            'only' => ['index'],
+        ]);
     }
 
     /**

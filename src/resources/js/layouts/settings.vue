@@ -3,9 +3,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <h1 class="page-title mb-5">
-                        <b>Settings</b>
-                    </h1>
+                    <div class="page-header">
+                        <h2 class="page-title">
+                            <b>Settings</b>
+                        </h2>
+                    </div>
                     <div class="subheader mb-2">General</div>
                     <div class="list-group list-group-transparent">
                         <inertia-link

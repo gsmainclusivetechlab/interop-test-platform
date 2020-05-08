@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        Tutorials
+                        <b>Tutorials</b>
                     </h2>
                 </div>
             </div>

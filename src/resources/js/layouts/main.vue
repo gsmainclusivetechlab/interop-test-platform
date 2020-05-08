@@ -30,13 +30,18 @@
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
-                            v-if="$page.auth.user.is_admin"
+                            v-if="(
+                                $page.auth.user.can.users.viewAny ||
+                                $page.auth.user.can.sessions.viewAny ||
+                                $page.auth.user.can.use_cases.viewAny ||
+                                $page.auth.user.can.test_cases.viewAny
+                            )"
                         >
                             <template v-slot:button-content>
                                 <icon name="settings" />
                             </template>
 
-                            <li>
+                            <li v-if="$page.auth.user.can.users.viewAny">
                                 <inertia-link
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
@@ -44,7 +49,7 @@
                                     Users
                                 </inertia-link>
                             </li>
-                            <li>
+                            <li v-if="$page.auth.user.can.sessions.viewAny">
                                 <inertia-link
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
@@ -52,14 +57,22 @@
                                     Sessions
                                 </inertia-link>
                             </li>
-<!--                            <li>-->
-<!--                                <inertia-link-->
-<!--                                    :href="route('admin.scenarios.index')"-->
-<!--                                    class="text-reset dropdown-item"-->
-<!--                                >-->
-<!--                                    Scenarios-->
-<!--                                </inertia-link>-->
-<!--                            </li>-->
+                            <li v-if="$page.auth.user.can.use_cases.viewAny">
+                                <inertia-link
+                                    :href="route('admin.use-cases.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Use Cases
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.test_cases.viewAny">
+                                <inertia-link
+                                    :href="route('admin.test-cases.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Test Cases
+                                </inertia-link>
+                            </li>
                         </b-nav-item-dropdown>
 
                         <b-nav-item-dropdown
@@ -188,7 +201,7 @@
             </b-collapse>
         </b-navbar>
         <main class="content">
-            <div class="container-fluid">
+            <div class="container-fluid d-flex flex-column">
                 <slot />
             </div>
         </main>

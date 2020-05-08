@@ -1,5 +1,17 @@
 <template>
-    <layout :scenario="scenario">
+    <layout>
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="page-pretitle">
+                        Administration
+                    </div>
+                    <h2 class="page-title">
+                        <b>Test Cases</b>
+                    </h2>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header">
                 <form class="input-icon" @submit.prevent="search">
@@ -15,7 +27,8 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('admin.scenarios.test-cases.import', scenario.id)"
+                        :href="route('admin.test-cases.import')"
+                        v-if="$page.auth.user.can.test_cases.import"
                         class="btn btn-primary"
                     >
                         <icon name="upload" />
@@ -36,14 +49,10 @@
                     <tbody>
                         <tr v-for="testCase in testCases.data">
                             <td class="text-break">
-                                <inertia-link :href="route('admin.test-cases.show', testCase.id)">
-                                    {{ testCase.name }}
-                                </inertia-link>
+                                {{ testCase.name }}
                             </td>
                             <td class="text-break">
-                                <a href="#" v-if="testCase.useCase">
-                                    {{ testCase.useCase.name }}
-                                </a>
+                                {{ testCase.useCase.name }}
                             </td>
                             <td>
                                 {{ testCase.testSteps ? testCase.testSteps.length : 0  }}
@@ -53,20 +62,27 @@
                                     v-if="testCase.can.delete"
                                     no-caret
                                     right
-                                    toggle-class="align-text-top"
-                                    variant="secondary"
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
                                     boundary="window"
                                 >
                                     <template v-slot:button-content>
-                                        <icon name="edit" class="m-0"></icon>
+                                        <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.test-cases.destroy', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.destroy',
+                                                    testCase.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${testCase.name}?`"
+                                            :confirm-text="
+                                                `Are you sure you want to delete ${testCase.name}?`
+                                            "
                                         >
                                             Delete
                                         </confirm-link>
@@ -75,7 +91,7 @@
                             </td>
                         </tr>
                         <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="2">
+                            <td class="text-center" colspan="4">
                                 No Results
                             </td>
                         </tr>
@@ -88,17 +104,16 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/admin/scenario';
+    import Layout from '@/layouts/main';
 
     export default {
+        metaInfo: {
+            title: 'Test Cases'
+        },
         components: {
             Layout,
         },
         props: {
-            scenario: {
-                type: Object,
-                required: true,
-            },
             testCases: {
                 type: Object,
                 required: true,
@@ -117,7 +132,7 @@
         },
         methods: {
             search() {
-                this.$inertia.replace(route('admin.scenarios.test-cases.index', this.scenario.id), {
+                this.$inertia.replace(route('admin.test-cases.index'), {
                     data: this.form
                 });
             }

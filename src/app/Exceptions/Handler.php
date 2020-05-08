@@ -35,6 +35,7 @@ class Handler extends ExceptionHandler
                 401,
                 403,
                 404,
+                405,
                 419,
                 429,
                 500,
