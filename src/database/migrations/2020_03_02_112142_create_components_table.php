@@ -18,7 +18,6 @@ class CreateComponentsTable extends Migration
             $table->uuid('uuid')->unique();
             $table->string('name');
             $table->string('base_url');
-            $table->boolean('simulated');
             $table->text('description')->nullable();
             $table->unsignedInteger('position');
             $table->timestamps();

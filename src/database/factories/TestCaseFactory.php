@@ -2,7 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Component;
+use App\Models\TestCase;
+use App\Models\UseCase;
 use Faker\Generator as Faker;
 
 /*
@@ -16,10 +17,14 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Component::class, function (Faker $faker) {
+$factory->define(TestCase::class, function (Faker $faker) {
     return [
+        'use_case_id' => function () {
+            return factory(UseCase::class)->create()->id;
+        },
         'name' => $faker->text,
-        'base_url' => $faker->url,
+        'behavior' => $faker->randomElement([TestCase::BEHAVIOR_POSITIVE, TestCase::BEHAVIOR_NEGATIVE]),
         'description' => $faker->text,
+        'precondition' => $faker->text,
     ];
 });

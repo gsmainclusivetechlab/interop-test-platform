@@ -25,7 +25,6 @@ class Component extends Model
     protected $fillable = [
         'name',
         'base_url',
-        'simulated',
         'description',
     ];
 

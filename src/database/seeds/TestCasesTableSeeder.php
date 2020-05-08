@@ -21,7 +21,5 @@ class TestCasesTableSeeder extends Seeder
         foreach ($finder as $file) {
             (new TestCaseImport())->import(Yaml::parse($file->getContents()));
         }
-
-        // applicability_sut
     }
 }

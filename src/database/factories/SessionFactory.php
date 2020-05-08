@@ -2,7 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Component;
+use App\Models\Session;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 /*
@@ -16,10 +17,12 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(Component::class, function (Faker $faker) {
+$factory->define(Session::class, function (Faker $faker) {
     return [
+        'owner_id' => function () {
+            return factory(User::class)->create()->id;
+        },
         'name' => $faker->text,
-        'base_url' => $faker->url,
         'description' => $faker->text,
     ];
 });
