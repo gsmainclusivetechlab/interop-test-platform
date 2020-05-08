@@ -4,142 +4,157 @@ namespace Tests\Browser;
 
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
+use Tests\Browser\Pages\LoginPage;
 
 class LoginTest extends DuskTestCase
 {
+    private $user;
+
     /**
-     * @test
+     * Setup tests.
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = $this->user();
+    }
+
+    /**
      * Can navigate to forgot password page.
      * @return void
      */
-    public function canNavigateToForgotPasswordPage()
+    public function testCanNavigateToForgotPasswordPage()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->clickLink('Forgot password?')
+            $browser
+                ->visit(new LoginPage)
+                ->click('@forgotPasswordLink')
                 ->waitForLocation('/password/reset')
                 ->assertSee('Forgot password');
         });
     }
 
     /**
-     * @test
      * Can navigate to register page.
      * @return void
      */
-    public function canNavigateToRegisterPage()
+    public function testCanNavigateToRegisterPage()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->clickLink('Register')
+            $browser
+                ->visit(new LoginPage)
+                ->click('@registerLink')
                 ->waitForLocation('/register')
                 ->assertSee('Create new account');
         });
     }
 
     /**
-     * @test
      * Can not login with empty credentials.
      * @return void
      */
-    public function canNotLoginWithEmptyCredentials()
+    public function testCanNotLoginWithEmptyCredentials()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->assertSee('Login to your account')
-                ->clear('email')
-                ->clear('password')
-                ->press('Login')
-                ->waitFor('.form-control.is-invalid')
+            $browser
+                ->visit(new LoginPage)
+                ->clear('@email')
+                ->clear('@password')
+                ->click('@submitButton')
+                ->waitFor('@invalidFormField')
+                ->assertSeeIn('@email + .invalid-feedback', 'The email field is required.')
+                ->assertSeeIn('@password + .invalid-feedback', 'The password field is required.')
                 ->assertGuest();
         });
     }
 
     /**
-     * @test
      * Can not login with invalid credentials.
      * @return void
      */
-    public function canNotLoginWithInvalidCredentials()
+    public function testCanNotLoginWithInvalidCredentials()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->assertSee('Login to your account')
-                ->type('email', 'invalid@email.com')
-                ->type('password', 'invalid_password')
-                ->press('Login')
-                ->waitFor('.form-control.is-invalid')
+            $browser
+                ->visit(new LoginPage)
+                ->type('@email', self::$userEmailInvalid)
+                ->type('@password', self::$userPasswordInvalid)
+                ->click('@submitButton')
+                ->waitFor('@invalidFormField')
+                ->assertSeeIn('@email + .invalid-feedback', 'These credentials do not match our records.')
                 ->assertGuest();
         });
     }
 
     /**
-     * @test
      * Can not login with valid email and invalid password.
      * @return void
      */
-    public function canNotLoginWithValidEmailAndInvalidPassword()
+    public function testCanNotLoginWithValidEmailAndInvalidPassword()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->assertSee('Login to your account')
-                ->type('email', 'superadmin@gsma.com')
-                ->type('password', 'invalid_password')
-                ->press('Login')
-                ->waitFor('.form-control.is-invalid')
+            $browser
+                ->visit(new LoginPage)
+                ->type('@email', $this->user->email)
+                ->type('@password', self::$userPasswordInvalid)
+                ->click('@submitButton')
+                ->waitFor('@invalidFormField')
+                ->assertSeeIn('@email + .invalid-feedback', 'These credentials do not match our records.')
                 ->assertGuest();
         });
     }
 
     /**
-     * @test
      * Can not login with invalid email and valid password.
      * @return void
      */
-    public function canNotLoginWithInvalidEmailAndValidPassword()
+    public function testCanNotLoginWithInvalidEmailAndValidPassword()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/login')
-                ->assertSee('Login to your account')
-                ->type('email', 'invalid@email.com')
-                ->type('password', 'qzRBHEzStdG8XWhy')
-                ->press('Login')
-                ->waitFor('.form-control.is-invalid')
+            $browser
+                ->visit(new LoginPage)
+                ->type('@email', self::$userEmailInvalid)
+                ->type('@password', self::$userPassword)
+                ->click('@submitButton')
+                ->waitFor('@invalidFormField')
+                ->assertSeeIn('@email + .invalid-feedback', 'These credentials do not match our records.')
                 ->assertGuest();
         });
     }
 
     /**
-     * @test
      * Can login with valid credentials.
      * @return void
      */
-//    public function canLoginWithValidCredentials()
-//    {
-//        $this->browse(function (Browser $browser) {
-//            $browser->visit('/login')
-//                ->assertSee('Login to your account')
-//                ->type('email', 'superadmin@gsma.com')
-//                ->type('password', 'qzRBHEzStdG8XWhy')
-//                ->press('Login')
-//                ->waitForLocation('/')
-//                ->assertAuthenticated();
-//        });
-//    }
+    public function testCanLoginWithValidCredentials()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->visit(new LoginPage)
+                ->type('@email', $this->user->email)
+                ->type('@password', self::$userPassword)
+                ->click('@submitButton')
+                ->waitForLocation('/')
+                ->assertAuthenticated();
+        });
+    }
 
     /**
-     * @test
      * Can logout.
      * @return void
      */
-//    public function canLogout()
-//    {
-//        $this->browse(function (Browser $browser) {
-//            $browser->visit('/')
-//                ->click('.navbar-nav .nav-item:last-child .nav-link')
-//                ->clickLink('Logout')
-//                ->waitForLocation('/login')
-//                ->assertGuest();
-//        });
-//    }
+    public function testCanLogout()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->loginAs($this->user)
+                ->visit('/')
+                ->click('@userActions')
+                ->waitFor('@logoutLink')
+                ->click('@logoutLink')
+                ->waitForLocation('/login')
+                ->assertGuest();
+        });
+    }
 }
