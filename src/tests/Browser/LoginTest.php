@@ -151,6 +151,7 @@ class LoginTest extends DuskTestCase
                 ->loginAs($this->user)
                 ->visit('/')
                 ->click('@userActions')
+                ->waitFor('@logoutLink')
                 ->click('@logoutLink')
                 ->waitForLocation('/login')
                 ->assertGuest();
