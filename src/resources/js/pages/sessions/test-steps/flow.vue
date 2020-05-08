@@ -53,7 +53,14 @@ export default {
         return {
             flowData: {
                 code: null,
-                mermaid: {}
+                mermaid: {
+                    sequence: {
+                        diagramMarginX: 30,
+                        width: 185,
+                        height: 60
+                    },
+                    theme: null
+                }
             },
             editorUrl:
                 'https://mermaid-js.github.io/mermaid-live-editor/#/edit/'
