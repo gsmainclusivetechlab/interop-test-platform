@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Scopes\NameScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -29,6 +30,14 @@ class TestCase extends Model
         'precondition',
         'behavior',
     ];
+
+    /**
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new NameScope());
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -59,7 +68,7 @@ class TestCase extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'test_case_id')->latest();
+        return $this->hasOne(TestRun::class, 'test_case_id')->completed()->latest();
     }
 
     /**

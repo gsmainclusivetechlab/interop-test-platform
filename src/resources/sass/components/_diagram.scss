@@ -2,6 +2,7 @@
     min-height: 66px;
     opacity: 0;
     transition: opacity 0.1s;
+    overflow-x: auto;
 
     &[data-processed='true'] {
         opacity: 1;
@@ -46,8 +47,9 @@
     }
 
     .actor {
-        fill: #fff;
-        stroke: #fff;
+        fill: $gray-100;
+        stroke: $gray-300;
+        stroke-width: 0.5;
     }
 
     text.actor {

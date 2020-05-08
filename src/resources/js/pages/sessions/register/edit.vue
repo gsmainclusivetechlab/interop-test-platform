@@ -301,7 +301,6 @@ export default {
         getTestCaseList(useCase, behavior) {
             return collect(useCase.testCases)
                 .where('behavior', behavior)
-                .sortBy('name')
                 .all();
         },
         toggleCheckboxes(e) {

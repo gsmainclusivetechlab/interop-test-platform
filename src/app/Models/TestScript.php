@@ -28,7 +28,6 @@ class TestScript extends Model
         'type',
         'rules',
         'messages',
-        'attributes',
     ];
 
     /**
@@ -37,7 +36,6 @@ class TestScript extends Model
     protected $casts = [
         'rules' => 'array',
         'messages' => 'array',
-        'attributes' => 'array',
     ];
 
     /**

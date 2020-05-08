@@ -32,6 +32,8 @@ class TestRunController extends Controller
      */
     public function show(Session $session, TestCase $testCase, TestRun $testRun, int $position = 1)
     {
+        $this->authorize('view', $session);
+
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([
@@ -39,7 +41,7 @@ class TestRunController extends Controller
                     'scenario' => function ($query) {
                         return $query->with([
                             'components' => function ($query) {
-                                return $query->with(['paths']);
+                                return $query->with(['connections']);
                             },
                         ]);
                     },

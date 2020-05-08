@@ -11,11 +11,11 @@
                     <div class="ml-auto col-2">
                         <div class="mb-1">
                             Execution:
-                            <icon name="briefcase" />
+                            <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
                             <small>
                                 {{ session.testCases ? collect(session.testCases.data).unique('use_case_id').count() : 0 }}
                             </small>
-                            <icon name="file-text" />
+                            <icon name="file-text" v-b-tooltip.hover title="Test Case" />
                             <small>
                                 {{ session.testCases ? session.testCases.data.length : 0  }}
                             </small>
@@ -68,7 +68,7 @@
                                                 class="nav-link rounded-0"
                                                 v-bind:class="{'active': route().current('sessions.test-cases.show') || route().current('sessions.test-cases.test-runs.*')}"
                                             >
-                                                Overview
+                                                Test Runs
                                             </inertia-link>
                                         </li>
                                         <li class="nav-item">
@@ -86,7 +86,7 @@
                                                 class="nav-link rounded-0"
                                                 v-bind:class="{'active': route().current('sessions.test-cases.test-steps.flow')}"
                                             >
-                                                Use Case Flow
+                                                Flow
                                             </inertia-link>
                                         </li>
                                     </ul>
@@ -100,16 +100,10 @@
                                                     readonly
                                                     :value="route('testing.run', [session.uuid, testCase.uuid])"
                                                 />
-                                                <button
-                                                    ref="clipboard"
-                                                    class="btn btn-secondary"
-                                                    type="button"
-                                                    v-b-tooltip.hover.topright.viewport
+                                                <clipboard-copy-btn
+                                                    target="#testing-url"
                                                     title="Copy URL"
-                                                    data-clipboard-target="#testing-url"
-                                                >
-                                                    <icon name="copy" class="m-0"></icon>
-                                                </button>
+                                                ></clipboard-copy-btn>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +119,6 @@
 </template>
 
 <script>
-    import Clipboard from 'clipboard';
     import Layout from '@/layouts/main';
     import SessionProgress from '@/components/sessions/progress';
 
@@ -148,9 +141,6 @@
                 type: Object,
                 required: true
             },
-        },
-        mounted() {
-            new Clipboard(this.$refs.clipboard);
         }
     };
 </script>

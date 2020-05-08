@@ -11,6 +11,7 @@
                     <thead class="thead-light">
                     <tr>
                         <th class="text-nowrap w-auto">Number</th>
+                        <th class="text-nowrap w-auto">Name</th>
                         <th class="text-nowrap w-auto">Source</th>
                         <th class="text-nowrap w-auto">Target</th>
                         <th class="text-nowrap w-auto">Expected Data</th>
@@ -20,6 +21,9 @@
                     <tr v-for="testStep in testSteps.data">
                         <td class="align-middle">
                             {{ testStep.position }}
+                        </td>
+                        <td class="align-middle">
+                            {{ testStep.name }}
                         </td>
                         <td class="align-middle">
                             {{ testStep.source ? testStep.source.name : '' }}
@@ -45,43 +49,43 @@
                                 title="Request"
                             >
                                 <div class="border">
-                                    <div class="d-flex" v-if="testStep.request_example.uri">
+                                    <div class="d-flex" v-if="testStep.request.uri">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Endpoint</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                {{ testStep.request_example.uri }}
+                                                {{ testStep.request.uri }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="testStep.request_example.method">
+                                    <div class="d-flex" v-if="testStep.request.method">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Method</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                {{ testStep.request_example.method }}
+                                                {{ testStep.request.method }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.request_example.headers).count()">
+                                    <div class="d-flex" v-if="collect(testStep.request.headers).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Headers</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <json-tree :data="testStep.request_example.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                <json-tree :data="testStep.request.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.request_example.body).count()">
+                                    <div class="d-flex" v-if="collect(testStep.request.body).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Body</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <json-tree :data="testStep.request_example.body" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                <json-tree :data="testStep.request.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
@@ -96,33 +100,33 @@
                                 title="Response"
                             >
                                 <div class="border">
-                                    <div class="d-flex" v-if="testStep.response_example.status">
+                                    <div class="d-flex" v-if="testStep.response.status">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Status</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                {{ testStep.response_example.status }}
+                                                {{ testStep.response.status }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.response_example.headers).count()">
+                                    <div class="d-flex" v-if="collect(testStep.response.headers).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Headers</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <json-tree :data="testStep.response_example.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                <json-tree :data="testStep.response.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.response_example.body).count()">
+                                    <div class="d-flex" v-if="collect(testStep.response.body).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Body</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0 bg-transparent">
-                                                <json-tree :data="testStep.response_example.body" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                <json-tree :data="testStep.response.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
                                     </div>

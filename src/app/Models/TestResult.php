@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Casts\TestRequestCast;
-use App\Casts\TestResponseCast;
+use App\Casts\RequestCast;
+use App\Casts\ResponseCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Model;
 class TestResult extends Model
 {
     const UPDATED_AT = null;
+
+    const STATUS_INCOMPLETE = 'incomplete';
+    const STATUS_PASS = 'pass';
+    const STATUS_FAIL = 'fail';
 
     /**
      * @var string
@@ -22,7 +26,6 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
-        'test_step_id',
         'request',
         'response',
     ];
@@ -31,24 +34,23 @@ class TestResult extends Model
      * @var array
      */
     protected $casts = [
-        'request' => TestRequestCast::class,
-        'response' => TestResponseCast::class,
-        'completed_at' => 'datetime',
+        'request' => RequestCast::class,
+        'response' => ResponseCast::class,
     ];
 
     /**
      * @var array
      */
     protected $attributes = [
-        'duration' => 0,
+        'status' => self::STATUS_INCOMPLETE,
     ];
 
     /**
      * @var array
      */
     protected $observables = [
-        'successful',
-        'unsuccessful',
+        'pass',
+        'fail',
     ];
 
     /**
@@ -76,65 +78,42 @@ class TestResult extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSuccessful($query)
-    {
-        return $query->where('successful', true);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeUnsuccessful($query)
-    {
-        return $query->where('successful', false);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeCompleted($query)
-    {
-        return $query->whereNotNull('completed_at');
-    }
-
-    /**
-     * @param float $time
      * @return bool
      */
-    public function successful(float $time)
+    public function getSuccessfulAttribute()
     {
-        $this->successful = true;
-        $this->duration = (int) floor($time * 1000);
-        $this->completed_at = now();
+        return $this->status === static::STATUS_PASS;
+    }
+
+    /**
+     * @return $this|bool
+     */
+    public function pass()
+    {
+        $this->status = static::STATUS_PASS;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('successful');
-        return true;
+        $this->fireModelEvent('pass');
+        return $this;
     }
 
     /**
-     * @param float $time
-     * @return bool
+     * @param string|null $exception
+     * @return $this|bool
      */
-    public function unsuccessful(float $time)
+    public function fail(string $exception = null)
     {
-        $this->successful = false;
-        $this->duration = (int) floor($time * 1000);
-        $this->completed_at = now();
+        $this->status = static::STATUS_FAIL;
+        $this->exception = $exception;
 
         if (!$this->save()) {
             return false;
         }
 
-        $this->fireModelEvent('unsuccessful');
-        return true;
+        $this->fireModelEvent('fail');
+        return $this;
     }
 }

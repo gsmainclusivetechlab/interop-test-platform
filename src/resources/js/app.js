@@ -9,7 +9,9 @@ import {
     DropdownPlugin,
     FormFilePlugin,
     ProgressPlugin,
-    VBTooltipPlugin
+    VBTooltipPlugin,
+    PopoverPlugin,
+    TabsPlugin
 } from 'bootstrap-vue';
 
 window.string = require('string');
@@ -18,14 +20,20 @@ window.collect = require('collect.js');
 Vue.use(VueMeta);
 Vue.use(InertiaApp);
 
-Vue.use(NavPlugin);
-Vue.use(NavbarPlugin);
-Vue.use(ModalPlugin);
-Vue.use(CollapsePlugin);
-Vue.use(DropdownPlugin);
-Vue.use(FormFilePlugin);
-Vue.use(ProgressPlugin);
-Vue.use(VBTooltipPlugin);
+[
+    NavPlugin,
+    NavbarPlugin,
+    ModalPlugin,
+    CollapsePlugin,
+    DropdownPlugin,
+    FormFilePlugin,
+    ProgressPlugin,
+    VBTooltipPlugin,
+    PopoverPlugin,
+    TabsPlugin
+].forEach(plugin => {
+    Vue.use(plugin);
+});
 
 Vue.mixin({
     methods: {
@@ -49,7 +57,12 @@ Vue.component('confirm-link', () =>
     )
 );
 Vue.component('json-tree', () =>
-    import(/* webpackChunkName: "json-tree" */ 'vue-json-pretty')
+    import(/* webpackChunkName: "json-tree" */ '@/components/json-tree.vue')
+);
+Vue.component('clipboard-copy-btn', () =>
+    import(
+        /* webpackChunkName: "clipboard-copy-btn" */ '@/components/clipboard-copy-btn.vue'
+    )
 );
 
 const app = document.getElementById('app');

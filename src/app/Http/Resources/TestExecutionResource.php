@@ -15,7 +15,9 @@ class TestExecutionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'message' => $this->message,
+            'actual' => $this->actual,
+            'expected' => $this->expected,
+            'exception' => $this->exception,
             'successful' => $this->successful,
         ];
     }

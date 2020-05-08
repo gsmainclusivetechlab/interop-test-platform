@@ -22,7 +22,7 @@ class ScenariosTableSeeder extends Seeder
         $scenario = Scenario::create(['name' => 'Mobile Money API v1.1.2 and Mojaloop FSPIOP API v1.0']);
         $scenario->useCases()->createMany($this->getUseCasesData());
         $scenario->components()->createMany($this->getComponentsData())->each(function (Component $component, $key) use ($scenario) {
-            $component->paths()->attach(Arr::get($this->getComponentPathsData($scenario), $key));
+            $component->connections()->attach(Arr::get($this->getComponentConnectionsData($scenario), $key));
         });
 
         $finder = (new Finder())
@@ -63,22 +63,18 @@ class ScenariosTableSeeder extends Seeder
             [
                 'name' => 'Service Provider',
                 'api_service_id' => ApiService::where(['name' => 'SP Simulator'])->value('id'),
-                'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 1',
                 'api_service_id' => ApiService::where(['name' => 'MM Simulator'])->value('id'),
-                'simulated' => true,
             ],
             [
                 'name' => 'Mojaloop',
                 'api_service_id' => ApiService::where(['name' => 'Mojaloop Hub'])->value('id'),
-                'simulated' => true,
             ],
             [
                 'name' => 'Mobile Money Operator 2',
                 'api_service_id' => ApiService::where(['name' => 'Mojaloop Simulator'])->value('id'),
-                'simulated' => true,
             ],
         ];
     }
@@ -87,7 +83,7 @@ class ScenariosTableSeeder extends Seeder
      * @param Scenario $scenario
      * @return array
      */
-    protected function getComponentPathsData(Scenario $scenario)
+    protected function getComponentConnectionsData(Scenario $scenario)
     {
         return [
             [

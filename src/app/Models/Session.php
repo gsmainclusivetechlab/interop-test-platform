@@ -64,7 +64,7 @@ class Session extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'session_id')->latest();
+        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
     }
 
     /**

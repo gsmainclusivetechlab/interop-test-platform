@@ -70,7 +70,6 @@ class PendingRequest
     {
         return new Client([
             'handler' => $this->buildHandlerStack(),
-            'http_errors' => false,
         ]);
     }
 

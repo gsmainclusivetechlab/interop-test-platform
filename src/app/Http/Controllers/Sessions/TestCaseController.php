@@ -27,6 +27,8 @@ class TestCaseController extends Controller
      */
     public function show(Session $session, TestCase $testCase)
     {
+        $this->authorize('view', $session);
+
         return Inertia::render('sessions/test-cases/show', [
             'session' => (new SessionResource(
                 $session->load([
@@ -44,6 +46,7 @@ class TestCaseController extends Controller
                 $session->testRuns()
                     ->where('test_case_id', $testCase->id)
                     ->with(['session', 'testCase'])
+//                    ->completed()
                     ->latest()
                     ->paginate()
             ),

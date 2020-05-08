@@ -23,15 +23,7 @@ class Component extends Model
     protected $fillable = [
         'name',
         'description',
-        'simulated',
         'api_service_id',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'simulated' => false,
     ];
 
     /**
@@ -53,9 +45,17 @@ class Component extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function paths()
+    public function connections()
     {
-        return $this->belongsToMany(static::class, 'component_paths', 'source_id', 'target_id');
+        return $this->belongsToMany(static::class, 'component_connections', 'source_id', 'target_id');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSimulatedAttribute()
+    {
+        return $this->apiService()->exists();
     }
 
     /**

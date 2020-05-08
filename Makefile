@@ -61,7 +61,7 @@ init:
 	@if [ ! -f 'src/.env' ]; then \
 		echo 'Copying src/.env file...'; \
 		${MAYBE_SUDO} cp ./src/.env.example ./src/.env; \
-	fi;	
+	fi;
 	@if [ ! -f 'runtime/bash/.bash_history' ]; then \
 		echo 'Creating runtime/bash/.bash_history file...'; \
 		${MAYBE_SUDO} mkdir -pv runtime/bash && ${MAYBE_SUDO} touch runtime/bash/.bash_history; \
@@ -88,9 +88,6 @@ build:
 run: xdebug-init
 	docker-compose up --force-recreate -d
 
-test-run: xdebug-init
-	docker-compose up --force-recreate
-
 xdebug-init:
 	@if [ $$USER = 'vagrant' ]; then \
 		export XDEBUG_REMOTE_HOST=`/sbin/ip route|awk '/default/ { print $$3 }'` \
@@ -99,7 +96,7 @@ xdebug-init:
 	fi	
 
 test:
-	@echo 'dummy test'
+	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make test"
 
 stop:
 	docker-compose down

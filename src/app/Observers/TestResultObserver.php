@@ -10,19 +10,19 @@ class TestResultObserver
      * @param TestResult $testResult
      * @return void
      */
-    public function successful(TestResult $testResult)
+    public function pass(TestResult $testResult)
     {
-        $testResult->testRun->increment('passed');
-        $testResult->testRun->increment('duration', $testResult->duration);
+        $testResult->testRun()->increment('passed');
+        $testResult->testRun()->increment('duration', floor((microtime(true) - LARAVEL_START) * 1000));
     }
 
     /**
      * @param TestResult $testResult
      * @return void
      */
-    public function unsuccessful(TestResult $testResult)
+    public function fail(TestResult $testResult)
     {
-        $testResult->testRun->increment('failures');
-        $testResult->testRun->increment('duration', $testResult->duration);
+        $testResult->testRun()->increment('failures');
+        $testResult->testRun()->increment('duration', floor((microtime(true) - LARAVEL_START) * 1000));
     }
 }

@@ -20,10 +20,10 @@ Route::get('/tutorials', 'TutorialController')->name('tutorials');
  * Sessions Routes
  */
 Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(function () {
-    Route::get('/', 'OverviewController@index')->name('index');
-    Route::get('{session}', 'OverviewController@show')->name('show');
-    Route::delete('{session}/destroy', 'OverviewController@destroy')->name('destroy');
-    Route::get('{session}/chart', 'ChartController')->name('chart');
+    Route::get('/', 'SessionController@index')->name('index');
+    Route::get('{session}', 'SessionController@show')->name('show');
+    Route::delete('{session}/destroy', 'SessionController@destroy')->name('destroy');
+    Route::get('{session}/chart', 'SessionController@showChartData')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
     Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController@index')->name('test-cases.test-steps.index');
@@ -74,7 +74,7 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
     });
     Route::resource('scenarios', 'ScenarioController');
     Route::resource('scenarios.components', 'ComponentController')->shallow();
-    Route::resource('scenarios.use-cases', 'UseCaseController')->shallow();
+    Route::resource('scenarios.use-cases', 'UseCaseController')->shallow()->except(['create']);
     Route::resource('scenarios.test-cases', 'TestCaseController')->shallow();
     Route::get('scenarios/{scenario}/test-cases/import', 'TestCaseController@showImportForm')->name('scenarios.test-cases.import');
     Route::post('scenarios/{scenario}/test-cases/import', 'TestCaseController@import')->name('scenarios.test-cases.import.confirm');
