@@ -5,6 +5,8 @@
 - Task: Test Run Step: Scripts- show the details what was tested (regex or etc.) [@jc_akokorev,@jc_ohladkov]
 - Task: Create a copy/paste button for the diagram [@jc_ohladkov]
 - Task: Create a copy button for header and body [@jc_ohladkov]
+- Task: Automated-tests: Authentication, browser [@jc_ohladkov]
+- Task: Eloquent model unit tests [@jc_skushnir]
 - Bug: Test steps - Collapsible json issue [@jc_ohladkov]
 - Bug: Rejected Quote by Payee FSP TC - Step 9 is not runing [@jc_skushnir]
 
