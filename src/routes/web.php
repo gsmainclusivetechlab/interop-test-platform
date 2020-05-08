@@ -18,6 +18,7 @@ Route::get('/tutorials', 'TutorialController')->name('tutorials');
 Route::name('legal.')->prefix('legal')->group(function () {
     Route::post('cookies/accept', 'LegalController@acceptCookies')->name('cookies.accept');
 });
+Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
 
 /**
  * Sessions Routes

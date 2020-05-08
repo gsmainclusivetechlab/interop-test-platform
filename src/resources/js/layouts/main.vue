@@ -1,5 +1,5 @@
 <template>
-    <layout>
+    <layout v-bind:class="{'theme-dark': $page.app.dark_mode}">
         <b-navbar class="flex-wrap py-0" tag="header" toggleable="md">
             <div class="container-fluid py-3">
                 <b-navbar-toggle target="header-nav"></b-navbar-toggle>
@@ -25,7 +25,12 @@
 
                 <div class="col-md-3 d-flex justify-content-end">
                     <label class="d-flex align-items-center align-self-center toggle cursor-pointer mb-0 mr-2">
-                        <input class="sr-only toggle-input" type="checkbox" checked />
+                        <input
+                            class="sr-only toggle-input"
+                            type="checkbox"
+                            @change.prevent="$inertia.post(route('dark-mode'))"
+                            :checked="$page.app.dark_mode"
+                        />
                         <span class="toggle-bg"></span>
                         <span class="toggle-switch">
                             <span class="toggle-switch-figure"></span>
@@ -247,6 +252,6 @@
     export default {
         components: {
             Layout,
-        },
+        }
     };
 </script>
