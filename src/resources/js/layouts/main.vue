@@ -24,6 +24,14 @@
                 </div>
 
                 <div class="col-md-3 d-flex justify-content-end">
+                    <label class="d-flex align-items-center align-self-center toggle cursor-pointer mb-0 mr-2">
+                        <input class="sr-only toggle-input" type="checkbox" checked />
+                        <span class="toggle-bg"></span>
+                        <span class="toggle-switch">
+                            <span class="toggle-switch-figure"></span>
+                            <span class="toggle-switch-figureAlt"></span>
+                        </span>
+                    </label>
                     <b-navbar-nav class="flex-row">
                         <b-nav-item-dropdown
                             right
