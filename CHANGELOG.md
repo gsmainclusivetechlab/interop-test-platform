@@ -1,3 +1,13 @@
+## v0.8
+- Task: Test Case YAML optimization -> use test examples instead of "forward/backward" [@jc_akokorev]
+- Task: Overridings -> move them to Request and Response [@jc_akokorev]
+- Task: Show what is once hove the icon [@jc_akokorev]
+- Task: Test Run Step: Scripts- show the details what was tested (regex or etc.) [@jc_akokorev,@jc_ohladkov]
+- Task: Create a copy/paste button for the diagram [@jc_ohladkov]
+- Task: Create a copy button for header and body [@jc_ohladkov]
+- Bug: Test steps - Collapsible json issue [@jc_ohladkov]
+- Bug: Rejected Quote by Payee FSP TC - Step 9 is not runing [@jc_skushnir]
+
 ## v0.7
 - Task: ITP production: change email "from" to avoid adding email to SPAM [@jc_akokorev]
 - Task: User Managment - Verify user by the interface [@jc_akokorev]
