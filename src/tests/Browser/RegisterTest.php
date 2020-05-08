@@ -9,11 +9,10 @@ use Tests\Browser\Pages\RegisterPage;
 class RegisterTest extends DuskTestCase
 {
     /**
-     * @test
      * Can navigate to login page.
      * @return void
      */
-    public function canNavigateToLoginPage()
+    public function testCanNavigateToLoginPage()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -25,11 +24,10 @@ class RegisterTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not register without filling required fields.
      * @return void
      */
-    public function canNotRegisterWithoutFillingRequiredFields()
+    public function testCanNotRegisterWithoutFillingRequiredFields()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -57,11 +55,10 @@ class RegisterTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can register with filling required fields.
      * @return void
      */
-    public function canRegisterWithFillingRequiredFields()
+    public function testCanRegisterWithFillingRequiredFields()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -81,11 +78,10 @@ class RegisterTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not register with existing email.
      * @return void
      */
-    public function canNotRegisterWithExistingEmail()
+    public function testCanNotRegisterWithExistingEmail()
     {
         $this->browse(function (Browser $browser) {
             $browser

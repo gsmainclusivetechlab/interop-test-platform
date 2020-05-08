@@ -25,11 +25,10 @@ class ProfileSettingsTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can navigate to change password page.
      * @return void
      */
-    public function canNavigateToChangePasswordPage()
+    public function testCanNavigateToChangePasswordPage()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -42,11 +41,10 @@ class ProfileSettingsTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Profile data matches user data.
      * @return void
      */
-    public function profileDataMatchesUserData()
+    public function testProfileDataMatchesUserData()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -59,11 +57,10 @@ class ProfileSettingsTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can update profile settings.
      * @return void
      */
-    public function canUpdateProfileSettings()
+    public function testCanUpdateProfileSettings()
     {
         $this->browse(function (Browser $browser) {
             $browser

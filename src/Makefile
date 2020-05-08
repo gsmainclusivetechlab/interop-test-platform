@@ -36,7 +36,6 @@ update: chmod composer-install cache-clear
 
 test:
 	php artisan dusk --testdox
-	php artisan migrate:refresh --seed -q
 
 # Composer helpers
 ci: composer-install

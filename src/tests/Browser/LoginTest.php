@@ -21,11 +21,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can navigate to forgot password page.
      * @return void
      */
-    public function canNavigateToForgotPasswordPage()
+    public function testCanNavigateToForgotPasswordPage()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -37,11 +36,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can navigate to register page.
      * @return void
      */
-    public function canNavigateToRegisterPage()
+    public function testCanNavigateToRegisterPage()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -53,11 +51,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not login with empty credentials.
      * @return void
      */
-    public function canNotLoginWithEmptyCredentials()
+    public function testCanNotLoginWithEmptyCredentials()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -73,11 +70,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not login with invalid credentials.
      * @return void
      */
-    public function canNotLoginWithInvalidCredentials()
+    public function testCanNotLoginWithInvalidCredentials()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -92,11 +88,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not login with valid email and invalid password.
      * @return void
      */
-    public function canNotLoginWithValidEmailAndInvalidPassword()
+    public function testCanNotLoginWithValidEmailAndInvalidPassword()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -111,11 +106,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not login with invalid email and valid password.
      * @return void
      */
-    public function canNotLoginWithInvalidEmailAndValidPassword()
+    public function testCanNotLoginWithInvalidEmailAndValidPassword()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -130,11 +124,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can login with valid credentials.
      * @return void
      */
-    public function canLoginWithValidCredentials()
+    public function testCanLoginWithValidCredentials()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -148,11 +141,10 @@ class LoginTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can logout.
      * @return void
      */
-    public function canLogout()
+    public function testCanLogout()
     {
         $this->browse(function (Browser $browser) {
             $browser

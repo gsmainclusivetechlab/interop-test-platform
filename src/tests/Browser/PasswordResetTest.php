@@ -21,11 +21,10 @@ class PasswordResetTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can navigate to login page.
      * @return void
      */
-    public function canNavigateToLoginPage()
+    public function testCanNavigateToLoginPage()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -37,11 +36,10 @@ class PasswordResetTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not receive password reset link with empty email field.
      * @return void
      */
-    public function canNotReceivePasswordResetLinkWithEmptyEmailField()
+    public function testCanNotReceivePasswordResetLinkWithEmptyEmailField()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -54,11 +52,10 @@ class PasswordResetTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can not receive password reset link with invalid email.
      * @return void
      */
-    public function canNotReceivePasswordResetLinkWithInvalidEmail()
+    public function testCanNotReceivePasswordResetLinkWithInvalidEmail()
     {
         $this->browse(function (Browser $browser) {
             $browser
@@ -71,11 +68,10 @@ class PasswordResetTest extends DuskTestCase
     }
 
     /**
-     * @test
      * Can receive password reset link with valid email.
      * @return void
      */
-    public function canReceivePasswordResetLinkWithValidEmail()
+    public function testCanReceivePasswordResetLinkWithValidEmail()
     {
         $this->browse(function (Browser $browser) {
             $browser
