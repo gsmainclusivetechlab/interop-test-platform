@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Models\Scenario;
 use App\Models\UseCase;
 use Tests\TestCase;
 use Illuminate\Support\Str;
@@ -17,7 +16,6 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseStoreValidData()
     {
-        factory(Scenario::class)->create();
         $useCase = factory(UseCase::class)->create();
         $this->assertInstanceOf(UseCase::class, $useCase);
     }
@@ -43,7 +41,6 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseUpdateValidData()
     {
-        factory(Scenario::class)->create();
         $useCase = factory(UseCase::class)->create();
         $this->assertTrue($useCase->update(factory(UseCase::class)->make()->attributesToArray()));
     }
@@ -55,8 +52,6 @@ class UseCaseTest extends TestCase
      */
     public function testUseCaseUpdateInvalidData()
     {
-        factory(Scenario::class)->create();
-
         $useCaseWithEmptyData = factory(UseCase::class)->create();
         $useCaseWithEmptyData->setRawAttributes(self::emptyData());
         $this->assertFalse(Validator::make($useCaseWithEmptyData->attributesToArray(), self::rules())->passes());
@@ -64,6 +59,19 @@ class UseCaseTest extends TestCase
         $useCaseWithInvalidData = factory(UseCase::class)->create();
         $useCaseWithInvalidData->setRawAttributes(self::invalidData());
         $this->assertFalse(Validator::make($useCaseWithInvalidData->attributesToArray(), self::rules())->passes());
+    }
+
+    /**
+     * Test UseCase delete.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testUseCaseDelete()
+    {
+        $useCase = factory(UseCase::class)->create();
+        $useCase->delete();
+        $this->assertDeleted($useCase->getTable(), $useCase->attributesToArray());
     }
 
     /**

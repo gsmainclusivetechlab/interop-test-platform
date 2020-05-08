@@ -62,6 +62,19 @@ class ApiServiceTest extends TestCase
     }
 
     /**
+     * Test ApiService delete.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testApiServiceDelete()
+    {
+        $apiService = factory(ApiService::class)->create();
+        $apiService->delete();
+        $this->assertDeleted($apiService->getTable(), $apiService->attributesToArray());
+    }
+
+    /**
      * Database validation rules.
      *
      * @return array

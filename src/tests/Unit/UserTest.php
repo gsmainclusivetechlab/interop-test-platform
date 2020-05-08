@@ -17,10 +17,7 @@ class UserTest extends TestCase
      */
     public function testUserStoreValidData()
     {
-        $user = factory(User::class)->create([
-            'email' => 'user@ggg.com',
-            'password' => Hash::make('password')
-        ]);
+        $user = factory(User::class)->create();
         $this->assertInstanceOf(User::class, $user);
     }
 

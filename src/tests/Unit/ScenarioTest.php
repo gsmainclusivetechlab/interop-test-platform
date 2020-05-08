@@ -62,6 +62,19 @@ class ScenarioTest extends TestCase
     }
 
     /**
+     * Test Scenario delete.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testScenarioDelete()
+    {
+        $scenario = factory(Scenario::class)->create();
+        $scenario->delete();
+        $this->assertDeleted($scenario->getTable(), $scenario->attributesToArray());
+    }
+
+    /**
      * Database validation rules.
      *
      * @return array

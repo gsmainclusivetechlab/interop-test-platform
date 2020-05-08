@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\UseCase;
-use App\Models\Scenario;
+use App\Models\TestExecution;
+use App\Models\TestResult;
 use Faker\Generator as Faker;
 
 /*
@@ -17,12 +17,18 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(UseCase::class, function (Faker $faker) {
+$factory->define(TestExecution::class, function (Faker $faker) {
     return [
-        'scenario_id' => function () {
-            return factory(Scenario::class)->create()->id;
+        'test_result_id' => function () {
+            return factory(TestResult::class)->create()->id;
         },
         'name' => $faker->text,
-        'description' => $faker->text,
+        'actual' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
+        'expected' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
+        'exception' => $faker->text,
+        'status' => $faker->randomElement([
+            TestExecution::STATUS_PASS,
+            TestExecution::STATUS_FAIL,
+        ]),
     ];
 });

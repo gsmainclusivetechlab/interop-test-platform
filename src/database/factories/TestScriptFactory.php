@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\UseCase;
-use App\Models\Scenario;
+use App\Models\TestScript;
+use App\Models\TestStep;
 use Faker\Generator as Faker;
 
 /*
@@ -17,12 +17,18 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(UseCase::class, function (Faker $faker) {
+$factory->define(TestScript::class, function (Faker $faker) {
     return [
-        'scenario_id' => function () {
-            return factory(Scenario::class)->create()->id;
+        'test_step_id' => function () {
+            return factory(TestStep::class)->create()->id;
         },
         'name' => $faker->text,
-        'description' => $faker->text,
+        'type' => $faker->randomElement([
+            TestScript::TYPE_REQUEST,
+            TestScript::TYPE_RESPONSE,
+        ]),
+        'rules' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
+        'messages' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
+        'position' => $faker->numberBetween(1, 10),
     ];
 });

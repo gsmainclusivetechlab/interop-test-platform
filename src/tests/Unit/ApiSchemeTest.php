@@ -62,6 +62,19 @@ class ApiSchemeTest extends TestCase
     }
 
     /**
+     * Test ApiScheme delete.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testApiSchemeDelete()
+    {
+        $apiScheme = factory(ApiScheme::class)->create();
+        $apiScheme->delete();
+        $this->assertDeleted($apiScheme->getTable(), ['id' => $apiScheme->id]);
+    }
+
+    /**
      * Database validation rules.
      *
      * @return array

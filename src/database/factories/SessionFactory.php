@@ -2,8 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\UseCase;
+use App\Models\Session;
 use App\Models\Scenario;
+use App\Models\User;
 use Faker\Generator as Faker;
 
 /*
@@ -17,8 +18,12 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(UseCase::class, function (Faker $faker) {
+$factory->define(Session::class, function (Faker $faker) {
     return [
+        'uuid' => $faker->uuid,
+        'owner_id' => function () {
+            return factory(User::class)->create()->id;
+        },
         'scenario_id' => function () {
             return factory(Scenario::class)->create()->id;
         },

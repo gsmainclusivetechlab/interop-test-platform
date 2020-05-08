@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Models\TestCase;
 use App\Models\UseCase;
-use App\Models\Scenario;
 use Faker\Generator as Faker;
 
 /*
@@ -17,12 +17,15 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(UseCase::class, function (Faker $faker) {
+$factory->define(TestCase::class, function (Faker $faker) {
     return [
-        'scenario_id' => function () {
-            return factory(Scenario::class)->create()->id;
+        'uuid' => $faker->uuid,
+        'use_case_id' => function () {
+            return factory(UseCase::class)->create()->id;
         },
         'name' => $faker->text,
+        'behavior' => $faker->randomElement([TestCase::BEHAVIOR_POSITIVE, TestCase::BEHAVIOR_NEGATIVE]),
         'description' => $faker->text,
+        'precondition' => $faker->text,
     ];
 });

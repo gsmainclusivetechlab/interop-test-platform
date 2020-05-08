@@ -2,8 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\UseCase;
+use App\Models\Component;
 use App\Models\Scenario;
+use App\Models\ApiService;
 use Faker\Generator as Faker;
 
 /*
@@ -17,12 +18,16 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(UseCase::class, function (Faker $faker) {
+$factory->define(Component::class, function (Faker $faker) {
     return [
         'scenario_id' => function () {
             return factory(Scenario::class)->create()->id;
         },
+        'api_service_id' => function () {
+            return factory(ApiService::class)->create()->id;
+        },
         'name' => $faker->text,
         'description' => $faker->text,
+        'position' => $faker->numberBetween(1, 10),
     ];
 });
