@@ -1,10 +1,10 @@
-name: P2P Declined - Error 500 - RN
+name: P2P Declined - RD - Error 503
 use_case: P2P
-test_case: P2P0150
+test_case: P2P0353
 behavior: negative
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
-  This flow shows the necessary steps for this transaction simulating an declined P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
+  This flow shows the necessary steps for this transaction simulating an declined P2P transaction considering AmountType: Receive and Disclosing Fees.
 precondition: |
   Mobile Money Operator is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -50,7 +50,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
-          status: 'in:500'
+          status: 'in:503'
       - name: Error is specified correctly
         rules:
           body.errorCategory: 'in:businessRule'
@@ -84,18 +84,17 @@ test_steps:
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '5.00'
+          amount: '5.03'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
           initiatorType: 'CONSUMER'
 
     response:
-      status: 500
+      status: 503
       headers:
         content-type: 'application/json'
         x-date: '2020-04-07T10:28:44.466Z'
       body:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
-

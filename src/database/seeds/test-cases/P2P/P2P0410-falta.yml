@@ -1,10 +1,10 @@
-name: P2P Rejected Quote
-use_case: P2P
-test_case: P2P0110
-behavior: negative
+name: P2P Successful Nondisclosing Receive with ALS
+use_case: P2P Successful without ALS
+test_case: TCP2P010
+behavior: positive
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
-  This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
+  This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Send and Disclosing Fees.
 precondition: |
   Mobile Money Operator is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -34,7 +34,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'in:SEND'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -77,10 +77,13 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'RECEIVE'
+        amountType: 'SEND'
         amount:
           currency: 'USD'
           amount: '123.45'
+        payerFspFee:
+          currency: 'USD'
+          amount: '1.00'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -108,7 +111,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'in:SEND'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -151,10 +154,13 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'RECEIVE'
+        amountType: 'SEND'
         amount:
           currency: 'USD'
           amount: '123.45'
+        payerFspFee:
+          currency: 'USD'
+          amount: '1.00'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -236,4 +242,3 @@ test_steps:
 
     response:
       status: 200
-

@@ -1,10 +1,10 @@
-name: P2P Declined - Error 500 - RN
+name: P2P Declined - SND - Error 503
 use_case: P2P
-test_case: P2P0150
+test_case: P2P0503
 behavior: negative
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
-  This flow shows the necessary steps for this transaction simulating an declined P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
+  This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Non-Disclosing Fees.
 precondition: |
   Mobile Money Operator is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -34,7 +34,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'in:SEND'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -50,7 +50,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
-          status: 'in:500'
+          status: 'in:503'
       - name: Error is specified correctly
         rules:
           body.errorCategory: 'in:businessRule'
@@ -81,21 +81,20 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'RECEIVE'
+        amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '5.00'
+          amount: '5.03'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
           initiatorType: 'CONSUMER'
 
     response:
-      status: 500
+      status: 503
       headers:
         content-type: 'application/json'
         x-date: '2020-04-07T10:28:44.466Z'
       body:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
-

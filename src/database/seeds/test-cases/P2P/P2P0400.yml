@@ -1,10 +1,10 @@
-name: P2P Successful Nondisclosing Receive with ALS
-use_case: P2P Successful without ALS
-test_case: TCP2P010
+name: P2P Accepted - SD
+use_case: P2P
+test_case: P2P0400
 behavior: positive
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
-  This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Send and Disclosing Fees.
+  This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Disclosing Fees.
 precondition: |
   Mobile Money Operator is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
