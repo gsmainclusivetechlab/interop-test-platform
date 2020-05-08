@@ -8,7 +8,6 @@
     />
 </template>
 <script>
-    import axios from 'axios';
     import apexchart from 'vue-apexcharts';
 
     export default {

@@ -15,6 +15,9 @@
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController')->name('home');
 Route::get('/tutorials', 'TutorialController')->name('tutorials');
+Route::name('legal.')->prefix('legal')->group(function () {
+    Route::post('cookies/accept', 'LegalController@acceptCookies')->name('cookies.accept');
+});
 
 /**
  * Sessions Routes
