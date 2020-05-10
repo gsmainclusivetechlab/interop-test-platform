@@ -1,10 +1,10 @@
-name: P2P Successful Nondisclosing Receive with ALS
-use_case: P2P Successful without ALS
-test_case: TCP2P010
-behavior: positive
+name: P2P Rejected Quote - RD
+use_case: P2P
+test_case: P2P0310
+behavior: negative
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
-  This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Send and Disclosing Fees.
+  This flow shows the necessary steps for this transaction simulating a rejected P2P quote transaction considering AmountType: Receive and Disclosing Fees.
 precondition: |
   Mobile Money Operator is capable of handled async calls.
   Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -34,7 +34,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -77,10 +77,10 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'SEND'
+        amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '51.03'
         payerFspFee:
           currency: 'USD'
           amount: '1.00'
@@ -111,7 +111,7 @@ test_steps:
           body.transactionType.initiatorType: 'in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
@@ -154,10 +154,10 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'SEND'
+        amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '51.03'
         payerFspFee:
           currency: 'USD'
           amount: '1.00'
@@ -170,7 +170,7 @@ test_steps:
       status: 202
 
 ## PUT/Quote{ID}: MMO2 -> Mojaloop ##
-  - name: PUT /quotes/{ID}
+  - name: PUT /quotes/{ID}/error
     backward: HTTP 200
     source: Mobile Money Operator 2
     target: Mojaloop
