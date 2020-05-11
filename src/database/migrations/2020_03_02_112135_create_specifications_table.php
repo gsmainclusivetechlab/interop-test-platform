@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTestCasesTable extends Migration
+class CreateSpecificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateTestCasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('test_cases', function (Blueprint $table) {
+        Schema::create('specifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('use_case_id');
-            $table->foreign('use_case_id')->references('id')->on('use_cases')->onDelete('cascade');
             $table->string('name');
-            $table->boolean('public');
-            $table->string('behavior');
+            $table->string('version');
+            $table->longText('openapi');
             $table->text('description')->nullable();
-            $table->text('precondition')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ class CreateTestCasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_cases');
+        Schema::dropIfExists('specifications');
     }
 }

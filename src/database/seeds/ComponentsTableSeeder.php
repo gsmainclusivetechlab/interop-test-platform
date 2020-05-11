@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 use App\Models\Component;
+use App\Models\Specification;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 
@@ -57,10 +58,18 @@ class ComponentsTableSeeder extends Seeder
     protected function getConnectionsData()
     {
         return [
-            Component::whereIn('name', ['Mobile Money Operator 1'])->pluck('id'),
-            Component::whereIn('name', ['Service Provider', 'Mojaloop'])->pluck('id'),
-            Component::whereIn('name', ['Mobile Money Operator 1', 'Mobile Money Operator 2'])->pluck('id'),
-            Component::whereIn('name', ['Mojaloop'])->pluck('id'),
+            [
+                [
+                    'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'specification_id' => Specification::where('name', 'MM v1.1.2')->value('id'),
+                ],
+            ]
         ];
+//        return [
+//            Component::whereIn('name', ['Mobile Money Operator 1'])->pluck('id'),
+//            Component::whereIn('name', ['Service Provider', 'Mojaloop'])->pluck('id'),
+//            Component::whereIn('name', ['Mobile Money Operator 1', 'Mobile Money Operator 2'])->pluck('id'),
+//            Component::whereIn('name', ['Mojaloop'])->pluck('id'),
+//        ];
     }
 }

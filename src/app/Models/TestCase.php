@@ -23,9 +23,17 @@ class TestCase extends Model
      */
     protected $fillable = [
         'name',
+        'public',
         'behavior',
         'description',
         'precondition',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'public' => true,
     ];
 
     /**

@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Import new test case</b>
+                    <b>Import new specification</b>
                 </h1>
             </div>
             <div class="container">
@@ -11,26 +11,27 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <div class="mb-3">
-                                    <label class="form-label">
-                                        File
-                                    </label>
-                                    <b-form-file
-                                        v-model="form.file"
-                                        placeholder="Choose file..."
-                                        v-bind:class="{ 'is-invalid': $page.errors.file }"
-                                    />
-                                    <span v-if="$page.errors.file" class="invalid-feedback">
-                                        <strong>
-                                            {{ $page.errors.file }}
-                                        </strong>
-                                    </span>
-                                </div>
+                                <label class="form-label">
+                                    File
+                                </label>
+                                <b-form-file
+                                    v-model="form.file"
+                                    placeholder="Choose file..."
+                                    v-bind:class="{ 'is-invalid': $page.errors.file }"
+                                />
+                                <span
+                                    v-if="$page.errors.file"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.file }}
+                                    </strong>
+                                </span>
                             </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.test-cases.index')"
+                                :href="route('admin.specifications.index')"
                                 class="btn btn-link"
                             >
                                 Cancel
@@ -52,7 +53,7 @@
 
     export default {
         metaInfo: {
-            title: 'Import new test case'
+            title: 'Import new specification'
         },
         components: {
             Layout,
@@ -71,7 +72,7 @@
                 let data = new FormData();
                 data.append('file', this.form.file);
                 this.$inertia
-                    .post(route('admin.test-cases.import.confirm'), data)
+                    .post(route('admin.specifications.import.confirm'), data)
                     .then(() => (this.sending = false));
             }
         }

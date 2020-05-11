@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\TestCase;
+use App\Models\Component;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TestCasePolicy
+class SpecificationPolicy
 {
     use HandlesAuthorization;
 
@@ -18,10 +18,6 @@ class TestCasePolicy
     public function before(User $user, $ability)
     {
         if ($user->isAdmin()) {
-            return true;
-        }
-
-        if ($user->isTestCaseCreator() && in_array($ability, ['viewAny', 'view', 'create'])) {
             return true;
         }
     }
@@ -37,10 +33,10 @@ class TestCasePolicy
 
     /**
      * @param  User  $user
-     * @param  TestCase  $model
+     * @param  Component  $model
      * @return mixed
      */
-    public function view(User $user, TestCase $model)
+    public function view(User $user, Component $model)
     {
 
     }
@@ -56,20 +52,20 @@ class TestCasePolicy
 
     /**
      * @param  User  $user
-     * @param  TestCase  $model
+     * @param  Component  $model
      * @return mixed
      */
-    public function update(User $user, TestCase $model)
+    public function update(User $user, Component $model)
     {
 
     }
 
     /**
      * @param  User  $user
-     * @param  TestCase  $model
+     * @param  Component  $model
      * @return mixed
      */
-    public function delete(User $user, TestCase $model)
+    public function delete(User $user, Component $model)
     {
 
     }

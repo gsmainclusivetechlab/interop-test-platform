@@ -73,10 +73,16 @@ Route::name('admin.')->prefix('admin')->namespace('Admin')->group(function () {
         Route::put('{user}/promote-role/{role}', 'UserController@promoteRole')->name('promote-role');
     });
     Route::resource('sessions', 'SessionController')->only(['index']);
+    Route::resource('specifications', 'SpecificationController')->only(['index', 'destroy']);
+    Route::name('specifications.')->prefix('specifications')->group(function () {
+        Route::get('import', 'SpecificationController@showImportForm')->name('import');
+        Route::post('import', 'SpecificationController@import')->name('import.confirm');
+    });
     Route::resource('use-cases', 'UseCaseController')->except(['show']);
     Route::resource('test-cases', 'TestCaseController')->only(['index', 'destroy']);
     Route::name('test-cases.')->prefix('test-cases')->group(function () {
         Route::get('import', 'TestCaseController@showImportForm')->name('import');
         Route::post('import', 'TestCaseController@import')->name('import.confirm');
+        Route::put('{testCase}/toggle-public', 'TestCaseController@togglePublic')->name('toggle-public');
     });
 });

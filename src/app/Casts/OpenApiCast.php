@@ -23,7 +23,7 @@ class OpenApiCast implements CastsAttributes
             return $value;
         }
 
-        return Reader::readFromJson($value);
+        return Reader::readFromYaml($value);
     }
 
     /**
@@ -39,6 +39,6 @@ class OpenApiCast implements CastsAttributes
             return $value;
         }
 
-        return Writer::writeToJson($value);
+        return Writer::writeToYaml($value);
     }
 }

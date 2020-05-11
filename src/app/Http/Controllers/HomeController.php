@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SessionResource;
+use App\Models\Component;
+use App\Models\Specification;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -20,6 +22,9 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
+        dd(Specification::latest()->first()->openapi);
+//        dd(Component::first()->connections()->first()->pivot->specification);
+
 //        $endpoint = ApiEndpoint::where('method', 'PUT')
 //            ->whereRaw('REGEXP_LIKE(?, CONCAT("^", REGEXP_REPLACE(route, "\\\{(.*?)\\\}", "[[:alnum:]]|[[:punct]]"), "+$"))', ['transactionRequests/as2-das'])
 //            ->get();

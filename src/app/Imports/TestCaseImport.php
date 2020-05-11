@@ -32,11 +32,11 @@ class TestCaseImport implements Importable
                     /**
                      * @var TestStep $testStep
                      */
-                    $testStep = $testCase->testSteps()->make(Arr::only($testStepRow, TestStep::make()->getFillable()));
-                    $testStep->setAttribute('source_id', Component::where('name', Arr::get($testStepRow, 'source'))->value('id'));
-                    $testStep->setAttribute('target_id', Component::where('name', Arr::get($testStepRow, 'target'))->value('id'));
-//                    $testStep->setAttribute('api_scheme_id', ApiScheme::where('name', Arr::get($testStepRow, 'api_scheme'))->value('id'));
-                    $testStep->saveOrFail();
+//                    $testStep = $testCase->testSteps()->make(Arr::only($testStepRow, TestStep::make()->getFillable()));
+//                    $testStep->setAttribute('source_id', Component::where('name', Arr::get($testStepRow, 'source'))->value('id'));
+//                    $testStep->setAttribute('target_id', Component::where('name', Arr::get($testStepRow, 'target'))->value('id'));
+////                    $testStep->setAttribute('api_scheme_id', ApiScheme::where('name', Arr::get($testStepRow, 'api_scheme'))->value('id'));
+//                    $testStep->saveOrFail();
 
 //                    if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {
 //                        foreach ($testRequestSetupRows as $testRequestSetupRow) {

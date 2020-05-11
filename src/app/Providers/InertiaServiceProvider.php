@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Component;
 use App\Models\Session;
+use App\Models\Specification;
 use App\Models\TestCase;
 use App\Models\UseCase;
 use App\Models\User;
@@ -68,6 +69,10 @@ class InertiaServiceProvider extends ServiceProvider
                             'sessions' => [
                                 'viewAny' => auth()->user()->can('viewAny', Session::class),
                             ],
+                            'specifications' => [
+                                'viewAny' => auth()->user()->can('viewAny', Specification::class),
+                                'create' => auth()->user()->can('create', Specification::class),
+                            ],
                             'use_cases' => [
                                 'viewAny' => auth()->user()->can('viewAny', UseCase::class),
                                 'create' => auth()->user()->can('create', UseCase::class),
@@ -75,7 +80,6 @@ class InertiaServiceProvider extends ServiceProvider
                             'test_cases' => [
                                 'viewAny' => auth()->user()->can('viewAny', TestCase::class),
                                 'create' => auth()->user()->can('create', TestCase::class),
-                                'import' => auth()->user()->can('create', TestCase::class),
                             ],
                         ],
                     ] : [],

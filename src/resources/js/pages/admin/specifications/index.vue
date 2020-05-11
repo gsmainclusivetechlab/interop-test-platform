@@ -7,7 +7,7 @@
                         Administration
                     </div>
                     <h2 class="page-title">
-                        <b>Test Cases</b>
+                        <b>Specifications</b>
                     </h2>
                 </div>
             </div>
@@ -27,12 +27,12 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('admin.test-cases.import')"
-                        v-if="$page.auth.user.can.test_cases.create"
+                        :href="route('admin.specifications.import')"
+                        v-if="$page.auth.user.can.specifications.create"
                         class="btn btn-primary"
                     >
                         <icon name="upload" />
-                        Import new test case
+                        Import new specification
                     </inertia-link>
                 </div>
             </div>
@@ -41,36 +41,21 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Public</th>
-                            <th class="text-nowrap">Use Case</th>
-                            <th class="text-nowrap">Test Steps</th>
+                            <th class="text-nowrap">Version</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="testCase in testCases.data">
+                        <tr v-for="specification in specifications.data">
                             <td class="text-break">
-                                {{ testCase.name }}
+                                {{ specification.name }}
                             </td>
                             <td class="text-break">
-                                <label class="form-check form-switch">
-                                    <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        :checked="testCase.public"
-                                        @change.prevent="$inertia.put(route('admin.test-cases.toggle-public', testCase.id))"
-                                    >
-                                </label>
-                            </td>
-                            <td class="text-break">
-                                {{ testCase.useCase.name }}
-                            </td>
-                            <td>
-                                {{ testCase.testSteps ? testCase.testSteps.length : 0  }}
+                                {{ specification.version }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="testCase.can.delete"
+                                    v-if="specification.can.delete"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -80,19 +65,19 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li v-if="testCase.can.delete">
+                                    <li v-if="specification.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="
                                                 route(
-                                                    'admin.test-cases.destroy',
-                                                    testCase.id
+                                                    'admin.specifications.destroy',
+                                                    specification.id
                                                 )
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="
-                                                `Are you sure you want to delete ${testCase.name}?`
+                                                `Are you sure you want to delete ${specification.name}?`
                                             "
                                         >
                                             Delete
@@ -101,15 +86,15 @@
                                 </b-dropdown>
                             </td>
                         </tr>
-                        <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="5">
+                        <tr v-if="!specifications.data.length">
+                            <td class="text-center" colspan="3">
                                 No Results
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="testCases.meta" :links="testCases.links" class="card-footer" />
+            <pagination :meta="specifications.meta" :links="specifications.links" class="card-footer" />
         </div>
     </layout>
 </template>
@@ -119,13 +104,13 @@
 
     export default {
         metaInfo: {
-            title: 'Test Cases'
+            title: 'Specifications'
         },
         components: {
             Layout,
         },
         props: {
-            testCases: {
+            specifications: {
                 type: Object,
                 required: true,
             },
@@ -143,7 +128,7 @@
         },
         methods: {
             search() {
-                this.$inertia.replace(route('admin.test-cases.index'), {
+                this.$inertia.replace(route('admin.specifications.index'), {
                     data: this.form
                 });
             }

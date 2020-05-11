@@ -63,7 +63,7 @@ class TestCaseController extends Controller
      */
     public function showImportForm()
     {
-        $this->authorize('import', TestCase::class);
+        $this->authorize('create', TestCase::class);
         return Inertia::render('admin/test-cases/import');
     }
 
@@ -72,7 +72,7 @@ class TestCaseController extends Controller
      */
     public function import()
     {
-        $this->authorize('import', TestCase::class);
+        $this->authorize('create', TestCase::class);
         request()->validate(['file' => ['required', 'mimetypes:text/yaml,text/plain']]);
 
         try {
@@ -86,5 +86,18 @@ class TestCaseController extends Controller
                 ->back()
                 ->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function togglePublic(TestCase $testCase)
+    {
+        $this->authorize('update', $testCase);
+        $testCase->update(['public' => !$testCase->public]);
+
+        return redirect()->back();
     }
 }
