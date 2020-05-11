@@ -62,12 +62,15 @@ jobs:
       - run:
           name: Run Tests
           command: make test
-      
+          
+       - run:
+          name: "Run tests"
+          command: phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report
+          
+      #store tests and code coverage
       - store_test_results:
           path: src/tests/results
-
       - store_artifacts:
-          path: src/tests/Browser/screenshots
-          
+          path: src/tests/Browser/screenshots          
       - store_artifacts:
           path: src/tests/results
