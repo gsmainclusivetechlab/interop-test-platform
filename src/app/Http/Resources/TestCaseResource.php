@@ -30,6 +30,7 @@ class TestCaseResource extends JsonResource
                 }, $this->lastTestRun);
             })),
             'can' => [
+                'update' => auth()->user()->can('update', $this->resource),
                 'delete' => auth()->user()->can('delete', $this->resource),
             ],
         ];

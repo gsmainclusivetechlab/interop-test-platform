@@ -31,6 +31,14 @@ class Component extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function testCases()
+    {
+        return $this->belongsToMany(TestCase::class, 'test_case_components', 'component_id', 'test_case_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function connections()
     {
         return $this->belongsToMany(static::class, Connection::class, 'source_id', 'target_id')

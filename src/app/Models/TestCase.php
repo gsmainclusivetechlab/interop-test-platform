@@ -33,7 +33,7 @@ class TestCase extends Model
      * @var array
      */
     protected $attributes = [
-        'public' => true,
+        'public' => false,
     ];
 
     /**
@@ -58,6 +58,14 @@ class TestCase extends Model
     public function testSteps()
     {
         return $this->hasMany(TestStep::class, 'test_case_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function components()
+    {
+        return $this->belongsToMany(Component::class, 'test_case_components', 'test_case_id', 'component_id');
     }
 
     /**

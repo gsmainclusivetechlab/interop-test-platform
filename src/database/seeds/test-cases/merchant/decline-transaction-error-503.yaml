@@ -13,6 +13,8 @@ precondition: |
   Amount should be the value "5.03".
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+components:
+  - Service Provider
 test_steps:
   - name: POST /transactions
     source: Service Provider

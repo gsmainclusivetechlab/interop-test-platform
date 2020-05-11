@@ -36,9 +36,9 @@ class Session extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function suts()
+    public function components()
     {
-        return $this->belongsToMany(Component::class, 'session_suts', 'session_id', 'component_id')
+        return $this->belongsToMany(Component::class, 'session_components', 'session_id', 'component_id')
             ->withPivot(['base_url']);
     }
 

@@ -14,10 +14,10 @@
                             class="form-select"
                         >
                             <option
-                                v-for="component in collect(components.data).where('simulated').all()"
-                                :value="component.id"
+                                v-for="sut in suts.data"
+                                :value="sut.id"
                             >
-                                {{ component.name }}
+                                {{ sut.name }}
                             </option>
                         </select>
                         <span v-if="$page.errors.component_id" class="invalid-feedback">
@@ -61,6 +61,10 @@ export default {
         session: {
             type: Object,
             required: false
+        },
+        suts: {
+            type: Object,
+            required: true
         },
         components: {
             type: Object,

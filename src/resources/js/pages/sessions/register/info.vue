@@ -61,7 +61,7 @@
                         <div class="card-body pt-0 pl-0">
                             <ul
                                 class="list-group overflow-auto"
-                                style="height: 320px;"
+                                style="max-height: 320px;"
                             >
                                 <li
                                     class="list-group-item"

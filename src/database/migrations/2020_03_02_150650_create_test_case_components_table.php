@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSessionSutsTable extends Migration
+class CreateTestCaseComponentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateSessionSutsTable extends Migration
      */
     public function up()
     {
-        Schema::create('session_suts', function (Blueprint $table) {
-            $table->unsignedBigInteger('session_id');
-            $table->foreign('session_id')->references('id')->on('sessions')->onDelete('cascade');
+        Schema::create('test_case_components', function (Blueprint $table) {
+            $table->unsignedBigInteger('test_case_id');
+            $table->foreign('test_case_id')->references('id')->on('test_cases')->onDelete('cascade');
             $table->unsignedBigInteger('component_id');
             $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
-            $table->primary(['session_id', 'component_id']);
-            $table->string('base_url');
+            $table->primary(['test_case_id', 'component_id']);
         });
     }
 
@@ -30,6 +29,6 @@ class CreateSessionSutsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('session_suts');
+        Schema::dropIfExists('test_case_components');
     }
 }

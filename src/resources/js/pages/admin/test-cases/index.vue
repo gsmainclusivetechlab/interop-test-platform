@@ -55,10 +55,18 @@
                             <td class="text-break">
                                 <label class="form-check form-switch">
                                     <input
+                                        v-if="testCase.can.update"
                                         class="form-check-input"
                                         type="checkbox"
                                         :checked="testCase.public"
                                         @change.prevent="$inertia.put(route('admin.test-cases.toggle-public', testCase.id))"
+                                    >
+                                    <input
+                                        v-else
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        disabled
+                                        :checked="testCase.public"
                                     >
                                 </label>
                             </td>

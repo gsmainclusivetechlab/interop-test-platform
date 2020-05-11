@@ -12,7 +12,7 @@ class Connection extends Pivot
     /**
      * @var string
      */
-    protected $table = 'component_connections';
+    protected $table = 'connections';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

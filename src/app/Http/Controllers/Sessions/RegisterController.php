@@ -10,7 +10,7 @@ use App\Models\Component;
 use App\Models\UseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Throwable;
 
@@ -33,6 +33,9 @@ class RegisterController extends Controller
     {
         return Inertia::render('sessions/register/sut', [
             'session' => session('session'),
+            'suts' => ComponentResource::collection(
+                Component::whereHas('testCases')->get(),
+            ),
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
@@ -49,9 +52,7 @@ class RegisterController extends Controller
             'base_url' => ['required', 'url', 'max:255'],
             'component_id' => [
                 'required',
-                Rule::exists('components', 'id')->where(function ($query) {
-                    $query->where('simulated', true);
-                }),
+                'exists:components,id',
             ],
         ]);
         $request->session()->put('session.sut', $request->input());
@@ -70,7 +71,13 @@ class RegisterController extends Controller
                 Component::with(['connections'])->get()
             ),
             'useCases' => UseCaseResource::collection(
-                UseCase::with(['testCases'])->get()
+                UseCase::with([
+                    'testCases' => function ($query) {
+                        $query->whereHas('components', function ($query) {
+                            $query->where('id', request()->session()->get('session.sut.component_id'));
+                        });
+                    },
+                ])->get()
             ),
         ]);
     }
@@ -86,7 +93,9 @@ class RegisterController extends Controller
             'description' => ['string', 'nullable'],
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
-        $request->session()->put('session.info', $request->input());
+        $request->session()->put('session.info', array_merge($request->input(), [
+            'uuid' => Str::uuid(),
+        ]));
 
         return redirect()->route('sessions.register.config');
     }
@@ -98,6 +107,10 @@ class RegisterController extends Controller
     {
         return Inertia::render('sessions/register/config', [
             'session' => session('session'),
+            'sut' => (new ComponentResource(
+                Component::firstWhere('id', request()->session()->get('session.sut.component_id'))
+                    ->load('connections'),
+            ))->resolve(),
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
@@ -116,7 +129,7 @@ class RegisterController extends Controller
                     ->sessions()
                     ->create($request->session()->get('session.info'));
                 $session->testCases()->attach($request->session()->get('session.info.test_cases'));
-                $session->suts()->attach([$request->session()->get('session.sut')]);
+                $session->components()->attach([$request->session()->get('session.sut')]);
 
                 return $session;
             });

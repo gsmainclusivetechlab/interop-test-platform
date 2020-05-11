@@ -6,7 +6,25 @@
                     <h3 class="card-title">Configure components</h3>
                 </div>
                 <div class="card-body">
-
+                    <div v-for="connection in sut.connections.data">
+                        <div class="mb-3">
+                            <label class="form-label">
+                                {{ connection.name }}
+                            </label>
+                            <div class="input-group">
+                                <input
+                                    :id="`testing-${connection.id}`"
+                                    type="text"
+                                    class="form-control"
+                                    readonly
+                                />
+                                <clipboard-copy-btn
+                                    :target="`#testing-${connection.id}`"
+                                    title="Copy"
+                                ></clipboard-copy-btn>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -37,6 +55,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        sut: {
             type: Object,
             required: true
         },
