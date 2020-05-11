@@ -11,6 +11,7 @@
                         type="text"
                         class="form-control"
                         placeholder="e.g., John"
+                        name="first_name"
                     />
                     <span
                         v-if="$page.errors.first_name"
@@ -27,6 +28,7 @@
                         type="text"
                         class="form-control"
                         placeholder="e.g., Doe"
+                        name="last_name"
                     />
                     <span
                         v-if="$page.errors.last_name"
@@ -43,6 +45,7 @@
                         type="email"
                         class="form-control"
                         placeholder="e.g., john.doe@email.com"
+                        name="email"
                     />
                     <span v-if="$page.errors.email" class="invalid-feedback">
                         {{ $page.errors.email }}
@@ -56,6 +59,7 @@
                         type="text"
                         class="form-control"
                         placeholder="e.g., GSMA"
+                        name="company"
                     />
                     <span v-if="$page.errors.company" class="invalid-feedback">
                         {{ $page.errors.company }}
@@ -69,6 +73,7 @@
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
+                        name="password"
                     />
                     <span v-if="$page.errors.password" class="invalid-feedback">
                         {{ $page.errors.password }}
@@ -84,6 +89,7 @@
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
+                        name="password_confirmation"
                     />
                     <span
                         v-if="$page.errors.password_confirmation"
@@ -100,6 +106,7 @@
                         type="text"
                         class="form-control"
                         placeholder="e.g., CODE"
+                        name="code"
                     />
                     <span v-if="$page.errors.code" class="invalid-feedback">
                         {{ $page.errors.code }}
@@ -114,6 +121,7 @@
                             type="checkbox"
                             v-model="form.terms"
                             class="form-check-input"
+                            name="terms"
                         />
                         <span class="form-check-label">
                             Agree the
