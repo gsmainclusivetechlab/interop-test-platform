@@ -64,8 +64,8 @@ jobs:
           command: make test
           
       - run:
-          name: "Run tests"
-          command: phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report
+          name: Run Test Coverage
+          command: make test-coverage
           
       #store tests and code coverage
       - store_test_results:
