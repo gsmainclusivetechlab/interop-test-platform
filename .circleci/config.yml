@@ -63,7 +63,7 @@ jobs:
           name: Run Tests
           command: make test
           
-       - run:
+      - run:
           name: "Run tests"
           command: phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report
           
