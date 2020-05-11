@@ -38,7 +38,7 @@ test:
 	php artisan dusk --testdox --log-junit tests/results/results.xml
 
 test-coverage:
-    phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report
+	phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report
 
 # Composer helpers
 ci: composer-install
