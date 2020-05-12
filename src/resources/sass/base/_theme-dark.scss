@@ -1,0 +1,94 @@
+.theme-dark {
+    & ~ div {
+        .modal-content,
+        .modal-header {
+            color: $dark-mode-text;
+            background-color: $dark;
+
+            .json-tree-wrapper {
+                background-color: inherit;
+            }
+        }
+    }
+
+    & ~ .popover.b-popover {
+        color: $dark-mode-text;
+        background-color: $dark;
+
+        &.bs-popover-bottom > .arrow:after {
+            border-bottom-color: $dark;
+        }
+
+        .popover-body {
+            color: inherit;
+        }
+
+        .json-tree-wrapper {
+            background-color: inherit;
+        }
+
+        .nav-tabs {
+            .nav-link {
+                color: $gray-300;
+            }
+        }
+    }
+
+    .table-hover {
+        tbody {
+            tr:hover {
+                color: $dark-mode-text;
+            }
+        }
+    }
+
+    .json-tree-wrapper {
+        background-color: inherit;
+    }
+
+    .mermaid-diagram {
+        .node {
+            rect {
+                fill: $dark;
+            }
+        }
+
+        .edgeLabel,
+        .actor {
+            background-color: $dark;
+        }
+
+        .edgeLabel,
+        .label,
+        .messageText {
+            color: $dark-mode-text;
+        }
+
+        .messageText {
+            fill: $dark-mode-text;
+        }
+
+        .actor {
+            fill: $dark;
+
+            tspan {
+                fill: $dark-mode-text;
+            }
+        }
+    }
+
+    .list-group-transparent {
+        .list-group-item {
+            &.active {
+                color: $dark-mode-text;
+                background-color: $dark;
+            }
+        }
+    }
+
+    .nav-tabs {
+        .nav-link {
+            color: $gray-300;
+        }
+    }
+}

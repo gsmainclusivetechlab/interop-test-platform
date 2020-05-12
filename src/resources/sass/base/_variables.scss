@@ -26,6 +26,10 @@ $success: $mint;
 $warning: $yellow;
 $danger: $red;
 $light: $gray-100;
+$dark: $gray-700;
+$dark-mode-darken: $gray-900;
+$dark-mode-lighten: $gray-500;
+$dark-mode-text: $gray-100;
 
 $colors: (
     'blue': $blue,
@@ -38,7 +42,8 @@ $colors: (
     'teal': $teal,
     'cyan': $cyan,
     'gray': $gray-600,
-    'mint': $mint
+    'mint': $mint,
+    'dark': $dark
 );
 
 $theme-colors: (
@@ -78,6 +83,7 @@ $nav-tabs-link-active-color: $primary;
 
 // modal colors
 $modal-content-bg: #fff;
+$modal-backdrop-bg: $dark-mode-darken;
 
 // popover
 $popover-max-width: 378px;
