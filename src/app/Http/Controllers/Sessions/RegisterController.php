@@ -7,6 +7,7 @@ use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Resources\ComponentResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\Component;
+use App\Models\TestCase;
 use App\Models\UseCase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,12 +73,22 @@ class RegisterController extends Controller
             ),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) {
+                        'testCases' => function ($query) {
+                            $query->whereHas('components', function ($query) {
+                                $query->where('id', request()->session()->get('session.sut.component_id'));
+                            })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
+                                $query->where('public', true);
+                            });
+                        },
+                    ])
+                    ->whereHas('testCases', function ($query) {
                         $query->whereHas('components', function ($query) {
                             $query->where('id', request()->session()->get('session.sut.component_id'));
+                        })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
+                            $query->where('public', true);
                         });
-                    },
-                ])->get()
+                    })
+                    ->get()
             ),
         ]);
     }

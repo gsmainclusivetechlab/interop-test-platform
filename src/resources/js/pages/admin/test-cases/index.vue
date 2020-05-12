@@ -32,7 +32,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="upload" />
-                        Import new test case
+                        Import Test Case
                     </inertia-link>
                 </div>
             </div>

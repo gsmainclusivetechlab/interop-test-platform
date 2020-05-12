@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
+use App\Models\UseCase;
 use Inertia\Inertia;
 
 class SessionController extends Controller
@@ -57,10 +59,19 @@ class SessionController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                        return $query->with(['lastTestRun']);
                     },
                 ])
             ))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::with('testCases')
+                    ->whereHas('testCases', function ($query) use($session) {
+                        $query->whereHas('sessions', function ($query) use($session) {
+                            $query->whereKey($session->id);
+                        });
+                    })
+                    ->get()
+            ),
             'testRuns' => TestRunResource::collection(
                 $session->testRuns()
                     ->with(['session', 'testCase'])

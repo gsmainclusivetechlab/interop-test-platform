@@ -32,7 +32,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="upload" />
-                        Import new specification
+                        Import Specification
                     </inertia-link>
                 </div>
             </div>

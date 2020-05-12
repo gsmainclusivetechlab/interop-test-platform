@@ -63,6 +63,14 @@ class TestCase extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class, 'session_test_cases', 'test_case_id', 'session_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function components()
     {
         return $this->belongsToMany(Component::class, 'test_case_components', 'test_case_id', 'component_id');

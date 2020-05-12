@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Import new specification</b>
+                    <b>Import specification</b>
                 </h1>
             </div>
             <div class="container">
@@ -53,7 +53,7 @@
 
     export default {
         metaInfo: {
-            title: 'Import new specification'
+            title: 'Import specification'
         },
         components: {
             Layout,

@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Import new test case</b>
+                    <b>Import test case</b>
                 </h1>
             </div>
             <div class="container">
@@ -52,7 +52,7 @@
 
     export default {
         metaInfo: {
-            title: 'Import new test case'
+            title: 'Import test case'
         },
         components: {
             Layout,
