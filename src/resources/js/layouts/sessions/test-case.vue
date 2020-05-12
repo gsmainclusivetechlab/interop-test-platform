@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="row border-bottom pb-4 align-items-center">
                     <div class="col-6 d-flex flex-wrap">
-                        <h1 class="page-title mr-2">
+                        <h1 class="page-title mw-100 mr-2 text-break">
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>
