@@ -1,0 +1,21 @@
+@mixin text-clamp($lines: 2) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $lines;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.text-clamp {
+    @include text-clamp();
+}
+
+@for $i from 3 to 6 {
+    .text-clamp-#{$i} {
+        @include text-clamp($i);
+    }
+}
