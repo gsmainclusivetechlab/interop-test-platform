@@ -23,7 +23,6 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
-        'api_scheme_id',
         'name',
         'request',
         'response',

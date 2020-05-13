@@ -23,34 +23,10 @@ class UseCase extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function scenario()
-    {
-        return $this->belongsTo(Scenario::class, 'scenario_id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testCases()
     {
         return $this->hasMany(TestCase::class, 'use_case_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function positiveTestCases()
-    {
-        return $this->testCases()->positive();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function negativeTestCases()
-    {
-        return $this->testCases()->negative();
     }
 }

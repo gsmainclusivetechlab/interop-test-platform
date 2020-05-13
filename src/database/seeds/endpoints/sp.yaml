@@ -1,0 +1,5 @@
+- name: Callback URL
+  route: '{callback}'
+  pattern: '^.*$'
+  method: PUT
+  description: Callback URL provided by the client in the request header.

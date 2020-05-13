@@ -29,6 +29,5 @@ $factory->define(TestScript::class, function (Faker $faker) {
         ]),
         'rules' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
         'messages' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
-        'position' => $faker->numberBetween(1, 10),
     ];
 });

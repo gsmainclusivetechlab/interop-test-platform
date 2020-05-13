@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        Latest sessions
+                        <b>Latest sessions</b>
                     </h2>
                 </div>
             </div>

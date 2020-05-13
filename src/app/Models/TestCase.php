@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
 use App\Scopes\NameScope;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,8 +10,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestCase extends Model
 {
-    use HasUuid;
-
     const BEHAVIOR_NEGATIVE = 'negative';
     const BEHAVIOR_POSITIVE = 'positive';
 
@@ -26,9 +23,17 @@ class TestCase extends Model
      */
     protected $fillable = [
         'name',
+        'public',
+        'behavior',
         'description',
         'precondition',
-        'behavior',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'public' => false,
     ];
 
     /**
@@ -56,6 +61,22 @@ class TestCase extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class, 'session_test_cases', 'test_case_id', 'session_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function components()
+    {
+        return $this->belongsToMany(Component::class, 'test_case_components', 'test_case_id', 'component_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testRuns()
@@ -69,23 +90,5 @@ class TestCase extends Model
     public function lastTestRun()
     {
         return $this->hasOne(TestRun::class, 'test_case_id')->completed()->latest();
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopePositive($query)
-    {
-        return $query->where('behavior', static::BEHAVIOR_POSITIVE);
-    }
-
-    /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeNegative($query)
-    {
-        return $query->where('behavior', static::BEHAVIOR_NEGATIVE);
     }
 }

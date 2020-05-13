@@ -98,11 +98,11 @@
                                                     type="text"
                                                     class="form-control"
                                                     readonly
-                                                    :value="route('testing.run', [session.uuid, testCase.uuid])"
+                                                    :value="route('testing.run', [session.uuid])"
                                                 />
                                                 <clipboard-copy-btn
                                                     target="#testing-url"
-                                                    title="Copy URL"
+                                                    title="Copy"
                                                 ></clipboard-copy-btn>
                                             </div>
                                         </div>

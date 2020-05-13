@@ -28,6 +28,5 @@ $factory->define(\App\Models\TestSetup::class, function (Faker $faker) {
             TestSetup::TYPE_RESPONSE,
         ]),
         'values' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
-        'position' => $faker->numberBetween(1, 10),
     ];
 });

@@ -1,5 +1,5 @@
 <template>
-    <layout>
+    <layout v-bind:class="{'theme-dark': $page.app.dark_mode}">
         <b-navbar class="flex-wrap py-0" tag="header" toggleable="md">
             <div class="container-fluid py-3">
                 <b-navbar-toggle target="header-nav"></b-navbar-toggle>
@@ -25,7 +25,12 @@
 
                 <div class="col-md-3 d-flex justify-content-end">
                     <label class="d-flex align-items-center align-self-center toggle cursor-pointer mb-0 mr-2">
-                        <input class="sr-only toggle-input" type="checkbox" checked />
+                        <input
+                            class="sr-only toggle-input"
+                            type="checkbox"
+                            @change.prevent="$inertia.post(route('dark-mode'))"
+                            :checked="$page.app.dark_mode"
+                        />
                         <span class="toggle-bg"></span>
                         <span class="toggle-switch">
                             <span class="toggle-switch-figure"></span>
@@ -38,13 +43,19 @@
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
-                            v-if="$page.auth.user.is_admin"
+                            v-if="(
+                                $page.auth.user.can.users.viewAny ||
+                                $page.auth.user.can.sessions.viewAny ||
+                                $page.auth.user.can.specifications.viewAny ||
+                                $page.auth.user.can.use_cases.viewAny ||
+                                $page.auth.user.can.test_cases.viewAny
+                            )"
                         >
                             <template v-slot:button-content>
                                 <icon name="settings" />
                             </template>
 
-                            <li>
+                            <li v-if="$page.auth.user.can.users.viewAny">
                                 <inertia-link
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
@@ -52,7 +63,7 @@
                                     Users
                                 </inertia-link>
                             </li>
-                            <li>
+                            <li v-if="$page.auth.user.can.sessions.viewAny">
                                 <inertia-link
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
@@ -60,12 +71,28 @@
                                     Sessions
                                 </inertia-link>
                             </li>
-                            <li>
+                            <li v-if="$page.auth.user.can.specifications.viewAny">
                                 <inertia-link
-                                    :href="route('admin.scenarios.index')"
+                                    :href="route('admin.specifications.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Scenarios
+                                    Specifications
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.use_cases.viewAny">
+                                <inertia-link
+                                    :href="route('admin.use-cases.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Use Cases
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.test_cases.viewAny">
+                                <inertia-link
+                                    :href="route('admin.test-cases.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Test Cases
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -90,7 +117,7 @@
                             </template>
                             <li>
                                 <inertia-link
-                                    :href="route('settings.profile.edit')"
+                                    :href="route('settings.profile')"
                                     class="text-reset dropdown-item"
                                 >
                                     Settings
@@ -186,7 +213,7 @@
                     </b-navbar-nav>
 
                     <inertia-link
-                        :href="route('sessions.register.create')"
+                        :href="route('sessions.register.sut')"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />
@@ -196,7 +223,7 @@
             </b-collapse>
         </b-navbar>
         <main class="content">
-            <div class="container-fluid">
+            <div class="container-fluid d-flex flex-column">
                 <slot />
             </div>
         </main>
@@ -234,6 +261,6 @@
     export default {
         components: {
             Layout,
-        },
+        }
     };
 </script>

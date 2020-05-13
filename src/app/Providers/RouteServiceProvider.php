@@ -33,7 +33,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-        $this->addBindings();
+        $this->registerBindings();
     }
 
     /**
@@ -50,7 +50,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * @return void
      */
-    protected function addBindings()
+    protected function registerBindings()
     {
         Route::bind('userOnlyTrashed', function ($value) {
             return User::onlyTrashed()->where('id', $value)->firstOrFail();

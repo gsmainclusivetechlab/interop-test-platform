@@ -16,6 +16,10 @@ class UseCaseResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'testCases' => TestCaseResource::collection($this->whenLoaded('testCases')),
+            'can' => [
+                'update' => auth()->user()->can('update', $this->resource),
+                'delete' => auth()->user()->can('delete', $this->resource),
+            ],
         ];
     }
 }
