@@ -8,6 +8,7 @@ $gray-500: #a7a8a9;
 $gray-600: #7c7c7c;
 $gray-700: #505154;
 $gray-900: #242529;
+$black-800: #34353a;
 
 $blue: #00568f;
 $purple: #95226c;
@@ -26,7 +27,7 @@ $success: $mint;
 $warning: $yellow;
 $danger: $red;
 $light: $gray-100;
-$dark: $gray-700;
+$dark: $black-800;
 $dark-mode-darken: $gray-900;
 $dark-mode-lighten: $gray-500;
 $dark-mode-text: $gray-100;
@@ -68,12 +69,12 @@ $input-btn-focus-color: rgba($blue, 0.25);
 
 $steps-color-inactive: $gray-300;
 $steps-border-color-inactive: transparent;
-$steps-bg-color-inactive: $gray-100;
+$steps-bg-color-inactive: $light;
 
 $list-group-active-color: $primary;
 
 // Body
-$body-bg: $gray-100;
+$body-bg: $light;
 $body-color: $gray-900;
 
 // navbar colors
@@ -87,3 +88,7 @@ $modal-backdrop-bg: $dark-mode-darken;
 
 // popover
 $popover-max-width: 378px;
+
+// list group
+$list-group-active-color: $body-color;
+$list-group-active-bg: $light;

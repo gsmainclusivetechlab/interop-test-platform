@@ -20,13 +20,14 @@
     .node {
         rect {
             fill: #fff;
-            stroke: #fff;
+            stroke: $gray-300;
             color: $body-color;
         }
 
         &.is-active {
             rect {
                 fill: $red;
+                stroke: none;
             }
 
             .label {

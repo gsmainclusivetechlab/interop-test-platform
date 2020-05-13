@@ -9,14 +9,34 @@
                 background-color: inherit;
             }
         }
+
+        .modal-content {
+            .btn-secondary {
+                @include button-variant(
+                    $dark-mode-lighten,
+                    $border-color,
+                    $dark-mode-text,
+                    rgba($dark, 0),
+                    $border-color,
+                    $dark-mode-text
+                );
+                background-image: none;
+            }
+        }
     }
 
     & ~ .popover.b-popover {
         color: $dark-mode-text;
         background-color: $dark;
 
-        &.bs-popover-bottom > .arrow:after {
-            border-bottom-color: $dark;
+        &.bs-popover-bottom > .arrow {
+            &::after {
+                border-bottom-color: $dark;
+            }
+
+            &::before {
+                border-bottom-color: rgba($dark-mode-text, 0.1);
+            }
         }
 
         .popover-body {
@@ -77,11 +97,29 @@
         }
     }
 
-    .list-group-transparent {
+    .list-group {
         .list-group-item {
-            &.active {
-                color: $dark-mode-text;
-                background-color: $dark;
+            &-action {
+                &:hover,
+                &:focus {
+                    color: $dark;
+                }
+            }
+        }
+
+        &-transparent {
+            .list-group-item {
+                &-action {
+                    &.active {
+                        color: $dark-mode-text;
+                        background-color: $dark;
+                    }
+
+                    &:hover,
+                    &:focus {
+                        color: $dark-mode-text;
+                    }
+                }
             }
         }
     }
@@ -90,5 +128,9 @@
         .nav-link {
             color: $gray-300;
         }
+    }
+
+    .scenario-card {
+        color: $dark-mode-text;
     }
 }

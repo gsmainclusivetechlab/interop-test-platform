@@ -170,3 +170,11 @@ a {
         }
     }
 }
+
+.list-group-transparent {
+    .list-group-item {
+        &.active {
+            background-color: #fff;
+        }
+    }
+}
