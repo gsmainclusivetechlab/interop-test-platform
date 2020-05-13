@@ -75,7 +75,7 @@ class RegisterController extends Controller
                 UseCase::with([
                         'testCases' => function ($query) {
                             $query->whereHas('components', function ($query) {
-                                $query->where('id', request()->session()->get('session.sut.component_id'));
+                                $query->whereKey(request()->session()->get('session.sut.component_id'));
                             })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
                                 $query->where('public', true);
                             });
@@ -83,7 +83,7 @@ class RegisterController extends Controller
                     ])
                     ->whereHas('testCases', function ($query) {
                         $query->whereHas('components', function ($query) {
-                            $query->where('id', request()->session()->get('session.sut.component_id'));
+                            $query->whereKey(request()->session()->get('session.sut.component_id'));
                         })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
                             $query->where('public', true);
                         });
@@ -119,7 +119,8 @@ class RegisterController extends Controller
         return Inertia::render('sessions/register/config', [
             'session' => session('session'),
             'sut' => (new ComponentResource(
-                Component::firstWhere('id', request()->session()->get('session.sut.component_id'))
+                Component::whereKey(request()->session()->get('session.sut.component_id'))
+                    ->firstOrFail()
                     ->load('connections'),
             ))->resolve(),
             'components' => ComponentResource::collection(
