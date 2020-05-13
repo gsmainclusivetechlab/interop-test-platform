@@ -65,4 +65,12 @@ class Session extends Model
     {
         return $this->belongsToMany(TestCase::class, 'session_test_cases', 'session_id', 'test_case_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function testSteps()
+    {
+        return $this->belongsToMany(TestStep::class, 'session_test_cases', 'session_id', 'test_case_id', 'id', 'test_case_id');
+    }
 }

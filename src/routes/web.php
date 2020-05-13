@@ -55,10 +55,10 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
 /**
  * Testing Routes
  */
-//Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-//    Route::any('{session:uuid}/{component:uuid}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
+Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
+    Route::any('{component:uuid}/{connection:uuid}/{session}/run/{path?}', 'RunController')->name('run')->where('path', '.*');
 //    Route::any('step/{path}', 'StepController')->name('step')->where('path', '.*');
-//});
+});
 
 /**
  * Admin Routes

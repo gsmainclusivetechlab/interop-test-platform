@@ -53,10 +53,10 @@ class RouteServiceProvider extends ServiceProvider
     protected function registerBindings()
     {
         Route::bind('userOnlyTrashed', function ($value) {
-            return User::onlyTrashed()->where('id', $value)->firstOrFail();
+            return User::onlyTrashed()->whereKey($value)->firstOrFail();
         });
         Route::bind('userWithTrashed', function ($value) {
-            return User::withTrashed()->where('id', $value)->firstOrFail();
+            return User::withTrashed()->whereKey($value)->firstOrFail();
         });
     }
 

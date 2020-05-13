@@ -13,27 +13,49 @@ use App\Jobs\CompleteTestRunJob;
 use App\Models\Component;
 use App\Models\Session;
 use App\Models\TestCase;
+use App\Models\TestStep;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use League\OpenAPIValidation\PSR7\PathFinder;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RunController extends Controller
 {
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request;
 
-    public function __construct()
+    /**
+     * RunController constructor.
+     * @param ServerRequestInterface $request
+     */
+    public function __construct(ServerRequestInterface $request)
     {
+        $this->request = $request;
         $this->middleware([SetJsonHeaders::class]);
     }
 
-    public function __invoke(Session $session, Component $component, string $path)
+    public function __invoke(Component $component, Component $connection, Session $session, string $path)
     {
-        $testStep = $component->testSteps()
-//            ->with([
-//                'testCase' => function ($query) {
-//                    $query->where('scenario_id', 1);
-//                },
-//            ])
-            ->get();
+        $request = $this->request->withUri(UriResolver::resolve(new Uri('http://172.16.14.103:8084'), new Uri($path)));
+        $specification = $connection->pivot->specification;
+        $pathFinder = new PathFinder($specification->openapi, $request->getUri(), $request->getMethod());
+        $operationAddress = collect($pathFinder->search())->first();
+
+        dd($operationAddress->method());
+
+        $testStep = $session->testSteps()
+            ->where('path', $operationAddress->path())
+            ->where('method', $operationAddress->method())
+            ->whereHas('source', function ($query) use ($component) {
+                $query->whereKey($component->getKey());
+            })
+            ->whereHas('target', function ($query) use ($connection) {
+                $query->whereKey($connection->getKey());
+            })
+            ->firstOrFail();
+
         dd($testStep);
 
 //        $testRun = tap($session->testRuns()->make(), function ($testRun) use ($testCase) {
