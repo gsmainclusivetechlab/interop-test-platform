@@ -4,7 +4,7 @@ behavior: negative
 description: |
     The Service Provider wants to test if he is capable of receiving a transaction from a different wallet. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction, simulating a decline transaction with error 401 by the Payee.
 precondition: |
-    Service Provider has GSMA Mobile Money API Implemented. Service Provider is capable of handled async calls. Payee and Payer MMOs exist in Mojaloop as Participants. Payee and Payer exist in Mojaloop as Parties. Debit party should be identified by account identifier "MSISDN" with the value "+33555123456". Credit party should be identified by account identifier "MSISDN" with the value "+33555789123".
+    Service Provider has GSMA Mobile Money API Implemented. Service Provider is capable of handled async calls. Payee and Payer MMOs exist in Mojaloop as Participants. Payee and Payer exist in Mojaloop as Parties. Debit party should be identified by account identifier "msisdn" with the value "+33555123456". Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 test_steps:
   - name: POST /transactions
     source: Service Provider
@@ -25,9 +25,9 @@ test_steps:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.debitParty.*.key: 'in:MSISDN'
+          body.debitParty.*.key: 'in:msisdn'
           body.debitParty.*.value: 'in:+33555123456'
-          body.creditParty.*.key: 'in:MSISDN'
+          body.creditParty.*.key: 'in:msisdn'
           body.creditParty.*.value: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
@@ -59,10 +59,10 @@ test_steps:
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
-          - key: 'MSISDN'
+          - key: 'msisdn'
             value: "+33555123456"
         creditParty:
-          - key: 'MSISDN'
+          - key: 'msisdn'
             value: '+33555789123'
     response:
       status: 401
