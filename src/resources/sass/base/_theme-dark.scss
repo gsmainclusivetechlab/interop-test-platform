@@ -133,4 +133,14 @@
     .scenario-card {
         color: $dark-mode-text;
     }
+
+    .custom-file-label {
+        color: $dark-mode-text;
+        background-color: $dark;
+
+        &::after {
+            color: $dark-mode-text;
+            background-color: $gray-500;
+        }
+    }
 }

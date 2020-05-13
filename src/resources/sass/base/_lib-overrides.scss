@@ -41,6 +41,7 @@ a {
     height: $form-file-height;
     margin: 0;
     opacity: 0;
+    cursor: pointer;
 
     &:focus ~ .custom-file-label {
         border-color: $form-file-focus-border-color;
@@ -77,14 +78,14 @@ a {
 
     &::after {
         position: absolute;
-        top: 0;
+        top: -1px;
         right: 0;
         bottom: 0;
         z-index: 3;
-        display: block;
+        display: flex;
+        align-items: center;
         height: $form-file-height;
         padding: $form-file-padding-y $form-file-padding-x;
-        line-height: $form-file-line-height;
         color: $form-file-button-color;
         content: 'Browse';
         @include gradient-bg($form-file-button-bg);
