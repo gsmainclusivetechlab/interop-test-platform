@@ -19,8 +19,8 @@ class CreateConnectionsTable extends Migration
             $table->unsignedBigInteger('target_id');
             $table->foreign('target_id')->references('id')->on('components')->onDelete('cascade');
             $table->primary(['source_id', 'target_id']);
-            $table->unsignedBigInteger('specification_id')->nullable();
-            $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('set null');
+            $table->unsignedBigInteger('specification_id');
+            $table->foreign('specification_id')->references('id')->on('specifications')->onDelete('cascade');
         });
     }
 

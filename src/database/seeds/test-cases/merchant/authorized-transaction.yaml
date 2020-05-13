@@ -2,22 +2,15 @@ name: Authorized Transaction by Payer FSP
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
-  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account.
-  In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
-  This flow shows the necessary steps for this transaction simulating an approved transaction.
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction simulating an approved transaction.
 precondition: |
-  Service Provider has GSMA Mobile Money API Implemented.
-  Service Provider is capable of handled async calls.
-  Payee and Payer MMOs exist in Mojaloop as Participants.
-  Payee and Payer exist in Mojaloop as Parties.
-  Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
-  Credit party should be identified by account identifier "msisdn" with the value  "+33555789123".
+  Service Provider has GSMA Mobile Money API Implemented. Service Provider is capable of handled async calls. Payee and Payer MMOs exist in Mojaloop as Participants. Payee and Payer exist in Mojaloop as Parties. Debit party should be identified by account identifier "msisdn" with the value "+33555123456". Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
   - Service Provider
   - Mobile Money Operator 1
   - Mobile Money Operator 2
 test_steps:
-  - path: transactions
+  - path: /transactions
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
@@ -81,7 +74,7 @@ test_steps:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
         notificationMethod: 'callback'
-  - path: transactionRequests
+  - path: /transactionRequests
     method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -138,7 +131,7 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - path: transactionRequests
+  - path: /transactionRequests
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
@@ -195,7 +188,7 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - path: transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -224,7 +217,7 @@ test_steps:
         transactionRequestState: 'RECEIVED'
     response:
       status: 200
-  - path: transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -253,7 +246,7 @@ test_steps:
         transactionRequestState: 'RECEIVED'
     response:
       status: 200
-  - path: quotes
+  - path: /quotes
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -322,7 +315,7 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - path: quotes
+  - path: /quotes
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -391,7 +384,7 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - path: quotes/{ID}
+  - path: /quotes/{ID}
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -438,7 +431,7 @@ test_steps:
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
     response:
       status: 200
-  - path: quotes/{ID}
+  - path: /quotes/{ID}
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
@@ -485,7 +478,7 @@ test_steps:
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
     response:
       status: 200
-  - path: transfers
+  - path: /transfers
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -541,7 +534,7 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
     response:
       status: 202
-  - path: transfers
+  - path: /transfers
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -597,7 +590,7 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
     response:
       status: 202
-  - path: {X-Callback-URL}
+  - path: '{X-Callback-URL}'
     method: PUT
     source: Mobile Money Operator 1
     target: Service Provider
@@ -647,7 +640,7 @@ test_steps:
             value: '+33555789123'
     response:
       status: 204
-  - path: transfers/{ID}
+  - path: /transfers/{ID}
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -691,7 +684,7 @@ test_steps:
         expiration: '2020-04-13T12:50:15.273Z'
     response:
       status: 200
-  - path: transfers/{ID}
+  - path: /transfers/{ID}
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
@@ -734,4 +727,4 @@ test_steps:
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2020-04-13T12:50:15.273Z'
     response:
-        status: 200
+      status: 200

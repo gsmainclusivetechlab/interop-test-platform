@@ -13,8 +13,13 @@ precondition: |
   Amount should be the value "10.1".
   Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+components:
+  - Service Provider
+  - Mobile Money Operator 1
+  - Mobile Money Operator 2
 test_steps:
-  - name: POST /transactions
+  - path: /transactions
+    method: POST
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
@@ -75,7 +80,8 @@ test_steps:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
         notificationMethod: 'callback'
-  - name: POST /transactionRequests
+  - path: /transactionRequests
+    method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -129,7 +135,8 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - name: POST /transactionRequests
+  - path: /transactionRequests
+    method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
@@ -183,7 +190,8 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - name: PUT /transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
+    method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -211,7 +219,8 @@ test_steps:
         transactionRequestState: 'RECEIVED'
     response:
       status: 200
-  - name: PUT /transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
@@ -239,7 +248,8 @@ test_steps:
         transactionRequestState: 'RECEIVED'
     response:
       status: 200
-  - name: POST /quotes
+  - path: /quotes
+    method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -305,7 +315,8 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - name: POST /quotes
+  - path: /quotes
+    method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
@@ -371,7 +382,8 @@ test_steps:
           initiatorType: 'BUSINESS'
     response:
       status: 202
-  - name: PUT /quotes/{ID}
+  - path: /quotes/{ID}
+    method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -415,7 +427,8 @@ test_steps:
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
     response:
       status: 200
-  - name: PUT /quotes/{ID}
+  - path: /quotes/{ID}
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
@@ -459,7 +472,8 @@ test_steps:
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
     response:
       status: 200
-  - name: PUT /transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
+    method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -487,7 +501,8 @@ test_steps:
         transactionRequestState: 'REJECTED'
     response:
       status: 200
-  - name: PUT /transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
@@ -515,7 +530,8 @@ test_steps:
         transactionRequestState: 'REJECTED'
     response:
       status: 200
-  - name: PUT /X-Callback-URL
+  - path: '{X-Callback-URL}'
+    method: PUT
     source: Mobile Money Operator 1
     target: Service Provider
     test_request_scripts:

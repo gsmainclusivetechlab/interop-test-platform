@@ -21,34 +21,46 @@ export default {
         },
         confirmTitle: {
             type: String,
-            default: 'Are you sure?',
+            default: 'Are you sure?'
         },
         confirmText: {
             type: String,
-            default: "You won't be able to revert this!",
-        },
+            default: "You won't be able to revert this!"
+        }
     },
     data() {
         return {
-            confirmed: false,
+            confirmed: false
         };
     },
     methods: {
         confirm(e) {
+            const h = this.$createElement;
+
+            const messageVNode = h(
+                'span',
+                {
+                    class: ['text-break']
+                },
+                [this.confirmText]
+            );
+
             if (!this.confirmed) {
                 e.preventDefault();
-                this.$bvModal.msgBoxConfirm(this.confirmText, {
-                    title: this.confirmTitle,
-                    okTitle: 'Confirm',
-                    centered: true,
-                }).then(value => {
-                    this.confirmed = value;
-                    if (this.confirmed) {
-                        this.$el.click();
-                    }
-                });
+                this.$bvModal
+                    .msgBoxConfirm([messageVNode], {
+                        title: this.confirmTitle,
+                        okTitle: 'Confirm',
+                        centered: true
+                    })
+                    .then(value => {
+                        this.confirmed = value;
+                        if (this.confirmed) {
+                            this.$el.click();
+                        }
+                    });
             }
-        },
-    },
+        }
+    }
 };
 </script>

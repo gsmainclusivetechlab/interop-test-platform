@@ -12,6 +12,28 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">
+                                    Name
+                                </label>
+                                <input
+                                    name="name"
+                                    type="text"
+                                    class="form-control"
+                                    v-model="form.name"
+                                    :class="{
+                                            'is-invalid': $page.errors.name
+                                        }"
+                                />
+                                <span
+                                    v-if="$page.errors.name"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.name }}
+                                    </strong>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">
                                     File
                                 </label>
                                 <b-form-file
@@ -62,6 +84,7 @@
             return {
                 sending: false,
                 form: {
+                    name: null,
                     file: null,
                 }
             };
@@ -70,6 +93,7 @@
             submit() {
                 this.sending = true;
                 let data = new FormData();
+                data.append('name', this.form.name);
                 data.append('file', this.form.file);
                 this.$inertia
                     .post(route('admin.specifications.import.confirm'), data)

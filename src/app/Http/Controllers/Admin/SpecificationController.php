@@ -59,15 +59,15 @@ class SpecificationController extends Controller
     public function import(Request $request)
     {
         $this->authorize('create', Specification::class);
-        $request->validate(['file' => ['required', 'mimetypes:text/yaml,text/plain']]);
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'file' => ['required', 'mimetypes:text/yaml,text/plain'],
+        ]);
 
         try {
-            $openapi = Reader::readFromYaml($request->file('file')->get());
             Specification::create([
-                'name' => $openapi->info->title,
-                'version' => $openapi->info->version,
-                'description' => $openapi->info->description,
-                'openapi' => $openapi,
+                'name' => $request->input('name'),
+                'openapi' => Reader::readFromYaml($request->file('file')->get()),
             ]);
 
             return redirect()

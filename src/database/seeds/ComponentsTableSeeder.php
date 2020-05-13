@@ -60,49 +60,39 @@ class ComponentsTableSeeder extends Seeder
         return [
             [
                 [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 1')
-                        ->value('id'),
-                    'specification_id' => Specification::where('name', 'Mobile Money API')
-                        ->where('version', '1.1.2')
-                        ->value('id'),
+                    'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
+                    'specification_id' => Specification::where('name', 'MM v1.1.2')->value('id'),
                 ],
             ],
             [
 
                 [
                     'target_id' => Component::where('name', 'Service Provider')->value('id'),
+                    'specification_id' => Specification::where('name', 'MM v1.1.2')->value('id'),
                 ],
 
                 [
                     'target_id' => Component::where('name', 'Mojaloop')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop API')
-                        ->where('version', '1.0')
-                        ->value('id'),
+                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
                 ],
             ],
             [
 
                 [
                     'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop API')
-                        ->where('version', '1.0')
-                        ->value('id'),
+                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
                 ],
 
                 [
                     'target_id' => Component::where('name', 'Mobile Money Operator 2')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop API')
-                        ->where('version', '1.0')
-                        ->value('id'),
+                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
                 ],
             ],
             [
 
                 [
                     'target_id' => Component::where('name', 'Mojaloop')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop API')
-                        ->where('version', '1.0')
-                        ->value('id'),
+                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
                 ],
             ],
         ];
