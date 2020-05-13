@@ -23,7 +23,8 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'path',
+        'method',
         'request',
         'response',
     ];

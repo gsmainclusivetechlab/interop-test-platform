@@ -16,7 +16,6 @@ class CreateSpecificationsTable extends Migration
         Schema::create('specifications', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('version');
             $table->longText('openapi');
             $table->text('description')->nullable();
             $table->timestamps();

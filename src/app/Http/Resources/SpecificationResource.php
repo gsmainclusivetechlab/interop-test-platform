@@ -15,7 +15,6 @@ class SpecificationResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'version' => $this->version,
             'description' => $this->description,
             'can' => [
                 'delete' => auth()->user()->can('delete', $this->resource),

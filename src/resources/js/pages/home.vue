@@ -24,8 +24,8 @@
                                 <b>{{ session.name }}</b>
                             </inertia-link>
                         </h2>
-                        <p class="mb-0">
-                            {{ session.description ? string(session.description).truncate(100) : '' }}
+                        <p class="mb-0 text-clamp">
+                            {{ session.description }}
                         </p>
                     </div>
                     <div class="card-body flex-shrink-0 py-4">

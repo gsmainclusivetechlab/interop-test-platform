@@ -20,7 +20,6 @@ class Specification extends Model
      */
     protected $fillable = [
         'name',
-        'version',
         'openapi',
         'description',
     ];

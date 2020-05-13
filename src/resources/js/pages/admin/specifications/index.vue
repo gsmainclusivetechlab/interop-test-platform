@@ -41,7 +41,6 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Version</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
@@ -49,9 +48,6 @@
                         <tr v-for="specification in specifications.data">
                             <td class="text-break">
                                 {{ specification.name }}
-                            </td>
-                            <td class="text-break">
-                                {{ specification.version }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
@@ -87,7 +83,7 @@
                             </td>
                         </tr>
                         <tr v-if="!specifications.data.length">
-                            <td class="text-center" colspan="3">
+                            <td class="text-center" colspan="2">
                                 No Results
                             </td>
                         </tr>

@@ -20,7 +20,8 @@ class CreateTestStepsTable extends Migration
             $table->unsignedBigInteger('source_id');
             $table->unsignedBigInteger('target_id');
             $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('connections')->onDelete('cascade');
-            $table->string('name');
+            $table->string('path');
+            $table->string('method');
             $table->json('request')->nullable();
             $table->json('response')->nullable();
             $table->unsignedInteger('position');

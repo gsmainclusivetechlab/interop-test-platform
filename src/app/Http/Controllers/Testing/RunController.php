@@ -43,6 +43,7 @@ class RunController extends Controller
         $pathFinder = new PathFinder($specification->openapi, $request->getUri(), $request->getMethod());
         $operationAddress = collect($pathFinder->search())->first();
 
+        dd($request->getUri()->getPath());
         dd($operationAddress->method());
 
         $testStep = $session->testSteps()
