@@ -91,9 +91,6 @@ test_steps:
       amount:
         amount: '1000'
     test_request_scripts:
-    trigger:
-      amount:
-        amount: '1000'
       - name: Transaction Type is a Merchant Payment
         rules:
           body.transactionType.scenario: 'in:PAYMENT'
