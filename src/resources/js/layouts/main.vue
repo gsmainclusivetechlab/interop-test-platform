@@ -43,6 +43,7 @@
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
+                            class="admin-settings-dropdown"
                             v-if="(
                                 $page.auth.user.can.users.viewAny ||
                                 $page.auth.user.can.sessions.viewAny ||
@@ -102,6 +103,7 @@
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center pr-0"
+                            class="user-settings-dropdown"
                         >
                             <template v-slot:button-content>
                             <span class="avatar flex-shrink-0">
