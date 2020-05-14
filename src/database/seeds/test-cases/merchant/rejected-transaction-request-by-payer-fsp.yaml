@@ -15,6 +15,8 @@ test_steps:
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -79,6 +81,9 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1000'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -136,6 +141,9 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1000'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -193,6 +201,8 @@ test_steps:
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
     test_request_setups:
     - name: Override request
       values:
@@ -226,6 +236,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -254,6 +266,8 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 1
     target: Service Provider
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Error category is valid
         rules:
