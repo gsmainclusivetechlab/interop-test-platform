@@ -4,7 +4,13 @@ behavior: negative
 description: |
   The Service Provider wants to test if he is capable of receiving a transaction from a different wallet. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction, simulating a decline transaction with error 500 by the Payee.
 precondition: |
-  Service Provider has GSMA Mobile Money API Implemented. Service Provider is capable of handled async calls. Payee and Payer MMOs exist in Mojaloop as Participants. Payee and Payer exist in Mojaloop as Parties. Debit party should be identified by account identifier "msisdn" with the value "+33555123456". Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer exist in Mojaloop as Parties.
+  - Amount should be the value "500".
+  - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
   - Service Provider
 test_steps:
