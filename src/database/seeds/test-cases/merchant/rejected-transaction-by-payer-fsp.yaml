@@ -24,7 +24,7 @@ test_steps:
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
     trigger:
-      amount: '1000'
+      amount: '10.1'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -89,7 +89,7 @@ test_steps:
     api_scheme: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1000'
+        amount: '10.1'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -147,7 +147,7 @@ test_steps:
     api_scheme: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1000'
+        amount: '10.1'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -267,7 +267,7 @@ test_steps:
     api_scheme: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1000'
+        amount: '10.1'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -337,7 +337,7 @@ test_steps:
     api_scheme: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1000'
+        amount: '10.1'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -407,7 +407,7 @@ test_steps:
     api_scheme: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '1000'
+        amount: '10.1'
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -455,7 +455,7 @@ test_steps:
     api_scheme: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '1000'
+        amount: '10.1'
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -563,7 +563,7 @@ test_steps:
     source: Mobile Money Operator 1
     target: Service Provider
     trigger:
-      amount: '1000'
+      amount: '10.1'
     test_request_scripts:
       - name: Error category is valid
         rules:
