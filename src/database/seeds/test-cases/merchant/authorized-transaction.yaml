@@ -83,6 +83,8 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -140,6 +142,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -197,6 +201,8 @@ test_steps:
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -226,6 +232,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -255,6 +263,8 @@ test_steps:
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -324,6 +334,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -393,6 +405,8 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -440,6 +454,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -487,6 +503,8 @@ test_steps:
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Transfer ID is present
         rules:
@@ -543,6 +561,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1000'
     test_request_scripts:
       - name: Transfer ID is present
         rules:
@@ -649,6 +669,8 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      transferState: 'COMMITTED'
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -693,6 +715,8 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
+    trigger:
+      transferState: 'COMMITTED'
     test_request_scripts:
       - name: ID is Valid
         rules:
