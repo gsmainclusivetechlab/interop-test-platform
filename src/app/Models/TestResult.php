@@ -26,6 +26,7 @@ class TestResult extends Model
      * @var array
      */
     protected $fillable = [
+        'test_step_id',
         'request',
         'response',
     ];

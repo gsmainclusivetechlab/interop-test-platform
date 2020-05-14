@@ -37,14 +37,14 @@ class TestRunController extends Controller
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([
-                    'suts',
-                    'scenario' => function ($query) {
-                        return $query->with([
-                            'components' => function ($query) {
-                                return $query->with(['connections']);
-                            },
-                        ]);
-                    },
+//                    'components',
+//                    'scenario' => function ($query) {
+//                        return $query->with([
+//                            'components' => function ($query) {
+//                                return $query->with(['connections']);
+//                            },
+//                        ]);
+//                    },
                     'testCases' => function ($query) {
                         return $query->with(['lastTestRun']);
                     },

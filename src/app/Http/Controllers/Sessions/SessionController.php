@@ -64,10 +64,15 @@ class SessionController extends Controller
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
-                UseCase::with('testCases')
+                UseCase::with([
+                    'testCases' => function ($query) use($session) {
+                        $query->whereHas('sessions', function ($query) use($session) {
+                            $query->whereKey($session->getKey());
+                        });
+                    }])
                     ->whereHas('testCases', function ($query) use($session) {
                         $query->whereHas('sessions', function ($query) use($session) {
-                            $query->whereKey($session->id);
+                            $query->whereKey($session->getKey());
                         });
                     })
                     ->get()

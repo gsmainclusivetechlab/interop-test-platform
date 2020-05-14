@@ -15,6 +15,10 @@ test_steps:
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
+    trigger:
+      amount: '1000'
+      currency: 'USD'
+      type: 'merchantpay'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
