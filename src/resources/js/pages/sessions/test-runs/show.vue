@@ -26,7 +26,16 @@
 <!--                <div class="p-4">-->
 <!--                    <diagram>-->
 <!--                        graph LR;-->
-<!--                        <template v-for="component in session.scenario.data.components">-->
+<!--                        <template v-for="testStepComponents in collect(this.testCase.testSteps.data).unique((item => item.source.id)).groupBy(item => item.target.id).all()">-->
+<!--                            <template v-for="testStepComponent in testStepComponents">-->
+<!--                                {{ testStepComponent.source.id }} &ndash;&gt; {{ testStepComponent.target.id }}-->
+<!--                            </template>-->
+
+<!--                            {{ testStepComponents.source.id }}({{ testStepComponents.source.name }});-->
+<!--                            {{ testStepComponents.target.id }}({{ testStepComponents.target.name }})<template v-if="collect(session.components.data).contains('id', testStepComponents.target.id)">:::is-active</template><template v-else></template>;-->
+<!--                            {{ testStepComponents.source.id }} &ndash;&gt; {{ testStepComponents.target.id }};-->
+<!--                            {{ testStepComponents.target.id }} &ndash;&gt; {{ testStepComponents.source.id }};-->
+
 <!--                            {{ component.id }}({{component.name}})<template v-if="collect(session.suts.data).contains('id', component.id)">:::is-active</template><template v-else></template>;-->
 <!--                            <template v-for="connection in component.connections">-->
 <!--                                {{ component.id }}-->
@@ -97,8 +106,8 @@
                                             <b>
                                                 {{ `Step ${testStep.position}` }}
                                             </b>
-                                            <div class="text-truncate" :title="testStep.name">
-                                                {{ testStep.name }}
+                                            <div class="text-truncate" :title="`${testStep.method} ${testStep.path}`">
+                                                {{ testStep.method }} {{ testStep.path }}
                                             </div>
                                         </div>
                                     </li>

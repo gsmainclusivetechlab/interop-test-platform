@@ -1,20 +1,5 @@
 .PHONY: info install update composer-install ci composer-update composer-init cu composer-autoload ca chmod cache-clear
 
-info:
-	@echo "LenderKit Application Utility (PHP-FPM Container)"
-	@echo " "
-	@echo "Usage:"
-	@echo "	make command"
-	@echo " "
-	@echo "Available commands:"
-	@echo "	install 			Install project after first time download"
-	@echo "	update 				Update project after code update"
-	@echo "	composer-install|ci		Run composer install w/ env options"
-	@echo "	composer-update|cu		Run composer update w/ env options"
-	@echo "	composer-autoload|ca		Run composer dump autoload w/ env options"
-	@echo "	chmod 				Chmod storage and bootstrap folders"
-	@echo "	cache-clear 			Clear all cache"
-
 COMPOSER_OPTS =
 
 MAYBE_SUDO = sudo

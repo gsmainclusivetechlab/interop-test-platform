@@ -66,7 +66,11 @@ class SessionController extends Controller
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) use($session) {
-                        $query->whereHas('sessions', function ($query) use($session) {
+                        $query->with([
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ])->whereHas('sessions', function ($query) use($session) {
                             $query->whereKey($session->getKey());
                         });
                     }])
@@ -80,7 +84,7 @@ class SessionController extends Controller
             'testRuns' => TestRunResource::collection(
                 $session->testRuns()
                     ->with(['session', 'testCase'])
-                    ->completed()
+//                    ->completed()
                     ->latest()
                     ->paginate()
             ),

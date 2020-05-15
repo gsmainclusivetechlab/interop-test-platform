@@ -13,6 +13,7 @@ use App\Http\Middleware\ValidateTraceContext;
 use App\Jobs\CompleteTestRunJob;
 use App\Models\Component;
 use App\Models\Session;
+use App\Models\TestCase;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
@@ -37,11 +38,19 @@ class RunController extends Controller
         $this->middleware([ValidateTraceContext::class])->only(['simulator']);
     }
 
+    public function run(Session $session, TestCase $testCase, string $path)
+    {
+        dd($testCase);
+    }
+
     public function sut(Session $session, Component $component, Component $connection, string $path)
     {
         $specification = $connection->pivot->specification;
         $pathFinder = new PathFinder($specification->openapi, new Uri("/{$path}"), $this->request->getMethod());
-        $operationAddress = collect($pathFinder->search())->first();
+
+        if (($operationAddress = collect($pathFinder->search())->first()) == null) {
+            abort(404);
+        }
 
         $testStep = $session->testSteps()
             ->where('path', $operationAddress->path())
@@ -52,7 +61,7 @@ class RunController extends Controller
             ->whereHas('target', function ($query) use ($connection) {
                 $query->whereKey($connection->getKey());
             })
-            ->whereJsonContains('trigger', $this->request->getBody())
+            ->whereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$this->request->getBody()->getContents()])
             ->where(function ($query) {
                 $query->where(function ($query) {
                     $query->whereDoesntHave('testRuns', function ($query) {
@@ -77,15 +86,19 @@ class RunController extends Controller
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
 
-//        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
+        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
-//        $baseUrl = $session->components()->whereKey($connection->getKey())->get('base_url') ?? $connection->base_url;
+        if ($sut = $session->components()->whereKey($connection->getKey())->first()) {
+            $url = $sut->pivot->base_url;
+        } else {
+            $url = $connection->base_url;
+        }
 
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $this->request->withUri(UriResolver::resolve(new Uri($connection->base_url), new Uri($path)))
-            ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
+        $request = $this->request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)))
+            ->withHeader(TraceparentHeader::NAME, (string) $traceparent);
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
@@ -99,7 +112,14 @@ class RunController extends Controller
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()->offset($testRun->testResults()->count())->firstOrFail();
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-        $request = $this->request->withUri(UriResolver::resolve(new Uri($testStep->target->base_url), new Uri($path)));
+
+        if ($sut = $testRun->session->components()->whereKey($testStep->target->getKey())->first()) {
+            $url = $sut->pivot->base_url;
+        } else {
+            $url = $testStep->target->base_url;
+        }
+
+        $request = $this->request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)));
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))

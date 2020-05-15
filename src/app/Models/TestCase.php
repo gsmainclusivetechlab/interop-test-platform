@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasUuid;
 use App\Scopes\NameScope;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestCase extends Model
 {
+    use HasUuid;
+
     const BEHAVIOR_NEGATIVE = 'negative';
     const BEHAVIOR_POSITIVE = 'positive';
 

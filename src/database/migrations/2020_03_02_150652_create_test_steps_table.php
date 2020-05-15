@@ -22,7 +22,7 @@ class CreateTestStepsTable extends Migration
             $table->foreign(['source_id', 'target_id'])->references(['source_id', 'target_id'])->on('connections')->onDelete('cascade');
             $table->string('path');
             $table->string('method');
-            $table->json('trigger')->nullable();
+            $table->json('trigger');
             $table->json('request')->nullable();
             $table->json('response')->nullable();
             $table->unsignedInteger('position');

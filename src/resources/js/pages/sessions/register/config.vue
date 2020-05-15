@@ -15,6 +15,7 @@
                                 <input
                                     :id="`testing-${connection.id}`"
                                     type="text"
+                                    :value="route('testing.sut', [session.info.uuid, sut.uuid, connection.uuid])"
                                     class="form-control"
                                     readonly
                                 />

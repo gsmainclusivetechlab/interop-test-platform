@@ -21,6 +21,7 @@ class Session extends Model
      * @var array
      */
     protected $fillable = [
+        'uuid',
         'name',
         'description',
     ];
