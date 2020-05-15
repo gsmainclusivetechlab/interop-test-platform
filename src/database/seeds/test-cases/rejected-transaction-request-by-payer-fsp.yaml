@@ -2,17 +2,9 @@ name: Rejected Transaction Request by Payer FSP
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
-  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet.
-  In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
-  This flow shows the necessary steps for this transaction, simulating a reject status during the transaction requested by the Payer.
+    The Service Provider wants to test if he is capable of receiving a transaction from a different wallet. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction, simulating a reject status during the transaction requested by the Payer.
 precondition: |
-  Service Provider has GSMA Mobile Money API Implemented.
-  Service Provider is capable of handled async calls.
-  Payee and Payer MMOs exist in Mojaloop as Participants.
-  Payee and Payer exist in Mojaloop as Parties.
-  Amount should be the value "15.15".
-  Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
-  Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+    Service Provider has GSMA Mobile Money API Implemented. Service Provider is capable of handled async calls. Payee and Payer MMOs exist in Mojaloop as Participants. Payee and Payer exist in Mojaloop as Parties. Debit party should be identified by account identifier "msisdn" with the value "+33555123456". Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 test_steps:
   - name: POST /transactions
     source: Service Provider
@@ -30,7 +22,9 @@ test_steps:
           body.creditParty.*.value: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'in:15.15'
+          body.amount:
+          - 'required'
+          - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -96,7 +90,9 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:15.15'
+          body.amount.amount:
+          - 'required'
+          - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -150,7 +146,9 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:15.15'
+          body.amount.amount:
+          - 'required'
+          - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -187,6 +185,10 @@ test_steps:
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    test_request_setups:
+    - name: Override request
+      values:
+        body.transactionRequestState: 'REJECTED'
     test_request_scripts:
       - name: ID is Valid
         rules:
