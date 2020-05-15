@@ -36,25 +36,25 @@ test_steps:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.debitParty.*.key: 'in:msisdn'
-          body.debitParty.*.value: 'in:+33555123456'
-          body.creditParty.*.key: 'in:msisdn'
-          body.creditParty.*.value: 'in:+33555789123'
+          body.debitParty.*.key: 'required|in:msisdn'
+          body.debitParty.*.value: 'required|in:+33555123456'
+          body.creditParty.*.key: 'required|in:msisdn'
+          body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'in:404'
+          body.amount: 'required|in:404'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
-          body.type: 'in:merchantpay'
+          body.type: 'required|in:merchantpay'
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
-          status: 'in:404'
+          status: 'required|in:404'
       - name: Error is specified correctly
         rules:
-          body.errorCode: 'in:genericError'
-          body.errorCategory: 'in:validation'
+          body.errorCode: 'required|in:genericError'
+          body.errorCategory: 'required|in:validation'
     request:
       method: POST
       uri: /transactions

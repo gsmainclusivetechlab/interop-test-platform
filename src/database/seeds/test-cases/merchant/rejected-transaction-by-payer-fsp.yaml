@@ -29,30 +29,30 @@ test_steps:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.debitParty.*.key: 'in:msisdn'
-          body.debitParty.*.value: 'in:+33555123456'
-          body.creditParty.*.key: 'in:msisdn'
-          body.creditParty.*.value: 'in:+33555789123'
+          body.debitParty.*.key: 'required|in:msisdn'
+          body.debitParty.*.value: 'required|in:+33555123456'
+          body.creditParty.*.key: 'required|in:msisdn'
+          body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'in:10.1'
+          body.amount: 'required|in:10.1'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
-          body.type: 'in:merchantpay'
+          body.type: 'required|in:merchantpay'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
       - name: Server Correlation Id is specified correctly
         rules:
           body.serverCorrelationId: 'required|regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
       - name: Status is specified correctly
         rules:
-          body.status: 'in:pending'
+          body.status: 'required|in:pending'
       - name: Notification Method is specified correctly
         rules:
-          body.notificationMethod: 'in:callback'
+          body.notificationMethod: 'required|in:callback'
     request:
       method: POST
       uri: /transactions
@@ -91,26 +91,26 @@ test_steps:
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:10.1'
+          body.amount.amount: 'required|in:10.1'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
     request:
       method: POST
       uri: /transactionsRequests
@@ -149,26 +149,26 @@ test_steps:
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:10.1'
+          body.amount.amount: 'required|in:10.1'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
     request:
       method: POST
       uri: /transactionsRequests
@@ -210,11 +210,11 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
-          body.transactionRequestState: 'in:RECEIVED'
+          body.transactionRequestState: 'required|in:RECEIVED'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
     request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
@@ -241,11 +241,11 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
-          body.transactionRequestState: 'in:RECEIVED'
+          body.transactionRequestState: 'required|in:RECEIVED'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
     request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
@@ -273,26 +273,26 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'required|in:SEND'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:10.1'
+          body.amount.amount: 'required|in:10.1'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
     request:
       method: POST
       uri: /quotes
@@ -343,26 +343,26 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'required|in:SEND'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'in:10.1'
+          body.amount.amount: 'required|in:10.1'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
     request:
       method: POST
       uri: /quotes
@@ -412,7 +412,7 @@ test_steps:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount and currency are specified correctly
         rules:
-          body.transferAmount.amount: 'in:10.1'
+          body.transferAmount.amount: 'required|in:10.1'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -428,7 +428,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
     request:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
@@ -460,7 +460,7 @@ test_steps:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount and currency are specified correctly
         rules:
-          body.transferAmount.amount: 'in:10.1'
+          body.transferAmount.amount: 'required|in:10.1'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -476,7 +476,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
     request:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
@@ -508,11 +508,11 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Rejected
         rules:
-          body.transactionRequestState: 'in:REJECTED'
+          body.transactionRequestState: 'required|in:REJECTED'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
     request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
@@ -539,11 +539,11 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Rejected
         rules:
-          body.transactionRequestState: 'in:REJECTED'
+          body.transactionRequestState: 'required|in:REJECTED'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
     request:
       method: PUT
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
@@ -565,14 +565,14 @@ test_steps:
     test_request_scripts:
       - name: Error category is valid
         rules:
-          body.errorCategory: 'in:businessRule'
+          body.errorCategory: 'required|in:businessRule'
       - name: Error code is valid
         rules:
-          body.errorCode: 'in:genericError'
+          body.errorCode: 'required|in:genericError'
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
-          status: 'in:204'
+          status: 'required|in:204'
     request:
       method: 'PUT'
       uri: 'http://example.com/example'
