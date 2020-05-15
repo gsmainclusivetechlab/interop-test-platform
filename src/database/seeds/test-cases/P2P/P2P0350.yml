@@ -1,0 +1,100 @@
+name: P2P Declined - RD - Error 500
+use_case: P2P
+test_case: P2P0350
+behavior: negative
+description: |
+  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
+  This flow shows the necessary steps for this transaction simulating an declined P2P transaction considering AmountType: Receive and Disclosing Fees.
+precondition: |
+  Mobile Money Operator is capable of handled async calls.
+  Payee and Payer MMOs exist in Mojaloop as Participants.
+  Payee and Payer exist in Mojaloop as Parties.
+  Mojaloop is responsible to access the Account Lookup System
+  Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
+  Payee party should be identified by account identifier "msisdn" with the value  "+33555789123".
+
+test_steps:
+
+## POST/Quote: MMO1 -> Mojaloop ##
+  - name: POST /quotes
+    backward: HTTP 202
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_scheme: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: Mandatory IDs is present
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a P2P Transfer
+        rules:
+          body.transactionType.scenario: 'in:TRANSFER'
+          body.transactionType.initiator: 'in:PAYER'
+          body.transactionType.initiatorType: 'in:CONSUMER'
+      - name: Payer wants to send money to Payee
+        rules:
+          body.amountType: 'in:RECEIVE'
+      - name: Payer and Payee parties are present and valid in the network
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'in:500'
+      - name: Error is specified correctly
+        rules:
+          body.errorCategory: 'in:businessRule'
+          body.errorCode: 'in:genericError'
+
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Fri, 17 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555123456"
+          personalInfo:
+            complexName:
+              firstName: 'Lars'
+              middleName: 'Per'
+              lastName: 'Bergqvist'
+            dateOfBirth: '1977-07-17'
+        amountType: 'RECEIVE'
+        amount:
+          currency: 'USD'
+          amount: '5.00'
+        transactionType:
+          scenario: 'TRANSFER'
+          initiator: 'PAYER'
+          initiatorType: 'CONSUMER'
+
+    response:
+      status: 500
+      headers:
+        content-type: 'application/json'
+        x-date: '2020-04-07T10:28:44.466Z'
+      body:
+        errorCategory: 'businessRule'
+        errorCode: 'genericError'

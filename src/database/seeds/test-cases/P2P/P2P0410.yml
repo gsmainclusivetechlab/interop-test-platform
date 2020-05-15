@@ -1,0 +1,244 @@
+name: P2P Rejected Quote - SD
+use_case: P2P
+test_case: P2P0410
+behavior: negative
+description: |
+  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location.
+  This flow shows the necessary steps for this transaction simulating a rejected P2P quote transaction considering AmountType: Send and Disclosing Fees.
+precondition: |
+  Mobile Money Operator is capable of handled async calls.
+  Payee and Payer MMOs exist in Mojaloop as Participants.
+  Payee and Payer exist in Mojaloop as Parties.
+  Mojaloop is responsible to access the Account Lookup System
+  Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
+  Payee party should be identified by account identifier "msisdn" with the value  "+33555789123".
+
+test_steps:
+
+## POST/Quote: MMO1 -> Mojaloop ##
+  - name: POST /quotes
+    backward: HTTP 202
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_scheme: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: Mandatory IDs is present
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a P2P Transfer
+        rules:
+          body.transactionType.scenario: 'in:TRANSFER'
+          body.transactionType.initiator: 'in:PAYER'
+          body.transactionType.initiatorType: 'in:CONSUMER'
+      - name: Payer wants to send money to Payee
+        rules:
+          body.amountType: 'in:SEND'
+      - name: Payer and Payee parties are present and valid in the network
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Fri, 17 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555123456"
+          personalInfo:
+            complexName:
+              firstName: 'Lars'
+              middleName: 'Per'
+              lastName: 'Bergqvist'
+            dateOfBirth: '1977-07-17'
+        amountType: 'SEND'
+        amount:
+          currency: 'USD'
+          amount: '51.03'
+        payerFspFee:
+          currency: 'USD'
+          amount: '1.00'
+        transactionType:
+          scenario: 'TRANSFER'
+          initiator: 'PAYER'
+          initiatorType: 'CONSUMER'
+
+    response:
+      status: 202
+
+## POST/Quote: Mojaloop -> MMO2 ##
+  - name: POST /quotes
+    backward: HTTP 202
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    api_scheme: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: Mandatory IDs is present
+        rules:
+          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a P2P Transfer
+        rules:
+          body.transactionType.scenario: 'in:TRANSFER'
+          body.transactionType.initiator: 'in:PAYER'
+          body.transactionType.initiatorType: 'in:CONSUMER'
+      - name: Payer wants to send money to Payee
+        rules:
+          body.amountType: 'in:SEND'
+      - name: Payer and Payee parties are present and valid in the network
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount.amount:
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'regex:/^[A-Z]{3}/'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'in:202'
+
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555123456"
+          personalInfo:
+            complexName:
+              firstName: 'Lars'
+              middleName: 'Per'
+              lastName: 'Bergqvist'
+            dateOfBirth: '1977-07-17'
+        amountType: 'SEND'
+        amount:
+          currency: 'USD'
+          amount: '51.03'
+        payerFspFee:
+          currency: 'USD'
+          amount: '1.00'
+        transactionType:
+          scenario: 'TRANSFER'
+          initiator: 'PAYER'
+          initiatorType: 'CONSUMER'
+
+    response:
+      status: 202
+
+## PUT/Quote{ID}: MMO2 -> Mojaloop ##
+  - name: PUT /quotes/{ID}/error
+    backward: HTTP 200
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    api_scheme: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: Error Code is specified correctly
+        rules:
+          body.errorInformation.errorCode: 'in:5103'
+          body.errorInformation.errorDescription: 'required|regex:/^.{1,128}$/'
+
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'in:200'
+
+    request:
+      method: 'PUT'
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transferAmount:
+          currency: 'USD'
+          amount: '51.03'
+        expiration: '2020-04-13T12:50:15.273Z'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+
+    response:
+      status: 200
+
+## PUT/Quote{ID}: Mojaloop -> MMO1 ##
+  - name: PUT /quotes/{ID}
+    backward: HTTP 200
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    api_scheme: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: Error Code is specified correctly
+        rules:
+          body.errorInformation.errorCode: 'in:5103'
+          body.errorInformation.errorDescription: 'required|regex:/^.{1,128}$/'
+
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'in:200'
+
+    request:
+      method: 'PUT'
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Wed, 07 Apr 2020 10:28:45 GMT'
+        fspiop-source: 'payeefsp'
+        fspiop-destination: 'payerfsp'
+      body:
+        transferAmount:
+          currency: 'USD'
+          amount: '51.03'
+        expiration: '2020-04-13T12:50:15.273Z'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+
+    response:
+      status: 200
