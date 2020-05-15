@@ -267,7 +267,8 @@ test_steps:
     source: Mobile Money Operator 1
     target: Service Provider
     trigger:
-      amount: '15.15'
+      errorCode: 'genericError'
+      errorCategory: 'businessRule'
     test_request_scripts:
       - name: Error category is valid
         rules:
