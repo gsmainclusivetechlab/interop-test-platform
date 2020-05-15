@@ -22,20 +22,11 @@
                     </span>
                 </div>
             </div>
-            <div class="card-body bg-light p-0">
+            <div class="card-body p-0">
 <!--                <div class="p-4">-->
 <!--                    <diagram>-->
 <!--                        graph LR;-->
-<!--                        <template v-for="testStepComponents in collect(this.testCase.testSteps.data).unique((item => item.source.id)).groupBy(item => item.target.id).all()">-->
-<!--                            <template v-for="testStepComponent in testStepComponents">-->
-<!--                                {{ testStepComponent.source.id }} &ndash;&gt; {{ testStepComponent.target.id }}-->
-<!--                            </template>-->
-
-<!--                            {{ testStepComponents.source.id }}({{ testStepComponents.source.name }});-->
-<!--                            {{ testStepComponents.target.id }}({{ testStepComponents.target.name }})<template v-if="collect(session.components.data).contains('id', testStepComponents.target.id)">:::is-active</template><template v-else></template>;-->
-<!--                            {{ testStepComponents.source.id }} &ndash;&gt; {{ testStepComponents.target.id }};-->
-<!--                            {{ testStepComponents.target.id }} &ndash;&gt; {{ testStepComponents.source.id }};-->
-
+<!--                        <template v-for="component in session.scenario.data.components">-->
 <!--                            {{ component.id }}({{component.name}})<template v-if="collect(session.suts.data).contains('id', component.id)">:::is-active</template><template v-else></template>;-->
 <!--                            <template v-for="connection in component.connections">-->
 <!--                                {{ component.id }}-->
@@ -50,15 +41,18 @@
 <!--                        </template>-->
 <!--                    </diagram>-->
 <!--                </div>-->
-                <div class="rounded-0 bg-white border-top">
+                <div class="rounded-0 border-top">
                     <div class="row">
                         <div class="col-3 pr-0">
-                            <ul class="list-unstyled mb-0">
+                            <ul class="list-group mb-0">
                                 <template v-for="testStep in testCase.testSteps.data">
                                     <li
                                         v-if="testResultStep = collect(testRun.testResults.data).firstWhere('testStep.id', testStep.id)"
-                                        v-bind:class="{'bg-light': testResult.testStep.data.id === testStep.id}"
-                                        class="list-group-item-action"
+                                        v-bind:class="{
+                                            'active': testResult.testStep.data.id === testStep.id,
+                                            'list-group-item-action': testResult.testStep.data.id !== testStep.id
+                                        }"
+                                        class="list-group-item p-0 rounded-0 border-0"
                                     >
                                         <inertia-link
                                             :href="route('sessions.test-cases.test-runs.show', [session, testCase, testRun, testStep.position])"
@@ -100,7 +94,7 @@
                                     </li>
                                     <li
                                         v-else
-                                        class="d-flex align-items-center py-2 px-4 text-black-50"
+                                        class="list-group-item px-4 rounded-0 border-0 disabled"
                                     >
                                         <div class="text-truncate">
                                             <b>
@@ -254,7 +248,7 @@
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0 bg-transparent">
+                                                <div class="mb-0 p-0">
                                                     <json-tree :data="testResult.request.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
@@ -275,7 +269,7 @@
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0 bg-transparent">
+                                                <div class="mb-0 p-0">
                                                     <json-tree :data="testResult.request.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
@@ -296,7 +290,7 @@
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0 bg-transparent">
+                                                <div class="mb-0 p-0">
                                                     <json-tree :data="testResultRequestSetups.all()" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
@@ -334,7 +328,7 @@
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0 bg-transparent">
+                                                <div class="mb-0 p-0">
                                                     <json-tree :data="testResult.response.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
@@ -354,7 +348,7 @@
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0 bg-transparent">
+                                                <div class="mb-0 p-0">
                                                     <json-tree :data="testResult.response.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
@@ -375,7 +369,7 @@
                                         <div class="d-flex">
                                             <div class="w-25 px-4 py-2 border"></div>
                                             <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0 bg-transparent">
+                                                <div class="mb-0 p-0">
                                                     <json-tree :data="testResultResponseSetups.all()" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>

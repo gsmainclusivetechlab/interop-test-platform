@@ -11,7 +11,7 @@
             </div>
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
-                    <thead class="thead-light">
+                    <thead>
                     <tr>
                         <th class="text-nowrap w-auto">Test Case</th>
                         <th class="text-nowrap w-auto">Run ID</th>

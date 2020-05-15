@@ -8,7 +8,7 @@
             </div>
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
-                    <thead class="thead-light">
+                    <thead>
                     <tr>
                         <th class="text-nowrap w-auto">Number</th>
                         <th class="text-nowrap w-auto">Method</th>
@@ -58,7 +58,7 @@
                                             <strong>Endpoint</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 {{ testStep.request.uri }}
                                             </div>
                                         </div>
@@ -68,7 +68,7 @@
                                             <strong>Method</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 {{ testStep.request.method }}
                                             </div>
                                         </div>
@@ -78,7 +78,7 @@
                                             <strong>Headers</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 <json-tree :data="testStep.request.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
@@ -88,7 +88,7 @@
                                             <strong>Body</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 <json-tree :data="testStep.request.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                                             <strong>Status</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 {{ testStep.response.status }}
                                             </div>
                                         </div>
@@ -119,7 +119,7 @@
                                             <strong>Headers</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 <json-tree :data="testStep.response.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>
@@ -129,7 +129,7 @@
                                             <strong>Body</strong>
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
-                                            <div class="mb-0 p-0 bg-transparent">
+                                            <div class="mb-0 p-0">
                                                 <json-tree :data="testStep.response.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                             </div>
                                         </div>

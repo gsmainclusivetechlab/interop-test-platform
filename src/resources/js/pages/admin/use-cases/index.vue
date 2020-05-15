@@ -38,7 +38,7 @@
             </div>
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-vcenter table-hover card-table">
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap">Test Cases</th>

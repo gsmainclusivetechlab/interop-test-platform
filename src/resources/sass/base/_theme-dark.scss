@@ -1,0 +1,146 @@
+.theme-dark {
+    & ~ div {
+        .modal-content,
+        .modal-header {
+            color: $dark-mode-text;
+            background-color: $dark;
+
+            .json-tree-wrapper {
+                background-color: inherit;
+            }
+        }
+
+        .modal-content {
+            .btn-secondary {
+                @include button-variant(
+                    $dark-mode-lighten,
+                    $border-color,
+                    $dark-mode-text,
+                    rgba($dark, 0),
+                    $border-color,
+                    $dark-mode-text
+                );
+                background-image: none;
+            }
+        }
+    }
+
+    & ~ .popover.b-popover {
+        color: $dark-mode-text;
+        background-color: $dark;
+
+        &.bs-popover-bottom > .arrow {
+            &::after {
+                border-bottom-color: $dark;
+            }
+
+            &::before {
+                border-bottom-color: rgba($dark-mode-text, 0.1);
+            }
+        }
+
+        .popover-body {
+            color: inherit;
+        }
+
+        .json-tree-wrapper {
+            background-color: inherit;
+        }
+
+        .nav-tabs {
+            .nav-link {
+                color: $gray-300;
+            }
+        }
+    }
+
+    .table-hover {
+        tbody {
+            tr:hover {
+                color: $dark-mode-text;
+            }
+        }
+    }
+
+    .json-tree-wrapper {
+        background-color: inherit;
+    }
+
+    .mermaid-diagram {
+        .node {
+            rect {
+                fill: $dark;
+            }
+        }
+
+        .edgeLabel,
+        .actor {
+            background-color: $dark;
+        }
+
+        .edgeLabel,
+        .label,
+        .messageText {
+            color: $dark-mode-text;
+        }
+
+        .messageText {
+            fill: $dark-mode-text;
+        }
+
+        .actor {
+            fill: $dark;
+
+            tspan {
+                fill: $dark-mode-text;
+            }
+        }
+    }
+
+    .list-group {
+        .list-group-item {
+            &-action {
+                &:hover,
+                &:focus {
+                    color: $dark;
+                }
+            }
+        }
+
+        &-transparent {
+            .list-group-item {
+                &-action {
+                    &.active {
+                        color: $dark-mode-text;
+                        background-color: $dark;
+                    }
+
+                    &:hover,
+                    &:focus {
+                        color: $dark-mode-text;
+                    }
+                }
+            }
+        }
+    }
+
+    .nav-tabs {
+        .nav-link {
+            color: $gray-300;
+        }
+    }
+
+    .scenario-card {
+        color: $dark-mode-text;
+    }
+
+    .custom-file-label {
+        color: $dark-mode-text;
+        background-color: $dark;
+
+        &::after {
+            color: $dark-mode-text;
+            background-color: $gray-500;
+        }
+    }
+}

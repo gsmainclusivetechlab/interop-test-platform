@@ -1,5 +1,5 @@
 <template>
-    <layout v-bind:class="{'theme-dark': $page.app.dark_mode}">
+    <layout>
         <b-navbar class="flex-wrap py-0" tag="header" toggleable="md">
             <div class="container-fluid py-3">
                 <b-navbar-toggle target="header-nav"></b-navbar-toggle>

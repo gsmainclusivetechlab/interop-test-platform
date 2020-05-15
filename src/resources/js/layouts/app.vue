@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="page" v-bind:class="{'theme-dark': $page.app.dark_mode}">
         <slot />
         <cookies />
     </div>
