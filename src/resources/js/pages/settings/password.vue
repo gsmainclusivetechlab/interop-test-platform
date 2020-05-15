@@ -19,6 +19,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': $page.errors.current_password }"
                                 placeholder="e.g., **********"
+                                name="current_password"
                             >
                             <span v-if="$page.errors.current_password" class="invalid-feedback">
                                 {{ $page.errors.current_password }}
@@ -38,6 +39,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': $page.errors.password }"
                                 placeholder="e.g., **********"
+                                name="password"
                             >
                             <span v-if="$page.errors.password" class="invalid-feedback">
                                 {{ $page.errors.password }}
@@ -57,6 +59,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': $page.errors.password_confirmation }"
                                 placeholder="e.g., **********"
+                                name="password_confirmation"
                             >
                             <span v-if="$page.errors.password_confirmation" class="invalid-feedback">
                                 {{ $page.errors.password_confirmation }}

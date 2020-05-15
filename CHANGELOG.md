@@ -1,17 +1,3 @@
-## v0.7
-- Task: ITP production: change email "from" to avoid adding email to SPAM [@jc_akokorev]
-- Task: User Managment - Verify user by the interface [@jc_akokorev]
-- Task: Change the verify email screen [@jc_akokorev]
-- Task: Tutorial page [@gsma_sbouch]
-- Task: Changing buttons/advertisement coloors [@jc_ohladkov]
-- Task: Show in TC excution page the data was override [@jc_akokorev]
-- Task: Change button location: Use Case Flow [@jc_akokorev]
-- Task: Run ID in the test case result page [@jc_akokorev]
-- Task: Session create -> At least 1 SUT should be set [@jc_akokorev]
-- Task: ITP -> update Tabler.io and migrate to Single page app using https://inertiajs.com/ [@jc_ohladkov,@jc_akokorev]
-- Bug: [NGINX issue] - 502 error when pasting large amount of characters [@jc_mbabuta]
-- Bug: TC import - Import fails (502 timeout) with big yaml files [@jc_akokorev]
-
 ## v0.6
 - Task: ITP: Schema validation [@jc_akokorev]
 - Task: MMO1 or 2 as SUT -> FSP registration during Session creation [@jc_akokorev]

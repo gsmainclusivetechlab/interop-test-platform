@@ -19,6 +19,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': $page.errors.first_name }"
                                 placeholder="e.g., John"
+                                name="first_name"
                             >
                             <span v-if="$page.errors.first_name" class="invalid-feedback">
                                 {{ $page.errors.first_name }}
@@ -38,6 +39,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': $page.errors.last_name }"
                                 placeholder="e.g., Doe"
+                                name="last_name"
                             >
                             <span v-if="$page.errors.last_name" class="invalid-feedback">
                                 {{ $page.errors.last_name }}
@@ -57,6 +59,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': $page.errors.company }"
                                 placeholder="e.g., GSMA"
+                                name="company"
                             >
                             <span v-if="$page.errors.company" class="invalid-feedback">
                                 {{ $page.errors.company }}
