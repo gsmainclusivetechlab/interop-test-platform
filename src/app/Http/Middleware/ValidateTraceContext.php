@@ -31,7 +31,6 @@ class ValidateTraceContext
      */
     protected function hasValidTraceContext(Request $request)
     {
-        return $request->headers->has(TraceparentHeader::NAME);
         if (!$request->headers->get(TraceparentHeader::NAME)) {
             return false;
         }
