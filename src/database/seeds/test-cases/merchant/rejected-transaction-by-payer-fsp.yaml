@@ -500,13 +500,13 @@ test_steps:
     target: Mojaloop
     api_scheme: Mojaloop v1.0
     trigger:
-      transactionRequestState: 'RECEIVED'
+      transactionRequestState: 'REJECTED'
     test_request_scripts:
       - name: ID is Valid
         rules:
           path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Status is Received
+      - name: Transaction Status is Rejected
         rules:
           body.transactionRequestState: 'in:REJECTED'
     test_response_scripts:
@@ -531,13 +531,13 @@ test_steps:
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
     trigger:
-      transactionRequestState: 'RECEIVED'
+      transactionRequestState: 'REJECTED'
     test_request_scripts:
       - name: ID is Valid
         rules:
           path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Status is Received
+      - name: Transaction Status is Rejected
         rules:
           body.transactionRequestState: 'in:REJECTED'
     test_response_scripts:

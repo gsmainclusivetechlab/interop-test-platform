@@ -10,6 +10,7 @@
         "guzzlehttp/guzzle": "^6.5",
         "inertiajs/inertia-laravel": "^0.2.5",
         "laravel/framework": "^7.0",
+        "laravel/telescope": "^3.5",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "league/openapi-psr7-validator": "^0.7.0",
