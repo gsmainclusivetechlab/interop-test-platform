@@ -1,0 +1,9 @@
+openapi: 3.0.0
+info:
+  version: "1.0"
+  title: SP API
+paths:
+  '{x-callback-url}':
+    put:
+      summary: Callback URL
+      description: The client endpoint is identified from the X-Callback-URL supplied in the POST request header.
