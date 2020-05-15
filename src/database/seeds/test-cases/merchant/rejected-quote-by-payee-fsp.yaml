@@ -99,10 +99,10 @@ test_steps:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
+          body.payer.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'required|in:51.03'
@@ -157,10 +157,10 @@ test_steps:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
+          body.payer.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'required|in:51.03'
