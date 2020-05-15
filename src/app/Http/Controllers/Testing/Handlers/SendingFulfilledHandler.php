@@ -32,7 +32,7 @@ class SendingFulfilledHandler
     public function __invoke(ResponseInterface $response)
     {
         $testSuite = new TestSuite();
-//        $testSuite->addTestSuite((new TestSchemeLoader())->load($this->testResult));
+        $testSuite->addTestSuite((new TestSchemeLoader())->load($this->testResult));
         $testSuite->addTestSuite((new TestScriptLoader())->load($this->testResult));
         $testSuiteResult = new TestSuiteResult();
         $testSuiteResult->addListener(new TestExecutionListener($this->testResult));

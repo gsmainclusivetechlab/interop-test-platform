@@ -3,7 +3,7 @@
 namespace App\Testing\Tests;
 
 use App\Http\Client\Response;
-use App\Models\ApiScheme;
+use App\Models\Specification;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\ResponseAddress;
 use League\OpenAPIValidation\PSR7\SpecFinder;
@@ -19,7 +19,7 @@ class ResponseHeaderParamsValidationTest extends TestCase
     protected $response;
 
     /**
-     * @var ApiScheme
+     * @var Specification
      */
     protected $apiScheme;
 
@@ -35,11 +35,11 @@ class ResponseHeaderParamsValidationTest extends TestCase
 
     /**
      * @param Response $response
-     * @param ApiScheme $apiScheme
+     * @param Specification $apiScheme
      * @param ResponseAddress $operationAddress
      * @param array $specs
      */
-    public function __construct(Response $response, ApiScheme $apiScheme, ResponseAddress $operationAddress, array $specs)
+    public function __construct(Response $response, Specification $apiScheme, ResponseAddress $operationAddress, array $specs)
     {
         $this->response = $response;
         $this->apiScheme = $apiScheme;
