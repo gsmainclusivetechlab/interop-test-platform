@@ -421,20 +421,6 @@ test_steps:
       transferAmount:
         amount: '1001'
     test_request_scripts:
-      - name: Transaction Type is a Merchant Payment
-        rules:
-          body.transactionType.scenario: 'required|in:PAYMENT'
-          body.transactionType.initiator: 'required|in:PAYEE'
-          body.transactionType.initiatorType: 'required|in:BUSINESS'
-      - name: Payer wants to send money to Payee
-        rules:
-          body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-          body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount:
@@ -472,20 +458,6 @@ test_steps:
       transferAmount:
         amount: '1001'
     test_request_scripts:
-      - name: Transaction Type is a Merchant Payment
-        rules:
-          body.transactionType.scenario: 'required|in:PAYMENT'
-          body.transactionType.initiator: 'required|in:PAYEE'
-          body.transactionType.initiatorType: 'required|in:BUSINESS'
-      - name: Payer wants to send money to Payee
-        rules:
-          body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-          body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount:
@@ -698,7 +670,7 @@ test_steps:
           path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'required|in:COMMITTED'
+          body.transferState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
@@ -743,7 +715,7 @@ test_steps:
           path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'required|in:COMMITTED'
+          body.transferState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
