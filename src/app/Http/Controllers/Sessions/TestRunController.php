@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestResultResource;
 use App\Http\Resources\TestRunResource;
+use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\TestRun;
@@ -37,19 +39,15 @@ class TestRunController extends Controller
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([
-                    'suts',
-                    'scenario' => function ($query) {
-                        return $query->with([
-                            'components' => function ($query) {
-                                return $query->with(['connections']);
-                            },
-                        ]);
-                    },
+                    'components',
                     'testCases' => function ($query) {
                         return $query->with(['lastTestRun']);
                     },
                 ])
             ))->resolve(),
+            'components' => ComponentResource::collection(
+                Component::with(['connections'])->get()
+            ),
             'testCase' => (new TestCaseResource(
                 $session->testCases()
                     ->where('test_case_id', $testCase->id)

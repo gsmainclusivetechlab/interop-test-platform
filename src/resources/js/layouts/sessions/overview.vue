@@ -35,14 +35,14 @@
                             </div>
                             <div class="card-body p-0">
                                 <ul class="list-unstyled">
-                                    <li v-for="useCase in collect(session.testCases.data).mapWithKeys(item => [item.useCase.id, item.useCase]).all()">
+                                    <li v-for="useCase in useCases.data">
                                         <b class="d-block dropdown-toggle py-2 px-3 border-bottom" v-b-toggle="`use-case-${useCase.id}`">
                                             {{ useCase.name }}
                                         </b>
                                         <b-collapse
                                             :id="`use-case-${useCase.id}`"
                                             visible
-                                            v-if="collect(session.testCases.data).where('behavior', 'positive').count()"
+                                            v-if="collect(useCase.testCases).where('behavior', 'positive').count()"
                                         >
                                             <ul class="list-unstyled">
                                                 <li>
@@ -55,7 +55,7 @@
                                                     <b-collapse :id="`positive-test-cases-${useCase.id}`" visible>
                                                         <ul class="list-unstyled">
                                                             <li
-                                                                v-for="testCase in collect(session.testCases.data).where('behavior', 'positive').all()"
+                                                                v-for="testCase in collect(useCase.testCases).where('behavior', 'positive').all()"
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
@@ -82,7 +82,7 @@
                                         <b-collapse
                                             :id="`use-case-${useCase.id}`"
                                             visible
-                                            v-if="collect(session.testCases.data).where('behavior', 'negative').count()"
+                                            v-if="collect(useCase.testCases).where('behavior', 'negative').count()"
                                         >
                                             <ul class="list-unstyled">
                                                 <li>
@@ -95,7 +95,7 @@
                                                     <b-collapse :id="`negative-test-cases-${useCase.id}`" visible>
                                                         <ul class="list-unstyled">
                                                             <li
-                                                                v-for="testCase in collect(session.testCases.data).where('behavior', 'negative').all()"
+                                                                v-for="testCase in collect(useCase.testCases).where('behavior', 'negative').all()"
                                                                 class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
                                                             >
                                                                 <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
@@ -153,6 +153,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         },

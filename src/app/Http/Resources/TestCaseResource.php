@@ -17,6 +17,7 @@ class TestCaseResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'public' => $this->public,
             'behavior' => $this->behavior,
             'description' => Markdown::parse($this->description)->toHtml(),
             'precondition' => Markdown::parse($this->precondition)->toHtml(),
@@ -30,6 +31,7 @@ class TestCaseResource extends JsonResource
                 }, $this->lastTestRun);
             })),
             'can' => [
+                'update' => auth()->user()->can('update', $this->resource),
                 'delete' => auth()->user()->can('delete', $this->resource),
             ],
         ];

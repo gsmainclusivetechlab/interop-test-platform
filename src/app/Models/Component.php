@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
+use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Component extends Model
 {
+    use HasUuid;
     use HasPosition;
 
     /**
@@ -22,24 +24,16 @@ class Component extends Model
      */
     protected $fillable = [
         'name',
+        'base_url',
         'description',
-        'api_service_id',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function scenario()
+    public function testCases()
     {
-        return $this->belongsTo(Scenario::class, 'scenario_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function apiService()
-    {
-        return $this->belongsTo(ApiService::class, 'api_service_id');
+        return $this->belongsToMany(TestCase::class, 'test_case_components', 'component_id', 'test_case_id');
     }
 
     /**
@@ -47,22 +41,7 @@ class Component extends Model
      */
     public function connections()
     {
-        return $this->belongsToMany(static::class, 'component_connections', 'source_id', 'target_id');
-    }
-
-    /**
-     * @return bool
-     */
-    public function getSimulatedAttribute()
-    {
-        return $this->apiService()->exists();
-    }
-
-    /**
-     * @return array
-     */
-    public function getPositionGroupColumn()
-    {
-        return ['scenario_id'];
+        return $this->belongsToMany(static::class, Connection::class, 'source_id', 'target_id')
+            ->withPivot(['specification_id']);
     }
 }

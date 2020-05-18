@@ -43,6 +43,5 @@ $factory->define(TestStep::class, function (Faker $faker) {
         'name' => $faker->text,
         'request' => (new Request(new ServerRequest('get', 'test'))),
         'response' => (new Response(new PsrResponse())),
-        'position' => $faker->numberBetween(0, 10),
     ];
 });

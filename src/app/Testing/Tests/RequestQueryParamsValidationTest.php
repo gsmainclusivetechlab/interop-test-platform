@@ -3,7 +3,7 @@
 namespace App\Testing\Tests;
 
 use App\Http\Client\Request;
-use App\Models\ApiScheme;
+use App\Models\Specification;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\OperationAddress;
 use League\OpenAPIValidation\PSR7\SpecFinder;
@@ -19,7 +19,7 @@ class RequestQueryParamsValidationTest extends TestCase
     protected $request;
 
     /**
-     * @var ApiScheme
+     * @var Specification
      */
     protected $apiScheme;
 
@@ -35,11 +35,11 @@ class RequestQueryParamsValidationTest extends TestCase
 
     /**
      * @param Request $request
-     * @param ApiScheme $apiScheme
+     * @param Specification $apiScheme
      * @param OperationAddress $operationAddress
      * @param array $spec
      */
-    public function __construct(Request $request, ApiScheme $apiScheme, OperationAddress $operationAddress, array $spec)
+    public function __construct(Request $request, Specification $apiScheme, OperationAddress $operationAddress, array $spec)
     {
         $this->request = $request;
         $this->apiScheme = $apiScheme;

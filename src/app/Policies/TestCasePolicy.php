@@ -20,6 +20,10 @@ class TestCasePolicy
         if ($user->isAdmin()) {
             return true;
         }
+
+        if ($user->isTestCaseCreator() && in_array($ability, ['viewAny', 'view', 'create'])) {
+            return true;
+        }
     }
 
     /**

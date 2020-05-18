@@ -7,7 +7,7 @@
                         Administration
                     </div>
                     <h2 class="page-title">
-                        Sessions
+                        <b>Sessions</b>
                     </h2>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <table
                     class="table table-striped table-vcenter table-hover card-table"
                 >
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
                             <th class="text-nowrap w-auto">Owner</th>
@@ -51,9 +51,7 @@
                                 </inertia-link>
                             </td>
                             <td class="text-break">
-                                <a href="#" v-if="session.owner">
-                                    {{ session.owner.name }}
-                                </a>
+                                {{ session.owner.name }}
                             </td>
                             <td>
                                 {{ session.testCases ? collect(session.testCases).unique('use_case_id').count() : 0 }}
@@ -72,12 +70,12 @@
                                     v-if="session.can.delete"
                                     no-caret
                                     right
-                                    toggle-class="align-text-top"
-                                    variant="secondary"
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
                                     boundary="window"
                                 >
                                     <template v-slot:button-content>
-                                        <icon name="edit" class="m-0"></icon>
+                                        <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="session.can.delete">
                                         <confirm-link

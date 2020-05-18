@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session">
+    <layout :session="session" :useCases="useCases">
         <div  class="card">
             <div class="card-header">
                 <h2 class="card-title">
@@ -11,7 +11,7 @@
             </div>
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
-                    <thead class="thead-light">
+                    <thead>
                     <tr>
                         <th class="text-nowrap w-auto">Test Case</th>
                         <th class="text-nowrap w-auto">Run ID</th>
@@ -82,6 +82,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         },

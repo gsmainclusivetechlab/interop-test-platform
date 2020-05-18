@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        Sessions
+                        <b>Sessions</b>
                     </h2>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                 <table
                     class="table table-striped table-vcenter table-hover card-table"
                 >
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
                             <th class="text-nowrap w-auto">Use Cases</th>
@@ -63,12 +63,12 @@
                                     v-if="session.can.delete"
                                     no-caret
                                     right
-                                    toggle-class="align-text-top"
-                                    variant="secondary"
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
                                     boundary="window"
                                 >
                                     <template v-slot:button-content>
-                                        <icon name="edit" class="m-0"></icon>
+                                        <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="session.can.delete">
                                         <confirm-link

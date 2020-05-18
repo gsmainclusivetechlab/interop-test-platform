@@ -21,9 +21,9 @@ class Session extends Model
      * @var array
      */
     protected $fillable = [
+        'uuid',
         'name',
         'description',
-        'scenario_id',
     ];
 
     /**
@@ -35,19 +35,11 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function scenario()
-    {
-        return $this->belongsTo(Scenario::class, 'scenario_id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function suts()
+    public function components()
     {
-        return $this->belongsToMany(Component::class, 'session_suts', 'session_id', 'component_id')
+        return $this->belongsToMany(Component::class, 'session_components', 'session_id', 'component_id')
             ->withPivot(['base_url']);
     }
 
@@ -70,22 +62,6 @@ class Session extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function passedTestRuns()
-    {
-        return $this->testRuns()->passed();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function failureTestRuns()
-    {
-        return $this->testRuns()->failure();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function testCases()
     {
         return $this->belongsToMany(TestCase::class, 'session_test_cases', 'session_id', 'test_case_id');
@@ -94,16 +70,8 @@ class Session extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function positiveTestCases()
+    public function testSteps()
     {
-        return $this->testCases()->positive();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function negativeTestCases()
-    {
-        return $this->testCases()->negative();
+        return $this->belongsToMany(TestStep::class, 'session_test_cases', 'session_id', 'test_case_id', 'id', 'test_case_id');
     }
 }

@@ -82,18 +82,8 @@ class UserPolicy
      * @param User $model
      * @return mixed
      */
-    public function promoteAdmin(User $user, User $model)
+    public function promoteRole(User $user, User $model)
     {
-        return ($user->isSuperAdmin() && !$user->is($model) && !$model->isAdmin());
-    }
-
-    /**
-     * @param User $user
-     * @param User $model
-     * @return mixed
-     */
-    public function relegateAdmin(User $user, User $model)
-    {
-        return ($user->isSuperAdmin() && !$user->is($model) && $model->isAdmin());
+        return ($user->isSuperAdmin() && !$user->is($model));
     }
 }
