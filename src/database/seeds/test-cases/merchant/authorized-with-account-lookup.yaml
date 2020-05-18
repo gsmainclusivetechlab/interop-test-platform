@@ -25,7 +25,7 @@ test_steps:
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
-    api_scheme: MM v1.1.2
+    api_spec: MM v1.1.2
     trigger:
       amount: '1010'
 
@@ -98,7 +98,7 @@ test_steps:
     method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
 
     test_request_scripts:
       - name: PartyIdType is valid
@@ -128,7 +128,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       fspId: 'payerfsp'
 
@@ -161,7 +161,7 @@ test_steps:
     method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1010'
@@ -228,7 +228,7 @@ test_steps:
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
 
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
@@ -292,7 +292,7 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
 
     test_request_scripts:
       - name: ID is Valid
@@ -328,7 +328,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
 
     test_request_scripts:
       - name: ID is Valid
@@ -364,7 +364,7 @@ test_steps:
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1010'
@@ -443,7 +443,7 @@ test_steps:
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1010'
@@ -522,7 +522,7 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
         amount: '1010'
@@ -583,7 +583,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
         amount: '1000'
@@ -644,7 +644,7 @@ test_steps:
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1010'
@@ -710,7 +710,7 @@ test_steps:
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1010'
@@ -835,7 +835,7 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
 
     test_request_scripts:
       - name: ID is Valid
@@ -886,7 +886,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
 
     test_request_scripts:
       - name: ID is Valid
