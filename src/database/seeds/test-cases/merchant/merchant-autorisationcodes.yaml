@@ -569,7 +569,7 @@ test_steps:
 ##------------------------------GET/Authorizations: MMO2 -> Mojaloop------------------------------##
   - path: /authorizations
     method: GET
-    pattern:
+    pattern: ^authorizations$
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -600,7 +600,7 @@ test_steps:
 ##------------------------------GET/Authorizations: Mojaloop -> MMO1------------------------------##
   - path: /authorizations
     method: GET
-    pattern:
+    pattern: ^authorizations$
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
@@ -631,7 +631,7 @@ test_steps:
 ##------------------------------POST/Accounts: MMO1 -> SP------------------------------##
   - path: /accounts
     method: POST
-    pattern:
+    pattern: ^accounts$
     source: Mobile Money Operator 1
     target: Service Provider
     api_scheme: MM v1.1.2
@@ -670,7 +670,7 @@ test_steps:
 ##------------------------------PUT/Authorizations: MMO1 -> Mojaloop------------------------------##
   - path: /authorizations
     method: PUT
-    pattern:
+    pattern: ^authorizations$
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
@@ -706,7 +706,7 @@ test_steps:
 ##------------------------------PUT/Authorizations: Mojaloop -> MMO2------------------------------##
   - path: /authorizations
     method: PUT
-    pattern:
+    pattern: ^authorizations$
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
