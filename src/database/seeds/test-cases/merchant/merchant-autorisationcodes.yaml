@@ -355,11 +355,11 @@ test_steps:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555123456"
           personalInfo:
-           complexName:
-               firstName: 'John'
-               middleName: 'Jane'
-               lastName: 'Doe'
-             dateOfBirth: '2000-01-01'
+            complexName:
+            firstName: 'John'
+            middleName: 'Jane'
+            lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
         amountType: 'SEND'
         amount:
           currency: 'USD'
@@ -433,11 +433,11 @@ test_steps:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555123456"
           personalInfo:
-           complexName:
-               firstName: 'John'
-               middleName: 'Jane'
-               lastName: 'Doe'
-             dateOfBirth: '2000-01-01'
+            complexName:
+            firstName: 'John'
+            middleName: 'Jane'
+            lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
         amountType: 'SEND'
         amount:
           currency: 'USD'
