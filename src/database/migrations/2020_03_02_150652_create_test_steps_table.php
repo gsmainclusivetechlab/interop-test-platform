@@ -25,7 +25,7 @@ class CreateTestStepsTable extends Migration
             $table->string('path');
             $table->string('method');
             $table->string('pattern');
-            $table->json('trigger');
+            $table->json('trigger')->nullable();
             $table->json('request')->nullable();
             $table->json('response')->nullable();
             $table->unsignedInteger('position');
