@@ -11,7 +11,7 @@ use App\Models\UseCase;
 use App\Models\User;
 use App\Policies\ComponentPolicy;
 use App\Policies\SessionPolicy;
-use App\Policies\SpecificationPolicy;
+use App\Policies\ApiSpecPolicy;
 use App\Policies\TestCasePolicy;
 use App\Policies\TestStepPolicy;
 use App\Policies\UseCasePolicy;
@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Session::class => SessionPolicy::class,
         Component::class => ComponentPolicy::class,
-        ApiSpec::class => SpecificationPolicy::class,
+        ApiSpec::class => ApiSpecPolicy::class,
         TestCase::class => TestCasePolicy::class,
         TestStep::class => TestStepPolicy::class,
         UseCase::class => UseCasePolicy::class,

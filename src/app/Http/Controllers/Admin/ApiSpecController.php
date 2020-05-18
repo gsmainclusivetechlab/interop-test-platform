@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Resources\SpecificationResource;
+use App\Http\Resources\ApiSpecResource;
 use App\Models\ApiSpec;
 use App\Http\Controllers\Controller;
 use cebe\openapi\exceptions\TypeErrorException;
@@ -11,15 +11,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class SpecificationController extends Controller
+class ApiSpecController extends Controller
 {
     /**
-     * SpecificationController constructor.
+     * ApiSpecController constructor.
      */
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(ApiSpec::class, 'specification', [
+        $this->authorizeResource(ApiSpec::class, 'api_spec', [
             'only' => ['index', 'destroy'],
         ]);
     }
@@ -29,8 +29,8 @@ class SpecificationController extends Controller
      */
     public function index()
     {
-        return Inertia::render('admin/specifications/index', [
-            'specifications' => SpecificationResource::collection(
+        return Inertia::render('admin/api-specs/index', [
+            'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::when(request('q'), function (Builder $query, $q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
@@ -49,7 +49,7 @@ class SpecificationController extends Controller
     public function showImportForm()
     {
         $this->authorize('create', ApiSpec::class);
-        return Inertia::render('admin/specifications/import');
+        return Inertia::render('admin/api-specs/import');
     }
 
     /**
@@ -71,8 +71,8 @@ class SpecificationController extends Controller
             ]);
 
             return redirect()
-                ->route('admin.specifications.index')
-                ->with('success', __('Specification created successfully'));
+                ->route('admin.api-specs.index')
+                ->with('success', __('Api spec created successfully'));
         } catch (TypeErrorException $e) {
             return redirect()
                 ->back()
@@ -81,16 +81,16 @@ class SpecificationController extends Controller
     }
 
     /**
-     * @param ApiSpec $specification
+     * @param ApiSpec $apiSpec
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(ApiSpec $specification)
+    public function destroy(ApiSpec $apiSpec)
     {
-        $specification->delete();
+        $apiSpec->delete();
 
         return redirect()
             ->back()
-            ->with('success', __('Specification deleted successfully'));
+            ->with('success', __('Api spec deleted successfully'));
     }
 }

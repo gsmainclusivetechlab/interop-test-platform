@@ -17,7 +17,7 @@ components:
   - Mobile Money Operator 2
 test_steps:
   - path: /transactions
-    pattern: '^/transactions$'
+    pattern: '^transactions$'
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
@@ -82,7 +82,7 @@ test_steps:
         status: 'pending'
         notificationMethod: 'callback'
   - path: /transactionRequests
-    pattern: '^/transactionRequests$'
+    pattern: '^transactionRequests$'
     method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -141,7 +141,7 @@ test_steps:
     response:
       status: 202
   - path: /transactionRequests
-    pattern: '^/transactionRequests$'
+    pattern: '^transactionRequests$'
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
@@ -200,7 +200,7 @@ test_steps:
     response:
       status: 202
   - path: /transactionRequests/{ID}
-    pattern: '^/transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -232,7 +232,7 @@ test_steps:
     response:
       status: 200
   - path: /transactionRequests/{ID}
-    pattern: '^/transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -264,7 +264,7 @@ test_steps:
     response:
       status: 200
   - path: /quotes
-    pattern: '^/quotes$'
+    pattern: '^quotes$'
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -335,7 +335,7 @@ test_steps:
     response:
       status: 202
   - path: /quotes
-    pattern: '^/quotes$'
+    pattern: '^quotes$'
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -406,7 +406,7 @@ test_steps:
     response:
       status: 202
   - path: /quotes/{ID}
-    pattern: '^/quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -455,7 +455,7 @@ test_steps:
     response:
       status: 200
   - path: /quotes/{ID}
-    pattern: '^/quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
@@ -504,7 +504,7 @@ test_steps:
     response:
       status: 200
   - path: /transactionRequests/{ID}
-    pattern: '^/transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -536,7 +536,7 @@ test_steps:
     response:
       status: 200
   - path: /transactionRequests/{ID}
-    pattern: '^/transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1

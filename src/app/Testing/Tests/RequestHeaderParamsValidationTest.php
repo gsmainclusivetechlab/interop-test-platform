@@ -21,7 +21,7 @@ class RequestHeaderParamsValidationTest extends TestCase
     /**
      * @var ApiSpec
      */
-    protected $apiScheme;
+    protected $apiSpec;
 
     /**
      * @var OperationAddress
@@ -35,14 +35,14 @@ class RequestHeaderParamsValidationTest extends TestCase
 
     /**
      * @param Request $request
-     * @param ApiSpec $apiScheme
+     * @param ApiSpec $apiSpec
      * @param OperationAddress $operationAddress
      * @param array $specs
      */
-    public function __construct(Request $request, ApiSpec $apiScheme, OperationAddress $operationAddress, array $specs)
+    public function __construct(Request $request, ApiSpec $apiSpec, OperationAddress $operationAddress, array $specs)
     {
         $this->request = $request;
-        $this->apiScheme = $apiScheme;
+        $this->apiSpec = $apiSpec;
         $this->operationAddress = $operationAddress;
         $this->specs = $specs;
     }
@@ -52,7 +52,7 @@ class RequestHeaderParamsValidationTest extends TestCase
      */
     public function test()
     {
-        $validator = new HeadersValidator(new SpecFinder($this->apiScheme->openapi));
+        $validator = new HeadersValidator(new SpecFinder($this->apiSpec->openapi));
 
         try {
             $validator->validate($this->operationAddress, $this->request->toPsrRequest());
@@ -66,7 +66,7 @@ class RequestHeaderParamsValidationTest extends TestCase
      */
     public function getName(): string
     {
-        return __('Request: :name API Scheme header params are specified correctly', ['name' => $this->apiScheme->name]);
+        return __('Request: :name API Scheme header params are specified correctly', ['name' => $this->apiSpec->name]);
     }
 
     /**

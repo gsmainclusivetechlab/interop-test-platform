@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Import specification</b>
+                    <b>Import api spec</b>
                 </h1>
             </div>
             <div class="container">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.specifications.index')"
+                                :href="route('admin.api-specs.index')"
                                 class="btn btn-link"
                             >
                                 Cancel
@@ -75,7 +75,7 @@
 
     export default {
         metaInfo: {
-            title: 'Import specification'
+            title: 'Import api spec'
         },
         components: {
             Layout,
@@ -103,7 +103,7 @@
                 }
 
                 this.$inertia
-                    .post(route('admin.specifications.import.confirm'), data)
+                    .post(route('admin.api-specs.import.confirm'), data)
                     .then(() => (this.sending = false));
             }
         }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SessionResource;
-use App\Models\TestStep;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -21,11 +20,6 @@ class HomeController extends Controller
      */
     public function __invoke()
     {
-//        $endpoint = TestStep::whereRaw('REGEXP_LIKE(?, pattern)', ['http://172.16.14.101:8084/7.x/middleware'])
-//            ->get();
-//
-//        dd($endpoint);
-
         return Inertia::render('home', [
             'sessions' => SessionResource::collection(
                 auth()->user()->sessions()

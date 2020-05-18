@@ -15,7 +15,7 @@ components:
   - Service Provider
 test_steps:
   - path: /transactions
-    pattern: '^/transactions$'
+    pattern: '^transactions$'
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1

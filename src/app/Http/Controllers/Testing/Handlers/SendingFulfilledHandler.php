@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
 use App\Testing\TestExecutionListener;
-use App\Testing\TestSchemeLoader;
+use App\Testing\TestSpecLoader;
 use App\Testing\TestScriptLoader;
 use PHPUnit\Framework\TestResult as TestSuiteResult;
 use PHPUnit\Framework\TestSuite;
@@ -32,7 +32,7 @@ class SendingFulfilledHandler
     public function __invoke(ResponseInterface $response)
     {
         $testSuite = new TestSuite();
-        $testSuite->addTestSuite((new TestSchemeLoader())->load($this->testResult));
+        $testSuite->addTestSuite((new TestSpecLoader())->load($this->testResult));
         $testSuite->addTestSuite((new TestScriptLoader())->load($this->testResult));
         $testSuiteResult = new TestSuiteResult();
         $testSuiteResult->addListener(new TestExecutionListener($this->testResult));
