@@ -5,9 +5,12 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RoleTestCaseCreatorTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
     private $user;
 
     /**

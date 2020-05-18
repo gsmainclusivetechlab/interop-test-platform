@@ -5,9 +5,12 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\ProfileSettingsPage;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ProfileSettingsTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
     private $user;
 
     /**
