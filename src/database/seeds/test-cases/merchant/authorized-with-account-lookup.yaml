@@ -99,8 +99,6 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
-    trigger:
-      amount: '1010'
 
     test_request_scripts:
       - name: PartyIdType is valid
@@ -295,8 +293,6 @@ test_steps:
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
-    trigger:
-      transactionRequestState: 'RECEIVED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -333,8 +329,6 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
-    trigger:
-      transactionRequestState: 'RECEIVED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -842,8 +836,6 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
-    trigger:
-      transferState: 'COMMITTED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -895,8 +887,6 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
-    trigger:
-      transferState: 'COMMITTED'
 
     test_request_scripts:
       - name: ID is Valid
