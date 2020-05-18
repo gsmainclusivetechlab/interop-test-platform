@@ -30,6 +30,7 @@
                             v-model="form.base_url"
                             :class="{ 'is-invalid': $page.errors.base_url }"
                             class="form-control"
+                            name="base_url"
                         />
                         <span v-if="$page.errors.base_url" class="invalid-feedback">
                             {{ $page.errors.base_url }}
@@ -75,9 +76,15 @@ export default {
         return {
             sending: false,
             form: {
-                base_url: this.session && this.session.sut ? this.session.sut.base_url : null,
-                component_id: this.session && this.session.sut ? this.session.sut.component_id : null,
-            },
+                base_url:
+                    this.session && this.session.sut
+                        ? this.session.sut.base_url
+                        : null,
+                component_id:
+                    this.session && this.session.sut
+                        ? this.session.sut.component_id
+                        : this.suts.data && this.suts.data[0].id
+            }
         };
     },
     methods: {
