@@ -8,13 +8,14 @@ use App\Models\User;
 use Tests\Browser\Pages\AdminUsersPage;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class RoleAdminTest extends DuskTestCase
+class RoleSuperAdminTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
     private $admin;
     private $user;
     private $testCaseCreator;
+    private $superAdmin;
 
     /**
      * Setup tests.
@@ -40,6 +41,106 @@ class RoleAdminTest extends DuskTestCase
             'last_name' => 'Test Case Creator',
             'role' => User::ROLE_TEST_CASE_CREATOR
         ]);
+
+        $this->superAdmin = $this->user([
+            'first_name' => 'GSMA',
+            'last_name' => 'Super Admin',
+            'role' => User::ROLE_SUPERADMIN
+        ]);
+    }
+
+    /**
+     * Change user role functionality is enabled
+     * @return void
+     */
+    public function testChangeUserRoleFunctionalityIsEnabled()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->loginAs($this->superAdmin)
+                ->visit(new AdminUsersPage)
+                ->with('.card .table tbody tr:first-child', function ($tr) {
+                    $tr
+                        ->assertButtonEnabled('td:nth-last-child(3) .dropdown-toggle');
+                });
+        });
+    }
+
+    /**
+     * Can block and unblock users with role admin.
+     * @return void
+     */
+    public function testCanBlockAndUnblockUsersWithRoleAdmin()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->loginAs($this->superAdmin)
+                ->visit(new AdminUsersPage)
+                ->with('.card .table tbody tr:first-child td:last-child', function ($td) {
+                    $td
+                        ->click('.dropdown-toggle')
+                        ->waitFor('.dropdown-menu')
+                        ->with('.dropdown-menu', function ($dropdown) {
+                            $dropdown
+                                ->clickLink('Block');
+                        });
+                })
+                ->whenAvailable('.modal', function ($modal) {
+                    $modal
+                        ->press('Confirm');
+                })
+                ->waitForText('User blocked successfully')
+                ->assertVisible('@notificationBox')
+                ->click('@blockedUsersLink')
+                ->waitForLocation('/admin/users/trash')
+                ->with('.card .table tbody tr:first-child', function ($tr) {
+                    $tr
+                        ->assertSeeLink($this->admin->email)
+                        ->with('td:last-child', function ($td) {
+                            $td
+                                ->click('.dropdown-toggle')
+                                ->waitFor('.dropdown-menu')
+                                ->with('.dropdown-menu', function ($dropdown) {
+                                    $dropdown
+                                        ->clickLink('Unblock');
+                                });
+                        });
+                })
+                ->waitForText('User unblocked successfully')
+                ->assertVisible('@notificationBox');
+        });
+    }
+
+    /**
+     * Can delete users with role admin.
+     * @return void
+     */
+    public function testCanDeleteUsersWithRoleAdmin()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser
+                ->loginAs($this->superAdmin)
+                ->visit(new AdminUsersPage)
+                ->with('.card .table tbody tr:first-child', function ($tr) {
+                    $tr
+                        ->assertSeeLink($this->admin->email)
+                        ->with('td:last-child', function ($td) {
+                            $td
+                                ->click('.dropdown-toggle')
+                                ->waitFor('.dropdown-menu')
+                                ->with('.dropdown-menu', function ($dropdown) {
+                                    $dropdown
+                                        ->clickLink('Delete');
+                                });
+                        });
+                })
+                ->whenAvailable('.modal', function ($modal) {
+                    $modal
+                        ->press('Confirm');
+                })
+                ->waitForText('User deleted successfully')
+                ->assertVisible('@notificationBox');
+        });
     }
 
     /**
@@ -50,7 +151,7 @@ class RoleAdminTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($this->superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(2) td:last-child', function ($td) {
                     $td
@@ -95,7 +196,7 @@ class RoleAdminTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($this->superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
                     $tr
@@ -127,7 +228,7 @@ class RoleAdminTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($this->superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(3) td:last-child', function ($td) {
                     $td
@@ -172,7 +273,7 @@ class RoleAdminTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($this->superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(3)', function ($tr) {
                     $tr
