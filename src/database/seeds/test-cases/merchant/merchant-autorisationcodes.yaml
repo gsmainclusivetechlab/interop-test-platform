@@ -11,6 +11,10 @@ precondition: |
   - Amount should be the value "1011".
   - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+components:
+  - Service Provider
+  - Mobile Money Operator 1
+  - Mobile Money Operator 2
 test_steps:
 ##------------------------------POST/Transactions: SP -> MMO1------------------------------##
   - path: /transactions
@@ -18,7 +22,7 @@ test_steps:
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
-    api_scheme: MM v1.1.2
+    api_spec: MM v1.1.2
     trigger:
       amount: '1011'
     test_request_scripts:
@@ -90,7 +94,7 @@ test_steps:
     method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1011'
@@ -156,7 +160,7 @@ test_steps:
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1011'
@@ -222,7 +226,7 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transactionRequestState: 'RECEIVED'
     test_request_scripts:
@@ -259,7 +263,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transactionRequestState: 'RECEIVED'
     test_request_scripts:
@@ -296,7 +300,7 @@ test_steps:
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1011'
@@ -374,7 +378,7 @@ test_steps:
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1011'
@@ -452,7 +456,7 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
         amount: '1011'
@@ -512,7 +516,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
         amount: '1011'
@@ -572,8 +576,7 @@ test_steps:
     pattern: ^authorizations$
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
-    trigger:
+    api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is valid
         rules:
@@ -603,8 +606,7 @@ test_steps:
     pattern: ^authorizations$
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
-    trigger:
+    api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is valid
         rules:
@@ -634,8 +636,9 @@ test_steps:
     pattern: ^accounts$
     source: Mobile Money Operator 1
     target: Service Provider
-    api_scheme: MM v1.1.2
-    reigger:
+    api_spec: MM v1.1.2
+    trigger:
+      authorisationCode: '12345'
     test_request_scripts:
       - name: Amount is correct
         rules:
@@ -673,8 +676,10 @@ test_steps:
     pattern: ^authorizations$
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
+      authenticationInfo:
+        authenticationValue: '12345'
     test_request_scripts:
       - name: Authentication information is correct
         rules:
@@ -709,8 +714,10 @@ test_steps:
     pattern: ^authorizations$
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
+      authenticationInfo:
+        authenticationValue: '12345'
     test_request_scripts:
       - name: Authentication information is correct
         rules:
@@ -745,7 +752,7 @@ test_steps:
     method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1011'
@@ -810,7 +817,7 @@ test_steps:
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '1011'
@@ -933,7 +940,7 @@ test_steps:
     method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transferState: 'COMMITTED'
     test_request_scripts:
@@ -985,7 +992,7 @@ test_steps:
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transferState: 'COMMITTED'
     test_request_scripts:
