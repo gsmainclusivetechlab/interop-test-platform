@@ -24,7 +24,7 @@ test_steps:
     test_request_scripts:
       - name: Transaction Type is a P2P transfer
         rules:
-          body.type: 'in:TRANSFER'
+          body.type: 'required|in:TRANSFER'
 
     test_response_setups:
       - name: Override response

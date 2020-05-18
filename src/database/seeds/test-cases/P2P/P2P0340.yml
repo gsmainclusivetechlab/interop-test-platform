@@ -24,14 +24,14 @@ test_steps:
     test_request_scripts:
       - name: Transaction Type is a P2P transfer
         rules:
-          body.type: 'in:TRANSFER'
+          body.type: 'required|in:TRANSFER'
 
     test_response_setups:
       - name: Override response
         values:
           status: 400
           body: {errorCode: "genericError", errorCategory: "businessRule", errorDateTime: "2020-05-12T14:17:59.843Z", errorDescription: "The specified property contents do not conform to the format required for this Property."}
-    
+
     request:
       method: POST
       uri: /quotes

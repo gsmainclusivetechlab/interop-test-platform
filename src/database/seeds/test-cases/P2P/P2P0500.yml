@@ -86,27 +86,27 @@ test_steps:
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
-          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a P2P Transfer
         rules:
-          body.transactionType.scenario: 'in:TRANSFER'
-          body.transactionType.initiator: 'in:PAYER'
-          body.transactionType.initiatorType: 'in:CONSUMER'
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -160,27 +160,27 @@ test_steps:
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
-          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a P2P Transfer
         rules:
-          body.transactionType.scenario: 'in:TRANSFER'
-          body.transactionType.initiator: 'in:PAYER'
-          body.transactionType.initiatorType: 'in:CONSUMER'
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -234,27 +234,27 @@ test_steps:
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
-          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a P2P Transfer
         rules:
-          body.transactionType.scenario: 'in:TRANSFER'
-          body.transactionType.initiator: 'in:PAYER'
-          body.transactionType.initiatorType: 'in:CONSUMER'
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -296,27 +296,27 @@ test_steps:
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
-          body.quoteId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a P2P Transfer
         rules:
-          body.transactionType.scenario: 'in:TRANSFER'
-          body.transactionType.initiator: 'in:PAYER'
-          body.transactionType.initiatorType: 'in:CONSUMER'
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:RECEIVE'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -368,8 +368,8 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
           body.expiration:
@@ -428,8 +428,8 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
-          body.amount.currency: 'regex:/^[A-Z]{3}/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
           body.expiration:
