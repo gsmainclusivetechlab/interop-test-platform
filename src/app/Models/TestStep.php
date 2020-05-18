@@ -25,6 +25,7 @@ class TestStep extends Model
     protected $fillable = [
         'path',
         'method',
+        'pattern',
         'trigger',
         'request',
         'response',
@@ -77,6 +78,14 @@ class TestStep extends Model
     public function target()
     {
         return $this->belongsTo(Component::class, 'target_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function apiSpec()
+    {
+        return $this->belongsTo(ApiSpec::class, 'api_spec_id');
     }
 
     /**

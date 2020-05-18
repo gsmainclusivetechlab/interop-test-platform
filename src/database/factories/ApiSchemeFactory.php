@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\ApiScheme;
+use App\Models\ApiSpec;
 use Faker\Generator as Faker;
 
 /*
@@ -16,7 +16,7 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(ApiScheme::class, function (Faker $faker) {
+$factory->define(ApiSpec::class, function (Faker $faker) {
     return [
         'name' => $faker->text,
         'openapi' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),

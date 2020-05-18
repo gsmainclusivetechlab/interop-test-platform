@@ -3,7 +3,7 @@
 namespace App\Testing\Tests;
 
 use App\Http\Client\Request;
-use App\Models\Specification;
+use App\Models\ApiSpec;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidPath;
 use League\OpenAPIValidation\PSR7\OperationAddress;
@@ -20,7 +20,7 @@ class RequestPathParamsValidationTest extends TestCase
     protected $request;
 
     /**
-     * @var Specification
+     * @var ApiSpec
      */
     protected $apiScheme;
 
@@ -36,11 +36,11 @@ class RequestPathParamsValidationTest extends TestCase
 
     /**
      * @param Request $request
-     * @param Specification $apiScheme
+     * @param ApiSpec $apiScheme
      * @param OperationAddress $operationAddress
      * @param array $specs
      */
-    public function __construct(Request $request, Specification $apiScheme, OperationAddress $operationAddress, array $specs)
+    public function __construct(Request $request, ApiSpec $apiScheme, OperationAddress $operationAddress, array $specs)
     {
         $this->request = $request;
         $this->apiScheme = $apiScheme;

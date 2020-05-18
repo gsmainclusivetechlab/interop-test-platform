@@ -15,10 +15,11 @@ components:
   - Service Provider
 test_steps:
   - path: /transactions
+    pattern: '^/transactions$'
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
-    api_scheme: MM v1.1.2
+    api_spec: MM v1.1.2
     trigger:
       amount: '503'
     test_response_setups:

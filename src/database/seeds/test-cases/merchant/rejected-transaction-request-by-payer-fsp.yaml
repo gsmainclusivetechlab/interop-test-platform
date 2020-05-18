@@ -17,10 +17,11 @@ components:
   - Mobile Money Operator 2
 test_steps:
   - path: /transactions
+    pattern: '^/transactions$'
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
-    api_scheme: MM v1.1.2
+    api_spec: MM v1.1.2
     trigger:
       amount: '15.15'
     test_request_scripts:
@@ -81,10 +82,11 @@ test_steps:
         status: 'pending'
         notificationMethod: 'callback'
   - path: /transactionRequests
+    pattern: '^/transactionRequests$'
     method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '15.15'
@@ -139,10 +141,11 @@ test_steps:
     response:
       status: 202
   - path: /transactionRequests
+    pattern: '^/transactionRequests$'
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
         amount: '15.15'
@@ -197,10 +200,11 @@ test_steps:
     response:
       status: 202
   - path: /transactionRequests/{ID}
+    pattern: '^/transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transactionRequestState: 'RECEIVED'
     test_request_setups:
@@ -232,10 +236,11 @@ test_steps:
     response:
       status: 200
   - path: /transactionRequests/{ID}
+    pattern: '^/transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       transactionRequestState: 'RECEIVED'
     test_request_scripts:
@@ -263,6 +268,7 @@ test_steps:
     response:
       status: 200
   - path: '{X-Callback-URL}'
+    pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     method: PUT
     source: Mobile Money Operator 1
     target: Service Provider

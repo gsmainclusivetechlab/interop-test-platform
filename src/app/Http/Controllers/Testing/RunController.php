@@ -11,7 +11,6 @@ use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
-use App\Jobs\CompleteTestRunJob;
 use App\Models\Component;
 use App\Models\Session;
 use App\Models\TestCase;
@@ -44,8 +43,6 @@ class RunController extends Controller
         $testStep = $testCase->testSteps()->firstOrFail();
         $testRun = $session->testRuns()->create(['test_case_id' => $testStep->test_case_id]);
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-
-        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
         if ($sut = $session->components()->whereKey($testStep->target->getKey())->first()) {
             $url = $sut->pivot->base_url;
@@ -113,10 +110,6 @@ class RunController extends Controller
             ->firstOrCreate(['test_case_id' => $testStep->test_case_id]);
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-
-        if ($testStep->isFirstPosition()) {
-            CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
-        }
 
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)

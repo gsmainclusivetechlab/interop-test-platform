@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\ApiSpec;
 use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\TestScript;
@@ -41,6 +42,7 @@ class TestCaseImport implements Importable
                     $testStep = $testCase->testSteps()->make(Arr::only($testStepRow, TestStep::make()->getFillable()));
                     $testStep->setAttribute('source_id', Component::where('name', Arr::get($testStepRow, 'source'))->value('id'));
                     $testStep->setAttribute('target_id', Component::where('name', Arr::get($testStepRow, 'target'))->value('id'));
+                    $testStep->setAttribute('api_spec_id', ApiSpec::where('name', Arr::get($testStepRow, 'api_spec'))->value('id'));
                     $testStep->saveOrFail();
 
                     if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {

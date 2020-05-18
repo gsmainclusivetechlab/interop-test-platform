@@ -41,7 +41,6 @@ class Component extends Model
      */
     public function connections()
     {
-        return $this->belongsToMany(static::class, Connection::class, 'source_id', 'target_id')
-            ->withPivot(['specification_id']);
+        return $this->belongsToMany(static::class, 'component_connections', 'source_id', 'target_id');
     }
 }

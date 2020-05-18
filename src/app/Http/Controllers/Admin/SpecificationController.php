@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\SpecificationResource;
-use App\Models\Specification;
+use App\Models\ApiSpec;
 use App\Http\Controllers\Controller;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\Reader;
@@ -19,7 +19,7 @@ class SpecificationController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(Specification::class, 'specification', [
+        $this->authorizeResource(ApiSpec::class, 'specification', [
             'only' => ['index', 'destroy'],
         ]);
     }
@@ -31,7 +31,7 @@ class SpecificationController extends Controller
     {
         return Inertia::render('admin/specifications/index', [
             'specifications' => SpecificationResource::collection(
-                Specification::when(request('q'), function (Builder $query, $q) {
+                ApiSpec::when(request('q'), function (Builder $query, $q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
                     ->latest()
@@ -48,7 +48,7 @@ class SpecificationController extends Controller
      */
     public function showImportForm()
     {
-        $this->authorize('create', Specification::class);
+        $this->authorize('create', ApiSpec::class);
         return Inertia::render('admin/specifications/import');
     }
 
@@ -58,14 +58,14 @@ class SpecificationController extends Controller
      */
     public function import(Request $request)
     {
-        $this->authorize('create', Specification::class);
+        $this->authorize('create', ApiSpec::class);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'file' => ['required', 'mimetypes:text/yaml,text/plain'],
         ]);
 
         try {
-            Specification::create([
+            ApiSpec::create([
                 'name' => $request->input('name'),
                 'openapi' => Reader::readFromYaml($request->file('file')->get()),
             ]);
@@ -81,11 +81,11 @@ class SpecificationController extends Controller
     }
 
     /**
-     * @param Specification $specification
+     * @param ApiSpec $specification
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Specification $specification)
+    public function destroy(ApiSpec $specification)
     {
         $specification->delete();
 
