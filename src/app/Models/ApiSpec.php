@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @mixin \Eloquent
  */
-class Specification extends Model
+class ApiSpec extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'specifications';
+    protected $table = 'api_specs';
 
     /**
      * @var array

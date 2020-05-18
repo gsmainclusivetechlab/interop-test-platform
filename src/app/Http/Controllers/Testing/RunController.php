@@ -5,47 +5,40 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
-use App\Jobs\CompleteTestRunJob;
 use App\Models\Component;
 use App\Models\Session;
 use App\Models\TestCase;
+use App\Models\TestResult;
 use App\Models\TestRun;
+use App\Testing\TestExecutionListener;
+use App\Testing\TestScriptLoader;
+use App\Testing\TestSpecLoader;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use League\OpenAPIValidation\PSR7\PathFinder;
+use PHPUnit\Framework\TestResult as TestSuiteResult;
+use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RunController extends Controller
 {
     /**
-     * @var ServerRequestInterface
-     */
-    protected $request;
-
-    /**
      * RunController constructor.
-     * @param ServerRequestInterface $request
      */
-    public function __construct(ServerRequestInterface $request)
+    public function __construct()
     {
-        $this->request = $request;
         $this->middleware([SetJsonHeaders::class]);
         $this->middleware([ValidateTraceContext::class])->only(['simulator']);
     }
 
-    public function run(Session $session, TestCase $testCase, string $path)
+    public function run(Session $session, TestCase $testCase, string $path, ServerRequestInterface $request)
     {
         $testStep = $testCase->testSteps()->firstOrFail();
         $testRun = $session->testRuns()->create(['test_case_id' => $testStep->test_case_id]);
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-
-        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
 
         if ($sut = $session->components()->whereKey($testStep->target->getKey())->first()) {
             $url = $sut->pivot->base_url;
@@ -56,42 +49,36 @@ class RunController extends Controller
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $this->request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)))
+        $request = $request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)))
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent);
+
+        $this->doTestAfterResponse($testResult);
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->sendAsync()
+            ->otherwise(function ($e) use ($testResult) {
+                $testResult->fail($e->getMessage());
+                $testResult->testRun->complete();
+
+                return $e;
+            })
+            ->wait();
     }
 
-    public function sut(Session $session, Component $component, Component $connection, string $path)
+    public function sut(Session $session, Component $component, Component $connection, string $path, ServerRequestInterface $request)
     {
-        if ($sut = $session->components()->whereKey($connection->getKey())->first()) {
-            $url = $sut->pivot->base_url;
-        } else {
-            $url = $connection->base_url;
-        }
-
-        $request = $this->request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)));
-
-        $specification = $connection->pivot->specification;
-        $pathFinder = new PathFinder($specification->openapi, $request->getUri(), $request->getMethod());
-
-        if (($operationAddress = collect($pathFinder->search())->first()) == null) {
-            abort(404);
-        }
-
         $testStep = $session->testSteps()
-            ->where('path', $operationAddress->path())
-            ->where('method', $operationAddress->method())
+            ->where('method', $request->getMethod())
+            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
+            ->whereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$request->getBody()->getContents()])
             ->whereHas('source', function ($query) use ($component) {
                 $query->whereKey($component->getKey());
             })
             ->whereHas('target', function ($query) use ($connection) {
                 $query->whereKey($connection->getKey());
             })
-            ->whereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$request->getBody()->getContents()])
             ->where(function ($query) {
                 $query->where(function ($query) {
                     $query->where('position', '=', 1);
@@ -114,26 +101,41 @@ class RunController extends Controller
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
 
-        if ($testStep->isFirstPosition()) {
-            CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
-        }
-
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)->withoutHeader(TracestateHeader::NAME);
+
+        if ($sut = $session->components()->whereKey($connection->getKey())->first()) {
+            $url = $sut->pivot->base_url;
+        } else {
+            $url = $connection->base_url;
+        }
+
+        $request = $request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)))
+            ->withHeader(TraceparentHeader::NAME, (string) $traceparent)->withoutHeader(TracestateHeader::NAME);
+
+        $this->doTestAfterResponse($testResult);
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->sendAsync()
+            ->otherwise(function ($e) use ($testResult) {
+                $testResult->fail($e->getMessage());
+                $testResult->testRun->complete();
+
+                return $e;
+            })
+            ->wait();
     }
 
-    public function simulator(Component $component, Component $connection, string $path)
+    public function simulator(Component $component, Component $connection, string $path, ServerRequestInterface $request)
     {
-        $trace = new TraceparentHeader($this->request->getHeaderLine(TraceparentHeader::NAME));
+        $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()
+            ->where('method', $request->getMethod())
+            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
             ->whereHas('source', function ($query) use ($component) {
                 $query->whereKey($component->getKey());
             })
@@ -142,12 +144,15 @@ class RunController extends Controller
             })
             ->offset(
                 $testRun->testResults()
-                    ->whereHas('testStep', function ($query) use ($component, $connection) {
-                        $query->whereHas('source', function ($query) use ($component) {
-                            $query->whereKey($component->getKey());
-                        })->whereHas('target', function ($query) use ($connection) {
-                            $query->whereKey($connection->getKey());
-                        });
+                    ->whereHas('testStep', function ($query) use ($component, $connection, $request, $path) {
+                        $query->where('method', $request->getMethod())
+                            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
+                            ->whereHas('source', function ($query) use ($component) {
+                                $query->whereKey($component->getKey());
+                            })
+                            ->whereHas('target', function ($query) use ($connection) {
+                                $query->whereKey($connection->getKey());
+                            });
                     })
                     ->count()
             )
@@ -161,11 +166,42 @@ class RunController extends Controller
             $url = $testStep->target->base_url;
         }
 
-        $request = $this->request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)));
+        $request = $request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)));
+
+        $this->doTestAfterResponse($testResult);
 
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->sendAsync()
+            ->otherwise(function ($e) use ($testResult) {
+                $testResult->fail($e->getMessage());
+                $testResult->testRun->complete();
+
+                return $e;
+            })
+            ->wait();
+    }
+
+    protected function doTestAfterResponse(TestResult $testResult)
+    {
+        app()->terminating(function () use ($testResult) {
+            $testSuite = new TestSuite();
+            $testSuite->addTestSuite((new TestSpecLoader())->load($testResult));
+            $testSuite->addTestSuite((new TestScriptLoader())->load($testResult));
+            $testSuiteResult = new TestSuiteResult();
+            $testSuiteResult->addListener(new TestExecutionListener($testResult));
+            $testSuiteResult = $testSuite->run($testSuiteResult);
+
+            if ($testSuiteResult->wasSuccessful()) {
+                $testResult->pass();
+            } else {
+                $testResult->fail();
+            }
+
+            if ($testResult->testStep->isLastPosition()) {
+                $testResult->testRun->complete();
+            }
+        });
     }
 }

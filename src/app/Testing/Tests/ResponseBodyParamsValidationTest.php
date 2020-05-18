@@ -3,7 +3,7 @@
 namespace App\Testing\Tests;
 
 use App\Http\Client\Response;
-use App\Models\Specification;
+use App\Models\ApiSpec;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\ResponseAddress;
 use League\OpenAPIValidation\PSR7\SpecFinder;
@@ -19,9 +19,9 @@ class ResponseBodyParamsValidationTest extends TestCase
     protected $response;
 
     /**
-     * @var Specification
+     * @var ApiSpec
      */
-    protected $apiScheme;
+    protected $apiSpec;
 
     /**
      * @var ResponseAddress
@@ -35,14 +35,14 @@ class ResponseBodyParamsValidationTest extends TestCase
 
     /**
      * @param Response $response
-     * @param Specification $apiScheme
+     * @param ApiSpec $apiSpec
      * @param ResponseAddress $operationAddress
      * @param array $specs
      */
-    public function __construct(Response $response, Specification $apiScheme, ResponseAddress $operationAddress, array $specs)
+    public function __construct(Response $response, ApiSpec $apiSpec, ResponseAddress $operationAddress, array $specs)
     {
         $this->response = $response;
-        $this->apiScheme = $apiScheme;
+        $this->apiSpec = $apiSpec;
         $this->operationAddress = $operationAddress;
         $this->specs = $specs;
     }
@@ -52,7 +52,7 @@ class ResponseBodyParamsValidationTest extends TestCase
      */
     public function test()
     {
-        $validator = new BodyValidator(new SpecFinder($this->apiScheme->openapi));
+        $validator = new BodyValidator(new SpecFinder($this->apiSpec->openapi));
 
         try {
             $validator->validate($this->operationAddress, $this->response->toPsrResponse());
@@ -66,7 +66,7 @@ class ResponseBodyParamsValidationTest extends TestCase
      */
     public function getName(): string
     {
-        return __('Response: :name API Scheme body params are specified correctly', ['name' => $this->apiScheme->name]);
+        return __('Response: :name API Scheme body params are specified correctly', ['name' => $this->apiSpec->name]);
     }
 
     /**

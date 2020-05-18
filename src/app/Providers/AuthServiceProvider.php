@@ -4,14 +4,14 @@ namespace App\Providers;
 
 use App\Models\Component;
 use App\Models\Session;
-use App\Models\Specification;
+use App\Models\ApiSpec;
 use App\Models\TestCase;
 use App\Models\TestStep;
 use App\Models\UseCase;
 use App\Models\User;
 use App\Policies\ComponentPolicy;
 use App\Policies\SessionPolicy;
-use App\Policies\SpecificationPolicy;
+use App\Policies\ApiSpecPolicy;
 use App\Policies\TestCasePolicy;
 use App\Policies\TestStepPolicy;
 use App\Policies\UseCasePolicy;
@@ -29,7 +29,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Session::class => SessionPolicy::class,
         Component::class => ComponentPolicy::class,
-        Specification::class => SpecificationPolicy::class,
+        ApiSpec::class => ApiSpecPolicy::class,
         TestCase::class => TestCasePolicy::class,
         TestStep::class => TestStepPolicy::class,
         UseCase::class => UseCasePolicy::class,

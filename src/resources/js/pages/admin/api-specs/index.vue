@@ -7,7 +7,7 @@
                         Administration
                     </div>
                     <h2 class="page-title">
-                        <b>Specifications</b>
+                        <b>Api Specs</b>
                     </h2>
                 </div>
             </div>
@@ -27,12 +27,12 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('admin.specifications.import')"
-                        v-if="$page.auth.user.can.specifications.create"
+                        :href="route('admin.api-specs.import')"
+                        v-if="$page.auth.user.can.api_specs.create"
                         class="btn btn-primary"
                     >
                         <icon name="upload" />
-                        Import Specification
+                        Import Api Spec
                     </inertia-link>
                 </div>
             </div>
@@ -45,13 +45,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="specification in specifications.data">
+                        <tr v-for="apiSpec in apiSpecs.data">
                             <td class="text-break">
-                                {{ specification.name }}
+                                {{ apiSpec.name }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="specification.can.delete"
+                                    v-if="apiSpec.can.delete"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -61,19 +61,19 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li v-if="specification.can.delete">
+                                    <li v-if="apiSpec.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="
                                                 route(
-                                                    'admin.specifications.destroy',
-                                                    specification.id
+                                                    'admin.api-specs.destroy',
+                                                    apiSpec.id
                                                 )
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="
-                                                `Are you sure you want to delete ${specification.name}?`
+                                                `Are you sure you want to delete ${apiSpec.name}?`
                                             "
                                         >
                                             Delete
@@ -82,7 +82,7 @@
                                 </b-dropdown>
                             </td>
                         </tr>
-                        <tr v-if="!specifications.data.length">
+                        <tr v-if="!apiSpecs.data.length">
                             <td class="text-center" colspan="2">
                                 No Results
                             </td>
@@ -90,7 +90,7 @@
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="specifications.meta" :links="specifications.links" class="card-footer" />
+            <pagination :meta="apiSpecs.meta" :links="apiSpecs.links" class="card-footer" />
         </div>
     </layout>
 </template>
@@ -106,7 +106,7 @@
             Layout,
         },
         props: {
-            specifications: {
+            apiSpecs: {
                 type: Object,
                 required: true,
             },
@@ -124,7 +124,7 @@
         },
         methods: {
             search() {
-                this.$inertia.replace(route('admin.specifications.index'), {
+                this.$inertia.replace(route('admin.api-specs.index'), {
                     data: this.form
                 });
             }

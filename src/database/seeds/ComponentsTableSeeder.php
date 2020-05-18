@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use App\Models\Component;
-use App\Models\Specification;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 
@@ -15,7 +14,7 @@ class ComponentsTableSeeder extends Seeder
         factory(Component::class)
             ->createMany($this->getComponentsData())
             ->each(function (Component $component, $key) {
-                $component->connections()->attach(Arr::get($this->getConnectionsData(), $key, []));
+                $component->connections()->attach(Arr::get($this->getComponentConnectionsData(), $key, []));
             });
     }
 
@@ -55,46 +54,13 @@ class ComponentsTableSeeder extends Seeder
     /**
      * @return array
      */
-    protected function getConnectionsData()
+    protected function getComponentConnectionsData()
     {
         return [
-            [
-                [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
-                    'specification_id' => Specification::where('name', 'MM v1.1.2')->value('id'),
-                ],
-            ],
-            [
-
-                [
-                    'target_id' => Component::where('name', 'Service Provider')->value('id'),
-                    'specification_id' => Specification::where('name', 'SP v1.0')->value('id'),
-                ],
-
-                [
-                    'target_id' => Component::where('name', 'Mojaloop')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
-                ],
-            ],
-            [
-
-                [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 1')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
-                ],
-
-                [
-                    'target_id' => Component::where('name', 'Mobile Money Operator 2')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
-                ],
-            ],
-            [
-
-                [
-                    'target_id' => Component::where('name', 'Mojaloop')->value('id'),
-                    'specification_id' => Specification::where('name', 'Mojaloop v1.0')->value('id'),
-                ],
-            ],
+            Component::whereIn('name', ['Mobile Money Operator 1'])->pluck('id'),
+            Component::whereIn('name', ['Service Provider', 'Mojaloop'])->pluck('id'),
+            Component::whereIn('name', ['Mobile Money Operator 1', 'Mobile Money Operator 2'])->pluck('id'),
+            Component::whereIn('name', ['Mojaloop'])->pluck('id'),
         ];
     }
 }

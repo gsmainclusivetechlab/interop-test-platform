@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Component;
+use App\Models\ApiSpec;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SpecificationPolicy
+class ApiSpecPolicy
 {
     use HandlesAuthorization;
 
@@ -33,10 +33,10 @@ class SpecificationPolicy
 
     /**
      * @param  User  $user
-     * @param  Component  $model
+     * @param  ApiSpec  $model
      * @return mixed
      */
-    public function view(User $user, Component $model)
+    public function view(User $user, ApiSpec $model)
     {
 
     }
@@ -52,20 +52,20 @@ class SpecificationPolicy
 
     /**
      * @param  User  $user
-     * @param  Component  $model
+     * @param  ApiSpec  $model
      * @return mixed
      */
-    public function update(User $user, Component $model)
+    public function update(User $user, ApiSpec $model)
     {
 
     }
 
     /**
      * @param  User  $user
-     * @param  Component  $model
+     * @param  ApiSpec  $model
      * @return mixed
      */
-    public function delete(User $user, Component $model)
+    public function delete(User $user, ApiSpec $model)
     {
 
     }

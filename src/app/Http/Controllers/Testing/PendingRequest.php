@@ -54,13 +54,11 @@ class PendingRequest
     }
 
     /**
-     * @param callable|null $onFulfilled
-     * @param callable|null $onRejected
-     * @return mixed
+     * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function send(callable $onFulfilled = null, callable $onRejected = null)
+    public function sendAsync()
     {
-        return $this->buildClient()->sendAsync($this->request)->then($onFulfilled, $onRejected)->wait();
+        return $this->buildClient()->sendAsync($this->request);
     }
 
     /**

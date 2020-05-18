@@ -8,7 +8,7 @@ precondition: |
     - Service Provider is capable of handled async calls.
     - Payee and Payer MMOs exist in Mojaloop as Participants.
     - Payee and Payer exist in Mojaloop as Parties.
-    - Amount should be the value "15.15".
+    - Amount should be the value "1004".
     - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
     - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
@@ -17,12 +17,13 @@ components:
   - Mobile Money Operator 2
 test_steps:
   - path: /transactions
+    pattern: '^transactions$'
     method: POST
     source: Service Provider
     target: Mobile Money Operator 1
-    api_scheme: MM v1.1.2
+    api_spec: MM v1.1.2
     trigger:
-      amount: '15.15'
+      amount: '1004'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -35,7 +36,9 @@ test_steps:
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'required|in:15.15'
+          body.amount:
+            - 'required'
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -62,7 +65,7 @@ test_steps:
         x-callback-url: 'http://example.com/example'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
-        amount: '15.15'
+        amount: '1004'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
@@ -81,13 +84,14 @@ test_steps:
         status: 'pending'
         notificationMethod: 'callback'
   - path: /transactionRequests
+    pattern: '^transactionRequests$'
     method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '15.15'
+        amount: '1004'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -105,7 +109,9 @@ test_steps:
           body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:15.15'
+          body.amount.amount:
+            - 'required'
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -129,7 +135,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '15.15'
+          amount: '1004'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -139,13 +145,14 @@ test_steps:
     response:
       status: 202
   - path: /transactionRequests
+    pattern: '^transactionRequests$'
     method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
-    api_scheme: Mojaloop v1.0
+    api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '15.15'
+        amount: '1004'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -163,7 +170,9 @@ test_steps:
           body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:15.15'
+          body.amount.amount:
+            - 'required'
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -187,7 +196,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '15.15'
+          amount: '1004'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -197,12 +206,11 @@ test_steps:
     response:
       status: 202
   - path: /transactionRequests/{ID}
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
-    api_scheme: Mojaloop v1.0
-    trigger:
-      transactionRequestState: 'RECEIVED'
+    api_spec: Mojaloop v1.0
     test_request_setups:
     - name: Override request
       values:
@@ -232,12 +240,11 @@ test_steps:
     response:
       status: 200
   - path: /transactionRequests/{ID}
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
-    api_scheme: Mojaloop v1.0
-    trigger:
-      transactionRequestState: 'RECEIVED'
+    api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
         rules:
@@ -263,12 +270,10 @@ test_steps:
     response:
       status: 200
   - path: '{X-Callback-URL}'
+    pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     method: PUT
     source: Mobile Money Operator 1
     target: Service Provider
-    trigger:
-      errorCode: 'genericError'
-      errorCategory: 'businessRule'
     test_request_scripts:
       - name: Error category is valid
         rules:

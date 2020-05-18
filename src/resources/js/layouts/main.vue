@@ -46,7 +46,7 @@
                             v-if="(
                                 $page.auth.user.can.users.viewAny ||
                                 $page.auth.user.can.sessions.viewAny ||
-                                $page.auth.user.can.specifications.viewAny ||
+                                $page.auth.user.can.api_specs.viewAny ||
                                 $page.auth.user.can.use_cases.viewAny ||
                                 $page.auth.user.can.test_cases.viewAny
                             )"
@@ -71,12 +71,12 @@
                                     Sessions
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.specifications.viewAny">
+                            <li v-if="$page.auth.user.can.api_specs.viewAny">
                                 <inertia-link
-                                    :href="route('admin.specifications.index')"
+                                    :href="route('admin.api-specs.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Specifications
+                                    Api Specs
                                 </inertia-link>
                             </li>
                             <li v-if="$page.auth.user.can.use_cases.viewAny">

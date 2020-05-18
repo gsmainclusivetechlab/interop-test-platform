@@ -11,12 +11,11 @@ use App\Testing\Tests\ResponseBodyParamsValidationTest;
 use App\Testing\Tests\ResponseHeaderParamsValidationTest;
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use League\OpenAPIValidation\PSR7\OperationAddress;
-use League\OpenAPIValidation\PSR7\PathFinder;
 use League\OpenAPIValidation\PSR7\ResponseAddress;
 use League\OpenAPIValidation\PSR7\SpecFinder;
 use PHPUnit\Framework\TestSuite;
 
-class TestSchemeLoader
+class TestSpecLoader
 {
     /**
      * @param TestResult $testResult
@@ -27,36 +26,33 @@ class TestSchemeLoader
     {
         $testSuite = new TestSuite();
 
-        if ($connection = $testResult->testStep->source->connections()->whereKey($testResult->testStep->target->getKey())->first()) {
-            $specification = $connection->pivot->specification;
-
+        if ($apiSpec = $testResult->testStep->apiSpec) {
             $operationAddress = new OperationAddress($testResult->testStep->path, strtolower($testResult->testStep->method));
-            $specFinder = new SpecFinder($specification->openapi);
+            $responseOperationAddress = new ResponseAddress($testResult->testStep->path, strtolower($testResult->testStep->method), $testResult->response->status());
+            $specFinder = new SpecFinder($apiSpec->openapi);
 
             if ($requestHeaderSpecs = $specFinder->findHeaderSpecs($operationAddress)) {
-                $testSuite->addTest(new RequestHeaderParamsValidationTest($testResult->request, $specification, $operationAddress, $requestHeaderSpecs));
+                $testSuite->addTest(new RequestHeaderParamsValidationTest($testResult->request, $apiSpec, $operationAddress, $requestHeaderSpecs));
             }
 
             if ($requestPathSpecs = $specFinder->findPathSpecs($operationAddress)) {
-                $testSuite->addTest(new RequestPathParamsValidationTest($testResult->request, $specification, $operationAddress, $requestPathSpecs));
+                $testSuite->addTest(new RequestPathParamsValidationTest($testResult->request, $apiSpec, $operationAddress, $requestPathSpecs));
             }
 
             if ($requestQuerySpecs = $specFinder->findQuerySpecs($operationAddress)) {
-                $testSuite->addTest(new RequestQueryParamsValidationTest($testResult->request, $specification, $operationAddress, $requestQuerySpecs));
+                $testSuite->addTest(new RequestQueryParamsValidationTest($testResult->request, $apiSpec, $operationAddress, $requestQuerySpecs));
             }
 
             if ($requestBodySpec = $specFinder->findBodySpec($operationAddress)) {
-                $testSuite->addTest(new RequestBodyParamsValidationTest($testResult->request, $specification, $operationAddress, $requestBodySpec));
+                $testSuite->addTest(new RequestBodyParamsValidationTest($testResult->request, $apiSpec, $operationAddress, $requestBodySpec));
             }
 
-            $responseOperationAddress = new ResponseAddress($operationAddress->path(), $operationAddress->method(), $testResult->response->status());
-
             if ($responseHeaderSpecs = $specFinder->findHeaderSpecs($responseOperationAddress)) {
-                $testSuite->addTest(new ResponseHeaderParamsValidationTest($testResult->response, $specification, $responseOperationAddress, $responseHeaderSpecs));
+                $testSuite->addTest(new ResponseHeaderParamsValidationTest($testResult->response, $apiSpec, $responseOperationAddress, $responseHeaderSpecs));
             }
 
             if ($responseBodySpec = $specFinder->findBodySpec($responseOperationAddress)) {
-                $testSuite->addTest(new ResponseBodyParamsValidationTest($testResult->response, $specification, $responseOperationAddress, $responseBodySpec));
+                $testSuite->addTest(new ResponseBodyParamsValidationTest($testResult->response, $apiSpec, $responseOperationAddress, $responseBodySpec));
             }
         }
 

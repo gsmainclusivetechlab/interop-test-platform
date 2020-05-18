@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-use App\Models\Specification;
+use App\Models\ApiSpec;
 use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
 
-class SpecificationsTableSeeder extends Seeder
+class ApiSpecsTableSeeder extends Seeder
 {
     /**
      * @throws \cebe\openapi\exceptions\IOException
@@ -13,8 +13,8 @@ class SpecificationsTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ($this->getSpecificationsData() as $key => $attributes) {
-            Specification::create($attributes);
+        foreach ($this->getApiSpecsData() as $key => $attributes) {
+            ApiSpec::create($attributes);
         }
     }
 
@@ -24,23 +24,18 @@ class SpecificationsTableSeeder extends Seeder
      * @throws \cebe\openapi\exceptions\TypeErrorException
      * @throws \cebe\openapi\exceptions\UnresolvableReferenceException
      */
-    protected function getSpecificationsData()
+    protected function getApiSpecsData()
     {
         return [
             [
-                'name' => 'SP v1.0',
-                'description' => '',
-                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/sp.yaml')),
-            ],
-            [
                 'name' => 'MM v1.1.2',
                 'description' => '',
-                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),
+                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapis/mm.yaml')),
             ],
             [
                 'name' => 'Mojaloop v1.0',
                 'description' => '',
-                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/mojaloop.yaml')),
+                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapis/mojaloop.yaml')),
             ],
         ];
     }
