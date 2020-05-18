@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Testing;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Http\Middleware\SetJsonHeaders;
@@ -14,9 +12,15 @@ use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Component;
 use App\Models\Session;
 use App\Models\TestCase;
+use App\Models\TestResult;
 use App\Models\TestRun;
+use App\Testing\TestExecutionListener;
+use App\Testing\TestScriptLoader;
+use App\Testing\TestSpecLoader;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use PHPUnit\Framework\TestResult as TestSuiteResult;
+use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RunController extends Controller
@@ -48,10 +52,19 @@ class RunController extends Controller
         $request = $request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)))
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent);
 
+        $this->doTestAfterResponse($testResult);
+
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->sendAsync()
+            ->otherwise(function ($e) use ($testResult) {
+                $testResult->fail($e->getMessage());
+                $testResult->testRun->complete();
+
+                return $e;
+            })
+            ->wait();
     }
 
     public function sut(Session $session, Component $component, Component $connection, string $path, ServerRequestInterface $request)
@@ -101,10 +114,19 @@ class RunController extends Controller
         $request = $request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)))
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent)->withoutHeader(TracestateHeader::NAME);
 
+        $this->doTestAfterResponse($testResult);
+
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->sendAsync()
+            ->otherwise(function ($e) use ($testResult) {
+                $testResult->fail($e->getMessage());
+                $testResult->testRun->complete();
+
+                return $e;
+            })
+            ->wait();
     }
 
     public function simulator(Component $component, Component $connection, string $path, ServerRequestInterface $request)
@@ -142,9 +164,40 @@ class RunController extends Controller
 
         $request = $request->withUri(UriResolver::resolve(new Uri($url), new Uri($path)));
 
+        $this->doTestAfterResponse($testResult);
+
         return (new PendingRequest($request))
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->sendAsync()
+            ->otherwise(function ($e) use ($testResult) {
+                $testResult->fail($e->getMessage());
+                $testResult->testRun->complete();
+
+                return $e;
+            })
+            ->wait();
+    }
+
+    protected function doTestAfterResponse(TestResult $testResult)
+    {
+        app()->terminating(function () use ($testResult) {
+            $testSuite = new TestSuite();
+            $testSuite->addTestSuite((new TestSpecLoader())->load($testResult));
+            $testSuite->addTestSuite((new TestScriptLoader())->load($testResult));
+            $testSuiteResult = new TestSuiteResult();
+            $testSuiteResult->addListener(new TestExecutionListener($testResult));
+            $testSuiteResult = $testSuite->run($testSuiteResult);
+
+            if ($testSuiteResult->wasSuccessful()) {
+                $testResult->pass();
+            } else {
+                $testResult->fail();
+            }
+
+            if ($testResult->testStep->isLastPosition()) {
+                $testResult->testRun->complete();
+            }
+        });
     }
 }
