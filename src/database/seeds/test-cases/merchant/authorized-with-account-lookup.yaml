@@ -6,18 +6,28 @@ description: |
   In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers.
   This flow shows the necessary steps for this transaction simulating an approved transaction using an account lookup system.
 precondition: |
-  Service Provider has GSMA Mobile Money API Implemented.
-  Service Provider is capable of handled async calls.
-  Payee and Payer MMOs exist in Mojaloop as Participants.
-  Payee and Payer exist in Mojaloop as Parties.
-  Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
-  Credit party should be identified by account identifier "msisdn" with the value  "+33555789123".
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer exist in Mojaloop as Parties.
+  - Amount should be the value "1010".
+  - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+components:
+  - Service Provider
+  - Mobile Money Operator 1
+  - Mobile Money Operator 2
+
 test_steps:
 ##------------------------------POST/Transactions: SP -> MMO1------------------------------##
-  - name: POST /transactions
+  - path: /transactions
+    pattern: '^transactions$'
+    method: POST
     source: Service Provider
     target: Mobile Money Operator 1
     api_scheme: MM v1.1.2
+    trigger:
+      amount: '1010'
 
     test_request_scripts:
       - name: Header has the Url Callback
@@ -25,10 +35,10 @@ test_steps:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.debitParty.*.key: 'in:msisdn'
-          body.debitParty.*.value: 'in:+33555123456'
-          body.creditParty.*.key: 'in:msisdn'
-          body.creditParty.*.value: 'in:+33555789123'
+          body.debitParty.*.key: 'required|in:msisdn'
+          body.debitParty.*.value: 'required|in:+33555123456'
+          body.creditParty.*.key: 'required|in:msisdn'
+          body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount:
@@ -37,21 +47,21 @@ test_steps:
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
-          body.type: 'in:merchantpay'
+          body.type: 'required|in:merchantpay'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
       - name: Server Correlation Id is specified correctly
         rules:
           body.serverCorrelationId: 'required|regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
       - name: Status is specified correctly
         rules:
-          body.status: 'in:pending'
+          body.status: 'required|in:pending'
       - name: Notification Method is specified correctly
         rules:
-          body.notificationMethod: 'in:callback'
+          body.notificationMethod: 'required|in:callback'
 
     request:
       method: POST
@@ -59,10 +69,10 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: 'http://example.com/example'
+        x-callback-url: 'http://example.com/callback'
         x-date: '2020-04-07T10:28:44.466Z'
       body:
-        amount: '100'
+        amount: '1010'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
@@ -83,20 +93,24 @@ test_steps:
         notificationMethod: 'callback'
 
 ##------------------------------GET/Participants: MMO1 -> Mojaloop------------------------------##
-  - name: GET /participants/{TYPE}/{ID}
+  - path: /participants/{TYPE}/{ID}
+    pattern: '^participants/[A-Z]/[a-z0-9]$'
+    method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '1010'
 
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri.path: 'in:MSISDN'
+          uri.path: 'required|in:MSISDN'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
 
     request:
       method: GET
@@ -111,20 +125,24 @@ test_steps:
       status: 202
 
 ##------------------------------PUT/Participants: Mojaloop -> MMO1------------------------------##
-  - name: PUT /participants/{TYPE}/{ID}
+  - path: /participants/{TYPE}/{ID}
+    pattern: '^participants/[A-Z]/[a-z0-9]$'
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      fspId: 'payerfsp'
 
     test_request_scripts:
       - name: FSP ID is correct
         rules:
-          body.fspId: 'payerfsp'
+          body.fspId: 'required|in:payerfsp'
 
     test_response_scripts:
       - name: Participant information was successfully received
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: PUT
@@ -140,26 +158,31 @@ test_steps:
         status: 200
 
 ##------------------------------POST/TransanctionRequests: MMO1 -> Mojaloop------------------------------##
-  - name: POST /transactionRequests
+  - path: /transactionRequests
+    pattern: '^transactionRequests$'
+    method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
@@ -190,7 +213,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '123.45'
+          amount: '1010'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -202,7 +225,9 @@ test_steps:
       status: 202
 
 ##------------------------------POST/TransanctionRequests: Mojaloop -> MMO2------------------------------##
-  - name: POST /transactionRequests
+  - path: /transactionRequests
+    pattern: '^transactionRequests$'
+    method: POST
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
@@ -210,18 +235,18 @@ test_steps:
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
@@ -252,7 +277,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '123.45'
+          amount: '1010'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -264,10 +289,14 @@ test_steps:
       status: 202
 
 ##------------------------------PUT/TransanctionRequests: MMO2 -> Mojaloop------------------------------##
-  - name: PUT /transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -276,12 +305,12 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
-          body.transactionRequestState: 'in:RECEIVED'
+          body.transactionRequestState: 'required|in:RECEIVED'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: PUT
@@ -298,10 +327,14 @@ test_steps:
       status: 200
 
 ##------------------------------PUT/TransanctionRequests: Mojaloop -> MMO1------------------------------##
-  - name: PUT /transactionRequests/{ID}
+  - path: /transactionRequests/{ID}
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -310,12 +343,12 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Status is Received
         rules:
-          body.transactionRequestState: 'in:RECEIVED'
+          body.transactionRequestState: 'required|in:RECEIVED'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: PUT
@@ -332,10 +365,15 @@ test_steps:
       status: 200
 
 ##------------------------------POST/Quotes: MMO2 -> Mojaloop------------------------------##
-  - name: POST /quotes
+  - path: /quotes
+    pattern: '^quotes$'
+    method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -344,17 +382,17 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'required|in:SEND'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
@@ -366,7 +404,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
 
     request:
       method: POST
@@ -396,7 +434,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -406,10 +444,15 @@ test_steps:
       status: 202
 
 ##------------------------------POST/Quotes: Mojaloop -> MMO1------------------------------##
-  - name: POST /quotes
+  - path: /quotes
+    pattern: '^quotes$'
+    method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -418,18 +461,18 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'required|in:SEND'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
@@ -440,7 +483,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
 
     request:
       method: POST
@@ -470,7 +513,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -480,10 +523,15 @@ test_steps:
       status: 202
 
 ##------------------------------PUT/Quotes: MMO1 -> Mojaloop------------------------------##
-  - name: PUT /quotes/{ID}
+  - path: /quotes/{ID}
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      transferAmount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -492,18 +540,18 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'required|in:SEND'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount:
@@ -514,7 +562,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -527,7 +575,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -536,10 +584,15 @@ test_steps:
       status: 200
 
 ##------------------------------PUT/Quotes: Mojaloop -> MMO2------------------------------##
-  - name: PUT /quotes/{ID}
+  - path: /quotes/{ID}
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
+    trigger:
+      transferAmount:
+        amount: '1000'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -548,18 +601,18 @@ test_steps:
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Transaction Type is a Merchant Payment
         rules:
-          body.transactionType.scenario: 'in:PAYMENT'
-          body.transactionType.initiator: 'in:PAYEE'
-          body.transactionType.initiatorType: 'in:BUSINESS'
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'in:SEND'
+          body.amountType: 'required|in:SEND'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'in:+33555789123'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.transferAmount.amount:
@@ -570,7 +623,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -583,7 +636,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         expiration: '2020-04-13T12:50:15.273Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -592,10 +645,15 @@ test_steps:
       status: 200
 
 ##------------------------------POST/Transfers: MMO2 -> Mojaloop------------------------------##
-  - name: POST /transfers
+  - path: /transfers
+    pattern: '^transfers$'
+    method: POST
     source: Mobile Money Operator 2
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -628,7 +686,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
 
     request:
       method: 'POST'
@@ -644,7 +702,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2020-04-13T12:50:15.273Z'
@@ -653,10 +711,15 @@ test_steps:
       status: 202
 
 ##------------------------------POST/Transfers: Mojaloop -> MMO1------------------------------##
-  - name: POST /transfers
+  - path: /transfers
+    pattern: '^transfers$'
+    method: POST
     source: Mojaloop
     target: Mobile Money Operator 1
     api_scheme: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -689,7 +752,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:202'
+          status: 'required|in:202'
 
     request:
       method: 'POST'
@@ -705,7 +768,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2020-04-13T12:50:15.273Z'
@@ -714,9 +777,13 @@ test_steps:
       status: 202
 
 ##------------------------------PUT/X-Callback-URL: MMO1 -> Service Provider------------------------------##
-  - name: PUT /X-Callback-URL
+  - path: '{X-Callback-URL}'
+    pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
+    method: PUT
     source: Mobile Money Operator 1
     target: Service Provider
+    trigger:
+      amount: '1010'
 
     test_request_scripts:
       - name: Header has the Url Callback
@@ -724,10 +791,10 @@ test_steps:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and credit party is valid
         rules:
-          body.debitParty.*.key: 'in:msisdn'
-          body.debitParty.*.value: 'in:+33555123456'
-          body.creditParty.*.key: 'in:msisdn'
-          body.creditParty.*.value: 'in:+33555789123'
+          body.debitParty.*.key: 'required|in:msisdn'
+          body.debitParty.*.value: 'required|in:+33555123456'
+          body.creditParty.*.key: 'required|in:msisdn'
+          body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
           body.amount:
@@ -736,15 +803,15 @@ test_steps:
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
-          body.type: 'in:merchantpay'
+          body.type: 'required|in:merchantpay'
       - name: Transaction was approved
         rules:
-          body.transactionStatus: 'in:Completed'
+          body.transactionStatus: 'required|in:Completed'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:204'
+          status: 'required|in:204'
 
     request:
       method: 'PUT'
@@ -753,7 +820,7 @@ test_steps:
         content-type: 'application/json'
         x-date: '2020-04-07T10:28:44.466Z'
       body:
-        amount: '123.45'
+        amount: '1010'
         currency: 'USD'
         type: 'merchantpay'
         transactionReference: ''
@@ -769,10 +836,14 @@ test_steps:
       status: 204
 
 ##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
-  - name: PUT /transfers/{ID}
+  - path: /transfers/{ID}
+    pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
+    trigger:
+      transferState: 'COMMITTED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -780,7 +851,7 @@ test_steps:
           path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'in:COMMITTED'
+          body.transactionRequestState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
@@ -793,7 +864,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -809,7 +880,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2020-04-13T12:50:15.273Z'
@@ -818,10 +889,14 @@ test_steps:
       status: 200
 
 ##------------------------------PUT/Transfers: Mojaloop -> MMO2------------------------------##
-  - name: PUT /transfers/{ID}
+  - path: /transfers/{ID}
+    pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
     source: Mojaloop
     target: Mobile Money Operator 2
     api_scheme: Mojaloop v1.0
+    trigger:
+      transferState: 'COMMITTED'
 
     test_request_scripts:
       - name: ID is Valid
@@ -829,7 +904,7 @@ test_steps:
           path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'in:COMMITTED'
+          body.transactionRequestState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
@@ -842,7 +917,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'in:200'
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -858,7 +933,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '123.45'
+          amount: '1010'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2020-04-13T12:50:15.273Z'
