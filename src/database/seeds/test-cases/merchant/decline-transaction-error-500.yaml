@@ -8,7 +8,7 @@ precondition: |
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "500".
+  - Amount should be the value "1008".
   - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
@@ -21,7 +21,7 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: MM v1.1.2
     trigger:
-      amount: '500'
+      amount: '1008'
     test_response_setups:
       - name: Override response
         values:
@@ -43,7 +43,9 @@ test_steps:
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'required|in:500'
+          body.amount:
+            - 'required'
+            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -65,7 +67,7 @@ test_steps:
         x-callback-url: 'http://example.com/example'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
-        amount: '500'
+        amount: '1008'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
