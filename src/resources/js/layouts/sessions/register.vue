@@ -56,7 +56,7 @@
                         <diagram>
                             graph LR;
                             <template v-for="component in components.data">
-                                {{ component.id }}({{component.name}});
+                                {{ component.id }}({{component.name}})<template v-if="collect(sut).get('component_id')  === component.id">:::is-active</template><template v-else></template>;
                                 <template v-for="connection in component.connections">
                                     {{ component.id }}-->{{ connection.id }};
                                 </template>
@@ -85,10 +85,14 @@ export default {
         Diagram
     },
     props: {
+        sut: {
+            type: Object,
+            required: false
+        },
         components: {
             type: Object,
             required: true
         },
-    }
+    },
 };
 </script>

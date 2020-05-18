@@ -23,24 +23,24 @@
                 </div>
             </div>
             <div class="card-body p-0">
-<!--                <div class="p-4">-->
-<!--                    <diagram>-->
-<!--                        graph LR;-->
-<!--                        <template v-for="component in session.scenario.data.components">-->
-<!--                            {{ component.id }}({{component.name}})<template v-if="collect(session.suts.data).contains('id', component.id)">:::is-active</template><template v-else></template>;-->
-<!--                            <template v-for="connection in component.connections">-->
-<!--                                {{ component.id }}-->
-<!--                                <template v-if="component.simulated && connection.simulated">&ndash;&gt;</template><template v-else>-.-></template>-->
-<!--                                <template v-if="component.id == testResult.testStep.data.source.id && connection.id == testResult.testStep.data.target.id">-->
-<!--                                    |{{ `Step ${testResult.testStep.data.position}` }}| {{ connection.id }};-->
-<!--                                </template>-->
-<!--                                <template v-else>-->
-<!--                                    {{ connection.id }};-->
-<!--                                </template>-->
-<!--                            </template>-->
-<!--                        </template>-->
-<!--                    </diagram>-->
-<!--                </div>-->
+                <div class="p-4">
+                    <diagram>
+                        graph LR;
+                        <template v-for="component in components.data">
+                            {{ component.id }}({{component.name}})<template v-if="collect(session.components.data).contains('id', component.id)">:::is-active</template><template v-else></template>;
+                            <template v-for="connection in component.connections">
+                                {{ component.id }}
+                                -->
+                                <template v-if="component.id == testResult.testStep.data.source.id && connection.id == testResult.testStep.data.target.id">
+                                    |{{ `Step ${testResult.testStep.data.position}` }}| {{ connection.id }};
+                                </template>
+                                <template v-else>
+                                    {{ connection.id }};
+                                </template>
+                            </template>
+                        </template>
+                    </diagram>
+                </div>
                 <div class="rounded-0 border-top">
                     <div class="row">
                         <div class="col-3 pr-0">
@@ -55,7 +55,7 @@
                                         class="list-group-item p-0 rounded-0 border-0"
                                     >
                                         <inertia-link
-                                            :href="route('sessions.test-cases.test-runs.show', [session, testCase, testRun, testStep.position])"
+                                            :href="route('sessions.test-cases.test-runs.show', [session.id, testCase.id, testRun.id, testStep.position])"
                                             class="d-flex justify-content-between align-items-center py-2 px-4 text-reset text-decoration-none"
                                         >
                                             <div class="mr-1 text-truncate">
@@ -396,6 +396,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        components: {
             type: Object,
             required: true
         },

@@ -1,5 +1,5 @@
 <template>
-    <layout :components="components">
+    <layout :sut="session.sut" :components="components">
         <form @submit.prevent="submit" class="col-12">
             <div class="card">
                 <div class="row">
