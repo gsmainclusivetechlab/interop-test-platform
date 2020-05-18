@@ -28,6 +28,7 @@ class TestSpecLoader
 
         if ($apiSpec = $testResult->testStep->apiSpec) {
             $operationAddress = new OperationAddress($testResult->testStep->path, strtolower($testResult->testStep->method));
+            $responseOperationAddress = new ResponseAddress($testResult->testStep->path, strtolower($testResult->testStep->method), $testResult->response->status());
             $specFinder = new SpecFinder($apiSpec->openapi);
 
             if ($requestHeaderSpecs = $specFinder->findHeaderSpecs($operationAddress)) {
@@ -45,8 +46,6 @@ class TestSpecLoader
             if ($requestBodySpec = $specFinder->findBodySpec($operationAddress)) {
                 $testSuite->addTest(new RequestBodyParamsValidationTest($testResult->request, $apiSpec, $operationAddress, $requestBodySpec));
             }
-
-            $responseOperationAddress = new ResponseAddress($operationAddress->path(), $operationAddress->method(), $testResult->response->status());
 
             if ($responseHeaderSpecs = $specFinder->findHeaderSpecs($responseOperationAddress)) {
                 $testSuite->addTest(new ResponseHeaderParamsValidationTest($testResult->response, $apiSpec, $responseOperationAddress, $responseHeaderSpecs));
