@@ -90,6 +90,23 @@
                                             </inertia-link>
                                         </li>
                                     </ul>
+                                    <div class="col-5 ml-auto">
+                                        <div class="d-flex">
+                                            <div class="input-group">
+                                                <input
+                                                    id="testing-url"
+                                                    type="text"
+                                                    class="form-control"
+                                                    readonly
+                                                    :value="route('testing.run', [session.uuid, testCase.uuid])"
+                                                />
+                                                <clipboard-copy-btn
+                                                    target="#testing-url"
+                                                    title="Copy URL"
+                                                ></clipboard-copy-btn>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <slot />
                             </div>

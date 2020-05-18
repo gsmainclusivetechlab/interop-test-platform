@@ -11,7 +11,8 @@
                     <thead>
                     <tr>
                         <th class="text-nowrap w-auto">Number</th>
-                        <th class="text-nowrap w-auto">Name</th>
+                        <th class="text-nowrap w-auto">Method</th>
+                        <th class="text-nowrap w-auto">Endpoint</th>
                         <th class="text-nowrap w-auto">Source</th>
                         <th class="text-nowrap w-auto">Target</th>
                         <th class="text-nowrap w-auto">Expected Data</th>
@@ -23,7 +24,10 @@
                             {{ testStep.position }}
                         </td>
                         <td class="align-middle">
-                            {{ testStep.name }}
+                            {{ testStep.method }}
+                        </td>
+                        <td class="align-middle">
+                            {{ testStep.path }}
                         </td>
                         <td class="align-middle">
                             {{ testStep.source ? testStep.source.name : '' }}
@@ -135,7 +139,7 @@
                         </td>
                     </tr>
                     <tr v-if="!testSteps.data.length">
-                        <td class="text-center" colspan="4">
+                        <td class="text-center" colspan="6">
                             No Results
                         </td>
                     </tr>

@@ -68,7 +68,7 @@ class ComponentsTableSeeder extends Seeder
 
                 [
                     'target_id' => Component::where('name', 'Service Provider')->value('id'),
-                    'specification_id' => Specification::where('name', 'MM v1.1.2')->value('id'),
+                    'specification_id' => Specification::where('name', 'SP v1.0')->value('id'),
                 ],
 
                 [

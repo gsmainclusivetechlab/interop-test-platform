@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SessionResource;
-use App\Models\Component;
-use App\Models\Specification;
 use Inertia\Inertia;
 
 class HomeController extends Controller

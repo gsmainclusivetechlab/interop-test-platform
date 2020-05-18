@@ -64,10 +64,19 @@ class SessionController extends Controller
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
-                UseCase::with('testCases')
+                UseCase::with([
+                    'testCases' => function ($query) use($session) {
+                        $query->with([
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ])->whereHas('sessions', function ($query) use($session) {
+                            $query->whereKey($session->getKey());
+                        });
+                    }])
                     ->whereHas('testCases', function ($query) use($session) {
                         $query->whereHas('sessions', function ($query) use($session) {
-                            $query->whereKey($session->id);
+                            $query->whereKey($session->getKey());
                         });
                     })
                     ->get()
@@ -75,7 +84,7 @@ class SessionController extends Controller
             'testRuns' => TestRunResource::collection(
                 $session->testRuns()
                     ->with(['session', 'testCase'])
-                    ->completed()
+//                    ->completed()
                     ->latest()
                     ->paginate()
             ),

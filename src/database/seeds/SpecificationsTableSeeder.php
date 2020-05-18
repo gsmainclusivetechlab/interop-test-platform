@@ -28,6 +28,11 @@ class SpecificationsTableSeeder extends Seeder
     {
         return [
             [
+                'name' => 'SP v1.0',
+                'description' => '',
+                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/sp.yaml')),
+            ],
+            [
                 'name' => 'MM v1.1.2',
                 'description' => '',
                 'openapi' => Reader::readFromYamlFile(database_path('seeds/openapi/mm.yaml')),

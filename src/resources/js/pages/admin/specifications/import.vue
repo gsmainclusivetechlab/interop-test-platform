@@ -93,8 +93,15 @@
             submit() {
                 this.sending = true;
                 let data = new FormData();
-                data.append('name', this.form.name);
-                data.append('file', this.form.file);
+
+                if (this.form.name) {
+                    data.append('name', this.form.name);
+                }
+
+                if (this.form.file) {
+                    data.append('file', this.form.file);
+                }
+
                 this.$inertia
                     .post(route('admin.specifications.import.confirm'), data)
                     .then(() => (this.sending = false));

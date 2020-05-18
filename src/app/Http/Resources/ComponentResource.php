@@ -14,6 +14,7 @@ class ComponentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'uuid' => $this->uuid,
             'name' => $this->name,
             'base_url' => $this->base_url,
             'simulated' => $this->simulated,
