@@ -134,6 +134,8 @@ class RunController extends Controller
         $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()
+            ->where('method', $request->getMethod())
+            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
             ->whereHas('source', function ($query) use ($component) {
                 $query->whereKey($component->getKey());
             })
@@ -142,8 +144,10 @@ class RunController extends Controller
             })
             ->offset(
                 $testRun->testResults()
-                    ->whereHas('testStep', function ($query) use ($component, $connection) {
-                        $query->whereHas('source', function ($query) use ($component) {
+                    ->whereHas('testStep', function ($query) use ($component, $connection, $request, $path) {
+                        $query->where('method', $request->getMethod())
+                            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
+                            ->whereHas('source', function ($query) use ($component) {
                                 $query->whereKey($component->getKey());
                             })
                             ->whereHas('target', function ($query) use ($connection) {
