@@ -5,10 +5,10 @@ defaults:
         project:
             env_variables: &default-env-vars
                 DOTENV_VALID: 1
-                MYSQL_HOST: host.docker.internal
         composer_json:
             require:
         docker_server: &default-docker-server
+            db: no
             target_server: s8
             vhosts:
                 app: &vhost-app
@@ -25,7 +25,7 @@ defaults:
                 SSHD_ENABLED: 0
                 PHP_XDEBUG_ENABLED: 0
             remove_services:
-                - mysqldb
+                - none
             cleanup:
                 build:
                     - runtime/mysql
