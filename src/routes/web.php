@@ -56,11 +56,11 @@ Route::name('settings.')->prefix('settings')->namespace('Settings')->group(funct
  * Testing Routes
  */
 Route::name('testing.')->prefix('testing')->namespace('Testing')->group(function () {
-    Route::any('{session:uuid}/{testCase:uuid}/run/{path?}', 'RunController@run')
+    Route::any('{session:uuid}/{testCase:uuid}/run/{path?}', 'RunController')
         ->name('run')->where('path', '.*');
-    Route::any('{session:uuid}/{component:uuid}/{connection:uuid}/sut/{path?}', 'RunController@sut')
+    Route::any('{session:uuid}/{component:uuid}/{connection:uuid}/sut/{path?}', 'SutController')
         ->name('sut')->where('path', '.*');
-    Route::any('{component:uuid}/{connection:uuid}/simulator/{path?}', 'RunController@simulator')
+    Route::any('{component:uuid}/{connection:uuid}/simulator/{path?}', 'SimulatorController')
         ->name('simulator')->where('path', '.*');
 });
 
