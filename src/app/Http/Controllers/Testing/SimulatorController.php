@@ -28,6 +28,12 @@ class SimulatorController extends Controller
         $this->middleware([ValidateTraceContext::class])->only(['simulator']);
     }
 
+    /**
+     * @param Component $component
+     * @param Component $connection
+     * @param string $path
+     * @return mixed
+     */
     public function __invoke(Component $component, Component $connection, string $path)
     {
         $request = $this->getRequest();
