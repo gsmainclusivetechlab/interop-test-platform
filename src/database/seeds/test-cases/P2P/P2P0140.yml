@@ -76,8 +76,10 @@ test_steps:
     response:
       status: 400
       headers:
-        content-type: 'application/json'
         x-date: '2000-01-01T00:00:00.000Z'
+        content-type: 'application/json'
       body:
-        errorCategory: 'businessRule'
-        errorCode: 'genericError'
+        errorCode: "genericError"
+        errorCategory: "businessRule"
+        errorDateTime: "2000-01-01T00:00:00.000Z"
+        errorDescription: "The specified property contents do not conform to the format required for this Property."
