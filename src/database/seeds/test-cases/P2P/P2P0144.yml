@@ -17,8 +17,9 @@ components:
 test_steps:
 
 ## POST/Quotes: MMO1 -> Mojaloop ##
-  - method: POST
-    path: /quotes
+  - path: /quotes
+    pattern: '^quotes$'
+    method: POST
     source: Mobile Money Operator 1
     target: Mojaloop
     api_scheme: Mojaloop v1.0
