@@ -571,9 +571,9 @@ test_steps:
       status: 200
 
 ##------------------------------GET/Authorizations: MMO2 -> Mojaloop------------------------------##
-  - path: /authorizations
+  - path: /authorizations/{ID}
     method: GET
-    pattern: ^authorizations$
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     source: Mobile Money Operator 2
     target: Mojaloop
     api_spec: Mojaloop v1.0
@@ -601,9 +601,9 @@ test_steps:
       status: 202
 
 ##------------------------------GET/Authorizations: Mojaloop -> MMO1------------------------------##
-  - path: /authorizations
+  - path: /authorizations/{ID}
     method: GET
-    pattern: ^authorizations$
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     source: Mojaloop
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
@@ -631,14 +631,14 @@ test_steps:
       status: 202
 
 ##------------------------------POST/Accounts: MMO1 -> SP------------------------------##
-  - path: /accounts
+  - path: /accounts/msisdn/{msisdn}/authorisationcodes
     method: POST
-    pattern: ^accounts$
+    pattern: '^accounts/msisdn/[+]?[0-9]{6,15}/authorisationcodes$'
     source: Mobile Money Operator 1
     target: Service Provider
     api_spec: MM v1.1.2
     trigger:
-      authorisationCode: '12345'
+      amount: '1011'
     test_request_scripts:
       - name: Amount is correct
         rules:
@@ -671,9 +671,9 @@ test_steps:
         codeState: 'active'
 
 ##------------------------------PUT/Authorizations: MMO1 -> Mojaloop------------------------------##
-  - path: /authorizations
+  - path: /authorizations/{ID}
     method: PUT
-    pattern: ^authorizations$
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     source: Mobile Money Operator 1
     target: Mojaloop
     api_spec: Mojaloop v1.0
@@ -709,9 +709,9 @@ test_steps:
       status: 202
 
 ##------------------------------PUT/Authorizations: Mojaloop -> MMO2------------------------------##
-  - path: /authorizations
+  - path: /authorizations/{ID}
     method: PUT
-    pattern: ^authorizations$
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     source: Mojaloop
     target: Mobile Money Operator 2
     api_spec: Mojaloop v1.0

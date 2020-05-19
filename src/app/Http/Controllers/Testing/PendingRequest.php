@@ -11,27 +11,19 @@ use Psr\Http\Message\RequestInterface;
 class PendingRequest
 {
     /**
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @var callable[
+     * @var callable[]
      */
     protected $mapRequestCallbacks = [];
 
     /**
-     * @var callable[
+     * @var callable[]
      */
     protected $mapResponseCallbacks = [];
 
     /**
-     * @param RequestInterface $request
+     * @var callable[]
      */
-    public function __construct(RequestInterface $request)
-    {
-        $this->request = $request;
-    }
+    protected $beforeSendingCallbacks = [];
 
     /**
      * @param callable $callback
@@ -54,11 +46,22 @@ class PendingRequest
     }
 
     /**
+     * @param callable $callback
+     * @return $this
+     */
+    public function beforeSending(callable $callback)
+    {
+        $this->beforeSendingCallbacks[] = $callback;
+        return $this;
+    }
+
+    /**
+     * @param RequestInterface $request
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function sendAsync()
+    public function transfer(RequestInterface $request)
     {
-        return $this->buildClient()->sendAsync($this->request);
+        return $this->buildClient()->sendAsync($request);
     }
 
     /**
@@ -85,6 +88,10 @@ class PendingRequest
 
         foreach ($this->mapResponseCallbacks as $mapResponseCallback) {
             $stack->push(Middleware::mapResponse($mapResponseCallback));
+        }
+
+        foreach ($this->beforeSendingCallbacks as $beforeSendingCallback) {
+            $stack->push(Middleware::tap($beforeSendingCallback));
         }
 
         return $stack;

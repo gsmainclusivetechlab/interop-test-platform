@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -73,5 +74,14 @@ class Session extends Model
     public function testSteps()
     {
         return $this->belongsToMany(TestStep::class, 'session_test_cases', 'session_id', 'test_case_id', 'id', 'test_case_id');
+    }
+
+    /**
+     * @param Component $component
+     * @return string
+     */
+    public function getBaseUriOfComponent(Component $component)
+    {
+        return Arr::get($this->components()->whereKey($component->getKey())->first(), 'pivot.base_url', $component->base_url);
     }
 }

@@ -8,13 +8,14 @@ use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
+use App\Http\Headers\TracestateHeader;
 use App\Http\Middleware\SetJsonHeaders;
+use App\Models\Component;
 use App\Models\Session;
-use App\Models\TestCase;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 
-class RunController extends Controller
+class SutController extends Controller
 {
     use HasRequest;
 
@@ -28,15 +29,43 @@ class RunController extends Controller
 
     /**
      * @param Session $session
-     * @param TestCase $testCase
+     * @param Component $component
+     * @param Component $connection
      * @param string $path
      * @return mixed
      */
-    public function __invoke(Session $session, TestCase $testCase, string $path)
+    public function __invoke(Session $session, Component $component, Component $connection, string $path)
     {
         $request = $this->getRequest();
-        $testStep = $testCase->testSteps()->firstOrFail();
-        $testRun = $session->testRuns()->create(['test_case_id' => $testStep->test_case_id]);
+        $testStep = $session->testSteps()
+            ->where('method', $request->getMethod())
+            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
+            ->whereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$request->getBody()->getContents()])
+            ->whereHas('source', function ($query) use ($component) {
+                $query->whereKey($component->getKey());
+            })
+            ->whereHas('target', function ($query) use ($connection) {
+                $query->whereKey($connection->getKey());
+            })
+            ->where(function ($query) {
+                $query->where(function ($query) {
+                    $query->where('position', '=', 1);
+                    $query->whereDoesntHave('testRuns', function ($query) {
+                        $query->incompleted();
+                    });
+                })->orWhere(function ($query) {
+                    $query->where('position', '!=', 1);
+                    $query->whereHas('testRuns', function ($query) {
+                        $query->incompleted();
+                    });
+                });
+            })
+            ->firstOrFail();
+
+        $testRun = $session->testRuns()
+            ->incompleted()
+            ->where('test_case_id', $testStep->test_case_id)
+            ->firstOrCreate(['test_case_id' => $testStep->test_case_id]);
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
 
         $traceparent = (new TraceparentHeader())
@@ -47,6 +76,7 @@ class RunController extends Controller
             new Uri($path)
         );
         $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
+            ->withoutHeader(TracestateHeader::NAME)
             ->withUri($uri->withQuery((string) request()->getQueryString()));
 
         return (new PendingRequest())
