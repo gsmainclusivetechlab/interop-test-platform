@@ -8,6 +8,7 @@ use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
+use App\Http\Middleware\SetContentLengthHeaders;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\Session;
 use App\Models\TestCase;
@@ -22,7 +23,7 @@ class RunController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class]);
+        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class]);
     }
 
     /**
@@ -41,12 +42,11 @@ class RunController extends Controller
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $uri = UriResolver::resolve(
-            new Uri($session->getBaseUriOfComponent($testStep->target)),
-            new Uri($path)
-        );
         $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
-            ->withUri($uri->withQuery((string) request()->getQueryString()));
+            ->withUri(UriResolver::resolve(
+                new Uri($session->getBaseUriOfComponent($testStep->target)),
+                (new Uri($path))->withQuery((string) request()->getQueryString())
+            ));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

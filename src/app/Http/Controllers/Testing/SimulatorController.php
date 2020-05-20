@@ -8,13 +8,13 @@ use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
+use App\Http\Middleware\SetContentLengthHeaders;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Component;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SimulatorController extends Controller
@@ -24,8 +24,7 @@ class SimulatorController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class]);
-        $this->middleware([ValidateTraceContext::class])->only(['simulator']);
+        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class, ValidateTraceContext::class]);
     }
 
     /**
@@ -65,11 +64,10 @@ class SimulatorController extends Controller
             ->firstOrFail();
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-        $uri = UriResolver::resolve(
+        $request = $request->withUri(UriResolver::resolve(
             new Uri($testRun->session->getBaseUriOfComponent($testStep->target)),
-            new Uri($path)
-        );
-        $request = $request->withUri($uri->withQuery((string) request()->getQueryString()));
+            (new Uri($path))->withQuery((string) request()->getQueryString())
+        ));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))
