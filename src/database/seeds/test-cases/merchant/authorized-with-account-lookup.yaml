@@ -39,9 +39,7 @@ test_steps:
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount: 'required|in:1010'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -175,15 +173,13 @@ test_steps:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payer.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:1010'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -227,6 +223,9 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 2
     api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '1010'
 
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
@@ -239,15 +238,13 @@ test_steps:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
+          body.payer.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:1010'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -388,9 +385,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:1010'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -467,9 +462,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:1010'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -526,29 +519,9 @@ test_steps:
         amount: '1010'
 
     test_request_scripts:
-      - name: Mandatory IDs is present
-        rules:
-          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Type is a Merchant Payment
-        rules:
-          body.transactionType.scenario: 'required|in:PAYMENT'
-          body.transactionType.initiator: 'required|in:PAYEE'
-          body.transactionType.initiatorType: 'required|in:BUSINESS'
-      - name: Payer wants to send money to Payee
-        rules:
-          body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.transferAmount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.transferAmount.amount: 'required|in:1010'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -587,29 +560,9 @@ test_steps:
         amount: '1000'
 
     test_request_scripts:
-      - name: Mandatory IDs is present
-        rules:
-          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Type is a Merchant Payment
-        rules:
-          body.transactionType.scenario: 'required|in:PAYMENT'
-          body.transactionType.initiator: 'required|in:PAYEE'
-          body.transactionType.initiatorType: 'required|in:BUSINESS'
-      - name: Payer wants to send money to Payee
-        rules:
-          body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.transferAmount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.transferAmount.amount: 'required|in:1010'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -659,9 +612,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:1010'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -725,9 +676,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:1010'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -778,9 +727,6 @@ test_steps:
       amount: '1010'
 
     test_request_scripts:
-      - name: Header has the Url Callback
-        rules:
-          headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and credit party is valid
         rules:
           body.debitParty.*.key: 'required|in:msisdn'
@@ -789,9 +735,7 @@ test_steps:
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount: 'required|in:1010'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -841,7 +785,7 @@ test_steps:
           path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'required|in:COMMITTED'
+          body.transferState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
@@ -892,7 +836,7 @@ test_steps:
           path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'required|in:COMMITTED'
+          body.transferState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
