@@ -5,9 +5,14 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\RegisterPage;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RegisterTest extends DuskTestCase
 {
+    use DatabaseMigrations;
+
+    private $user;
+
     /**
      * Can navigate to login page.
      * @return void
@@ -83,6 +88,10 @@ class RegisterTest extends DuskTestCase
      */
     public function testCanNotRegisterWithExistingEmail()
     {
+        $this->user = $this->user([
+            'email' => 'john.doe@gmail.com'
+        ]);
+
         $this->browse(function (Browser $browser) {
             $browser
                 ->visit(new RegisterPage)

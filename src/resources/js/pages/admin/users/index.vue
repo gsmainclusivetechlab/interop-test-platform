@@ -72,34 +72,33 @@
                                 {{ user.company }}
                             </td>
                             <td class="text-break">
-                                <div class="btn-group">
-                                    <b-dropdown
-                                        no-caret
-                                        right
-                                        size="sm"
-                                        variant="outline-primary"
-                                        toggle-class="text-uppercase"
-                                        boundary="window"
-                                        v-if="!user.trashed && user.can.promoteRole"
-                                    >
-                                        <template v-slot:button-content>
-                                            {{ collect($page.enums.user_roles).get(user.role) }}
-                                        </template>
-                                        <li v-for="(role_name, role) in collect($page.enums.user_roles).except(['superadmin']).all()">
-                                            <inertia-link
-                                                class="dropdown-item"
-                                                method="put"
-                                                :href="route('admin.users.promote-role', [user.id, role])"
-                                                v-bind:class="{active: user.role === role}"
-                                            >
-                                                {{ role_name }}
-                                            </inertia-link>
-                                        </li>
-                                    </b-dropdown>
-                                    <button v-else class="btn btn-sm btn-outline-primary text-uppercase" disabled>
+                                <b-dropdown
+                                    no-caret
+                                    right
+                                    size="sm"
+                                    variant="outline-primary"
+                                    toggle-class="text-uppercase"
+                                    boundary="window"
+                                    menu-class="mt-1"
+                                    v-if="!user.trashed && user.can.promoteRole"
+                                >
+                                    <template v-slot:button-content>
                                         {{ collect($page.enums.user_roles).get(user.role) }}
-                                    </button>
-                                </div>
+                                    </template>
+                                    <li v-for="(role_name, role) in collect($page.enums.user_roles).except(['superadmin']).all()">
+                                        <inertia-link
+                                            class="dropdown-item"
+                                            method="put"
+                                            :href="route('admin.users.promote-role', [user.id, role])"
+                                            v-bind:class="{active: user.role === role}"
+                                        >
+                                            {{ role_name }}
+                                        </inertia-link>
+                                    </li>
+                                </b-dropdown>
+                                <button v-else class="btn btn-sm btn-outline-primary text-uppercase" disabled>
+                                    {{ collect($page.enums.user_roles).get(user.role) }}
+                                </button>
                             </td>
                             <td class="text-break">
                                 {{ user.email_verified_at }}
