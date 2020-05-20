@@ -8,16 +8,17 @@ precondition: |
   - Mobile Money Operator is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "101".
+  - Amount should be the value "100".
+  - PayeeFsp Comission should be the value "1"
+  - PayerFsp Comission should be the value "1"
+  - PayerFsp Fee should be the value "1"
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
-  - Service Provider
   - Mobile Money Operator 1
   - Mobile Money Operator 2
 
 test_steps:
-
 ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
@@ -27,7 +28,8 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '101'
+        amount: '100'
+
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -50,8 +52,7 @@ test_steps:
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -87,7 +88,7 @@ test_steps:
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '101'
+          amount: '100'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -105,7 +106,8 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '101'
+        amount: '100'
+
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -165,7 +167,7 @@ test_steps:
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '101'
+          amount: '100'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -182,8 +184,19 @@ test_steps:
     target: Mojaloop
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
-        amount: '101'
+      transferAmount:
+        amount: '100'
+
+    test_request_setups:
+      - name: Override request
+        values:
+          body.transferAmount.amount: '99'
+          body.transferAmount.currency: 'USD'
+          body.payeeReceiveAmount.amount: '100'
+          body.payeeReceiveAmount.currency: 'USD'
+          body.payeeFspCommission.amount: '1'
+          body.payeeFspCommission.currency: 'USD'
+              
     test_request_scripts:
       - name: Transaction Type is a P2P Transfer
         rules:
@@ -201,17 +214,11 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.transferAmount.amount: 'required|in:99'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.payeeReceiveAmount.amount: 'required|in:100'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspCommission.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.payeeFspCommission.amount: 'required|in:1'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -230,10 +237,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '100'
+          amount: '99'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '101'
+          amount: '100'
         payeeFspCommission:
           currency: 'USD'
           amount: '1'
@@ -252,8 +259,19 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
-        amount: '101'
+      transferAmount:
+        amount: '100'
+
+    test_request_setups:
+      - name: Override request
+        values:
+          body.transferAmount.amount: '99'
+          body.transferAmount.currency: 'USD'
+          body.payeeReceiveAmount.amount: '100'
+          body.payeeReceiveAmount.currency: 'USD'
+          body.payeeFspCommission.amount: '1'
+          body.payeeFspCommission.currency: 'USD'
+
     test_request_scripts:
       - name: Transaction Type is a P2P Transfer
         rules:
@@ -271,17 +289,11 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.transferAmount.amount: 'required|in:99'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.payeeReceiveAmount.amount: 'required|in:100'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspCommission.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.payeeFspCommission.amount: 'required|in:1'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -300,10 +312,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '100'
+          amount: '99'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '101'
+          amount: '100'
         payeeFspCommission:
           currency: 'USD'
           amount: '1'
@@ -323,7 +335,8 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '100'
+        amount: '99'
+
     test_request_scripts:
       - name: Transfer ID is present
         rules:
@@ -336,15 +349,12 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
           body.expiration:
-            - 'required'
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+            - 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: ilpPacket is specified correctly
         rules:
           body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
@@ -371,7 +381,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '100'
+          amount: '99'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -388,7 +398,8 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '100'
+        amount: '99'
+
     test_request_scripts:
       - name: Transfer ID is present
         rules:
@@ -401,15 +412,11 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
-          body.expiration:
-            - 'required'
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+          body.expiration: 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: ilpPacket is specified correctly
         rules:
           body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
@@ -436,7 +443,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '100'
+          amount: '99'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -461,9 +468,7 @@ test_steps:
           body.transactionRequestState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
-          body.completedTimestamp:
-            - 'required'
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+          body.completedTimestamp: 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: fulfilment is specified correctly
         rules:
           body.fulfilment: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
@@ -509,9 +514,7 @@ test_steps:
           body.transactionRequestState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
-          body.completedTimestamp:
-            - 'required'
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+          body.completedTimestamp: 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: fulfilment is specified correctly
         rules:
           body.fulfilment: 'required|regex:/^[A-Za-z0-9-_]{43}$/'

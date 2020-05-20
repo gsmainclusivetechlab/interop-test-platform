@@ -8,35 +8,34 @@ use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
+use App\Http\Middleware\SetContentLengthHeaders;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Component;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 class SimulatorController extends Controller
 {
-    use HasRequest;
-
     /**
      * SimulatorController constructor.
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class]);
-        $this->middleware([ValidateTraceContext::class])->only(['simulator']);
+        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class, ValidateTraceContext::class]);
     }
 
     /**
      * @param Component $component
      * @param Component $connection
      * @param string $path
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Component $component, Component $connection, string $path)
+    public function __invoke(Component $component, Component $connection, string $path, ServerRequestInterface $request)
     {
-        $request = $this->getRequest();
         $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()
@@ -65,11 +64,10 @@ class SimulatorController extends Controller
             ->firstOrFail();
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-        $uri = UriResolver::resolve(
+        $request = $request->withUri(UriResolver::resolve(
             new Uri($testRun->session->getBaseUriOfComponent($testStep->target)),
-            new Uri($path)
-        );
-        $request = $request->withUri($uri->withQuery((string) request()->getQueryString()));
+            (new Uri($path))->withQuery((string) request()->getQueryString())
+        ));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

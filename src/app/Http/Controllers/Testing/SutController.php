@@ -9,22 +9,22 @@ use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
+use App\Http\Middleware\SetContentLengthHeaders;
 use App\Http\Middleware\SetJsonHeaders;
 use App\Models\Component;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
 {
-    use HasRequest;
-
     /**
      * RunController constructor.
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class]);
+        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class]);
     }
 
     /**
@@ -32,11 +32,11 @@ class SutController extends Controller
      * @param Component $component
      * @param Component $connection
      * @param string $path
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Session $session, Component $component, Component $connection, string $path)
+    public function __invoke(Session $session, Component $component, Component $connection, string $path, ServerRequestInterface $request)
     {
-        $request = $this->getRequest();
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
@@ -71,13 +71,12 @@ class SutController extends Controller
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $uri = UriResolver::resolve(
-            new Uri($session->getBaseUriOfComponent($testStep->target)),
-            new Uri($path)
-        );
         $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
             ->withoutHeader(TracestateHeader::NAME)
-            ->withUri($uri->withQuery((string) request()->getQueryString()));
+            ->withUri(UriResolver::resolve(
+                new Uri($session->getBaseUriOfComponent($testStep->target)),
+                (new Uri($path))->withQuery((string) request()->getQueryString())
+            ));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

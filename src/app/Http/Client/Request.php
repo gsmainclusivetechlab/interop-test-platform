@@ -3,6 +3,7 @@
 namespace App\Http\Client;
 
 use App\Models\TestSetup;
+use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\RequestInterface;
@@ -59,7 +60,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             Arr::set($data, $key, $value);
         }
 
-        return new self(new \GuzzleHttp\Psr7\Request(
+        return new self(new ServerRequest(
                 $data['method'],
                 $data['uri'],
                 $data['headers'],
