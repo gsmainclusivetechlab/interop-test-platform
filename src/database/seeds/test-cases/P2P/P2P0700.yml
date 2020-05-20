@@ -44,7 +44,7 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Thu, 30 Apr 2020 16:30:21 GMT'
+        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'payerfsp'
 
     response:
@@ -74,7 +74,7 @@ test_steps:
       uri: /participants/MSISDN/33555123456
       headers:
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Thu, 30 Apr 2020 16:30:21 GMT'
+        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'payerfsp'
       body:
         fspId: 'payeefsp'
@@ -107,7 +107,7 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Thu, 30 Apr 2020 16:30:21 GMT'
+        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'payerfsp'
 
     response:
@@ -137,7 +137,7 @@ test_steps:
       uri: /participants/MSISDN/33555123456
       headers:
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Thu, 30 Apr 2020 16:30:21 GMT'
+        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'payerfsp'
       body:
         fspId: 'payeefsp'
