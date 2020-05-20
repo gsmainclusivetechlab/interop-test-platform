@@ -14,7 +14,6 @@ precondition: |
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
-  - Service Provider
   - Mobile Money Operator 1
   - Mobile Money Operator 2
 
@@ -52,9 +51,9 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:399'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.payerFspFee.amount: 'required|in:1'
           body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -134,9 +133,9 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:399'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.payerFspFee.amount: 'required|in:1'
           body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -198,32 +197,14 @@ test_steps:
     test_request_setups:
       - name: Override request
         values:
-          body:
-            transferAmount:
-              currency: 'USD'
-              amount: '399'
-            payeeReceiveAmount:
-              currency: 'USD'
-              amount: '398'
-            payeeFspFee:
-              currency: 'USD'
-              amount: '1'
+          body.transferAmount.currency: 'USD'
+          body.transferAmount.amount: '399'
+          body.payeeReceiveAmount.currency: 'USD'
+          body.payeeReceiveAmount.amount: '398'
+          body.payeeFspFee.currency: 'USD'
+          body.payeeFspFee.amount: '1'
 
     test_request_scripts:
-      - name: Transaction Type is a P2P Transfer
-        rules:
-          body.transactionType.scenario: 'required|in:TRANSFER'
-          body.transactionType.initiator: 'required|in:PAYER'
-          body.transactionType.initiatorType: 'required|in:CONSUMER'
-      - name: Payer wants to send money to Payee
-        rules:
-          body.amountType: 'required|in:SEND'
-      - name: Payer and Payee parties are present and valid in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amounts and currencies are specified correctly
         rules:
           body.transferAmount.amount: 'required|in:399'
@@ -274,35 +255,7 @@ test_steps:
       transferAmount:
         amount: '399'
 
-    test_request_setups:
-      - name: Override request
-        values:
-          body:
-            transferAmount:
-              currency: 'USD'
-              amount: '399'
-            payeeReceiveAmount:
-              currency: 'USD'
-              amount: '398'
-            payeeFspFee:
-              currency: 'USD'
-              amount: '1'
-
     test_request_scripts:
-      - name: Transaction Type is a P2P Transfer
-        rules:
-          body.transactionType.scenario: 'required|in:TRANSFER'
-          body.transactionType.initiator: 'required|in:PAYER'
-          body.transactionType.initiatorType: 'required|in:CONSUMER'
-      - name: Payer wants to send money to Payee
-        rules:
-          body.amountType: 'required|in:SEND'
-      - name: Payer and Payee parties are present and valid in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amounts and currencies are specified correctly
         rules:
           body.transferAmount.amount: 'required|in:399'
@@ -365,7 +318,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:399'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -428,7 +381,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:399'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
