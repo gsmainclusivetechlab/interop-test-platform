@@ -259,9 +259,9 @@ test_steps:
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:99'
+          body.transferAmount.amount: 'required|in:299'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:100'
+          body.payeeReceiveAmount.amount: 'required|in:300'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspCommission.amount: 'required|in:1'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
@@ -435,10 +435,10 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'required|in:COMMITTED'
+          body.transferState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
@@ -483,10 +483,10 @@ test_steps:
     test_request_scripts:
       - name: ID is Valid
         rules:
-          uri.path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          uri: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Transfer State is COMMITTED
         rules:
-          body.transactionRequestState: 'required|in:COMMITTED'
+          body.transferState: 'required|in:COMMITTED'
       - name: completedTimestamp is specified correctly
         rules:
           body.completedTimestamp:
