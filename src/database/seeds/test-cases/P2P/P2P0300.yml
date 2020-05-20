@@ -253,7 +253,7 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
+      transferAmount:
         amount: '299'
 
     test_request_scripts:
