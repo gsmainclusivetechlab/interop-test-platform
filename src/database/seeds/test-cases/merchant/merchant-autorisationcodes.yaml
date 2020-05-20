@@ -585,7 +585,7 @@ test_steps:
     test_response_scripts:
       - name: Authorisation was successfully accepted
         rules:
-          status: 202
+          status: 'required|in:202'
 
     request:
       method: 'GET'
