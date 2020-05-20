@@ -830,9 +830,6 @@ test_steps:
     trigger:
       amount: '1011'
     test_request_scripts:
-      - name: Header has the Url Callback
-        rules:
-          headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Debit and credit party is valid
         rules:
           body.debitParty.*.key: 'required|in:msisdn'
