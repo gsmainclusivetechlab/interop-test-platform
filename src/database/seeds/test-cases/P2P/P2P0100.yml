@@ -9,18 +9,16 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Amount should be the value "100".
-  - PayeeFsp Comission must be the value "1".
-  - PayerFsp Comission must be the value "1".
-  - PayerFsp Fee must be the value "1".
+  - PayeeFsp Comission should be the value "1".
+  - PayerFsp Comission should be the value "1".
+  - PayerFsp Fee should be the value "1".
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
-  - Service Provider
   - Mobile Money Operator 1
   - Mobile Money Operator 2
 
 test_steps:
-
 ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
@@ -83,10 +81,10 @@ test_steps:
             partyIdentifier: "+33555123456"
           personalInfo:
             complexName:
-              firstName: 'Lars'
-              middleName: 'Per'
-              lastName: 'Bergqvist'
-            dateOfBirth: '1977-07-17'
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
@@ -162,10 +160,10 @@ test_steps:
             partyIdentifier: "+33555123456"
           personalInfo:
             complexName:
-              firstName: 'Lars'
-              middleName: 'Per'
-              lastName: 'Bergqvist'
-            dateOfBirth: '1977-07-17'
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
@@ -186,23 +184,19 @@ test_steps:
     target: Mojaloop
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
+      transferAmount:
         amount: '100'
 
     test_request_setups:
       - name: Override request
         values:
-          body:
-            transferAmount:
-              currency: 'USD'
-              amount: '99'
-            payeeReceiveAmount:
-              currency: 'USD'
-              amount: '100'
-            payeeFspCommission:
-              currency: 'USD'
-              amount: '1'
-
+          body.transferAmount.amount: '99'
+          body.transferAmount.currency: 'USD'
+          body.payeeReceiveAmount.amount: '100'
+          body.payeeReceiveAmount.currency: 'USD'
+          body.payeeFspCommission.amount: '1'
+          body.payeeFspCommission.currency: 'USD'
+              
     test_request_scripts:
       - name: Transaction Type is a P2P Transfer
         rules:
@@ -265,22 +259,18 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
+      transferAmount:
         amount: '100'
 
     test_request_setups:
       - name: Override request
         values:
-          body:
-            transferAmount:
-              currency: 'USD'
-              amount: '99'
-            payeeReceiveAmount:
-              currency: 'USD'
-              amount: '100'
-            payeeFspCommission:
-              currency: 'USD'
-              amount: '1'
+          body.transferAmount.amount: '99'
+          body.transferAmount.currency: 'USD'
+          body.payeeReceiveAmount.amount: '100'
+          body.payeeReceiveAmount.currency: 'USD'
+          body.payeeFspCommission.amount: '1'
+          body.payeeFspCommission.currency: 'USD'
 
     test_request_scripts:
       - name: Transaction Type is a P2P Transfer
