@@ -30,7 +30,12 @@ test_steps:
       - name: Override response
         values:
           status: 400
-          body: {errorCode: "genericError", errorCategory: "businessRule", errorDateTime: "2020-05-12T14:17:59.843Z", errorDescription: "The specified property contents do not conform to the format required for this Property."}
+          body: {
+            errorCode: "genericError",
+            errorCategory: "businessRule",
+            errorDateTime: "2020-05-12T14:17:59.843Z",
+            errorDescription: "The specified property contents do not conform to the format required for this Property."
+            }
 
     request:
       method: POST

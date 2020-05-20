@@ -1,14 +1,15 @@
 name: P2P Accepted - SD
 use_case: P2P
-test_case: P2P0400
+test_case: P2P0800
 behavior: positive
 description: |
-  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Disclosing Fees.
+  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Send and Disclosing Fees.
 precondition: |
   - Mobile Money Operator is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "400".
+  - Mojaloop is responsible to access the Account Lookup System
+  - Amount should be the value "800".
   - PayeeFsp Fee must be the value "1"
   - PayerFsp Fee must be the value "1"
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
@@ -20,6 +21,69 @@ components:
 
 test_steps:
 
+## GET/Participants: MMO1 -> Mojaloop ##
+
+  - path: /participants/{TYPE}/{ID}
+    pattern: '^participants$'
+    method: GET
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: PartyIdType is valid
+        rules:
+          uri.path: 'in:MSISDN'
+
+    test_response_scripts:
+      - name: Participant request was successfully accepted
+        rules:
+          status: 'in:202'
+
+    request:
+      method: GET
+      uri: /participants/MSISDN/33555789123
+      headers:
+        accept: 'application/json'
+        content-type: 'application/vnd.interoperability.participants+json;version=1.0'
+        date: 'Thu, 30 Apr 2020 16:30:21 GMT'
+        fspiop-source: 'payerfsp'
+
+    response:
+      status: 202
+
+## PUT/Participants: Mojaloop -> MMO1 ##
+
+  - path: /participants/{TYPE}/{ID}
+    pattern: '^participants$'
+    method: PUT
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    api_spec: Mojaloop v1.0
+
+    test_request_scripts:
+      - name: FSP ID is correct
+        rules:
+          body.fspId: 'payerfsp'
+
+    test_response_scripts:
+      - name: Participant information was successfully received
+        rules:
+          status: 'in:200'
+
+    request:
+      method: PUT
+      uri: /participants/MSISDN/33555123456
+      headers:
+        content-type: 'application/vnd.interoperability.participants+json;version=1.0'
+        date: 'Thu, 30 Apr 2020 16:30:21 GMT'
+        fspiop-source: 'payerfsp'
+      body:
+        fspId: 'payeefsp'
+
+    response:
+        status: 200
+
 ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
@@ -29,7 +93,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '799'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -90,7 +154,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '399'
+          amount: '799'
         payerFspFee:
           currency: 'USD'
           amount: '1'
@@ -111,7 +175,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '799'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -172,7 +236,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '399'
+          amount: '799'
         payerFspFee:
           currency: 'USD'
           amount: '1'
@@ -193,7 +257,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '399'
+        amount: '799'
 
     test_request_setups:
       - name: Override request
@@ -201,10 +265,10 @@ test_steps:
           body:
             transferAmount:
               currency: 'USD'
-              amount: '399'
+              amount: '799'
             payeeReceiveAmount:
               currency: 'USD'
-              amount: '398'
+              amount: '798'
             payeeFspFee:
               currency: 'USD'
               amount: '1'
@@ -226,9 +290,9 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:399'
+          body.transferAmount.amount: 'required|in:799'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:398'
+          body.payeeReceiveAmount.amount: 'required|in:798'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspFee.amount: 'required|in:1'
           body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
@@ -249,10 +313,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '399'
+          amount: '799'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '398'
+          amount: '798'
         payeeFspFee:
           currency: 'USD'
           amount: '1'
@@ -272,7 +336,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '399'
+        amount: '799'
 
     test_request_setups:
       - name: Override request
@@ -280,10 +344,10 @@ test_steps:
           body:
             transferAmount:
               currency: 'USD'
-              amount: '399'
+              amount: '799'
             payeeReceiveAmount:
               currency: 'USD'
-              amount: '398'
+              amount: '798'
             payeeFspFee:
               currency: 'USD'
               amount: '1'
@@ -305,9 +369,9 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:399'
+          body.transferAmount.amount: 'required|in:799'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:398'
+          body.payeeReceiveAmount.amount: 'required|in:798'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspFee.amount: 'required|in:1'
           body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
@@ -328,10 +392,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '399'
+          amount: '799'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '398'
+          amount: '798'
         payeeFspFee:
           currency: 'USD'
           amount: '1'
@@ -351,7 +415,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '799'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -397,7 +461,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '399'
+          amount: '799'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -414,7 +478,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '799'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -459,7 +523,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '399'
+          amount: '799'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
