@@ -13,11 +13,10 @@ use App\Models\Session;
 use App\Models\TestCase;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 class RunController extends Controller
 {
-    use HasRequest;
-
     /**
      * RunController constructor.
      */
@@ -30,11 +29,11 @@ class RunController extends Controller
      * @param Session $session
      * @param TestCase $testCase
      * @param string $path
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Session $session, TestCase $testCase, string $path)
+    public function __invoke(Session $session, TestCase $testCase, string $path, ServerRequestInterface $request)
     {
-        $request = $this->getRequest();
         $testStep = $testCase->testSteps()->firstOrFail();
         $testRun = $session->testRuns()->create(['test_case_id' => $testStep->test_case_id]);
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);

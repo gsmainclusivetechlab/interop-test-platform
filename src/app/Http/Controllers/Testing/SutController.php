@@ -14,11 +14,10 @@ use App\Models\Component;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
 {
-    use HasRequest;
-
     /**
      * RunController constructor.
      */
@@ -32,11 +31,11 @@ class SutController extends Controller
      * @param Component $component
      * @param Component $connection
      * @param string $path
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Session $session, Component $component, Component $connection, string $path)
+    public function __invoke(Session $session, Component $component, Component $connection, string $path, ServerRequestInterface $request)
     {
-        $request = $this->getRequest();
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])

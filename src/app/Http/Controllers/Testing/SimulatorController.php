@@ -14,11 +14,11 @@ use App\Models\Component;
 use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Illuminate\Support\Facades\Log;
+use Psr\Http\Message\ServerRequestInterface;
 
 class SimulatorController extends Controller
 {
-    use HasRequest;
-
     /**
      * SimulatorController constructor.
      */
@@ -32,11 +32,11 @@ class SimulatorController extends Controller
      * @param Component $component
      * @param Component $connection
      * @param string $path
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Component $component, Component $connection, string $path)
+    public function __invoke(Component $component, Component $connection, string $path, ServerRequestInterface $request)
     {
-        $request = $this->getRequest();
         $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
         $testStep = $testRun->testSteps()
