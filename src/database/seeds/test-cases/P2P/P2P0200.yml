@@ -190,12 +190,12 @@ test_steps:
     test_request_setups:
       - name: Override request
         values:
-            body.transferAmount.amount: '200'
-            body.transferAmount.currency: 'USD'
-            body.payeeReceiveAmount.amount: '199'
-            body.payeeReceiveAmount.currency: 'USD'
-            body.payeeFspCommission.amount: '1'
-            body.payeeFspCommission.currency: 'USD'
+          body.transferAmount.amount: '200'
+          body.transferAmount.currency: 'USD'
+          body.payeeReceiveAmount.amount: '199'
+          body.payeeReceiveAmount.currency: 'USD'
+          body.payeeFspCommission.amount: '1'
+          body.payeeFspCommission.currency: 'USD'
 
     test_request_scripts:
       - name: Transaction Type is a P2P Transfer
