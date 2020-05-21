@@ -82,7 +82,6 @@ class TestCaseTest extends BaseTestCase
     protected static function rules()
     {
         return [
-            'uuid' => ['required', 'string', 'max:36'],
             'use_case_id' => ['required', 'exists:use_cases,id'],
             'name' => ['required', 'string', 'max:255'],
             'behavior' => ['required', 'string', 'max:255'],
@@ -99,7 +98,6 @@ class TestCaseTest extends BaseTestCase
     protected static function emptyData()
     {
         return [
-            'uuid' => null,
             'use_case_id' => null,
             'name' => null,
             'behavior' => null,
@@ -116,7 +114,6 @@ class TestCaseTest extends BaseTestCase
     protected static function invalidData()
     {
         return [
-            'uuid' => Str::random(500),
             'use_case_id' => Str::random(500),
             'name' => Str::random(500),
             'behavior' => Str::random(500),

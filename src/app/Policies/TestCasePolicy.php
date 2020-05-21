@@ -17,11 +17,7 @@ class TestCasePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        if ($user->isTestCaseCreator() && in_array($ability, ['viewAny', 'view', 'create'])) {
+        if ($user->canAdmin()) {
             return true;
         }
     }

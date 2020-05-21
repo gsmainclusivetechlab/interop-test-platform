@@ -15,7 +15,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return $user->canAdmin();
     }
 
     /**
@@ -25,7 +25,7 @@ class UserPolicy
      */
     public function view(User $user, User $model)
     {
-        return $user->isAdmin();
+        return $user->canAdmin();
     }
 
     /**
@@ -34,7 +34,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return $user->canAdmin();
     }
 
     /**
@@ -44,7 +44,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return $user->isAdmin();
+        return $user->canAdmin();
     }
 
     /**
@@ -54,7 +54,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return ($user->isAdmin() && !$model->isAdmin()) || ($user->isSuperAdmin() && !$user->is($model));
+        return ($user->canAdmin() && !$model->canAdmin()) || ($user->canSuperAdmin() && !$user->is($model));
     }
 
     /**
@@ -64,7 +64,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        return ($user->isAdmin() && !$model->isAdmin()) || ($user->isSuperAdmin() && !$user->is($model));
+        return ($user->canAdmin() && !$model->canAdmin()) || ($user->canSuperAdmin() && !$user->is($model));
     }
 
     /**
@@ -74,7 +74,7 @@ class UserPolicy
      */
     public function verify(User $user, User $model)
     {
-        return ($user->isAdmin() && !$user->is($model) && !$model->hasVerifiedEmail());
+        return ($user->canAdmin() && !$user->is($model) && !$model->hasVerifiedEmail());
     }
 
     /**
@@ -84,6 +84,6 @@ class UserPolicy
      */
     public function promoteRole(User $user, User $model)
     {
-        return ($user->isSuperAdmin() && !$user->is($model));
+        return ($user->canSuperAdmin() && !$user->is($model));
     }
 }

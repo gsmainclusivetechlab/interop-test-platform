@@ -86,11 +86,10 @@ class TestStepTest extends TestCase
             'test_case_id' => ['required', 'exists:test_cases,id'],
             'source_id' => ['required', 'exists:components,id'],
             'target_id' => ['required', 'exists:components,id'],
-            'api_scheme_id' => ['exists:api_schemes,id'],
+            'api_spec_id' => ['exists:api_specs,id'],
             'name' => ['required', 'string', 'max:255'],
             'request' => ['string'],
             'response' => ['string'],
-            'position' => ['required', 'integer'],
         ];
     }
 
@@ -105,11 +104,10 @@ class TestStepTest extends TestCase
             'test_case_id' => null,
             'source_id' => null,
             'target_id' => null,
-            'api_scheme_id' => null,
+            'api_spec_id' => null,
             'name' => null,
             'request' => null,
             'response' => null,
-            'position' => null,
         ];
     }
 
@@ -124,11 +122,10 @@ class TestStepTest extends TestCase
             'test_case_id' => Str::random(500),
             'source_id' => Str::random(500),
             'target_id' => Str::random(500),
-            'api_scheme_id' => Str::random(500),
+            'api_spec_id' => Str::random(500),
             'name' => Str::random(500),
             'request' => 125,
             'response' => 125,
-            'position' => Str::random(500),
         ];
     }
 }

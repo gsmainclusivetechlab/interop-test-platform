@@ -36,12 +36,6 @@ class RoleSuperAdminTest extends DuskTestCase
             'role' => User::ROLE_USER
         ]);
 
-        $this->testCaseCreator = $this->user([
-            'first_name' => 'GSMA',
-            'last_name' => 'Test Case Creator',
-            'role' => User::ROLE_TEST_CASE_CREATOR
-        ]);
-
         $this->superAdmin = $this->user([
             'first_name' => 'GSMA',
             'last_name' => 'Super Admin',
@@ -201,83 +195,6 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
                     $tr
                         ->assertSeeLink($this->user->email)
-                        ->with('td:last-child', function ($td) {
-                            $td
-                                ->click('.dropdown-toggle')
-                                ->waitFor('.dropdown-menu')
-                                ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Delete');
-                                });
-                        });
-                })
-                ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
-                })
-                ->waitForText('User deleted successfully')
-                ->assertVisible('@notificationBox');
-        });
-    }
-
-    /**
-     * Can block and unblock users with role test case creator.
-     * @return void
-     */
-    public function testCanBlockAndUnblockUsersWithRoleTestCaseCreator()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser
-                ->loginAs($this->superAdmin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(3) td:last-child', function ($td) {
-                    $td
-                        ->click('.dropdown-toggle')
-                        ->waitFor('.dropdown-menu')
-                        ->with('.dropdown-menu', function ($dropdown) {
-                            $dropdown
-                                ->clickLink('Block');
-                        });
-                })
-                ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
-                })
-                ->waitForText('User blocked successfully')
-                ->assertVisible('@notificationBox')
-                ->click('@blockedUsersLink')
-                ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) {
-                    $tr
-                        ->assertSeeLink($this->testCaseCreator->email)
-                        ->with('td:last-child', function ($td) {
-                            $td
-                                ->click('.dropdown-toggle')
-                                ->waitFor('.dropdown-menu')
-                                ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Unblock');
-                                });
-                        });
-                })
-                ->waitForText('User unblocked successfully')
-                ->assertVisible('@notificationBox');
-        });
-    }
-
-    /**
-     * Can delete users with role test case creator.
-     * @return void
-     */
-    public function testCanDeleteUsersWithRoleTestCaseCreator()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser
-                ->loginAs($this->superAdmin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(3)', function ($tr) {
-                    $tr
-                        ->assertSeeLink($this->testCaseCreator->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')
