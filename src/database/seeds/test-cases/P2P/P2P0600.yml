@@ -19,6 +19,7 @@ components:
   - Mobile Money Operator 2
 
 test_steps:
+
 ## GET/Participants: MMO1 -> Mojaloop ##
   - path: /participants/{TYPE}/{ID}
     pattern: '^participants/[A-Z]/[a-z0-9]$'
@@ -90,7 +91,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '600'
+        amount: '599'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -149,7 +150,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '600'
+          amount: '599'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -167,7 +168,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '600'
+        amount: '599'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -226,7 +227,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '600'
+          amount: '599'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -244,14 +245,14 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '600'
+        amount: '599'
 
     test_request_setups:
       - name: Override request
         values:
-          body.transferAmount.amount: '600'
+          body.transferAmount.amount: '599'
           body.transferAmount.currency: 'USD'
-          body.payeeReceiveAmount.amount: '599'
+          body.payeeReceiveAmount.amount: '598'
           body.payeeReceiveAmount.currency: 'USD'
           body.payeeFspCommission.amount: '1'
           body.payeeFspCommission.currency: 'USD'
@@ -259,9 +260,9 @@ test_steps:
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:600'
+          body.transferAmount.amount: 'required|in:599'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:599'
+          body.payeeReceiveAmount.amount: 'required|in:598'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspCommission.amount: 'required|in:1'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
@@ -282,10 +283,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '600'
+          amount: '599'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '599'
+          amount: '598'
         payeeFspCommission:
           currency: 'USD'
           amount: '1'
@@ -305,14 +306,14 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '600'
+        amount: '599'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:600'
+          body.transferAmount.amount: 'required|in:599'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:599'
+          body.payeeReceiveAmount.amount: 'required|in:598'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspCommission.amount: 'required|in:1'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
@@ -333,10 +334,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '600'
+          amount: '599'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '599'
+          amount: '598'
         payeeFspCommission:
           currency: 'USD'
           amount: '1'

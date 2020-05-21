@@ -20,70 +20,8 @@ components:
   - Mobile Money Operator 2
 
 test_steps:
-## GET/Participants: MMO1 -> Mojaloop ##
-  - path: /participants/{TYPE}/{ID}
-    pattern: '^participants/[A-Z]/[a-z0-9]$'
-    method: GET
-    source: Mobile Money Operator 1
-    target: Mojaloop
-    api_spec: Mojaloop v1.0
-
-    test_request_scripts:
-      - name: PartyIdType is valid
-        rules:
-          uri: 'required|in:MSISDN'
-
-    test_response_scripts:
-      - name: Participant request was successfully accepted
-        rules:
-          status: 'required|in:202'
-
-    request:
-      method: GET
-      uri: /participants/MSISDN/33555789123
-      headers:
-        accept: 'application/json'
-        content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-
-    response:
-      status: 202
-
-## PUT/Participants: Mojaloop -> MMO1 ##
-
-  - path: /participants/{TYPE}/{ID}
-    pattern: '^participants/[A-Z]/[a-z0-9]$'
-    method: PUT
-    source: Mojaloop
-    target: Mobile Money Operator 1
-    api_spec: Mojaloop v1.0
-
-    test_request_scripts:
-      - name: FSP ID is correct
-        rules:
-          body.fspId: 'required|regex:/[0-9a-z]{1,32}$/'
-
-    test_response_scripts:
-      - name: Participant information was successfully received
-        rules:
-          status: 'required|in:200'
-
-    request:
-      method: PUT
-      uri: /participants/MSISDN/33555123456
-      headers:
-        content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-      body:
-        fspId: 'payeefsp'
-
-    response:
-        status: 200
 
 ## GET/Participants: MMO1 -> Mojaloop ##
-
   - path: /participants/{TYPE}/{ID}
     pattern: '^participants/[A-Z]/[a-z0-9]$'
     method: GET
@@ -318,8 +256,8 @@ test_steps:
     target: Mojaloop
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
-        amount: '700'
+      transferAmount:
+        amount: '699'
 
     test_request_setups:
       - name: Override request
@@ -379,8 +317,8 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
-        amount: '700'
+      transferAmount:
+        amount: '699'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly

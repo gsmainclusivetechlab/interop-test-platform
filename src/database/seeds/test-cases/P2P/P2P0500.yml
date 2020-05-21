@@ -244,8 +244,8 @@ test_steps:
     target: Mojaloop
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
-        amount: '500'
+      transferAmount:
+        amount: '499'
 
     test_request_setups:
       - name: Override request
@@ -305,8 +305,8 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      payeeReceiveAmount:
-        amount: '500'
+      transferAmount:
+        amount: '499'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly

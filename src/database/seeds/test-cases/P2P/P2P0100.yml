@@ -19,6 +19,7 @@ components:
   - Mobile Money Operator 2
 
 test_steps:
+
 ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
@@ -182,7 +183,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '100'
+        amount: '99'
 
     test_request_setups:
       - name: Override request
@@ -193,7 +194,7 @@ test_steps:
           body.payeeReceiveAmount.currency: 'USD'
           body.payeeFspCommission.amount: '1'
           body.payeeFspCommission.currency: 'USD'
-              
+
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:

@@ -19,6 +19,7 @@ components:
   - Mobile Money Operator 2
 
 test_steps:
+
 ## GET/Participants: MMO1 -> Mojaloop ##
   - path: /participants/{TYPE}/{ID}
     pattern: '^participants/[A-Z]/[a-z0-9]$'
@@ -90,7 +91,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '800'
+        amount: '799'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -113,7 +114,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:800'
+          body.amount.amount: 'required|in:799'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payerFspFee.amount: 'required|in:1'
           body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
@@ -151,7 +152,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '800'
+          amount: '799'
         payerFspFee:
           currency: 'USD'
           amount: '1'
@@ -172,7 +173,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '800'
+        amount: '799'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -233,7 +234,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '800'
+          amount: '799'
         payerFspFee:
           currency: 'USD'
           amount: '1'
@@ -254,14 +255,14 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '800'
+        amount: '799'
 
     test_request_setups:
       - name: Override request
         values:
-          body.transferAmount.amount: '800'
+          body.transferAmount.amount: '799'
           body.transferAmount.currency: 'USD'
-          body.payeeReceiveAmount.amount: '799'
+          body.payeeReceiveAmount.amount: '798'
           body.payeeReceiveAmount.currency: 'USD'
           body.payeeFspCommission.amount: '1'
           body.payeeFspCommission.currency: 'USD'
@@ -269,9 +270,9 @@ test_steps:
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:800'
+          body.transferAmount.amount: 'required|in:799'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:799'
+          body.payeeReceiveAmount.amount: 'required|in:798'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspFee.amount: 'required|in:1'
           body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
@@ -292,10 +293,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '800'
+          amount: '799'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '799'
+          amount: '798'
         payeeFspFee:
           currency: 'USD'
           amount: '1'
@@ -315,14 +316,14 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '800'
+        amount: '799'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:800'
+          body.transferAmount.amount: 'required|in:799'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:799'
+          body.payeeReceiveAmount.amount: 'required|in:798'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payeeFspFee.amount: 'required|in:1'
           body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
@@ -343,10 +344,10 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '800'
+          amount: '799'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '799'
+          amount: '798'
         payeeFspFee:
           currency: 'USD'
           amount: '1'
@@ -366,7 +367,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '800'
+        amount: '799'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -380,7 +381,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:800'
+          body.amount.amount: 'required|in:799'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -413,7 +414,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '800'
+          amount: '799'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -430,7 +431,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '800'
+        amount: '799'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -444,7 +445,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:800'
+          body.amount.amount: 'required|in:799'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -477,7 +478,7 @@ test_steps:
         payerFsp: 'payerfsp'
         amount:
           currency: 'USD'
-          amount: '800'
+          amount: '799'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
