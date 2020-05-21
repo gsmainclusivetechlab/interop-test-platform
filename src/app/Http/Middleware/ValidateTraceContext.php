@@ -18,7 +18,7 @@ class ValidateTraceContext
      */
     public function handle($request, Closure $next)
     {
-        if ($this->hasValidTraceContext($request)) {
+        if ($request->headers->get(TraceparentHeader::NAME)) {
             return $next($request);
         }
 
