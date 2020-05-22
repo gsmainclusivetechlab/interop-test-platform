@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Testing\Handlers\BeforeSendingHandler;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
+use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Middleware\SetContentLengthHeaders;
@@ -51,8 +51,8 @@ class RunController extends Controller
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->beforeSending(new BeforeSendingHandler($testResult))
             ->transfer($request)
+            ->then(new SendingFulfilledHandler($testResult))
             ->otherwise(new SendingRejectedHandler($testResult))
             ->wait();
     }

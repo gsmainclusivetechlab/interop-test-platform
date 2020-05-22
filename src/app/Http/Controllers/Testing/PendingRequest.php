@@ -21,11 +21,6 @@ class PendingRequest
     protected $mapResponseCallbacks = [];
 
     /**
-     * @var callable[]
-     */
-    protected $beforeSendingCallbacks = [];
-
-    /**
      * @param callable $callback
      * @return $this
      */
@@ -42,16 +37,6 @@ class PendingRequest
     public function mapResponse(callable $callback)
     {
         $this->mapResponseCallbacks[] = $callback;
-        return $this;
-    }
-
-    /**
-     * @param callable $callback
-     * @return $this
-     */
-    public function beforeSending(callable $callback)
-    {
-        $this->beforeSendingCallbacks[] = $callback;
         return $this;
     }
 
@@ -88,10 +73,6 @@ class PendingRequest
 
         foreach ($this->mapResponseCallbacks as $mapResponseCallback) {
             $stack->push(Middleware::mapResponse($mapResponseCallback));
-        }
-
-        foreach ($this->beforeSendingCallbacks as $beforeSendingCallback) {
-            $stack->push(Middleware::tap($beforeSendingCallback));
         }
 
         return $stack;
