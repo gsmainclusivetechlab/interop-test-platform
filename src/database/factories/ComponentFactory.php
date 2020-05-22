@@ -23,3 +23,7 @@ $factory->define(Component::class, function (Faker $faker) {
         'description' => $faker->text,
     ];
 });
+
+$factory->afterCreatingState(Component::class, 'withConnection', function (Component $component) {
+    $component->connections()->attach(factory(Component::class)->create()->getKey());
+});

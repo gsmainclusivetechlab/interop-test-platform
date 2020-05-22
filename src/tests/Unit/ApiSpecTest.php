@@ -9,26 +9,27 @@ use Tests\TestCase;
 class ApiSpecTest extends TestCase
 {
     /**
-     * Test ApiSpec with valid data.
+     * Test ApiSpec store.
      *
      * @return void
      */
-    public function testApiSpecValidData()
+    public function testApiSpecStore()
     {
         $apiSpec = factory(ApiSpec::class)->make();
-        $this->assertValidationPasses($apiSpec->attributesToArray(), [
+        $this->assertValidationPasses($apiSpec->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
             'openapi' => ['required'],
             'description' => ['required', 'string'],
         ]);
+        $this->assertTrue($apiSpec->save());
     }
 
     /**
-     * Test ApiSpec OpenAPi instance.
+     * Test ApiSpec contains OpenAPi instance.
      *
      * @return void
      */
-    public function testApiSpecOpenApi()
+    public function testApiSpecContainsOpenApi()
     {
         $apiSpec = factory(ApiSpec::class)->create();
         $this->assertInstanceOf(OpenApi::class, $apiSpec->openapi);

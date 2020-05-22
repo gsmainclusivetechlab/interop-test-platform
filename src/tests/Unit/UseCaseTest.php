@@ -8,17 +8,18 @@ use Tests\TestCase;
 class UseCaseTest extends TestCase
 {
     /**
-     * Test UseCase with valid data.
+     * Test UseCase store.
      *
      * @return void
      */
-    public function testUseCaseValidData()
+    public function testUseCaseStore()
     {
         $useCase = factory(UseCase::class)->make();
-        $this->assertValidationPasses($useCase->attributesToArray(), [
+        $this->assertValidationPasses($useCase->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
         ]);
+        $this->assertTrue($useCase->save());
     }
 
     /**

@@ -9,20 +9,21 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     /**
-     * Test User with valid data.
+     * Test User store.
      *
      * @return void
      */
-    public function testUserValidData()
+    public function testUserStore()
     {
         $user = factory(User::class)->make();
-        $this->assertValidationPasses($user->attributesToArray(), [
+        $this->assertValidationPasses($user->getAttributes(), [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'company' => ['string', 'max:255'],
             'role' => ['required', Rule::in([User::ROLE_USER, User::ROLE_ADMIN, User::ROLE_SUPERADMIN])],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
         ]);
+        $this->assertTrue($user->save());
     }
 
     /**
@@ -52,7 +53,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test User canAdmin.
+     * Test User can admin.
      *
      * @return void
      */
@@ -67,7 +68,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * Test User canSuperadmin.
+     * Test User can super admin.
      *
      * @return void
      */

@@ -8,18 +8,19 @@ use Tests\TestCase;
 class ComponentTest extends TestCase
 {
     /**
-     * Test Component with valid data.
+     * Test Component store.
      *
      * @return void
      */
-    public function testComponentValidData()
+    public function testComponentStore()
     {
         $component = factory(Component::class)->make();
-        $this->assertValidationPasses($component->attributesToArray(), [
+        $this->assertValidationPasses($component->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
             'base_url' => ['required', 'url'],
             'description' => ['required', 'string'],
         ]);
+        $this->assertTrue($component->save());
     }
 
     /**

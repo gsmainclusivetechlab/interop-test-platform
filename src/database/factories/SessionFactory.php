@@ -20,7 +20,7 @@ use Faker\Generator as Faker;
 $factory->define(Session::class, function (Faker $faker) {
     return [
         'owner_id' => function () {
-            return factory(User::class)->create()->id;
+            return factory(User::class)->create()->getKey();
         },
         'name' => $faker->text,
         'description' => $faker->text,

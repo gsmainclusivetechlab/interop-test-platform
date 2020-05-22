@@ -15,7 +15,9 @@ class RefreshDatabaseExtension implements BeforeFirstTestHook, AfterLastTestHook
      */
     public function executeBeforeFirstTest(): void
     {
-        $this->createApplication()->make(Kernel::class)->call('migrate:fresh');
+        $app = $this->createApplication();
+        $app->make(Kernel::class)->call('migrate:fresh');
+//        $app->make(Kernel::class)->call('db:seed --class=TestDatabaseSeeder');
     }
 
     /**
@@ -23,6 +25,7 @@ class RefreshDatabaseExtension implements BeforeFirstTestHook, AfterLastTestHook
      */
     public function executeAfterLastTest(): void
     {
-        $this->createApplication()->make(Kernel::class)->call('migrate:rollback');
+        $app = $this->createApplication();
+//        $app->make(Kernel::class)->call('migrate:rollback');
     }
 }
