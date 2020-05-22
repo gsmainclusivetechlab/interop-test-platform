@@ -31,7 +31,7 @@ test_steps:
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri.path: 'required|in:MSISDN'
+          uri: 'required|in:MSISDN'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
