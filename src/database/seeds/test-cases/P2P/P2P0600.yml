@@ -114,7 +114,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:600'
+          body.amount.amount: 'required|in:599'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -191,7 +191,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:600'
+          body.amount.amount: 'required|in:599'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
