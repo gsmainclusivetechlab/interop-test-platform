@@ -49,7 +49,6 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8'],
             'terms' => ['required'],
-            'code' => ['required', 'in:ITPBETA2020'],
         ]);
     }
 
