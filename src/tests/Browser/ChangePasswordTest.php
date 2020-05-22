@@ -2,27 +2,13 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\ChangePasswordPage;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ChangePasswordTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->user();
-    }
-
     /**
      * Can navigate to profile settings page.
      * @return void
@@ -30,8 +16,9 @@ class ChangePasswordTest extends DuskTestCase
     public function testCanNavigateToProfileSettingsPage()
     {
         $this->browse(function (Browser $browser) {
+            $user = factory(User::class)->create();
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit(new ChangePasswordPage)
                 ->click('@profileSettingsLink')
                 ->waitForLocation('/settings/profile')
@@ -46,8 +33,9 @@ class ChangePasswordTest extends DuskTestCase
     public function testCanNavigateToResetPasswordPage()
     {
         $this->browse(function (Browser $browser) {
+            $user = factory(User::class)->create();
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit(new ChangePasswordPage)
                 ->click('@forgotPasswordLink')
                 ->waitForLocation('/password/reset')
@@ -62,10 +50,11 @@ class ChangePasswordTest extends DuskTestCase
     public function testCanChangeProfilePassword()
     {
         $this->browse(function (Browser $browser) {
+            $user = factory(User::class)->create();
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit(new ChangePasswordPage)
-                ->type('@currentPassword', self::$userPassword)
+                ->type('@currentPassword', 'password')
                 ->type('@password', 'passwordUpdated')
                 ->type('@passwordConfirmation', 'passwordUpdated')
                 ->press('@submitButton')
