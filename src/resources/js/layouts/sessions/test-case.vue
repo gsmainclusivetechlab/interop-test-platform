@@ -83,6 +83,14 @@
                             <div class="col">
                                 <div class="d-flex align-items-baseline border-bottom mb-4">
                                     <ul class="nav nav-tabs mx-0 border-0">
+                                         <li class="nav-item">
+                                            <inertia-link
+                                                href="#"
+                                                class="nav-link rounded-0"
+                                            >
+                                                Overview
+                                            </inertia-link>
+                                        </li>
                                         <li class="nav-item">
                                             <inertia-link
                                                 :href="route('sessions.test-cases.show', [session.id, testCase.id])"
