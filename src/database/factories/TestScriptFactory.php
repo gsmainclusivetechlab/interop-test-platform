@@ -20,14 +20,14 @@ use Faker\Generator as Faker;
 $factory->define(TestScript::class, function (Faker $faker) {
     return [
         'test_step_id' => function () {
-            return factory(TestStep::class)->create()->id;
+            return factory(TestStep::class)->create()->getKey();
         },
         'name' => $faker->text,
         'type' => $faker->randomElement([
             TestScript::TYPE_REQUEST,
             TestScript::TYPE_RESPONSE,
         ]),
-        'rules' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
-        'messages' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
+        'rules' => $faker->randomElements(),
+        'messages' => $faker->randomElements(),
     ];
 });

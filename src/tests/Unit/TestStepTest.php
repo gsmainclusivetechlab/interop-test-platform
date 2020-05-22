@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Http\Client\Request;
+use App\Http\Client\Response;
 use App\Models\TestStep;
 use Tests\TestCase;
 
@@ -24,6 +26,28 @@ class TestStepTest extends TestCase
             'response' => ['required'],
         ]);
         $this->assertTrue($testStep->save());
+    }
+
+    /**
+     * Test TestStep contains Request instance.
+     *
+     * @return void
+     */
+    public function testTestStepContainsRequest()
+    {
+        $testStep = factory(TestStep::class)->create();
+        $this->assertInstanceOf(Request::class, $testStep->request);
+    }
+
+    /**
+     * Test TestStep contains Response instance.
+     *
+     * @return void
+     */
+    public function testTestStepContainsResponse()
+    {
+        $testStep = factory(TestStep::class)->create();
+        $this->assertInstanceOf(Response::class, $testStep->response);
     }
 
     /**
