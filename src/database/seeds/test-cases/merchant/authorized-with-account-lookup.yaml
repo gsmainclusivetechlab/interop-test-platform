@@ -99,7 +99,7 @@ test_steps:
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri.path: 'required|in:MSISDN'
+          uri: 'required|in:MSISDN'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
@@ -131,7 +131,7 @@ test_steps:
     test_request_scripts:
       - name: FSP ID is correct
         rules:
-          body.fspId: 'required|in:payerfsp'
+          body.fspId: 'required|regex:/^[a-z0-9A-Z]/'
 
     test_response_scripts:
       - name: Participant information was successfully received
