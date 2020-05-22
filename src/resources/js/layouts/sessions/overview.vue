@@ -70,23 +70,29 @@
                                                         <ul class="list-unstyled">
                                                             <li
                                                                 v-for="testCase in collect(useCase.testCases).where('behavior', 'positive').all()"
-                                                                class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
+                                                                class="list-group-item-action border-bottom"
                                                             >
-                                                                <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
-                                                                    {{ testCase.name }}
+                                                                <inertia-link
+                                                                    :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                                                                    class="d-flex justify-content-between align-items-center pl-5 pr-4 py-2"
+                                                                >
+                                                                    <span>
+                                                                        {{ testCase.name }}
+                                                                    </span>
+
+                                                                    <span
+                                                                        v-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && testCase.lastTestRun.successful"
+                                                                        class="flex-shrink-0 mr-0 ml-1  badge bg-success"
+                                                                    ></span>
+                                                                    <span
+                                                                        v-else-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && !testCase.lastTestRun.successful"
+                                                                        class="flex-shrink-0 mr-0 ml-1  badge bg-danger"
+                                                                    ></span>
+                                                                    <span
+                                                                        v-else
+                                                                        class="flex-shrink-0 mr-0 ml-1 badge bg-secondary"
+                                                                    ></span>
                                                                 </inertia-link>
-                                                                <span
-                                                                    v-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && testCase.lastTestRun.successful"
-                                                                    class="flex-shrink-0 mr-0 ml-1  badge bg-success"
-                                                                ></span>
-                                                                <span
-                                                                    v-else-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && !testCase.lastTestRun.successful"
-                                                                    class="flex-shrink-0 mr-0 ml-1  badge bg-danger"
-                                                                ></span>
-                                                                <span
-                                                                    v-else
-                                                                    class="flex-shrink-0 mr-0 ml-1 badge bg-secondary"
-                                                                ></span>
                                                             </li>
                                                         </ul>
                                                     </b-collapse>
@@ -110,23 +116,29 @@
                                                         <ul class="list-unstyled">
                                                             <li
                                                                 v-for="testCase in collect(useCase.testCases).where('behavior', 'negative').all()"
-                                                                class="list-group-item-action d-flex justify-content-between align-items-center pl-5 pr-4 py-2 border-bottom"
+                                                                class="list-group-item-action border-bottom"
                                                             >
-                                                                <inertia-link :href="route('sessions.test-cases.show', [session.id, testCase.id])">
-                                                                    {{ testCase.name }}
+                                                                <inertia-link
+                                                                    :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                                                                    class="d-flex justify-content-between align-items-center pl-5 pr-4 py-2"
+                                                                >
+                                                                    <span>
+                                                                        {{ testCase.name }}
+                                                                    </span>
+
+                                                                    <span
+                                                                        v-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && testCase.lastTestRun.successful"
+                                                                        class="flex-shrink-0 mr-0 ml-1  badge bg-success"
+                                                                    ></span>
+                                                                    <span
+                                                                        v-else-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && !testCase.lastTestRun.successful"
+                                                                        class="flex-shrink-0 mr-0 ml-1  badge bg-danger"
+                                                                    ></span>
+                                                                    <span
+                                                                        v-else
+                                                                        class="flex-shrink-0 mr-0 ml-1 badge bg-secondary"
+                                                                    ></span>
                                                                 </inertia-link>
-                                                                <span
-                                                                    v-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && testCase.lastTestRun.successful"
-                                                                    class="flex-shrink-0 mr-0 ml-1  badge bg-success"
-                                                                ></span>
-                                                                <span
-                                                                    v-else-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && !testCase.lastTestRun.successful"
-                                                                    class="flex-shrink-0 mr-0 ml-1  badge bg-danger"
-                                                                ></span>
-                                                                <span
-                                                                    v-else
-                                                                    class="flex-shrink-0 mr-0 ml-1 badge bg-secondary"
-                                                                ></span>
                                                             </li>
                                                         </ul>
                                                     </b-collapse>
