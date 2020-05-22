@@ -8,10 +8,12 @@ use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestResultResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\UseCaseResource;
 use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\TestRun;
+use App\Models\UseCase;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 
@@ -45,6 +47,24 @@ class TestRunController extends Controller
                     },
                 ])
             ))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::with([
+                    'testCases' => function ($query) use($session) {
+                        $query->with([
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ])->whereHas('sessions', function ($query) use($session) {
+                            $query->whereKey($session->getKey());
+                        });
+                    }])
+                    ->whereHas('testCases', function ($query) use($session) {
+                        $query->whereHas('sessions', function ($query) use($session) {
+                            $query->whereKey($session->getKey());
+                        });
+                    })
+                    ->get()
+            ),
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),

@@ -1,18 +1,14 @@
 <template>
-    <layout :session="session" :test-case="testCase">
+    <layout :session="session" :useCases="useCases" :test-case="testCase">
         <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <b>{{ `Test runs of ${testCase.name}` }}</b>
-                </h2>
-            </div>
-
             <div class="empty h-auto" v-if="!testRuns.data.length">
                 <div class="row">
                     <div class="col-10 mx-auto">
-                        <p class="empty-title h3 mb-3">You have no test runs for test case</p>
+                        <p class="empty-title h3 mb-3">
+                            You have no test runs for this test case
+                        </p>
                         <p class="empty-subtitle text-muted mb-0">
-                            Follow the instuctions in the Overview to make your first test run or click the button below to learn more from our enhanced Tutorial.
+                            Follow the instructions in the Overview to make your first test run or click the button below to learn more from our enhanced Tutorial.
                         </p>
                         <div class="empty-action">
                             <inertia-link
@@ -28,6 +24,11 @@
             </div>
 
             <div v-else>
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <b>{{ `Test runs of ${testCase.name}` }}</b>
+                    </h2>
+                </div>
                 <div class="table-responsive mb-0">
                     <table class="table table-striped table-hover card-table">
                         <thead>
@@ -88,6 +89,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         },

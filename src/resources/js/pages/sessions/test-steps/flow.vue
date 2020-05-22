@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session" :test-case="testCase">
+    <layout :session="session" :testCase="testCase" :useCases="useCases">
         <div class="card mb-0">
             <div class="card-header justify-content-between">
                 <h2 class="card-title">
@@ -41,6 +41,10 @@ export default {
             required: true
         },
         testCase: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         },

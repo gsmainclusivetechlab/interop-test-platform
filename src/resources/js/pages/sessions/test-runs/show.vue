@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session" :test-case="testCase">
+    <layout :session="session" :testCase="testCase" :useCases="useCases">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
@@ -396,6 +396,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         },

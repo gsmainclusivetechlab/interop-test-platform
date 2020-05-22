@@ -1,16 +1,10 @@
 <template>
     <layout :session="session" :useCases="useCases">
         <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <b>Latest test runs</b>
-                </h2>
-            </div>
-
             <div class="empty h-auto" v-if="!testRuns.data.length">
                 <div class="row">
                     <div class="col-10 mx-auto">
-                        <p class="empty-title h3 mb-3">You have no test runs for session</p>
+                        <p class="empty-title h3 mb-3">You have no test runs for this session</p>
                         <p class="empty-subtitle text-muted mb-0">
                             Select any test case in the left menu to get more information about it and make your first test run or click the button below to learn more from our enhanced Tutorial.
                         </p>
@@ -28,6 +22,12 @@
             </div>
 
             <template v-else>
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <b>Latest test runs</b>
+                    </h2>
+                </div>
+
                 <div class="pt-4 border-bottom">
                     <session-chart :session="session" />
                 </div>

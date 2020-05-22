@@ -14,7 +14,7 @@
                                     </inertia-link>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    <a href="#">{{ session.name }}</a>
+                                    {{ session.name }}
                                 </li>
                             </ol>
                         </div>
@@ -69,23 +69,24 @@
                                                     <b-collapse :id="`positive-test-cases-${useCase.id}`" visible>
                                                         <ul class="list-unstyled">
                                                             <li
-                                                                v-for="testCase in collect(useCase.testCases).where('behavior', 'positive').all()"
+                                                                v-for="positiveTestCase in collect(useCase.testCases).where('behavior', 'positive').all()"
                                                                 class="list-group-item-action border-bottom"
+                                                                v-bind:class="{'bg-body': (testCase !== null && positiveTestCase.id === testCase.id)}"
                                                             >
                                                                 <inertia-link
-                                                                    :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                                                                    :href="route('sessions.test-cases.show', [session.id, positiveTestCase.id])"
                                                                     class="d-flex justify-content-between align-items-center pl-5 pr-4 py-2"
                                                                 >
                                                                     <span>
-                                                                        {{ testCase.name }}
+                                                                        {{ positiveTestCase.name }}
                                                                     </span>
 
                                                                     <span
-                                                                        v-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && testCase.lastTestRun.successful"
+                                                                        v-if="positiveTestCase.lastTestRun && positiveTestCase.lastTestRun.completed_at && positiveTestCase.lastTestRun.successful"
                                                                         class="flex-shrink-0 mr-0 ml-1  badge bg-success"
                                                                     ></span>
                                                                     <span
-                                                                        v-else-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && !testCase.lastTestRun.successful"
+                                                                        v-else-if="positiveTestCase.lastTestRun && positiveTestCase.lastTestRun.completed_at && !positiveTestCase.lastTestRun.successful"
                                                                         class="flex-shrink-0 mr-0 ml-1  badge bg-danger"
                                                                     ></span>
                                                                     <span
@@ -115,23 +116,24 @@
                                                     <b-collapse :id="`negative-test-cases-${useCase.id}`" visible>
                                                         <ul class="list-unstyled">
                                                             <li
-                                                                v-for="testCase in collect(useCase.testCases).where('behavior', 'negative').all()"
+                                                                v-for="negativeTestCase in collect(useCase.testCases).where('behavior', 'negative').all()"
                                                                 class="list-group-item-action border-bottom"
+                                                                v-bind:class="{'bg-body': (testCase !== null && negativeTestCase.id === testCase.id)}"
                                                             >
                                                                 <inertia-link
-                                                                    :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                                                                    :href="route('sessions.test-cases.show', [session.id, negativeTestCase.id])"
                                                                     class="d-flex justify-content-between align-items-center pl-5 pr-4 py-2"
                                                                 >
                                                                     <span>
-                                                                        {{ testCase.name }}
+                                                                        {{ negativeTestCase.name }}
                                                                     </span>
 
                                                                     <span
-                                                                        v-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && testCase.lastTestRun.successful"
+                                                                        v-if="negativeTestCase.lastTestRun && negativeTestCase.lastTestRun.completed_at && negativeTestCase.lastTestRun.successful"
                                                                         class="flex-shrink-0 mr-0 ml-1  badge bg-success"
                                                                     ></span>
                                                                     <span
-                                                                        v-else-if="testCase.lastTestRun && testCase.lastTestRun.completed_at && !testCase.lastTestRun.successful"
+                                                                        v-else-if="negativeTestCase.lastTestRun && negativeTestCase.lastTestRun.completed_at && !negativeTestCase.lastTestRun.successful"
                                                                         class="flex-shrink-0 mr-0 ml-1  badge bg-danger"
                                                                     ></span>
                                                                     <span
@@ -181,6 +183,10 @@ export default {
         session: {
             type: Object,
             required: true
+        },
+        testCase: {
+            type: Object,
+            required: false
         },
         useCases: {
             type: Object,
