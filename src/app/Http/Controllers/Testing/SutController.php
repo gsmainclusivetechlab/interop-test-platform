@@ -42,7 +42,7 @@ class SutController extends Controller
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
             ->where(function ($query) use ($request) {
                 $query->whereNull('test_steps.trigger');
-                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$request->getBody()->getContents()]);
+                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [json_encode($request->getParsedBody())]);
             })
             ->whereHas('source', function ($query) use ($component) {
                 $query->whereKey($component->getKey());
