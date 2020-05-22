@@ -23,7 +23,7 @@ $factory->define(User::class, function (Faker $faker) {
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
         'company' => $faker->company,
-        'role' => User::ROLE_USER,
+        'role' => $faker->randomElement([User::ROLE_USER, User::ROLE_ADMIN, User::ROLE_SUPERADMIN]),
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => $faker->dateTime,
         'password' => Hash::make('password'),

@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\ApiSpec;
+use cebe\openapi\Reader;
 use Faker\Generator as Faker;
 
 /*
@@ -19,7 +20,9 @@ use Faker\Generator as Faker;
 $factory->define(ApiSpec::class, function (Faker $faker) {
     return [
         'name' => $faker->text,
-        'openapi' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
+        'openapi' => function () use ($faker) {
+            return Reader::readFromJsonFile('https://petstore.swagger.io/v2/swagger.json');
+        },
         'description' => $faker->text,
     ];
 });

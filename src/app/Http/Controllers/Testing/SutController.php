@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Testing\Handlers\BeforeSendingHandler;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
+use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
@@ -40,7 +40,10 @@ class SutController extends Controller
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
-            ->whereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$request->getBody()->getContents()])
+            ->where(function ($query) use ($request) {
+                $query->whereNull('test_steps.trigger');
+                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [$request->getBody()->getContents()]);
+            })
             ->whereHas('source', function ($query) use ($component) {
                 $query->whereKey($component->getKey());
             })
@@ -81,8 +84,8 @@ class SutController extends Controller
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->beforeSending(new BeforeSendingHandler($testResult))
             ->transfer($request)
+            ->then(new SendingFulfilledHandler($testResult))
             ->otherwise(new SendingRejectedHandler($testResult))
             ->wait();
     }

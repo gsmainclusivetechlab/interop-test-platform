@@ -3,175 +3,82 @@
 namespace Tests\Unit;
 
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Tests\TestCase;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserTest extends TestCase
 {
     /**
-     * Test User creating with valid data.
+     * Test User store.
      *
      * @return void
      */
-    public function testUserStoreValidData()
+    public function testUserStore()
     {
-        $user = factory(User::class)->create();
-        $this->assertInstanceOf(User::class, $user);
-    }
-
-    /**
-     * Test User creating with invalid data.
-     *
-     * @return void
-     */
-    public function testUserStoreInvalidData()
-    {
-        $emptyUser = factory(User::class)->make(self::emptyData());
-        $this->assertFalse(Validator::make($emptyUser->attributesToArray(), self::rules())->passes());
-
-        $validationFailedUser = factory(User::class)->make(self::invalidData());
-        $this->assertFalse(Validator::make($validationFailedUser->attributesToArray(), self::rules())->passes());
-
-        $existUser = factory(User::class)->create();
-        $userUniqueEmail = factory(User::class)->make([
-            'email' => $existUser->email,
+        $user = factory(User::class)->make();
+        $this->assertValidationPasses($user->getAttributes(), [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'company' => ['string', 'max:255'],
+            'role' => ['required', Rule::in([User::ROLE_USER, User::ROLE_ADMIN, User::ROLE_SUPERADMIN])],
+            'email' => ['required', 'email', 'max:255', 'unique:users'],
         ]);
-        $this->assertFalse(Validator::make($userUniqueEmail->attributesToArray(), self::rules())->passes());
+        $this->assertTrue($user->save());
     }
 
     /**
-     * Test User updating with valid data.
-     *
-     * @return void
-     */
-    public function testUserUpdateValidData()
-    {
-        $user = factory(User::class)->create();
-        $this->assertTrue($user->update(factory(User::class)->make()->attributesToArray()));
-    }
-
-    /**
-     * Test User updating with invalid data.
-     *
-     * @return void
-     */
-    public function testUserUpdateInvalidData()
-    {
-        $userWithEmptyData = factory(User::class)->create();
-
-        $userWithEmptyData->setRawAttributes(self::emptyData());
-        $this->assertFalse(Validator::make($userWithEmptyData->attributesToArray(), self::rules())->passes());
-
-        $userWithInvalidData = factory(User::class)->create();
-        $userWithInvalidData->setRawAttributes(self::invalidData());
-        $this->assertFalse(Validator::make($userWithInvalidData->attributesToArray(), self::rules())->passes());
-
-        $existUser = factory(User::class)->create();
-        $userWithUniqueEmail = factory(User::class)->create();
-        $userWithUniqueEmail->email = $existUser->email;
-        $this->assertFalse(Validator::make($userWithUniqueEmail->attributesToArray(), self::rules())->passes());
-    }
-
-    /**
-     * Test User soft delete.
+     * Test User delete.
      *
      * @return void
      * @throws \Exception
      */
-    public function testUserSoftDelete()
+    public function testUserDelete()
     {
         $user = factory(User::class)->create();
         $user->delete();
-        $this->assertSoftDeleted(
-            $user->getTable(),
-            $user->attributesToArray(),
-            null,
-            $user->getDeletedAtColumn()
-        );
+        $this->assertSoftDeleted($user);
     }
 
     /**
-     * Test User isAdmin.
+     * Test User force delete.
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testUserForceDelete()
+    {
+        $user = factory(User::class)->create();
+        $user->forceDelete();
+        $this->assertDeleted($user);
+    }
+
+    /**
+     * Test User can admin.
      *
      * @return void
      */
-    public function testUserIsAdmin()
+    public function testUserCanAdmin()
     {
         $userNormal = factory(User::class)->create(['role' => User::ROLE_USER]);
         $userAdmin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
         $userSuperAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
-        $this->assertFalse($userNormal->isAdmin());
-        $this->assertTrue($userAdmin->isAdmin());
-        $this->assertTrue($userSuperAdmin->isAdmin());
+        $this->assertFalse($userNormal->canAdmin());
+        $this->assertTrue($userAdmin->canAdmin());
+        $this->assertTrue($userSuperAdmin->canAdmin());
     }
 
     /**
-     * Test User isSuperadmin.
+     * Test User can super admin.
      *
      * @return void
      */
-    public function testUserIsSuperadmin()
+    public function testUserCanSuperadmin()
     {
         $userNormal = factory(User::class)->create(['role' => User::ROLE_USER]);
         $userAdmin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
         $userSuperAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
-        $this->assertFalse($userNormal->isSuperadmin());
-        $this->assertFalse($userAdmin->isSuperadmin());
-        $this->assertTrue($userSuperAdmin->isSuperadmin());
-    }
-
-    /**
-     * Database validation rules.
-     *
-     * @return array
-     */
-    protected static function rules()
-    {
-        return [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'company' => ['string', 'max:255'],
-            'role' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255', 'unique:users'],
-            'remember_token' => ['string', 'max:100'],
-            'password' => ['required', 'string', 'max:255'],
-        ];
-    }
-
-    /**
-     * User Empty Data.
-     *
-     * @return array
-     */
-    protected static function emptyData()
-    {
-        return [
-            'first_name' => null,
-            'last_name' => null,
-            'role' => null,
-            'email' => null,
-            'company' => null,
-            'password' => null,
-        ];
-    }
-
-    /**
-     * User Invalid Data.
-     *
-     * @return array
-     */
-    protected static function invalidData()
-    {
-        return [
-            'first_name' => Str::random(500),
-            'last_name' => Str::random(500),
-            'company' => Str::random(500),
-            'role' => 'test',
-            'email' => 'test',
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(100),
-        ];
+        $this->assertFalse($userNormal->canSuperadmin());
+        $this->assertFalse($userAdmin->canSuperadmin());
+        $this->assertTrue($userSuperAdmin->canSuperadmin());
     }
 }

@@ -10,6 +10,6 @@ class DarkModeController extends Controller
     public function __invoke()
     {
         return redirect()->back()
-            ->withCookie(cookie()->forever('dark_mode', !request()->cookie('dark_mode', false)));
+            ->withCookie(request()->hasCookie('dark_mode') ? cookie()->forget('dark_mode') : cookie()->forever('dark_mode', true));
     }
 }

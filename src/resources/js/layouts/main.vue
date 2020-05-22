@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="col-md-3 d-flex justify-content-end">
-                    <label class="d-flex align-items-center align-self-center toggle cursor-pointer mb-0 mr-2">
+                    <label class="d-flex align-items-center align-self-center flex-shrink-0 toggle cursor-pointer mb-0 mr-2">
                         <input
                             class="sr-only toggle-input"
                             type="checkbox"
@@ -43,6 +43,7 @@
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
+                            class="admin-settings-dropdown"
                             v-if="(
                                 $page.auth.user.can.users.viewAny ||
                                 $page.auth.user.can.sessions.viewAny ||
@@ -101,7 +102,8 @@
                             right
                             no-caret
                             menu-class="dropdown-menu-arrow"
-                            toggle-class="align-items-center"
+                            toggle-class="align-items-center pr-0"
+                            class="user-settings-dropdown"
                         >
                             <template v-slot:button-content>
                             <span class="avatar flex-shrink-0">
@@ -111,7 +113,7 @@
                                     class="ml-2 d-none d-lg-inline-block text-truncate"
                                 >
                                 <span class="text-default">
-                                    {{ $page.auth.user.name }}
+                                    {{ string($page.auth.user.name).truncate(30) }}
                                 </span>
                             </span>
                             </template>

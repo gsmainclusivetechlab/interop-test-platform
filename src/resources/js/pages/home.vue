@@ -10,6 +10,30 @@
             </div>
         </div>
         <div class="row row-cards row-deck">
+            <div class="col-12" v-if="!sessions.data.length">
+                <div class="card">
+                    <div class="empty h-auto">
+                        <div class="row">
+                            <div class="col-10 mx-auto">
+                                <p class="empty-title h3 mb-3">You have no sessions</p>
+                                <p class="empty-subtitle text-muted mb-0">
+                                    Click the button below to create your first session.
+                                </p>
+                                <div class="empty-action">
+                                    <inertia-link
+                                        :href="route('sessions.register.sut')"
+                                        class="btn btn-primary"
+                                    >
+                                        <icon name="plus" />
+                                        New Session
+                                    </inertia-link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-xl-3 col-md-4" v-for="session in sessions.data">
                 <div class="card">
                     <div class="card-header flex-column align-items-start h-100 border-bottom py-4">
@@ -44,11 +68,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
-            <div class="col-12" v-if="!sessions.data.length">
-                <div class="card card-body">
-                    No Results
                 </div>
             </div>
         </div>

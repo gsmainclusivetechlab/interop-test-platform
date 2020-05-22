@@ -530,7 +530,7 @@ test_steps:
     test_request_scripts:
       - name: ID is valid
         rules:
-          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'required|regex:/authorizations\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
 
     test_response_scripts:
       - name: Authorisation was successfully accepted
@@ -560,12 +560,12 @@ test_steps:
     test_request_scripts:
       - name: ID is valid
         rules:
-          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          path: 'required|regex:/authorizations\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
 
     test_response_scripts:
       - name: Authorisation was successfully accepted
         rules:
-          status: 202
+          status: 'required|in:202'
 
     request:
       method: 'GET'
@@ -640,7 +640,7 @@ test_steps:
     test_response_scripts:
       - name: Authorisation was successfully accepted
         rules:
-          status: 202
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -678,7 +678,7 @@ test_steps:
     test_response_scripts:
       - name: Authorisation was successfully accepted
         rules:
-          status: 202
+          status: 'required|in:200'
 
     request:
       method: 'PUT'

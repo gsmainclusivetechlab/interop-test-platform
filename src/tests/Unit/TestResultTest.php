@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class TestResultTest extends TestCase
 {
-    protected function setUp(): void
+    public function setUp(): void
     {
         if (!defined('LARAVEL_START')) {
             define('LARAVEL_START', microtime(true));
