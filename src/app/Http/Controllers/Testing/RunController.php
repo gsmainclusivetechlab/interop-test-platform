@@ -8,8 +8,8 @@ use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
+use App\Http\Middleware\SetContentLengthHeaders;
 use App\Http\Middleware\SetJsonHeaders;
-use App\Jobs\CompleteTestRunJob;
 use App\Models\Session;
 use App\Models\TestCase;
 use GuzzleHttp\Psr7\Uri;
@@ -23,45 +23,37 @@ class RunController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class]);
+        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class]);
     }
 
     /**
-     * @param ServerRequestInterface $request
      * @param Session $session
      * @param TestCase $testCase
      * @param string $path
+     * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(ServerRequestInterface $request, Session $session, TestCase $testCase, string $path)
+    public function __invoke(Session $session, TestCase $testCase, string $path, ServerRequestInterface $request)
     {
-        $testRun = tap($session->testRuns()->make(), function ($testRun) use ($testCase) {
-            $testRun->testCase()
-                ->associate($testCase)
-                ->save();
-        });
-        $testRun->increment('total', $testCase->testSteps()->count());
-        $testStep = $testRun->testCase->testSteps()->firstOrFail();
-        $testResult = tap($testRun->testResults()->make(), function ($testResult) use ($testStep) {
-            $testResult->testStep()
-                ->associate($testStep)
-                ->save();
-        });
+        $testStep = $testCase->testSteps()->firstOrFail();
+        $testRun = $session->testRuns()->create(['test_case_id' => $testStep->test_case_id]);
+        $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
 
-        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
-
-        $baseUrl = $session->suts()->whereKey($testStep->target->id)->value('base_url')
-            ??
-            $testStep->target->apiService->base_url;
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $request->withUri(UriResolver::resolve(new Uri($baseUrl), new Uri($path)))
-            ->withAddedHeader(TraceparentHeader::NAME, (string) $traceparent);
+        $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
+            ->withUri(UriResolver::resolve(
+                new Uri($session->getBaseUriOfComponent($testStep->target)),
+                (new Uri($path))->withQuery((string) request()->getQueryString())
+            ));
 
-        return (new PendingRequest($request))
+        return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))
             ->mapResponse(new MapResponseHandler($testResult))
-            ->send(new SendingFulfilledHandler($testResult), new SendingRejectedHandler($testResult));
+            ->transfer($request)
+            ->then(new SendingFulfilledHandler($testResult))
+            ->otherwise(new SendingRejectedHandler($testResult))
+            ->wait();
     }
 }

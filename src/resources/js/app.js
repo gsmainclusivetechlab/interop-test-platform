@@ -16,6 +16,8 @@ import {
 
 window.string = require('string');
 window.collect = require('collect.js');
+window.axios = require('axios');
+window.axios.defaults.withCredentials = true;
 
 Vue.use(VueMeta);
 Vue.use(InertiaApp);
@@ -65,7 +67,7 @@ Vue.component('clipboard-copy-btn', () =>
     )
 );
 
-const app = document.getElementById('app');
+let app = document.getElementById('app');
 
 new Vue({
     render: h =>

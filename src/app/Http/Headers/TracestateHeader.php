@@ -37,7 +37,7 @@ class TracestateHeader
         $parts = [];
 
         foreach ($this->vendors as $key => $value) {
-            $parts[] = implode('=', [$key, $value]);
+            $parts[] = implode('=', [$key, base64_encode(json_encode($value))]);
         }
 
         return implode(',', $parts);
@@ -103,6 +103,21 @@ class TracestateHeader
     }
 
     /**
+     * @param string $spanId
+     * @return bool
+     */
+    public function hasVendorWithSpanId($spanId)
+    {
+        foreach ($this->vendors as $vendor) {
+            if (isset($vendor['spanId']) && $vendor['spanId'] == $spanId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param $tracestate
      * @return array|false
      */
@@ -123,13 +138,14 @@ class TracestateHeader
     protected function applyParts(array $parts)
     {
         foreach ($parts as $part) {
-            $vendor = explode('=', $part);
+            $vendor = explode('=', $part, 2);
 
             if (count($vendor) != 2) {
                 throw new InvalidArgumentException('Vendor is invalid');
             }
 
-            list($key, $value) = $vendor;
+            [$key, $value] = $vendor;
+
             $this->vendors[$this->filterVendorKey($key)] = $this->filterVendorValue($value);
         }
     }
@@ -165,7 +181,7 @@ class TracestateHeader
      */
     protected function filterVendorValue($vendorValue)
     {
-        if (!preg_match('/^[a-z0-9]{16}$/', $vendorValue)) {
+        if (!($vendorValue = base64_decode($vendorValue)) || !($vendorValue = json_decode($vendorValue, true))) {
             throw new InvalidArgumentException('Vendor value is invalid');
         }
 

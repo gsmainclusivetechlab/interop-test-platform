@@ -2,32 +2,19 @@
 
 namespace App\Imports;
 
-use App\Models\ApiScheme;
-use App\Models\Scenario;
+use App\Models\ApiSpec;
+use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\TestScript;
 use App\Models\TestSetup;
 use App\Models\TestStep;
+use App\Models\UseCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class TestCaseImport implements Importable
 {
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
-
-    /**
-     * TestCaseImport constructor.
-     * @param Scenario $scenario
-     */
-    public function __construct(Scenario $scenario)
-    {
-        $this->scenario = $scenario;
-    }
-
     /**
      * @param array $rows
      * @return Model
@@ -36,9 +23,16 @@ class TestCaseImport implements Importable
     public function import(array $rows): Model
     {
         return DB::transaction(function () use ($rows) {
-            $testCase = TestCase::make(Arr::only($rows, TestCase::make()->getFillable()));
-            $testCase->setAttribute('use_case_id', $this->scenario->useCases()->where('name', Arr::get($rows, 'use_case'))->value('id'));
+            $useCase = UseCase::firstOrCreate(['name' => Arr::get($rows, 'use_case')]);
+            /**
+             * @var TestCase $testCase
+             */
+            $testCase = $useCase->testCases()->make(Arr::only($rows, TestCase::make()->getFillable()));
             $testCase->saveOrFail();
+
+            if ($componentRows = Arr::get($rows, 'components', [])) {
+                $testCase->components()->attach(Component::whereIn('name', $componentRows)->pluck('id'));
+            }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
                 foreach ($testStepRows as $testStepRow) {
@@ -46,9 +40,9 @@ class TestCaseImport implements Importable
                      * @var TestStep $testStep
                      */
                     $testStep = $testCase->testSteps()->make(Arr::only($testStepRow, TestStep::make()->getFillable()));
-                    $testStep->setAttribute('source_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'source'))->value('id'));
-                    $testStep->setAttribute('target_id', $this->scenario->components()->where('name', Arr::get($testStepRow, 'target'))->value('id'));
-                    $testStep->setAttribute('api_scheme_id', ApiScheme::where('name', Arr::get($testStepRow, 'api_scheme'))->value('id'));
+                    $testStep->setAttribute('source_id', Component::where('name', Arr::get($testStepRow, 'source'))->value('id'));
+                    $testStep->setAttribute('target_id', Component::where('name', Arr::get($testStepRow, 'target'))->value('id'));
+                    $testStep->setAttribute('api_spec_id', ApiSpec::where('name', Arr::get($testStepRow, 'api_spec'))->value('id'));
                     $testStep->saveOrFail();
 
                     if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {

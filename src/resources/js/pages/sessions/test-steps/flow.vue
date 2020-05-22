@@ -80,7 +80,7 @@ export default {
         diagramCode() {
             return this.testSteps.data.reduce((template, testStep) => {
                 template += `
-${testStep.source.name} ->> ${testStep.target.name}: ${testStep.name};
+${testStep.source.name} ->> ${testStep.target.name}: ${testStep.method} ${testStep.path};
 ${testStep.target.name} -->> ${testStep.source.name}: HTTP ${testStep.response.status};
 `;
                 return template;

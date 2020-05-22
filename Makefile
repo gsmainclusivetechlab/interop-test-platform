@@ -1,30 +1,5 @@
 .PHONY: info init build run test-run install update stop xdebug-init chown npm-i npm-build npm-watch php-bash nodejs-bash
 
-info:
-	@echo "LenderKit Server Configuration/Launcher"
-	@echo " "
-	@echo "Usage:"
-	@echo "	make command [V=1]"
-	@echo " "
-	@echo "Options:"
-	@echo "	V=1 			Vagrant mode, use it in Vagrant to prevent permission errors"
-	@echo "	NONE_INTERACTIVE=1	Use it in CI to prevent errors with docker-compose exec\run"
-	@echo " "
-	@echo "Available commands:"
-	@echo "	init	 		Init configurations"
-	@echo "	build	 		Build images"
-	@echo "	test-run		Docker run in place"
-	@echo "	run	 		Docker run as daemon"
-	@echo "	stop			Docker stop"
-	@echo "	install	 		Run install process (php and nodejs)"
-	@echo "	update	 		Run install process (php and nodejs)"
-	@echo "	chown	 		Return back correct file owner for files created inside a container"
-	@echo "	php-bash		Open php-fpm container bash"
-	@echo "	nodejs-bash		Open nodejs container bash"
-	@echo "	npm-i			Install npm modules inside nodejs container"
-	@echo "	npm-build		Build admin assets inside nodejs container"
-	@echo "	npm-watch		Admin assets build watcher for development"
-
 CURDIR_BASENAME = $(notdir ${CURDIR})
 
 MAYBE_SUDO = 
@@ -97,6 +72,9 @@ xdebug-init:
 
 test:
 	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make test"
+	
+test-coverage:
+	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make test-coverage"
 
 stop:
 	docker-compose down

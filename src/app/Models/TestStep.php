@@ -23,8 +23,10 @@ class TestStep extends Model
      * @var array
      */
     protected $fillable = [
-        'api_scheme_id',
-        'name',
+        'path',
+        'method',
+        'pattern',
+        'trigger',
         'request',
         'response',
     ];
@@ -33,6 +35,7 @@ class TestStep extends Model
      * @var array
      */
     protected $casts = [
+        'trigger' => 'array',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
     ];
@@ -43,6 +46,22 @@ class TestStep extends Model
     public function testCase()
     {
         return $this->belongsTo(TestCase::class, 'test_case_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function testRuns()
+    {
+        return $this->hasManyThrough(TestRun::class, TestCase::class, 'id', 'test_case_id', 'test_case_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResults()
+    {
+        return $this->hasMany(TestResult::class, 'test_step_id');
     }
 
     /**
@@ -64,9 +83,9 @@ class TestStep extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function apiScheme()
+    public function apiSpec()
     {
-        return $this->belongsTo(ApiScheme::class, 'api_scheme_id');
+        return $this->belongsTo(ApiSpec::class, 'api_spec_id');
     }
 
     /**

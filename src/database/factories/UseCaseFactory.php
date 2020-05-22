@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\UseCase;
-use App\Models\Scenario;
 use Faker\Generator as Faker;
 
 /*
@@ -19,9 +18,6 @@ use Faker\Generator as Faker;
 
 $factory->define(UseCase::class, function (Faker $faker) {
     return [
-        'scenario_id' => function () {
-            return factory(Scenario::class)->create()->id;
-        },
         'name' => $faker->text,
         'description' => $faker->text,
     ];

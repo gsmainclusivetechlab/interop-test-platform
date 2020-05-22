@@ -3,8 +3,29 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="row border-bottom pb-4 align-items-center">
-                    <div class="col-6 d-flex flex-wrap">
-                        <h1 class="page-title mr-2">
+                    <div class="col-6 d-flex flex-column">
+                        <div class="page-pretitle font-weight-normal">
+                            <ol class="breadcrumb breadcrumb-bullets" aria-label="breadcrumbs">
+                                <li class="breadcrumb-item">
+                                    <inertia-link
+                                        :href="route('sessions.index')"
+                                    >
+                                        Sessions
+                                    </inertia-link>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <inertia-link
+                                        :href="route('sessions.show', session.id)"
+                                    >
+                                        {{ session.name }}
+                                    </inertia-link>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <a href="#">{{ testCase.name }}</a>
+                                </li>
+                            </ol>
+                        </div>
+                        <h1 class="page-title mw-100 mr-2 text-break">
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>

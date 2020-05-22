@@ -17,17 +17,16 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(\App\Models\TestSetup::class, function (Faker $faker) {
+$factory->define(TestSetup::class, function (Faker $faker) {
     return [
         'test_step_id' => function () {
-            return factory(TestStep::class)->create()->id;
+            return factory(TestStep::class)->create()->getKey();
         },
         'name' => $faker->text,
         'type' => $faker->randomElement([
             TestSetup::TYPE_REQUEST,
             TestSetup::TYPE_RESPONSE,
         ]),
-        'values' => \GuzzleHttp\json_encode($faker->rgbColorAsArray),
-        'position' => $faker->numberBetween(1, 10),
+        'values' => $faker->randomElements(),
     ];
 });

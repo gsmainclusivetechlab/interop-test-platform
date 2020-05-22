@@ -17,7 +17,7 @@ class TestCasePolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->isAdmin()) {
+        if ($user->canAdmin()) {
             return true;
         }
     }

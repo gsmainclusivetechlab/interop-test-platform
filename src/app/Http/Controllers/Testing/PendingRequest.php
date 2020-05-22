@@ -11,27 +11,14 @@ use Psr\Http\Message\RequestInterface;
 class PendingRequest
 {
     /**
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @var callable[
+     * @var callable[]
      */
     protected $mapRequestCallbacks = [];
 
     /**
-     * @var callable[
+     * @var callable[]
      */
     protected $mapResponseCallbacks = [];
-
-    /**
-     * @param RequestInterface $request
-     */
-    public function __construct(RequestInterface $request)
-    {
-        $this->request = $request;
-    }
 
     /**
      * @param callable $callback
@@ -54,13 +41,12 @@ class PendingRequest
     }
 
     /**
-     * @param callable|null $onFulfilled
-     * @param callable|null $onRejected
-     * @return mixed
+     * @param RequestInterface $request
+     * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function send(callable $onFulfilled = null, callable $onRejected = null)
+    public function transfer(RequestInterface $request)
     {
-        return $this->buildClient()->sendAsync($this->request)->then($onFulfilled, $onRejected)->wait();
+        return $this->buildClient()->sendAsync($request);
     }
 
     /**

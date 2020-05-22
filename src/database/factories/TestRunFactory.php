@@ -29,7 +29,6 @@ $factory->define(TestRun::class, function (Faker $faker) {
     ]);
 
     return [
-        'uuid' => $faker->uuid,
         'session_id' => $sessionId,
         'test_case_id' => $testCaseId,
         'total' => $passed + $failures,

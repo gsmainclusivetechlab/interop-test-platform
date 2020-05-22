@@ -223,7 +223,7 @@ class TraceparentHeader
      */
     protected function filterTraceFlags($traceFlags)
     {
-        if (!preg_match('/^[0-9]{2}$/', $traceFlags)) {
+        if (!preg_match('/^[a-z0-9]{2}$/', $traceFlags)) {
             throw new InvalidArgumentException('Trace flags is invalid');
         }
 

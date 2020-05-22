@@ -90,7 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return bool
      */
-    public function isAdmin()
+    public function canAdmin()
     {
         return in_array($this->role, [static::ROLE_ADMIN, static::ROLE_SUPERADMIN]);
     }
@@ -98,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return bool
      */
-    public function isSuperadmin()
+    public function canSuperadmin()
     {
         return in_array($this->role, [static::ROLE_SUPERADMIN]);
     }

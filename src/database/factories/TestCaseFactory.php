@@ -19,9 +19,8 @@ use Faker\Generator as Faker;
 
 $factory->define(TestCase::class, function (Faker $faker) {
     return [
-        'uuid' => $faker->uuid,
         'use_case_id' => function () {
-            return factory(UseCase::class)->create()->id;
+            return factory(UseCase::class)->create()->getKey();
         },
         'name' => $faker->text,
         'behavior' => $faker->randomElement([TestCase::BEHAVIOR_POSITIVE, TestCase::BEHAVIOR_NEGATIVE]),

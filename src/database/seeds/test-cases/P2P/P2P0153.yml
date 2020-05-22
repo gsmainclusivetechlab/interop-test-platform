@@ -1,0 +1,86 @@
+name: P2P Declined - RND - Error 503
+use_case: P2P
+test_case: P2P0153
+behavior: negative
+description: |
+  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
+precondition: |
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer exist in Mojaloop as Parties.
+  - Amount should be the value "107".
+  - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+components:
+  - Mobile Money Operator 1
+test_steps:
+
+## POST/Quotes: MMO1 -> Mojaloop ##
+  - path: /quotes
+    pattern: '^quotes$'
+    method: POST
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_scheme: Mojaloop v1.0
+    trigger:
+      amount: '107'
+    test_request_scripts:
+      - name: Transaction Type is a P2P transfer
+        rules:
+          body.type: 'required|in:TRANSFER'
+
+    test_response_setups:
+      - name: Override response
+        values:
+          status: 503
+          body:
+            errorCode: "genericError"
+            errorCategory: "internal"
+            errorDateTime: "2000-01-01T00:00:00.000Z"
+            errorDescription: "The service is not currently available. This could be due to network issues, issues with individual components or complete systems outages. Regardless of the cause, the result means that the request cannot be performed."
+
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        fspiop-source: 'payerfsp'
+        fspiop-destination: 'payeefsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555789123"
+        payer:
+          partIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: "+33555123456"
+          personalInfo:
+            complexName:
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
+        amountType: 'RECEIVE'
+        amount:
+          currency: 'USD'
+          amount: '107'
+        transactionType:
+          scenario: 'TRANSFER'
+          initiator: 'PAYER'
+          initiatorType: 'CONSUMER'
+
+    response:
+      status: 503
+      headers:
+        x-date: '2000-01-01T00:00:00.000Z'
+        content-type: 'application/json'
+      body:
+        errorCode: "genericError"
+        errorCategory: "internal"
+        errorDateTime: "2000-01-01T00:00:00.000Z"
+        errorDescription: "The service is not currently available. This could be due to network issues, issues with individual components or complete systems outages. Regardless of the cause, the result means that the request cannot be performed."

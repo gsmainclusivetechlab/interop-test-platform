@@ -1,0 +1,76 @@
+# Interop Test Platofrm CircleCI
+
+version: 2
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:201903-01 # Define a machine who has support for docker compose 3.7
+    working_directory: ~/repo # Default working directory, where your project will be clo
+      
+    branches:  
+      only:  
+        - master  
+        - develop
+        - circleci-project-setup
+        
+    steps:
+      - checkout
+
+      - run: 
+          name: Generate configuration files
+          command: make init
+
+      - run: 
+          name: Run docker containers
+          command: make run
+          
+      - restore_cache: 
+          keys:
+            - composer-v1-{{ checksum "src/composer.lock" }}
+            - composer-v1-
+               
+      - restore_cache: 
+          keys:
+            - node-v1-{{ checksum "src/package-lock.json" }}
+            - node-v1-
+
+      - run: 
+          name: Install Componser and Node dependecies
+          command: make install
+      
+      - save_cache:
+          key: composer-v1-{{ checksum "src/composer.lock" }}
+          paths:
+            - vendor
+      
+      - save_cache:
+          key: node-v1-{{ checksum "src/package-lock.json" }}
+          paths:
+            - node_modules
+
+      - run: 
+          name: Check installation
+          command: |
+            FILE=./runtime/installed
+            if test -f "$FILE"; then
+                echo "Installation succesful"
+            else 
+                echo "Installation fail"
+                exit 2
+            fi
+            
+      - run:
+          name: Run Tests
+          command: make test
+          
+      - run:
+          name: Run Test Coverage
+          command: make test-coverage
+          
+      #store tests and code coverage
+      - store_test_results:
+          path: src/tests/results
+      - store_artifacts:
+          path: src/tests/Browser/screenshots          
+      - store_artifacts:
+          path: src/tests/results

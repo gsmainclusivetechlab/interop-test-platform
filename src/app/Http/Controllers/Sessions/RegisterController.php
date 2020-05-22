@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Sessions\StoreSessionSutsRequest;
-use App\Http\Requests\Sessions\StoreSessionRequest;
-use App\Http\Requests\Sessions\UpdateSessionRequest;
-use App\Http\Resources\ScenarioResource;
-use App\Http\Resources\SessionResource;
-use App\Models\Session;
-use App\Models\Scenario;
-use Illuminate\Support\Arr;
+use App\Http\Middleware\EnsureSessionIsPresent;
+use App\Http\Resources\ComponentResource;
+use App\Http\Resources\UseCaseResource;
+use App\Models\Component;
+use App\Models\TestCase;
+use App\Models\UseCase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Throwable;
 
 class RegisterController extends Controller
 {
@@ -21,125 +23,135 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware(EnsureSessionIsPresent::class. ':session.sut')->only('info');
+        $this->middleware(EnsureSessionIsPresent::class. ':session.sut,session.info')->only('config');
     }
 
     /**
      * @return \Inertia\Response
      */
-    public function create()
+    public function showSutForm()
     {
-        $scenario = Scenario::firstOrFail();
-
-        return Inertia::render('sessions/register/create', [
-            'scenario' => (new ScenarioResource(
-                $scenario->load([
-                    'useCases' => function ($query) {
-                        $query->with(['testCases'])->whereHas('testCases');
-                    },
-                    'components' => function ($query) {
-                        $query->with(['connections']);
-                    },
-                ])
-            ))->resolve(),
+        return Inertia::render('sessions/register/sut', [
+            'session' => session('session'),
+            'suts' => ComponentResource::collection(
+                Component::whereHas('testCases')->get(),
+            ),
+            'components' => ComponentResource::collection(
+                Component::with(['connections'])->get()
+            ),
         ]);
     }
 
     /**
-     * @param StoreSessionRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(StoreSessionRequest $request)
+    public function storeSut(Request $request)
     {
-        $user = auth()->user();
-        $scenario = Scenario::firstOrFail();
-        $session = $user->sessions()->create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'scenario_id' => $scenario->id,
+        $request->validate([
+            'base_url' => ['required', 'url', 'max:255'],
+            'component_id' => [
+                'required',
+                'exists:components,id',
+            ],
         ]);
-        $session->testCases()->attach($request->input('test_cases'));
+        $request->session()->put('session.sut', $request->input());
 
-        return redirect()->route('sessions.register.config', $session);
+        return redirect()->route('sessions.register.info');
     }
 
     /**
-     * @param Session $session
      * @return \Inertia\Response
      */
-    public function edit(Session $session)
+    public function showInfoForm()
     {
-        return Inertia::render('sessions/register/edit', [
-            'scenario' => (new ScenarioResource(
-                $session->scenario->load([
-                    'useCases' => function ($query) {
-                        $query->with(['testCases'])->whereHas('testCases');
-                    },
-                    'components' => function ($query) {
-                        $query->with(['connections']);
-                    },
-                ])
-            ))->resolve(),
-            'session' => (new SessionResource(
-                $session->load(['testCases'])
-            ))->resolve(),
+        return Inertia::render('sessions/register/info', [
+            'session' => session('session'),
+            'components' => ComponentResource::collection(
+                Component::with(['connections'])->get()
+            ),
+            'useCases' => UseCaseResource::collection(
+                UseCase::with([
+                        'testCases' => function ($query) {
+                            $query->whereHas('components', function ($query) {
+                                $query->whereKey(request()->session()->get('session.sut.component_id'));
+                            })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
+                                $query->where('public', true);
+                            });
+                        },
+                    ])
+                    ->whereHas('testCases', function ($query) {
+                        $query->whereHas('components', function ($query) {
+                            $query->whereKey(request()->session()->get('session.sut.component_id'));
+                        })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
+                            $query->where('public', true);
+                        });
+                    })
+                    ->get()
+            ),
         ]);
     }
 
     /**
-     * @param Session $session
-     * @param UpdateSessionRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Session $session, UpdateSessionRequest $request)
+    public function storeInfo(Request $request)
     {
-        $session->update([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['string', 'nullable'],
+            'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
-        $session->testCases()->sync($request->input('test_cases'));
+        $request->session()->put('session.info', array_merge($request->input(), [
+            'uuid' => Str::uuid(),
+        ]));
 
-        return redirect()->route('sessions.register.config', $session);
+        return redirect()->route('sessions.register.config');
     }
 
     /**
-     * @param Session $session
      * @return \Inertia\Response
      */
-    public function showConfig(Session $session)
+    public function showConfigForm()
     {
         return Inertia::render('sessions/register/config', [
-            'scenario' => (new ScenarioResource(
-                $session->scenario->load([
-                    'useCases' => function ($query) {
-                        $query->with(['testCases'])->whereHas('testCases');
-                    },
-                    'components' => function ($query) {
-                        $query->with(['connections', 'apiService']);
-                    },
-                ])
+            'session' => session('session'),
+            'sut' => (new ComponentResource(
+                Component::whereKey(request()->session()->get('session.sut.component_id'))
+                    ->firstOrFail()
+                    ->load('connections'),
             ))->resolve(),
-            'session' => (new SessionResource(
-                $session->load(['testCases'])
-            ))->resolve(),
+            'components' => ComponentResource::collection(
+                Component::with(['connections'])->get()
+            ),
         ]);
     }
 
     /**
-     * @param Session $session
-     * @param StoreSessionSutsRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeConfig(Session $session, StoreSessionSutsRequest $request)
+    public function storeConfig(Request $request)
     {
-        $components = collect($request->input('components'))->map(function ($item) {
-           if (Arr::get($item, 'sut', false)) {
-               return Arr::only($item, ['base_url']);
-           }
-        })->filter();
-        $session->suts()->attach($components);
+        try {
+            $session = DB::transaction(function () use ($request) {
+                $session = auth()->user()
+                    ->sessions()
+                    ->create($request->session()->get('session.info'));
+                $session->testCases()->attach($request->session()->get('session.info.test_cases'));
+                $session->components()->attach([$request->session()->get('session.sut')]);
 
-        return redirect()
-            ->route('sessions.show', $session)
-            ->with('success', __('Session created successfully'));
+                return $session;
+            });
+            $request->session()->remove('session');
+
+            return redirect()
+                ->route('sessions.show', $session)
+                ->with('success', __('Session created successfully'));
+        } catch (Throwable $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }

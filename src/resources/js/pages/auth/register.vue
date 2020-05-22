@@ -99,20 +99,6 @@
                     </span>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Code</label>
-                    <input
-                        v-model="form.code"
-                        :class="{ 'is-invalid': $page.errors.code }"
-                        type="text"
-                        class="form-control"
-                        placeholder="e.g., CODE"
-                        name="code"
-                    />
-                    <span v-if="$page.errors.code" class="invalid-feedback">
-                        {{ $page.errors.code }}
-                    </span>
-                </div>
-                <div class="mb-3">
                     <label
                         :class="{ 'is-invalid': $page.errors.terms }"
                         class="form-check"
@@ -174,7 +160,6 @@ export default {
                 company: null,
                 password: null,
                 password_confirmation: null,
-                code: null,
                 terms: null
             }
         };

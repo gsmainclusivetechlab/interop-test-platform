@@ -1,5 +1,11 @@
 ## Interoperability Test Platform
 
+[![Codacy grade](https://img.shields.io/codacy/grade/8ff2b7590e13431dad7032a973d908fd?logo=codacy)](https://www.codacy.com/gh/gsmainclusivetechlab/interop-test-platform?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gsmainclusivetechlab/interop-test-platform&amp;utm_campaign=Badge_Grade)
+
+[![CircleCI](https://img.shields.io/circleci/build/github/gsmainclusivetechlab/interop-test-platform/master?label=Master&logo=circleCI&token=7cc80f8c435154849e1f57a8708d8765da9ffa1a)](https://app.circleci.com/pipelines/github/gsmainclusivetechlab/interop-test-platform?branch=master)
+[![CircleCI](https://img.shields.io/circleci/build/github/gsmainclusivetechlab/interop-test-platform/develop?label=Develop&logo=circleCI&token=7cc80f8c435154849e1f57a8708d8765da9ffa1a)](https://app.circleci.com/pipelines/github/gsmainclusivetechlab/interop-test-platform?branch=develop)
+
+
 ### Installation
 
 Project can be setup with Docker.
@@ -39,8 +45,8 @@ To open nodejs container permanently just run:
 
 ### Site access:
 
-Access your site via URL: http://localhost:8084
+Access your site via URL: <http://localhost:8084>
 
-Mail catcher: http://localhost:8086
+Mail catcher: <http://localhost:8086>
 
 Superadmin login: superadmin@gsma.com / qzRBHEzStdG8XWhy

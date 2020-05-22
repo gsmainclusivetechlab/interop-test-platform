@@ -7,7 +7,7 @@
                         Administration
                     </div>
                     <h2 class="page-title">
-                        Users
+                        <b>Users</b>
                     </h2>
                 </div>
             </div>
@@ -29,14 +29,14 @@
                     <div class="btn-group">
                         <inertia-link
                             :href="route('admin.users.index')"
-                            :class="{ active: !filter.trashed }"
+                            :class="{ active: !filter.trash }"
                             class="btn btn-outline-primary"
                         >
                             Active
                         </inertia-link>
                         <inertia-link
-                            :href="route('admin.users.index', ['trashed'])"
-                            :class="{ active: filter.trashed }"
+                            :href="route('admin.users.index', ['trash'])"
+                            :class="{ active: filter.trash }"
                             class="btn btn-outline-primary"
                         >
                             Blocked
@@ -48,7 +48,7 @@
                 <table
                     class="table table-striped table-vcenter table-hover card-table"
                 >
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
                             <th class="text-nowrap w-25">Email</th>
@@ -61,11 +61,10 @@
                     <tbody>
                         <tr v-for="user in users.data">
                             <td class="text-break">
-                                <span v-if="user.trashed">{{ user.name }}</span>
-                                <a href="#" v-else>{{ user.name }}</a>
+                                {{ user.name }}
                             </td>
                             <td class="text-break">
-                                <a :href="'mailto:' + user.email">
+                                <a :href="`mailto:${user.email}`">
                                     {{ user.email }}
                                 </a>
                             </td>
@@ -73,27 +72,48 @@
                                 {{ user.company }}
                             </td>
                             <td class="text-break">
-                                {{ user.role_name }}
+                                <b-dropdown
+                                    no-caret
+                                    right
+                                    size="sm"
+                                    variant="outline-primary"
+                                    toggle-class="text-uppercase"
+                                    boundary="window"
+                                    menu-class="mt-1"
+                                    v-if="!user.trashed && user.can.promoteRole"
+                                >
+                                    <template v-slot:button-content>
+                                        {{ collect($page.enums.user_roles).get(user.role) }}
+                                    </template>
+                                    <li v-for="(role_name, role) in collect($page.enums.user_roles).except(['superadmin']).all()">
+                                        <inertia-link
+                                            class="dropdown-item"
+                                            method="put"
+                                            :href="route('admin.users.promote-role', [user.id, role])"
+                                            v-bind:class="{active: user.role === role}"
+                                        >
+                                            {{ role_name }}
+                                        </inertia-link>
+                                    </li>
+                                </b-dropdown>
+                                <button v-else class="btn btn-sm btn-outline-primary text-uppercase" disabled>
+                                    {{ collect($page.enums.user_roles).get(user.role) }}
+                                </button>
                             </td>
                             <td class="text-break">
                                 {{ user.email_verified_at }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="
-                                        user.can.promoteAdmin ||
-                                            user.can.relegateAdmin ||
-                                            user.can.delete ||
-                                            user.can.restore
-                                    "
+                                    v-if="user.can.delete || user.can.restore || user.can.verify"
                                     no-caret
                                     right
-                                    toggle-class="align-text-top"
-                                    variant="secondary"
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
                                     boundary="window"
                                 >
                                     <template v-slot:button-content>
-                                        <icon name="edit" class="m-0"></icon>
+                                        <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="user.trashed && user.can.restore">
                                         <inertia-link
@@ -112,56 +132,6 @@
                                         >
                                             Unblock
                                         </inertia-link>
-                                    </li>
-                                    <li
-                                        v-if="
-                                            !user.trashed &&
-                                                user.can.promoteAdmin
-                                        "
-                                    >
-                                        <confirm-link
-                                            class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'admin.users.promote-admin',
-                                                    user.id
-                                                )
-                                            "
-                                            method="post"
-                                            :confirm-title="
-                                                'Confirm promote admin'
-                                            "
-                                            :confirm-text="
-                                                `Are you sure you want to promote ${user.name} to admin?`
-                                            "
-                                        >
-                                            Promote admin
-                                        </confirm-link>
-                                    </li>
-                                    <li
-                                        v-if="
-                                            !user.trashed &&
-                                                user.can.relegateAdmin
-                                        "
-                                    >
-                                        <confirm-link
-                                            class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'admin.users.relegate-admin',
-                                                    user.id
-                                                )
-                                            "
-                                            method="post"
-                                            :confirm-title="
-                                                'Confirm relegate admin'
-                                            "
-                                            :confirm-text="
-                                                `Are you sure you want to relegate ${user.name} from admin?`
-                                            "
-                                        >
-                                            Relegate admin
-                                        </confirm-link>
                                     </li>
                                     <li v-if="!user.trashed && user.can.delete">
                                         <confirm-link
@@ -269,7 +239,7 @@ export default {
             this.$inertia.replace(
                 route(
                     'admin.users.index',
-                    this.filter.trashed ? ['trashed'] : []
+                    this.filter.trash ? ['trash'] : []
                 ),
                 {
                     data: this.form
