@@ -1,14 +1,14 @@
-name: P2P Rejected Quote by Payee FSP - Send / Non-Disclosing
+name: P2P Rejected Quote by Payee FSP - Receive / Non-Disclosing
 use_case: P2P
 test_case: P2P5001
 behavior: negative
 description: |
-  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Non-Disclosing Fees.
+  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
 precondition: |
   - Mobile Money Operator is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "5103".
+  - Amount should be the value "50.01".
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
@@ -41,7 +41,7 @@ test_steps:
           body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'required|in:SEND'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
@@ -84,7 +84,7 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'SEND'
+        amountType: 'RECEIVE'
         amount:
           currency: 'USD'
           amount: '50.01'
@@ -105,7 +105,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '199'
+        amount: '50.01'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -119,7 +119,7 @@ test_steps:
           body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'required|in:SEND'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
@@ -163,10 +163,10 @@ test_steps:
               middleName: 'Per'
               lastName: 'Bergqvist'
             dateOfBirth: '1977-07-17'
-        amountType: 'SEND'
+        amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '199'
+          amount: '50.01'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -232,9 +232,6 @@ test_steps:
     source: Mojaloop
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
-    trigger:
-      payeeReceiveAmount:
-        amount: '5103'
 
     test_request_scripts:
       - name: ID is Valid
@@ -267,7 +264,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '5103'
+          amount: '50.01'
         errorInformation:
           errorCode: '5103'
           errorDescription: 'Quote Rejected by PayeeFSP'
