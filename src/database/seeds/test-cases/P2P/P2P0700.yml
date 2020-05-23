@@ -257,7 +257,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '699'
+        amount: '700'
 
     test_request_setups:
       - name: Override request

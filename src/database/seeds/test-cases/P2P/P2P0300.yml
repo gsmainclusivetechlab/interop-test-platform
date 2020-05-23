@@ -172,7 +172,7 @@ test_steps:
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '100'
+          amount: '300'
         payerFspFee:
           currency: 'USD'
           amount: '1'
@@ -193,7 +193,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '299'
+        amount: '300'
 
     test_request_setups:
       - name: Override request

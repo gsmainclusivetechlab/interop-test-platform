@@ -196,7 +196,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:800'
+          body.amount.amount: 'required|in:799'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
           body.payerFspFee.amount: 'required|in:1'
           body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
