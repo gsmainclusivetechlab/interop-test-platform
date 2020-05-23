@@ -182,29 +182,21 @@ test_steps:
     response:
       status: 202
 
-## PUT/Quotes/{ID}: MMO2 -> Mojaloop ##
-  - path: /quotes/{ID}
+## PUT/Quotes/{ID}/error: MMO2 -> Mojaloop ##
+  - path: /quotes/{ID}/error
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
     api_spec: Mojaloop v1.0
     trigger:
-      transferAmount:
-        amount: '50.04'
+      errorInformation:
+        errorCode: '5103'
 
     test_request_scripts:
       - name: ID is Valid
         rules:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
-      - name: Amounts and currencies are specified correctly
-        rules:
-          body.transferAmount.amount: 'required|in:50.04'
-          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:49.04'
-          body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspFee.amount: 'required|in:1'
-          body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Error Code is specified correctly
         rules:
           body.errorInformation.errorCode: 'required|in:5103'
@@ -213,8 +205,8 @@ test_steps:
     test_request_setup:
       - name: Error Code is specified correctly
         rules:
-          body.errorInformation.errorCode: '5103'
-          body.errorInformation.errorDescription: 'Rejected Quote: Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
+          body.errorInformation.errorCode: 'required|in:5103'
+          body.errorInformation.errorDescription: 'required|in:Rejected Quote: Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -230,15 +222,10 @@ test_steps:
         fspiop-source: 'payeefsp'
         fspiop-destination: 'payerfsp'
       body:
-        transferAmount:
-          currency: 'USD'
-          amount: '50.04'
-        payeeReceiveAmount:
-          currency: 'USD'
-          amount: '49.04'
-        payeeFspFee:
-          currency: 'USD'
-          amount: '1'
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        errorInformation:
+          errorCode: '5103'
+          errorDescription: 'Rejected Quote: Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -254,21 +241,13 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      transferAmount:
-        amount: '50.04'
+      errorInformation:
+        errorCode: '5103'
 
     test_request_scripts:
       - name: ID is Valid
         rules:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/error$/i'
-      - name: Amounts and currencies are specified correctly
-        rules:
-          body.transferAmount.amount: 'required|in:50.04'
-          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:49.04'
-          body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspFee.amount: 'required|in:1'
-          body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Error Code is specified correctly
         rules:
           body.errorInformation.errorCode: 'required|in:5103'
@@ -277,9 +256,8 @@ test_steps:
     test_request_setup:
       - name: Error Code is specified correctly
         rules:
-          body.errorInformation.errorCode: '5103'
-          body.errorInformation.errorDescription: 'Rejected Quote: Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
-
+          body.errorInformation.errorCode: 'required|in:5103'
+          body.errorInformation.errorDescription: 'required|in:Rejected Quote: Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -295,18 +273,10 @@ test_steps:
         fspiop-source: 'payeefsp'
         fspiop-destination: 'payerfsp'
       body:
-        transferAmount:
-          currency: 'USD'
-          amount: '50.04'
-        payeeReceiveAmount:
-          currency: 'USD'
-          amount: '49.04'
-        payeeFspFee:
-          currency: 'USD'
-          amount: '1'
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        errorInformation:
+          errorCode: '5103'
+          errorDescription: 'Rejected Quote: Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-
-    response:
-      status: 200
