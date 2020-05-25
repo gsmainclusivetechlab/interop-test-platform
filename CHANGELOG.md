@@ -1,3 +1,43 @@
+## v0.9
+- Task: Add Cookie popup and Cookie policy [@jc_akokorev,@jc_ohladkov]
+- Task: Dark/Light Mode [@jc_akokorev,@jc_ohladkov]
+- Task: Add text to guide the user to execute the first test case [@jc_akokorev,@jc_agalaguz]
+- Task: Add text to guide user once create a new session [@jc_ohladkov,@jc_agalaguz]
+- Task: Use Case managment [@jc_akokorev]
+- Task: Test Case draft/public [@jc_akokorev]
+- Task: API Spec Managment [@jc_akokorev]
+- Task: Remove registration code [@jc_akokorev]
+- Bug: 404 page style issue [@jc_akokorev]
+- Bug: Rejected Quote by Payee FSP - Step 8 - PUT quotes ID error [@jc_skushnir]
+- Bug: Long session name and description display issue [@jc_ohladkov]
+- Bug: Assertions not showing all data in actual [@jc_vmartynov]
+
+## v0.8
+- Task: Test Case YAML optimization -> use test examples instead of "forward/backward" [@jc_akokorev]
+- Task: Overridings -> move them to Request and Response [@jc_akokorev]
+- Task: Show what is once hove the icon [@jc_akokorev]
+- Task: Test Run Step: Scripts- show the details what was tested (regex or etc.) [@jc_akokorev,@jc_ohladkov]
+- Task: Create a copy/paste button for the diagram [@jc_ohladkov]
+- Task: Create a copy button for header and body [@jc_ohladkov]
+- Task: Automated-tests: Authentication, browser [@jc_ohladkov]
+- Task: Eloquent model unit tests [@jc_skushnir]
+- Bug: Test steps - Collapsible json issue [@jc_ohladkov]
+- Bug: Rejected Quote by Payee FSP TC - Step 9 is not runing [@jc_skushnir]
+
+## v0.7
+- Task: ITP production: change email "from" to avoid adding email to SPAM [@jc_akokorev]
+- Task: User Managment - Verify user by the interface [@jc_akokorev]
+- Task: Change the verify email screen [@jc_akokorev]
+- Task: Tutorial page [@gsma_sbouch]
+- Task: Changing buttons/advertisement coloors [@jc_ohladkov]
+- Task: Show in TC excution page the data was override [@jc_akokorev]
+- Task: Change button location: Use Case Flow [@jc_akokorev]
+- Task: Run ID in the test case result page [@jc_akokorev]
+- Task: Session create -> At least 1 SUT should be set [@jc_akokorev]
+- Task: ITP -> update Tabler.io and migrate to Single page app using https://inertiajs.com/ [@jc_ohladkov,@jc_akokorev]
+- Bug: [NGINX issue] - 502 error when pasting large amount of characters [@jc_mbabuta]
+- Bug: TC import - Import fails (502 timeout) with big yaml files [@jc_akokorev]
+
 ## v0.6
 - Task: ITP: Schema validation [@jc_akokorev]
 - Task: MMO1 or 2 as SUT -> FSP registration during Session creation [@jc_akokorev]
