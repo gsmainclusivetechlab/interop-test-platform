@@ -9,6 +9,7 @@ use App\Testing\TestSpecLoader;
 use PHPUnit\Framework\TestResult as TestSuiteResult;
 use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ResponseInterface;
+use SebastianBergmann\Timer\Timer;
 
 class SendingFulfilledHandler
 {
@@ -22,6 +23,7 @@ class SendingFulfilledHandler
      */
     public function __construct(TestResult $testResult)
     {
+        Timer::start();
         $this->testResult = $testResult;
     }
 
@@ -39,9 +41,9 @@ class SendingFulfilledHandler
         $testSuiteResult = $testSuite->run($testSuiteResult);
 
         if ($testSuiteResult->wasSuccessful()) {
-            $this->testResult->pass();
+            $this->testResult->pass(Timer::stop());
         } else {
-            $this->testResult->fail();
+            $this->testResult->fail(Timer::stop());
         }
 
         if ($this->testResult->testStep->isLastPosition()) {

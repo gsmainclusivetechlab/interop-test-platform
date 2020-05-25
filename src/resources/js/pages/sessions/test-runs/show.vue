@@ -114,12 +114,20 @@
                                     <b class="text-nowrap">
                                         {{ `Step ${testResult.testStep.data.position}` }}
                                     </b>
-                                    <small class="d-inline-block ml-auto" v-if="testResult.response">
-                                        Status:
-                                        <span class="text-success">
-                                            {{ `HTTP ${testResult.response.status}` }}
-                                        </span>
-                                    </small>
+                                    <div class="d-inline-block ml-auto">
+                                        <small class="d-inline-block ml-2" v-if="testResult.response">
+                                            Status:
+                                            <span class="text-success">
+                                                {{ `HTTP ${testResult.response.status}` }}
+                                            </span>
+                                        </small>
+                                        <small class="d-inline-block ml-2" v-if="testResult.duration">
+                                            Duration:
+                                            <span class="text-success">
+                                                {{ `${testResult.duration} ms` }}
+                                            </span>
+                                        </small>
+                                    </div>
                                 </div>
                                 <div class="text-truncate">
                                     <u class="mr-2">{{ testResult.request.method }} {{ testResult.request.path }}</u>
