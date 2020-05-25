@@ -7,7 +7,9 @@
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "stylelint": "npx stylelint ./resources/sass/**/*.scss",
+        "stylelint:fix": "npm run stylelint --fix"
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.1.7",
@@ -32,5 +34,10 @@
         "vue-json-pretty": "^1.6.3",
         "vue-meta": "^2.3.1",
         "vue-template-compiler": "^2.6.11"
+    },
+    "devDependencies": {
+        "stylelint": "^13.5.0",
+        "stylelint-config-recommended": "^3.0.0",
+        "stylelint-scss": "^3.17.2"
     }
 }
