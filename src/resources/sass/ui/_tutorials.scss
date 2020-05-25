@@ -1,82 +1,82 @@
 $tutorials-red-color: $primary;
 
 .tutorial-cards {
-    .scenario-card {
-        width: 350px;
-        height: 150px;
-        border: solid 2px $tutorials-red-color;
-    }
+  .scenario-card {
+    width: 350px;
+    height: 150px;
+    border: solid 2px $tutorials-red-color;
+  }
 
-    .icon {
-        height: 30px;
-        width: 30px;
-    }
+  .icon {
+    height: 30px;
+    width: 30px;
+  }
 }
 
 .tutorial-accordion {
-    .demo-create-session,
-    .demo-service-provider {
-        height: 65%;
-        width: 60%;
+  .demo-create-session,
+  .demo-service-provider {
+    height: 65%;
+    width: 60%;
 
-        .demo-circle {
-            position: absolute;
-            border: solid 3px #d87070;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .demo-inner-container {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .image-holder {
-            position: relative;
-        }
-
-        [class*='circle-label'] {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 10%;
-            width: 100%;
-            text-align: center;
-            font-weight: 600;
-            background-color: #222;
-            color: #fff;
-        }
-
-        [class*='demo-overlay'] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 5;
-            background-color: #000;
-            opacity: 0.75;
-            border-radius: 5px;
-            border: 1px solid #000;
-        }
-
-        [class*='start-demo-btn'] {
-            position: absolute;
-            z-index: 6;
-            left: 50%;
-            top: 40%;
-            margin-left: -7.2em;
-            color: $tutorials-red-color;
-            font-weight: 600;
-            background: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0px 1px 3px 0px black;
-            cursor: pointer;
-
-            &:hover {
-                color: #fff;
-                background: $tutorials-red-color;
-            }
-        }
+    .demo-circle {
+      position: absolute;
+      border: solid 3px #d87070;
+      border-radius: 50%;
+      cursor: pointer;
     }
+
+    .demo-inner-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .image-holder {
+      position: relative;
+    }
+
+    [class*='circle-label'] {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 10%;
+      width: 100%;
+      text-align: center;
+      font-weight: 600;
+      background-color: #222;
+      color: #fff;
+    }
+
+    [class*='demo-overlay'] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      background-color: #000;
+      opacity: 0.75;
+      border-radius: 5px;
+      border: 1px solid #000;
+    }
+
+    [class*='start-demo-btn'] {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      top: 40%;
+      margin-left: -7.2em;
+      color: $tutorials-red-color;
+      font-weight: 600;
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 3px 0 black;
+      cursor: pointer;
+
+      &:hover {
+        color: #fff;
+        background: $tutorials-red-color;
+      }
+    }
+  }
 }
