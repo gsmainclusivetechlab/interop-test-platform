@@ -1,3 +1,17 @@
+## v0.9
+- Task: Add Cookie popup and Cookie policy [@jc_akokorev,@jc_ohladkov]
+- Task: Dark/Light Mode [@jc_akokorev,@jc_ohladkov]
+- Task: Add text to guide the user to execute the first test case [@jc_akokorev,@jc_agalaguz]
+- Task: Add text to guide user once create a new session [@jc_ohladkov,@jc_agalaguz]
+- Task: Use Case managment [@jc_akokorev]
+- Task: Test Case draft/public [@jc_akokorev]
+- Task: API Spec Managment [@jc_akokorev]
+- Task: Remove registration code [@jc_akokorev]
+- Bug: 404 page style issue [@jc_akokorev]
+- Bug: Rejected Quote by Payee FSP - Step 8 - PUT quotes ID error [@jc_skushnir]
+- Bug: Long session name and description display issue [@jc_ohladkov]
+- Bug: Assertions not showing all data in actual [@jc_vmartynov]
+
 ## v0.8
 - Task: Test Case YAML optimization -> use test examples instead of "forward/backward" [@jc_akokorev]
 - Task: Overridings -> move them to Request and Response [@jc_akokorev]
