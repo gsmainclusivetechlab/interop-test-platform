@@ -29,6 +29,7 @@ Route::name('sessions.')->prefix('sessions')->namespace('Sessions')->group(funct
     Route::delete('{session}/destroy', 'SessionController@destroy')->name('destroy');
     Route::get('{session}/chart', 'SessionController@showChartData')->name('chart');
     Route::get('{session}/test-cases/{testCase}', 'TestCaseController@show')->name('test-cases.show');
+    Route::get('{session}/test-cases/{testCase}/test-runs', 'TestRunController@index')->name('test-cases.test-runs.index');
     Route::get('{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}', 'TestRunController@show')->name('test-cases.test-runs.show');
     Route::get('{session}/test-cases/{testCase}/test-steps', 'TestStepController@index')->name('test-cases.test-steps.index');
     Route::get('{session}/test-cases/{testCase}/test-steps/flow', 'TestStepController@flow')->name('test-cases.test-steps.flow');

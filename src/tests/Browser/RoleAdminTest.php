@@ -6,36 +6,9 @@ use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use App\Models\User;
 use Tests\Browser\Pages\AdminUsersPage;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RoleAdminTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
-    private $admin;
-    private $user;
-    private $testCaseCreator;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->admin = $this->user([
-            'first_name' => 'GSMA',
-            'last_name' => 'Admin',
-            'role' => User::ROLE_ADMIN
-        ]);
-
-        $this->user = $this->user([
-            'first_name' => 'GSMA',
-            'last_name' => 'User',
-            'role' => User::ROLE_USER
-        ]);
-    }
-
     /**
      * Can block and unblock users with role user.
      * @return void
@@ -43,10 +16,12 @@ class RoleAdminTest extends DuskTestCase
     public function testCanBlockAndUnblockUsersWithRoleUser()
     {
         $this->browse(function (Browser $browser) {
+            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+            $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($admin)
                 ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2) td:last-child', function ($td) {
+                ->with('.card .table tbody tr:first-child td:last-child', function ($td) {
                     $td
                         ->click('.dropdown-toggle')
                         ->waitFor('.dropdown-menu')
@@ -63,9 +38,9 @@ class RoleAdminTest extends DuskTestCase
                 ->assertVisible('@notificationBox')
                 ->click('@blockedUsersLink')
                 ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use ($user) {
                     $tr
-                        ->assertSeeLink($this->user->email)
+                        ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')
@@ -88,12 +63,14 @@ class RoleAdminTest extends DuskTestCase
     public function testCanDeleteUsersWithRoleUser()
     {
         $this->browse(function (Browser $browser) {
+            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+            $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($admin)
                 ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use ($user) {
                     $tr
-                        ->assertSeeLink($this->user->email)
+                        ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')

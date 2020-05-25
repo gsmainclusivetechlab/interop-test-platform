@@ -44,6 +44,7 @@ class TestResult extends Model
      */
     protected $attributes = [
         'status' => self::STATUS_INCOMPLETE,
+        'duration' => 0,
     ];
 
     /**
@@ -79,6 +80,14 @@ class TestResult extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function session()
+    {
+        return $this->hasOneThrough(Session::class, TestRun::class, 'id', 'id', 'test_run_id', 'session_id');
+    }
+
+    /**
      * @return bool
      */
     public function getSuccessfulAttribute()
@@ -87,11 +96,13 @@ class TestResult extends Model
     }
 
     /**
+     * @param float $duration
      * @return $this|bool
      */
-    public function pass()
+    public function pass(float $duration)
     {
         $this->status = static::STATUS_PASS;
+        $this->duration = (int) floor($duration * 1000);
 
         if (!$this->save()) {
             return false;
@@ -102,13 +113,15 @@ class TestResult extends Model
     }
 
     /**
+     * @param float $duration
      * @param string|null $exception
      * @return $this|bool
      */
-    public function fail(string $exception = null)
+    public function fail(float $duration, string $exception = null)
     {
         $this->status = static::STATUS_FAIL;
         $this->exception = $exception;
+        $this->duration = (int) floor($duration * 1000);
 
         if (!$this->save()) {
             return false;
