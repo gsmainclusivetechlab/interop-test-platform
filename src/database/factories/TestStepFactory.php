@@ -30,15 +30,11 @@ $factory->define(TestStep::class, function (Faker $faker) {
         'test_case_id' => function () {
             return factory(TestCase::class)->create()->getKey();
         },
-        'source_id' => function () use ($componentWithConnection) {
-            return $componentWithConnection->getKey();
-        },
-        'target_id' => function () use ($componentWithConnection) {
-            return $componentWithConnection->connections()->first()->getKey();
-        },
         'api_spec_id' => function () {
             return factory(ApiSpec::class)->create()->getKey();
         },
+        'source_id' => $componentWithConnection->getKey(),
+        'target_id' => $componentWithConnection->connections()->first()->getKey(),
         'path' => $faker->text,
         'method' => $faker->text,
         'pattern' => $faker->text,

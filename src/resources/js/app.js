@@ -50,6 +50,9 @@ Vue.config.productionTip = false;
 Vue.component('icon', () =>
     import(/* webpackChunkName: "icon" */ '@/components/icon.vue')
 );
+Vue.component('breadcrumb', () =>
+    import(/* webpackChunkName: "breadcrumb" */ '@/components/breadcrumb.vue')
+);
 Vue.component('pagination', () =>
     import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
 );

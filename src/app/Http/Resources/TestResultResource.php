@@ -18,6 +18,7 @@ class TestResultResource extends JsonResource
             'response' => $this->response ? $this->response->toArray() : null,
             'exception' => $this->exception,
             'successful' => $this->successful,
+            'duration' => $this->duration,
             'testRun' => new TestResultResource($this->whenLoaded('testRun')),
             'testStep' => new TestStepResource($this->whenLoaded('testStep')),
             'testExecutions' => TestExecutionResource::collection($this->whenLoaded('testExecutions')),
