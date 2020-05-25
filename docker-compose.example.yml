@@ -74,6 +74,10 @@ services:
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
+        healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            timeout: 20s
+            retries: 10
         volumes:
             - ./runtime/mysql:/var/lib/mysql
             - ./build/my.cnf:/etc/mysql/my.cnf
