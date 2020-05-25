@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
-use App\Scopes\NameScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -44,7 +43,9 @@ class TestCase extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope(new NameScope());
+        static::addGlobalScope('alphabetic', function ($builder) {
+            $builder->orderBy('name');
+        });
     }
 
     /**

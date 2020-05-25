@@ -37,7 +37,7 @@ class UserController extends Controller
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('company', 'like', "%{$q}%");
                 })
-                    ->when(!is_null($trash), function (Builder $query) {
+                    ->when(($trash !== null), function (Builder $query) {
                         return $query->onlyTrashed();
                     })
                     ->latest()
@@ -45,7 +45,7 @@ class UserController extends Controller
             ),
             'filter' => [
                 'q' => request('q'),
-                'trash' => !is_null($trash),
+                'trash' => ($trash !== null),
             ],
         ]);
     }

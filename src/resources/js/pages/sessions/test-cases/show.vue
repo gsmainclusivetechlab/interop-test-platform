@@ -8,6 +8,31 @@
             </div>
             <div class="card-body">
                 <ul class="list-unstyled">
+                    <li>
+                        <p>
+                            <strong>Configuration</strong>
+                        </p>
+                        <div v-for="component in session.components.data">
+                            <div class="mb-3" v-for="connection in component.connections">
+                                <label>
+                                    {{ connection.name }}
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        :id="`testing-${connection.id}`"
+                                        type="text"
+                                        :value="route('testing.sut', [session.uuid, component.uuid, connection.uuid])"
+                                        class="form-control"
+                                        readonly
+                                    />
+                                    <clipboard-copy-btn
+                                        :target="`#testing-${connection.id}`"
+                                        title="Copy"
+                                    ></clipboard-copy-btn>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                     <li v-if="testCase.description">
                         <p>
                             <strong>Description</strong>
