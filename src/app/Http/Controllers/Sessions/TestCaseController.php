@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\UseCaseResource;
+use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\UseCase;
@@ -63,5 +64,21 @@ class TestCaseController extends Controller
                     ->firstOrFail()
             ))->resolve(),
         ]);
+    }
+
+    /**
+     * @param Session $session
+     * @param TestCase $testCase
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function run(Session $session, TestCase $testCase)
+    {
+        $this->authorize('view', $session);
+        ExecuteTestRunJob::dispatch($session, $testCase);
+
+        return redirect()
+            ->back()
+            ->with('success', __('Run started successfully'));
     }
 }
