@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import Layout from '@/layouts/sessions/overview';
+import Layout from '@/layouts/sessions/main';
 import SessionChart from '@/components/sessions/chart';
 
 export default {
@@ -113,6 +113,6 @@ export default {
             type: Object,
             required: true
         },
-    }
+    },
 };
 </script>

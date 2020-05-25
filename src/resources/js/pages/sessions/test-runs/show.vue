@@ -4,7 +4,7 @@
             <div class="card-header">
                 <h3 class="card-title">
                     <inertia-link
-                        :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                        :href="route('sessions.test-cases.test-runs.index', [session.id, testCase.id])"
                         class="text-decoration-none"
                     >
                         <icon name="chevron-left"></icon>

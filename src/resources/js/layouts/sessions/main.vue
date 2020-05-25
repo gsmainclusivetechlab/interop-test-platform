@@ -5,18 +5,6 @@
                 <div class="row border-bottom pb-4 align-items-center">
                     <div class="col-6 d-flex flex-column">
                         <div class="page-pretitle font-weight-normal">
-                            <ol class="breadcrumb breadcrumb-bullets" aria-label="breadcrumbs">
-                                <li class="breadcrumb-item">
-                                    <inertia-link
-                                        :href="route('sessions.index')"
-                                    >
-                                        Sessions
-                                    </inertia-link>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">
-                                    {{ session.name }}
-                                </li>
-                            </ol>
                             <breadcrumb class="breadcrumb-bullets" :items="breadcrumbs"></breadcrumb>
                         </div>
                         <h1 class="page-title mw-100 mr-2 text-break">
@@ -193,14 +181,16 @@ export default {
             type: Object,
             required: true
         },
-    },
-    data() {
-        return {
-            breadcrumbs: [
-                {name: 'Sessions', url: route('sessions.index')},
-                {name: this.session.name},
-            ]
-        };
-    },
+        breadcrumbs: {
+            type: Array,
+            required: false,
+            default: function () {
+                return [
+                    {name: 'Sessions', url: route('sessions.index')},
+                    {name: this.session.name},
+                ];
+            }
+        }
+    }
 };
 </script>

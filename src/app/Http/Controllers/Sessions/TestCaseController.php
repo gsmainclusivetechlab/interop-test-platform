@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
-use App\Http\Resources\TestRunResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\TestCase;
 use App\Models\Session;
@@ -26,6 +25,7 @@ class TestCaseController extends Controller
      * @param Session $session
      * @param TestCase $testCase
      * @return \Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Session $session, TestCase $testCase)
     {
@@ -62,14 +62,6 @@ class TestCaseController extends Controller
                     ->where('test_case_id', $testCase->id)
                     ->firstOrFail()
             ))->resolve(),
-            'testRuns' => TestRunResource::collection(
-                $session->testRuns()
-                    ->where('test_case_id', $testCase->id)
-                    ->with(['session', 'testCase'])
-//                    ->completed()
-                    ->latest()
-                    ->paginate()
-            ),
         ]);
     }
 }

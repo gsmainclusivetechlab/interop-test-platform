@@ -1,5 +1,5 @@
 <template>
-    <ol class="breadcrumb">
+    <ol class="breadcrumb" v-if="items.length">
         <li v-for="item in items" class="breadcrumb-item" v-bind:class="{active: item.active}">
             <inertia-link v-if="item.url" :href="item.url">
                 {{ item.name }}
