@@ -35,7 +35,13 @@ class SutController extends Controller
      * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Session $session, Component $component, Component $connection, string $path, ServerRequestInterface $request)
+    public function __invoke(
+        Session $session,
+        Component $component,
+        Component $connection,
+        string $path,
+        ServerRequestInterface $request
+    )
     {
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())

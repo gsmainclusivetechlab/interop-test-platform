@@ -26,6 +26,8 @@ class TestExecution extends Model
         'name',
         'actual',
         'expected',
+        'exception',
+        'status',
     ];
 
     /**
@@ -34,14 +36,6 @@ class TestExecution extends Model
     protected $casts = [
         'actual' => 'array',
         'expected' => 'array',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $observables = [
-        'pass',
-        'fail',
     ];
 
     /**
@@ -58,37 +52,5 @@ class TestExecution extends Model
     public function getSuccessfulAttribute()
     {
         return $this->status === static::STATUS_PASS;
-    }
-
-    /**
-     * @return $this|bool
-     */
-    public function pass()
-    {
-        $this->status = static::STATUS_PASS;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('pass');
-        return $this;
-    }
-
-    /**
-     * @param string|null $exception
-     * @return $this|bool
-     */
-    public function fail(string $exception = null)
-    {
-        $this->status = static::STATUS_FAIL;
-        $this->exception = $exception;
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        $this->fireModelEvent('fail');
-        return $this;
     }
 }
