@@ -78,7 +78,7 @@
                                                             <li
                                                                 v-for="positiveTestCase in collect(useCase.testCases).where('behavior', 'positive').all()"
                                                                 class="list-group-item-action border-bottom"
-                                                                v-bind:class="{'bg-body': (testCase !== null && positiveTestCase.id === testCase.id)}"
+                                                                v-bind:class="{'bg-body': (testCase !== undefined && positiveTestCase.id === testCase.id)}"
                                                             >
                                                                 <inertia-link
                                                                     :href="route('sessions.test-cases.show', [session.id, positiveTestCase.id])"
@@ -125,7 +125,7 @@
                                                             <li
                                                                 v-for="negativeTestCase in collect(useCase.testCases).where('behavior', 'negative').all()"
                                                                 class="list-group-item-action border-bottom"
-                                                                v-bind:class="{'bg-body': (testCase !== null && negativeTestCase.id === testCase.id)}"
+                                                                v-bind:class="{'bg-body': (testCase !== undefined && negativeTestCase.id === testCase.id)}"
                                                             >
                                                                 <inertia-link
                                                                     :href="route('sessions.test-cases.show', [session.id, negativeTestCase.id])"

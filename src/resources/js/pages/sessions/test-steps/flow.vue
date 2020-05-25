@@ -10,9 +10,10 @@
                     :href="editorLink"
                     target="_blank"
                     rel="noreferrer"
-                    class="btn btn-outline-primary"
+                    class="btn btn-primary"
                 >
-                    Copy diagram to live editor
+                    <icon name="external-link"></icon>
+                    Diagram Editor
                 </a>
             </div>
             <div class="pt-2 pb-4">
