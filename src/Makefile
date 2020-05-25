@@ -11,13 +11,13 @@ endif
 install: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
-	php artisan dusk:chrome-driver
+	php artisan dusk:chrome-driver 81
 
 update: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
 	php artisan queue:restart
-	php artisan dusk:chrome-driver
+	php artisan dusk:chrome-driver 81
 
 test:
 	php artisan dusk --testdox --log-junit tests/results/results.xml

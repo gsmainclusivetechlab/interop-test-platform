@@ -18,11 +18,11 @@ class AdminSessionsTest extends DuskTestCase
     {
         parent::setUp();
 
-        $this->admin = $this->user([
+        $this->admin = factory(User::class)->create([
             'role' => User::ROLE_ADMIN
         ]);
 
-        $this->user = $this->user([
+        $this->user = factory(User::class)->create([
             'role' => User::ROLE_USER
         ]);
     }
