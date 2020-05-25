@@ -78,6 +78,15 @@ class Session extends Model
 
     /**
      * @param Component $component
+     * @return bool
+     */
+    public function hasComponent(Component $component)
+    {
+        return $this->components()->whereKey($component->getKey())->exists();
+    }
+
+    /**
+     * @param Component $component
      * @return string
      */
     public function getBaseUriOfComponent(Component $component)

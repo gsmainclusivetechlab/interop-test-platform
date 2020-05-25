@@ -80,6 +80,14 @@ class TestResult extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function session()
+    {
+        return $this->hasOneThrough(Session::class, TestRun::class, 'id', 'id', 'test_run_id', 'session_id');
+    }
+
+    /**
      * @return bool
      */
     public function getSuccessfulAttribute()
