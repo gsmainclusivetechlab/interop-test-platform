@@ -38,6 +38,9 @@ class TestCaseController extends Controller
                     'testCases' => function ($query) {
                         return $query->with(['lastTestRun']);
                     },
+                    'components' => function ($query) {
+                        return $query->with(['connections']);
+                    },
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
