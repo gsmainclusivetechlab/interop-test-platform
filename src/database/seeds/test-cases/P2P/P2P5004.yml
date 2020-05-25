@@ -9,7 +9,7 @@ precondition: |
   - Mobile Money Operator is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "50.03".
+  - Amount should be the value "50.04".
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
