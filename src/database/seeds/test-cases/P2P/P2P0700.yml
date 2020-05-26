@@ -22,7 +22,7 @@ components:
 test_steps:
 
 ## GET/Participants: MMO1 -> Mojaloop ##
-  - path: /participants/{TYPE}/{ID}
+  - path: /participants/{Type}/{ID}
     pattern: '^participants/[A-Z]/[a-z0-9]$'
     method: GET
     source: Mobile Money Operator 1
@@ -32,7 +32,7 @@ test_steps:
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri: 'required|in:MSISDN'
+          uri: 'required|regex:/.*\/participants\/MSISDN\/[+]?[0-9]{6,15}$/'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
@@ -53,7 +53,7 @@ test_steps:
 
 ## PUT/Participants: Mojaloop -> MMO1 ##
 
-  - path: /participants/{TYPE}/{ID}
+  - path: /participants/{Type}/{ID}
     pattern: '^participants/[A-Z]/[a-z0-9]$'
     method: PUT
     source: Mojaloop
