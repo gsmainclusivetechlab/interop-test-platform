@@ -142,6 +142,7 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
@@ -215,6 +216,7 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
@@ -266,6 +268,7 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
@@ -333,6 +336,7 @@ test_steps:
       method: 'POST'
       uri: /transfers
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo2fsp'
@@ -397,6 +401,7 @@ test_steps:
       method: 'POST'
       uri: /transfers
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo2fsp'
@@ -448,6 +453,7 @@ test_steps:
       method: 'PUT'
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
@@ -496,6 +502,7 @@ test_steps:
       method: 'PUT'
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
