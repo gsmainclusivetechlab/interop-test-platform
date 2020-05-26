@@ -47,6 +47,7 @@ test_steps:
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
 
     response:
       status: 202
@@ -78,6 +79,7 @@ test_steps:
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         fspId: 'mmo2fsp'
 
@@ -118,8 +120,8 @@ test_steps:
         rules:
           body.amount.amount: 'required|in:700'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -156,7 +158,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '700'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
@@ -201,8 +203,8 @@ test_steps:
         rules:
           body.amount.amount: 'required|in:700'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
 
     test_response_scripts:
@@ -240,7 +242,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '700'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
