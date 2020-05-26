@@ -592,7 +592,7 @@ test_steps:
     test_request_scripts:
       - name: Amount is correct
         rules:
-          body.amount: 'required|in:1011'
+          body.amount: 'required|in:20.01'
 
     test_response_scripts:
       - name: Authorisation code is valid and state is active
@@ -718,7 +718,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:1011'
+          body.amount.amount: 'required|in:20.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -781,7 +781,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:1011'
+          body.amount.amount: 'required|in:20.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
