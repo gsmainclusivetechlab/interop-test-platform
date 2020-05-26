@@ -6,7 +6,7 @@ description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Disclosing Fees.
 precondition: |
   - Mobile Money Operator is capable of handled async calls.
-  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer MMOs exist in Mojaloop as Participants.f
   - Payee and Payer exist in Mojaloop as Parties.
   - Amount should be the value "400".
   - PayeeFsp Fee should be the value "1".
@@ -53,8 +53,8 @@ test_steps:
         rules:
           body.amount.amount: 'required|in:399'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -91,7 +91,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '399'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
@@ -136,8 +136,8 @@ test_steps:
         rules:
           body.amount.amount: 'required|in:399'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -174,7 +174,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '399'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
