@@ -82,12 +82,13 @@ class RegisterTest extends DuskTestCase
     public function testCanNotRegisterWithExistingEmail()
     {
         $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser
                 ->visit(new RegisterPage)
                 ->type('@firstName', 'John')
                 ->type('@lastName', 'Doe')
-                ->type('@email', $user->email)
+                ->type('@email', 'john.doe@gmail.com')
                 ->type('@company', 'GSMA')
                 ->type('@password', 'password')
                 ->type('@passwordConfirmation', 'password')
