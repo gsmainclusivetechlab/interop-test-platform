@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Testing\Handlers;
 
 use App\Models\TestResult;
-use SebastianBergmann\Timer\Timer;
 use Throwable;
 
 class SendingRejectedHandler
@@ -18,7 +17,6 @@ class SendingRejectedHandler
      */
     public function __construct(TestResult $testResult)
     {
-        Timer::start();
         $this->testResult = $testResult;
     }
 
@@ -28,7 +26,7 @@ class SendingRejectedHandler
      */
     public function __invoke(Throwable $exception)
     {
-        $this->testResult->fail(Timer::stop(), $exception->getMessage());
+        $this->testResult->fail($exception->getMessage());
         $this->testResult->testRun->complete();
 
         return $exception;

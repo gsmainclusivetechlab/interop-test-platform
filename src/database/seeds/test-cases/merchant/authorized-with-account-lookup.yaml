@@ -89,7 +89,7 @@ test_steps:
         notificationMethod: 'callback'
 
   ##------------------------------GET/Participants: MMO1 -> Mojaloop------------------------------##
-  - path: /participants/{TYPE}/{ID}
+  - path: /participants/{Type}/{ID}
     pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
     method: GET
     source: Mobile Money Operator 1
@@ -119,7 +119,7 @@ test_steps:
       status: 202
 
   ##------------------------------PUT/Participants: Mojaloop -> MMO1------------------------------##
-  - path: /participants/{TYPE}/{ID}
+  - path: /participants/{Type}/{ID}
     pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
     method: PUT
     source: Mojaloop

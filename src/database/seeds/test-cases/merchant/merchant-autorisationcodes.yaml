@@ -581,7 +581,7 @@ test_steps:
       status: 202
 
   ##------------------------------POST/Accounts: MMO1 -> SP------------------------------##
-  - path: /accounts/msisdn/{msisdn}/authorisationcodes
+  - path: /accounts/{identifierType}/{identifier}/authorisationcodes
     method: POST
     pattern: '^accounts/msisdn/[+]?[0-9]{6,15}/authorisationcodes$'
     source: Mobile Money Operator 1
