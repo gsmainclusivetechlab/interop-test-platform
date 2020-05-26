@@ -99,7 +99,7 @@ test_steps:
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri: 'required|in:MSISDN'
+          uri: 'required|regex:/.*\/participants\/MSISDN\/[+]?[0-9]{6,15}$/'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
@@ -108,7 +108,7 @@ test_steps:
 
     request:
       method: GET
-      uri: /participants/MSISDN/+2000009999+2000009999
+      uri: /participants/MSISDN/+2000009999
       headers:
         accept: 'application/json'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
