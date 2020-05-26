@@ -14,7 +14,7 @@ precondition: |
   - PayerFsp Comission should be the value "1".
   - PayerFsp Fee should be the value "1".
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
-  - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Payee party should be identified by account identifier "msisdn" with the value "+2000028888".
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
@@ -41,7 +41,7 @@ test_steps:
 
     request:
       method: GET
-      uri: /participants/MSISDN/33555789123
+      uri: /participants/MSISDN/+2000028888
       headers:
         accept: 'application/json'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
@@ -72,7 +72,7 @@ test_steps:
 
     request:
       method: PUT
-      uri: /participants/MSISDN/33555123456
+      uri: /participants/MSISDN/+2000028888
       headers:
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
@@ -112,7 +112,7 @@ test_steps:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+2000028888'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'required|in:700'
@@ -139,7 +139,7 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: "+2000028888"
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
@@ -194,7 +194,7 @@ test_steps:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+2000028888'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'required|in:700'
@@ -222,7 +222,7 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: "+2000028888"
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
