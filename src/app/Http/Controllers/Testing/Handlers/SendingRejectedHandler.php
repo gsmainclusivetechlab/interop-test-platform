@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
+use App\Exceptions\TestMismatchException;
 use App\Models\TestResult;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
@@ -31,6 +32,6 @@ class SendingRejectedHandler
         $this->testResult->fail(Timer::stop(), $exception->getMessage());
         $this->testResult->testRun->complete();
 
-        return $exception;
+        throw new TestMismatchException($this->testResult->session, 500, $exception->getMessage());
     }
 }
