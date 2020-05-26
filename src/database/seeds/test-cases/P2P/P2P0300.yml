@@ -54,8 +54,8 @@ test_steps:
         rules:
           body.amount.amount: 'required|in:300'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -92,7 +92,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '300'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
@@ -137,8 +137,8 @@ test_steps:
         rules:
           body.amount.amount: 'required|in:300'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -175,7 +175,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '300'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
