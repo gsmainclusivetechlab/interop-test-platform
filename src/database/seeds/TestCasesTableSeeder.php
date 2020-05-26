@@ -16,7 +16,7 @@ class TestCasesTableSeeder extends Seeder
         $finder = (new Finder())
             ->files()
             ->name('*.yaml')
-            ->in(database_path('seeds/test-cases/merchant'));
+            ->in(database_path('seeds/test-cases'));
 
         foreach ($finder as $file) {
             $testCase = (new TestCaseImport())->import(Yaml::parse($file->getContents()));

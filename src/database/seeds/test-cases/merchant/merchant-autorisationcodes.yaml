@@ -2,7 +2,7 @@ name: Authorized Transaction by Payer FSP w/ Authorisation Code
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
-    The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction simulating an approved transaction using an authorisation code.
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction simulating an approved transaction using an authorisation code.
 precondition: |
   - Service Provider has GSMA Mobile Money API Implemented.
   - Service Provider is capable of handled async calls.
@@ -16,7 +16,7 @@ components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
 test_steps:
-##------------------------------POST/Transactions: SP -> MMO1------------------------------##
+  ##------------------------------POST/Transactions: SP -> MMO1------------------------------##
   - path: /transactions
     pattern: '^transactions$'
     method: POST
@@ -86,7 +86,7 @@ test_steps:
         status: 'pending'
         notificationMethod: 'callback'
 
-##------------------------------POST/TransanctionRequests: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------POST/TransanctionRequests: MMO1 -> Mojaloop------------------------------##
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
@@ -150,7 +150,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/TransanctionRequests: Mojaloop -> MMO2------------------------------##
+  ##------------------------------POST/TransanctionRequests: Mojaloop -> MMO2------------------------------##
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
@@ -214,7 +214,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/TransanctionRequests: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------PUT/TransanctionRequests: MMO2 -> Mojaloop------------------------------##
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -251,7 +251,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------PUT/TransanctionRequests: Mojaloop -> MMO1------------------------------##
+  ##------------------------------PUT/TransanctionRequests: Mojaloop -> MMO1------------------------------##
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -288,7 +288,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------POST/Quotes: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------POST/Quotes: MMO2 -> Mojaloop------------------------------##
   - path: /quotes
     pattern: '^quotes$'
     method: POST
@@ -364,7 +364,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/Quotes: Mojaloop -> MMO1------------------------------##
+  ##------------------------------POST/Quotes: Mojaloop -> MMO1------------------------------##
   - path: /quotes
     pattern: '^quotes$'
     method: POST
@@ -440,7 +440,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/Quotes: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------PUT/Quotes: MMO1 -> Mojaloop------------------------------##
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -480,7 +480,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------PUT/Quotes: Mojaloop -> MMO2------------------------------##
+  ##------------------------------PUT/Quotes: Mojaloop -> MMO2------------------------------##
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -520,7 +520,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------GET/Authorizations: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------GET/Authorizations: MMO2 -> Mojaloop------------------------------##
   - path: /authorizations/{ID}
     method: GET
     pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
@@ -550,7 +550,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------GET/Authorizations: Mojaloop -> MMO1------------------------------##
+  ##------------------------------GET/Authorizations: Mojaloop -> MMO1------------------------------##
   - path: /authorizations/{ID}
     method: GET
     pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
@@ -580,7 +580,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/Accounts: MMO1 -> SP------------------------------##
+  ##------------------------------POST/Accounts: MMO1 -> SP------------------------------##
   - path: /accounts/msisdn/{msisdn}/authorisationcodes
     method: POST
     pattern: '^accounts/msisdn/[+]?[0-9]{6,15}/authorisationcodes$'
@@ -620,7 +620,7 @@ test_steps:
         authorisationCode: '12345'
         codeState: 'active'
 
-##------------------------------PUT/Authorizations: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------PUT/Authorizations: MMO1 -> Mojaloop------------------------------##
   - path: /authorizations/{ID}
     method: PUT
     pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
@@ -658,7 +658,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/Authorizations: Mojaloop -> MMO2------------------------------##
+  ##------------------------------PUT/Authorizations: Mojaloop -> MMO2------------------------------##
   - path: /authorizations/{ID}
     method: PUT
     pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
@@ -696,7 +696,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/Transfers: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------POST/Transfers: MMO2 -> Mojaloop------------------------------##
   - path: /transfers
     pattern: '^transfers$'
     method: POST
@@ -759,7 +759,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/Transfers: Mojaloop -> MMO1------------------------------##
+  ##------------------------------POST/Transfers: Mojaloop -> MMO1------------------------------##
   - path: /transfers
     pattern: '^transfers$'
     method: POST
@@ -822,7 +822,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/X-Callback-URL: MMO1 -> Service Provider------------------------------##
+  ##------------------------------PUT/X-Callback-URL: MMO1 -> Service Provider------------------------------##
   - path: '{X-Callback-URL}'
     pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     method: PUT
@@ -875,7 +875,7 @@ test_steps:
     response:
       status: 204
 
-##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -927,7 +927,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------PUT/Transfers: Mojaloop -> MMO2------------------------------##
+  ##------------------------------PUT/Transfers: Mojaloop -> MMO2------------------------------##
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -977,4 +977,4 @@ test_steps:
         expiration: '2000-01-01T00:00:00.000Z'
 
     response:
-        status: 200
+      status: 200
