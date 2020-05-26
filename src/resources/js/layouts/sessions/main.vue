@@ -11,8 +11,11 @@
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>
-                    <div class="ml-auto col-4 align-items-center">
-                        <inertia-link :href="route('sessions.test-mismatches.index', session.id)" class="btn btn-secondary mr-2">
+                    <div class="ml-auto col-4 d-flex justify-content-end">
+                        <inertia-link
+                            :href="route('sessions.test-mismatches.index', session.id)"
+                            class="btn btn-secondary mr-4 align-self-end flex-shrink-0"
+                        >
                             <icon name="alert-triangle"></icon>
                             Test Mismatches
                         </inertia-link>
