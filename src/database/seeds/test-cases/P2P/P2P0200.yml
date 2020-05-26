@@ -208,7 +208,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'required|in:199'
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -260,7 +260,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'required|in:199'
+          status: 'required|in:200'
 
     request:
       method: 'PUT'
@@ -311,7 +311,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:200'
+          body.amount.amount: 'required|in:199'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -376,7 +376,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:200'
+          body.amount.amount: 'required|in:199'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
