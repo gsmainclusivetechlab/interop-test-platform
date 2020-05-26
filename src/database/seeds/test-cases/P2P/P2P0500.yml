@@ -211,11 +211,11 @@ test_steps:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555123456"
           personalInfo:
