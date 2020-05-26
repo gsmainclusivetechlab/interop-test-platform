@@ -90,7 +90,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '50.03'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
@@ -173,7 +173,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '50.03'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
