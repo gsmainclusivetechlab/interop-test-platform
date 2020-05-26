@@ -1,4 +1,3 @@
-  
 name: Authorized Transaction by Payer FSP
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
