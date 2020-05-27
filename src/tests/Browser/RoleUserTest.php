@@ -14,8 +14,8 @@ class RoleUserTest extends DuskTestCase
      */
     public function testHasNoAccessToAdminUsersPage()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit('/')
@@ -31,8 +31,8 @@ class RoleUserTest extends DuskTestCase
      */
     public function testHasNoAccessToAdminSessionsPage()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit('/')
@@ -48,8 +48,8 @@ class RoleUserTest extends DuskTestCase
      */
     public function testHasNoAccessToAdminTestCasesPage()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit('/')

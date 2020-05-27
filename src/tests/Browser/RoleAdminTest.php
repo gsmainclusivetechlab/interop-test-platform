@@ -15,9 +15,10 @@ class RoleAdminTest extends DuskTestCase
      */
     public function testCanBlockAndUnblockUsersWithRoleUser()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
-            $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+
+        $this->browse(function (Browser $browser) use ($user, $admin) {
             $browser
                 ->loginAs($admin)
                 ->visit(new AdminUsersPage)
@@ -62,9 +63,9 @@ class RoleAdminTest extends DuskTestCase
      */
     public function testCanDeleteUsersWithRoleUser()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create(['role' => User::ROLE_USER]);
-            $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $this->browse(function (Browser $browser) use ($user, $admin) {
             $browser
                 ->loginAs($admin)
                 ->visit(new AdminUsersPage)

@@ -9,33 +9,19 @@ use Tests\Browser\Pages\AdminSessionsPage;
 
 class AdminSessionsTest extends DuskTestCase
 {
-    private $admin;
-    private $user;
-    private $session;
-
     /**
      * Admin can see sessions created by users.
      * @return void
      */
     public function testAdminCanSeeSessionsCreatedByUsers()
     {
-        $this->browse(function ($browser) {
-            $this->admin = factory(User::class)->create([
-                'role' => User::ROLE_ADMIN
-            ]);
-
-            $this->user = factory(User::class)->create([
-                'role' => User::ROLE_USER
-            ]);
-
-            $this->session = factory(Session::class)->create([
-                'owner_id' => $this->user->id
-            ]);
-
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $session = factory(Session::class)->create();
+        $this->browse(function ($browser) use ($admin, $session) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($admin)
                 ->visit(new AdminSessionsPage)
-                ->assertSeeIn('@sessionsTable', $this->session->name);
+                ->assertSeeIn('@sessionsTable', $session->name);
         });
     }
 
@@ -45,9 +31,11 @@ class AdminSessionsTest extends DuskTestCase
      */
     public function testAdminCanDeleteSessionsCreatedByUsers()
     {
-        $this->browse(function ($browser) {
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $session = factory(Session::class)->create();
+        $this->browse(function ($browser) use ($admin) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($admin)
                 ->visit(new AdminSessionsPage)
                 ->with('@sessionsTable', function ($table) {
                     $table

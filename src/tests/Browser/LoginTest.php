@@ -64,8 +64,8 @@ class LoginTest extends DuskTestCase
      */
     public function testCanNotLoginWithInvalidCredentials()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->visit(new LoginPage)
                 ->type('@email', $user->email)
@@ -83,8 +83,8 @@ class LoginTest extends DuskTestCase
      */
     public function testCanLoginWithValidCredentials()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->visit(new LoginPage)
                 ->type('@email', $user->email)
@@ -101,8 +101,8 @@ class LoginTest extends DuskTestCase
      */
     public function testCanLogout()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit('/')
