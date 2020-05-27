@@ -8,7 +8,7 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="navbar-brand-image h-5"
+                            class="navbar-brand-image h-5 outline-light"
                             alt="Interoperability Test Platform"
                         />
                     </inertia-link>

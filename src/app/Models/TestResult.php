@@ -96,13 +96,12 @@ class TestResult extends Model
     }
 
     /**
-     * @param float $duration
      * @return $this|bool
      */
-    public function pass(float $duration)
+    public function pass()
     {
         $this->status = static::STATUS_PASS;
-        $this->duration = (int) floor($duration * 1000);
+        $this->duration = (int) floor((microtime(true) - LARAVEL_START) * 1000);
 
         if (!$this->save()) {
             return false;
@@ -113,15 +112,14 @@ class TestResult extends Model
     }
 
     /**
-     * @param float $duration
      * @param string|null $exception
      * @return $this|bool
      */
-    public function fail(float $duration, string $exception = null)
+    public function fail(string $exception = null)
     {
         $this->status = static::STATUS_FAIL;
         $this->exception = $exception;
-        $this->duration = (int) floor($duration * 1000);
+        $this->duration = (int) floor((microtime(true) - LARAVEL_START) * 1000);
 
         if (!$this->save()) {
             return false;

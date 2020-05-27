@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Exceptions\InvalidTraceContextException;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use Closure;
@@ -22,7 +21,7 @@ class ValidateTraceContext
             return $next($request);
         }
 
-        throw new InvalidTraceContextException;
+        abort(403, 'Invalid trace context.');
     }
 
     /**
@@ -41,7 +40,7 @@ class ValidateTraceContext
 
             return !$tracestate->hasVendors() || $tracestate->hasVendorWithSpanId($traceparent->getParentId());
         } catch (InvalidArgumentException $e) {
-            return false;
+            abort(403, $e->getMessage());
         }
     }
 }

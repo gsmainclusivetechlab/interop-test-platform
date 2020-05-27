@@ -23,6 +23,11 @@ class ExecuteTestRunJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * @var int
+     */
+    public $tries = 1;
+
+    /**
      * @var Session
      */
     protected $session;

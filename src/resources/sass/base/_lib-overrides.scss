@@ -189,3 +189,13 @@ a {
     word-break: break-word;
   }
 }
+
+.outline {
+  &-light {
+    outline: 1px solid $gray-100;
+  }
+
+  &-dark {
+    outline: 1px solid $gray-900;
+  }
+}

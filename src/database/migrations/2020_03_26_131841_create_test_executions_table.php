@@ -20,7 +20,7 @@ class CreateTestExecutionsTable extends Migration
             $table->string('name');
             $table->json('actual');
             $table->json('expected');
-            $table->string('exception')->nullable();
+            $table->text('exception')->nullable();
             $table->string('status')->index();
             $table->timestamp('created_at');
         });
