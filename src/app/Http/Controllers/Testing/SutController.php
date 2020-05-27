@@ -61,12 +61,16 @@ class SutController extends Controller
                 $query->where(function ($query) {
                     $query->where('position', '=', 1);
                     $query->whereDoesntHave('testRuns', function ($query) {
-                        $query->incompleted();
+                        $query->incompleted()->whereDoesntHave('testResults', function ($query) {
+                            $query->whereColumn('test_step_id', 'test_steps.id');
+                        });
                     });
                 })->orWhere(function ($query) {
                     $query->where('position', '!=', 1);
                     $query->whereHas('testRuns', function ($query) {
-                        $query->incompleted();
+                        $query->incompleted()->whereDoesntHave('testResults', function ($query) {
+                            $query->whereColumn('test_step_id', 'test_steps.id');
+                        });
                     });
                 });
             })
