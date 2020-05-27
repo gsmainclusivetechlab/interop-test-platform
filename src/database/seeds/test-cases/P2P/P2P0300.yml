@@ -310,7 +310,11 @@ test_steps:
     trigger:
       amount:
         amount: '299'
-
+    test_request_setups:
+      - name: Override request
+        values:
+          body.amount.amount: '299'
+          body.amount.currency: 'USD'
     test_request_scripts:
       - name: Transfer ID is present
         rules:
