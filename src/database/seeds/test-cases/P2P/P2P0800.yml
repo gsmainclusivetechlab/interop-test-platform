@@ -93,7 +93,14 @@ test_steps:
     trigger:
       amount:
         amount: '799'
-
+    test_request_setups:
+      - name: Override request
+        values:
+          body.amountType: "SEND"
+          body.amount.amount: 799
+          body.amount.currency: "USD"
+          body.fees.amount: 1
+          body.fees.currency: "USD"
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -259,7 +266,13 @@ test_steps:
     trigger:
       transferAmount:
         amount: '799'
-
+    test_request_setups:
+      - name: Override request
+        values:
+          body.transferAmount.amount: 799
+          body.transferAmount.currency: "USD"
+          body.payeeReceiveAmount.amount: 798
+          body.payeeReceiveAmount.currency: "USD"
     test_request_setups:
       - name: Override request
         values:
