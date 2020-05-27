@@ -269,19 +269,12 @@ test_steps:
     test_request_setups:
       - name: Override request
         values:
-          body.transferAmount.amount: 799
-          body.transferAmount.currency: "USD"
-          body.payeeReceiveAmount.amount: 798
-          body.payeeReceiveAmount.currency: "USD"
-    test_request_setups:
-      - name: Override request
-        values:
           body.transferAmount.amount: '799'
           body.transferAmount.currency: 'USD'
           body.payeeReceiveAmount.amount: '798'
           body.payeeReceiveAmount.currency: 'USD'
-          body.payeeFspCommission.amount: '1'
-          body.payeeFspCommission.currency: 'USD'
+#          body.payeeFspCommission.amount: '1'
+#          body.payeeFspCommission.currency: 'USD'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
