@@ -23,7 +23,7 @@ test_steps:
 
 ## GET/Participants: MMO1 -> Mojaloop ##
   - path: /participants/{Type}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+    pattern: '^participants/MSISDN/[+]2000028888$'
     method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -54,7 +54,7 @@ test_steps:
 ## PUT/Participants: Mojaloop -> MMO1 ##
 
   - path: /participants/{Type}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+    pattern: '^participants/MSISDN/[+]2000028888$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -94,7 +94,14 @@ test_steps:
     trigger:
       amount:
         amount: '700'
-
+    test_request_setups:
+      - name: Override request
+        values:
+          body.amountType: 'RECEIVE'
+          body.amount.amount: '700'
+          body.amount.currency: 'USD'
+          body.fees.amount: '1'
+          body.fees.currency: 'USD'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:

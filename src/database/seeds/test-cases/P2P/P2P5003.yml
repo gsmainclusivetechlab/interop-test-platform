@@ -237,7 +237,7 @@ test_steps:
       status: 200
 
 ## PUT/Quotes/{ID}: Mojaloop -> MMO1 ##
-  - path: /quotes/{ID}
+  - path: /quotes/{ID}/error
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
     method: PUT
     source: Mojaloop
@@ -269,7 +269,7 @@ test_steps:
 
     request:
       method: 'PUT'
-      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a/error
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'

@@ -78,7 +78,7 @@ class TestCaseController extends Controller
     public function run(Session $session, TestCase $testCase)
     {
         $this->authorize('view', $session);
-        ExecuteTestRunJob::dispatch($session, $testCase);
+        ExecuteTestRunJob::dispatch($session, $testCase)->afterResponse();
 
         return redirect()
             ->back()

@@ -22,7 +22,7 @@ test_steps:
 
 ## GET/Participants: MMO1 -> Mojaloop ##
   - path: /participants/{Type}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+    pattern: '^participants/MSISDN/[+]2000018888$'
     method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -53,7 +53,7 @@ test_steps:
 ## PUT/Participants: Mojaloop -> MMO1 ##
 
   - path: /participants/{Type}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+    pattern: '^participants/MSISDN/[+]2000018888$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -93,7 +93,12 @@ test_steps:
     trigger:
       amount:
         amount: '599'
-
+    test_request_setups:
+      - name: Override request
+        values:
+          body.amountType: 'SEND'
+          body.amount.amount: '599'
+          body.amount.currency: 'USD'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -551,7 +556,7 @@ test_steps:
         rules:
           body.completedTimestamp:
             - 'required'
-            - 'required|regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
       - name: fulfilment is specified correctly
         rules:
           body.fulfilment: 'required|regex:/^[A-Za-z0-9-_]{43}$/'

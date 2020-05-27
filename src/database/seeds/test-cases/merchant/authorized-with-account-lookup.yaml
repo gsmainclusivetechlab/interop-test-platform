@@ -90,7 +90,7 @@ test_steps:
 
   ##------------------------------GET/Participants: MMO1 -> Mojaloop------------------------------##
   - path: /participants/{Type}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+    pattern: '^participants/MSISDN/[+]2000009999$'
     method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -110,7 +110,7 @@ test_steps:
       method: GET
       uri: /participants/MSISDN/+2000009999
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-source: 'mmo1fsp'
@@ -120,7 +120,7 @@ test_steps:
 
   ##------------------------------PUT/Participants: Mojaloop -> MMO1------------------------------##
   - path: /participants/{Type}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+    pattern: '^participants/MSISDN/[+]2000009999$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -142,6 +142,7 @@ test_steps:
       method: PUT
       uri: /participants/MSISDN/+2000009999
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
         fspiop-destination: 'mmo1fsp'
