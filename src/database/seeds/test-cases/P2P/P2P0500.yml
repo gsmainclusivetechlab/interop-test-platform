@@ -94,7 +94,7 @@ test_steps:
       amount:
         amount: '500'
     test_request_setups:
-      - name: Override response
+      - name: Override request
         values:
           body.amountType: "RECEIVE"
           body.amount.amount: 500
