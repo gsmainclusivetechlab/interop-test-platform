@@ -5,11 +5,16 @@ namespace Tests;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Dusk\Browser;
 use Laravel\Dusk\TestCase as BaseTestCase;
 
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use WithFaker;
+    use DatabaseMigrations;
 
     /**
      * Prepare for Dusk test execution.
@@ -46,15 +51,23 @@ abstract class DuskTestCase extends BaseTestCase
     }
 
     /**
-     * Tear down the test and delete all cookies from the browser instance to address
-     * instances where the test would be kicked over to the login page.
+     * @return void
      */
-//    protected function tearDown(): void
-//    {
-//        foreach (static::$browsers as $browser) {
-//            $browser->driver->manage()->deleteAllCookies();
-//        }
-//
-//        parent::tearDown();
-//    }
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Browser::$waitSeconds = 10;
+    }
+
+    /**
+     * @return void
+     */
+    protected function tearDown(): void
+    {
+        foreach (static::$browsers as $browser) {
+            $browser->driver->manage()->deleteAllCookies();
+        }
+
+        parent::tearDown();
+    }
 }

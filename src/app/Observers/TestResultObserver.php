@@ -13,7 +13,7 @@ class TestResultObserver
     public function pass(TestResult $testResult)
     {
         $testResult->testRun()->increment('passed');
-        $testResult->testRun()->increment('duration', floor((microtime(true) - LARAVEL_START) * 1000));
+        $testResult->testRun()->increment('duration', $testResult->duration);
     }
 
     /**
@@ -23,6 +23,6 @@ class TestResultObserver
     public function fail(TestResult $testResult)
     {
         $testResult->testRun()->increment('failures');
-        $testResult->testRun()->increment('duration', floor((microtime(true) - LARAVEL_START) * 1000));
+        $testResult->testRun()->increment('duration', $testResult->duration);
     }
 }

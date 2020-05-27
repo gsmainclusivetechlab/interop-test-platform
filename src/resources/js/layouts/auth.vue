@@ -6,7 +6,7 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="mb-2"
+                            class="mb-2 outline-light"
                             alt="Interoperability Test Platform"
                         />
                     </inertia-link>

@@ -5,35 +5,19 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RoleUserTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->user([
-            'role' => User::ROLE_USER
-        ]);
-    }
-
     /**
      * Has no access to admin users page.
      * @return void
      */
     public function testHasNoAccessToAdminUsersPage()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit('/')
                 ->assertMissing('.navbar-nav .admin-settings-dropdown')
                 ->visit('/admin/users')
@@ -47,9 +31,10 @@ class RoleUserTest extends DuskTestCase
      */
     public function testHasNoAccessToAdminSessionsPage()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit('/')
                 ->assertMissing('.navbar-nav .admin-settings-dropdown')
                 ->visit('/admin/sessions')
@@ -63,9 +48,10 @@ class RoleUserTest extends DuskTestCase
      */
     public function testHasNoAccessToAdminTestCasesPage()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit('/')
                 ->assertMissing('.navbar-nav .admin-settings-dropdown')
                 ->visit('/admin/test-cases')

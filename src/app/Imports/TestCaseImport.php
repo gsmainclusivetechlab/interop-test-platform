@@ -45,53 +45,51 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute('api_spec_id', ApiSpec::where('name', Arr::get($testStepRow, 'api_spec'))->value('id'));
                     $testStep->saveOrFail();
 
-                    if ($testRequestSetupRows = Arr::get($testStepRow, 'test_request_setups', [])) {
-                        foreach ($testRequestSetupRows as $testRequestSetupRow) {
-                            /**
-                             * @var TestSetup $testRequestSetup
-                             */
-                            $testRequestSetup = $testStep->testSetups()->make(Arr::only($testRequestSetupRow, TestSetup::make()->getFillable()));
-                            $testRequestSetup->type = TestSetup::TYPE_REQUEST;
-                            $testRequestSetup->saveOrFail();
-                        }
-                    }
+                    $this->importTestSetups($testStep, TestSetup::TYPE_REQUEST, Arr::get($testStepRow, 'test_request_setups', []));
+                    $this->importTestSetups($testStep, TestSetup::TYPE_RESPONSE, Arr::get($testStepRow, 'test_response_setups', []));
 
-                    if ($testRequestScriptRows = Arr::get($testStepRow, 'test_request_scripts', [])) {
-                        foreach ($testRequestScriptRows as $testRequestScriptRow) {
-                            /**
-                             * @var TestScript $testRequestScript
-                             */
-                            $testRequestScript = $testStep->testScripts()->make(Arr::only($testRequestScriptRow, TestScript::make()->getFillable()));
-                            $testRequestScript->type = TestScript::TYPE_REQUEST;
-                            $testRequestScript->saveOrFail();
-                        }
-                    }
-
-                    if ($testResponseSetupRows = Arr::get($testStepRow, 'test_response_setups', [])) {
-                        foreach ($testResponseSetupRows as $testResponseSetupRow) {
-                            /**
-                             * @var TestSetup $testResponseSetup
-                             */
-                            $testResponseSetup = $testStep->testSetups()->make(Arr::only($testResponseSetupRow, TestSetup::make()->getFillable()));
-                            $testResponseSetup->type = TestSetup::TYPE_RESPONSE;
-                            $testResponseSetup->saveOrFail();
-                        }
-                    }
-
-                    if ($testResponseScriptRows = Arr::get($testStepRow, 'test_response_scripts', [])) {
-                        foreach ($testResponseScriptRows as $testResponseScriptRow) {
-                            /**
-                             * @var TestScript $testResponseScript
-                             */
-                            $testResponseScript = $testStep->testScripts()->make(Arr::only($testResponseScriptRow, TestScript::make()->getFillable()));
-                            $testResponseScript->type = TestScript::TYPE_RESPONSE;
-                            $testResponseScript->saveOrFail();
-                        }
-                    }
+                    $this->importTestScripts($testStep, TestScript::TYPE_REQUEST, Arr::get($testStepRow, 'test_request_scripts', []));
+                    $this->importTestScripts($testStep, TestScript::TYPE_RESPONSE, Arr::get($testStepRow, 'test_response_scripts', []));
                 }
             }
 
             return $testCase;
         });
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param string $type
+     * @param array $rows
+     * @throws \Throwable
+     */
+    protected function importTestSetups(TestStep $testStep, $type, array $rows)
+    {
+        foreach ($rows as $row) {
+            /**
+             * @var TestSetup $testSetup
+             */
+            $testSetup = $testStep->testSetups()->make(Arr::only($row, TestSetup::make()->getFillable()));
+            $testSetup->type = $type;
+            $testSetup->saveOrFail();
+        }
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param string $type
+     * @param array $rows
+     * @throws \Throwable
+     */
+    protected function importTestScripts(TestStep $testStep, $type, array $rows)
+    {
+        foreach ($rows as $row) {
+            /**
+             * @var TestScript $testScript
+             */
+            $testScript = $testStep->testScripts()->make(Arr::only($row, TestScript::make()->getFillable()));
+            $testScript->type = $type;
+            $testScript->saveOrFail();
+        }
     }
 }

@@ -11,19 +11,19 @@ endif
 install: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
-	php artisan dusk:chrome-driver
+	php artisan dusk:chrome-driver 81
 
 update: chmod composer-install cache-clear
 	php artisan key:generate
 	php artisan migrate:fresh --seed
 	php artisan queue:restart
-	php artisan dusk:chrome-driver
+	php artisan dusk:chrome-driver 81
 
 test:
-	#php artisan dusk --testdox --log-junit tests/results/results.xml
+	php artisan dusk --testdox --log-junit tests/results/results.xml
 
 test-coverage:
-	#phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report
+	phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report-html --coverage-clover tests/results/coverage-report-clover/clover.xml
 
 # Composer helpers
 ci: composer-install

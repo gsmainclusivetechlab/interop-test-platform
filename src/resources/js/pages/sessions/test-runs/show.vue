@@ -1,10 +1,10 @@
 <template>
-    <layout :session="session" :test-case="testCase">
+    <layout :session="session" :testCase="testCase" :useCases="useCases">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
                     <inertia-link
-                        :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                        :href="route('sessions.test-cases.test-runs.index', [session.id, testCase.id])"
                         class="text-decoration-none"
                     >
                         <icon name="chevron-left"></icon>
@@ -114,12 +114,20 @@
                                     <b class="text-nowrap">
                                         {{ `Step ${testResult.testStep.data.position}` }}
                                     </b>
-                                    <small class="d-inline-block ml-auto" v-if="testResult.response">
-                                        Status:
-                                        <span class="text-success">
-                                            {{ `HTTP ${testResult.response.status}` }}
-                                        </span>
-                                    </small>
+                                    <div class="d-inline-block ml-auto">
+                                        <small class="d-inline-block ml-2" v-if="testResult.response">
+                                            Status:
+                                            <span class="text-success">
+                                                {{ `HTTP ${testResult.response.status}` }}
+                                            </span>
+                                        </small>
+                                        <small class="d-inline-block ml-2" v-if="testResult.duration">
+                                            Duration:
+                                            <span class="text-success">
+                                                {{ `${testResult.duration} ms` }}
+                                            </span>
+                                        </small>
+                                    </div>
                                 </div>
                                 <div class="text-truncate">
                                     <u class="mr-2">{{ testResult.request.method }} {{ testResult.request.path }}</u>
@@ -396,6 +404,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true
+        },
+        useCases: {
             type: Object,
             required: true
         },

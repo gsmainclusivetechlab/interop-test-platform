@@ -2,40 +2,23 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\ProfileSettingsPage;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class ProfileSettingsTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->user([
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
-            'company' => 'Company',
-        ]);
-    }
-
     /**
      * Can navigate to change password page.
      * @return void
      */
     public function testCanNavigateToChangePasswordPage()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit(new ProfileSettingsPage)
                 ->click('@changePasswordLink')
                 ->waitForLocation('/settings/password')
@@ -49,13 +32,14 @@ class ProfileSettingsTest extends DuskTestCase
      */
     public function testProfileDataMatchesUserData()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit(new ProfileSettingsPage)
-                ->assertInputValue('@firstName', $this->user->first_name)
-                ->assertInputValue('@lastName', $this->user->last_name)
-                ->assertInputValue('@company', $this->user->company);
+                ->assertInputValue('@firstName', $user->first_name)
+                ->assertInputValue('@lastName', $user->last_name)
+                ->assertInputValue('@company', $user->company);
         });
     }
 
@@ -65,9 +49,10 @@ class ProfileSettingsTest extends DuskTestCase
      */
     public function testCanUpdateProfileSettings()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit(new ProfileSettingsPage)
                 ->type('@firstName', 'newFirstName')
                 ->type('@lastName', 'newLastName')

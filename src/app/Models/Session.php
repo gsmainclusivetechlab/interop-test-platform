@@ -53,6 +53,14 @@ class Session extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testMismatches()
+    {
+        return $this->hasMany(TestMismatch::class, 'session_id');
+    }
+
+    /**
      * @return mixed
      */
     public function lastTestRun()
@@ -74,6 +82,15 @@ class Session extends Model
     public function testSteps()
     {
         return $this->belongsToMany(TestStep::class, 'session_test_cases', 'session_id', 'test_case_id', 'id', 'test_case_id');
+    }
+
+    /**
+     * @param Component $component
+     * @return bool
+     */
+    public function hasComponent(Component $component)
+    {
+        return $this->components()->whereKey($component->getKey())->exists();
     }
 
     /**

@@ -9,7 +9,7 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Amount should be the value "1010".
-  - Debit party should be identified by account identifier "msisdn" with the value "+3355511111".
+  - Debit party should be identified by account identifier "msisdn" with the value "+2000009999".
   - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
   - Service Provider
@@ -17,7 +17,7 @@ components:
   - Mobile Money Operator 2
 
 test_steps:
-##------------------------------POST/Transactions: SP -> MMO1------------------------------##
+  ##------------------------------POST/Transactions: SP -> MMO1------------------------------##
   - path: /transactions
     pattern: '^transactions$'
     method: POST
@@ -34,7 +34,7 @@ test_steps:
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.debitParty.*.key: 'required|in:msisdn'
-          body.debitParty.*.value: 'required|in:+3355511111'
+          body.debitParty.*.value: 'required|in:+2000009999'
           body.creditParty.*.key: 'required|in:msisdn'
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
@@ -65,7 +65,7 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: 'http://example.com/callback'
+        x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
         amount: '1010'
@@ -73,7 +73,7 @@ test_steps:
         type: 'merchantpay'
         debitParty:
           - key: 'msisdn'
-            value: "+3355511111"
+            value: "+2000009999"
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
@@ -88,9 +88,9 @@ test_steps:
         status: 'pending'
         notificationMethod: 'callback'
 
-##------------------------------GET/Participants: MMO1 -> Mojaloop------------------------------##
-  - path: /participants/{TYPE}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+  ##------------------------------GET/Participants: MMO1 -> Mojaloop------------------------------##
+  - path: /participants/{Type}/{ID}
+    pattern: '^participants/MSISDN/[+]2000009999$'
     method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -99,7 +99,7 @@ test_steps:
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri: 'required|in:MSISDN'
+          uri: 'required|regex:/.*\/participants\/MSISDN\/[+]?[0-9]{6,15}$/'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
@@ -108,25 +108,25 @@ test_steps:
 
     request:
       method: GET
-      uri: /participants/MSISDN/33555123456
+      uri: /participants/MSISDN/+2000009999
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
 
     response:
       status: 202
 
-##------------------------------PUT/Participants: Mojaloop -> MMO1------------------------------##
-  - path: /participants/{TYPE}/{ID}
-    pattern: '^participants/MSISDN/[+]?[0-9]{6,15}$'
+  ##------------------------------PUT/Participants: Mojaloop -> MMO1------------------------------##
+  - path: /participants/{Type}/{ID}
+    pattern: '^participants/MSISDN/[+]2000009999$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
     api_spec: Mojaloop v1.0
     trigger:
-      fspId: 'payerfsp'
+      fspId: 'mmo2fsp'
 
     test_request_scripts:
       - name: FSP ID is correct
@@ -140,18 +140,19 @@ test_steps:
 
     request:
       method: PUT
-      uri: /participants/MSISDN/33555123456
+      uri: /participants/MSISDN/+2000009999
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
+        fspiop-destination: 'mmo1fsp'
       body:
-        fspId: 'payerfsp'
+        fspId: 'mmo2fsp'
 
     response:
-        status: 200
+      status: 200
 
-##------------------------------POST/TransanctionRequests: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------POST/TransanctionRequests: MMO1 -> Mojaloop------------------------------##
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
@@ -174,7 +175,7 @@ test_steps:
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+3355511111'
+          body.payer.partyIdentifier: 'required|in:+2000009999'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
@@ -193,17 +194,17 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
           partyIdType: 'MSISDN'
-          partyIdentifier: "+3355511111"
+          partyIdentifier: "+2000009999"
         amount:
           amount: '1010'
           currency: 'USD'
@@ -216,7 +217,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/TransanctionRequests: Mojaloop -> MMO2------------------------------##
+  ##------------------------------POST/TransanctionRequests: Mojaloop -> MMO2------------------------------##
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
@@ -239,7 +240,7 @@ test_steps:
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+3355511111'
+          body.payer.partyIdentifier: 'required|in:+2000009999'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
@@ -258,17 +259,17 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
           partyIdType: 'MSISDN'
-          partyIdentifier: "+3355511111"
+          partyIdentifier: "+2000009999"
         amount:
           amount: '1010'
           currency: 'USD'
@@ -281,7 +282,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/TransanctionRequests: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------PUT/TransanctionRequests: MMO2 -> Mojaloop------------------------------##
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -309,15 +310,15 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transactionRequestState: 'RECEIVED'
 
     response:
       status: 200
 
-##------------------------------PUT/TransanctionRequests: Mojaloop -> MMO1------------------------------##
+  ##------------------------------PUT/TransanctionRequests: Mojaloop -> MMO1------------------------------##
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -345,15 +346,15 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transactionRequestState: 'RECEIVED'
 
     response:
       status: 200
 
-##------------------------------POST/Quotes: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------POST/Quotes: MMO2 -> Mojaloop------------------------------##
   - path: /quotes
     pattern: '^quotes$'
     method: POST
@@ -380,7 +381,7 @@ test_steps:
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+3355511111'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+2000009999'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
@@ -399,19 +400,19 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+3355511111"
+            partyIdentifier: "+2000009999"
           personalInfo:
             complexName:
               firstName: 'John'
@@ -430,7 +431,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/Quotes: Mojaloop -> MMO1------------------------------##
+  ##------------------------------POST/Quotes: Mojaloop -> MMO1------------------------------##
   - path: /quotes
     pattern: '^quotes$'
     method: POST
@@ -457,7 +458,7 @@ test_steps:
       - name: Debit and Credit party is present and is a Valid Party in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+3355511111'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:+2000009999'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
@@ -476,19 +477,19 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+3355511111"
+            partyIdentifier: "+2000009999"
           personalInfo:
             complexName:
               firstName: 'John'
@@ -507,7 +508,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/Quotes: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------PUT/Quotes: MMO1 -> Mojaloop------------------------------##
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -535,8 +536,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
@@ -548,7 +549,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------PUT/Quotes: Mojaloop -> MMO2------------------------------##
+  ##------------------------------PUT/Quotes: Mojaloop -> MMO2------------------------------##
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -576,8 +577,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
@@ -589,7 +590,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------POST/Transfers: MMO2 -> Mojaloop------------------------------##
+  ##------------------------------POST/Transfers: MMO2 -> Mojaloop------------------------------##
   - path: /transfers
     pattern: '^transfers$'
     method: POST
@@ -637,12 +638,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo1fsp'
+        payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
           amount: '1010'
@@ -653,7 +654,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------POST/Transfers: Mojaloop -> MMO1------------------------------##
+  ##------------------------------POST/Transfers: Mojaloop -> MMO1------------------------------##
   - path: /transfers
     pattern: '^transfers$'
     method: POST
@@ -701,12 +702,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo1fsp'
+        payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
           amount: '1010'
@@ -717,7 +718,7 @@ test_steps:
     response:
       status: 202
 
-##------------------------------PUT/X-Callback-URL: MMO1 -> Service Provider------------------------------##
+  ##------------------------------PUT/X-Callback-URL: MMO1 -> Service Provider------------------------------##
   - path: '{X-Callback-URL}'
     pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     method: PUT
@@ -730,7 +731,7 @@ test_steps:
       - name: Debit and credit party is valid
         rules:
           body.debitParty.*.key: 'required|in:msisdn'
-          body.debitParty.*.value: 'required|in:+3355511111'
+          body.debitParty.*.value: 'required|in:+2000009999'
           body.creditParty.*.key: 'required|in:msisdn'
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
@@ -763,7 +764,7 @@ test_steps:
         transactionStatus: 'Completed'
         debitParty:
           - key: 'msisdn'
-            value: "+33555123456"
+            value: "+2000009999"
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
@@ -771,7 +772,7 @@ test_steps:
     response:
       status: 204
 
-##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
+  ##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -806,12 +807,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo1fsp'
+        payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
           amount: '1010'
@@ -822,7 +823,7 @@ test_steps:
     response:
       status: 200
 
-##------------------------------PUT/Transfers: Mojaloop -> MMO2------------------------------##
+  ##------------------------------PUT/Transfers: Mojaloop -> MMO2------------------------------##
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -857,12 +858,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo1fsp'
+        payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
           amount: '1010'
@@ -871,4 +872,4 @@ test_steps:
         expiration: '2000-01-01T00:00:00.000Z'
 
     response:
-        status: 200
+      status: 200

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Exceptions\TestMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -35,7 +36,13 @@ class SutController extends Controller
      * @param ServerRequestInterface $request
      * @return mixed
      */
-    public function __invoke(Session $session, Component $component, Component $connection, string $path, ServerRequestInterface $request)
+    public function __invoke(
+        Session $session,
+        Component $component,
+        Component $connection,
+        string $path,
+        ServerRequestInterface $request
+    )
     {
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())
@@ -54,16 +61,24 @@ class SutController extends Controller
                 $query->where(function ($query) {
                     $query->where('position', '=', 1);
                     $query->whereDoesntHave('testRuns', function ($query) {
-                        $query->incompleted();
+                        $query->incompleted()->whereDoesntHave('testResults', function ($query) {
+                            $query->whereColumn('test_step_id', 'test_steps.id');
+                        });
                     });
                 })->orWhere(function ($query) {
                     $query->where('position', '!=', 1);
                     $query->whereHas('testRuns', function ($query) {
-                        $query->incompleted();
+                        $query->incompleted()->whereDoesntHave('testResults', function ($query) {
+                            $query->whereColumn('test_step_id', 'test_steps.id');
+                        });
                     });
                 });
             })
-            ->firstOrFail();
+            ->first();
+
+        if ($testStep === null) {
+            throw new TestMismatchException($session, 404, 'Testing step not found.');
+        }
 
         $testRun = $session->testRuns()
             ->incompleted()

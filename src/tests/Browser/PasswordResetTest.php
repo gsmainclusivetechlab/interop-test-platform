@@ -2,27 +2,13 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\PasswordResetPage;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class PasswordResetTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->user();
-    }
-
     /**
      * Can navigate to login page.
      * @return void
@@ -63,9 +49,9 @@ class PasswordResetTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser
                 ->visit(new PasswordResetPage)
-                ->type('@email', self::$userEmailInvalid)
+                ->type('@email', 'invalid-email@dom.com')
                 ->click('@submitButton')
-                ->waitFor('@invalidFormField')
+                ->waitFor('@invalidFormField', 10)
                 ->assertSeeIn('@email + .invalid-feedback', 'We can\'t find a user with that e-mail address.');
         });
     }
@@ -76,10 +62,11 @@ class PasswordResetTest extends DuskTestCase
      */
     public function testCanReceivePasswordResetLinkWithValidEmail()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->visit(new PasswordResetPage)
-                ->type('@email', $this->user->email)
+                ->type('@email', $user->email)
                 ->press('@submitButton')
                 ->waitForLocation('/login')
                 ->waitForText('We have e-mailed your password reset link!')

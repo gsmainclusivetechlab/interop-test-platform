@@ -1,62 +1,37 @@
 a {
-    transition: $btn-transition;
+  transition: $btn-transition;
 }
 
 #nprogress {
-    .bar {
-        background: $primary;
-    }
+  .bar {
+    background: $primary;
+  }
 
-    .peg {
-        box-shadow: 0 0 10px $primary, 0 0 5px $primary;
-    }
+  .peg {
+    box-shadow: 0 0 10px $primary, 0 0 5px $primary;
+  }
 
-    .spinner-icon {
-        border-top-color: $primary;
-        border-left-color: $primary;
-    }
+  .spinner-icon {
+    border-top-color: $primary;
+    border-left-color: $primary;
+  }
 }
 
 .noty_layout {
-    .noty_bar {
-        &:not(:last-child) {
-            margin-bottom: 0.25rem;
-        }
+  .noty_bar {
+    &:not(:last-child) {
+      margin-bottom: 0.25rem;
     }
+  }
 }
 
 .custom-file {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    height: $form-file-height;
-    margin-bottom: 0;
-    backface-visibility: hidden;
-}
-
-.custom-file-input {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: $form-file-height;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-
-    &:focus ~ .custom-file-label {
-        border-color: $form-file-focus-border-color;
-        box-shadow: $form-file-focus-box-shadow;
-    }
-
-    &[disabled] ~ .custom-file-label,
-    &:disabled ~ .custom-file-label {
-        background-color: $form-file-disabled-bg;
-        border-color: $form-file-disabled-border-color;
-    }
-
-    ~ .custom-file-label[data-browse]::after {
-        content: attr(data-browse);
-    }
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: $form-file-height;
+  margin-bottom: 0;
+  backface-visibility: hidden;
 }
 
 .custom-file-label {
@@ -73,115 +48,154 @@ a {
     color: $form-file-color;
     background-color: $form-file-bg;
     border: $border-width solid $form-file-border-color;
+
     @include border-radius($form-file-border-radius);
     @include box-shadow($form-file-box-shadow);
 
     &::after {
-        position: absolute;
-        top: -1px;
-        right: 0;
-        bottom: 0;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        height: $form-file-height;
-        padding: $form-file-padding-y $form-file-padding-x;
-        color: $form-file-button-color;
-        content: 'Browse';
-        @include gradient-bg($form-file-button-bg);
-        border-left: inherit;
-        @include border-right-radius(inherit);
+      position: absolute;
+      top: -1px;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      height: $form-file-height;
+      padding: $form-file-padding-y $form-file-padding-x;
+      color: $form-file-button-color;
+      content: 'Browse';
+
+      @include gradient-bg($form-file-button-bg);
+
+      border-left: inherit;
+
+      @include border-right-radius(inherit);
     }
+  }
+
+.custom-file-input {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: $form-file-height;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+
+  &:focus ~ .custom-file-label {
+    border-color: $form-file-focus-border-color;
+    box-shadow: $form-file-focus-box-shadow;
+  }
+
+  &[disabled] ~ .custom-file-label,
+  &:disabled ~ .custom-file-label {
+    background-color: $form-file-disabled-bg;
+    border-color: $form-file-disabled-border-color;
+  }
+
+  ~ .custom-file-label[data-browse]::after {
+    content: attr(data-browse);
+  }
 }
 
 .dropdown-toggle {
-    &::after {
-        transition: transform 0.2s;
-    }
+  &::after {
+    transition: transform 0.2s;
+  }
 
-    &[aria-expanded='true'] {
-        &::after {
-            transform: scale(-1) translate(0, -3px) rotate(-45deg);
-        }
+  &[aria-expanded='true'] {
+    &::after {
+      transform: scale(-1) translate(0, -3px) rotate(-45deg);
     }
+  }
 }
 
 .border-dashed {
-    border-style: dashed !important;
+  border-style: dashed !important;
 }
 
 .form-selectgroup-input:checked + .form-selectgroup-label {
-    border-color: currentColor;
+  border-color: currentColor;
 }
 
 .nav-tabs {
-    .nav-link {
-        &:hover,
-        &.active {
-            color: $nav-tabs-link-active-color;
-        }
+  .nav-link {
+    &:hover,
+    &.active {
+      color: $nav-tabs-link-active-color;
     }
+  }
 }
 
 .b-popover {
-    width: 100%;
+  width: 100%;
 
-    .arrow {
-        position: absolute;
-        width: 1rem;
-        height: 0.5rem;
-        margin: 0 0.3rem;
+  .arrow {
+    position: absolute;
+    width: 1rem;
+    height: 0.5rem;
+    margin: 0 0.3rem;
 
-        &::after,
-        &::before {
-            position: absolute;
-            display: block;
-            content: '';
-            border-color: transparent;
-            border-style: solid;
-        }
+    &::after,
+    &::before {
+      position: absolute;
+      display: block;
+      content: '';
+      border-color: transparent;
+      border-style: solid;
     }
+  }
 }
 
-.bs-popover-auto[x-placement^='bottom'] > .arrow,
-.bs-popover-bottom > .arrow {
-    top: calc(-0.5rem - 1px);
+.bs-popover-bottom > .arrow,
+.bs-popover-auto[x-placement^='bottom'] > .arrow {
+  top: calc(-0.5rem - 1px);
 }
 
-.bs-popover-auto[x-placement^='bottom'] > .arrow:before,
-.bs-popover-bottom > .arrow:before {
-    top: 0;
-    border-width: 0 0.5rem 0.5rem;
-    border-bottom-color: rgba(0, 0, 0, 0.25);
+.bs-popover-bottom > .arrow::before,
+.bs-popover-auto[x-placement^='bottom'] > .arrow::before {
+  top: 0;
+  border-width: 0 0.5rem 0.5rem;
+  border-bottom-color: rgba(0, 0, 0, 0.25);
 }
 
-.bs-popover-auto[x-placement^='bottom'] > .arrow:after,
-.bs-popover-bottom > .arrow:after {
-    top: 1px;
-    border-width: 0 0.5rem 0.5rem;
-    border-bottom-color: #fff;
+.bs-popover-bottom > .arrow::after,
+.bs-popover-auto[x-placement^='bottom'] > .arrow::after {
+  top: 1px;
+  border-width: 0 0.5rem 0.5rem;
+  border-bottom-color: #fff;
 }
 
 .tabs {
-    .nav-tabs {
-        .nav-link {
-            &:focus {
-                outline: 0;
-            }
-        }
+  .nav-tabs {
+    .nav-link {
+      &:focus {
+        outline: 0;
+      }
     }
+  }
 }
 
 .list-group-transparent {
-    .list-group-item {
-        &.active {
-            background-color: #fff;
-        }
+  .list-group-item {
+    &.active {
+      background-color: #fff;
     }
+  }
 }
 
 .table {
-    .text-break {
-        word-break: break-word;
-    }
+  .text-break {
+    word-break: break-word;
+  }
+}
+
+.outline {
+  &-light {
+    outline: 1px solid $gray-100;
+  }
+
+  &-dark {
+    outline: 1px solid $gray-900;
+  }
 }

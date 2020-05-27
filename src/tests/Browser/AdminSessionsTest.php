@@ -4,56 +4,24 @@ namespace Tests\Browser;
 
 use Tests\DuskTestCase;
 use App\Models\User;
+use App\Models\Session;
 use Tests\Browser\Pages\AdminSessionsPage;
 
 class AdminSessionsTest extends DuskTestCase
 {
-    private $admin;
-    private $user;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->admin = $this->user([
-            'role' => User::ROLE_ADMIN
-        ]);
-
-        $this->user = $this->user([
-            'role' => User::ROLE_USER
-        ]);
-    }
-
     /**
      * Admin can see sessions created by users.
      * @return void
      */
     public function testAdminCanSeeSessionsCreatedByUsers()
     {
-        $this->browse(function ($userBrowser, $adminBrowser) {
-            $userBrowser
-                ->loginAs($this->user)
-                ->visit('sessions/register/sut')
-                ->with('.fixed-bottom', function ($box) {
-                    $box
-                        ->press('Got It!');
-                })
-                ->type('base_url', 'http://base_url.com')
-                ->click('form .btn[type="submit"]')
-                ->waitForLocation('/sessions/register/info')
-                ->type('form input[name="name"]', 'Test Session Creation')
-                ->click('form .list-group > .list-group-item > .d-flex .btn')
-                ->click('form .btn[type="submit"]')
-                ->waitForLocation('/sessions/register/config')
-                ->click('form .btn[type="submit"]');
-
-            $adminBrowser
-                ->loginAs($this->admin)
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $session = factory(Session::class)->create();
+        $this->browse(function ($browser) use ($admin, $session) {
+            $browser
+                ->loginAs($admin)
                 ->visit(new AdminSessionsPage)
-                ->assertSeeIn('@sessionsTable', 'Test Session Creation');
+                ->assertSeeIn('@sessionsTable', $session->name);
         });
     }
 
@@ -63,9 +31,11 @@ class AdminSessionsTest extends DuskTestCase
      */
     public function testAdminCanDeleteSessionsCreatedByUsers()
     {
-        $this->browse(function ($browser) {
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $session = factory(Session::class)->create();
+        $this->browse(function ($browser) use ($admin) {
             $browser
-                ->loginAs($this->admin)
+                ->loginAs($admin)
                 ->visit(new AdminSessionsPage)
                 ->with('@sessionsTable', function ($table) {
                     $table

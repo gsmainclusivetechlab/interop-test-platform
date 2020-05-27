@@ -13,9 +13,7 @@ class ApiSpecsTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ($this->getApiSpecsData() as $key => $attributes) {
-            ApiSpec::create($attributes);
-        }
+        factory(ApiSpec::class)->createMany($this->getApiSpecsData());
     }
 
     /**

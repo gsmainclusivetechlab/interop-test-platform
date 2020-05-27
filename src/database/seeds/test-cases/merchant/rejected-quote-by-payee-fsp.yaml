@@ -8,7 +8,7 @@ precondition: |
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "1002".
+  - Amount should be the value "51.01".
   - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
   - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
@@ -23,7 +23,7 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: MM v1.1.2
     trigger:
-      amount: '1002'
+      amount: '51.01'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -36,7 +36,7 @@ test_steps:
           body.creditParty.*.value: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount: 'required|in:1002'
+          body.amount: 'required|in:51.01'
           body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
@@ -60,10 +60,10 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: 'http://example.com/example'
+        x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
-        amount: '1002'
+        amount: '51.01'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
@@ -89,7 +89,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1002'
+        amount: '51.01'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -107,7 +107,7 @@ test_steps:
           body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:1002'
+          body.amount.amount: 'required|in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -119,19 +119,19 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '1002'
+          amount: '51.01'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -148,7 +148,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1002'
+        amount: '51.01'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -166,7 +166,7 @@ test_steps:
           body.payer.partyIdentifier: 'required|in:+33555123456'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:1002'
+          body.amount.amount: 'required|in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -178,19 +178,19 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '1002'
+          amount: '51.01'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -225,8 +225,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transactionRequestState: 'RECEIVED'
     response:
@@ -257,8 +257,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transactionRequestState: 'RECEIVED'
     response:
@@ -271,7 +271,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1002'
+        amount: '51.01'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -293,7 +293,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:1002'
+          body.amount.amount: 'required|in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -305,17 +305,17 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555123456"
           personalInfo:
@@ -327,7 +327,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '1002'
+          amount: '51.01'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -342,7 +342,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1002'
+        amount: '51.01'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -364,7 +364,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:1002'
+          body.amount.amount: 'required|in:51.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -376,17 +376,17 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555123456"
           personalInfo:
@@ -398,7 +398,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '1002'
+          amount: '51.01'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -429,8 +429,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
@@ -464,12 +464,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
-          amount: '1002'
+          amount: '51.01'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'

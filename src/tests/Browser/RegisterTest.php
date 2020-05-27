@@ -2,17 +2,13 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\RegisterPage;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class RegisterTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-
-    private $user;
-
     /**
      * Can navigate to login page.
      * @return void
@@ -44,7 +40,6 @@ class RegisterTest extends DuskTestCase
                 ->clear('@company')
                 ->clear('@password')
                 ->clear('@passwordConfirmation')
-                ->clear('@code')
                 ->uncheck('@terms')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
@@ -54,7 +49,6 @@ class RegisterTest extends DuskTestCase
                 ->assertSeeIn('@company + .invalid-feedback', 'The company field is required.')
                 ->assertSeeIn('@password + .invalid-feedback', 'The password field is required.')
                 ->assertSeeIn('@passwordConfirmation + .invalid-feedback', 'The password confirmation field is required.')
-                ->assertSeeIn('@code + .invalid-feedback', 'The code field is required.')
                 ->assertSee('The terms field is required.');
         });
     }
@@ -72,9 +66,8 @@ class RegisterTest extends DuskTestCase
                 ->type('@lastName', 'Doe')
                 ->type('@email', 'john.doe@gmail.com')
                 ->type('@company', 'GSMA')
-                ->type('@password', self::$userPassword)
-                ->type('@passwordConfirmation', self::$userPassword)
-                ->type('@code', self::$userRegistrationCode)
+                ->type('@password', 'password')
+                ->type('@passwordConfirmation', 'password')
                 ->check('@terms')
                 ->click('@submitButton')
                 ->waitForLocation('/email/verify')
@@ -88,20 +81,16 @@ class RegisterTest extends DuskTestCase
      */
     public function testCanNotRegisterWithExistingEmail()
     {
-        $this->user = $this->user([
-            'email' => 'john.doe@gmail.com'
-        ]);
-
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->visit(new RegisterPage)
                 ->type('@firstName', 'John')
                 ->type('@lastName', 'Doe')
-                ->type('@email', 'john.doe@gmail.com')
+                ->type('@email', $user->email)
                 ->type('@company', 'GSMA')
-                ->type('@password', self::$userPassword)
-                ->type('@passwordConfirmation', self::$userPassword)
-                ->type('@code', self::$userRegistrationCode)
+                ->type('@password', 'password')
+                ->type('@passwordConfirmation', 'password')
                 ->check('@terms')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
