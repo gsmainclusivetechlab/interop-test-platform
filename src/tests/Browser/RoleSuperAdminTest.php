@@ -9,34 +9,18 @@ use Tests\Browser\Pages\AdminUsersPage;
 
 class RoleSuperAdminTest extends DuskTestCase
 {
-    private $superAdmin;
-    private $admin;
-    private $user;
-
     /**
      * Change user role functionality is enabled
      * @return void
      */
     public function testChangeUserRoleFunctionalityIsEnabled()
     {
-        $this->browse(function (Browser $browser) {
-            $this->superAdmin = factory(User::class)->create([
-                'role' => User::ROLE_SUPERADMIN,
-                'email' => 'superadmin@gsma.com'
-            ]);
-
-            $this->admin = factory(User::class)->create([
-                'role' => User::ROLE_ADMIN,
-                'email' => 'admin@gsma.com'
-            ]);
-
-            $this->user = factory(User::class)->create([
-                'role' => User::ROLE_USER,
-                'email' => 'user@gsma.com'
-            ]);
-
+        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($superAdmin, $admin, $user) {
             $browser
-                ->loginAs($this->superAdmin)
+                ->loginAs($superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
                     $tr
@@ -50,15 +34,16 @@ class RoleSuperAdminTest extends DuskTestCase
     }
 
     /**
-     * @depends testChangeUserRoleFunctionalityIsEnabled
      * Can block and unblock users with role admin.
      * @return void
      */
     public function testCanBlockAndUnblockUsersWithRoleAdmin()
     {
-        $this->browse(function (Browser $browser) {
+        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $this->browse(function (Browser $browser) use ($superAdmin, $admin) {
             $browser
-                ->loginAs($this->superAdmin)
+                ->loginAs($superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(2) td:last-child', function ($td) {
                     $td
@@ -77,9 +62,9 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->assertVisible('@notificationBox')
                 ->click('@blockedUsersLink')
                 ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use ($admin) {
                     $tr
-                        ->assertSeeLink('admin@gsma.com')
+                        ->assertSeeLink($admin->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')
@@ -101,13 +86,15 @@ class RoleSuperAdminTest extends DuskTestCase
      */
     public function testCanDeleteUsersWithRoleAdmin()
     {
-        $this->browse(function (Browser $browser) {
+        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        $this->browse(function (Browser $browser) use ($superAdmin, $admin) {
             $browser
-                ->loginAs($this->superAdmin)
+                ->loginAs($superAdmin)
                 ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
+                ->with('.card .table tbody tr:nth-child(2)', function ($tr) use ($admin) {
                     $tr
-                        ->assertSeeLink('admin@gsma.com')
+                        ->assertSeeLink($admin->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')
@@ -128,15 +115,16 @@ class RoleSuperAdminTest extends DuskTestCase
     }
 
     /**
-     * @depends testCanDeleteUsersWithRoleAdmin
      * Can block and unblock users with role user.
      * @return void
      */
     public function testCanBlockAndUnblockUsersWithRoleUser()
     {
-        $this->browse(function (Browser $browser) {
+        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($superAdmin, $user) {
             $browser
-                ->loginAs($this->superAdmin)
+                ->loginAs($superAdmin)
                 ->visit(new AdminUsersPage)
                 ->with('.card .table tbody tr:nth-child(2) td:last-child', function ($td) {
                     $td
@@ -155,9 +143,9 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->assertVisible('@notificationBox')
                 ->click('@blockedUsersLink')
                 ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use ($user) {
                     $tr
-                        ->assertSeeLink('user@gsma.com')
+                        ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')
@@ -174,19 +162,20 @@ class RoleSuperAdminTest extends DuskTestCase
     }
 
     /**
-     * @depends testCanDeleteUsersWithRoleAdmin
      * Can delete users with role user.
      * @return void
      */
     public function testCanDeleteUsersWithRoleUser()
     {
-        $this->browse(function (Browser $browser) {
+        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($superAdmin, $user) {
             $browser
-                ->loginAs($this->superAdmin)
+                ->loginAs($superAdmin)
                 ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
+                ->with('.card .table tbody tr:nth-child(2)', function ($tr) use ($user) {
                     $tr
-                        ->assertSeeLink('user@gsma.com')
+                        ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
                             $td
                                 ->click('.dropdown-toggle')

@@ -51,7 +51,7 @@ class PasswordResetTest extends DuskTestCase
                 ->visit(new PasswordResetPage)
                 ->type('@email', 'invalid-email@dom.com')
                 ->click('@submitButton')
-                ->waitFor('@invalidFormField')
+                ->waitFor('@invalidFormField', 10)
                 ->assertSeeIn('@email + .invalid-feedback', 'We can\'t find a user with that e-mail address.');
         });
     }
@@ -62,8 +62,8 @@ class PasswordResetTest extends DuskTestCase
      */
     public function testCanReceivePasswordResetLinkWithValidEmail()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->visit(new PasswordResetPage)
                 ->type('@email', $user->email)

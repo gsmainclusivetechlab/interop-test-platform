@@ -15,8 +15,8 @@ class ProfileSettingsTest extends DuskTestCase
      */
     public function testCanNavigateToChangePasswordPage()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit(new ProfileSettingsPage)
@@ -32,8 +32,8 @@ class ProfileSettingsTest extends DuskTestCase
      */
     public function testProfileDataMatchesUserData()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit(new ProfileSettingsPage)
@@ -49,8 +49,8 @@ class ProfileSettingsTest extends DuskTestCase
      */
     public function testCanUpdateProfileSettings()
     {
-        $this->browse(function (Browser $browser) {
-            $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
                 ->visit(new ProfileSettingsPage)
