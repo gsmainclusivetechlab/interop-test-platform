@@ -6,12 +6,6 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01 # Define a machine who has support for docker compose 3.7
     working_directory: ~/repo # Default working directory, where your project will be clo
-      
-    branches:  
-      only:  
-        - master  
-        - develop
-        - circleci-project-setup
         
     steps:
       - checkout
@@ -64,8 +58,12 @@ jobs:
           command: make test
           
       - run:
-          name: Run Test Coverage
+          name: Run Tests Coverage
           command: make test-coverage
+
+      - coverage-reporter/send_report:
+          coverage-reports: src/tests/results/coverage-report-clover/clover.xml
+          project-token: $CODACY_PROJECT_TOKEN
           
       #store tests and code coverage
       - store_test_results:
@@ -74,3 +72,15 @@ jobs:
           path: src/tests/Browser/screenshots          
       - store_artifacts:
           path: src/tests/results
+          
+worflow:
+  version: 2
+  build_and_test:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+                - codacy-code-coverage
