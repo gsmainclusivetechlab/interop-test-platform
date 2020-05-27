@@ -77,8 +77,7 @@ test_steps:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'mmo1fsp'
-        fspiop-destination: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         fspId: 'mmo2fsp'
 
