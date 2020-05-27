@@ -96,11 +96,11 @@ test_steps:
     test_request_setups:
       - name: Override request
         values:
-          body.amountType: "SEND"
-          body.amount.amount: 799
-          body.amount.currency: "USD"
-          body.fees.amount: 1
-          body.fees.currency: "USD"
+          body.amountType: 'SEND'
+          body.amount.amount: '799'
+          body.amount.currency: 'USD'
+          body.fees.amount: '1'
+          body.fees.currency: 'USD'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
