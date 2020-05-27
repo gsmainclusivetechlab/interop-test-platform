@@ -93,7 +93,12 @@ test_steps:
     trigger:
       amount:
         amount: '500'
-
+    test_request_setups:
+      - name: Override response
+        values:
+          body.amountType: "RECEIVE"
+          body.amount.amount: 500
+          body.amount.currency: "USD"
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
