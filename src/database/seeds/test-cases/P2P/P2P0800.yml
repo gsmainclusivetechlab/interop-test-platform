@@ -273,8 +273,8 @@ test_steps:
           body.transferAmount.currency: 'USD'
           body.payeeReceiveAmount.amount: '798'
           body.payeeReceiveAmount.currency: 'USD'
-          body.payeeFspCommission.amount: '1'
-          body.payeeFspCommission.currency: 'USD'
+          body.payeeFspFee.amount: '1'
+          body.payeeFspFee.currency: 'USD'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
