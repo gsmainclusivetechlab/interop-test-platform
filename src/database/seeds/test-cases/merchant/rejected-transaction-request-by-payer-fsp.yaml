@@ -60,7 +60,7 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: 'http://example.com/example'
+        x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
         amount: '1004'
@@ -119,12 +119,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
@@ -178,12 +178,12 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
         payee:
-          partIdInfo:
+          partyIdInfo:
             partyIdType: 'MSISDN'
             partyIdentifier: "+33555789123"
         payer:
@@ -227,8 +227,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transactionRequestState: 'REJECTED'
     response:
@@ -257,8 +257,8 @@ test_steps:
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transactionRequestState: 'REJECTED'
     response:

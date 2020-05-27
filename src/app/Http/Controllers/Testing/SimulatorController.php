@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Exceptions\TestMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -65,7 +66,11 @@ class SimulatorController extends Controller
                     })
                     ->count()
             )
-            ->firstOrFail();
+            ->first();
+
+        if ($testStep === null) {
+            throw new TestMismatchException($testRun->session, 404, 'Testing step not found.');
+        }
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
         $request = $request->withUri(UriResolver::resolve(

@@ -11,20 +11,29 @@
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>
-                    <div class="ml-auto col-2">
-                        <div class="mb-1">
-                            Execution:
-                            <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
-                            <small>
-                                {{ session.testCases ? collect(session.testCases.data).unique('use_case_id').count() : 0 }}
-                            </small>
-                            <icon name="file-text" v-b-tooltip.hover title="Test Case" />
-                            <small>
-                                {{ session.testCases ? session.testCases.data.length : 0  }}
-                            </small>
-                        </div>
-                        <div style="min-width: 180px">
-                            <session-progress :testCases="session.testCases.data" />
+                    <div class="ml-auto col-4 d-flex justify-content-end">
+                        <inertia-link
+                            :href="route('sessions.test-mismatches.index', session.id)"
+                            class="btn btn-secondary mr-4 align-self-end flex-shrink-0"
+                        >
+                            <icon name="alert-triangle"></icon>
+                            Test Mismatches
+                        </inertia-link>
+                        <div class="d-inline-block">
+                            <div class="mb-1">
+                                Execution:
+                                <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
+                                <small>
+                                    {{ session.testCases ? collect(session.testCases.data).unique('use_case_id').count() : 0 }}
+                                </small>
+                                <icon name="file-text" v-b-tooltip.hover title="Test Case" />
+                                <small>
+                                    {{ session.testCases ? session.testCases.data.length : 0  }}
+                                </small>
+                            </div>
+                            <div style="min-width: 180px">
+                                <session-progress :testCases="session.testCases.data" />
+                            </div>
                         </div>
                     </div>
                 </div>
