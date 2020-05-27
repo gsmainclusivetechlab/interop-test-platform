@@ -91,10 +91,17 @@ test_steps:
     source: Mobile Money Operator 1
     target: Mojaloop
     api_spec: Mojaloop v1.0
-##    trigger:
-##      amount:
-##        amount: '700'
-
+    trigger:
+      amount:
+        amount: '700'
+    test_request_setups:
+      - name: Override response
+        values:
+          body.amountType: "RECEIVE"
+          body.amount.amount: 700
+          body.amount.currency: "USD"
+          body.fees.amount: 1
+          body.fees.currency: "USD"
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
