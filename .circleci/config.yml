@@ -18,7 +18,9 @@ jobs:
 
       - run: 
           name: Run docker containers
-          command: make run
+          command: | 
+            make run
+            sleep 15
           
       - restore_cache: 
           keys:
