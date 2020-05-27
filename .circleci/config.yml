@@ -1,6 +1,8 @@
 # Interop Test Platofrm CircleCI
 
-version: 2
+version: 2.1
+orbs:
+  coverage-reporter: codacy/coverage-reporter@9.0.1
 jobs:
   build:
     machine:
