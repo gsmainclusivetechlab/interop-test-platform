@@ -4,16 +4,13 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestCaseResource;
-use App\Http\Resources\TestMismatchResource;
+use App\Http\Resources\TestLogResource;
 use App\Http\Resources\UseCaseResource;
-use App\Jobs\ExecuteTestRunJob;
-use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\UseCase;
 use Inertia\Inertia;
 
-class TestMismatchController extends Controller
+class TestLogController extends Controller
 {
     /**
      * TestCaseController constructor.
@@ -32,7 +29,7 @@ class TestMismatchController extends Controller
     {
         $this->authorize('view', $session);
 
-        return Inertia::render('sessions/test-mismatches/index', [
+        return Inertia::render('sessions/test-logs/index', [
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
@@ -61,8 +58,8 @@ class TestMismatchController extends Controller
                     })
                     ->get()
             ),
-            'testMismatches' => TestMismatchResource::collection(
-                $session->testMismatches()
+            'testLogs' => TestLogResource::collection(
+                $session->testLogs()
                     ->latest()
                     ->paginate()
             ),

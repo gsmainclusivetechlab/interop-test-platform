@@ -55,9 +55,9 @@ class Session extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function testMismatches()
+    public function testLogs()
     {
-        return $this->hasMany(TestMismatch::class, 'session_id');
+        return $this->hasMany(TestLog::class, 'session_id');
     }
 
     /**

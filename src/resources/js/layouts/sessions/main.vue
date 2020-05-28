@@ -13,11 +13,11 @@
                     </div>
                     <div class="ml-auto col-4 d-flex justify-content-end">
                         <inertia-link
-                            :href="route('sessions.test-mismatches.index', session.id)"
+                            :href="route('sessions.test-logs.index', session.id)"
                             class="btn btn-secondary mr-4 align-self-end flex-shrink-0"
                         >
-                            <icon name="alert-triangle"></icon>
-                            Test Mismatches
+                            <icon name="notebook"></icon>
+                            Test Logs
                         </inertia-link>
                         <div class="d-inline-block">
                             <div class="mb-1">

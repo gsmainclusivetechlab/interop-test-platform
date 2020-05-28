@@ -2,13 +2,10 @@
 
 namespace App\Exceptions;
 
-use App\Http\Client\Request;
-use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -49,35 +46,6 @@ class Handler extends ExceptionHandler
             ])->toResponse(request());
         }
 
-        return $this->renderHttpException($e);
-    }
-
-    /**
-     * @param Throwable $e
-     * @throws \Exception
-     */
-    public function report(Throwable $e)
-    {
-        if ($e instanceof TestMismatchException) {
-            $this->reportTestMismatch($e);
-        }
-
-        parent::report($e);
-    }
-
-    /**
-     * @param TestMismatchException $e
-     */
-    protected function reportTestMismatch(TestMismatchException $e)
-    {
-        $e->getSession()->testMismatches()->create([
-            'exception' => $e->getMessage(),
-            'request' => new Request(new ServerRequest(
-                request()->method(),
-                request()->url(),
-                request()->headers->all(),
-                request()->getContent()
-            )),
-        ]);
+        return parent::renderHttpException($e);
     }
 }

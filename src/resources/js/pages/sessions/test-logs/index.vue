@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">
-                    <b>Test mismatches</b>
+                    <b>Test Logs</b>
                 </h2>
             </div>
             <div class="table-responsive mb-0">
@@ -18,25 +18,26 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="testMismatch in testMismatches.data">
+                        <tr v-for="testLog in testLogs.data">
                             <td>
-                                {{ testMismatch.request.method }}
+                                {{ testLog.request.method }}
                             </td>
                             <td>
-                                {{ testMismatch.request.path }}
+                                {{ testLog.request.path }}
                             </td>
                             <td>
-                                {{ testMismatch.exception }}
+                                {{ testLog.exception }}
+                            </td>
+
+                            <td>
+                                {{ testLog.created_at }}
                             </td>
                             <td>
-                                {{ testMismatch.created_at }}
-                            </td>
-                            <td>
-                                <button class="btn btn-secondary" v-b-modal="`modal-request-${testMismatch.id}`">
+                                <button class="btn btn-secondary" v-b-modal="`modal-request-${testLog.id}`">
                                     Request
                                 </button>
                                 <b-modal
-                                    :id="`modal-request-${testMismatch.id}`"
+                                    :id="`modal-request-${testLog.id}`"
                                     size="lg"
                                     centered
                                     hide-footer
@@ -44,43 +45,43 @@
                                     title="Request"
                                 >
                                     <div class="border">
-                                        <div class="d-flex" v-if="testMismatch.request.uri">
+                                        <div class="d-flex" v-if="testLog.request.uri">
                                             <div class="w-25 px-4 py-2 border">
                                                 <strong>Endpoint</strong>
                                             </div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
-                                                    {{ testMismatch.request.uri }}
+                                                    {{ testLog.request.uri }}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex" v-if="testMismatch.request.method">
+                                        <div class="d-flex" v-if="testLog.request.method">
                                             <div class="w-25 px-4 py-2 border">
                                                 <strong>Method</strong>
                                             </div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
-                                                    {{ testMismatch.request.method }}
+                                                    {{ testLog.request.method }}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex" v-if="collect(testMismatch.request.headers).count()">
+                                        <div class="d-flex" v-if="collect(testLog.request.headers).count()">
                                             <div class="w-25 px-4 py-2 border">
                                                 <strong>Headers</strong>
                                             </div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
-                                                    <json-tree :data="testMismatch.request.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                    <json-tree :data="testLog.request.headers" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex" v-if="collect(testMismatch.request.body).count()">
+                                        <div class="d-flex" v-if="collect(testLog.request.body).count()">
                                             <div class="w-25 px-4 py-2 border">
                                                 <strong>Body</strong>
                                             </div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
-                                                    <json-tree :data="testMismatch.request.body" :deep="1" :show-line="false" class="p-2"></json-tree>
+                                                    <json-tree :data="testLog.request.body" :deep="1" :show-line="false" class="p-2"></json-tree>
                                                 </div>
                                             </div>
                                         </div>
@@ -88,7 +89,7 @@
                                 </b-modal>
                             </td>
                         </tr>
-                        <tr v-if="!testMismatches.data.length">
+                        <tr v-if="!testLogs.data.length">
                             <td class="text-center" colspan="5">
                                 No Results
                             </td>
@@ -98,8 +99,8 @@
             </div>
 
             <pagination
-                :meta="testMismatches.meta"
-                :links="testMismatches.links"
+                :meta="testLogs.meta"
+                :links="testLogs.links"
                 class="card-footer"
             />
         </div>
@@ -122,7 +123,7 @@ export default {
             type: Object,
             required: true
         },
-        testMismatches: {
+        testLogs: {
             type: Object,
             required: true
         },

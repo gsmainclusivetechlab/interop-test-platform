@@ -3,26 +3,27 @@
 namespace App\Models;
 
 use App\Casts\RequestCast;
+use App\Casts\ResponseCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
  */
-class TestMismatch extends Model
+class TestLog extends Model
 {
     const UPDATED_AT = null;
 
     /**
      * @var string
      */
-    protected $table = 'test_mismatches';
+    protected $table = 'test_logs';
 
     /**
      * @var array
      */
     protected $fillable = [
         'request',
-        'exception',
+        'status_code',
     ];
 
     /**

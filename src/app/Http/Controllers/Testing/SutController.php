@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Exceptions\TestMismatchException;
+use App\Http\Client\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -44,6 +44,13 @@ class SutController extends Controller
         ServerRequestInterface $request
     )
     {
+        app()->terminating(function () use ($session, $request) {
+            $session->testLogs()->create([
+                'request' => new Request($request),
+                'status_code' => http_response_code(),
+            ]);
+        });
+
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
@@ -74,11 +81,7 @@ class SutController extends Controller
                     });
                 });
             })
-            ->first();
-
-        if ($testStep === null) {
-            throw new TestMismatchException($session, 404, 'Testing step not found.');
-        }
+            ->firstOrFail();
 
         $testRun = $session->testRuns()
             ->incompleted()
