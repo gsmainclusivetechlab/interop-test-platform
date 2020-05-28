@@ -1,0 +1,28 @@
+version: "3.7"
+
+x-migration-service: &migration-service
+    build: 
+      context: src
+      dockerfile: build/Dockerfile.php
+    depends_on:
+      - mysqldb
+    environment:
+      MYSQL_HOST: mysqldb
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      FOREGROUND_PROCESS: php-fpm
+      CONTAINER_ENABLED: 1
+      WAIT_HOSTS: mysqldb:3306
+      WAIT_SLEEP_INTERVAL: 5
+    networks:
+      internal:
+
+services:
+  seed:
+    <<: *migration-service
+    command: bash -c "/wait && php artisan migrate:refresh --seed"
+
+  migrate:
+    <<: *migration-service
+    command: bash -c "/wait && php artisan migrate"

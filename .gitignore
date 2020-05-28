@@ -1,8 +1,6 @@
 # configs and main entry
 .env*
 !.env.example
-docker-compose.yml
-/build/nginx-server.conf
 
 # phpstorm project files
 .idea

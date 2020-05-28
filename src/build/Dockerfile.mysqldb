@@ -1,0 +1,3 @@
+FROM mysql:8
+
+COPY ./build/my.cnf /etc/mysql/my.cnf

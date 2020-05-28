@@ -1,0 +1,96 @@
+version: '3.7'
+
+x-mysql-credentials: &mysql-credentials
+    MYSQL_HOST: mysqldb
+    MYSQL_DATABASE: ${DB_DATABASE}
+    MYSQL_USER: ${DB_USERNAME}
+    MYSQL_PASSWORD: ${DB_PASSWORD}
+
+x-php-defaults: &php-defaults
+    build:
+        context: src
+        dockerfile: build/Dockerfile.php
+    cap_add:
+        - SYS_PTRACE
+    security_opt:
+        - apparmor:unconfined
+    environment: &php-env-defaults
+        <<: *mysql-credentials
+        PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
+    depends_on:
+        - mysqldb
+
+networks:
+    internal:
+        driver: bridge
+
+services:
+    php:
+        <<: *php-defaults
+        environment:
+            <<: *php-env-defaults
+            FOREGROUND_PROCESS: php-fpm
+            CONTAINER_ENABLED: 1
+            SSHD_ENABLED: ${SSHD_ENABLED}
+            PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
+            PHP_XDEBUG_ENABLED: ${PHP_XDEBUG_ENABLED}
+            XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+            PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+        networks:
+            internal:
+                aliases:
+                    - app
+
+    queue:
+        <<: *php-defaults
+        environment:
+            <<: *php-env-defaults
+            FOREGROUND_PROCESS: supervisor
+            CONTAINER_ENABLED: ${QUEUE_ENABLED}
+        networks:
+            - internal
+
+    redis:
+        image: redis:5
+        volumes:
+            - ./runtime/redis:/data
+        environment:
+            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        networks:
+            - internal
+
+    web:
+        build:
+            context: src
+            dockerfile: build/Dockerfile.web
+        depends_on:
+            - php
+        networks:
+            internal:
+
+    mysqldb:
+        user: ${UID}
+        build:
+            context: src
+            dockerfile: build/Dockerfile.mysqldb
+        image: mysql:8
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            <<: *mysql-credentials
+        healthcheck:
+            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+            timeout: 20s
+            retries: 10
+        volumes:
+            - ./runtime/mysql:/var/lib/mysql
+            - ./src/build/my.cnf:/etc/mysql/my.cnf
+        networks:
+            internal:
+
+    mailhog:
+        image: mailhog/mailhog
+        ports:
+            - '${HOST_MAILHOG_PORT}:8025'
+        networks:
+            internal:

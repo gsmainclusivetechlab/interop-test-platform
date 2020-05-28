@@ -1,0 +1,10 @@
+FROM gsmainclusivetechlab/interop-nodejs:latest
+
+COPY . /var/www/html
+
+WORKDIR /var/www/html
+
+RUN npm ci
+
+# build the image with the files as they currently are. They can be overridden with a volume.
+RUN npm run production
