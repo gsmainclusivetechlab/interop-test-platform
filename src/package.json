@@ -36,6 +36,8 @@
         "vue-template-compiler": "^2.6.11"
     },
     "devDependencies": {
+        "@prettier/plugin-php": "^0.14.2",
+        "prettier": "^2.0.5",
         "stylelint": "^13.5.0",
         "stylelint-config-recommended": "^3.0.0",
         "stylelint-scss": "^3.17.2"
