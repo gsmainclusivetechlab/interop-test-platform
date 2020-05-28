@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\TestRunResource;
 use App\Http\Resources\UseCaseResource;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
@@ -66,6 +67,14 @@ class TestCaseController extends Controller
                     ->where('test_case_id', $testCase->id)
                     ->firstOrFail()
             ))->resolve(),
+            'testRuns' => TestRunResource::collection(
+                $session->testRuns()
+                    ->where('test_case_id', $testCase->id)
+                    ->with(['session', 'testCase'])
+//                    ->completed()
+                    ->latest()
+                    ->paginate()
+            ),
         ]);
     }
 
