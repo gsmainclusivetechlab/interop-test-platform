@@ -1,12 +1,12 @@
 {
     "quoteProps": "consistent",
     "singleQuote": true,
-    "tabWidth": 2,
+    "tabWidth": 4,
     "overrides": [
         {
-          "files": "*.php",
+          "files": "*.{css,scss}",
           "options": {
-            "tabWidth": 4
+            "tabWidth": 2
           }
         }
       ]
