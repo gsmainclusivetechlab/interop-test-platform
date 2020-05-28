@@ -20,7 +20,7 @@
                             Test Mismatches
                         </inertia-link>
                         <div class="d-inline-block">
-                            <div class="mb-1">
+                            <div>
                                 Execution:
                                 <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
                                 <small>
