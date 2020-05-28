@@ -10,7 +10,6 @@
 - Task: MMO1 or 2 as SUT -> Button that initiates Test Execution [@jc_akokorev]
 - Task: Update Eloquent model unit tests after Matching implementation [@jc_akokorev,@jc_skushnir]
 - Task: Create Accounts Authorisation flow [@jc_ohladkov,@jc_skushnir]
-- Task: Create Accounts Authorisation flow [@jc_ohladkov,@jc_skushnir]
 - Task: Automated-tests: Sessions and Admin are actions, browser [@jc_ohladkov]
 - Bug: Test Case validation not being exectued [@jc_agalaguz]
 - Bug: Add white border in GSMA Logo for dark theme [@jc_ohladkov]
