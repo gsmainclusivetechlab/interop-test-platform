@@ -31,10 +31,16 @@
                             @change.prevent="$inertia.post(route('dark-mode'))"
                             :checked="$page.app.dark_mode"
                         />
-                        <span class="toggle-bg"></span>
-                        <span class="toggle-switch">
-                            <span class="toggle-switch-figure"></span>
-                            <span class="toggle-switch-figureAlt"></span>
+                        <span
+                            class="toggle-switch d-flex justify-content-between align-items-center rounded-pill"
+                            :class="{ enabled : $page.app.dark_mode }"
+                        >
+                            <span class="toggle-switch-icon">
+                                <icon name="sun" />
+                            </span>
+                            <span class="toggle-switch-icon">
+                                <icon name="moon" />
+                            </span>
                         </span>
                     </label>
                     <b-navbar-nav class="flex-row">
