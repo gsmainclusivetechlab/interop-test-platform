@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session" :testCase="testCase" :useCases="useCases">
+    <layout :session="session" :testCase="testCase" :useCases="useCases" :testStepFirstSource="testStepFirstSource">
         <div  class="card">
             <div class="card-header">
                 <h2 class="card-title">
@@ -176,6 +176,10 @@
                 required: true
             },
             testSteps: {
+                type: Object,
+                required: true
+            },
+            testStepFirstSource: {
                 type: Object,
                 required: true
             },

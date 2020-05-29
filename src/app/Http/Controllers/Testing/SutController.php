@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Exceptions\TestMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -74,27 +73,22 @@ class SutController extends Controller
                     });
                 });
             })
-            ->first();
-
-        if ($testStep === null) {
-            throw new TestMismatchException($session, 404, 'Testing step not found.');
-        }
+            ->firstOrFail();
 
         $testRun = $session->testRuns()
             ->incompleted()
             ->where('test_case_id', $testStep->test_case_id)
             ->firstOrCreate(['test_case_id' => $testStep->test_case_id]);
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
             ->withoutHeader(TracestateHeader::NAME)
             ->withUri(UriResolver::resolve(
-                new Uri($session->getBaseUriOfComponent($testStep->target)),
-                (new Uri($path))->withQuery((string) request()->getQueryString())
-            ));
+                new Uri($session->getBaseUriOfComponent($connection)),
+                new Uri($path)
+            )->withQuery((string) request()->getQueryString()));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))
