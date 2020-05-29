@@ -11,6 +11,7 @@
 - Task: Update Eloquent model unit tests after Matching implementation [@jc_akokorev,@jc_skushnir]
 - Task: Create Accounts Authorisation flow [@jc_ohladkov,@jc_skushnir]
 - Task: Automated-tests: Sessions and Admin are actions, browser [@jc_ohladkov]
+- Bug: P2P flow - PUT /transfers/{ID} is not running [@jc_ohladkov]
 - Bug: Test Case validation not being exectued [@jc_agalaguz]
 - Bug: Add white border in GSMA Logo for dark theme [@jc_ohladkov]
 - Bug: Matching issues with MMO as SUT [@jc_akokorev,@jc_ohladkov,@jc_skushnir]
