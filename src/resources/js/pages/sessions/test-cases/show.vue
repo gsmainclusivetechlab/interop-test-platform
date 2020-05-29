@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session" :useCases="useCases" :test-case="testCase">
+    <layout :session="session" :useCases="useCases" :test-case="testCase" :testStepFirstSource="testStepFirstSource">
         <div class="card">
             <div class="empty h-auto" v-if="!testRuns.data.length">
                 <div class="row">
@@ -101,6 +101,10 @@ export default {
             required: true
         },
         testRuns: {
+            type: Object,
+            required: true
+        },
+        testStepFirstSource: {
             type: Object,
             required: true
         },

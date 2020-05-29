@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Http\Client\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -44,13 +43,6 @@ class SutController extends Controller
         ServerRequestInterface $request
     )
     {
-        app()->terminating(function () use ($session, $request) {
-            $session->testLogs()->create([
-                'request' => new Request($request),
-                'status_code' => http_response_code(),
-            ]);
-        });
-
         $testStep = $session->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
@@ -88,16 +80,15 @@ class SutController extends Controller
             ->where('test_case_id', $testStep->test_case_id)
             ->firstOrCreate(['test_case_id' => $testStep->test_case_id]);
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
             ->withoutHeader(TracestateHeader::NAME)
             ->withUri(UriResolver::resolve(
-                new Uri($session->getBaseUriOfComponent($testStep->target)),
-                (new Uri($path))->withQuery((string) request()->getQueryString())
-            ));
+                new Uri($session->getBaseUriOfComponent($connection)),
+                new Uri($path)
+            )->withQuery((string) request()->getQueryString()));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

@@ -1,10 +1,10 @@
 <template>
-    <layout :session="session" :testCase="testCase" :useCases="useCases">
+    <layout :session="session" :testCase="testCase" :useCases="useCases" :testStepFirstSource="testStepFirstSource">
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title d-flex align-items-center">
                     <inertia-link
-                        :href="route('sessions.test-cases.test-runs.index', [session.id, testCase.id])"
+                        :href="route('sessions.test-cases.show', [session.id, testCase.id])"
                         class="d-inline-flex text-decoration-none mr-1"
                     >
                         <icon name="corner-down-left"></icon>
@@ -424,6 +424,10 @@ export default {
             required: true
         },
         testResult: {
+            type: Object,
+            required: true
+        },
+        testStepFirstSource: {
             type: Object,
             required: true
         },

@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Http\Response;
+use App\Http\Client\Response;
 use Inertia\Inertia;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;

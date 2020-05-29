@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Events\TestingMismatchEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -14,10 +13,8 @@ use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Component;
 use App\Models\TestRun;
-use App\Models\TestStep;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SimulatorController extends Controller
@@ -31,7 +28,6 @@ class SimulatorController extends Controller
     }
 
     /**
-     * @param TestRun $testRun
      * @param Component $component
      * @param Component $connection
      * @param string $path
@@ -48,6 +44,7 @@ class SimulatorController extends Controller
         $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
         $session = $testRun->session;
+
         $testStep = $testRun->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
@@ -71,18 +68,13 @@ class SimulatorController extends Controller
                     })
                     ->count()
             )
-            ->first();
-
-        if ($testStep === null) {
-            TestingMismatchEvent::dispatch($session, $component, $connection);
-            throw (new ModelNotFoundException)->setModel(TestStep::class);
-        }
+            ->firstOrFail();
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
         $request = $request->withUri(UriResolver::resolve(
-            new Uri($session->getBaseUriOfComponent($testStep->target)),
-            (new Uri($path))->withQuery((string) request()->getQueryString())
-        ));
+            new Uri($session->getBaseUriOfComponent($connection)),
+            new Uri($path)
+        )->withQuery((string) request()->getQueryString()));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

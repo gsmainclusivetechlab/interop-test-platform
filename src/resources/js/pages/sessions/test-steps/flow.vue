@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session" :testCase="testCase" :useCases="useCases">
+    <layout :session="session" :testCase="testCase" :useCases="useCases" :testStepFirstSource="testStepFirstSource">
         <div class="card mb-0">
             <div class="card-header justify-content-between">
                 <h2 class="card-title">
@@ -52,7 +52,11 @@ export default {
         testSteps: {
             type: Object,
             required: true
-        }
+        },
+        testStepFirstSource: {
+            type: Object,
+            required: true
+        },
     },
     data() {
         return {

@@ -11,15 +11,8 @@
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>
-                    <div class="ml-auto col-4 d-flex justify-content-end">
-                        <inertia-link
-                            :href="route('sessions.test-mismatches.index', session.id)"
-                            class="btn btn-secondary mr-4 align-self-end flex-shrink-0"
-                        >
-                            <icon name="alert-triangle"></icon>
-                            Test Mismatches
-                        </inertia-link>
-                        <div class="d-inline-block">
+                    <div class="ml-auto col-2 d-flex justify-content-end">
+                        <div class="w-100">
                             <div>
                                 Execution:
                                 <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
@@ -31,9 +24,7 @@
                                     {{ session.testCases ? session.testCases.data.length : 0  }}
                                 </small>
                             </div>
-                            <div style="min-width: 180px">
-                                <session-progress :testCases="session.testCases.data" />
-                            </div>
+                            <session-progress :testCases="session.testCases.data" />
                         </div>
                     </div>
                 </div>
@@ -53,7 +44,7 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-unstyled">
-                                    <!-- <li>
+                                    <li>
                                         <p>
                                             <strong>Configuration</strong>
                                         </p>
@@ -77,7 +68,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </li> -->
+                                    </li>
                                     <li v-if="testCase.description">
                                         <p>
                                             <strong>Description</strong>
@@ -127,7 +118,10 @@
                                             </inertia-link>
                                         </li>
                                     </ul>
-                                    <div class="ml-auto">
+                                    <div
+                                        class="ml-auto"
+                                        v-if="!collect(session.components.data).where('id', testStepFirstSource.id).count()"
+                                    >
                                         <div class="d-flex">
                                             <inertia-link
                                                 :href="route('sessions.test-cases.run', [session.id, testCase.id])"
@@ -174,6 +168,10 @@
                 required: true
             },
             testCase: {
+                type: Object,
+                required: true
+            },
+            testStepFirstSource: {
                 type: Object,
                 required: true
             },

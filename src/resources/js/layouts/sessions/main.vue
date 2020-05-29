@@ -11,15 +11,8 @@
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>
-                    <div class="ml-auto col-4 d-flex justify-content-end">
-                        <inertia-link
-                            :href="route('sessions.test-logs.index', session.id)"
-                            class="btn btn-secondary mr-4 align-self-end flex-shrink-0"
-                        >
-                            <icon name="notebook"></icon>
-                            Test Logs
-                        </inertia-link>
-                        <div class="d-inline-block">
+                    <div class="ml-auto col-2 d-flex justify-content-end">
+                        <div class="w-100">
                             <div>
                                 Execution:
                                 <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
@@ -31,9 +24,7 @@
                                     {{ session.testCases ? session.testCases.data.length : 0  }}
                                 </small>
                             </div>
-                            <div style="min-width: 180px">
-                                <session-progress :testCases="session.testCases.data" />
-                            </div>
+                            <session-progress :testCases="session.testCases.data" />
                         </div>
                     </div>
                 </div>

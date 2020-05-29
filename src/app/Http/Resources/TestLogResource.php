@@ -15,7 +15,7 @@ class TestLogResource extends JsonResource
         return [
             'id' => $this->id,
             'request' => $this->request->toArray(),
-            'status_code' => $this->status_code,
+            'response' => $this->response->toArray(),
             'created_at' => $this->created_at->diffForHumans(),
             'session' => new SessionResource($this->whenLoaded('session')),
         ];
