@@ -18,15 +18,35 @@ class TestScriptLoader
     {
         $testSuite = new TestSuite();
 
-        if ($testRequestScripts = $testResult->testStep->testScripts()->ofType(TestScript::TYPE_REQUEST)->get()) {
+        if (
+            $testRequestScripts = $testResult->testStep
+                ->testScripts()
+                ->ofType(TestScript::TYPE_REQUEST)
+                ->get()
+        ) {
             foreach ($testRequestScripts as $testRequestScript) {
-                $testSuite->addTest(new RequestScriptValidationTest($testResult->request, $testRequestScript));
+                $testSuite->addTest(
+                    new RequestScriptValidationTest(
+                        $testResult->request,
+                        $testRequestScript
+                    )
+                );
             }
         }
 
-        if ($testResponseScripts = $testResult->testStep->testScripts()->ofType(TestScript::TYPE_RESPONSE)->get()) {
+        if (
+            $testResponseScripts = $testResult->testStep
+                ->testScripts()
+                ->ofType(TestScript::TYPE_RESPONSE)
+                ->get()
+        ) {
             foreach ($testResponseScripts as $testResponseScript) {
-                $testSuite->addTest(new ResponseScriptValidationTest($testResult->response, $testResponseScript));
+                $testSuite->addTest(
+                    new ResponseScriptValidationTest(
+                        $testResult->response,
+                        $testResponseScript
+                    )
+                );
             }
         }
 

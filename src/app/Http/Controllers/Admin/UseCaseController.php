@@ -30,8 +30,8 @@ class UseCaseController extends Controller
         return Inertia::render('admin/use-cases/index', [
             'useCases' => UseCaseResource::collection(
                 UseCase::when(request('q'), function (Builder $query, $q) {
-                        $query->where('name', 'like', "%{$q}%");
-                    })
+                    $query->where('name', 'like', "%{$q}%");
+                })
                     ->with(['testCases'])
                     ->latest()
                     ->paginate()

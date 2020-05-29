@@ -34,12 +34,11 @@ class TestCaseController extends Controller
     {
         $this->authorize('view', $session);
 
-        $testCase = $session->testCases()
+        $testCase = $session
+            ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()
-            ->firstOrFail()
-            ->source;
+        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-cases/show', [
             'session' => (new SessionResource(
@@ -54,29 +53,41 @@ class TestCaseController extends Controller
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use($session) {
-                        $query->with([
-                            'lastTestRun' => function ($query) use ($session) {
-                                $query->where('session_id', $session->id);
-                            },
-                        ])->whereHas('sessions', function ($query) use($session) {
-                            $query->whereKey($session->getKey());
-                        });
-                    }])
-                    ->whereHas('testCases', function ($query) use($session) {
-                        $query->whereHas('sessions', function ($query) use($session) {
+                    'testCases' => function ($query) use ($session) {
+                        $query
+                            ->with([
+                                'lastTestRun' => function ($query) use (
+                                    $session
+                                ) {
+                                    $query->where('session_id', $session->id);
+                                },
+                            ])
+                            ->whereHas('sessions', function ($query) use (
+                                $session
+                            ) {
+                                $query->whereKey($session->getKey());
+                            });
+                    },
+                ])
+                    ->whereHas('testCases', function ($query) use ($session) {
+                        $query->whereHas('sessions', function ($query) use (
+                            $session
+                        ) {
                             $query->whereKey($session->getKey());
                         });
                     })
                     ->get()
             ),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
-            'testStepFirstSource' => (new ComponentResource($testStepFirstSource))->resolve(),
+            'testStepFirstSource' => (new ComponentResource(
+                $testStepFirstSource
+            ))->resolve(),
             'testRuns' => TestRunResource::collection(
-                $session->testRuns()
+                $session
+                    ->testRuns()
                     ->where('test_case_id', $testCase->id)
                     ->with(['session', 'testCase'])
-//                    ->completed()
+                    //                    ->completed()
                     ->latest()
                     ->paginate()
             ),

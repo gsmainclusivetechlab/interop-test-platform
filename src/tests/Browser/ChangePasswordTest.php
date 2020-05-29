@@ -19,7 +19,7 @@ class ChangePasswordTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
-                ->visit(new ChangePasswordPage)
+                ->visit(new ChangePasswordPage())
                 ->click('@profileSettingsLink')
                 ->waitForLocation('/settings/profile')
                 ->assertSee('Profile');
@@ -36,7 +36,7 @@ class ChangePasswordTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
-                ->visit(new ChangePasswordPage)
+                ->visit(new ChangePasswordPage())
                 ->click('@forgotPasswordLink')
                 ->waitForLocation('/password/reset')
                 ->assertSee('Forgot password');
@@ -53,7 +53,7 @@ class ChangePasswordTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
-                ->visit(new ChangePasswordPage)
+                ->visit(new ChangePasswordPage())
                 ->type('@currentPassword', 'password')
                 ->type('@password', 'passwordUpdated')
                 ->type('@passwordConfirmation', 'passwordUpdated')

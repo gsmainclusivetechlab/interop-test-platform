@@ -23,15 +23,23 @@ class TestCaseImport implements Importable
     public function import(array $rows): Model
     {
         return DB::transaction(function () use ($rows) {
-            $useCase = UseCase::firstOrCreate(['name' => Arr::get($rows, 'use_case')]);
+            $useCase = UseCase::firstOrCreate([
+                'name' => Arr::get($rows, 'use_case'),
+            ]);
             /**
              * @var TestCase $testCase
              */
-            $testCase = $useCase->testCases()->make(Arr::only($rows, TestCase::make()->getFillable()));
+            $testCase = $useCase
+                ->testCases()
+                ->make(Arr::only($rows, TestCase::make()->getFillable()));
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
-                $testCase->components()->attach(Component::whereIn('name', $componentRows)->pluck('id'));
+                $testCase
+                    ->components()
+                    ->attach(
+                        Component::whereIn('name', $componentRows)->pluck('id')
+                    );
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
@@ -39,17 +47,58 @@ class TestCaseImport implements Importable
                     /**
                      * @var TestStep $testStep
                      */
-                    $testStep = $testCase->testSteps()->make(Arr::only($testStepRow, TestStep::make()->getFillable()));
-                    $testStep->setAttribute('source_id', Component::where('name', Arr::get($testStepRow, 'source'))->value('id'));
-                    $testStep->setAttribute('target_id', Component::where('name', Arr::get($testStepRow, 'target'))->value('id'));
-                    $testStep->setAttribute('api_spec_id', ApiSpec::where('name', Arr::get($testStepRow, 'api_spec'))->value('id'));
+                    $testStep = $testCase
+                        ->testSteps()
+                        ->make(
+                            Arr::only(
+                                $testStepRow,
+                                TestStep::make()->getFillable()
+                            )
+                        );
+                    $testStep->setAttribute(
+                        'source_id',
+                        Component::where(
+                            'name',
+                            Arr::get($testStepRow, 'source')
+                        )->value('id')
+                    );
+                    $testStep->setAttribute(
+                        'target_id',
+                        Component::where(
+                            'name',
+                            Arr::get($testStepRow, 'target')
+                        )->value('id')
+                    );
+                    $testStep->setAttribute(
+                        'api_spec_id',
+                        ApiSpec::where(
+                            'name',
+                            Arr::get($testStepRow, 'api_spec')
+                        )->value('id')
+                    );
                     $testStep->saveOrFail();
 
-                    $this->importTestSetups($testStep, TestSetup::TYPE_REQUEST, Arr::get($testStepRow, 'test_request_setups', []));
-                    $this->importTestSetups($testStep, TestSetup::TYPE_RESPONSE, Arr::get($testStepRow, 'test_response_setups', []));
+                    $this->importTestSetups(
+                        $testStep,
+                        TestSetup::TYPE_REQUEST,
+                        Arr::get($testStepRow, 'test_request_setups', [])
+                    );
+                    $this->importTestSetups(
+                        $testStep,
+                        TestSetup::TYPE_RESPONSE,
+                        Arr::get($testStepRow, 'test_response_setups', [])
+                    );
 
-                    $this->importTestScripts($testStep, TestScript::TYPE_REQUEST, Arr::get($testStepRow, 'test_request_scripts', []));
-                    $this->importTestScripts($testStep, TestScript::TYPE_RESPONSE, Arr::get($testStepRow, 'test_response_scripts', []));
+                    $this->importTestScripts(
+                        $testStep,
+                        TestScript::TYPE_REQUEST,
+                        Arr::get($testStepRow, 'test_request_scripts', [])
+                    );
+                    $this->importTestScripts(
+                        $testStep,
+                        TestScript::TYPE_RESPONSE,
+                        Arr::get($testStepRow, 'test_response_scripts', [])
+                    );
                 }
             }
 
@@ -69,7 +118,9 @@ class TestCaseImport implements Importable
             /**
              * @var TestSetup $testSetup
              */
-            $testSetup = $testStep->testSetups()->make(Arr::only($row, TestSetup::make()->getFillable()));
+            $testSetup = $testStep
+                ->testSetups()
+                ->make(Arr::only($row, TestSetup::make()->getFillable()));
             $testSetup->type = $type;
             $testSetup->saveOrFail();
         }
@@ -87,7 +138,9 @@ class TestCaseImport implements Importable
             /**
              * @var TestScript $testScript
              */
-            $testScript = $testStep->testScripts()->make(Arr::only($row, TestScript::make()->getFillable()));
+            $testScript = $testStep
+                ->testScripts()
+                ->make(Arr::only($row, TestScript::make()->getFillable()));
             $testScript->type = $type;
             $testScript->saveOrFail();
         }

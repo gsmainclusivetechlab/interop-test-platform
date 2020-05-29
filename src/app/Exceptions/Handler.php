@@ -18,10 +18,7 @@ class Handler extends ExceptionHandler
     /**
      * @var array
      */
-    protected $dontFlash = [
-        'password',
-        'password_confirmation',
-    ];
+    protected $dontFlash = ['password', 'password_confirmation'];
 
     /**
      * @param HttpExceptionInterface $e
@@ -29,7 +26,8 @@ class Handler extends ExceptionHandler
      */
     protected function renderHttpException(HttpExceptionInterface $e)
     {
-        if (in_array($e->getStatusCode(), [
+        if (
+            in_array($e->getStatusCode(), [
                 400,
                 401,
                 403,
@@ -39,7 +37,8 @@ class Handler extends ExceptionHandler
                 429,
                 500,
                 503,
-            ])) {
+            ])
+        ) {
             return Inertia::render('error', [
                 'status' => $e->getStatusCode(),
             ])->toResponse(request());

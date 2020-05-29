@@ -23,8 +23,12 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->middleware(EnsureSessionIsPresent::class. ':session.sut')->only('info');
-        $this->middleware(EnsureSessionIsPresent::class. ':session.sut,session.info')->only('config');
+        $this->middleware(EnsureSessionIsPresent::class . ':session.sut')->only(
+            'info'
+        );
+        $this->middleware(
+            EnsureSessionIsPresent::class . ':session.sut,session.info'
+        )->only('config');
     }
 
     /**
@@ -35,7 +39,7 @@ class RegisterController extends Controller
         return Inertia::render('sessions/register/sut', [
             'session' => session('session'),
             'suts' => ComponentResource::collection(
-                Component::whereHas('testCases')->get(),
+                Component::whereHas('testCases')->get()
             ),
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
@@ -51,10 +55,7 @@ class RegisterController extends Controller
     {
         $request->validate([
             'base_url' => ['required', 'url', 'max:255'],
-            'component_id' => [
-                'required',
-                'exists:components,id',
-            ],
+            'component_id' => ['required', 'exists:components,id'],
         ]);
         $request->session()->put('session.sut', $request->input());
 
@@ -73,20 +74,42 @@ class RegisterController extends Controller
             ),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                        'testCases' => function ($query) {
-                            $query->whereHas('components', function ($query) {
-                                $query->whereKey(request()->session()->get('session.sut.component_id'));
-                            })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
-                                $query->where('public', true);
-                            });
-                        },
-                    ])
+                    'testCases' => function ($query) {
+                        $query
+                            ->whereHas('components', function ($query) {
+                                $query->whereKey(
+                                    request()
+                                        ->session()
+                                        ->get('session.sut.component_id')
+                                );
+                            })
+                            ->when(
+                                !auth()
+                                    ->user()
+                                    ->can('viewAny', TestCase::class),
+                                function ($query) {
+                                    $query->where('public', true);
+                                }
+                            );
+                    },
+                ])
                     ->whereHas('testCases', function ($query) {
-                        $query->whereHas('components', function ($query) {
-                            $query->whereKey(request()->session()->get('session.sut.component_id'));
-                        })->when(!auth()->user()->can('viewAny', TestCase::class), function ($query) {
-                            $query->where('public', true);
-                        });
+                        $query
+                            ->whereHas('components', function ($query) {
+                                $query->whereKey(
+                                    request()
+                                        ->session()
+                                        ->get('session.sut.component_id')
+                                );
+                            })
+                            ->when(
+                                !auth()
+                                    ->user()
+                                    ->can('viewAny', TestCase::class),
+                                function ($query) {
+                                    $query->where('public', true);
+                                }
+                            );
                     })
                     ->get()
             ),
@@ -104,9 +127,12 @@ class RegisterController extends Controller
             'description' => ['string', 'nullable'],
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
-        $request->session()->put('session.info', array_merge($request->input(), [
-            'uuid' => Str::uuid(),
-        ]));
+        $request->session()->put(
+            'session.info',
+            array_merge($request->input(), [
+                'uuid' => Str::uuid(),
+            ])
+        );
 
         return redirect()->route('sessions.register.config');
     }
@@ -119,9 +145,13 @@ class RegisterController extends Controller
         return Inertia::render('sessions/register/config', [
             'session' => session('session'),
             'sut' => (new ComponentResource(
-                Component::whereKey(request()->session()->get('session.sut.component_id'))
+                Component::whereKey(
+                    request()
+                        ->session()
+                        ->get('session.sut.component_id')
+                )
                     ->firstOrFail()
-                    ->load('connections'),
+                    ->load('connections')
             ))->resolve(),
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
@@ -137,11 +167,18 @@ class RegisterController extends Controller
     {
         try {
             $session = DB::transaction(function () use ($request) {
-                $session = auth()->user()
+                $session = auth()
+                    ->user()
                     ->sessions()
                     ->create($request->session()->get('session.info'));
-                $session->testCases()->attach($request->session()->get('session.info.test_cases'));
-                $session->components()->attach([$request->session()->get('session.sut')]);
+                $session
+                    ->testCases()
+                    ->attach(
+                        $request->session()->get('session.info.test_cases')
+                    );
+                $session
+                    ->components()
+                    ->attach([$request->session()->get('session.sut')]);
 
                 return $session;
             });
@@ -151,7 +188,9 @@ class RegisterController extends Controller
                 ->route('sessions.show', $session)
                 ->with('success', __('Session created successfully'));
         } catch (Throwable $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
         }
     }
 }

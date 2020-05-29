@@ -71,10 +71,10 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Login to your account'
+        title: 'Login to your account',
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -82,8 +82,8 @@ export default {
             form: {
                 email: null,
                 password: null,
-                remember: null
-            }
+                remember: null,
+            },
         };
     },
     methods: {
@@ -92,7 +92,7 @@ export default {
             this.$inertia
                 .post(route('login'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

@@ -9,28 +9,28 @@ export default {
     props: {
         href: {
             type: String,
-            required: true
+            required: true,
         },
         data: {
             type: Object,
-            required: false
+            required: false,
         },
         method: {
             type: String,
-            required: false
+            required: false,
         },
         confirmTitle: {
             type: String,
-            default: 'Are you sure?'
+            default: 'Are you sure?',
         },
         confirmText: {
             type: String,
-            default: "You won't be able to revert this!"
-        }
+            default: "You won't be able to revert this!",
+        },
     },
     data() {
         return {
-            confirmed: false
+            confirmed: false,
         };
     },
     methods: {
@@ -40,7 +40,7 @@ export default {
             const messageVNode = h(
                 'span',
                 {
-                    class: ['text-break']
+                    class: ['text-break'],
                 },
                 [this.confirmText]
             );
@@ -51,16 +51,16 @@ export default {
                     .msgBoxConfirm([messageVNode], {
                         title: this.confirmTitle,
                         okTitle: 'Confirm',
-                        centered: true
+                        centered: true,
                     })
-                    .then(value => {
+                    .then((value) => {
                         this.confirmed = value;
                         if (this.confirmed) {
                             this.$el.click();
                         }
                     });
             }
-        }
-    }
+        },
+    },
 };
 </script>

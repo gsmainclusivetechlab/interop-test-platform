@@ -18,11 +18,19 @@ class SessionResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'owner' => new UserResource($this->whenLoaded('owner')),
-            'components' => ComponentResource::collection($this->whenLoaded('components')),
-            'testCases' => TestCaseResource::collection($this->whenLoaded('testCases')),
-            'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun')),
+            'components' => ComponentResource::collection(
+                $this->whenLoaded('components')
+            ),
+            'testCases' => TestCaseResource::collection(
+                $this->whenLoaded('testCases')
+            ),
+            'lastTestRun' => new TestRunResource(
+                $this->whenLoaded('lastTestRun')
+            ),
             'can' => [
-                'delete' => auth()->user()->can('delete', $this->resource),
+                'delete' => auth()
+                    ->user()
+                    ->can('delete', $this->resource),
             ],
         ];
     }

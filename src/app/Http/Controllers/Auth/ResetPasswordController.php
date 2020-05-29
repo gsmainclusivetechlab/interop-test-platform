@@ -38,8 +38,10 @@ class ResetPasswordController extends Controller
      */
     protected function sendResetResponse(Request $request, $response)
     {
-        return redirect($this->redirectPath())
-            ->with('success', trans($response));
+        return redirect($this->redirectPath())->with(
+            'success',
+            trans($response)
+        );
     }
 
     /**

@@ -40,10 +40,12 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
             Arr::set($data, $key, $value);
         }
 
-        return new self(new \GuzzleHttp\Psr7\Response(
-            $data['status'],
-            $data['headers'],
-            json_encode($data['body'])
-        ));
+        return new self(
+            new \GuzzleHttp\Psr7\Response(
+                $data['status'],
+                $data['headers'],
+                json_encode($data['body'])
+            )
+        );
     }
 }

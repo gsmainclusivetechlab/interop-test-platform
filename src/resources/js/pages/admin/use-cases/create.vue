@@ -20,8 +20,8 @@
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                            'is-invalid': $page.errors.name
-                                        }"
+                                        'is-invalid': $page.errors.name,
+                                    }"
                                 />
                                 <span
                                     v-if="$page.errors.name"
@@ -42,8 +42,8 @@
                                     rows="5"
                                     v-model="form.description"
                                     :class="{
-                                            'is-invalid': $page.errors.description
-                                        }"
+                                        'is-invalid': $page.errors.description,
+                                    }"
                                 ></textarea>
                                 <span
                                     v-if="$page.errors.description"
@@ -63,7 +63,10 @@
                                 Cancel
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
-                                <span v-if="sending" class="spinner-border spinner-border-sm mr-2"></span>
+                                <span
+                                    v-if="sending"
+                                    class="spinner-border spinner-border-sm mr-2"
+                                ></span>
                                 Create
                             </button>
                         </div>
@@ -75,31 +78,31 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        metaInfo: {
-            title: 'Create new use case'
+export default {
+    metaInfo: {
+        title: 'Create new use case',
+    },
+    components: {
+        Layout,
+    },
+    data() {
+        return {
+            sending: false,
+            form: {
+                name: null,
+                description: null,
+            },
+        };
+    },
+    methods: {
+        submit() {
+            this.sending = true;
+            this.$inertia
+                .post(route('admin.use-cases.store'), this.form)
+                .then(() => (this.sending = false));
         },
-        components: {
-            Layout,
-        },
-        data() {
-            return {
-                sending: false,
-                form: {
-                    name: null,
-                    description: null,
-                }
-            };
-        },
-        methods: {
-            submit() {
-                this.sending = true;
-                this.$inertia
-                    .post(route('admin.use-cases.store'), this.form)
-                    .then(() => (this.sending = false));
-            }
-        }
-    };
+    },
+};
 </script>

@@ -46,7 +46,9 @@ class ResponseScriptValidationTest extends TestCase
         try {
             $validator->validate();
         } catch (ValidationException $e) {
-            throw new AssertionFailedError(implode(PHP_EOL, $validator->errors()->all()));
+            throw new AssertionFailedError(
+                implode(PHP_EOL, $validator->errors()->all())
+            );
         }
     }
 
@@ -68,7 +70,10 @@ class ResponseScriptValidationTest extends TestCase
             $data = $this->response->toArray();
 
             foreach (array_keys($expected) as $attribute) {
-                $actual = array_merge($actual, ValidationData::initializeAndGatherData($attribute, $data));
+                $actual = array_merge(
+                    $actual,
+                    ValidationData::initializeAndGatherData($attribute, $data)
+                );
             }
         });
     }

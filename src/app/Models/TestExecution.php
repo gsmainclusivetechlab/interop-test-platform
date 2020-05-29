@@ -22,13 +22,7 @@ class TestExecution extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'actual',
-        'expected',
-        'exception',
-        'status',
-    ];
+    protected $fillable = ['name', 'actual', 'expected', 'exception', 'status'];
 
     /**
      * @var array

@@ -13,14 +13,14 @@
                             :class="{ 'is-invalid': $page.errors.component_id }"
                             class="form-select"
                         >
-                            <option
-                                v-for="sut in suts.data"
-                                :value="sut.id"
-                            >
+                            <option v-for="sut in suts.data" :value="sut.id">
                                 {{ sut.name }}
                             </option>
                         </select>
-                        <span v-if="$page.errors.component_id" class="invalid-feedback">
+                        <span
+                            v-if="$page.errors.component_id"
+                            class="invalid-feedback"
+                        >
                             {{ $page.errors.component_id }}
                         </span>
                     </div>
@@ -32,7 +32,10 @@
                             class="form-control"
                             name="base_url"
                         />
-                        <span v-if="$page.errors.base_url" class="invalid-feedback">
+                        <span
+                            v-if="$page.errors.base_url"
+                            class="invalid-feedback"
+                        >
                             {{ $page.errors.base_url }}
                         </span>
                     </div>
@@ -56,20 +59,20 @@ import Layout from '@/layouts/sessions/register';
 
 export default {
     components: {
-        Layout
+        Layout,
     },
     props: {
         session: {
             type: Object,
-            required: false
+            required: false,
         },
         suts: {
             type: Object,
-            required: true
+            required: true,
         },
         components: {
             type: Object,
-            required: true
+            required: true,
         },
     },
     data() {
@@ -83,8 +86,8 @@ export default {
                 component_id:
                     this.session && this.session.sut
                         ? this.session.sut.component_id
-                        : this.suts.data && this.suts.data[0].id
-            }
+                        : this.suts.data && this.suts.data[0].id,
+            },
         };
     },
     methods: {
@@ -93,7 +96,7 @@ export default {
             this.$inertia
                 .post(route('sessions.register.sut.store'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

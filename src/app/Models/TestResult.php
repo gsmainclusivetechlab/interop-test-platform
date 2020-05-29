@@ -25,11 +25,7 @@ class TestResult extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'test_step_id',
-        'request',
-        'response',
-    ];
+    protected $fillable = ['test_step_id', 'request', 'response'];
 
     /**
      * @var array
@@ -50,10 +46,7 @@ class TestResult extends Model
     /**
      * @var array
      */
-    protected $observables = [
-        'pass',
-        'fail',
-    ];
+    protected $observables = ['pass', 'fail'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -84,7 +77,14 @@ class TestResult extends Model
      */
     public function session()
     {
-        return $this->hasOneThrough(Session::class, TestRun::class, 'id', 'id', 'test_run_id', 'session_id');
+        return $this->hasOneThrough(
+            Session::class,
+            TestRun::class,
+            'id',
+            'id',
+            'test_run_id',
+            'session_id'
+        );
     }
 
     /**

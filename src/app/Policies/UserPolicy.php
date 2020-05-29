@@ -54,7 +54,8 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return ($user->canAdmin() && !$model->canAdmin()) || ($user->canSuperAdmin() && !$user->is($model));
+        return ($user->canAdmin() && !$model->canAdmin()) ||
+            ($user->canSuperAdmin() && !$user->is($model));
     }
 
     /**
@@ -64,7 +65,8 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        return ($user->canAdmin() && !$model->canAdmin()) || ($user->canSuperAdmin() && !$user->is($model));
+        return ($user->canAdmin() && !$model->canAdmin()) ||
+            ($user->canSuperAdmin() && !$user->is($model));
     }
 
     /**
@@ -74,7 +76,9 @@ class UserPolicy
      */
     public function verify(User $user, User $model)
     {
-        return ($user->canAdmin() && !$user->is($model) && !$model->hasVerifiedEmail());
+        return $user->canAdmin() &&
+            !$user->is($model) &&
+            !$model->hasVerifiedEmail();
     }
 
     /**
@@ -84,6 +88,6 @@ class UserPolicy
      */
     public function promoteRole(User $user, User $model)
     {
-        return ($user->canSuperAdmin() && !$user->is($model));
+        return $user->canSuperAdmin() && !$user->is($model);
     }
 }

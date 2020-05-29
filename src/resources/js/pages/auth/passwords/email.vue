@@ -45,17 +45,17 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Forgot password'
+        title: 'Forgot password',
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
             sending: false,
             form: {
-                email: null
-            }
+                email: null,
+            },
         };
     },
     methods: {
@@ -64,7 +64,7 @@ export default {
             this.$inertia
                 .post(route('password.email'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

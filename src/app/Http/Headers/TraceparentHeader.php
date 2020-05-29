@@ -35,7 +35,9 @@ class TraceparentHeader
             $parts = $this->parse($traceparent);
 
             if ($parts === false) {
-                throw new InvalidArgumentException("Unable to parse traceparent: $traceparent");
+                throw new InvalidArgumentException(
+                    "Unable to parse traceparent: $traceparent"
+                );
             }
 
             $this->applyParts($parts);
@@ -47,12 +49,15 @@ class TraceparentHeader
      */
     public function __toString()
     {
-        return implode('-', array_filter([
-            $this->version,
-            $this->traceId,
-            $this->parentId,
-            $this->traceFlags,
-        ]));
+        return implode(
+            '-',
+            array_filter([
+                $this->version,
+                $this->traceId,
+                $this->parentId,
+                $this->traceFlags,
+            ])
+        );
     }
 
     /**
@@ -147,9 +152,15 @@ class TraceparentHeader
             case 2:
                 return array_combine(['version', 'trace-id'], $parts);
             case 3:
-                return array_combine(['version', 'trace-id', 'parent-id'], $parts);
+                return array_combine(
+                    ['version', 'trace-id', 'parent-id'],
+                    $parts
+                );
             case 4:
-                return array_combine(['version', 'trace-id', 'parent-id', 'trace-flags'], $parts);
+                return array_combine(
+                    ['version', 'trace-id', 'parent-id', 'trace-flags'],
+                    $parts
+                );
             default:
                 return false;
         }
@@ -160,10 +171,18 @@ class TraceparentHeader
      */
     protected function applyParts(array $parts)
     {
-        $this->version = isset($parts['version']) ? $this->filterVersion($parts['version']) : '';
-        $this->traceId = isset($parts['trace-id']) ? $this->filterTraceId($parts['trace-id']) : '';
-        $this->parentId = isset($parts['parent-id']) ? $this->filterParentId($parts['parent-id']) : '';
-        $this->traceFlags = isset($parts['trace-flags']) ? $this->filterTraceFlags($parts['trace-flags']) : '';
+        $this->version = isset($parts['version'])
+            ? $this->filterVersion($parts['version'])
+            : '';
+        $this->traceId = isset($parts['trace-id'])
+            ? $this->filterTraceId($parts['trace-id'])
+            : '';
+        $this->parentId = isset($parts['parent-id'])
+            ? $this->filterParentId($parts['parent-id'])
+            : '';
+        $this->traceFlags = isset($parts['trace-flags'])
+            ? $this->filterTraceFlags($parts['trace-flags'])
+            : '';
     }
 
     /**

@@ -35,7 +35,7 @@ class ProfileSettingsPage extends Page
     public function elements()
     {
         return [
-            '@changePasswordLink' => 'a[href$="/settings/password"]'
+            '@changePasswordLink' => 'a[href$="/settings/password"]',
         ];
     }
 }

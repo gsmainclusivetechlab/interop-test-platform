@@ -1,5 +1,13 @@
 {
     "quoteProps": "consistent",
     "singleQuote": true,
-    "tabWidth": 2
+    "tabWidth": 4,
+    "overrides": [
+        {
+          "files": "*.{css,scss}",
+          "options": {
+            "tabWidth": 2
+          }
+        }
+      ]
 }

@@ -33,11 +33,15 @@ class UserController extends Controller
         return Inertia::render('admin/users/index', [
             'users' => UserResource::collection(
                 User::when(request('q'), function (Builder $query, $q) {
-                    $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                    $query
+                        ->whereRaw(
+                            'CONCAT(first_name, " ", last_name) like ?',
+                            "%{$q}%"
+                        )
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('company', 'like', "%{$q}%");
                 })
-                    ->when(($trash !== null), function (Builder $query) {
+                    ->when($trash !== null, function (Builder $query) {
                         return $query->onlyTrashed();
                     })
                     ->latest()
@@ -45,7 +49,7 @@ class UserController extends Controller
             ),
             'filter' => [
                 'q' => request('q'),
-                'trash' => ($trash !== null),
+                'trash' => $trash !== null,
             ],
         ]);
     }
@@ -122,7 +126,11 @@ class UserController extends Controller
         Validator::make($request->route()->parameters(), [
             'role' => [
                 'required',
-                Rule::in(collect(User::getRoleNames())->except([User::ROLE_SUPERADMIN])->keys()),
+                Rule::in(
+                    collect(User::getRoleNames())
+                        ->except([User::ROLE_SUPERADMIN])
+                        ->keys()
+                ),
             ],
         ])->validate();
         $user->update(['role' => $role]);

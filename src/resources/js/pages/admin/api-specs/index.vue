@@ -37,7 +37,9 @@
                 </div>
             </div>
             <div class="table-responsive mb-0">
-                <table class="table table-striped table-vcenter table-hover card-table">
+                <table
+                    class="table table-striped table-vcenter table-hover card-table"
+                >
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
@@ -72,9 +74,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="
-                                                `Are you sure you want to delete ${apiSpec.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to delete ${apiSpec.name}?`"
                                         >
                                             Delete
                                         </confirm-link>
@@ -90,44 +90,48 @@
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="apiSpecs.meta" :links="apiSpecs.links" class="card-footer" />
+            <pagination
+                :meta="apiSpecs.meta"
+                :links="apiSpecs.links"
+                class="card-footer"
+            />
         </div>
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        metaInfo: {
-            title: 'Specifications'
+export default {
+    metaInfo: {
+        title: 'Specifications',
+    },
+    components: {
+        Layout,
+    },
+    props: {
+        apiSpecs: {
+            type: Object,
+            required: true,
         },
-        components: {
-            Layout,
+        filter: {
+            type: Object,
+            required: true,
         },
-        props: {
-            apiSpecs: {
-                type: Object,
-                required: true,
+    },
+    data() {
+        return {
+            form: {
+                q: this.filter.q,
             },
-            filter: {
-                type: Object,
-                required: true,
-            },
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(route('admin.api-specs.index'), {
+                data: this.form,
+            });
         },
-        data() {
-            return {
-                form: {
-                    q: this.filter.q,
-                }
-            };
-        },
-        methods: {
-            search() {
-                this.$inertia.replace(route('admin.api-specs.index'), {
-                    data: this.form
-                });
-            }
-        }
-    };
+    },
+};
 </script>

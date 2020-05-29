@@ -24,7 +24,11 @@ class SimulatorController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class, ValidateTraceContext::class]);
+        $this->middleware([
+            SetJsonHeaders::class,
+            SetContentLengthHeaders::class,
+            ValidateTraceContext::class,
+        ]);
     }
 
     /**
@@ -39,13 +43,18 @@ class SimulatorController extends Controller
         Component $connection,
         string $path,
         ServerRequestInterface $request
-    )
-    {
-        $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
-        $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
+    ) {
+        $trace = new TraceparentHeader(
+            $request->getHeaderLine(TraceparentHeader::NAME)
+        );
+        $testRun = TestRun::whereRaw(
+            'REPLACE(uuid, "-", "") = ?',
+            $trace->getTraceId()
+        )->firstOrFail();
         $session = $testRun->session;
 
-        $testStep = $testRun->testSteps()
+        $testStep = $testRun
+            ->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
             ->whereHas('source', function ($query) use ($component) {
@@ -55,14 +64,25 @@ class SimulatorController extends Controller
                 $query->whereKey($connection->getKey());
             })
             ->offset(
-                $testRun->testResults()
-                    ->whereHas('testStep', function ($query) use ($component, $connection, $request, $path) {
-                        $query->where('method', $request->getMethod())
+                $testRun
+                    ->testResults()
+                    ->whereHas('testStep', function ($query) use (
+                        $component,
+                        $connection,
+                        $request,
+                        $path
+                    ) {
+                        $query
+                            ->where('method', $request->getMethod())
                             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
-                            ->whereHas('source', function ($query) use ($component) {
+                            ->whereHas('source', function ($query) use (
+                                $component
+                            ) {
                                 $query->whereKey($component->getKey());
                             })
-                            ->whereHas('target', function ($query) use ($connection) {
+                            ->whereHas('target', function ($query) use (
+                                $connection
+                            ) {
                                 $query->whereKey($connection->getKey());
                             });
                     })
@@ -70,11 +90,15 @@ class SimulatorController extends Controller
             )
             ->firstOrFail();
 
-        $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
-        $request = $request->withUri(UriResolver::resolve(
-            new Uri($session->getBaseUriOfComponent($connection)),
-            new Uri($path)
-        )->withQuery((string) request()->getQueryString()));
+        $testResult = $testRun
+            ->testResults()
+            ->create(['test_step_id' => $testStep->id]);
+        $request = $request->withUri(
+            UriResolver::resolve(
+                new Uri($session->getBaseUriOfComponent($connection)),
+                new Uri($path)
+            )->withQuery((string) request()->getQueryString())
+        );
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

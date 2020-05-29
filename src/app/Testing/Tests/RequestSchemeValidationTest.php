@@ -45,8 +45,11 @@ class RequestSchemeValidationTest extends TestCase
      * @param ApiSpec $apiSpec
      * @param OperationAddress $operationAddress
      */
-    public function __construct(Request $request, ApiSpec $apiSpec, OperationAddress $operationAddress)
-    {
+    public function __construct(
+        Request $request,
+        ApiSpec $apiSpec,
+        OperationAddress $operationAddress
+    ) {
         $this->request = $request;
         $this->apiSpec = $apiSpec;
         $this->operationAddress = $operationAddress;
@@ -68,7 +71,10 @@ class RequestSchemeValidationTest extends TestCase
         );
 
         try {
-            $validator->validate($this->operationAddress, $this->request->toPsrRequest());
+            $validator->validate(
+                $this->operationAddress,
+                $this->request->toPsrRequest()
+            );
         } catch (Throwable $e) {
             throw new AssertionFailedError($e->getMessage());
         }
@@ -79,7 +85,9 @@ class RequestSchemeValidationTest extends TestCase
      */
     public function getName(): string
     {
-        return __('Request: :name API Spec validation', ['name' => $this->apiSpec->name]);
+        return __('Request: :name API Spec validation', [
+            'name' => $this->apiSpec->name,
+        ]);
     }
 
     /**
