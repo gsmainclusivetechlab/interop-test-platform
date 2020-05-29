@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TestMismatchResource extends JsonResource
+class TestLogResource extends JsonResource
 {
     /**
      * @param  \Illuminate\Http\Request  $request
@@ -15,9 +15,9 @@ class TestMismatchResource extends JsonResource
         return [
             'id' => $this->id,
             'request' => $this->request->toArray(),
-            'exception' => $this->exception,
-            'session' => new SessionResource($this->whenLoaded('session')),
+            'response' => $this->response->toArray(),
             'created_at' => $this->created_at->diffForHumans(),
+            'session' => new SessionResource($this->whenLoaded('session')),
         ];
     }
 }

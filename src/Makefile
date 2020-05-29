@@ -20,7 +20,7 @@ update: chmod composer-install cache-clear
 	php artisan dusk:chrome-driver 81
 
 test:
-	php artisan dusk --testdox --log-junit tests/results/results.xml
+	php artisan test --testdox --log-junit tests/results/results.xml
 
 test-coverage:
 	phpdbg -qrr vendor/bin/phpunit --coverage-html tests/results/coverage-report-html --coverage-clover tests/results/coverage-report-clover/clover.xml

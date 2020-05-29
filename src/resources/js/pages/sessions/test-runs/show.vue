@@ -1,16 +1,16 @@
 <template>
-    <layout :session="session" :testCase="testCase" :useCases="useCases">
+    <layout :session="session" :testCase="testCase" :useCases="useCases" :testStepFirstSource="testStepFirstSource">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">
+                <h2 class="card-title d-flex align-items-center">
                     <inertia-link
-                        :href="route('sessions.test-cases.test-runs.index', [session.id, testCase.id])"
-                        class="text-decoration-none"
+                        :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                        class="d-inline-flex text-decoration-none mr-1"
                     >
-                        <icon name="chevron-left"></icon>
+                        <icon name="corner-down-left"></icon>
                     </inertia-link>
-                    {{ `Run ID: ${testRun.uuid}` }}
-                </h3>
+                    <b>{{ `Run ID: ${testRun.uuid}` }}</b>
+                </h2>
                 <div class="card-options">
                     <span class="text-success mr-2 align-items-center d-flex" v-if="testRun.passed">
                         <icon name="circle-check" class="icon-md mr-1"></icon>
@@ -424,6 +424,10 @@ export default {
             required: true
         },
         testResult: {
+            type: Object,
+            required: true
+        },
+        testStepFirstSource: {
             type: Object,
             required: true
         },

@@ -1,129 +1,45 @@
-@mixin crater($top, $left, $size) {
-  content: '';
-  position: absolute;
-  top: $top;
-  left: $left;
-  width: $size;
-  height: $size;
-  border: 2px solid $gray-300;
-  border-radius: 100%;
-  background-color: $gray-100;
-}
-
-@mixin cloudBubble($top, $right, $width, $height, $deg) {
-  content: '';
-  display: block;
-  position: relative;
-  top: $top;
-  right: $right;
-  transform: rotateZ($deg);
-  width: $width;
-  height: $height;
-  border: 2px solid $gray-300;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-  border-radius: 100%;
-  background-color: #fff;
-}
-
-.toggle {
-  position: relative;
-  width: 40px;
-  height: 20px;
-  border-radius: 40px;
-  transition: opacity 0.15s;
-
-  &:hover {
-    opacity: 0.9;
-  }
-}
-
-.toggle-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 1px solid rgba($cyan, 0.6);
-  border-radius: inherit;
-  background-color: rgba($cyan, 0.2);
-  transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
 .toggle-switch {
   position: relative;
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-left: 23px;
-  border: 1px solid $yellow;
-  border-radius: 50%;
-  background-color: rgba($orange, 0.6);
-  transition: all 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.toggle-switch-figure {
-  position: absolute;
-  bottom: -3px;
-  left: -18px;
-  transform: scale(0.4);
-  width: 32px;
-  height: 12px;
-  border: 2px solid $gray-300;
-  border-radius: 20px;
-  background-color: #fff;
-  transition: all 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  width: 2.75rem;
+  height: 1.5rem;
+  padding: 0 0.25rem;
+  border: 1px solid $gray-300;
 
   &::after {
-    @include cloudBubble(-20px, -14px, 10px, 10px, 70deg);
+    content: '';
+    position: absolute;
+    top: 0.175rem;
+    right: 0.175rem;
+    z-index: 1;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid $gray-300;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: transform 0.15s;
   }
 
-  &::before {
-    @include cloudBubble(-8px, -4px, 13px, 13px, 30deg);
-  }
-}
+  .toggle-switch-icon {
+    transition: opacity 0.15s;
 
-.toggle-switch-figureAlt {
-  @include crater(5px, 2px, 2px);
-
-  transform: scale(0);
-  transition: all 0.12s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  // prettier-ignore
-  box-shadow:
-    14px 3px 0 0 $gray-100,
-    13px -5px 0 -1px $gray-100,
-    20px -2px 0 -1px $gray-100,
-    24px -6px 0 -1px $gray-100,
-    22px 4px 0 -1px $gray-100,
-    27px 1px 0 -1px $gray-100;
-
-  &::before {
-    @include crater(-6px, 3px, 5px);
+    &:last-child {
+      opacity: 0;
+    }
   }
 
-  &::after {
-    @include crater(1px, 3px, 2px);
-  }
-}
+  &.enabled {
+    &::after {
+      transform: translateX(-1.25rem);
+    }
 
-.toggle-input:checked {
-  & ~ .toggle-switch {
-    margin-left: 3px;
-    border-color: $gray-300;
-    background-color: $gray-100;
-  }
+    .toggle-switch-icon {
+      &:first-child {
+        opacity: 0;
+      }
 
-  & ~ .toggle-bg {
-    background-color: $gray-900;
-  }
-
-  & ~ .toggle-switch .toggle-switch-figure {
-    margin-left: 40px;
-    transform: scale(0.5);
-    opacity: 0;
-  }
-
-  & ~ .toggle-switch .toggle-switch-figureAlt {
-    transform: scale(1);
+      &:last-child {
+        opacity: 1;
+      }
+    }
   }
 }

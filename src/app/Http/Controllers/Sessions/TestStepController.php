@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestStepResource;
@@ -31,11 +32,21 @@ class TestStepController extends Controller
     {
         $this->authorize('view', $session);
 
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
+        $testStepFirstSource = $testCase->testSteps()
+            ->firstOrFail()
+            ->source;
+
         return Inertia::render('sessions/test-steps/index', [
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
                         return $query->with(['lastTestRun']);
+                    },
+                    'components' => function ($query) {
+                        return $query->with(['connections']);
                     },
                 ])
             ))->resolve(),
@@ -57,11 +68,8 @@ class TestStepController extends Controller
                     })
                     ->get()
             ),
-            'testCase' => (new TestCaseResource(
-                $session->testCases()
-                    ->where('test_case_id', $testCase->id)
-                    ->firstOrFail()
-            ))->resolve(),
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+            'testStepFirstSource' => (new ComponentResource($testStepFirstSource))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase->testSteps()
                     ->with(['source', 'target'])
@@ -77,11 +85,21 @@ class TestStepController extends Controller
      */
     public function flow(Session $session, TestCase $testCase)
     {
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
+        $testStepFirstSource = $testCase->testSteps()
+            ->firstOrFail()
+            ->source;
+
         return Inertia::render('sessions/test-steps/flow', [
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
                         return $query->with(['lastTestRun']);
+                    },
+                    'components' => function ($query) {
+                        return $query->with(['connections']);
                     },
                 ])
             ))->resolve(),
@@ -103,11 +121,8 @@ class TestStepController extends Controller
                     })
                     ->get()
             ),
-            'testCase' => (new TestCaseResource(
-                $session->testCases()
-                    ->where('test_case_id', $testCase->id)
-                    ->firstOrFail()
-            ))->resolve(),
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+            'testStepFirstSource' => (new ComponentResource($testStepFirstSource))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase->testSteps()
                     ->with(['source', 'target'])

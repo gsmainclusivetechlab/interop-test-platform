@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\TestRunResource;
 use App\Http\Resources\UseCaseResource;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
@@ -31,6 +33,13 @@ class TestCaseController extends Controller
     public function show(Session $session, TestCase $testCase)
     {
         $this->authorize('view', $session);
+
+        $testCase = $session->testCases()
+            ->where('test_case_id', $testCase->id)
+            ->firstOrFail();
+        $testStepFirstSource = $testCase->testSteps()
+            ->firstOrFail()
+            ->source;
 
         return Inertia::render('sessions/test-cases/show', [
             'session' => (new SessionResource(
@@ -61,11 +70,16 @@ class TestCaseController extends Controller
                     })
                     ->get()
             ),
-            'testCase' => (new TestCaseResource(
-                $session->testCases()
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+            'testStepFirstSource' => (new ComponentResource($testStepFirstSource))->resolve(),
+            'testRuns' => TestRunResource::collection(
+                $session->testRuns()
                     ->where('test_case_id', $testCase->id)
-                    ->firstOrFail()
-            ))->resolve(),
+                    ->with(['session', 'testCase'])
+//                    ->completed()
+                    ->latest()
+                    ->paginate()
+            ),
         ]);
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Exceptions\TestMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -37,12 +36,15 @@ class SimulatorController extends Controller
      */
     public function __invoke(
         Component $component,
-        Component $connection, string $path,
+        Component $connection,
+        string $path,
         ServerRequestInterface $request
     )
     {
         $trace = new TraceparentHeader($request->getHeaderLine(TraceparentHeader::NAME));
         $testRun = TestRun::whereRaw('REPLACE(uuid, "-", "") = ?', $trace->getTraceId())->firstOrFail();
+        $session = $testRun->session;
+
         $testStep = $testRun->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
@@ -66,17 +68,13 @@ class SimulatorController extends Controller
                     })
                     ->count()
             )
-            ->first();
-
-        if ($testStep === null) {
-            throw new TestMismatchException($testRun->session, 404, 'Testing step not found.');
-        }
+            ->firstOrFail();
 
         $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
         $request = $request->withUri(UriResolver::resolve(
-            new Uri($testRun->session->getBaseUriOfComponent($testStep->target)),
-            (new Uri($path))->withQuery((string) request()->getQueryString())
-        ));
+            new Uri($session->getBaseUriOfComponent($connection)),
+            new Uri($path)
+        )->withQuery((string) request()->getQueryString()));
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))
