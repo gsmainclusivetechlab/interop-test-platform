@@ -17,7 +17,7 @@ class RegisterTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new RegisterPage)
+                ->visit(new RegisterPage())
                 ->click('@loginLink')
                 ->waitForLocation('/login')
                 ->assertSee('Login to your account');
@@ -32,7 +32,7 @@ class RegisterTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new RegisterPage)
+                ->visit(new RegisterPage())
                 ->assertSee('Create new account')
                 ->clear('@firstName')
                 ->clear('@lastName')
@@ -43,12 +43,30 @@ class RegisterTest extends DuskTestCase
                 ->uncheck('@terms')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
-                ->assertSeeIn('@firstName + .invalid-feedback', 'The first name field is required.')
-                ->assertSeeIn('@lastName + .invalid-feedback', 'The last name field is required.')
-                ->assertSeeIn('@email + .invalid-feedback', 'The email field is required.')
-                ->assertSeeIn('@company + .invalid-feedback', 'The company field is required.')
-                ->assertSeeIn('@password + .invalid-feedback', 'The password field is required.')
-                ->assertSeeIn('@passwordConfirmation + .invalid-feedback', 'The password confirmation field is required.')
+                ->assertSeeIn(
+                    '@firstName + .invalid-feedback',
+                    'The first name field is required.'
+                )
+                ->assertSeeIn(
+                    '@lastName + .invalid-feedback',
+                    'The last name field is required.'
+                )
+                ->assertSeeIn(
+                    '@email + .invalid-feedback',
+                    'The email field is required.'
+                )
+                ->assertSeeIn(
+                    '@company + .invalid-feedback',
+                    'The company field is required.'
+                )
+                ->assertSeeIn(
+                    '@password + .invalid-feedback',
+                    'The password field is required.'
+                )
+                ->assertSeeIn(
+                    '@passwordConfirmation + .invalid-feedback',
+                    'The password confirmation field is required.'
+                )
                 ->assertSee('The terms field is required.');
         });
     }
@@ -61,7 +79,7 @@ class RegisterTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new RegisterPage)
+                ->visit(new RegisterPage())
                 ->type('@firstName', 'John')
                 ->type('@lastName', 'Doe')
                 ->type('@email', 'john.doe@gmail.com')
@@ -84,7 +102,7 @@ class RegisterTest extends DuskTestCase
         $user = factory(User::class)->create();
         $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->visit(new RegisterPage)
+                ->visit(new RegisterPage())
                 ->type('@firstName', 'John')
                 ->type('@lastName', 'Doe')
                 ->type('@email', $user->email)
@@ -94,7 +112,10 @@ class RegisterTest extends DuskTestCase
                 ->check('@terms')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
-                ->assertSeeIn('@email + .invalid-feedback', 'The email has already been taken.');
+                ->assertSeeIn(
+                    '@email + .invalid-feedback',
+                    'The email has already been taken.'
+                );
         });
     }
 }

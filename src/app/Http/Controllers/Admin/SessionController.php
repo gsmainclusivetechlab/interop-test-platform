@@ -30,7 +30,11 @@ class SessionController extends Controller
             'sessions' => SessionResource::collection(
                 Session::whereHas('owner', function (Builder $query) {
                     $query->when(request('q'), function (Builder $query, $q) {
-                        $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                        $query
+                            ->whereRaw(
+                                'CONCAT(first_name, " ", last_name) like ?',
+                                "%{$q}%"
+                            )
                             ->orWhere('name', 'like', "%{$q}%");
                     });
                 })

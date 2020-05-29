@@ -83,21 +83,46 @@
                                     v-if="!user.trashed && user.can.promoteRole"
                                 >
                                     <template v-slot:button-content>
-                                        {{ collect($page.enums.user_roles).get(user.role) }}
+                                        {{
+                                            collect($page.enums.user_roles).get(
+                                                user.role
+                                            )
+                                        }}
                                     </template>
-                                    <li v-for="(role_name, role) in collect($page.enums.user_roles).except(['superadmin']).all()">
+                                    <li
+                                        v-for="(role_name, role) in collect(
+                                            $page.enums.user_roles
+                                        )
+                                            .except(['superadmin'])
+                                            .all()"
+                                    >
                                         <inertia-link
                                             class="dropdown-item"
                                             method="put"
-                                            :href="route('admin.users.promote-role', [user.id, role])"
-                                            v-bind:class="{active: user.role === role}"
+                                            :href="
+                                                route(
+                                                    'admin.users.promote-role',
+                                                    [user.id, role]
+                                                )
+                                            "
+                                            v-bind:class="{
+                                                active: user.role === role,
+                                            }"
                                         >
                                             {{ role_name }}
                                         </inertia-link>
                                     </li>
                                 </b-dropdown>
-                                <button v-else class="btn btn-sm btn-outline-primary text-uppercase" disabled>
-                                    {{ collect($page.enums.user_roles).get(user.role) }}
+                                <button
+                                    v-else
+                                    class="btn btn-sm btn-outline-primary text-uppercase"
+                                    disabled
+                                >
+                                    {{
+                                        collect($page.enums.user_roles).get(
+                                            user.role
+                                        )
+                                    }}
                                 </button>
                             </td>
                             <td class="text-break">
@@ -105,7 +130,11 @@
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="user.can.delete || user.can.restore || user.can.verify"
+                                    v-if="
+                                        user.can.delete ||
+                                        user.can.restore ||
+                                        user.can.verify
+                                    "
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -126,9 +155,7 @@
                                             "
                                             method="post"
                                             :confirm-title="'Confirm unblock'"
-                                            :confirm-text="
-                                                `Are you sure you want to unblock ${user.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to unblock ${user.name}?`"
                                         >
                                             Unblock
                                         </inertia-link>
@@ -144,9 +171,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm block'"
-                                            :confirm-text="
-                                                `Are you sure you want to block ${user.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to block ${user.name}?`"
                                         >
                                             Block
                                         </confirm-link>
@@ -162,9 +187,7 @@
                                             "
                                             method="post"
                                             :confirm-title="'Confirm verify'"
-                                            :confirm-text="
-                                                `Are you sure you want to verify ${user.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to verify ${user.name}?`"
                                         >
                                             Verify
                                         </confirm-link>
@@ -180,9 +203,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="
-                                                `Are you sure you want to delete ${user.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to delete ${user.name}?`"
                                         >
                                             Delete
                                         </confirm-link>
@@ -212,40 +233,37 @@ import Layout from '@/layouts/main';
 
 export default {
     metaInfo: {
-        title: 'Users'
+        title: 'Users',
     },
     components: {
-        Layout
+        Layout,
     },
     props: {
         users: {
             type: Object,
-            required: true
+            required: true,
         },
         filter: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             form: {
-                q: this.filter.q
-            }
+                q: this.filter.q,
+            },
         };
     },
     methods: {
         search() {
             this.$inertia.replace(
-                route(
-                    'admin.users.index',
-                    this.filter.trash ? ['trash'] : []
-                ),
+                route('admin.users.index', this.filter.trash ? ['trash'] : []),
                 {
-                    data: this.form
+                    data: this.form,
                 }
             );
-        }
-    }
+        },
+    },
 };
 </script>

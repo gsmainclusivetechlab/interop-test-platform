@@ -51,6 +51,9 @@ class VerificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('success', 'A fresh verification link has been sent to your email address.');
+        return back()->with(
+            'success',
+            'A fresh verification link has been sent to your email address.'
+        );
     }
 }

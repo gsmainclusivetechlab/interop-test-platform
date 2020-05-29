@@ -53,7 +53,14 @@ class TestStep extends Model
      */
     public function testRuns()
     {
-        return $this->hasManyThrough(TestRun::class, TestCase::class, 'id', 'test_case_id', 'test_case_id', 'id');
+        return $this->hasManyThrough(
+            TestRun::class,
+            TestCase::class,
+            'id',
+            'test_case_id',
+            'test_case_id',
+            'id'
+        );
     }
 
     /**

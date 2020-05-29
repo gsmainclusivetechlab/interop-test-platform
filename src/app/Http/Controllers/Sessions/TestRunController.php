@@ -35,16 +35,19 @@ class TestRunController extends Controller
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Session $session, TestCase $testCase, TestRun $testRun, int $position = 1)
-    {
+    public function show(
+        Session $session,
+        TestCase $testCase,
+        TestRun $testRun,
+        int $position = 1
+    ) {
         $this->authorize('view', $session);
 
-        $testCase = $session->testCases()
+        $testCase = $session
+            ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()
-            ->firstOrFail()
-            ->source;
+        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
@@ -57,17 +60,26 @@ class TestRunController extends Controller
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use($session) {
-                        $query->with([
-                            'lastTestRun' => function ($query) use ($session) {
-                                $query->where('session_id', $session->id);
-                            },
-                        ])->whereHas('sessions', function ($query) use($session) {
-                            $query->whereKey($session->getKey());
-                        });
-                    }])
-                    ->whereHas('testCases', function ($query) use($session) {
-                        $query->whereHas('sessions', function ($query) use($session) {
+                    'testCases' => function ($query) use ($session) {
+                        $query
+                            ->with([
+                                'lastTestRun' => function ($query) use (
+                                    $session
+                                ) {
+                                    $query->where('session_id', $session->id);
+                                },
+                            ])
+                            ->whereHas('sessions', function ($query) use (
+                                $session
+                            ) {
+                                $query->whereKey($session->getKey());
+                            });
+                    },
+                ])
+                    ->whereHas('testCases', function ($query) use ($session) {
+                        $query->whereHas('sessions', function ($query) use (
+                            $session
+                        ) {
                             $query->whereKey($session->getKey());
                         });
                     })
@@ -76,8 +88,12 @@ class TestRunController extends Controller
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
-            'testCase' => (new TestCaseResource($testCase->load(['testSteps'])))->resolve(),
-            'testStepFirstSource' => (new ComponentResource($testStepFirstSource))->resolve(),
+            'testCase' => (new TestCaseResource(
+                $testCase->load(['testSteps'])
+            ))->resolve(),
+            'testStepFirstSource' => (new ComponentResource(
+                $testStepFirstSource
+            ))->resolve(),
             'testRun' => (new TestRunResource(
                 $testRun->load([
                     'testResults' => function ($query) {
@@ -86,13 +102,20 @@ class TestRunController extends Controller
                 ])
             ))->resolve(),
             'testResult' => (new TestResultResource(
-                $testRun->testResults()
-                    ->whereHas('testStep', function (Builder $query) use ($position) {
+                $testRun
+                    ->testResults()
+                    ->whereHas('testStep', function (Builder $query) use (
+                        $position
+                    ) {
                         $query->where('position', $position);
                     })
                     ->with([
                         'testStep' => function ($query) {
-                            return $query->with(['source', 'target', 'testSetups']);
+                            return $query->with([
+                                'source',
+                                'target',
+                                'testSetups',
+                            ]);
                         },
                         'testExecutions',
                     ])

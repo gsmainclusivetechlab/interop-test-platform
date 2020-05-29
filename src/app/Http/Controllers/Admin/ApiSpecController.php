@@ -32,8 +32,8 @@ class ApiSpecController extends Controller
         return Inertia::render('admin/api-specs/index', [
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::when(request('q'), function (Builder $query, $q) {
-                        $query->where('name', 'like', "%{$q}%");
-                    })
+                    $query->where('name', 'like', "%{$q}%");
+                })
                     ->latest()
                     ->paginate()
             ),
@@ -67,7 +67,9 @@ class ApiSpecController extends Controller
         try {
             ApiSpec::create([
                 'name' => $request->input('name'),
-                'openapi' => Reader::readFromYaml($request->file('file')->get()),
+                'openapi' => Reader::readFromYaml(
+                    $request->file('file')->get()
+                ),
             ]);
 
             return redirect()

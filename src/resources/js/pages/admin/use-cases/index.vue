@@ -37,7 +37,9 @@
                 </div>
             </div>
             <div class="table-responsive mb-0">
-                <table class="table table-striped table-vcenter table-hover card-table">
+                <table
+                    class="table table-striped table-vcenter table-hover card-table"
+                >
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
@@ -51,11 +53,17 @@
                                 {{ useCase.name }}
                             </td>
                             <td>
-                                {{ useCase.testCases ? useCase.testCases.length : 0  }}
+                                {{
+                                    useCase.testCases
+                                        ? useCase.testCases.length
+                                        : 0
+                                }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="useCase.can.update || useCase.can.delete"
+                                    v-if="
+                                        useCase.can.update || useCase.can.delete
+                                    "
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -89,9 +97,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="
-                                                `Are you sure you want to delete ${useCase.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to delete ${useCase.name}?`"
                                         >
                                             Delete
                                         </confirm-link>
@@ -107,44 +113,48 @@
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="useCases.meta" :links="useCases.links" class="card-footer" />
+            <pagination
+                :meta="useCases.meta"
+                :links="useCases.links"
+                class="card-footer"
+            />
         </div>
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        metaInfo: {
-            title: 'Use Cases'
+export default {
+    metaInfo: {
+        title: 'Use Cases',
+    },
+    components: {
+        Layout,
+    },
+    props: {
+        useCases: {
+            type: Object,
+            required: true,
         },
-        components: {
-            Layout,
+        filter: {
+            type: Object,
+            required: true,
         },
-        props: {
-            useCases: {
-                type: Object,
-                required: true,
+    },
+    data() {
+        return {
+            form: {
+                q: this.filter.q,
             },
-            filter: {
-                type: Object,
-                required: true,
-            },
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(route('admin.use-cases.index'), {
+                data: this.form,
+            });
         },
-        data() {
-            return {
-                form: {
-                    q: this.filter.q,
-                }
-            };
-        },
-        methods: {
-            search() {
-                this.$inertia.replace(route('admin.use-cases.index'), {
-                    data: this.form
-                });
-            }
-        }
-    };
+    },
+};
 </script>

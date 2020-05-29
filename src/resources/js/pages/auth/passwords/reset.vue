@@ -4,7 +4,8 @@
             <div class="card-body">
                 <h2 class="mb-5 text-center">Reset password</h2>
                 <p class="text-muted">
-                    You can set a new password below. Please take the time to choose a secure and difficult to guess password.
+                    You can set a new password below. Please take the time to
+                    choose a secure and difficult to guess password.
                 </p>
                 <div class="mb-3">
                     <label class="form-label">Email address</label>
@@ -37,12 +38,17 @@
                     <label class="form-label">Confirm password</label>
                     <input
                         v-model="form.password_confirmation"
-                        :class="{ 'is-invalid': $page.errors.password_confirmation }"
+                        :class="{
+                            'is-invalid': $page.errors.password_confirmation,
+                        }"
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
                     />
-                    <span v-if="$page.errors.password_confirmation" class="invalid-feedback">
+                    <span
+                        v-if="$page.errors.password_confirmation"
+                        class="invalid-feedback"
+                    >
                         {{ $page.errors.password_confirmation }}
                     </span>
                 </div>
@@ -65,10 +71,10 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Reset password'
+        title: 'Reset password',
     },
     components: {
-        Layout
+        Layout,
     },
     props: {
         token: {
@@ -88,7 +94,7 @@ export default {
                 email: this.email,
                 password: null,
                 password_confirmation: null,
-            }
+            },
         };
     },
     methods: {
@@ -97,7 +103,7 @@ export default {
             this.$inertia
                 .post(route('password.update'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

@@ -22,18 +22,19 @@ class Component extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'base_url',
-        'description',
-    ];
+    protected $fillable = ['name', 'base_url', 'description'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function testCases()
     {
-        return $this->belongsToMany(TestCase::class, 'test_case_components', 'component_id', 'test_case_id');
+        return $this->belongsToMany(
+            TestCase::class,
+            'test_case_components',
+            'component_id',
+            'test_case_id'
+        );
     }
 
     /**
@@ -41,6 +42,11 @@ class Component extends Model
      */
     public function connections()
     {
-        return $this->belongsToMany(static::class, 'component_connections', 'source_id', 'target_id');
+        return $this->belongsToMany(
+            static::class,
+            'component_connections',
+            'source_id',
+            'target_id'
+        );
     }
 }

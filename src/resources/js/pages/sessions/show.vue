@@ -4,9 +4,14 @@
             <div class="empty h-auto" v-if="!testRuns.data.length">
                 <div class="row">
                     <div class="col-10 mx-auto">
-                        <p class="empty-title h3 mb-3">You have no test runs for this session</p>
+                        <p class="empty-title h3 mb-3">
+                            You have no test runs for this session
+                        </p>
                         <p class="empty-subtitle text-muted mb-0">
-                            Select any test case in the left menu to get more information about it and make your first test run or click the button below to learn more from our enhanced Tutorial.
+                            Select any test case in the left menu to get more
+                            information about it and make your first test run or
+                            click the button below to learn more from our
+                            enhanced Tutorial.
                         </p>
                         <div class="empty-action">
                             <inertia-link
@@ -35,39 +40,77 @@
                 <div class="table-responsive mb-0">
                     <table class="table table-striped table-hover card-table">
                         <thead>
-                        <tr>
-                            <th class="text-nowrap w-auto">Test Case</th>
-                            <th class="text-nowrap w-auto">Run ID</th>
-                            <th class="text-nowrap w-auto">Status</th>
-                            <th class="text-nowrap w-auto">Duration</th>
-                            <th class="text-nowrap w-auto">Date</th>
-                        </tr>
+                            <tr>
+                                <th class="text-nowrap w-auto">Test Case</th>
+                                <th class="text-nowrap w-auto">Run ID</th>
+                                <th class="text-nowrap w-auto">Status</th>
+                                <th class="text-nowrap w-auto">Duration</th>
+                                <th class="text-nowrap w-auto">Date</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr v-for="testRun in testRuns.data">
                                 <td>
                                     <inertia-link
-                                        :href="route('sessions.test-cases.show', [testRun.session.id, testRun.testCase.id])"
+                                        :href="
+                                            route('sessions.test-cases.show', [
+                                                testRun.session.id,
+                                                testRun.testCase.id,
+                                            ])
+                                        "
                                     >
                                         {{ testRun.testCase.name }}
                                     </inertia-link>
                                 </td>
                                 <td>
                                     <inertia-link
-                                        :href="route('sessions.test-cases.test-runs.show', [testRun.session.id, testRun.testCase.id, testRun.id])"
+                                        :href="
+                                            route(
+                                                'sessions.test-cases.test-runs.show',
+                                                [
+                                                    testRun.session.id,
+                                                    testRun.testCase.id,
+                                                    testRun.id,
+                                                ]
+                                            )
+                                        "
                                     >
                                         {{ testRun.uuid }}
                                     </inertia-link>
                                 </td>
                                 <td>
-                                    <span v-if="testRun.completed_at && testRun.successful" class="d-flex align-items-center">
-                                        <span class="badge bg-success mr-2"></span> Pass
+                                    <span
+                                        v-if="
+                                            testRun.completed_at &&
+                                            testRun.successful
+                                        "
+                                        class="d-flex align-items-center"
+                                    >
+                                        <span
+                                            class="badge bg-success mr-2"
+                                        ></span>
+                                        Pass
                                     </span>
-                                    <span v-else-if="testRun.completed_at && !testRun.successful" class="d-flex align-items-center">
-                                        <span class="badge bg-danger mr-2"></span> Fail
+                                    <span
+                                        v-else-if="
+                                            testRun.completed_at &&
+                                            !testRun.successful
+                                        "
+                                        class="d-flex align-items-center"
+                                    >
+                                        <span
+                                            class="badge bg-danger mr-2"
+                                        ></span>
+                                        Fail
                                     </span>
-                                    <span v-else class="d-flex align-items-center">
-                                        <span class="badge bg-secondary mr-2"></span> Incomplete
+                                    <span
+                                        v-else
+                                        class="d-flex align-items-center"
+                                    >
+                                        <span
+                                            class="badge bg-secondary mr-2"
+                                        ></span>
+                                        Incomplete
                                     </span>
                                 </td>
                                 <td>
@@ -98,20 +141,20 @@ import SessionChart from '@/components/sessions/chart';
 export default {
     components: {
         Layout,
-        SessionChart
+        SessionChart,
     },
     props: {
         session: {
             type: Object,
-            required: true
+            required: true,
         },
         useCases: {
             type: Object,
-            required: true
+            required: true,
         },
         testRuns: {
             type: Object,
-            required: true
+            required: true,
         },
     },
 };

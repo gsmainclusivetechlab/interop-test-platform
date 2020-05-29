@@ -20,7 +20,7 @@ class AdminSessionsTest extends DuskTestCase
         $this->browse(function ($browser) use ($admin, $session) {
             $browser
                 ->loginAs($admin)
-                ->visit(new AdminSessionsPage)
+                ->visit(new AdminSessionsPage())
                 ->assertSeeIn('@sessionsTable', $session->name);
         });
     }
@@ -36,19 +36,19 @@ class AdminSessionsTest extends DuskTestCase
         $this->browse(function ($browser) use ($admin) {
             $browser
                 ->loginAs($admin)
-                ->visit(new AdminSessionsPage)
+                ->visit(new AdminSessionsPage())
                 ->with('@sessionsTable', function ($table) {
                     $table
-                        ->click('tbody tr:first-child td:last-child .dropdown-toggle')
+                        ->click(
+                            'tbody tr:first-child td:last-child .dropdown-toggle'
+                        )
                         ->waitFor('.dropdown-menu')
                         ->with('.dropdown-menu', function ($dropdown) {
-                            $dropdown
-                                ->clickLink('Delete');
+                            $dropdown->clickLink('Delete');
                         });
                 })
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('Session deleted successfully')
                 ->assertVisible('@notificationBox');

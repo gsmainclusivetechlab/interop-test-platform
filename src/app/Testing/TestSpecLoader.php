@@ -22,16 +22,27 @@ class TestSpecLoader
         $testSuite = new TestSuite();
 
         if ($apiSpec = $testResult->testStep->apiSpec) {
-            $testSuite->addTest(new RequestSchemeValidationTest(
-                $testResult->request,
-                $apiSpec,
-                new OperationAddress($testResult->testStep->path, strtolower($testResult->testStep->method))
-            ));
-            $testSuite->addTest(new ResponseSchemeValidationTest(
-                $testResult->response,
-                $apiSpec,
-                new ResponseAddress($testResult->testStep->path, strtolower($testResult->testStep->method), $testResult->response->status())
-            ));
+            $testSuite->addTest(
+                new RequestSchemeValidationTest(
+                    $testResult->request,
+                    $apiSpec,
+                    new OperationAddress(
+                        $testResult->testStep->path,
+                        strtolower($testResult->testStep->method)
+                    )
+                )
+            );
+            $testSuite->addTest(
+                new ResponseSchemeValidationTest(
+                    $testResult->response,
+                    $apiSpec,
+                    new ResponseAddress(
+                        $testResult->testStep->path,
+                        strtolower($testResult->testStep->method),
+                        $testResult->response->status()
+                    )
+                )
+            );
         }
 
         return $testSuite;

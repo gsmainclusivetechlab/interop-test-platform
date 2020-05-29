@@ -1,5 +1,5 @@
 <template>
-    <div v-if="meta.total"  class="d-flex align-items-center">
+    <div v-if="meta.total" class="d-flex align-items-center">
         <p class="m-0 text-muted">
             Showing
             <span>
@@ -28,8 +28,16 @@
                     Prev
                 </span>
             </li>
-            <li v-for="n in meta.last_page" class="page-item" v-bind:class="{'active': meta.current_page === n}">
-                <inertia-link class="page-link" :href="route().url()" :data="{page: n}">
+            <li
+                v-for="n in meta.last_page"
+                class="page-item"
+                v-bind:class="{ active: meta.current_page === n }"
+            >
+                <inertia-link
+                    class="page-link"
+                    :href="route().url()"
+                    :data="{ page: n }"
+                >
                     {{ n }}
                 </inertia-link>
             </li>
@@ -54,12 +62,12 @@ export default {
     props: {
         meta: {
             type: Object,
-            required: true
+            required: true,
         },
         links: {
             type: Object,
-            required: true
+            required: true,
         },
-    }
+    },
 };
 </script>

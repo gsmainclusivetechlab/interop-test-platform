@@ -1,11 +1,19 @@
 <template>
-    <layout :session="session" :useCases="useCases" :testCase="testCase" :breadcrumbs="breadcrumbs">
+    <layout
+        :session="session"
+        :useCases="useCases"
+        :testCase="testCase"
+        :breadcrumbs="breadcrumbs"
+    >
         <div class="row">
             <div class="col-md-12">
                 <div class="row border-bottom pb-4 align-items-center">
                     <div class="col-6 d-flex flex-column">
                         <div class="page-pretitle font-weight-normal">
-                            <breadcrumb class="breadcrumb-bullets" :items="breadcrumbs"></breadcrumb>
+                            <breadcrumb
+                                class="breadcrumb-bullets"
+                                :items="breadcrumbs"
+                            ></breadcrumb>
                         </div>
                         <h1 class="page-title mw-100 mr-2 text-break">
                             <b>{{ session.name }}</b>
@@ -15,16 +23,36 @@
                         <div class="w-100">
                             <div>
                                 Execution:
-                                <icon name="briefcase" v-b-tooltip.hover title="Use Case" />
+                                <icon
+                                    name="briefcase"
+                                    v-b-tooltip.hover
+                                    title="Use Case"
+                                />
                                 <small>
-                                    {{ session.testCases ? collect(session.testCases.data).unique('use_case_id').count() : 0 }}
+                                    {{
+                                        session.testCases
+                                            ? collect(session.testCases.data)
+                                                  .unique('use_case_id')
+                                                  .count()
+                                            : 0
+                                    }}
                                 </small>
-                                <icon name="file-text" v-b-tooltip.hover title="Test Case" />
+                                <icon
+                                    name="file-text"
+                                    v-b-tooltip.hover
+                                    title="Test Case"
+                                />
                                 <small>
-                                    {{ session.testCases ? session.testCases.data.length : 0  }}
+                                    {{
+                                        session.testCases
+                                            ? session.testCases.data.length
+                                            : 0
+                                    }}
                                 </small>
                             </div>
-                            <session-progress :testCases="session.testCases.data" />
+                            <session-progress
+                                :testCases="session.testCases.data"
+                            />
                         </div>
                     </div>
                 </div>
@@ -32,9 +60,13 @@
                     <div class="col-3 mt-3 pr-0">
                         <div class="card">
                             <div class="card-header">
-                                <h2 class="card-title d-flex align-items-center">
+                                <h2
+                                    class="card-title d-flex align-items-center"
+                                >
                                     <inertia-link
-                                        :href="route('sessions.show', session.id)"
+                                        :href="
+                                            route('sessions.show', session.id)
+                                        "
                                         class="d-inline-flex mr-1 text-decoration-none"
                                     >
                                         <icon name="corner-down-left"></icon>
@@ -48,8 +80,14 @@
                                         <p>
                                             <strong>Configuration</strong>
                                         </p>
-                                        <div v-for="component in session.components.data">
-                                            <div class="mb-3" v-for="connection in component.connections">
+                                        <div
+                                            v-for="component in session
+                                                .components.data"
+                                        >
+                                            <div
+                                                class="mb-3"
+                                                v-for="connection in component.connections"
+                                            >
                                                 <label>
                                                     {{ connection.name }}
                                                 </label>
@@ -57,7 +95,16 @@
                                                     <input
                                                         :id="`testing-${connection.id}`"
                                                         type="text"
-                                                        :value="route('testing.sut', [session.uuid, component.uuid, connection.uuid])"
+                                                        :value="
+                                                            route(
+                                                                'testing.sut',
+                                                                [
+                                                                    session.uuid,
+                                                                    component.uuid,
+                                                                    connection.uuid,
+                                                                ]
+                                                            )
+                                                        "
                                                         class="form-control"
                                                         readonly
                                                     />
@@ -73,13 +120,17 @@
                                         <p>
                                             <strong>Description</strong>
                                         </p>
-                                        <div v-html="testCase.description"></div>
+                                        <div
+                                            v-html="testCase.description"
+                                        ></div>
                                     </li>
                                     <li v-if="testCase.precondition">
                                         <p>
                                             <strong>Precondition</strong>
                                         </p>
-                                        <div v-html="testCase.precondition"></div>
+                                        <div
+                                            v-html="testCase.precondition"
+                                        ></div>
                                     </li>
                                 </ul>
                             </div>
@@ -88,31 +139,73 @@
                     <div class="col-9 mt-3">
                         <div class="row">
                             <div class="col">
-                                <div class="d-flex align-items-baseline border-bottom mb-4">
+                                <div
+                                    class="d-flex align-items-baseline border-bottom mb-4"
+                                >
                                     <ul class="nav nav-tabs mx-0 border-0">
                                         <li class="nav-item">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.show', [session.id, testCase.id])"
+                                                :href="
+                                                    route(
+                                                        'sessions.test-cases.show',
+                                                        [
+                                                            session.id,
+                                                            testCase.id,
+                                                        ]
+                                                    )
+                                                "
                                                 class="nav-link rounded-0"
-                                                v-bind:class="{'active': route().current('sessions.test-cases.show') || route().current('sessions.test-cases.test-runs.*')}"
+                                                v-bind:class="{
+                                                    active:
+                                                        route().current(
+                                                            'sessions.test-cases.show'
+                                                        ) ||
+                                                        route().current(
+                                                            'sessions.test-cases.test-runs.*'
+                                                        ),
+                                                }"
                                             >
                                                 Test Runs
                                             </inertia-link>
                                         </li>
                                         <li class="nav-item">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.test-steps.index', [session.id, testCase.id])"
+                                                :href="
+                                                    route(
+                                                        'sessions.test-cases.test-steps.index',
+                                                        [
+                                                            session.id,
+                                                            testCase.id,
+                                                        ]
+                                                    )
+                                                "
                                                 class="nav-link rounded-0"
-                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps.index')}"
+                                                v-bind:class="{
+                                                    active: route().current(
+                                                        'sessions.test-cases.test-steps.index'
+                                                    ),
+                                                }"
                                             >
                                                 Test Steps
                                             </inertia-link>
                                         </li>
                                         <li class="nav-item">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.test-steps.flow', [session.id, testCase.id])"
+                                                :href="
+                                                    route(
+                                                        'sessions.test-cases.test-steps.flow',
+                                                        [
+                                                            session.id,
+                                                            testCase.id,
+                                                        ]
+                                                    )
+                                                "
                                                 class="nav-link rounded-0"
-                                                v-bind:class="{'active': route().current('sessions.test-cases.test-steps.flow')}"
+                                                v-bind:class="{
+                                                    active: route().current(
+                                                        'sessions.test-cases.test-steps.flow'
+                                                    ),
+                                                }"
                                             >
                                                 Flow
                                             </inertia-link>
@@ -120,11 +213,26 @@
                                     </ul>
                                     <div
                                         class="ml-auto"
-                                        v-if="!collect(session.components.data).where('id', testStepFirstSource.id).count()"
+                                        v-if="
+                                            !collect(session.components.data)
+                                                .where(
+                                                    'id',
+                                                    testStepFirstSource.id
+                                                )
+                                                .count()
+                                        "
                                     >
                                         <div class="d-flex">
                                             <inertia-link
-                                                :href="route('sessions.test-cases.run', [session.id, testCase.id])"
+                                                :href="
+                                                    route(
+                                                        'sessions.test-cases.run',
+                                                        [
+                                                            session.id,
+                                                            testCase.id,
+                                                        ]
+                                                    )
+                                                "
                                                 class="btn btn-primary"
                                                 method="post"
                                             >
@@ -145,47 +253,50 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
-    import SessionProgress from '@/components/sessions/progress';
+import Layout from '@/layouts/main';
+import SessionProgress from '@/components/sessions/progress';
 
-    export default {
-        components: {
-            Layout,
-            SessionProgress
+export default {
+    components: {
+        Layout,
+        SessionProgress,
+    },
+    metaInfo() {
+        return {
+            title: this.session.name,
+        };
+    },
+    props: {
+        session: {
+            type: Object,
+            required: true,
         },
-        metaInfo() {
-            return {
-                title: this.session.name,
-            }
+        useCases: {
+            type: Object,
+            required: true,
         },
-        props: {
-            session: {
-                type: Object,
-                required: true
+        testCase: {
+            type: Object,
+            required: true,
+        },
+        testStepFirstSource: {
+            type: Object,
+            required: true,
+        },
+        breadcrumbs: {
+            type: Array,
+            required: false,
+            default: function () {
+                return [
+                    { name: 'Sessions', url: route('sessions.index') },
+                    {
+                        name: this.session.name,
+                        url: route('sessions.show', this.session.id),
+                    },
+                    { name: this.testCase.name },
+                ];
             },
-            useCases: {
-                type: Object,
-                required: true
-            },
-            testCase: {
-                type: Object,
-                required: true
-            },
-            testStepFirstSource: {
-                type: Object,
-                required: true
-            },
-            breadcrumbs: {
-                type: Array,
-                required: false,
-                default: function () {
-                    return [
-                        {name: 'Sessions', url: route('sessions.index')},
-                        {name: this.session.name, url: route('sessions.show', this.session.id)},
-                        {name: this.testCase.name},
-                    ];
-                }
-            }
-        }
-    };
+        },
+    },
+};
 </script>

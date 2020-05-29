@@ -23,11 +23,7 @@ class TestSetup extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'type',
-        'values',
-    ];
+    protected $fillable = ['name', 'type', 'values'];
 
     /**
      * @var array

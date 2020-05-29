@@ -18,11 +18,7 @@ class ApiSpec extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'openapi',
-        'description',
-    ];
+    protected $fillable = ['name', 'openapi', 'description'];
 
     /**
      * @var array

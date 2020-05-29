@@ -17,56 +17,56 @@ export default {
     props: {
         showCopyBtn: {
             type: Boolean,
-            default: true
+            default: true,
         },
         data: {
-            required: true
+            required: true,
         },
         deep: {
-            type: Number
+            type: Number,
         },
         showLength: {
-            type: Boolean
+            type: Boolean,
         },
         showLine: {
-            type: Boolean
+            type: Boolean,
         },
         showDoubleQuotes: {
-            type: Boolean
+            type: Boolean,
         },
         highlightMouseoverNode: {
-            type: Boolean
+            type: Boolean,
         },
         vModel: {
-            type: [String, Array]
+            type: [String, Array],
         },
         path: {
-            type: String
+            type: String,
         },
         pathChecked: {
-            type: Array
+            type: Array,
         },
         pathSelectable: {
-            type: Function
+            type: Function,
         },
         selectableType: {
-            type: String
+            type: String,
         },
         showSelectController: {
-            type: Boolean
+            type: Boolean,
         },
         selectOnClickNode: {
-            type: Boolean
+            type: Boolean,
         },
         highlightSelectedNode: {
-            type: Boolean
+            type: Boolean,
         },
         customValueFormatter: {
-            type: Function
-        }
+            type: Function,
+        },
     },
     components: {
-        vueJsonPretty
-    }
+        vueJsonPretty,
+    },
 };
 </script>

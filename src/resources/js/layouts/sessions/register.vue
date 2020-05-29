@@ -13,10 +13,9 @@
                             <span
                                 class="step-item"
                                 :class="{
-                                    active:
-                                        route().current(
-                                          'sessions.register.sut'
-                                        )
+                                    active: route().current(
+                                        'sessions.register.sut'
+                                    ),
                                 }"
                             >
                                 <span class="d-inline-block mt-2">
@@ -28,7 +27,7 @@
                                 :class="{
                                     active: route().current(
                                         'sessions.register.info'
-                                    )
+                                    ),
                                 }"
                             >
                                 <span class="d-inline-block mt-2">
@@ -38,10 +37,9 @@
                             <span
                                 class="step-item"
                                 :class="{
-                                    active:
-                                        route().current(
-                                          'sessions.register.config'
-                                        )
+                                    active: route().current(
+                                        'sessions.register.config'
+                                    ),
                                 }"
                             >
                                 <span class="d-inline-block mt-2">
@@ -56,8 +54,18 @@
                         <diagram>
                             graph LR;
                             <template v-for="component in components.data">
-                                {{ component.id }}({{component.name}})<template v-if="collect(sut).get('component_id')  === component.id">:::is-active</template><template v-else></template>;
-                                <template v-for="connection in component.connections">
+                                {{ component.id }}({{
+                                    component.name
+                                }})<template
+                                    v-if="
+                                        collect(sut).get('component_id') ===
+                                        component.id
+                                    "
+                                    >:::is-active</template
+                                ><template v-else></template>;
+                                <template
+                                    v-for="connection in component.connections"
+                                >
                                     {{ component.id }}-->{{ connection.id }};
                                 </template>
                             </template>
@@ -78,20 +86,20 @@ import Diagram from '@/components/diagram';
 
 export default {
     metaInfo: {
-        title: 'Create new session'
+        title: 'Create new session',
     },
     components: {
         Layout,
-        Diagram
+        Diagram,
     },
     props: {
         sut: {
             type: Object,
-            required: false
+            required: false,
         },
         components: {
             type: Object,
-            required: true
+            required: true,
         },
     },
 };

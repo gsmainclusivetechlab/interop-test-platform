@@ -65,8 +65,11 @@ class TestExecutionListener implements TestListener
      * @param AssertionFailedError $e
      * @param float $time
      */
-    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
-    {
+    public function addFailure(
+        Test $test,
+        AssertionFailedError $e,
+        float $time
+    ): void {
         if ($test instanceof TestCase) {
             $this->testResult->testExecutions()->create([
                 'name' => $test->getName(),

@@ -17,21 +17,21 @@ import Clipboard from 'clipboard';
 export default {
     props: {
         data: {
-            type: String
+            type: String,
         },
         target: {
-            type: String
+            type: String,
         },
         title: {
             type: String,
-            default: 'Copy'
-        }
+            default: 'Copy',
+        },
     },
     mounted() {
         new Clipboard(this.$el, {
             container: this.$el.parentElement,
-            text: () => !this.target && this.data
+            text: () => !this.target && this.data,
         });
-    }
+    },
 };
 </script>

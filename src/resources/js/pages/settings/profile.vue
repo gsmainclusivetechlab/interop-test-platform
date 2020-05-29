@@ -17,11 +17,16 @@
                                 type="text"
                                 v-model="form.first_name"
                                 class="form-control"
-                                :class="{ 'is-invalid': $page.errors.first_name }"
+                                :class="{
+                                    'is-invalid': $page.errors.first_name,
+                                }"
                                 placeholder="e.g., John"
                                 name="first_name"
+                            />
+                            <span
+                                v-if="$page.errors.first_name"
+                                class="invalid-feedback"
                             >
-                            <span v-if="$page.errors.first_name" class="invalid-feedback">
                                 {{ $page.errors.first_name }}
                             </span>
                         </div>
@@ -37,11 +42,16 @@
                                 type="text"
                                 v-model="form.last_name"
                                 class="form-control"
-                                :class="{ 'is-invalid': $page.errors.last_name }"
+                                :class="{
+                                    'is-invalid': $page.errors.last_name,
+                                }"
                                 placeholder="e.g., Doe"
                                 name="last_name"
+                            />
+                            <span
+                                v-if="$page.errors.last_name"
+                                class="invalid-feedback"
                             >
-                            <span v-if="$page.errors.last_name" class="invalid-feedback">
                                 {{ $page.errors.last_name }}
                             </span>
                         </div>
@@ -60,8 +70,11 @@
                                 :class="{ 'is-invalid': $page.errors.company }"
                                 placeholder="e.g., GSMA"
                                 name="company"
+                            />
+                            <span
+                                v-if="$page.errors.company"
+                                class="invalid-feedback"
                             >
-                            <span v-if="$page.errors.company" class="invalid-feedback">
                                 {{ $page.errors.company }}
                             </span>
                         </div>
@@ -86,7 +99,7 @@ import Layout from '@/layouts/settings';
 
 export default {
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -95,7 +108,7 @@ export default {
                 first_name: this.$page.auth.user.first_name,
                 last_name: this.$page.auth.user.last_name,
                 company: this.$page.auth.user.company,
-            }
+            },
         };
     },
     methods: {
@@ -104,7 +117,7 @@ export default {
             this.$inertia
                 .post(route('settings.profile.update'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

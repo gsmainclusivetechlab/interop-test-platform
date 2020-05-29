@@ -22,7 +22,9 @@ class TracestateHeader
             $parts = $this->parse($tracestate);
 
             if ($parts === false) {
-                throw new InvalidArgumentException("Unable to parse tracestate: $tracestate");
+                throw new InvalidArgumentException(
+                    "Unable to parse tracestate: $tracestate"
+                );
             }
 
             $this->applyParts($parts);
@@ -68,7 +70,9 @@ class TracestateHeader
     public function withVendor($key, $value)
     {
         $new = clone $this;
-        $new->vendors[$this->filterVendorKey($key)] = $this->filterVendorValue($value);
+        $new->vendors[$this->filterVendorKey($key)] = $this->filterVendorValue(
+            $value
+        );
 
         return $new;
     }
@@ -146,7 +150,9 @@ class TracestateHeader
 
             [$key, $value] = $vendor;
 
-            $this->vendors[$this->filterVendorKey($key)] = $this->filterVendorValue($value);
+            $this->vendors[
+                $this->filterVendorKey($key)
+            ] = $this->filterVendorValue($value);
         }
     }
 
@@ -181,7 +187,10 @@ class TracestateHeader
      */
     protected function filterVendorValue($vendorValue)
     {
-        if (!($vendorValue = base64_decode($vendorValue)) || !($vendorValue = json_decode($vendorValue, true))) {
+        if (
+            !($vendorValue = base64_decode($vendorValue)) ||
+            !($vendorValue = json_decode($vendorValue, true))
+        ) {
             throw new InvalidArgumentException('Vendor value is invalid');
         }
 

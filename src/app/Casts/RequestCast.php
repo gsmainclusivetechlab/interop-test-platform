@@ -26,12 +26,14 @@ class RequestCast implements CastsAttributes
             return $value;
         }
 
-        return new Request(new ServerRequest(
+        return new Request(
+            new ServerRequest(
                 Arr::get($value, 'method'),
                 Arr::get($value, 'uri'),
                 Arr::get($value, 'headers', []),
                 json_encode(Arr::get($value, 'body'))
-            ));
+            )
+        );
     }
 
     /**
