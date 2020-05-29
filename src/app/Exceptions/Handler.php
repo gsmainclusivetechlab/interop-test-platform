@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use App\Http\Client\Response;
 use Inertia\Inertia;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -26,7 +25,7 @@ class Handler extends ExceptionHandler
 
     /**
      * @param HttpExceptionInterface $e
-     * @return \Illuminate\Http\JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     protected function renderHttpException(HttpExceptionInterface $e)
     {
