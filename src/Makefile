@@ -15,7 +15,7 @@ install: chmod composer-install cache-clear
 
 update: chmod composer-install cache-clear
 	php artisan key:generate
-	php artisan migrate:fresh --seed
+	php artisan migrate
 	php artisan queue:restart
 	php artisan dusk:chrome-driver 81
 

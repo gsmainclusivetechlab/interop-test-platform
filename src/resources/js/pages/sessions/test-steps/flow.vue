@@ -88,10 +88,18 @@ export default {
         },
         diagramCode() {
             return this.testSteps.data.reduce((template, testStep) => {
-                template += `
+                if (testStep.response) {
+                    template += `
 ${testStep.source.name} ->> ${testStep.target.name}: ${testStep.method} ${testStep.path};
 ${testStep.target.name} -->> ${testStep.source.name}: HTTP ${testStep.response.status};
 `;
+                } else {
+                    template += `
+${testStep.source.name} ->> ${testStep.target.name}: ${testStep.method} ${testStep.path};
+${testStep.target.name} -->> ${testStep.source.name}: HTTP;
+`;
+                }
+
                 return template;
             }, 'sequenceDiagram;');
         }

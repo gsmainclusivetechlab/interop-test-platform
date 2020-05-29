@@ -37,10 +37,10 @@
                         </td>
                         <td class="align-middle">
                             <div class="btn-group">
-                                <button class="btn btn-secondary" v-b-modal="`modal-request-${testStep.id}`">
+                                <button class="btn btn-secondary" v-b-modal="`modal-request-${testStep.id}`" v-if="testStep.request">
                                     Request
                                 </button>
-                                <button class="btn btn-secondary" v-b-modal="`modal-response-${testStep.id}`">
+                                <button class="btn btn-secondary" v-b-modal="`modal-response-${testStep.id}`" v-if="testStep.response">
                                     Response
                                 </button>
                             </div>
@@ -53,7 +53,7 @@
                                 title="Request"
                             >
                                 <div class="border">
-                                    <div class="d-flex" v-if="testStep.request.uri">
+                                    <div class="d-flex" v-if="testStep.request && testStep.request.uri">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Endpoint</strong>
                                         </div>
@@ -63,7 +63,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="testStep.request.method">
+                                    <div class="d-flex" v-if="testStep.request && testStep.request.method">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Method</strong>
                                         </div>
@@ -73,7 +73,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.request.headers).count()">
+                                    <div class="d-flex" v-if="testStep.request && collect(testStep.request.headers).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Headers</strong>
                                         </div>
@@ -83,7 +83,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.request.body).count()">
+                                    <div class="d-flex" v-if="testStep.request && collect(testStep.request.body).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Body</strong>
                                         </div>
@@ -104,7 +104,7 @@
                                 title="Response"
                             >
                                 <div class="border">
-                                    <div class="d-flex" v-if="testStep.response.status">
+                                    <div class="d-flex" v-if="testStep.response && testStep.response.status">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Status</strong>
                                         </div>
@@ -114,7 +114,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.response.headers).count()">
+                                    <div class="d-flex" v-if="testStep.response && collect(testStep.response.headers).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Headers</strong>
                                         </div>
@@ -124,7 +124,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex" v-if="collect(testStep.response.body).count()">
+                                    <div class="d-flex" v-if="testStep.response && collect(testStep.response.body).count()">
                                         <div class="w-25 px-4 py-2 border">
                                             <strong>Body</strong>
                                         </div>
