@@ -13,6 +13,7 @@
 - Task: Update Eloquent model unit tests after Matching implementation [@jc_akokorev,@jc_skushnir]
 - Task: Create Accounts Authorisation flow [@jc_ohladkov,@jc_skushnir]
 - Task: Automated-tests: Sessions and Admin are actions, browser [@jc_ohladkov]
+- Task: Add prettier php to ITP [@jc_ohladkov]
 - Task: Color theme switcher [@jc_ohladkov]
 - Bug: P2P flow - PUT /transfers/{ID} is not running [@jc_ohladkov]
 - Bug: Test Case validation not being exectued [@jc_agalaguz]

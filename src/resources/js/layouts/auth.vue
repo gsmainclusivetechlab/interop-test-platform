@@ -26,11 +26,11 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/app';
+import Layout from '@/layouts/app';
 
-    export default {
-        components: {
-            Layout,
-        },
-    };
+export default {
+    components: {
+        Layout,
+    },
+};
 </script>

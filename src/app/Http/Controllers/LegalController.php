@@ -9,6 +9,8 @@ class LegalController extends Controller
      */
     public function acceptCookies()
     {
-        return response()->json()->withCookie(cookie()->forever('cookies_accepted', true));
+        return response()
+            ->json()
+            ->withCookie(cookie()->forever('cookies_accepted', true));
     }
 }

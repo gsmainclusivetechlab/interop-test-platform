@@ -31,9 +31,13 @@ class MapRequestHandler
         $testRequest = new Request($request);
 
         if (
-            !$this->testResult->session->hasComponent($this->testResult->testStep->source)
-            &&
-            $testRequestSetups = $this->testResult->testStep->testSetups()->ofType(TestSetup::TYPE_REQUEST)->get()
+            !$this->testResult->session->hasComponent(
+                $this->testResult->testStep->source
+            ) &&
+            ($testRequestSetups = $this->testResult->testStep
+                ->testSetups()
+                ->ofType(TestSetup::TYPE_REQUEST)
+                ->get())
         ) {
             foreach ($testRequestSetups as $testRequestSetup) {
                 $testRequest = $testRequest->withSetup($testRequestSetup);

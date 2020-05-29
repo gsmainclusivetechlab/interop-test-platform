@@ -21,25 +21,28 @@ class RoleAdminTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user, $admin) {
             $browser
                 ->loginAs($admin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:first-child td:last-child', function ($td) {
-                    $td
-                        ->click('.dropdown-toggle')
-                        ->waitFor('.dropdown-menu')
-                        ->with('.dropdown-menu', function ($dropdown) {
-                            $dropdown
-                                ->clickLink('Block');
-                        });
-                })
+                ->visit(new AdminUsersPage())
+                ->with(
+                    '.card .table tbody tr:first-child td:last-child',
+                    function ($td) {
+                        $td
+                            ->click('.dropdown-toggle')
+                            ->waitFor('.dropdown-menu')
+                            ->with('.dropdown-menu', function ($dropdown) {
+                                $dropdown->clickLink('Block');
+                            });
+                    }
+                )
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('User blocked successfully')
                 ->assertVisible('@notificationBox')
                 ->click('@blockedUsersLink')
                 ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) use ($user) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use (
+                    $user
+                ) {
                     $tr
                         ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
@@ -47,8 +50,7 @@ class RoleAdminTest extends DuskTestCase
                                 ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Unblock');
+                                    $dropdown->clickLink('Unblock');
                                 });
                         });
                 })
@@ -68,8 +70,10 @@ class RoleAdminTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user, $admin) {
             $browser
                 ->loginAs($admin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:first-child', function ($tr) use ($user) {
+                ->visit(new AdminUsersPage())
+                ->with('.card .table tbody tr:first-child', function ($tr) use (
+                    $user
+                ) {
                     $tr
                         ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
@@ -77,14 +81,12 @@ class RoleAdminTest extends DuskTestCase
                                 ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Delete');
+                                    $dropdown->clickLink('Delete');
                                 });
                         });
                 })
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('User deleted successfully')
                 ->assertVisible('@notificationBox');

@@ -27,12 +27,14 @@ abstract class Page extends BasePage
             '@terms' => 'form input[name="terms"]',
             '@password' => 'form input[name="password"]',
             '@currentPassword' => 'form input[name="current_password"]',
-            '@passwordConfirmation' => 'form input[name="password_confirmation"]',
+            '@passwordConfirmation' =>
+                'form input[name="password_confirmation"]',
             '@loginLink' => 'a[href$="/login"]',
             '@registerLink' => 'a[href$="/register"]',
             '@logoutLink' => '.navbar-nav a[href$="/logout"]',
             '@forgotPasswordLink' => 'a[href$="/password/reset"]',
-            '@profileSettingsLink' => '.navbar-nav a[href$="/settings/profile"]',
+            '@profileSettingsLink' =>
+                '.navbar-nav a[href$="/settings/profile"]',
         ];
     }
 }

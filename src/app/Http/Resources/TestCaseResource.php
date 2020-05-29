@@ -22,17 +22,29 @@ class TestCaseResource extends JsonResource
             'description' => Markdown::parse($this->description)->toHtml(),
             'precondition' => Markdown::parse($this->precondition)->toHtml(),
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
-            'testSteps' => TestStepResource::collection($this->whenLoaded('testSteps')),
-            'lastTestRun' => new TestRunResource($this->whenLoaded('lastTestRun', function () {
-                return $this->whenPivotLoaded('session_test_cases', function () {
-                    return $this->lastTestRun()
-                        ->where('session_id', $this->pivot->session_id)
-                        ->first();
-                }, $this->lastTestRun);
-            })),
+            'testSteps' => TestStepResource::collection(
+                $this->whenLoaded('testSteps')
+            ),
+            'lastTestRun' => new TestRunResource(
+                $this->whenLoaded('lastTestRun', function () {
+                    return $this->whenPivotLoaded(
+                        'session_test_cases',
+                        function () {
+                            return $this->lastTestRun()
+                                ->where('session_id', $this->pivot->session_id)
+                                ->first();
+                        },
+                        $this->lastTestRun
+                    );
+                })
+            ),
             'can' => [
-                'update' => auth()->user()->can('update', $this->resource),
-                'delete' => auth()->user()->can('delete', $this->resource),
+                'update' => auth()
+                    ->user()
+                    ->can('update', $this->resource),
+                'delete' => auth()
+                    ->user()
+                    ->can('delete', $this->resource),
             ],
         ];
     }

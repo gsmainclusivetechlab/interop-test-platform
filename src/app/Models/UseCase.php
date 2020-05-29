@@ -17,10 +17,7 @@ class UseCase extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'description',
-    ];
+    protected $fillable = ['name', 'description'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

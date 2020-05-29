@@ -18,7 +18,13 @@ class TestCaseTest extends BaseTestCase
         $testCase = factory(TestCase::class)->make();
         $this->assertValidationPasses($testCase->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
-            'behavior' => ['required', Rule::in([TestCase::BEHAVIOR_NEGATIVE, TestCase::BEHAVIOR_POSITIVE])],
+            'behavior' => [
+                'required',
+                Rule::in([
+                    TestCase::BEHAVIOR_NEGATIVE,
+                    TestCase::BEHAVIOR_POSITIVE,
+                ]),
+            ],
             'precondition' => ['string'],
             'description' => ['string'],
         ]);

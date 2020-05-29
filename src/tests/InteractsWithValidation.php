@@ -13,9 +13,20 @@ trait InteractsWithValidation
      * @param array $customAttributes
      * @return $this
      */
-    protected function assertValidationPasses(array $data, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        $this->assertTrue(Validator::make($data, $rules, $messages, $customAttributes)->passes());
+    protected function assertValidationPasses(
+        array $data,
+        array $rules,
+        array $messages = [],
+        array $customAttributes = []
+    ) {
+        $this->assertTrue(
+            Validator::make(
+                $data,
+                $rules,
+                $messages,
+                $customAttributes
+            )->passes()
+        );
 
         return $this;
     }
@@ -27,9 +38,20 @@ trait InteractsWithValidation
      * @param array $customAttributes
      * @return $this
      */
-    protected function assertValidationFails(array $data, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        $this->assertTrue(Validator::make($data, $rules, $messages, $customAttributes)->fails());
+    protected function assertValidationFails(
+        array $data,
+        array $rules,
+        array $messages = [],
+        array $customAttributes = []
+    ) {
+        $this->assertTrue(
+            Validator::make(
+                $data,
+                $rules,
+                $messages,
+                $customAttributes
+            )->fails()
+        );
 
         return $this;
     }

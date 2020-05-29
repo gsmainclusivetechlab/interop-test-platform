@@ -28,7 +28,10 @@ trait HasPosition
      */
     protected function generatePositionOnCreate()
     {
-        $this->setAttribute($this->getPositionColumn(), $this->getPositionGroupCount() + 1);
+        $this->setAttribute(
+            $this->getPositionColumn(),
+            $this->getPositionGroupCount() + 1
+        );
     }
 
     /**
@@ -36,7 +39,6 @@ trait HasPosition
      */
     protected function generatePositionOnUpdate()
     {
-
     }
 
     /**
@@ -59,9 +61,11 @@ trait HasPosition
         $positionColumn = $this->getPositionColumn();
         $this->query()
             ->where($this->createPositionGroupCondition())
-            ->where($positionColumn, ($this->getAttribute($positionColumn) - 1))
+            ->where($positionColumn, $this->getAttribute($positionColumn) - 1)
             ->update([$positionColumn => $this->getAttribute($positionColumn)]);
-        $this->update([$positionColumn => $this->getAttribute($positionColumn) - 1]);
+        $this->update([
+            $positionColumn => $this->getAttribute($positionColumn) - 1,
+        ]);
 
         return $this;
     }
@@ -74,9 +78,11 @@ trait HasPosition
         $positionColumn = $this->getPositionColumn();
         $this->query()
             ->where($this->createPositionGroupCondition())
-            ->where($positionColumn, ($this->getAttribute($positionColumn) + 1))
+            ->where($positionColumn, $this->getAttribute($positionColumn) + 1)
             ->update([$positionColumn => $this->getAttribute($positionColumn)]);
-        $this->update([$positionColumn => $this->getAttribute($positionColumn) + 1]);
+        $this->update([
+            $positionColumn => $this->getAttribute($positionColumn) + 1,
+        ]);
 
         return $this;
     }
@@ -91,7 +97,11 @@ trait HasPosition
         if ($this->getAttribute($positionColumn) != 1) {
             $this->query()
                 ->where($this->createPositionGroupCondition())
-                ->where($positionColumn, '<', $this->getAttribute($positionColumn))
+                ->where(
+                    $positionColumn,
+                    '<',
+                    $this->getAttribute($positionColumn)
+                )
                 ->increment($positionColumn);
             $this->update([$positionColumn => 1]);
         }
@@ -110,7 +120,11 @@ trait HasPosition
         if ($this->getAttribute($positionColumn) != $count) {
             $this->query()
                 ->where($this->createPositionGroupCondition())
-                ->where($positionColumn, '>', $this->getAttribute($positionColumn))
+                ->where(
+                    $positionColumn,
+                    '>',
+                    $this->getAttribute($positionColumn)
+                )
                 ->decrement($positionColumn);
             $this->update([$positionColumn => $count]);
         }
@@ -138,7 +152,11 @@ trait HasPosition
             $this->query()
                 ->where($this->createPositionGroupCondition())
                 ->where($positionColumn, '>=', $position)
-                ->where($positionColumn, '<', $this->getAttribute($positionColumn))
+                ->where(
+                    $positionColumn,
+                    '<',
+                    $this->getAttribute($positionColumn)
+                )
                 ->increment($positionColumn);
             $this->update([$positionColumn => $position]);
 
@@ -174,7 +192,8 @@ trait HasPosition
      */
     public function isLastPosition()
     {
-        return ($this->getAttribute($this->getPositionColumn()) >= $this->getPositionGroupCount());
+        return $this->getAttribute($this->getPositionColumn()) >=
+            $this->getPositionGroupCount();
     }
 
     /**

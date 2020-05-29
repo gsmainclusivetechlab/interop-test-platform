@@ -17,14 +17,18 @@ class TestRunResource extends JsonResource
             'uuid' => $this->uuid,
             'session' => new SessionResource($this->whenLoaded('session')),
             'testCase' => new TestCaseResource($this->whenLoaded('testCase')),
-            'testResults' => TestResultResource::collection($this->whenLoaded('testResults')),
+            'testResults' => TestResultResource::collection(
+                $this->whenLoaded('testResults')
+            ),
             'total' => $this->total,
             'passed' => $this->passed,
             'failures' => $this->failures,
             'successful' => $this->successful,
             'duration' => $this->duration,
             'created_at' => $this->created_at->diffForHumans(),
-            'completed_at' => ($this->completed_at) ? $this->completed_at->diffForHumans() : '',
+            'completed_at' => $this->completed_at
+                ? $this->completed_at->diffForHumans()
+                : '',
         ];
     }
 }

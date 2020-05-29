@@ -18,13 +18,23 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'company' => $this->company,
             'role' => $this->role,
-            'email_verified_at' => $this->email_verified_at ? $this->email_verified_at->toDateTimeString() : null,
+            'email_verified_at' => $this->email_verified_at
+                ? $this->email_verified_at->toDateTimeString()
+                : null,
             'trashed' => $this->trashed(),
             'can' => [
-                'verify' => auth()->user()->can('verify', $this->resource),
-                'delete' => auth()->user()->can('delete', $this->resource),
-                'restore' => auth()->user()->can('restore', $this->resource),
-                'promoteRole' => auth()->user()->can('promoteRole', $this->resource),
+                'verify' => auth()
+                    ->user()
+                    ->can('verify', $this->resource),
+                'delete' => auth()
+                    ->user()
+                    ->can('delete', $this->resource),
+                'restore' => auth()
+                    ->user()
+                    ->can('restore', $this->resource),
+                'promoteRole' => auth()
+                    ->user()
+                    ->can('promoteRole', $this->resource),
             ],
         ];
     }

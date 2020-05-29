@@ -15,7 +15,13 @@
                                 <input
                                     :id="`testing-${connection.id}`"
                                     type="text"
-                                    :value="route('testing.sut', [session.info.uuid, sut.uuid, connection.uuid])"
+                                    :value="
+                                        route('testing.sut', [
+                                            session.info.uuid,
+                                            sut.uuid,
+                                            connection.uuid,
+                                        ])
+                                    "
                                     class="form-control"
                                     readonly
                                 />
@@ -52,20 +58,20 @@ import Layout from '@/layouts/sessions/register';
 
 export default {
     components: {
-        Layout
+        Layout,
     },
     props: {
         session: {
             type: Object,
-            required: true
+            required: true,
         },
         sut: {
             type: Object,
-            required: true
+            required: true,
         },
         components: {
             type: Object,
-            required: true
+            required: true,
         },
     },
     data() {
@@ -80,7 +86,7 @@ export default {
             this.$inertia
                 .post(route('sessions.register.config.store'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

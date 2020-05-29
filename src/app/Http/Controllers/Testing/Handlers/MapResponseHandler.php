@@ -31,9 +31,13 @@ class MapResponseHandler
         $testResponse = new Response($response);
 
         if (
-            !$this->testResult->session->hasComponent($this->testResult->testStep->target)
-            &&
-            $testResponseSetups = $this->testResult->testStep->testSetups()->ofType(TestSetup::TYPE_RESPONSE)->get()
+            !$this->testResult->session->hasComponent(
+                $this->testResult->testStep->target
+            ) &&
+            ($testResponseSetups = $this->testResult->testStep
+                ->testSetups()
+                ->ofType(TestSetup::TYPE_RESPONSE)
+                ->get())
         ) {
             foreach ($testResponseSetups as $testResponseSetup) {
                 $testResponse = $testResponse->withSetup($testResponseSetup);

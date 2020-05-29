@@ -6,11 +6,15 @@
                     Verify Your Email Address
                 </div>
                 <p class="text-muted">
-                    Before proceeding, please check your email for a verification link.
+                    Before proceeding, please check your email for a
+                    verification link.
                 </p>
                 <p class="text-muted">
-                    If have problems to receive the verification link, please reach out our support:
-                    <a href="mailto:inclusivetechlab@gsma.com">inclusivetechlab@gsma.com</a>
+                    If have problems to receive the verification link, please
+                    reach out our support:
+                    <a href="mailto:inclusivetechlab@gsma.com"
+                        >inclusivetechlab@gsma.com</a
+                    >
                 </p>
                 <div class="form-footer">
                     <button type="submit" class="btn btn-primary btn-block">
@@ -31,10 +35,10 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Verify Your Email Address'
+        title: 'Verify Your Email Address',
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -47,7 +51,7 @@ export default {
             this.$inertia
                 .post(route('verification.resend'))
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

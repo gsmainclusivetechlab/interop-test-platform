@@ -18,7 +18,10 @@ class TestSetupTest extends TestCase
         $testSetup = factory(TestSetup::class)->make();
         $this->assertValidationPasses($testSetup->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', Rule::in([TestSetup::TYPE_RESPONSE, TestSetup::TYPE_REQUEST])],
+            'type' => [
+                'required',
+                Rule::in([TestSetup::TYPE_RESPONSE, TestSetup::TYPE_REQUEST]),
+            ],
             'values' => ['required'],
         ]);
         $this->assertTrue($testSetup->save());

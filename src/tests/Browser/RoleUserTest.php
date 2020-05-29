@@ -21,7 +21,9 @@ class RoleUserTest extends DuskTestCase
                 ->visit('/')
                 ->assertMissing('.navbar-nav .admin-settings-dropdown')
                 ->visit('/admin/users')
-                ->assertSee('We are sorry but you do not have permission to access this page');
+                ->assertSee(
+                    'We are sorry but you do not have permission to access this page'
+                );
         });
     }
 
@@ -38,7 +40,9 @@ class RoleUserTest extends DuskTestCase
                 ->visit('/')
                 ->assertMissing('.navbar-nav .admin-settings-dropdown')
                 ->visit('/admin/sessions')
-                ->assertSee('We are sorry but you do not have permission to access this page');
+                ->assertSee(
+                    'We are sorry but you do not have permission to access this page'
+                );
         });
     }
 
@@ -55,7 +59,9 @@ class RoleUserTest extends DuskTestCase
                 ->visit('/')
                 ->assertMissing('.navbar-nav .admin-settings-dropdown')
                 ->visit('/admin/test-cases')
-                ->assertSee('We are sorry but you do not have permission to access this page');
+                ->assertSee(
+                    'We are sorry but you do not have permission to access this page'
+                );
         });
     }
 }

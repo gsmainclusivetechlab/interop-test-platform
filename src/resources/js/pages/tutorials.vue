@@ -105,7 +105,7 @@
                     </a>
 
                     <a
-                        class="d-inline-block btn scenario-card "
+                        class="d-inline-block btn scenario-card"
                         href="#mobile-money-api-info"
                         v-b-toggle.accordion-5
                     >
@@ -431,105 +431,105 @@ const createSession = [
         `${createImgPath}dashboard.png`,
         [1335, 40],
         'Start by creating a new session',
-        true
+        true,
     ],
     [
         `${createImgPath}select_sut.png`,
         [535, 390],
         'Select the System Under Test',
-        true
+        true,
     ],
     [
         `${createImgPath}select_sut_2.png`,
         [535, 385],
         "Let's select Service Provider",
-        true
+        true,
     ],
     [`${createImgPath}select_sut_3.png`, [1100, 473], 'Press Next', true],
     [
         `${createImgPath}configure_sut.png`,
         [1100, 422],
         'After configuration, press Next',
-        true
+        true,
     ],
     [
         `${createImgPath}session_info.png`,
         [732, 325],
         'Select use cases by ticking the corresponding box',
-        true
+        true,
     ],
     [
         `${createImgPath}session_info_2.png`,
         [732, 355],
         'Select use cases by ticking the corresponding box',
-        true
+        true,
     ],
     [
         `${createImgPath}session_info_3.png`,
         [732, 410],
         'Select use cases by ticking the corresponding box',
-        true
+        true,
     ],
     [
         `${createImgPath}session_info_4.png`,
         [1050, 515],
         'Press Create when you are finished',
-        true
+        true,
     ],
     [
         `${createImgPath}session_created.png`,
         [47, 243],
         'Your session has now been created and use cases can be accessed on the left.',
-        true
-    ]
+        true,
+    ],
 ];
 
 const serviceProvider = [
     [
         `${executeImgPath}1-session-page.png`,
         [85, 232],
-        'First, select the session you would like to execute.'
+        'First, select the session you would like to execute.',
     ],
     [
         `${executeImgPath}2-session-usecase.png`,
         [101, 270],
-        'Here you can see all your selected use cases, select the one you would like to test.'
+        'Here you can see all your selected use cases, select the one you would like to test.',
     ],
     [
         `${executeImgPath}3-test-runs.png`,
         [1344, 104],
-        'This page details the use case. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.'
+        'This page details the use case. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.',
     ],
     [
         `${executeImgPath}7-postman-1.png`,
         [1241, 72],
         'Here we are using Postman. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
-        true
+        true,
     ],
     [
         `${executeImgPath}8-postman-2.png`,
         [412, 567],
         'Check the response is correct, and go back to the test platform.',
-        true
+        true,
     ],
     [
         `${executeImgPath}9-test-runs.png`,
         [447, 243],
         'You should now see your test run. Click to be taken to the test run page.',
-        true
+        true,
     ],
     [
         `${executeImgPath}10-test-details-1.png`,
         [618, 527],
         'On this page are all the details about the test run. Clicking on a failed test will give you more information. ',
-        true
+        true,
     ],
     [
         `${executeImgPath}11-test-details-2.png`,
         [102, 45],
         'You can also see the request and response data for each step of the use case flow. To start the demo again click the sessions tab.',
-        true
-    ]
+        true,
+    ],
 ];
 
 export default {
@@ -539,13 +539,13 @@ export default {
             script: [
                 {
                     src: 'https://code.jquery.com/jquery-3.5.0.min.js',
-                    defer: true
-                }
-            ]
+                    defer: true,
+                },
+            ],
         };
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -556,7 +556,7 @@ export default {
             demoWrapper: null,
             labelText: '',
             screenshotUrl: '',
-            originalHeight: 0
+            originalHeight: 0,
         };
     },
     methods: {
@@ -603,11 +603,11 @@ export default {
                         this.demoAdjusted(coordinates[0]) -
                         (circleRadius - this.radius),
                     width: circleRadius * 2,
-                    height: circleRadius * 2
+                    height: circleRadius * 2,
                 },
                 {
                     complete: cb,
-                    duration: ms
+                    duration: ms,
                 }
             );
         },
@@ -658,10 +658,10 @@ export default {
             if (this.demoWrapper.find('.demo-overlay').is(':hidden')) {
                 this.demoWrapper.find('.demo-overlay').toggle();
             }
-        }
+        },
     },
     destroyed() {
         this.demoStopPulsate();
-    }
+    },
 };
 </script>

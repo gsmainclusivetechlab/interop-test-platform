@@ -9,14 +9,14 @@ const config = {
     startOnLoad: false,
     fontFamily: 'gotham',
     flowchart: {
-        curve: 'cardinal'
+        curve: 'cardinal',
     },
     sequence: {
         diagramMarginX: 30,
         width: 185,
-        height: 60
+        height: 60,
     },
-    theme: null
+    theme: null,
 };
 
 export default {
@@ -28,9 +28,9 @@ export default {
                     defer: true,
                     callback: () => {
                         this.initDiagram();
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         };
     },
     mounted() {
@@ -44,7 +44,7 @@ export default {
 
             mermaid.initialize(config);
             mermaid.init({}, graphEl);
-        }
-    }
+        },
+    },
 };
 </script>

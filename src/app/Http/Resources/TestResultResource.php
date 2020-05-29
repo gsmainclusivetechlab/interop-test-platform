@@ -21,7 +21,9 @@ class TestResultResource extends JsonResource
             'duration' => $this->duration,
             'testRun' => new TestResultResource($this->whenLoaded('testRun')),
             'testStep' => new TestStepResource($this->whenLoaded('testStep')),
-            'testExecutions' => TestExecutionResource::collection($this->whenLoaded('testExecutions')),
+            'testExecutions' => TestExecutionResource::collection(
+                $this->whenLoaded('testExecutions')
+            ),
         ];
     }
 }

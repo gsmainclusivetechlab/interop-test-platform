@@ -18,9 +18,14 @@
                                     <b-form-file
                                         v-model="form.file"
                                         placeholder="Choose file..."
-                                        v-bind:class="{ 'is-invalid': $page.errors.file }"
+                                        v-bind:class="{
+                                            'is-invalid': $page.errors.file,
+                                        }"
                                     />
-                                    <span v-if="$page.errors.file" class="invalid-feedback">
+                                    <span
+                                        v-if="$page.errors.file"
+                                        class="invalid-feedback"
+                                    >
                                         <strong>
                                             {{ $page.errors.file }}
                                         </strong>
@@ -36,7 +41,10 @@
                                 Cancel
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
-                                <span v-if="sending" class="spinner-border spinner-border-sm mr-2"></span>
+                                <span
+                                    v-if="sending"
+                                    class="spinner-border spinner-border-sm mr-2"
+                                ></span>
                                 Import
                             </button>
                         </div>
@@ -48,32 +56,32 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        metaInfo: {
-            title: 'Import test case'
+export default {
+    metaInfo: {
+        title: 'Import test case',
+    },
+    components: {
+        Layout,
+    },
+    data() {
+        return {
+            sending: false,
+            form: {
+                file: null,
+            },
+        };
+    },
+    methods: {
+        submit() {
+            this.sending = true;
+            let data = new FormData();
+            data.append('file', this.form.file);
+            this.$inertia
+                .post(route('admin.test-cases.import.confirm'), data)
+                .then(() => (this.sending = false));
         },
-        components: {
-            Layout,
-        },
-        data() {
-            return {
-                sending: false,
-                form: {
-                    file: null,
-                }
-            };
-        },
-        methods: {
-            submit() {
-                this.sending = true;
-                let data = new FormData();
-                data.append('file', this.form.file);
-                this.$inertia
-                    .post(route('admin.test-cases.import.confirm'), data)
-                    .then(() => (this.sending = false));
-            }
-        }
-    };
+    },
+};
 </script>

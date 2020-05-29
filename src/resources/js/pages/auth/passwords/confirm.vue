@@ -9,7 +9,10 @@
                 <div class="mb-3">
                     <label class="form-label">
                         Password
-                        <inertia-link :href="route('password.request')" class="float-right small">
+                        <inertia-link
+                            :href="route('password.request')"
+                            class="float-right small"
+                        >
                             I forgot password
                         </inertia-link>
                     </label>
@@ -43,17 +46,17 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Confirm password'
+        title: 'Confirm password',
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
             sending: false,
             form: {
                 password: null,
-            }
+            },
         };
     },
     methods: {
@@ -62,7 +65,7 @@ export default {
             this.$inertia
                 .post(route('password.confirm'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

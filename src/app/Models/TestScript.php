@@ -23,12 +23,7 @@ class TestScript extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'type',
-        'rules',
-        'messages',
-    ];
+    protected $fillable = ['name', 'type', 'rules', 'messages'];
 
     /**
      * @var array

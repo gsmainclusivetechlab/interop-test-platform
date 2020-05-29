@@ -18,7 +18,7 @@
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name
+                                        'is-invalid': $page.errors.name,
                                     }"
                                 />
                                 <span
@@ -40,7 +40,7 @@
                                     rows="5"
                                     v-model="form.description"
                                     :class="{
-                                        'is-invalid': $page.errors.description
+                                        'is-invalid': $page.errors.description,
                                     }"
                                 ></textarea>
                                 <span
@@ -91,7 +91,14 @@
                                     >
                                         <ul
                                             class="list-group"
-                                            v-if="collect(useCase.testCases).where('behavior', 'positive').count()"
+                                            v-if="
+                                                collect(useCase.testCases)
+                                                    .where(
+                                                        'behavior',
+                                                        'positive'
+                                                    )
+                                                    .count()
+                                            "
                                         >
                                             <li
                                                 class="list-group-item border-0 py-0"
@@ -119,15 +126,20 @@
                                                 </div>
 
                                                 <b-collapse
-                                                    :id="
-                                                        `positive-test-cases-${useCase.id}`
-                                                    "
+                                                    :id="`positive-test-cases-${useCase.id}`"
                                                     visible
                                                 >
                                                     <ul class="list-group">
                                                         <li
                                                             class="list-group-item"
-                                                            v-for="testCase in collect(useCase.testCases).where('behavior', 'positive').all()"
+                                                            v-for="testCase in collect(
+                                                                useCase.testCases
+                                                            )
+                                                                .where(
+                                                                    'behavior',
+                                                                    'positive'
+                                                                )
+                                                                .all()"
                                                         >
                                                             <label
                                                                 class="form-check mb-0"
@@ -158,7 +170,14 @@
 
                                         <ul
                                             class="list-group"
-                                            v-if="collect(useCase.testCases).where('behavior', 'negative').count()"
+                                            v-if="
+                                                collect(useCase.testCases)
+                                                    .where(
+                                                        'behavior',
+                                                        'negative'
+                                                    )
+                                                    .count()
+                                            "
                                         >
                                             <li
                                                 class="list-group-item border-0 py-0"
@@ -186,15 +205,20 @@
                                                 </div>
 
                                                 <b-collapse
-                                                    :id="
-                                                        `negative-test-cases-${useCase.id}`
-                                                    "
+                                                    :id="`negative-test-cases-${useCase.id}`"
                                                     visible
                                                 >
                                                     <ul class="list-group">
                                                         <li
                                                             class="list-group-item"
-                                                            v-for="testCase in collect(useCase.testCases).where('behavior', 'negative').all()"
+                                                            v-for="testCase in collect(
+                                                                useCase.testCases
+                                                            )
+                                                                .where(
+                                                                    'behavior',
+                                                                    'negative'
+                                                                )
+                                                                .all()"
                                                         >
                                                             <label
                                                                 class="form-check mb-0"
@@ -259,30 +283,34 @@ import Layout from '@/layouts/sessions/register';
 
 export default {
     components: {
-        Layout
+        Layout,
     },
     props: {
         session: {
             type: Object,
-            required: true
+            required: true,
         },
         components: {
             type: Object,
-            required: true
+            required: true,
         },
         useCases: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             sending: false,
             form: {
                 name: this.session.info ? this.session.info.name : null,
-                description: this.session.info ? this.session.info.description : null,
-                test_cases: this.session.info ? this.session.info.test_cases : [],
-            }
+                description: this.session.info
+                    ? this.session.info.description
+                    : null,
+                test_cases: this.session.info
+                    ? this.session.info.test_cases
+                    : [],
+            },
         };
     },
     methods: {
@@ -293,10 +321,10 @@ export default {
                 closestParentList.querySelectorAll('input[type="checkbox"]')
             );
             const isChecked = checkboxes.every(
-                checkbox => checkbox.checked === true
+                (checkbox) => checkbox.checked === true
             );
 
-            checkboxes.forEach(checkbox => {
+            checkboxes.forEach((checkbox) => {
                 checkbox.checked = !isChecked;
                 checkbox.dispatchEvent(new Event('change'));
             });
@@ -306,7 +334,7 @@ export default {
             this.$inertia
                 .post(route('sessions.register.info.store'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

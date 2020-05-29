@@ -19,7 +19,7 @@ class ProfileSettingsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
-                ->visit(new ProfileSettingsPage)
+                ->visit(new ProfileSettingsPage())
                 ->click('@changePasswordLink')
                 ->waitForLocation('/settings/password')
                 ->assertSee('Change password');
@@ -36,7 +36,7 @@ class ProfileSettingsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
-                ->visit(new ProfileSettingsPage)
+                ->visit(new ProfileSettingsPage())
                 ->assertInputValue('@firstName', $user->first_name)
                 ->assertInputValue('@lastName', $user->last_name)
                 ->assertInputValue('@company', $user->company);
@@ -53,7 +53,7 @@ class ProfileSettingsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $browser
                 ->loginAs($user)
-                ->visit(new ProfileSettingsPage)
+                ->visit(new ProfileSettingsPage())
                 ->type('@firstName', 'newFirstName')
                 ->type('@lastName', 'newLastName')
                 ->type('@company', 'newCompany')

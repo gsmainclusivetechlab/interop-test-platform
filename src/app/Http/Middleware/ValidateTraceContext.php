@@ -35,10 +35,15 @@ class ValidateTraceContext
         }
 
         try {
-            $tracestate = new TracestateHeader($request->headers->get(TracestateHeader::NAME));
-            $traceparent = new TraceparentHeader($request->headers->get(TraceparentHeader::NAME));
+            $tracestate = new TracestateHeader(
+                $request->headers->get(TracestateHeader::NAME)
+            );
+            $traceparent = new TraceparentHeader(
+                $request->headers->get(TraceparentHeader::NAME)
+            );
 
-            return !$tracestate->hasVendors() || $tracestate->hasVendorWithSpanId($traceparent->getParentId());
+            return !$tracestate->hasVendors() ||
+                $tracestate->hasVendorWithSpanId($traceparent->getParentId());
         } catch (InvalidArgumentException $e) {
             abort(403, $e->getMessage());
         }

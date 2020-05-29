@@ -17,7 +17,9 @@ class ApiSpecResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'can' => [
-                'delete' => auth()->user()->can('delete', $this->resource),
+                'delete' => auth()
+                    ->user()
+                    ->can('delete', $this->resource),
             ],
         ];
     }

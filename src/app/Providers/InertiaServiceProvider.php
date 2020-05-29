@@ -48,39 +48,60 @@ class InertiaServiceProvider extends ServiceProvider
             'auth' => function () {
                 return [
                     'guest' => auth()->guest(),
-                    'user' => !auth()->guest() ? [
-                        'name' => auth()->user()->name,
-                        'first_name' => auth()->user()->first_name,
-                        'last_name' => auth()->user()->last_name,
-                        'company' => auth()->user()->company,
-                        'can' => [
-                            'users' => [
-                                'viewAny' => auth()->user()->can('viewAny', User::class),
+                    'user' => !auth()->guest()
+                        ? [
+                            'name' => auth()->user()->name,
+                            'first_name' => auth()->user()->first_name,
+                            'last_name' => auth()->user()->last_name,
+                            'company' => auth()->user()->company,
+                            'can' => [
+                                'users' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', User::class),
+                                ],
+                                'sessions' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', Session::class),
+                                ],
+                                'api_specs' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', ApiSpec::class),
+                                    'create' => auth()
+                                        ->user()
+                                        ->can('create', ApiSpec::class),
+                                ],
+                                'use_cases' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', UseCase::class),
+                                    'create' => auth()
+                                        ->user()
+                                        ->can('create', UseCase::class),
+                                ],
+                                'test_cases' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', TestCase::class),
+                                    'create' => auth()
+                                        ->user()
+                                        ->can('create', TestCase::class),
+                                ],
                             ],
-                            'sessions' => [
-                                'viewAny' => auth()->user()->can('viewAny', Session::class),
-                            ],
-                            'api_specs' => [
-                                'viewAny' => auth()->user()->can('viewAny', ApiSpec::class),
-                                'create' => auth()->user()->can('create', ApiSpec::class),
-                            ],
-                            'use_cases' => [
-                                'viewAny' => auth()->user()->can('viewAny', UseCase::class),
-                                'create' => auth()->user()->can('create', UseCase::class),
-                            ],
-                            'test_cases' => [
-                                'viewAny' => auth()->user()->can('viewAny', TestCase::class),
-                                'create' => auth()->user()->can('create', TestCase::class),
-                            ],
-                        ],
-                    ] : [],
+                        ]
+                        : [],
                 ];
             },
             'errors' => function () {
-                return collect(session('errors', new ViewErrorBag())->getBag('default')->getMessages())
-                    ->mapWithKeys(function ($value, $key) {
-                        return [$key => implode(' ', $value)];
-                    });
+                return collect(
+                    session('errors', new ViewErrorBag())
+                        ->getBag('default')
+                        ->getMessages()
+                )->mapWithKeys(function ($value, $key) {
+                    return [$key => implode(' ', $value)];
+                });
             },
             'messages' => function () {
                 return collect()

@@ -53,18 +53,27 @@ class ExecuteTestRunJob implements ShouldQueue
     public function handle()
     {
         $testStep = $this->testCase->testSteps()->firstOrFail();
-        $testRun = $this->session->testRuns()->create(['test_case_id' => $testStep->test_case_id]);
-        $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
+        $testRun = $this->session
+            ->testRuns()
+            ->create(['test_case_id' => $testStep->test_case_id]);
+        $testResult = $testRun
+            ->testResults()
+            ->create(['test_step_id' => $testStep->id]);
 
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $testStep->request->toPsrRequest()
+        $request = $testStep->request
+            ->toPsrRequest()
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent)
-            ->withUri(UriResolver::resolve(
-                new Uri($this->session->getBaseUriOfComponent($testStep->target)),
-                new Uri($testStep->request->path())
-            ));
+            ->withUri(
+                UriResolver::resolve(
+                    new Uri(
+                        $this->session->getBaseUriOfComponent($testStep->target)
+                    ),
+                    new Uri($testStep->request->path())
+                )
+            );
 
         (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

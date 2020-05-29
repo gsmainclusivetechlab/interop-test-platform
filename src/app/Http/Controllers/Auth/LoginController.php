@@ -44,7 +44,11 @@ class LoginController extends Controller
     {
         if ($this->isCredentialsValid($request)) {
             throw ValidationException::withMessages([
-                $this->username() => [__('Your account is blocked. Please contact us for more details.')],
+                $this->username() => [
+                    __(
+                        'Your account is blocked. Please contact us for more details.'
+                    ),
+                ],
             ]);
         } else {
             throw ValidationException::withMessages([

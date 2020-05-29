@@ -18,7 +18,10 @@ class TestScriptTest extends TestCase
         $testScript = factory(TestScript::class)->make();
         $this->assertValidationPasses($testScript->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', Rule::in([TestScript::TYPE_RESPONSE, TestScript::TYPE_REQUEST])],
+            'type' => [
+                'required',
+                Rule::in([TestScript::TYPE_RESPONSE, TestScript::TYPE_REQUEST]),
+            ],
             'rules' => ['required'],
         ]);
         $this->assertTrue($testScript->save());

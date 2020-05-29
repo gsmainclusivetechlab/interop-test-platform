@@ -24,7 +24,9 @@
                 </div>
 
                 <div class="col-md-3 d-flex justify-content-end">
-                    <label class="d-flex align-items-center align-self-center flex-shrink-0 toggle cursor-pointer mb-0 mr-2">
+                    <label
+                        class="d-flex align-items-center align-self-center flex-shrink-0 toggle cursor-pointer mb-0 mr-2"
+                    >
                         <input
                             class="sr-only toggle-input"
                             type="checkbox"
@@ -33,7 +35,7 @@
                         />
                         <span
                             class="toggle-switch d-flex justify-content-between align-items-center rounded-pill"
-                            :class="{ enabled : $page.app.dark_mode }"
+                            :class="{ enabled: $page.app.dark_mode }"
                         >
                             <span class="toggle-switch-icon">
                                 <icon name="sun" />
@@ -112,16 +114,20 @@
                             class="user-settings-dropdown"
                         >
                             <template v-slot:button-content>
-                            <span class="avatar flex-shrink-0">
-                                <icon name="user" />
-                            </span>
+                                <span class="avatar flex-shrink-0">
+                                    <icon name="user" />
+                                </span>
                                 <span
                                     class="ml-2 d-none d-lg-inline-block text-truncate"
                                 >
-                                <span class="text-default">
-                                    {{ string($page.auth.user.name).truncate(30) }}
+                                    <span class="text-default">
+                                        {{
+                                            string(
+                                                $page.auth.user.name
+                                            ).truncate(30)
+                                        }}
+                                    </span>
                                 </span>
-                            </span>
                             </template>
                             <li>
                                 <inertia-link
@@ -155,51 +161,58 @@
                             class="nav-item"
                             v-bind:class="{ active: route().current('home') }"
                         >
-                            <inertia-link :href="route('home')" class="nav-link">
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
+                            <inertia-link
+                                :href="route('home')"
+                                class="nav-link"
                             >
-                                <icon name="activity" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="activity" />
+                                </span>
                                 <span class="nav-link-title">
-                                Dashboard
-                            </span>
+                                    Dashboard
+                                </span>
                             </inertia-link>
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{ active: route().current('sessions.*') }"
+                            v-bind:class="{
+                                active: route().current('sessions.*'),
+                            }"
                         >
                             <inertia-link
                                 :href="route('sessions.index')"
                                 class="nav-link"
                             >
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
-                            >
-                                <icon name="box" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="box" />
+                                </span>
                                 <span class="nav-link-title">
-                                Sessions
-                            </span>
+                                    Sessions
+                                </span>
                             </inertia-link>
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{ active: route().current('tutorials') }"
+                            v-bind:class="{
+                                active: route().current('tutorials'),
+                            }"
                         >
                             <inertia-link
                                 :href="route('tutorials')"
                                 class="nav-link"
                             >
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
-                            >
-                                <icon name="help" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="help" />
+                                </span>
                                 <span class="nav-link-title">
-                                Tutorials
-                            </span>
+                                    Tutorials
+                                </span>
                             </inertia-link>
                         </li>
                         <li class="nav-item">
@@ -208,14 +221,14 @@
                                 class="nav-link"
                                 target="_blank"
                             >
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
-                            >
-                                <icon name="link" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="link" />
+                                </span>
                                 <span class="nav-link-title">
-                                The Lab
-                            </span>
+                                    The Lab
+                                </span>
                             </a>
                         </li>
                     </b-navbar-nav>
@@ -237,16 +250,26 @@
         </main>
         <footer class="footer m-0">
             <div class="container-fluid">
-                <div class="row text-center align-items-center flex-row-reverse">
+                <div
+                    class="row text-center align-items-center flex-row-reverse"
+                >
                     <div class="col-lg-auto ml-lg-auto">
                         <ul class="list-inline list-inline-dots mb-0">
                             <li class="list-inline-item">
-                                <a href="https://www.gsma.com/aboutus/legal" class="link-secondary" target="_blank">
+                                <a
+                                    href="https://www.gsma.com/aboutus/legal"
+                                    class="link-secondary"
+                                    target="_blank"
+                                >
                                     Legal
                                 </a>
                             </li>
                             <li class="list-inline-item">
-                                <a href="https://www.gsma.com/aboutus/legal/cookie-policy" class="link-secondary" target="_blank">
+                                <a
+                                    href="https://www.gsma.com/aboutus/legal/cookie-policy"
+                                    class="link-secondary"
+                                    target="_blank"
+                                >
                                     Cookies
                                 </a>
                             </li>
@@ -254,8 +277,13 @@
                     </div>
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         {{ `Copyright © ${new Date().getFullYear()}` }}
-                        <a href="https://www.gsma.com/" class="link-secondary" target="_blank">GSMA</a>.
-                        All rights reserved.
+                        <a
+                            href="https://www.gsma.com/"
+                            class="link-secondary"
+                            target="_blank"
+                        >
+                            GSMA </a
+                        >. All rights reserved.
                     </div>
                 </div>
             </div>
@@ -264,11 +292,11 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/app';
+import Layout from '@/layouts/app';
 
-    export default {
-        components: {
-            Layout,
-        }
-    };
+export default {
+    components: {
+        Layout,
+    },
+};
 </script>

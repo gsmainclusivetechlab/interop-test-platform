@@ -20,7 +20,14 @@ class UserTest extends TestCase
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'company' => ['string', 'max:255'],
-            'role' => ['required', Rule::in([User::ROLE_USER, User::ROLE_ADMIN, User::ROLE_SUPERADMIN])],
+            'role' => [
+                'required',
+                Rule::in([
+                    User::ROLE_USER,
+                    User::ROLE_ADMIN,
+                    User::ROLE_SUPERADMIN,
+                ]),
+            ],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
         ]);
         $this->assertTrue($user->save());
@@ -61,7 +68,9 @@ class UserTest extends TestCase
     {
         $userNormal = factory(User::class)->create(['role' => User::ROLE_USER]);
         $userAdmin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
-        $userSuperAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $userSuperAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $this->assertFalse($userNormal->canAdmin());
         $this->assertTrue($userAdmin->canAdmin());
         $this->assertTrue($userSuperAdmin->canAdmin());
@@ -76,7 +85,9 @@ class UserTest extends TestCase
     {
         $userNormal = factory(User::class)->create(['role' => User::ROLE_USER]);
         $userAdmin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
-        $userSuperAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $userSuperAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $this->assertFalse($userNormal->canSuperadmin());
         $this->assertFalse($userAdmin->canSuperadmin());
         $this->assertTrue($userSuperAdmin->canSuperadmin());

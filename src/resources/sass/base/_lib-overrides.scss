@@ -35,43 +35,43 @@ a {
 }
 
 .custom-file-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: $form-file-height;
+  padding: $form-file-padding-y $form-file-padding-x;
+  font-family: $form-file-font-family;
+  font-weight: $form-file-font-weight;
+  line-height: $form-file-line-height;
+  color: $form-file-color;
+  background-color: $form-file-bg;
+  border: $border-width solid $form-file-border-color;
+
+  @include border-radius($form-file-border-radius);
+  @include box-shadow($form-file-box-shadow);
+
+  &::after {
     position: absolute;
-    top: 0;
+    top: -1px;
     right: 0;
-    left: 0;
-    z-index: 1;
+    bottom: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
     height: $form-file-height;
     padding: $form-file-padding-y $form-file-padding-x;
-    font-family: $form-file-font-family;
-    font-weight: $form-file-font-weight;
-    line-height: $form-file-line-height;
-    color: $form-file-color;
-    background-color: $form-file-bg;
-    border: $border-width solid $form-file-border-color;
+    color: $form-file-button-color;
+    content: 'Browse';
 
-    @include border-radius($form-file-border-radius);
-    @include box-shadow($form-file-box-shadow);
+    @include gradient-bg($form-file-button-bg);
 
-    &::after {
-      position: absolute;
-      top: -1px;
-      right: 0;
-      bottom: 0;
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      height: $form-file-height;
-      padding: $form-file-padding-y $form-file-padding-x;
-      color: $form-file-button-color;
-      content: 'Browse';
+    border-left: inherit;
 
-      @include gradient-bg($form-file-button-bg);
-
-      border-left: inherit;
-
-      @include border-right-radius(inherit);
-    }
+    @include border-right-radius(inherit);
   }
+}
 
 .custom-file-input {
   position: relative;

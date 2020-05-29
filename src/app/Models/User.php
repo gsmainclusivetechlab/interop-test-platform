@@ -42,10 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @var array
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * @var array
@@ -92,7 +89,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function canAdmin()
     {
-        return in_array($this->role, [static::ROLE_ADMIN, static::ROLE_SUPERADMIN]);
+        return in_array($this->role, [
+            static::ROLE_ADMIN,
+            static::ROLE_SUPERADMIN,
+        ]);
     }
 
     /**
