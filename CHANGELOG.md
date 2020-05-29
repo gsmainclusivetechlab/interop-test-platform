@@ -1,6 +1,7 @@
-## v1.0 Release
+## v1.0
 - Task: Create Participant flow [@jc_agalaguz,@jc_ohladkov,@jc_skushnir,@jc_vmartynov]
 - Task: UI/UX add breadcrumbs and left menu navigation [@jc_akokorev,@jc_ohladkov]
+- Task: Session -> Test case page: Move TC Overview to the sidebar instead of TC list [@jc_akokorev,@jc_ohladkov]
 - Task: Find a way to manage negative scenarios via Test Cases [@jc_ohladkov,@jc_skushnir]
 - Task: Overriding should not be performed for messages sent from SUTs [@jc_akokorev]
 - Task: Implement P2P routes for MMO1 [@jc_skushnir]
@@ -8,9 +9,11 @@
 - Task: SUTs: Single URL per Session [@jc_akokorev]
 - Task: Add duration per step [@jc_akokorev]
 - Task: MMO1 or 2 as SUT -> Button that initiates Test Execution [@jc_akokorev]
+- Task: Test Case: Remove the "RUN" button once the test case has the first message initiated by a SUT [@jc_akokorev]
 - Task: Update Eloquent model unit tests after Matching implementation [@jc_akokorev,@jc_skushnir]
 - Task: Create Accounts Authorisation flow [@jc_ohladkov,@jc_skushnir]
 - Task: Automated-tests: Sessions and Admin are actions, browser [@jc_ohladkov]
+- Task: Color theme switcher [@jc_ohladkov]
 - Bug: P2P flow - PUT /transfers/{ID} is not running [@jc_ohladkov]
 - Bug: Test Case validation not being exectued [@jc_agalaguz]
 - Bug: Add white border in GSMA Logo for dark theme [@jc_ohladkov]
