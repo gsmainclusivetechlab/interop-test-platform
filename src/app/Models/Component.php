@@ -38,6 +38,22 @@ class Component extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sourceTestSteps()
+    {
+        return $this->hasMany(TestStep::class, 'source_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function targetTestSteps()
+    {
+        return $this->hasMany(TestStep::class, 'target_id', 'id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function connections()
