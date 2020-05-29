@@ -88,12 +88,18 @@ class TestRunController extends Controller
             'components' => ComponentResource::collection(
                 Component::with([
                     'connections' => function ($query) use ($testCase) {
-                        $query->whereHas('targetTestSteps', function ($query) use ($testCase) {
+                        $query->whereHas('sourceTestSteps', function ($query) use ($testCase) {
                             $query->where('test_case_id', $testCase->id);
-                        });
+                        })
+                            ->orWhereHas('targetTestSteps', function ($query) use ($testCase) {
+                                $query->where('test_case_id', $testCase->id);
+                            });
                     }
                 ])
                     ->whereHas('sourceTestSteps', function ($query) use ($testCase) {
+                        $query->where('test_case_id', $testCase->id);
+                    })
+                    ->orWhereHas('targetTestSteps', function ($query) use ($testCase) {
                         $query->where('test_case_id', $testCase->id);
                     })
                     ->get()
