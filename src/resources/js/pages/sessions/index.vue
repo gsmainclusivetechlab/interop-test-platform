@@ -62,22 +62,40 @@
                             <tr v-for="session in sessions.data">
                                 <td class="text-break">
                                     <inertia-link
-                                        :href="route('sessions.show', session.id)"
+                                        :href="
+                                            route('sessions.show', session.id)
+                                        "
                                     >
                                         {{ session.name }}
                                     </inertia-link>
                                 </td>
                                 <td>
-                                    {{ session.testCases ? collect(session.testCases).unique('use_case_id').count() : 0 }}
+                                    {{
+                                        session.testCases
+                                            ? collect(session.testCases)
+                                                  .unique('use_case_id')
+                                                  .count()
+                                            : 0
+                                    }}
                                 </td>
                                 <td>
-                                    {{ session.testCases ? session.testCases.length : 0  }}
+                                    {{
+                                        session.testCases
+                                            ? session.testCases.length
+                                            : 0
+                                    }}
                                 </td>
                                 <td>
-                                    <session-progress :testCases="session.testCases" />
+                                    <session-progress
+                                        :testCases="session.testCases"
+                                    />
                                 </td>
                                 <td>
-                                    {{ session.lastTestRun ? session.lastTestRun.created_at : '' }}
+                                    {{
+                                        session.lastTestRun
+                                            ? session.lastTestRun.created_at
+                                            : ''
+                                    }}
                                 </td>
                                 <td class="text-center text-break">
                                     <b-dropdown
@@ -102,9 +120,7 @@
                                                 "
                                                 method="delete"
                                                 :confirm-title="'Confirm delete'"
-                                                :confirm-text="
-                                                    `Are you sure you want to delete ${session.name}?`
-                                                "
+                                                :confirm-text="`Are you sure you want to delete ${session.name}?`"
                                             >
                                                 Delete
                                             </confirm-link>
@@ -131,35 +147,35 @@ import SessionProgress from '@/components/sessions/progress';
 
 export default {
     metaInfo: {
-        title: 'Sessions'
+        title: 'Sessions',
     },
     components: {
         Layout,
-        SessionProgress
+        SessionProgress,
     },
     props: {
         sessions: {
             type: Object,
-            required: true
+            required: true,
         },
         filter: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             form: {
-                q: this.filter.q
-            }
+                q: this.filter.q,
+            },
         };
     },
     methods: {
         search() {
             this.$inertia.replace(route('sessions.index'), {
-                data: this.form
+                data: this.form,
             });
-        }
-    }
+        },
+    },
 };
 </script>

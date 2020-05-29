@@ -21,11 +21,7 @@ class Session extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'uuid',
-        'name',
-        'description',
-    ];
+    protected $fillable = ['uuid', 'name', 'description'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -40,8 +36,12 @@ class Session extends Model
      */
     public function components()
     {
-        return $this->belongsToMany(Component::class, 'session_components', 'session_id', 'component_id')
-            ->withPivot(['base_url']);
+        return $this->belongsToMany(
+            Component::class,
+            'session_components',
+            'session_id',
+            'component_id'
+        )->withPivot(['base_url']);
     }
 
     /**
@@ -57,7 +57,9 @@ class Session extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'session_id')->completed()->latest();
+        return $this->hasOne(TestRun::class, 'session_id')
+            ->completed()
+            ->latest();
     }
 
     /**
@@ -65,7 +67,12 @@ class Session extends Model
      */
     public function testCases()
     {
-        return $this->belongsToMany(TestCase::class, 'session_test_cases', 'session_id', 'test_case_id');
+        return $this->belongsToMany(
+            TestCase::class,
+            'session_test_cases',
+            'session_id',
+            'test_case_id'
+        );
     }
 
     /**
@@ -73,7 +80,14 @@ class Session extends Model
      */
     public function testSteps()
     {
-        return $this->belongsToMany(TestStep::class, 'session_test_cases', 'session_id', 'test_case_id', 'id', 'test_case_id');
+        return $this->belongsToMany(
+            TestStep::class,
+            'session_test_cases',
+            'session_id',
+            'test_case_id',
+            'id',
+            'test_case_id'
+        );
     }
 
     /**
@@ -82,7 +96,9 @@ class Session extends Model
      */
     public function hasComponent(Component $component)
     {
-        return $this->components()->whereKey($component->getKey())->exists();
+        return $this->components()
+            ->whereKey($component->getKey())
+            ->exists();
     }
 
     /**
@@ -91,6 +107,12 @@ class Session extends Model
      */
     public function getBaseUriOfComponent(Component $component)
     {
-        return Arr::get($this->components()->whereKey($component->getKey())->first(), 'pivot.base_url', $component->base_url);
+        return Arr::get(
+            $this->components()
+                ->whereKey($component->getKey())
+                ->first(),
+            'pivot.base_url',
+            $component->base_url
+        );
     }
 }

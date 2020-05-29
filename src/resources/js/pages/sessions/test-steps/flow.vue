@@ -1,5 +1,10 @@
 <template>
-    <layout :session="session" :testCase="testCase" :useCases="useCases" :testStepFirstSource="testStepFirstSource">
+    <layout
+        :session="session"
+        :testCase="testCase"
+        :useCases="useCases"
+        :testStepFirstSource="testStepFirstSource"
+    >
         <div class="card mb-0">
             <div class="card-header justify-content-between">
                 <h2 class="card-title">
@@ -34,28 +39,28 @@ import { Base64 } from 'js-base64';
 export default {
     components: {
         Layout,
-        Diagram
+        Diagram,
     },
     props: {
         session: {
             type: Object,
-            required: true
+            required: true,
         },
         testCase: {
             type: Object,
-            required: true
+            required: true,
         },
         useCases: {
             type: Object,
-            required: true
+            required: true,
         },
         testSteps: {
             type: Object,
-            required: true
+            required: true,
         },
         testStepFirstSource: {
             type: Object,
-            required: true
+            required: true,
         },
     },
     data() {
@@ -66,13 +71,13 @@ export default {
                     sequence: {
                         diagramMarginX: 30,
                         width: 185,
-                        height: 60
+                        height: 60,
                     },
-                    theme: null
-                }
+                    theme: null,
+                },
             },
             editorUrl:
-                'https://mermaid-js.github.io/mermaid-live-editor/#/edit/'
+                'https://mermaid-js.github.io/mermaid-live-editor/#/edit/',
         };
     },
     mounted() {
@@ -94,7 +99,7 @@ ${testStep.target.name} -->> ${testStep.source.name}: HTTP ${testStep.response.s
 `;
                 return template;
             }, 'sequenceDiagram;');
-        }
-    }
+        },
+    },
 };
 </script>

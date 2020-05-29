@@ -69,7 +69,12 @@ class TestCase extends Model
      */
     public function sessions()
     {
-        return $this->belongsToMany(Session::class, 'session_test_cases', 'test_case_id', 'session_id');
+        return $this->belongsToMany(
+            Session::class,
+            'session_test_cases',
+            'test_case_id',
+            'session_id'
+        );
     }
 
     /**
@@ -77,7 +82,12 @@ class TestCase extends Model
      */
     public function components()
     {
-        return $this->belongsToMany(Component::class, 'test_case_components', 'test_case_id', 'component_id');
+        return $this->belongsToMany(
+            Component::class,
+            'test_case_components',
+            'test_case_id',
+            'component_id'
+        );
     }
 
     /**
@@ -93,6 +103,8 @@ class TestCase extends Model
      */
     public function lastTestRun()
     {
-        return $this->hasOne(TestRun::class, 'test_case_id')->completed()->latest();
+        return $this->hasOne(TestRun::class, 'test_case_id')
+            ->completed()
+            ->latest();
     }
 }

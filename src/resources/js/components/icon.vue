@@ -20,17 +20,17 @@ export default {
     props: {
         name: {
             type: String,
-            required: true
+            required: true,
         },
         url: {
             type: String,
-            default: '/assets/images/icons.svg#tabler-'
-        }
+            default: '/assets/images/icons.svg#tabler-',
+        },
     },
     computed: {
         href() {
             return `${this.$props.url}${this.$props.name}`;
-        }
-    }
+        },
+    },
 };
 </script>

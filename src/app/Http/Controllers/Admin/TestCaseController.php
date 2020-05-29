@@ -32,8 +32,8 @@ class TestCaseController extends Controller
         return Inertia::render('admin/test-cases/index', [
             'testCases' => TestCaseResource::collection(
                 TestCase::when(request('q'), function (Builder $query, $q) {
-                        $query->where('test_cases.name', 'like', "%{$q}%");
-                    })
+                    $query->where('test_cases.name', 'like', "%{$q}%");
+                })
                     ->with(['useCase', 'testSteps'])
                     ->latest()
                     ->paginate()
@@ -73,10 +73,16 @@ class TestCaseController extends Controller
     public function import()
     {
         $this->authorize('create', TestCase::class);
-        request()->validate(['file' => ['required', 'mimetypes:text/yaml,text/plain']]);
+        request()->validate([
+            'file' => ['required', 'mimetypes:text/yaml,text/plain'],
+        ]);
 
         try {
-            $rows = Yaml::parse(request()->file('file')->get());
+            $rows = Yaml::parse(
+                request()
+                    ->file('file')
+                    ->get()
+            );
             (new TestCaseImport())->import($rows);
             return redirect()
                 ->route('admin.test-cases.index')

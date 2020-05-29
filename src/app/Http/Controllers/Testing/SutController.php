@@ -24,7 +24,10 @@ class SutController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([SetJsonHeaders::class, SetContentLengthHeaders::class]);
+        $this->middleware([
+            SetJsonHeaders::class,
+            SetContentLengthHeaders::class,
+        ]);
     }
 
     /**
@@ -41,14 +44,16 @@ class SutController extends Controller
         Component $connection,
         string $path,
         ServerRequestInterface $request
-    )
-    {
-        $testStep = $session->testSteps()
+    ) {
+        $testStep = $session
+            ->testSteps()
             ->where('method', $request->getMethod())
             ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
             ->where(function ($query) use ($request) {
                 $query->whereNull('test_steps.trigger');
-                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [json_encode($request->getParsedBody())]);
+                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [
+                    json_encode($request->getParsedBody()),
+                ]);
             })
             ->whereHas('source', function ($query) use ($component) {
                 $query->whereKey($component->getKey());
@@ -57,38 +62,60 @@ class SutController extends Controller
                 $query->whereKey($connection->getKey());
             })
             ->where(function ($query) {
-                $query->where(function ($query) {
-                    $query->where('position', '=', 1);
-                    $query->whereDoesntHave('testRuns', function ($query) {
-                        $query->incompleted()->whereDoesntHave('testResults', function ($query) {
-                            $query->whereColumn('test_step_id', 'test_steps.id');
+                $query
+                    ->where(function ($query) {
+                        $query->where('position', '=', 1);
+                        $query->whereDoesntHave('testRuns', function ($query) {
+                            $query
+                                ->incompleted()
+                                ->whereDoesntHave('testResults', function (
+                                    $query
+                                ) {
+                                    $query->whereColumn(
+                                        'test_step_id',
+                                        'test_steps.id'
+                                    );
+                                });
+                        });
+                    })
+                    ->orWhere(function ($query) {
+                        $query->where('position', '!=', 1);
+                        $query->whereHas('testRuns', function ($query) {
+                            $query
+                                ->incompleted()
+                                ->whereDoesntHave('testResults', function (
+                                    $query
+                                ) {
+                                    $query->whereColumn(
+                                        'test_step_id',
+                                        'test_steps.id'
+                                    );
+                                });
                         });
                     });
-                })->orWhere(function ($query) {
-                    $query->where('position', '!=', 1);
-                    $query->whereHas('testRuns', function ($query) {
-                        $query->incompleted()->whereDoesntHave('testResults', function ($query) {
-                            $query->whereColumn('test_step_id', 'test_steps.id');
-                        });
-                    });
-                });
             })
             ->firstOrFail();
 
-        $testRun = $session->testRuns()
+        $testRun = $session
+            ->testRuns()
             ->incompleted()
             ->where('test_case_id', $testStep->test_case_id)
             ->firstOrCreate(['test_case_id' => $testStep->test_case_id]);
-        $testResult = $testRun->testResults()->create(['test_step_id' => $testStep->id]);
+        $testResult = $testRun
+            ->testResults()
+            ->create(['test_step_id' => $testStep->id]);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $request = $request->withHeader(TraceparentHeader::NAME, (string) $traceparent)
+        $request = $request
+            ->withHeader(TraceparentHeader::NAME, (string) $traceparent)
             ->withoutHeader(TracestateHeader::NAME)
-            ->withUri(UriResolver::resolve(
-                new Uri($session->getBaseUriOfComponent($connection)),
-                new Uri($path)
-            )->withQuery((string) request()->getQueryString()));
+            ->withUri(
+                UriResolver::resolve(
+                    new Uri($session->getBaseUriOfComponent($connection)),
+                    new Uri($path)
+                )->withQuery((string) request()->getQueryString())
+            );
 
         return (new PendingRequest())
             ->mapRequest(new MapRequestHandler($testResult))

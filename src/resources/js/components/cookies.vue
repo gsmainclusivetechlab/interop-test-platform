@@ -1,5 +1,8 @@
 <template>
-    <div v-if="!accepted" class="col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-2 mr-2 ml-2 ml-sm-auto fixed-bottom">
+    <div
+        v-if="!accepted"
+        class="col-sm-6 col-md-5 col-lg-4 col-xl-3 mb-2 mr-2 ml-2 ml-sm-auto fixed-bottom"
+    >
         <div class="card m-0">
             <div class="card-body">
                 <p>
@@ -27,20 +30,20 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                sending: false,
-                accepted: this.$page.app.cookies_accepted,
-            };
+export default {
+    data() {
+        return {
+            sending: false,
+            accepted: this.$page.app.cookies_accepted,
+        };
+    },
+    methods: {
+        accept() {
+            this.sending = true;
+            axios
+                .post(route('legal.cookies.accept'))
+                .then(() => (this.accepted = true));
         },
-        methods: {
-            accept() {
-                this.sending = true;
-                axios
-                    .post(route('legal.cookies.accept'))
-                    .then(() => this.accepted = true);
-            },
-        },
-    };
+    },
+};
 </script>

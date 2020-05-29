@@ -17,7 +17,7 @@ class PasswordResetTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new PasswordResetPage)
+                ->visit(new PasswordResetPage())
                 ->click('@loginLink')
                 ->waitForLocation('/login')
                 ->assertSee('Login to your account');
@@ -32,11 +32,14 @@ class PasswordResetTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new PasswordResetPage)
+                ->visit(new PasswordResetPage())
                 ->clear('@email')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
-                ->assertSeeIn('@email + .invalid-feedback', 'The email field is required.');
+                ->assertSeeIn(
+                    '@email + .invalid-feedback',
+                    'The email field is required.'
+                );
         });
     }
 
@@ -48,11 +51,14 @@ class PasswordResetTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new PasswordResetPage)
+                ->visit(new PasswordResetPage())
                 ->type('@email', 'invalid-email@dom.com')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField', 10)
-                ->assertSeeIn('@email + .invalid-feedback', 'We can\'t find a user with that e-mail address.');
+                ->assertSeeIn(
+                    '@email + .invalid-feedback',
+                    'We can\'t find a user with that e-mail address.'
+                );
         });
     }
 
@@ -65,7 +71,7 @@ class PasswordResetTest extends DuskTestCase
         $user = factory(User::class)->create();
         $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->visit(new PasswordResetPage)
+                ->visit(new PasswordResetPage())
                 ->type('@email', $user->email)
                 ->press('@submitButton')
                 ->waitForLocation('/login')

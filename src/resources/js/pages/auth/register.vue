@@ -84,7 +84,7 @@
                     <input
                         v-model="form.password_confirmation"
                         :class="{
-                            'is-invalid': $page.errors.password_confirmation
+                            'is-invalid': $page.errors.password_confirmation,
                         }"
                         type="password"
                         class="form-control"
@@ -145,10 +145,10 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Create new account'
+        title: 'Create new account',
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -160,8 +160,8 @@ export default {
                 company: null,
                 password: null,
                 password_confirmation: null,
-                terms: null
-            }
+                terms: null,
+            },
         };
     },
     methods: {
@@ -170,7 +170,7 @@ export default {
             this.$inertia
                 .post(route('register'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

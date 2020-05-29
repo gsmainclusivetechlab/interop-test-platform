@@ -15,20 +15,28 @@ class RoleSuperAdminTest extends DuskTestCase
      */
     public function testChangeUserRoleFunctionalityIsEnabled()
     {
-        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $superAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
         $user = factory(User::class)->create(['role' => User::ROLE_USER]);
-        $this->browse(function (Browser $browser) use ($superAdmin, $admin, $user) {
+        $this->browse(function (Browser $browser) use (
+            $superAdmin,
+            $admin,
+            $user
+        ) {
             $browser
                 ->loginAs($superAdmin)
-                ->visit(new AdminUsersPage)
+                ->visit(new AdminUsersPage())
                 ->with('.card .table tbody tr:nth-child(2)', function ($tr) {
-                    $tr
-                        ->assertButtonEnabled('td:nth-last-child(3) .dropdown-toggle');
+                    $tr->assertButtonEnabled(
+                        'td:nth-last-child(3) .dropdown-toggle'
+                    );
                 })
                 ->with('.card .table tbody tr:nth-child(3)', function ($tr) {
-                    $tr
-                        ->assertButtonEnabled('td:nth-last-child(3) .dropdown-toggle');
+                    $tr->assertButtonEnabled(
+                        'td:nth-last-child(3) .dropdown-toggle'
+                    );
                 });
         });
     }
@@ -39,30 +47,35 @@ class RoleSuperAdminTest extends DuskTestCase
      */
     public function testCanBlockAndUnblockUsersWithRoleAdmin()
     {
-        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $superAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
         $this->browse(function (Browser $browser) use ($superAdmin, $admin) {
             $browser
                 ->loginAs($superAdmin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2) td:last-child', function ($td) {
-                    $td
-                        ->click('.dropdown-toggle')
-                        ->waitFor('.dropdown-menu')
-                        ->with('.dropdown-menu', function ($dropdown) {
-                            $dropdown
-                                ->clickLink('Block');
-                        });
-                })
+                ->visit(new AdminUsersPage())
+                ->with(
+                    '.card .table tbody tr:nth-child(2) td:last-child',
+                    function ($td) {
+                        $td
+                            ->click('.dropdown-toggle')
+                            ->waitFor('.dropdown-menu')
+                            ->with('.dropdown-menu', function ($dropdown) {
+                                $dropdown->clickLink('Block');
+                            });
+                    }
+                )
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('User blocked successfully')
                 ->assertVisible('@notificationBox')
                 ->click('@blockedUsersLink')
                 ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) use ($admin) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use (
+                    $admin
+                ) {
                     $tr
                         ->assertSeeLink($admin->email)
                         ->with('td:last-child', function ($td) {
@@ -70,8 +83,7 @@ class RoleSuperAdminTest extends DuskTestCase
                                 ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Unblock');
+                                    $dropdown->clickLink('Unblock');
                                 });
                         });
                 })
@@ -86,13 +98,17 @@ class RoleSuperAdminTest extends DuskTestCase
      */
     public function testCanDeleteUsersWithRoleAdmin()
     {
-        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $superAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
         $this->browse(function (Browser $browser) use ($superAdmin, $admin) {
             $browser
                 ->loginAs($superAdmin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2)', function ($tr) use ($admin) {
+                ->visit(new AdminUsersPage())
+                ->with('.card .table tbody tr:nth-child(2)', function (
+                    $tr
+                ) use ($admin) {
                     $tr
                         ->assertSeeLink($admin->email)
                         ->with('td:last-child', function ($td) {
@@ -100,14 +116,12 @@ class RoleSuperAdminTest extends DuskTestCase
                                 ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Delete');
+                                    $dropdown->clickLink('Delete');
                                 });
                         });
                 })
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('User deleted successfully')
                 ->assertVisible('@notificationBox');
@@ -120,30 +134,35 @@ class RoleSuperAdminTest extends DuskTestCase
      */
     public function testCanBlockAndUnblockUsersWithRoleUser()
     {
-        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $superAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $user = factory(User::class)->create(['role' => User::ROLE_USER]);
         $this->browse(function (Browser $browser) use ($superAdmin, $user) {
             $browser
                 ->loginAs($superAdmin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2) td:last-child', function ($td) {
-                    $td
-                        ->click('.dropdown-toggle')
-                        ->waitFor('.dropdown-menu')
-                        ->with('.dropdown-menu', function ($dropdown) {
-                            $dropdown
-                                ->clickLink('Block');
-                        });
-                })
+                ->visit(new AdminUsersPage())
+                ->with(
+                    '.card .table tbody tr:nth-child(2) td:last-child',
+                    function ($td) {
+                        $td
+                            ->click('.dropdown-toggle')
+                            ->waitFor('.dropdown-menu')
+                            ->with('.dropdown-menu', function ($dropdown) {
+                                $dropdown->clickLink('Block');
+                            });
+                    }
+                )
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('User blocked successfully')
                 ->assertVisible('@notificationBox')
                 ->click('@blockedUsersLink')
                 ->waitForLocation('/admin/users/trash')
-                ->with('.card .table tbody tr:first-child', function ($tr) use ($user) {
+                ->with('.card .table tbody tr:first-child', function ($tr) use (
+                    $user
+                ) {
                     $tr
                         ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
@@ -151,8 +170,7 @@ class RoleSuperAdminTest extends DuskTestCase
                                 ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Unblock');
+                                    $dropdown->clickLink('Unblock');
                                 });
                         });
                 })
@@ -167,13 +185,17 @@ class RoleSuperAdminTest extends DuskTestCase
      */
     public function testCanDeleteUsersWithRoleUser()
     {
-        $superAdmin = factory(User::class)->create(['role' => User::ROLE_SUPERADMIN]);
+        $superAdmin = factory(User::class)->create([
+            'role' => User::ROLE_SUPERADMIN,
+        ]);
         $user = factory(User::class)->create(['role' => User::ROLE_USER]);
         $this->browse(function (Browser $browser) use ($superAdmin, $user) {
             $browser
                 ->loginAs($superAdmin)
-                ->visit(new AdminUsersPage)
-                ->with('.card .table tbody tr:nth-child(2)', function ($tr) use ($user) {
+                ->visit(new AdminUsersPage())
+                ->with('.card .table tbody tr:nth-child(2)', function (
+                    $tr
+                ) use ($user) {
                     $tr
                         ->assertSeeLink($user->email)
                         ->with('td:last-child', function ($td) {
@@ -181,14 +203,12 @@ class RoleSuperAdminTest extends DuskTestCase
                                 ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
-                                    $dropdown
-                                        ->clickLink('Delete');
+                                    $dropdown->clickLink('Delete');
                                 });
                         });
                 })
                 ->whenAvailable('.modal', function ($modal) {
-                    $modal
-                        ->press('Confirm');
+                    $modal->press('Confirm');
                 })
                 ->waitForText('User deleted successfully')
                 ->assertVisible('@notificationBox');

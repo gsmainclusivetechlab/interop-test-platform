@@ -23,6 +23,5 @@ class TestRunObserver
      */
     public function complete(TestRun $testRun)
     {
-
     }
 }

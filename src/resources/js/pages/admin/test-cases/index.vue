@@ -37,7 +37,9 @@
                 </div>
             </div>
             <div class="table-responsive mb-0">
-                <table class="table table-striped table-vcenter table-hover card-table">
+                <table
+                    class="table table-striped table-vcenter table-hover card-table"
+                >
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
@@ -59,22 +61,33 @@
                                         class="form-check-input"
                                         type="checkbox"
                                         :checked="testCase.public"
-                                        @change.prevent="$inertia.put(route('admin.test-cases.toggle-public', testCase.id))"
-                                    >
+                                        @change.prevent="
+                                            $inertia.put(
+                                                route(
+                                                    'admin.test-cases.toggle-public',
+                                                    testCase.id
+                                                )
+                                            )
+                                        "
+                                    />
                                     <input
                                         v-else
                                         class="form-check-input"
                                         type="checkbox"
                                         disabled
                                         :checked="testCase.public"
-                                    >
+                                    />
                                 </label>
                             </td>
                             <td class="text-break">
                                 {{ testCase.useCase.name }}
                             </td>
                             <td>
-                                {{ testCase.testSteps ? testCase.testSteps.length : 0  }}
+                                {{
+                                    testCase.testSteps
+                                        ? testCase.testSteps.length
+                                        : 0
+                                }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
@@ -99,9 +112,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="
-                                                `Are you sure you want to delete ${testCase.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to delete ${testCase.name}?`"
                                         >
                                             Delete
                                         </confirm-link>
@@ -117,44 +128,48 @@
                     </tbody>
                 </table>
             </div>
-            <pagination :meta="testCases.meta" :links="testCases.links" class="card-footer" />
+            <pagination
+                :meta="testCases.meta"
+                :links="testCases.links"
+                class="card-footer"
+            />
         </div>
     </layout>
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        metaInfo: {
-            title: 'Test Cases'
+export default {
+    metaInfo: {
+        title: 'Test Cases',
+    },
+    components: {
+        Layout,
+    },
+    props: {
+        testCases: {
+            type: Object,
+            required: true,
         },
-        components: {
-            Layout,
+        filter: {
+            type: Object,
+            required: true,
         },
-        props: {
-            testCases: {
-                type: Object,
-                required: true,
+    },
+    data() {
+        return {
+            form: {
+                q: this.filter.q,
             },
-            filter: {
-                type: Object,
-                required: true,
-            },
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(route('admin.test-cases.index'), {
+                data: this.form,
+            });
         },
-        data() {
-            return {
-                form: {
-                    q: this.filter.q,
-                }
-            };
-        },
-        methods: {
-            search() {
-                this.$inertia.replace(route('admin.test-cases.index'), {
-                    data: this.form
-                });
-            }
-        }
-    };
+    },
+};
 </script>

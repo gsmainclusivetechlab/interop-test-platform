@@ -14,7 +14,10 @@ class SetContentLengthHeaders
      */
     public function handle($request, Closure $next)
     {
-        $request->headers->set('Content-Length', mb_strlen($request->getContent()));
+        $request->headers->set(
+            'Content-Length',
+            mb_strlen($request->getContent())
+        );
 
         return $next($request);
     }
