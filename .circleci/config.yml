@@ -77,7 +77,13 @@ jobs:
     
     steps:
       - checkout
-      
+       
+      - run:
+          name: Update php.ini
+          command: |
+            sudo cp /build/php-ini-development.ini /usr/local/etc/php/conf.d/zz-force-conf.ini
+            sudo service php-fpm restart
+          
       - run: 
           name: Generate configuration files
           command: make init
