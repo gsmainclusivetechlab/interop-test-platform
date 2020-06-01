@@ -2,13 +2,30 @@
 
 version: 2.1
 orbs:
-  coverage-reporter: codacy/coverage-reporter@9.0.1
+  coverage-reporter: codacy/coverage-reporter@10.0.3
+executors:
+  # Define a machine who has support for docker compose 3.7
+  standard:
+    machine:
+      image: ubuntu-1604:201903-01
+    working_directory: ~/repo
+  test:
+    docker:
+      - image: gsmainclusivetechlab/interop-php-fpm:latest
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ROOT_HOST: "%"
+          MYSQL_ROOT_PASSWORD: developer
+          MYSQL_DATABASE: itp-test-control
+          MYSQL_USER: itp-test-control
+          MYSQL_PASSWORD: developer
+        command: [--max-allowed-packet=536870912]
+          
+    working_directory: ~/repo
 jobs:
   build:
-    machine:
-      image: ubuntu-1604:201903-01 # Define a machine who has support for docker compose 3.7
-    working_directory: ~/repo # Default working directory, where your project will be clo
-        
+    executor: standard
+    
     steps:
       - checkout
 
@@ -24,27 +41,27 @@ jobs:
           
       - restore_cache: 
           keys:
-            - composer-v1-{{ checksum "src/composer.lock" }}
-            - composer-v1-
+            - composer-v2-{{ checksum "src/composer.lock" }}
+            - composer-v2-
                
       - restore_cache: 
           keys:
-            - node-v1-{{ checksum "src/package-lock.json" }}
-            - node-v1-
+            - node-v2-{{ checksum "src/package-lock.json" }}
+            - node-v2-
 
       - run: 
           name: Install Componser and Node dependecies
           command: make install
       
       - save_cache:
-          key: composer-v1-{{ checksum "src/composer.lock" }}
+          key: composer-v2-{{ checksum "src/composer.lock" }}
           paths:
-            - vendor
+            - src/vendor
       
       - save_cache:
-          key: node-v1-{{ checksum "src/package-lock.json" }}
+          key: node-v2-{{ checksum "src/package-lock.json" }}
           paths:
-            - node_modules
+            - src/node_modules
 
       - run: 
           name: Check installation
@@ -56,28 +73,95 @@ jobs:
                 echo "Installation fail"
                 exit 2
             fi
+         
+  test-run:
+    executor: test
+    
+    steps:
+      - checkout
+       
+      - run:
+          name: Update php.ini
+          command: sudo cp build/php-ini-development.ini /usr/local/etc/php/conf.d/zz-force-conf.ini
+          
+      - run: 
+          name: Generate configuration files
+          command: make init
+            
+      - restore_cache: 
+          keys:
+            - composer-v1-test{{ checksum "src/composer.lock" }}
+            - composer-v1-test
+     
+      - restore_cache: 
+          keys:
+            - node-v1-test{{ checksum "src/package-lock.json" }}
+            - node-v1-test
+            
+      - run: 
+          name: Install Componser dependecies
+          command: |
+            sleep 15
+            cd src
+            make install
+      
+      - save_cache:
+          key: composer-v1-test{{ checksum "src/composer.lock" }}
+          paths:
+            - src/vendor
+            
+      - save_cache:
+          key: node-v1-test{{ checksum "src/package-lock.json" }}
+          paths:
+            - src/node_modules
             
       - run:
           name: Run Tests
-          command: make test
+          command: |
+            cd src
+            make test
           
       - run:
           name: Run Tests Coverage
-          command: make test-coverage
-
-      - coverage-reporter/send_report:
-          coverage-reports: src/tests/results/coverage-report-clover/clover.xml
-          project-token: $CODACY_PROJECT_TOKEN
-          
-      #store tests and code coverage
+          command: |
+            cd src
+            make test-coverage
+ 
       - store_test_results:
           path: src/tests/results
       - store_artifacts:
-          path: src/tests/Browser/screenshots          
+          path: src/tests/results
+      - store_artifacts:
+          path: src/tests/Browser/screenshots
+          
+      - persist_to_workspace:      
+          root: ~/repo/src/tests
+          paths:
+            - results
+          
+  test-coverage-codacy:
+    docker:
+      - image: gsmainclusivetechlab/interop-php-fpm:latest
+    working_directory: ~/repo
+    
+    steps:
+      - attach_workspace:
+          at: ~/repo/src/tests
+          
+      - coverage-reporter/send_report:
+          coverage-reports: src/tests/results/coverage-report-clover/clover.xml
+          project-token: $CODACY_PROJECT_TOKEN
+      
+      - run:
+          name: Copy codacy json report to artifact
+          command: sudo cp /var/tmp/codacy-coverage-*.json ~/repo/src/tests/results/
+          
+      - store_test_results:
+          path: src/tests/results
       - store_artifacts:
           path: src/tests/results
-          
-worflow:
+    
+workflows:
   version: 2
   build_and_test:
     jobs:
@@ -87,4 +171,17 @@ worflow:
               only:
                 - master
                 - develop
-                - codacy-code-coverage
+      - test-run:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+      - test-coverage-codacy:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+          requires:
+            - test-run
