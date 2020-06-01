@@ -16,8 +16,8 @@ executors:
         environment:
           MYSQL_ROOT_HOST: "%"
           MYSQL_ROOT_PASSWORD: developer
-          MYSQL_DATABASE: itp-mmo-api-control
-          MYSQL_USER: itp-mmo-api-control
+          MYSQL_DATABASE: itp-test-control
+          MYSQL_USER: itp-test-control
           MYSQL_PASSWORD: developer
     working_directory: ~/repo
 jobs:
@@ -165,7 +165,6 @@ workflows:
               only:
                 - master
                 - develop
-                - codacy-code-coverage
       - test-run:
           filters:
             branches:
