@@ -72,7 +72,7 @@ jobs:
                 exit 2
             fi
          
-test-run:
+  test-run:
     executor: test
     
     steps:
