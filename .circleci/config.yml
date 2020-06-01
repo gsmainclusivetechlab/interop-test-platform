@@ -19,7 +19,7 @@ executors:
           MYSQL_DATABASE: itp-test-control
           MYSQL_USER: itp-test-control
           MYSQL_PASSWORD: developer
-        entrypoint: | 
+        command: | 
           echo '\n\
           [mysqld]\n\
           collation-server = utf8_unicode_ci\n\
