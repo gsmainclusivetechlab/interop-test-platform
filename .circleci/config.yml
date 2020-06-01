@@ -177,13 +177,11 @@ workflows:
               only:
                 - master
                 - develop
-                - codacy-code-coverage
       - test-coverage-codacy:
           filters:
             branches:
               only:
                 - master
                 - develop
-                - codacy-code-coverage
           requires:
             - test-run
