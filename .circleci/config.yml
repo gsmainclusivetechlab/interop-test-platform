@@ -19,16 +19,7 @@ executors:
           MYSQL_DATABASE: itp-test-control
           MYSQL_USER: itp-test-control
           MYSQL_PASSWORD: developer
-        command: | 
-          echo '\n\
-          [mysqld]\n\
-          collation-server = utf8_unicode_ci\n\
-          init-connect="SET NAMES utf8"\n\
-          character-set-server = utf8\n\
-          innodb_flush_log_at_trx_commit=2\n\
-          sync_binlog=0\n\
-          innodb_use_native_aio=0\n
-          max_allowed_packet=512M\n' >> /etc/mysql/my.cnf
+        command: [--max-allowed-packet=536870912]
           
     working_directory: ~/repo
 jobs:
