@@ -525,55 +525,47 @@ const createSession = [
         `${createImgPath}dashboard.png`,
         [1150, 35],
         'Start by creating a new session',
-        true,
     ],
     [
         `${createImgPath}select_sut.png`,
         [415, 360],
         'Select the System Under Test',
-        true,
     ],
     [
         `${createImgPath}select_sut_2.png`,
         [415, 410],
         "Let's select Service Provider, and enter our URL.",
-        true
     ],
-    [`${createImgPath}select_sut_3.png`, [785, 460], 'Press Next', true],
+    [`${createImgPath}select_sut_3.png`, [785, 460], 'Press Next'],
     [
         `${createImgPath}session_info.png`,
         [616, 337],
         'Select use cases by ticking the corresponding box',
-        true,
     ],
     [
         `${createImgPath}session_info_2.png`,
         [616, 360],
         'Select use cases by ticking the corresponding box',
-        true,
     ],
     [
         `${createImgPath}session_info_3.png`,
         [616, 405],
         'Select use cases by ticking the corresponding box',
-        true,
     ],
     [
         `${createImgPath}session_info_4.png`,
         [900, 500],
         'Press Next when you are finished',
-        true
     ],
     [
         `${createImgPath}configure_sut.png`,
         [780, 436],
         'After configuration, press Confirm',
-        true
     ],
     [
         `${createImgPath}session_created.png`,
         [47, 195],
-        'Your session has now been created and use cases can be accessed on the left. Click to start the demo again.',
+        'Your session has now been created and use cases can be accessed on the left. Click "Reset Demo" to start the demo again.',
         true
     ]
 ];
@@ -598,24 +590,21 @@ const serviceProvider = [
         `${executeSPImgPath}7-postman-1.png`,
         [1053, 74],
         'Here we are using Postman. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
-        true,
     ],
     [
         `${executeSPImgPath}9-test-runs.png`,
         [384, 209],
         'You should now see your test run. Click to be taken to the test run page.',
-        true
     ],
     [
         `${executeSPImgPath}10-test-details-1.png`,
         [604, 437],
         'On this page are all the details about the test run. Clicking on any particular test will give you more information. ',
-        true
     ],
     [
         `${executeSPImgPath}11-test-details-2.png`,
         [75, 35],
-        'You can also see the request and response data for each step of the use case flow. To start the demo again click the sessions tab.',
+        'You can also see the request and response data for each step of the use case flow. To start the demo again click "Reset Demo".',
         true
     ]
 ];
@@ -639,37 +628,32 @@ const mobileMoneyOperator = [
     [
         `${executeMMOImgPath}4-test-flow.png`,
         [109, 225],
-        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs.',
-        true
+        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs.'
     ],
     [
         `${executeMMOImgPath}4-test-flow.png`,
         [1150, 115],
-        'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run.',
-        true
+        'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run.'
     ],
     [
         `${executeMMOImgPath}5-run-test.png`,
         [315, 119],
-        'We should now be able to see the test run by returning to the test run page.',
-        true
+        'We should now be able to see the test run by returning to the test run page.'
     ],
     [
         `${executeMMOImgPath}6-test-runs-2.png`,
         [370, 205],
-        'Click the test run to see more details.',
-        true
+        'Click the test run to see more details.'
     ],
     [
         `${executeMMOImgPath}7-test-details.png`,
         [600, 395],
-        'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results.',
-        true
+        'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results.'
     ],
     [
         `${executeMMOImgPath}8-test-details-2.png`,
         [5, 240],
-        'To start the demo again, click the sessions tab.',
+        'You can also see the request and response data for each step of the use case flow. To start the demo again press "Reset Demo".',
         true
     ]
 ];
@@ -785,6 +769,10 @@ export default {
         continueDemo() {
             this.currentStep = (this.currentStep + 1) % this.steps.length;
             this.screenshotUrl = this.steps[this.currentStep][0];
+
+            if (this.steps[this.currentStep][3] === true) {
+                this.demoWrapper.find('.demo-circle').toggle();
+            }
 
             this.demoUpdateCircle();
         },
