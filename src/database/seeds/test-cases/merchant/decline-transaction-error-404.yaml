@@ -1,0 +1,86 @@
+name: Decline Transaction with Error 404 by Payee FSP
+use_case: Merchant-Initiated Merchant Payment
+behavior: negative
+description: |
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction, simulating a decline transaction with error 404 by the Payee.
+precondition: |
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer exist in Mojaloop as Parties.
+  - Amount should be the value "1007".
+  - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
+  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+components:
+  - Service Provider
+test_steps:
+  - path: /transactions
+    pattern: '^transactions$'
+    method: POST
+    source: Service Provider
+    target: Mobile Money Operator 1
+    api_spec: MM v1.1.2
+    trigger:
+      amount: '1007'
+    test_response_setups:
+      - name: Override response
+        values:
+          status: 404
+          body:
+            errorCode: "genericError"
+            errorCategory: "validation"
+            errorDateTime: "2000-01-01T00:00:00.000Z"
+            errorDescription: "The requested resource could not be matched on the system with the supplied identifier(s)."
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.x-callback-url.*: 'required|regex:/.*/'
+      - name: Debit and Credit party is present and is a Valid Party in the network
+        rules:
+          body.debitParty.*.key: 'required|in:msisdn'
+          body.debitParty.*.value: 'required|in:+33555123456'
+          body.creditParty.*.key: 'required|in:msisdn'
+          body.creditParty.*.value: 'required|in:+33555789123'
+      - name: Amount and currency are specified correctly
+        rules:
+          body.amount: 'required|in:1007'
+          body.currency: 'required|regex:/^[A-Z]{3}/'
+      - name: Transaction is a Merchant Payment
+        rules:
+          body.type: 'required|in:merchantpay'
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'required|in:404'
+      - name: Error is specified correctly
+        rules:
+          body.errorCode: 'required|in:genericError'
+          body.errorCategory: 'required|in:validation'
+    request:
+      method: POST
+      uri: /transactions
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
+        x-date: '2000-01-01T00:00:00.000Z'
+      body:
+        amount: '1007'
+        currency: 'USD'
+        type: 'merchantpay'
+        debitParty:
+          - key: 'msisdn'
+            value: "+33555123456"
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
+    response:
+      status: 404
+      headers:
+        x-date: '2000-01-01T00:00:00.000Z'
+        content-type: 'application/json'
+      body:
+        errorCode: "genericError"
+        errorCategory: "validation"
+        errorDateTime: "2000-01-01T00:00:00.000Z"
+        errorDescription: "The requested resource could not be matched on the system with the supplied identifier(s)."

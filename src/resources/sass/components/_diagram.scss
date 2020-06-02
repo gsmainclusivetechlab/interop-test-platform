@@ -1,73 +1,74 @@
 .mermaid-diagram {
-    min-height: 66px;
-    opacity: 0;
-    transition: opacity 0.1s;
-    overflow-x: auto;
+  min-height: 66px;
+  opacity: 0;
+  transition: opacity 0.1s;
+  overflow-x: auto;
 
-    &[data-processed='true'] {
-        opacity: 1;
+  &[data-processed='true'] {
+    opacity: 1;
+  }
+
+  .label {
+    color: $body-color;
+    text-align: center;
+  }
+
+  .edgeLabel {
+    background-color: #fff;
+  }
+
+  .node {
+    rect {
+      fill: #fff;
+      stroke: $gray-300;
+      color: $body-color;
     }
 
-    .label {
-        color: $body-color;
-        text-align: center;
-    }
-
-    .edgeLabel {
-        background-color: #fff;
-    }
-
-    .node {
-        rect {
-            fill: #fff;
-            stroke: #fff;
-            color: $body-color;
-        }
-
-        &.is-active {
-            rect {
-                fill: $red;
-            }
-
-            .label {
-                color: #fff;
-            }
-        }
-    }
-
-    .edgePath {
-        .path {
-            stroke: $gray-300;
-            stroke-width: 1.5px;
-        }
-
-        .arrowheadPath {
-            fill: $gray-300;
-        }
-    }
-
-    .actor {
-        fill: $gray-100;
-        stroke: $gray-300;
-        stroke-width: 0.5;
-    }
-
-    text.actor {
+    &.is-active {
+      rect {
+        fill: $red;
         stroke: none;
-        fill: $body-color;
+      }
+
+      .label {
+        color: #fff;
+      }
+    }
+  }
+
+  .edgePath {
+    .path {
+      stroke: $gray-300;
+      stroke-width: 1.5px;
     }
 
-    .messageText {
-        fill: $body-color;
+    .arrowheadPath {
+      fill: $gray-300;
     }
+  }
 
-    #arrowhead {
-        path {
-            fill: $gray-300;
-        }
-    }
+  .actor {
+    fill: $gray-100;
+    stroke: $gray-300;
+    stroke-width: 0.5;
+  }
 
-    [class^='messageLine'] {
-        stroke: $gray-300;
+  text.actor {
+    stroke: none;
+    fill: $body-color;
+  }
+
+  .messageText {
+    fill: $body-color;
+  }
+
+  #arrowhead {
+    path {
+      fill: $gray-300;
     }
+  }
+
+  [class^='messageLine'] {
+    stroke: $gray-300;
+  }
 }

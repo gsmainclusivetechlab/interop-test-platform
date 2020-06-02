@@ -2,24 +2,13 @@
 
 namespace Tests\Browser;
 
+use App\Models\User;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Tests\Browser\Pages\LoginPage;
 
 class LoginTest extends DuskTestCase
 {
-    private $user;
-
-    /**
-     * Setup tests.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->user = $this->user();
-    }
-
     /**
      * Can navigate to forgot password page.
      * @return void
@@ -28,7 +17,7 @@ class LoginTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new LoginPage)
+                ->visit(new LoginPage())
                 ->click('@forgotPasswordLink')
                 ->waitForLocation('/password/reset')
                 ->assertSee('Forgot password');
@@ -43,7 +32,7 @@ class LoginTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new LoginPage)
+                ->visit(new LoginPage())
                 ->click('@registerLink')
                 ->waitForLocation('/register')
                 ->assertSee('Create new account');
@@ -58,13 +47,19 @@ class LoginTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser
-                ->visit(new LoginPage)
+                ->visit(new LoginPage())
                 ->clear('@email')
                 ->clear('@password')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
-                ->assertSeeIn('@email + .invalid-feedback', 'The email field is required.')
-                ->assertSeeIn('@password + .invalid-feedback', 'The password field is required.')
+                ->assertSeeIn(
+                    '@email + .invalid-feedback',
+                    'The email field is required.'
+                )
+                ->assertSeeIn(
+                    '@password + .invalid-feedback',
+                    'The password field is required.'
+                )
                 ->assertGuest();
         });
     }
@@ -75,50 +70,18 @@ class LoginTest extends DuskTestCase
      */
     public function testCanNotLoginWithInvalidCredentials()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->visit(new LoginPage)
-                ->type('@email', self::$userEmailInvalid)
-                ->type('@password', self::$userPasswordInvalid)
+                ->visit(new LoginPage())
+                ->type('@email', $user->email)
+                ->type('@password', 'invalid-password')
                 ->click('@submitButton')
                 ->waitFor('@invalidFormField')
-                ->assertSeeIn('@email + .invalid-feedback', 'These credentials do not match our records.')
-                ->assertGuest();
-        });
-    }
-
-    /**
-     * Can not login with valid email and invalid password.
-     * @return void
-     */
-    public function testCanNotLoginWithValidEmailAndInvalidPassword()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser
-                ->visit(new LoginPage)
-                ->type('@email', $this->user->email)
-                ->type('@password', self::$userPasswordInvalid)
-                ->click('@submitButton')
-                ->waitFor('@invalidFormField')
-                ->assertSeeIn('@email + .invalid-feedback', 'These credentials do not match our records.')
-                ->assertGuest();
-        });
-    }
-
-    /**
-     * Can not login with invalid email and valid password.
-     * @return void
-     */
-    public function testCanNotLoginWithInvalidEmailAndValidPassword()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser
-                ->visit(new LoginPage)
-                ->type('@email', self::$userEmailInvalid)
-                ->type('@password', self::$userPassword)
-                ->click('@submitButton')
-                ->waitFor('@invalidFormField')
-                ->assertSeeIn('@email + .invalid-feedback', 'These credentials do not match our records.')
+                ->assertSeeIn(
+                    '@email + .invalid-feedback',
+                    'These credentials do not match our records.'
+                )
                 ->assertGuest();
         });
     }
@@ -129,11 +92,12 @@ class LoginTest extends DuskTestCase
      */
     public function testCanLoginWithValidCredentials()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->visit(new LoginPage)
-                ->type('@email', $this->user->email)
-                ->type('@password', self::$userPassword)
+                ->visit(new LoginPage())
+                ->type('@email', $user->email)
+                ->type('@password', 'password')
                 ->click('@submitButton')
                 ->waitForLocation('/')
                 ->assertAuthenticated();
@@ -146,9 +110,10 @@ class LoginTest extends DuskTestCase
      */
     public function testCanLogout()
     {
-        $this->browse(function (Browser $browser) {
+        $user = factory(User::class)->create();
+        $this->browse(function (Browser $browser) use ($user) {
             $browser
-                ->loginAs($this->user)
+                ->loginAs($user)
                 ->visit('/')
                 ->click('@userActions')
                 ->waitFor('@logoutLink')

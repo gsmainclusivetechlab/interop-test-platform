@@ -6,6 +6,9 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -16,30 +19,37 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(User::class, 'user');
+        $this->authorizeResource(User::class, 'user', [
+            'only' => ['index', 'destroy'],
+        ]);
     }
 
     /**
+     * @param string|null $trash
      * @return \Inertia\Response
      */
-    public function index()
+    public function index($trash = null)
     {
         return Inertia::render('admin/users/index', [
             'users' => UserResource::collection(
                 User::when(request('q'), function (Builder $query, $q) {
-                    $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                    $query
+                        ->whereRaw(
+                            'CONCAT(first_name, " ", last_name) like ?',
+                            "%{$q}%"
+                        )
                         ->orWhere('email', 'like', "%{$q}%")
                         ->orWhere('company', 'like', "%{$q}%");
                 })
-                    ->when(request()->route()->hasParameter('trashed'), function (Builder $query, $trashed) {
-                        return $trashed ? $query->onlyTrashed() : $query->withoutTrashed();
+                    ->when($trash !== null, function (Builder $query) {
+                        return $query->onlyTrashed();
                     })
                     ->latest()
                     ->paginate()
             ),
             'filter' => [
                 'q' => request('q'),
-                'trashed' => request()->route()->hasParameter('trashed'),
+                'trash' => $trash !== null,
             ],
         ]);
     }
@@ -105,31 +115,26 @@ class UserController extends Controller
 
     /**
      * @param User $user
+     * @param string $role
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function promoteAdmin(User $user)
+    public function promoteRole(User $user, string $role, Request $request)
     {
-        $this->authorize('promoteAdmin', $user);
-        $user->update(['role' => User::ROLE_ADMIN]);
+        $this->authorize('promoteRole', $user);
+        Validator::make($request->route()->parameters(), [
+            'role' => [
+                'required',
+                Rule::in(
+                    collect(User::getRoleNames())
+                        ->except([User::ROLE_SUPERADMIN])
+                        ->keys()
+                ),
+            ],
+        ])->validate();
+        $user->update(['role' => $role]);
 
-        return redirect()
-            ->back()
-            ->with('success', __('User promoted to admin successfully'));
-    }
-
-    /**
-     * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function relegateAdmin(User $user)
-    {
-        $this->authorize('relegateAdmin', $user);
-        $user->update(['role' => User::ROLE_USER]);
-
-        return redirect()
-            ->back()
-            ->with('success', __('User relegated from admin successfully'));
+        return redirect()->back();
     }
 }

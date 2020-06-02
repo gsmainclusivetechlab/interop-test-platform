@@ -15,6 +15,9 @@ class TestScriptResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'type' => $this->type,
+            'rules' => $this->rules,
+            'messages' => $this->messages,
         ];
     }
 }

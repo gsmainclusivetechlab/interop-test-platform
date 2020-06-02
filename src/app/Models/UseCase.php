@@ -17,18 +17,7 @@ class UseCase extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'description',
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function scenario()
-    {
-        return $this->belongsTo(Scenario::class, 'scenario_id');
-    }
+    protected $fillable = ['name', 'description'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -36,21 +25,5 @@ class UseCase extends Model
     public function testCases()
     {
         return $this->hasMany(TestCase::class, 'use_case_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function positiveTestCases()
-    {
-        return $this->testCases()->positive();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function negativeTestCases()
-    {
-        return $this->testCases()->negative();
     }
 }

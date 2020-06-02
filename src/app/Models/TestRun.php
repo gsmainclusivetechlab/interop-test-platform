@@ -22,6 +22,11 @@ class TestRun extends Model
     /**
      * @var array
      */
+    protected $fillable = ['test_case_id'];
+
+    /**
+     * @var array
+     */
     protected $casts = [
         'completed_at' => 'datetime',
     ];
@@ -39,9 +44,7 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $observables = [
-        'complete',
-    ];
+    protected $observables = ['complete'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -56,7 +59,14 @@ class TestRun extends Model
      */
     public function testSteps()
     {
-        return $this->hasManyThrough(TestStep::class, TestCase::class, 'id', 'test_case_id', 'test_case_id', 'id');
+        return $this->hasManyThrough(
+            TestStep::class,
+            TestCase::class,
+            'id',
+            'test_case_id',
+            'test_case_id',
+            'id'
+        );
     }
 
     /**
@@ -110,6 +120,15 @@ class TestRun extends Model
     public function scopeCompleted($query)
     {
         return $query->whereNotNull('completed_at');
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIncompleted($query)
+    {
+        return $query->whereNull('completed_at');
     }
 
     /**

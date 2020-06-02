@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\ApiScheme;
+use App\Models\ApiSpec;
 use App\Models\TestCase;
 use App\Models\Component;
 use App\Models\TestStep;
@@ -24,25 +24,22 @@ use GuzzleHttp\Psr7\Response as PsrResponse;
 */
 
 $factory->define(TestStep::class, function (Faker $faker) {
-    $sourceId = factory(Component::class)->create()->id;
-    $targetId = factory(Component::class)->create()->id;
-    DB::table('component_connections')->insert([
-        'source_id' => $sourceId,
-        'target_id' => $targetId,
-    ]);
+    $componentWithConnection = factory(Component::class)->state('withConnection')->create();
 
     return [
         'test_case_id' => function () {
-            return factory(TestCase::class)->create()->id;
+            return factory(TestCase::class)->create()->getKey();
         },
-        'source_id' => $sourceId,
-        'target_id' => $targetId,
-        'api_scheme_id' => function () {
-            return factory(ApiScheme::class)->create()->id;
+        'api_spec_id' => function () {
+            return factory(ApiSpec::class)->create()->getKey();
         },
-        'name' => $faker->text,
-        'request' => (new Request(new ServerRequest('get', 'test'))),
+        'source_id' => $componentWithConnection->getKey(),
+        'target_id' => $componentWithConnection->connections()->first()->getKey(),
+        'path' => $faker->text,
+        'method' => $faker->text,
+        'pattern' => $faker->text,
+        'trigger' => $faker->randomElements(),
+        'request' => (new Request(new ServerRequest('get', $faker->url))),
         'response' => (new Response(new PsrResponse())),
-        'position' => $faker->numberBetween(0, 10),
     ];
 });

@@ -11,24 +11,12 @@ class UseCasePolicy
     use HandlesAuthorization;
 
     /**
-     * @param User $user
-     * @param string $ability
-     * @return bool
-     */
-    public function before(User $user, $ability)
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-    }
-
-    /**
      * @param  User  $user
      * @return mixed
      */
     public function viewAny(User $user)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -38,7 +26,7 @@ class UseCasePolicy
      */
     public function view(User $user, UseCase $model)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -47,7 +35,7 @@ class UseCasePolicy
      */
     public function create(User $user)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -57,7 +45,7 @@ class UseCasePolicy
      */
     public function update(User $user, UseCase $model)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -67,6 +55,6 @@ class UseCasePolicy
      */
     public function delete(User $user, UseCase $model)
     {
-
+        return $user->canAdmin();
     }
 }

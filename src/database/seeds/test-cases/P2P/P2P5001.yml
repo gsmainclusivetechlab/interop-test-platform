@@ -49,8 +49,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required|regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:50.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -62,10 +61,11 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
@@ -79,10 +79,10 @@ test_steps:
             partyIdentifier: "+33555123456"
           personalInfo:
             complexName:
-              firstName: 'Lars'
-              middleName: 'Per'
-              lastName: 'Bergqvist'
-            dateOfBirth: '1977-07-17'
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
@@ -127,9 +127,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount:
-            - 'required'
-            - 'regex:/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/'
+          body.amount.amount: 'required|in:50.01'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -141,10 +139,11 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
@@ -158,10 +157,10 @@ test_steps:
             partyIdentifier: "+33555123456"
           personalInfo:
             complexName:
-              firstName: 'Lars'
-              middleName: 'Per'
-              lastName: 'Bergqvist'
-            dateOfBirth: '1977-07-17'
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
@@ -176,7 +175,7 @@ test_steps:
 
 ## PUT/Quotes/{ID}/error: MMO2 -> Mojaloop ##
   - path: /quotes/{ID}/error
-    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
     method: PUT
     source: Mobile Money Operator 2
     target: Mojaloop
@@ -209,10 +208,11 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         errorInformation:
@@ -226,8 +226,8 @@ test_steps:
       status: 200
 
 ## PUT/Quotes/{ID}: Mojaloop -> MMO1 ##
-  - path: /quotes/{ID}
-    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+  - path: /quotes/{ID}/error
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -260,10 +260,11 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         errorInformation:
@@ -272,3 +273,5 @@ test_steps:
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+    response:
+        status: 200

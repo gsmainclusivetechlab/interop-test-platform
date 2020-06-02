@@ -11,24 +11,12 @@ class SessionPolicy
     use HandlesAuthorization;
 
     /**
-     * @param User $user
-     * @param string $ability
-     * @return bool
-     */
-    public function before(User $user, $ability)
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-    }
-
-    /**
      * @param  User  $user
      * @return mixed
      */
     public function viewAny(User $user)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -38,7 +26,7 @@ class SessionPolicy
      */
     public function view(User $user, Session $model)
     {
-        return $model->owner->is($user);
+        return $user->canAdmin() || $model->owner->is($user);
     }
 
     /**
@@ -57,7 +45,7 @@ class SessionPolicy
      */
     public function update(User $user, Session $model)
     {
-        return $model->owner->is($user);
+        return $user->canAdmin() || $model->owner->is($user);
     }
 
     /**
@@ -67,6 +55,6 @@ class SessionPolicy
      */
     public function delete(User $user, Session $model)
     {
-        return $model->owner->is($user);
+        return $user->canAdmin() || $model->owner->is($user);
     }
 }

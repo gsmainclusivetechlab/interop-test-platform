@@ -60,11 +60,13 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             Arr::set($data, $key, $value);
         }
 
-        return new self(new ServerRequest(
+        return new self(
+            new ServerRequest(
                 $data['method'],
                 $data['uri'],
                 $data['headers'],
                 json_encode($data['body'])
-            ));
+            )
+        );
     }
 }

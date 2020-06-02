@@ -2,6 +2,7 @@
 
 namespace App\Testing;
 
+use App\Models\TestExecution;
 use App\Models\TestResult;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
@@ -47,11 +48,13 @@ class TestExecutionListener implements TestListener
     public function addError(Test $test, Throwable $e, float $time): void
     {
         if ($test instanceof TestCase) {
-            $this->testResult->testExecutions()->make([
+            $this->testResult->testExecutions()->create([
                 'name' => $test->getName(),
                 'actual' => $test->getActual(),
                 'expected' => $test->getExpected(),
-            ])->fail($e->getMessage());
+                'exception' => $e->getMessage(),
+                'status' => TestExecution::STATUS_FAIL,
+            ]);
         }
 
         $this->lastTestWasNotSuccessful = true;
@@ -62,14 +65,19 @@ class TestExecutionListener implements TestListener
      * @param AssertionFailedError $e
      * @param float $time
      */
-    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
-    {
+    public function addFailure(
+        Test $test,
+        AssertionFailedError $e,
+        float $time
+    ): void {
         if ($test instanceof TestCase) {
-            $this->testResult->testExecutions()->make([
+            $this->testResult->testExecutions()->create([
                 'name' => $test->getName(),
                 'actual' => $test->getActual(),
                 'expected' => $test->getExpected(),
-            ])->fail($e->getMessage());
+                'exception' => $e->getMessage(),
+                'status' => TestExecution::STATUS_FAIL,
+            ]);
         }
 
         $this->lastTestWasNotSuccessful = true;
@@ -83,11 +91,12 @@ class TestExecutionListener implements TestListener
     {
         if (!$this->lastTestWasNotSuccessful) {
             if ($test instanceof TestCase) {
-                $this->testResult->testExecutions()->make([
+                $this->testResult->testExecutions()->create([
                     'name' => $test->getName(),
                     'actual' => $test->getActual(),
                     'expected' => $test->getExpected(),
-                ])->pass();
+                    'status' => TestExecution::STATUS_PASS,
+                ]);
             }
         }
     }

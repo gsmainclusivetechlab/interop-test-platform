@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\UpdateProfileRequest;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -19,17 +19,22 @@ class ProfileController extends Controller
     /**
      * @return \Inertia\Response
      */
-    public function edit()
+    public function showProfileForm()
     {
         return Inertia::render('settings/profile');
     }
 
     /**
-     * @param UpdateProfileRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateProfileRequest $request)
+    public function updateProfile(Request $request)
     {
+        $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'company' => ['required', 'string', 'max:255'],
+        ]);
         $user = auth()->user();
         $user->update($request->input());
 

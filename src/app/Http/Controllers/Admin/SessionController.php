@@ -6,7 +6,6 @@ use App\Http\Resources\SessionResource;
 use App\Models\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SessionController extends Controller
@@ -17,7 +16,9 @@ class SessionController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(Session::class, 'session');
+        $this->authorizeResource(Session::class, 'session', [
+            'only' => ['index'],
+        ]);
     }
 
     /**
@@ -29,7 +30,11 @@ class SessionController extends Controller
             'sessions' => SessionResource::collection(
                 Session::whereHas('owner', function (Builder $query) {
                     $query->when(request('q'), function (Builder $query, $q) {
-                        $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$q}%")
+                        $query
+                            ->whereRaw(
+                                'CONCAT(first_name, " ", last_name) like ?',
+                                "%{$q}%"
+                            )
                             ->orWhere('name', 'like', "%{$q}%");
                     });
                 })

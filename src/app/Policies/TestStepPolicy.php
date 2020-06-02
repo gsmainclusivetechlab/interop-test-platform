@@ -11,24 +11,12 @@ class TestStepPolicy
     use HandlesAuthorization;
 
     /**
-     * @param User $user
-     * @param string $ability
-     * @return bool
-     */
-    public function before(User $user, $ability)
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-    }
-
-    /**
      * @param  User  $user
      * @return mixed
      */
     public function viewAny(User $user)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -38,7 +26,7 @@ class TestStepPolicy
      */
     public function view(User $user, TestStep $model)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -47,7 +35,7 @@ class TestStepPolicy
      */
     public function create(User $user)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -57,7 +45,7 @@ class TestStepPolicy
      */
     public function update(User $user, TestStep $model)
     {
-
+        return $user->canAdmin();
     }
 
     /**
@@ -67,6 +55,6 @@ class TestStepPolicy
      */
     public function delete(User $user, TestStep $model)
     {
-
+        return $user->canAdmin();
     }
 }

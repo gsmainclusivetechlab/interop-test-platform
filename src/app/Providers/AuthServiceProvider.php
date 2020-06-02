@@ -3,15 +3,15 @@
 namespace App\Providers;
 
 use App\Models\Component;
-use App\Models\Scenario;
 use App\Models\Session;
+use App\Models\ApiSpec;
 use App\Models\TestCase;
 use App\Models\TestStep;
 use App\Models\UseCase;
 use App\Models\User;
 use App\Policies\ComponentPolicy;
-use App\Policies\ScenarioPolicy;
 use App\Policies\SessionPolicy;
+use App\Policies\ApiSpecPolicy;
 use App\Policies\TestCasePolicy;
 use App\Policies\TestStepPolicy;
 use App\Policies\UseCasePolicy;
@@ -21,23 +21,19 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
-     *
      * @var array
      */
     protected $policies = [
         User::class => UserPolicy::class,
         Session::class => SessionPolicy::class,
-        Scenario::class => ScenarioPolicy::class,
         Component::class => ComponentPolicy::class,
+        ApiSpec::class => ApiSpecPolicy::class,
         TestCase::class => TestCasePolicy::class,
         TestStep::class => TestStepPolicy::class,
         UseCase::class => UseCasePolicy::class,
     ];
 
     /**
-     * Register any authentication / authorization services.
-     *
      * @return void
      */
     public function boot()

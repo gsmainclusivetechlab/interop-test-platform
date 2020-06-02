@@ -23,6 +23,7 @@ class CreateTestResultsTable extends Migration
             $table->json('response')->nullable();
             $table->text('exception')->nullable();
             $table->string('status')->index();
+            $table->unsignedInteger('duration');
             $table->timestamp('created_at');
         });
     }

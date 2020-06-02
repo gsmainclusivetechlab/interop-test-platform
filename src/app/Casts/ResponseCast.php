@@ -26,11 +26,13 @@ class ResponseCast implements CastsAttributes
             return $value;
         }
 
-        return new Response(new PsrResponse(
-            Arr::get($value, 'status'),
-            Arr::get($value, 'headers', []),
-            json_encode(Arr::get($value, 'body'))
-        ));
+        return new Response(
+            new PsrResponse(
+                Arr::get($value, 'status'),
+                Arr::get($value, 'headers', []),
+                json_encode(Arr::get($value, 'body'))
+            )
+        );
     }
 
     /**

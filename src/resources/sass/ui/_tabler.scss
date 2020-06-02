@@ -1,17 +1,13 @@
 @import '~bootstrap/scss/functions';
-
 @import '~tabler/scss/utilities';
 @import '~tabler/scss/mixins';
 @import '~tabler/scss/bootstrap-config';
 @import '~tabler/scss/mixins-override';
-
 @import '~tabler/scss/bootstrap-components';
-
 @import '~tabler/scss/layout/core';
 @import '~tabler/scss/layout/navbar';
 @import '~tabler/scss/layout/page';
 @import '~tabler/scss/layout/footer';
-
 @import '~tabler/scss/ui/alerts';
 @import '~tabler/scss/ui/avatars';
 @import '~tabler/scss/ui/badges';
@@ -50,7 +46,6 @@
 @import '~tabler/scss/ui/type';
 @import '~tabler/scss/ui/markdown';
 @import '~tabler/scss/ui/charts';
-
 @import '~tabler/scss/utils/background';
 @import '~tabler/scss/utils/colors';
 @import '~tabler/scss/utils/scroll';
@@ -58,8 +53,6 @@
 @import '~tabler/scss/utils/opacity';
 @import '~tabler/scss/utils/shadow';
 @import '~tabler/scss/utils/text';
-
 @import '~tabler/scss/dark';
 @import '~tabler/scss/debug';
-
 @import '~tabler/scss/vendor/apexcharts';

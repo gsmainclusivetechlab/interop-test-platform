@@ -11,11 +11,13 @@ import {
     ProgressPlugin,
     VBTooltipPlugin,
     PopoverPlugin,
-    TabsPlugin
+    TabsPlugin,
 } from 'bootstrap-vue';
 
 window.string = require('string');
 window.collect = require('collect.js');
+window.axios = require('axios');
+window.axios.defaults.withCredentials = true;
 
 Vue.use(VueMeta);
 Vue.use(InertiaApp);
@@ -30,8 +32,8 @@ Vue.use(InertiaApp);
     ProgressPlugin,
     VBTooltipPlugin,
     PopoverPlugin,
-    TabsPlugin
-].forEach(plugin => {
+    TabsPlugin,
+].forEach((plugin) => {
     Vue.use(plugin);
 });
 
@@ -39,14 +41,17 @@ Vue.mixin({
     methods: {
         route: window.route,
         string: window.string,
-        collect: window.collect
-    }
+        collect: window.collect,
+    },
 });
 
 Vue.config.productionTip = false;
 
 Vue.component('icon', () =>
     import(/* webpackChunkName: "icon" */ '@/components/icon.vue')
+);
+Vue.component('breadcrumb', () =>
+    import(/* webpackChunkName: "breadcrumb" */ '@/components/breadcrumb.vue')
 );
 Vue.component('pagination', () =>
     import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
@@ -65,17 +70,17 @@ Vue.component('clipboard-copy-btn', () =>
     )
 );
 
-const app = document.getElementById('app');
+let app = document.getElementById('app');
 
 new Vue({
-    render: h =>
+    render: (h) =>
         h(InertiaApp, {
             props: {
                 initialPage: JSON.parse(app.dataset.page),
-                resolveComponent: name =>
+                resolveComponent: (name) =>
                     import(
                         /* webpackChunkName: "pages/[request]" */ `@/pages/${name}`
-                    ).then(module => module.default)
-            }
-        })
+                    ).then((module) => module.default),
+            },
+        }),
 }).$mount(app);

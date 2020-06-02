@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
+use App\Models\UseCase;
 use Inertia\Inertia;
 
 class SessionController extends Controller
@@ -25,7 +27,9 @@ class SessionController extends Controller
     {
         return Inertia::render('sessions/index', [
             'sessions' => SessionResource::collection(
-                auth()->user()->sessions()
+                auth()
+                    ->user()
+                    ->sessions()
                     ->when(request('q'), function ($query, $q) {
                         return $query->where('name', 'like', "%{$q}%");
                     })
@@ -57,14 +61,42 @@ class SessionController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                        return $query->with(['lastTestRun']);
                     },
                 ])
             ))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::with([
+                    'testCases' => function ($query) use ($session) {
+                        $query
+                            ->with([
+                                'lastTestRun' => function ($query) use (
+                                    $session
+                                ) {
+                                    $query->where('session_id', $session->id);
+                                },
+                            ])
+                            ->whereHas('sessions', function ($query) use (
+                                $session
+                            ) {
+                                $query->whereKey($session->getKey());
+                            });
+                    },
+                ])
+                    ->whereHas('testCases', function ($query) use ($session) {
+                        $query->whereHas('sessions', function ($query) use (
+                            $session
+                        ) {
+                            $query->whereKey($session->getKey());
+                        });
+                    })
+                    ->get()
+            ),
             'testRuns' => TestRunResource::collection(
-                $session->testRuns()
+                $session
+                    ->testRuns()
                     ->with(['session', 'testCase'])
-                    ->completed()
+                    //                    ->completed()
                     ->latest()
                     ->paginate()
             ),
@@ -97,20 +129,23 @@ class SessionController extends Controller
         $data = [
             [
                 'name' => __('Passed'),
-                'data' => []
+                'data' => [],
             ],
             [
                 'name' => __('Failed'),
-                'data' => []
+                'data' => [],
             ],
         ];
 
-        $rows = $session->testRuns()
+        $rows = $session
+            ->testRuns()
             ->completed()
             ->selectRaw('COUNT(IF (total = passed, 1, NULL)) AS pass')
             ->selectRaw('COUNT(IF (total != passed, 1, NULL)) AS fail')
             ->selectRaw('DATE_FORMAT(created_at, "%e %b") as date')
-            ->whereRaw('DATE_FORMAT(completed_at, "%e %b") < DATE_ADD(NOW(), INTERVAL -1 MONTH)')
+            ->whereRaw(
+                'DATE_FORMAT(completed_at, "%e %b") < DATE_ADD(NOW(), INTERVAL -1 MONTH)'
+            )
             ->groupByRaw('DATE_FORMAT(created_at, "%e %b")')
             ->orderByRaw('DATE_FORMAT(created_at, "%e %b") ASC')
             ->limit(30)

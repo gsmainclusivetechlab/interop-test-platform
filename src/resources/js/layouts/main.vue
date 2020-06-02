@@ -8,7 +8,7 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="navbar-brand-image h-5"
+                            class="navbar-brand-image h-5 outline-light"
                             alt="Interoperability Test Platform"
                         />
                     </inertia-link>
@@ -24,19 +24,47 @@
                 </div>
 
                 <div class="col-md-3 d-flex justify-content-end">
+                    <label
+                        class="d-flex align-items-center align-self-center flex-shrink-0 toggle cursor-pointer mb-0 mr-2"
+                    >
+                        <input
+                            class="sr-only toggle-input"
+                            type="checkbox"
+                            @change.prevent="$inertia.post(route('dark-mode'))"
+                            :checked="$page.app.dark_mode"
+                        />
+                        <span
+                            class="toggle-switch d-flex justify-content-between align-items-center rounded-pill"
+                            :class="{ enabled: $page.app.dark_mode }"
+                        >
+                            <span class="toggle-switch-icon">
+                                <icon name="sun" />
+                            </span>
+                            <span class="toggle-switch-icon">
+                                <icon name="moon" />
+                            </span>
+                        </span>
+                    </label>
                     <b-navbar-nav class="flex-row">
                         <b-nav-item-dropdown
                             right
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
-                            v-if="$page.auth.user.is_admin"
+                            class="admin-settings-dropdown"
+                            v-if="(
+                                $page.auth.user.can.users.viewAny ||
+                                $page.auth.user.can.sessions.viewAny ||
+                                $page.auth.user.can.api_specs.viewAny ||
+                                $page.auth.user.can.use_cases.viewAny ||
+                                $page.auth.user.can.test_cases.viewAny
+                            )"
                         >
                             <template v-slot:button-content>
                                 <icon name="settings" />
                             </template>
 
-                            <li>
+                            <li v-if="$page.auth.user.can.users.viewAny">
                                 <inertia-link
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
@@ -44,7 +72,7 @@
                                     Users
                                 </inertia-link>
                             </li>
-                            <li>
+                            <li v-if="$page.auth.user.can.sessions.viewAny">
                                 <inertia-link
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
@@ -52,12 +80,28 @@
                                     Sessions
                                 </inertia-link>
                             </li>
-                            <li>
+                            <li v-if="$page.auth.user.can.api_specs.viewAny">
                                 <inertia-link
-                                    :href="route('admin.scenarios.index')"
+                                    :href="route('admin.api-specs.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Scenarios
+                                    Api Specs
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.use_cases.viewAny">
+                                <inertia-link
+                                    :href="route('admin.use-cases.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Use Cases
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.test_cases.viewAny">
+                                <inertia-link
+                                    :href="route('admin.test-cases.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Test Cases
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -66,23 +110,28 @@
                             right
                             no-caret
                             menu-class="dropdown-menu-arrow"
-                            toggle-class="align-items-center"
+                            toggle-class="align-items-center pr-0"
+                            class="user-settings-dropdown"
                         >
                             <template v-slot:button-content>
-                            <span class="avatar flex-shrink-0">
-                                <icon name="user" />
-                            </span>
+                                <span class="avatar flex-shrink-0">
+                                    <icon name="user" />
+                                </span>
                                 <span
                                     class="ml-2 d-none d-lg-inline-block text-truncate"
                                 >
-                                <span class="text-default">
-                                    {{ $page.auth.user.name }}
+                                    <span class="text-default">
+                                        {{
+                                            string(
+                                                $page.auth.user.name
+                                            ).truncate(30)
+                                        }}
+                                    </span>
                                 </span>
-                            </span>
                             </template>
                             <li>
                                 <inertia-link
-                                    :href="route('settings.profile.edit')"
+                                    :href="route('settings.profile')"
                                     class="text-reset dropdown-item"
                                 >
                                     Settings
@@ -112,51 +161,58 @@
                             class="nav-item"
                             v-bind:class="{ active: route().current('home') }"
                         >
-                            <inertia-link :href="route('home')" class="nav-link">
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
+                            <inertia-link
+                                :href="route('home')"
+                                class="nav-link"
                             >
-                                <icon name="activity" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="activity" />
+                                </span>
                                 <span class="nav-link-title">
-                                Dashboard
-                            </span>
+                                    Dashboard
+                                </span>
                             </inertia-link>
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{ active: route().current('sessions.*') }"
+                            v-bind:class="{
+                                active: route().current('sessions.*'),
+                            }"
                         >
                             <inertia-link
                                 :href="route('sessions.index')"
                                 class="nav-link"
                             >
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
-                            >
-                                <icon name="box" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="box" />
+                                </span>
                                 <span class="nav-link-title">
-                                Sessions
-                            </span>
+                                    Sessions
+                                </span>
                             </inertia-link>
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{ active: route().current('tutorials') }"
+                            v-bind:class="{
+                                active: route().current('tutorials'),
+                            }"
                         >
                             <inertia-link
                                 :href="route('tutorials')"
                                 class="nav-link"
                             >
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
-                            >
-                                <icon name="help" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="help" />
+                                </span>
                                 <span class="nav-link-title">
-                                Tutorials
-                            </span>
+                                    Tutorials
+                                </span>
                             </inertia-link>
                         </li>
                         <li class="nav-item">
@@ -165,20 +221,20 @@
                                 class="nav-link"
                                 target="_blank"
                             >
-                            <span
-                                class="nav-link-icon d-md-none d-lg-inline-block"
-                            >
-                                <icon name="link" />
-                            </span>
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="link" />
+                                </span>
                                 <span class="nav-link-title">
-                                The Lab
-                            </span>
+                                    The Lab
+                                </span>
                             </a>
                         </li>
                     </b-navbar-nav>
 
                     <inertia-link
-                        :href="route('sessions.register.create')"
+                        :href="route('sessions.register.sut')"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />
@@ -188,22 +244,32 @@
             </b-collapse>
         </b-navbar>
         <main class="content">
-            <div class="container-fluid">
+            <div class="container-fluid d-flex flex-column">
                 <slot />
             </div>
         </main>
         <footer class="footer m-0">
             <div class="container-fluid">
-                <div class="row text-center align-items-center flex-row-reverse">
+                <div
+                    class="row text-center align-items-center flex-row-reverse"
+                >
                     <div class="col-lg-auto ml-lg-auto">
                         <ul class="list-inline list-inline-dots mb-0">
                             <li class="list-inline-item">
-                                <a href="https://www.gsma.com/aboutus/legal" class="link-secondary" target="_blank">
+                                <a
+                                    href="https://www.gsma.com/aboutus/legal"
+                                    class="link-secondary"
+                                    target="_blank"
+                                >
                                     Legal
                                 </a>
                             </li>
                             <li class="list-inline-item">
-                                <a href="https://www.gsma.com/aboutus/legal/cookie-policy" class="link-secondary" target="_blank">
+                                <a
+                                    href="https://www.gsma.com/aboutus/legal/cookie-policy"
+                                    class="link-secondary"
+                                    target="_blank"
+                                >
                                     Cookies
                                 </a>
                             </li>
@@ -211,8 +277,13 @@
                     </div>
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         {{ `Copyright © ${new Date().getFullYear()}` }}
-                        <a href="https://www.gsma.com/" class="link-secondary" target="_blank">GSMA</a>.
-                        All rights reserved.
+                        <a
+                            href="https://www.gsma.com/"
+                            class="link-secondary"
+                            target="_blank"
+                        >
+                            GSMA </a
+                        >. All rights reserved.
                     </div>
                 </div>
             </div>
@@ -221,11 +292,11 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/app';
+import Layout from '@/layouts/app';
 
-    export default {
-        components: {
-            Layout,
-        },
-    };
+export default {
+    components: {
+        Layout,
+    },
+};
 </script>

@@ -17,11 +17,16 @@
                                 type="password"
                                 v-model="form.current_password"
                                 class="form-control"
-                                :class="{ 'is-invalid': $page.errors.current_password }"
+                                :class="{
+                                    'is-invalid': $page.errors.current_password,
+                                }"
                                 placeholder="e.g., **********"
                                 name="current_password"
+                            />
+                            <span
+                                v-if="$page.errors.current_password"
+                                class="invalid-feedback"
                             >
-                            <span v-if="$page.errors.current_password" class="invalid-feedback">
                                 {{ $page.errors.current_password }}
                             </span>
                         </div>
@@ -40,8 +45,11 @@
                                 :class="{ 'is-invalid': $page.errors.password }"
                                 placeholder="e.g., **********"
                                 name="password"
+                            />
+                            <span
+                                v-if="$page.errors.password"
+                                class="invalid-feedback"
                             >
-                            <span v-if="$page.errors.password" class="invalid-feedback">
                                 {{ $page.errors.password }}
                             </span>
                         </div>
@@ -57,11 +65,17 @@
                                 type="password"
                                 v-model="form.password_confirmation"
                                 class="form-control"
-                                :class="{ 'is-invalid': $page.errors.password_confirmation }"
+                                :class="{
+                                    'is-invalid':
+                                        $page.errors.password_confirmation,
+                                }"
                                 placeholder="e.g., **********"
                                 name="password_confirmation"
+                            />
+                            <span
+                                v-if="$page.errors.password_confirmation"
+                                class="invalid-feedback"
                             >
-                            <span v-if="$page.errors.password_confirmation" class="invalid-feedback">
                                 {{ $page.errors.password_confirmation }}
                             </span>
                         </div>
@@ -69,7 +83,10 @@
                 </div>
             </div>
             <div class="card-footer text-right">
-                <inertia-link :href="route('password.request')" class="btn btn-link btn-space">
+                <inertia-link
+                    :href="route('password.request')"
+                    class="btn btn-link btn-space"
+                >
                     I forgot my password
                 </inertia-link>
                 <button type="submit" class="btn btn-primary btn-space">
@@ -89,7 +106,7 @@ import Layout from '@/layouts/settings';
 
 export default {
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -98,7 +115,7 @@ export default {
                 current_password: null,
                 password: null,
                 password_confirmation: null,
-            }
+            },
         };
     },
     methods: {
@@ -107,7 +124,7 @@ export default {
             this.$inertia
                 .post(route('settings.password.update'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

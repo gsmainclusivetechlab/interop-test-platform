@@ -3,22 +3,28 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <h1 class="page-title mb-5">
-                        <b>Settings</b>
-                    </h1>
+                    <div class="page-header">
+                        <h2 class="page-title">
+                            <b>Settings</b>
+                        </h2>
+                    </div>
                     <div class="subheader mb-2">General</div>
                     <div class="list-group list-group-transparent">
                         <inertia-link
-                            :href="route('settings.profile.edit')"
+                            :href="route('settings.profile')"
                             class="list-group-item list-group-item-action d-flex align-items-center"
-                            v-bind:class="{'active' : route().current('settings.profile.*')}"
+                            v-bind:class="{
+                                active: route().current('settings.profile'),
+                            }"
                         >
                             Profile
                         </inertia-link>
                         <inertia-link
-                            :href="route('settings.password.edit')"
+                            :href="route('settings.password')"
                             class="list-group-item list-group-item-action d-flex align-items-center"
-                            v-bind:class="{'active' : route().current('settings.password.*')}"
+                            v-bind:class="{
+                                active: route().current('settings.password'),
+                            }"
                         >
                             Change password
                         </inertia-link>
@@ -33,14 +39,14 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        components: {
-            Layout,
-        },
-        metaInfo: {
-            title: 'Settings'
-        },
-    };
+export default {
+    components: {
+        Layout,
+    },
+    metaInfo: {
+        title: 'Settings',
+    },
+};
 </script>

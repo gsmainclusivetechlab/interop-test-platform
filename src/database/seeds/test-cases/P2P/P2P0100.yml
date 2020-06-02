@@ -343,8 +343,8 @@ test_steps:
         fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
+        payeeFsp: 'mmo2fsp' 
+        payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
           amount: '99'
@@ -408,8 +408,8 @@ test_steps:
         fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
           amount: '99'
@@ -460,8 +460,8 @@ test_steps:
         fspiop-destination: 'mmo2fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -509,8 +509,8 @@ test_steps:
         fspiop-destination: 'mmo2fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'

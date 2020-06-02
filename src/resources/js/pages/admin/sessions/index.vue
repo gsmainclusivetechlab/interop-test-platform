@@ -7,7 +7,7 @@
                         Administration
                     </div>
                     <h2 class="page-title">
-                        Sessions
+                        <b>Sessions</b>
                     </h2>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <table
                     class="table table-striped table-vcenter table-hover card-table"
                 >
-                    <thead class="thead-light">
+                    <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
                             <th class="text-nowrap w-auto">Owner</th>
@@ -51,33 +51,47 @@
                                 </inertia-link>
                             </td>
                             <td class="text-break">
-                                <a href="#" v-if="session.owner">
-                                    {{ session.owner.name }}
-                                </a>
+                                {{ session.owner.name }}
                             </td>
                             <td>
-                                {{ session.testCases ? collect(session.testCases).unique('use_case_id').count() : 0 }}
+                                {{
+                                    session.testCases
+                                        ? collect(session.testCases)
+                                              .unique('use_case_id')
+                                              .count()
+                                        : 0
+                                }}
                             </td>
                             <td>
-                                {{ session.testCases ? session.testCases.length : 0  }}
+                                {{
+                                    session.testCases
+                                        ? session.testCases.length
+                                        : 0
+                                }}
                             </td>
                             <td>
-                                <session-progress :testCases="session.testCases" />
+                                <session-progress
+                                    :testCases="session.testCases"
+                                />
                             </td>
                             <td>
-                                {{ session.lastTestRun ? session.lastTestRun.created_at : '' }}
+                                {{
+                                    session.lastTestRun
+                                        ? session.lastTestRun.created_at
+                                        : ''
+                                }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
                                     v-if="session.can.delete"
                                     no-caret
                                     right
-                                    toggle-class="align-text-top"
-                                    variant="secondary"
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
                                     boundary="window"
                                 >
                                     <template v-slot:button-content>
-                                        <icon name="edit" class="m-0"></icon>
+                                        <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="session.can.delete">
                                         <confirm-link
@@ -90,9 +104,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="
-                                                `Are you sure you want to delete ${session.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to delete ${session.name}?`"
                                         >
                                             Delete
                                         </confirm-link>
@@ -123,35 +135,35 @@ import SessionProgress from '@/components/sessions/progress';
 
 export default {
     metaInfo: {
-        title: 'Sessions'
+        title: 'Sessions',
     },
     components: {
         Layout,
-        SessionProgress
+        SessionProgress,
     },
     props: {
         sessions: {
             type: Object,
-            required: true
+            required: true,
         },
         filter: {
             type: Object,
-            required: true
-        }
+            required: true,
+        },
     },
     data() {
         return {
             form: {
-                q: this.filter.q
-            }
+                q: this.filter.q,
+            },
         };
     },
     methods: {
         search() {
             this.$inertia.replace(route('admin.sessions.index'), {
-                data: this.form
+                data: this.form,
             });
-        }
-    }
+        },
+    },
 };
 </script>

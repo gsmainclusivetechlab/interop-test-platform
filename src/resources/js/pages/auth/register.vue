@@ -84,7 +84,7 @@
                     <input
                         v-model="form.password_confirmation"
                         :class="{
-                            'is-invalid': $page.errors.password_confirmation
+                            'is-invalid': $page.errors.password_confirmation,
                         }"
                         type="password"
                         class="form-control"
@@ -96,20 +96,6 @@
                         class="invalid-feedback"
                     >
                         {{ $page.errors.password_confirmation }}
-                    </span>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Code</label>
-                    <input
-                        v-model="form.code"
-                        :class="{ 'is-invalid': $page.errors.code }"
-                        type="text"
-                        class="form-control"
-                        placeholder="e.g., CODE"
-                        name="code"
-                    />
-                    <span v-if="$page.errors.code" class="invalid-feedback">
-                        {{ $page.errors.code }}
                     </span>
                 </div>
                 <div class="mb-3">
@@ -159,10 +145,10 @@ import Layout from '@/layouts/auth';
 
 export default {
     metaInfo: {
-        title: 'Create new account'
+        title: 'Create new account',
     },
     components: {
-        Layout
+        Layout,
     },
     data() {
         return {
@@ -174,9 +160,8 @@ export default {
                 company: null,
                 password: null,
                 password_confirmation: null,
-                code: null,
-                terms: null
-            }
+                terms: null,
+            },
         };
     },
     methods: {
@@ -185,7 +170,7 @@ export default {
             this.$inertia
                 .post(route('register'), this.form)
                 .then(() => (this.sending = false));
-        }
-    }
+        },
+    },
 };
 </script>

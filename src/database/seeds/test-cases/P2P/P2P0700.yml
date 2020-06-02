@@ -14,7 +14,7 @@ precondition: |
   - PayerFsp Comission should be the value "1".
   - PayerFsp Fee should be the value "1".
   - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
-  - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Payee party should be identified by account identifier "msisdn" with the value "+2000028888".
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
@@ -22,8 +22,8 @@ components:
 test_steps:
 
 ## GET/Participants: MMO1 -> Mojaloop ##
-  - path: /participants/{TYPE}/{ID}
-    pattern: '^participants/[A-Z]/[a-z0-9]$'
+  - path: /participants/{Type}/{ID}
+    pattern: '^participants/MSISDN/[+]2000028888$'
     method: GET
     source: Mobile Money Operator 1
     target: Mojaloop
@@ -32,7 +32,7 @@ test_steps:
     test_request_scripts:
       - name: PartyIdType is valid
         rules:
-          uri: 'required|in:MSISDN'
+          uri: 'required|regex:/.*\/participants\/MSISDN\/[+]?[0-9]{6,15}$/'
 
     test_response_scripts:
       - name: Participant request was successfully accepted
@@ -41,20 +41,20 @@ test_steps:
 
     request:
       method: GET
-      uri: /participants/MSISDN/33555789123
+      uri: /participants/MSISDN/+2000028888
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
+        fspiop-source: 'mmo1fsp'
 
     response:
       status: 202
 
 ## PUT/Participants: Mojaloop -> MMO1 ##
 
-  - path: /participants/{TYPE}/{ID}
-    pattern: '^participants/[A-Z]/[a-z0-9]$'
+  - path: /participants/{Type}/{ID}
+    pattern: '^participants/MSISDN/[+]2000028888$'
     method: PUT
     source: Mojaloop
     target: Mobile Money Operator 1
@@ -72,13 +72,14 @@ test_steps:
 
     request:
       method: PUT
-      uri: /participants/MSISDN/33555123456
+      uri: /participants/MSISDN/+2000028888
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
+        fspiop-destination: 'mmo1fsp'
       body:
-        fspId: 'payeefsp'
+        fspId: 'mmo2fsp'
 
     response:
         status: 200
@@ -93,7 +94,14 @@ test_steps:
     trigger:
       amount:
         amount: '700'
-
+    test_request_setups:
+      - name: Override request
+        values:
+          body.amountType: 'RECEIVE'
+          body.amount.amount: '700'
+          body.amount.currency: 'USD'
+          body.fees.amount: '1'
+          body.fees.currency: 'USD'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -112,13 +120,13 @@ test_steps:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+2000028888'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'required|in:700'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -129,17 +137,18 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: "+2000028888"
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
@@ -154,7 +163,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '700'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
@@ -194,13 +203,13 @@ test_steps:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
           body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
           body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:+2000028888'
       - name: Amount and currency are specified correctly
         rules:
           body.amount.amount: 'required|in:700'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payerFspFee.amount: 'required|in:1'
-          body.payerFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.fees.amount: 'required|in:1'
+          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
 
     test_response_scripts:
@@ -212,17 +221,18 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: "+2000028888"
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
@@ -237,7 +247,7 @@ test_steps:
         amount:
           currency: 'USD'
           amount: '700'
-        payerFspFee:
+        fees:
           currency: 'USD'
           amount: '1'
         transactionType:
@@ -288,10 +298,11 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferAmount:
           currency: 'USD'
@@ -339,10 +350,11 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferAmount:
           currency: 'USD'
@@ -406,14 +418,15 @@ test_steps:
       method: 'POST'
       uri: /transfers
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
           amount: '699'
@@ -470,14 +483,15 @@ test_steps:
       method: 'POST'
       uri: /transfers
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payerfsp'
-        fspiop-destination: 'payeefsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
           amount: '699'
@@ -521,14 +535,15 @@ test_steps:
       method: 'PUT'
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -569,14 +584,15 @@ test_steps:
       method: 'PUT'
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
+        accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: 'Sat, 01 Jan 2000 00:00:00 GMT'
-        fspiop-source: 'payeefsp'
-        fspiop-destination: 'payerfsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'payeefsp'
-        payerFsp: 'payerfsp'
+        payeeFsp: 'mmo2fsp'
+        payerFsp: 'mmo1fsp'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'

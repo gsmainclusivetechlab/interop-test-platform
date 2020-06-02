@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
+use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Component extends Model
 {
+    use HasUuid;
     use HasPosition;
 
     /**
@@ -20,26 +22,35 @@ class Component extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'description',
-        'api_service_id',
-    ];
+    protected $fillable = ['name', 'base_url', 'description'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function scenario()
+    public function testCases()
     {
-        return $this->belongsTo(Scenario::class, 'scenario_id');
+        return $this->belongsToMany(
+            TestCase::class,
+            'test_case_components',
+            'component_id',
+            'test_case_id'
+        );
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function apiService()
+    public function sourceTestSteps()
     {
-        return $this->belongsTo(ApiService::class, 'api_service_id');
+        return $this->hasMany(TestStep::class, 'source_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function targetTestSteps()
+    {
+        return $this->hasMany(TestStep::class, 'target_id', 'id');
     }
 
     /**
@@ -47,22 +58,11 @@ class Component extends Model
      */
     public function connections()
     {
-        return $this->belongsToMany(static::class, 'component_connections', 'source_id', 'target_id');
-    }
-
-    /**
-     * @return bool
-     */
-    public function getSimulatedAttribute()
-    {
-        return $this->apiService()->exists();
-    }
-
-    /**
-     * @return array
-     */
-    public function getPositionGroupColumn()
-    {
-        return ['scenario_id'];
+        return $this->belongsToMany(
+            static::class,
+            'component_connections',
+            'source_id',
+            'target_id'
+        );
     }
 }
