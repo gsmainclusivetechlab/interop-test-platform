@@ -1,4 +1,4 @@
-name: P2P Accepted - SND - ALS
+name: P2P Accepted with Account Lookup - Send / Non-Disclosing
 use_case: P2P
 test_case: P2P0600
 behavior: positive
