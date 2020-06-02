@@ -1,4 +1,4 @@
-name: P2P Accepted - RND - ALS
+name: P2P Accepted with Account Lookup - Receive / Non-Disclosing
 use_case: P2P
 test_case: P2P0500
 behavior: positive
