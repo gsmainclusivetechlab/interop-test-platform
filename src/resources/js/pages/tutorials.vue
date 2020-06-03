@@ -540,17 +540,17 @@ const createSession = [
     [
         `${createImgPath}session_info.png`,
         [616, 337],
-        'Select use cases by ticking the corresponding box',
+        'Add a name and select test cases by ticking the corresponding box',
     ],
     [
         `${createImgPath}session_info_2.png`,
         [616, 360],
-        'Select use cases by ticking the corresponding box',
+        'Select test cases by ticking the corresponding box',
     ],
     [
         `${createImgPath}session_info_3.png`,
         [616, 405],
-        'Select use cases by ticking the corresponding box',
+        'Select test cases by ticking the corresponding box',
     ],
     [
         `${createImgPath}session_info_4.png`,
@@ -560,12 +560,12 @@ const createSession = [
     [
         `${createImgPath}configure_sut.png`,
         [780, 436],
-        'After configuration, press Confirm',
+        'Configure your System Under Test using this data and press Confirm',
     ],
     [
         `${createImgPath}session_created.png`,
         [47, 195],
-        'Your session has now been created and use cases can be accessed on the left. Click "Reset Demo" to start the demo again.',
+        'Your session has now been created and test cases can be accessed on the left. Click "Reset Demo" to start the demo again.',
         true
     ]
 ];
