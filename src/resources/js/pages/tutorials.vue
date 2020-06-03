@@ -534,7 +534,7 @@ const createSession = [
     [
         `${createImgPath}select_sut_2.png`,
         [415, 410],
-        "Let's select Service Provider, and enter our URL.",
+        "Let's select Service Provider, and enter our URL",
     ],
     [`${createImgPath}select_sut_3.png`, [785, 460], 'Press Next'],
     [
@@ -565,7 +565,7 @@ const createSession = [
     [
         `${createImgPath}session_created.png`,
         [47, 195],
-        'Your session has now been created and test cases can be accessed on the left. Click "Reset Demo" to start the demo again.',
+        'Your session has now been created and test cases can be accessed on the left. Click "Reset Demo" to start the demo again',
         true
     ]
 ];
@@ -574,37 +574,42 @@ const serviceProvider = [
     [
         `${executeSPImgPath}1-session-page.png`,
         [3, 185],
-        'First, select the session you would like to execute.'
+        'First, select the session you would like to execute'
     ],
     [
         `${executeSPImgPath}2-session-usecase.png`,
         [61, 195],
-        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test.'
+        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test'
     ],
     [
         `${executeSPImgPath}3-test-runs.png`,
+        [430, 120],
+        'This page details the test case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test'
+    ],
+    [
+        `${executeSPImgPath}4-test-flow.png`,
         [251, 199],
-        'This page details the test case and test runs. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.'
+        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs'
     ],
     [
         `${executeSPImgPath}7-postman-1.png`,
         [1053, 74],
-        'Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
+        'Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press "Send"',
     ],
     [
         `${executeSPImgPath}9-test-runs.png`,
         [384, 209],
-        'You should now see your test run. Click to be taken to the test run page.',
+        'You should now see your test run. Click to be taken to the test run page',
     ],
     [
         `${executeSPImgPath}10-test-details-1.png`,
         [604, 437],
-        'On this page are all the details about the test run. Clicking on any particular test will give you more information. ',
+        'On this page are all the details about the test run. Clicking on any particular test will give you more information',
     ],
     [
         `${executeSPImgPath}11-test-details-2.png`,
         [75, 35],
-        'You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click "Reset Demo".',
+        'You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click "Reset Demo"',
         true
     ]
 ];
@@ -613,47 +618,47 @@ const mobileMoneyOperator = [
     [
         `${executeMMOImgPath}1-session-page.png`,
         [5, 240],
-        'First, select the session you would like to execute.'
+        'First, select the session you would like to execute'
     ],
     [
         `${executeMMOImgPath}2-test-usecase.png`,
         [65, 215],
-        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test.'
+        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test'
     ],
     [
         `${executeMMOImgPath}3-test-runs.png`,
         [430, 120],
-        'This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test.'
+        'This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test'
     ],
     [
         `${executeMMOImgPath}4-test-flow.png`,
         [109, 225],
-        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs.'
+        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs'
     ],
     [
         `${executeMMOImgPath}4-test-flow.png`,
         [1150, 115],
-        'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run.'
+        'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run'
     ],
     [
         `${executeMMOImgPath}5-run-test.png`,
         [315, 119],
-        'We should now be able to see the test run by returning to the test run page.'
+        'We should now be able to see the test run by returning to the test run page'
     ],
     [
         `${executeMMOImgPath}6-test-runs-2.png`,
         [370, 205],
-        'Click the test run to see more details.'
+        'Click the test run to see more details'
     ],
     [
         `${executeMMOImgPath}7-test-details.png`,
         [600, 395],
-        'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results.'
+        'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results'
     ],
     [
         `${executeMMOImgPath}8-test-details-2.png`,
         [5, 240],
-        'You can also see the request and response data and validation for each step of the use case flow. To start the demo again press "Reset Demo".',
+        'You can also see the request and response data and validation for each step of the use case flow. To start the demo again press "Reset Demo"',
         true
     ]
 ];
