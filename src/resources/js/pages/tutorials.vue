@@ -50,7 +50,7 @@
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
-                            How do I execute a session?
+                            How do I execute a session as a Service Provider?
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
                             Click here to learn more about Postman and links to
@@ -59,6 +59,30 @@
                         </div>
                     </a>
 
+                    <a
+                        class="d-inline-block btn scenario-card demo3"
+                        href="#mobile-money-operator"
+                        v-b-toggle.accordion-3
+                        @click="initDemo"
+                    >
+                        <h4
+                            id="scenario-heading"
+                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
+                        >
+                            <img
+                                id="session-icon"
+                                src="assets/images/tutorials/Gizmo_RED_Press.png"
+                                class="icon"
+                            />
+                            How do I execute a session as a Mobile Money Operator?
+                        </h4>
+                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                            Click here to learn more about how you can simulate a Service
+                            Provider.
+                        </div>
+                    </a>
+                </section>
+                <section class="d-flex justify-content-around">
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#postman-collections"
@@ -80,8 +104,7 @@
                             collections you can use on the test platform.
                         </div>
                     </a>
-                </section>
-                <section class="d-flex justify-content-around">
+
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#mojaloop-info"
@@ -125,7 +148,6 @@
                             with links to documentations and specifications
                         </div>
                     </a>
-                    <span class="scenario-card border-0"></span>
                 </section>
             </div>
 
@@ -210,7 +232,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                How do I execute a session?
+                                How do I execute a session as a Service Provider?
                             </h3>
                         </button>
                     </header>
@@ -233,7 +255,7 @@
                                     use by clicking
                                     <a
                                         href="#postman-collections"
-                                        v-b-toggle.accordion-3
+                                        v-b-toggle.accordion-4
                                         >here</a
                                     >
                                 </p>
@@ -278,12 +300,82 @@
 
                 <article class="mb-3 card">
                     <header
-                        id="postman-collections"
+                        id="mobile-money-operator"
                         class="pl-0 card-header"
                         role="tab"
                     >
                         <button
                             v-b-toggle.accordion-3
+                            class="btn shadow-none demo3"
+                            type="button"
+                            @click="initDemo"
+                        >
+                            <h3 class="mb-0 scenario-accordion text-primary">
+                                How do I execute a session as a Mobile Money Operator?
+                            </h3>
+                        </button>
+                    </header>
+                    <b-collapse
+                        id="accordion-3"
+                        accordion="tutorial-accordion"
+                        role="tabpanel"
+                    >
+                        <div class="card-body">
+                            <div id="demo-desc">
+                                <p>
+                                    To start the interactive demo, simply press
+                                    the "Start interactive demo" below and
+                                    follow the red circle which will indicate
+                                    where to click and give you additional
+                                    information.
+                                </p>
+                            </div>
+                            <div class="demo-mobile-money-operator mt-3 mx-auto">
+                                <div class="demo-inner-container mb-4">
+                                    <div class="image-holder">
+                                        <div
+                                            class="demo-circle"
+                                            @click.prevent="continueDemo"
+                                        ></div>
+                                        <div
+                                            class="d-flex align-items-center justify-content-center circle-label"
+                                        >
+                                            {{ labelText }}
+                                        </div>
+                                        <img
+                                            class="demo-screenshot"
+                                            :src="screenshotUrl"
+                                        />
+                                    </div>
+                                    <div class="demo-overlay"></div>
+                                    <a
+                                        class="btn border-primary start-demo-btn"
+                                        @click.prevent="startDemo"
+                                    >
+                                        Start interactive demo
+                                    </a>
+                                </div>
+                                <button
+                                    id="service-provider-reset"
+                                    class="btn btn-outline-primary"
+                                    type="button"
+                                    @click.prevent="resetDemo"
+                                >
+                                    Reset Demo
+                                </button>
+                            </div>
+                        </div>
+                    </b-collapse>
+                </article>
+
+                <article class="mb-3 card">
+                    <header
+                        id="postman-collections"
+                        class="pl-0 card-header"
+                        role="tab"
+                    >
+                        <button
+                            v-b-toggle.accordion-4
                             class="btn shadow-none"
                             type="button"
                         >
@@ -293,7 +385,7 @@
                         </button>
                     </header>
                     <b-collapse
-                        id="accordion-3"
+                        id="accordion-4"
                         accordion="tutorial-accordion"
                         role="tabpanel"
                     >
@@ -307,7 +399,7 @@
                                 <ul class="mb-0">
                                     <li>
                                         <a
-                                            href="https://documenter.getpostman.com/view/1386725/SzYUaM2p?version=latest"
+                                            href="https://documenter.getpostman.com/view/1386725/SzYUaM2p"
                                             target="_blank"
                                             class="ml-1"
                                             >Service Provider Simulator</a
@@ -326,7 +418,7 @@
                         role="tab"
                     >
                         <button
-                            v-b-toggle.accordion-4
+                            v-b-toggle.accordion-5
                             class="btn shadow-none"
                             type="button"
                         >
@@ -336,7 +428,7 @@
                         </button>
                     </header>
                     <b-collapse
-                        id="accordion-4"
+                        id="accordion-5"
                         accordion="tutorial-accordion"
                         role="tabpanel"
                     >
@@ -375,14 +467,14 @@
                         class="pl-0 card-header"
                         role="tab"
                     >
-                        <button v-b-toggle.accordion-5 class="btn shadow-none">
+                        <button v-b-toggle.accordion-6 class="btn shadow-none">
                             <h3 class="mb-0 scenario-accordion text-primary">
                                 Learn more about Mobile Money API
                             </h3>
                         </button>
                     </header>
                     <b-collapse
-                        id="accordion-5"
+                        id="accordion-6"
                         accordion="tutorial-accordion"
                         role="tabpanel"
                     >
@@ -424,112 +516,150 @@
 import Layout from '@/layouts/main';
 
 const createImgPath = '/assets/images/tutorials/create-session/';
-const executeImgPath = '/assets/images/tutorials/service-provider/';
+const executeSPImgPath = '/assets/images/tutorials/service-provider/';
+const executeMMOImgPath = 'assets/images/tutorials/mobile-money-operator/';
 
 const createSession = [
     [
         `${createImgPath}dashboard.png`,
-        [1335, 40],
+        [1150, 35],
         'Start by creating a new session',
-        true,
     ],
     [
         `${createImgPath}select_sut.png`,
-        [535, 390],
+        [415, 360],
         'Select the System Under Test',
-        true,
     ],
     [
         `${createImgPath}select_sut_2.png`,
-        [535, 385],
-        "Let's select Service Provider",
-        true,
+        [415, 410],
+        "Let's select Service Provider, and enter our URL",
     ],
-    [`${createImgPath}select_sut_3.png`, [1100, 473], 'Press Next', true],
-    [
-        `${createImgPath}configure_sut.png`,
-        [1100, 422],
-        'After configuration, press Next',
-        true,
-    ],
+    [`${createImgPath}select_sut_3.png`, [785, 460], 'Press Next'],
     [
         `${createImgPath}session_info.png`,
-        [732, 325],
-        'Select use cases by ticking the corresponding box',
-        true,
+        [616, 337],
+        'Add a name and select test cases by ticking the corresponding box',
     ],
     [
         `${createImgPath}session_info_2.png`,
-        [732, 355],
-        'Select use cases by ticking the corresponding box',
-        true,
+        [616, 360],
+        'Select test cases by ticking the corresponding box',
     ],
     [
         `${createImgPath}session_info_3.png`,
-        [732, 410],
-        'Select use cases by ticking the corresponding box',
-        true,
+        [616, 405],
+        'Select test cases by ticking the corresponding box',
     ],
     [
         `${createImgPath}session_info_4.png`,
-        [1050, 515],
-        'Press Create when you are finished',
-        true,
+        [900, 500],
+        'Press Next when you are finished',
+    ],
+    [
+        `${createImgPath}configure_sut.png`,
+        [780, 436],
+        'Configure your System Under Test using this data and press Confirm',
     ],
     [
         `${createImgPath}session_created.png`,
-        [47, 243],
-        'Your session has now been created and use cases can be accessed on the left.',
-        true,
-    ],
+        [47, 195],
+        'Your session has now been created and test cases can be accessed on the left. Click "Reset Demo" to start the demo again',
+        true
+    ]
 ];
 
 const serviceProvider = [
     [
-        `${executeImgPath}1-session-page.png`,
-        [85, 232],
-        'First, select the session you would like to execute.',
+        `${executeSPImgPath}1-session-page.png`,
+        [3, 185],
+        'First, select the session you would like to execute'
     ],
     [
-        `${executeImgPath}2-session-usecase.png`,
-        [101, 270],
-        'Here you can see all your selected use cases, select the one you would like to test.',
+        `${executeSPImgPath}2-session-usecase.png`,
+        [61, 195],
+        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test'
     ],
     [
-        `${executeImgPath}3-test-runs.png`,
-        [1344, 104],
-        'This page details the use case. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.',
+        `${executeSPImgPath}3-test-runs.png`,
+        [430, 120],
+        'This page details the test case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test'
     ],
     [
-        `${executeImgPath}7-postman-1.png`,
-        [1241, 72],
-        'Here we are using Postman. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
-        true,
+        `${executeSPImgPath}4-test-flow.png`,
+        [251, 199],
+        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs'
     ],
     [
-        `${executeImgPath}8-postman-2.png`,
-        [412, 567],
-        'Check the response is correct, and go back to the test platform.',
-        true,
+        `${executeSPImgPath}7-postman-1.png`,
+        [1053, 74],
+        'Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press "Send"',
     ],
     [
-        `${executeImgPath}9-test-runs.png`,
-        [447, 243],
-        'You should now see your test run. Click to be taken to the test run page.',
-        true,
+        `${executeSPImgPath}9-test-runs.png`,
+        [384, 209],
+        'You should now see your test run. Click to be taken to the test run page',
     ],
     [
-        `${executeImgPath}10-test-details-1.png`,
-        [618, 527],
-        'On this page are all the details about the test run. Clicking on a failed test will give you more information. ',
-        true,
+        `${executeSPImgPath}10-test-details-1.png`,
+        [604, 437],
+        'On this page are all the details about the test run. Clicking on any particular test will give you more information',
     ],
     [
-        `${executeImgPath}11-test-details-2.png`,
-        [102, 45],
-        'You can also see the request and response data for each step of the use case flow. To start the demo again click the sessions tab.',
-        true,
+        `${executeSPImgPath}11-test-details-2.png`,
+        [75, 35],
+        'You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click "Reset Demo"',
+        true
+    ]
+];
+
+const mobileMoneyOperator = [
+    [
+        `${executeMMOImgPath}1-session-page.png`,
+        [5, 240],
+        'First, select the session you would like to execute'
     ],
+    [
+        `${executeMMOImgPath}2-test-usecase.png`,
+        [65, 215],
+        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test'
+    ],
+    [
+        `${executeMMOImgPath}3-test-runs.png`,
+        [430, 120],
+        'This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test'
+    ],
+    [
+        `${executeMMOImgPath}4-test-flow.png`,
+        [109, 225],
+        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs'
+    ],
+    [
+        `${executeMMOImgPath}4-test-flow.png`,
+        [1150, 115],
+        'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run'
+    ],
+    [
+        `${executeMMOImgPath}5-run-test.png`,
+        [315, 119],
+        'We should now be able to see the test run by returning to the test run page'
+    ],
+    [
+        `${executeMMOImgPath}6-test-runs-2.png`,
+        [370, 205],
+        'Click the test run to see more details'
+    ],
+    [
+        `${executeMMOImgPath}7-test-details.png`,
+        [600, 395],
+        'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results'
+    ],
+    [
+        `${executeMMOImgPath}8-test-details-2.png`,
+        [5, 240],
+        'You can also see the request and response data and validation for each step of the use case flow. To start the demo again press "Reset Demo"',
+        true
+    ]
 ];
 
 export default {
@@ -566,19 +696,24 @@ export default {
 
             this.demoWrapper = $(`#${wrapperId}`);
             this.currentStep = 0;
+            this.originalHeight = 592;
 
             if ($target.hasClass('demo1')) {
                 this.steps = createSession;
                 this.screenshotUrl =
                     'assets/images/tutorials/create-session/dashboard.png';
-                this.originalHeight = 653;
             }
 
             if ($target.hasClass('demo2')) {
                 this.steps = serviceProvider;
                 this.screenshotUrl =
                     'assets/images/tutorials/service-provider/1-session-page.png';
-                this.originalHeight = 805;
+            }
+
+            if ($target.hasClass('demo3')) {
+                this.steps = mobileMoneyOperator;
+                this.screenshotUrl =
+                    'assets/images/tutorials/mobile-money-operator/1-session-page.png';
             }
 
             this.demoUpdateCircle();
@@ -638,6 +773,10 @@ export default {
         continueDemo() {
             this.currentStep = (this.currentStep + 1) % this.steps.length;
             this.screenshotUrl = this.steps[this.currentStep][0];
+
+            if (this.steps[this.currentStep][3] === true) {
+                this.demoWrapper.find('.demo-circle').toggle();
+            }
 
             this.demoUpdateCircle();
         },
