@@ -148,7 +148,6 @@
                             with links to documentations and specifications
                         </div>
                     </a>
-                    <span class="scenario-card border-0"></span>
                 </section>
             </div>
 
