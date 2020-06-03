@@ -579,17 +579,17 @@ const serviceProvider = [
     [
         `${executeSPImgPath}2-session-usecase.png`,
         [61, 195],
-        'Here you can see all your selected use cases with information on previous runs. Select the one you would like to test.'
+        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test.'
     ],
     [
         `${executeSPImgPath}3-test-runs.png`,
         [251, 199],
-        'This page details the use case and test runs. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.'
+        'This page details the test case and test runs. You can also view the use case flow and test data example. Copy the link to use in your preferred API testing tool.'
     ],
     [
         `${executeSPImgPath}7-postman-1.png`,
         [1053, 74],
-        'Here we are using Postman. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
+        'Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press "Send".',
     ],
     [
         `${executeSPImgPath}9-test-runs.png`,
@@ -604,7 +604,7 @@ const serviceProvider = [
     [
         `${executeSPImgPath}11-test-details-2.png`,
         [75, 35],
-        'You can also see the request and response data for each step of the use case flow. To start the demo again click "Reset Demo".',
+        'You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click "Reset Demo".',
         true
     ]
 ];
@@ -618,7 +618,7 @@ const mobileMoneyOperator = [
     [
         `${executeMMOImgPath}2-test-usecase.png`,
         [65, 215],
-        'Here you can see all your selected use cases with information on previous runs. Select the one you would like to test.'
+        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test.'
     ],
     [
         `${executeMMOImgPath}3-test-runs.png`,
@@ -653,7 +653,7 @@ const mobileMoneyOperator = [
     [
         `${executeMMOImgPath}8-test-details-2.png`,
         [5, 240],
-        'You can also see the request and response data for each step of the use case flow. To start the demo again press "Reset Demo".',
+        'You can also see the request and response data and validation for each step of the use case flow. To start the demo again press "Reset Demo".',
         true
     ]
 ];
