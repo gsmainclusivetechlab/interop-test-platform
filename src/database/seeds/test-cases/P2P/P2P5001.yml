@@ -225,7 +225,7 @@ test_steps:
     response:
       status: 200
 
-## PUT/Quotes/{ID}: Mojaloop -> MMO1 ##
+## PUT/Quotes/{ID}:/error: Mojaloop -> MMO1 ##
   - path: /quotes/{ID}/error
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
     method: PUT
