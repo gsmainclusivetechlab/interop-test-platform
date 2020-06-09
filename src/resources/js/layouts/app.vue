@@ -61,6 +61,7 @@ export default {
                     type: type,
                     text: text,
                     theme: 'bootstrap-v4',
+                    timeout: 3000,
                 }).show();
             });
         },
