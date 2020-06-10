@@ -9,8 +9,6 @@
 
 Project can be setup with Docker.
 
-(If you have a Mac machine - we recommend to run docker under Vagrant. See [Vagranfile and Instructions](https://bitbucket.org/snippets/justcoded/Aex4nL/))
-
 1. Clone repository
 2. Navigate to your project directory
 3. Run `make init`, this command will copy important files from examples:
