@@ -86,7 +86,7 @@
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#postman-collections"
-                        v-b-toggle.accordion-3
+                        v-b-toggle.accordion-4
                     >
                         <h4
                             id="scenario-heading"
@@ -108,7 +108,7 @@
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#mojaloop-info"
-                        v-b-toggle.accordion-4
+                        v-b-toggle.accordion-5
                     >
                         <h4
                             id="scenario-heading"
@@ -130,7 +130,7 @@
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#mobile-money-api-info"
-                        v-b-toggle.accordion-5
+                        v-b-toggle.accordion-6
                     >
                         <h4
                             id="scenario-heading"
