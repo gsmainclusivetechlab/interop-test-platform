@@ -5,14 +5,14 @@ behavior: positive
 description: |
   This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Non-Disclosing Fees.
 precondition: |
-  - Mobile Money Operator is capable of handled async calls.
+  - Mobile Money Operator is capable to handle async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "200".
-  - PayeeFsp Fee should be the value "1".
-  - PayerFsp Fee should be the value "1".
-  - Payer party should be identified by account identifier "msisdn" with the value "+33555123456".
-  - Payee party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Payeer request a 200 transfer.
+  - PayeeFsp Fee should be the value 1.
+  - PayerFsp Fee should be the value 1.
+  - Required Parameters for Execution:
+  -- Transfer Amount: 199.
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
