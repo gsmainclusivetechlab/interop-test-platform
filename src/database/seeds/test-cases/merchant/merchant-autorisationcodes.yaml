@@ -8,7 +8,14 @@ precondition: |
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "20.01".
+  - Configuration for MMO1 as SUT:
+  -- fspiop-source: 'mmo1fsp'.
+  -- fspiop-destination: 'mmo2fsp'.
+  - Configuration for MMO2 as SUT:
+  -- fspiop-source: 'mmo2fsp'.
+  -- fspiop-destination: 'mmo1fsp'.
+  - Required Parameters for Execution:
+  -- Amount should be the value "20.01".
 components:
   - Service Provider
   - Mobile Money Operator 1
