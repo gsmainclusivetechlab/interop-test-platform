@@ -1,56 +1,56 @@
 # configs and main entry
 .env*
 !.env.example
+src/.env
+src/.env.backup
 
 # IDE config
-/src/.idea
-/src/Homestead.json
-/src/Homestead.yaml
-/src/_ide_helper.php
-/src/.phpstorm.meta.php
-/.idea
-/nbproject
-/.buildpath
-/.project
-/.settings
-/jsconfig.json
+src/.idea
+src/Homestead.json
+src/Homestead.yaml
+src/_ide_helper.php
+src/.phpstorm.meta.php
+.idea
+nbproject
+.buildpath
+.project
+.settings
+jsconfig.json
 
 # vendor
 vendor
 node_modules
 *.hot-update.json
 *.hot-update.js
+src/node_modules
+src/vendor
 composer.phar
-/src/node_modules
-/src/vendor
 
 # caches
 Thumbs.db
 .DS_Store
-/src/bootstrap/cache
+/src/bootstrap/cache/*
 
 # runtime assets
 /runtime
 /src/public/hot
 /src/public/storage
-/src/storage
-/src/storage/*.key
-/src/storage/framework/config.php
-/src/storage/framework/routes.php
-/src/storage/framework/schedule-*
-/src/storage/framework/compiled.php
-/src/storage/framework/services.json
-/src/storage/framework/events.scanned.php
-/src/storage/framework/routes.scanned.php
-/src/storage/framework/down
+/src/storage/framework/cache/*
+/src/storage/framework/sessions/*
+/src/storage/framework/testing/*
+/src/storage/framework/views/*
+/src/storage/logs/*
 /src/public/assets
 
 # testing assets
-/src/tests/Browser/console
-/src/tests/Browser/screenshots
-/src/tests/results
-/src/.phpunit.result.cache
+src/tests/Browser/console
+src/tests/Browser/screenshots
+src/tests/results
+src/.phpunit.result.cache
 
 # Logs
 /src/npm-debug.log
 /src/yarn-error.log
+
+# Keep desired directory structure with .gitkeep files
+!.gitkeep
