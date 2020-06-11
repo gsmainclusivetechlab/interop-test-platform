@@ -1,35 +1,58 @@
 # configs and main entry
 .env*
 !.env.example
-docker-compose.yml
-/build/nginx-server.conf
+src/.env
+src/.env.backup
 
-# phpstorm project files
+# IDE config
+src/.idea
+src/Homestead.json
+src/Homestead.yaml
+src/_ide_helper.php
+src/.phpstorm.meta.php
 .idea
-
-# netbeans project files
 nbproject
-
-# zend studio for eclipse project files
 .buildpath
 .project
 .settings
+jsconfig.json
 
-# windows thumbnail cache
-Thumbs.db
-
-# composer vendor dir
+# vendor
 vendor
 node_modules
 *.hot-update.json
 *.hot-update.js
-
-# composer itself is not needed
+src/node_modules
+src/vendor
 composer.phar
-#composer.lock
 
-# Mac DS_Store Files
+# caches
+Thumbs.db
 .DS_Store
+src/bootstrap/cache
 
-# visual studio code config
-jsconfig.json
+# runtime assets
+runtime
+src/public/hot
+src/public/storage
+src/storage
+src/storage/*.key
+src/storage/framework/config.php
+src/storage/framework/routes.php
+src/storage/framework/schedule-*
+src/storage/framework/compiled.php
+src/storage/framework/services.json
+src/storage/framework/events.scanned.php
+src/storage/framework/routes.scanned.php
+src/storage/framework/down
+src/public/assets
+
+# testing assets
+src/tests/Browser/console
+src/tests/Browser/screenshots
+src/tests/results
+src/.phpunit.result.cache
+
+# Logs
+src/npm-debug.log
+src/yarn-error.log
