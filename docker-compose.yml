@@ -90,7 +90,5 @@ services:
 
     mailhog:
         image: mailhog/mailhog
-        ports:
-            - '${HOST_MAILHOG_PORT}:8025'
         networks:
             internal:

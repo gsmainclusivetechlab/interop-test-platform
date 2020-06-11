@@ -1,4 +1,4 @@
-.PHONY: info init build run test-run install update stop xdebug-init chown npm-i npm-build npm-watch php-bash nodejs-bash
+.PHONY: info init build run test-run install update stop xdebug-init chown npm-i npm-build npm-watch php-bash
 
 CURDIR_BASENAME = $(notdir ${CURDIR})
 
@@ -48,14 +48,10 @@ init:
 
 install:
 	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make install"
-	$(MAKE) npm-i
-	$(MAKE) npm-build
 	${MAYBE_SUDO} touch runtime/installed
 
 update:
 	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make update"
-	$(MAKE) npm-i
-	$(MAKE) npm-build
 
 build:
 	docker-compose build
@@ -84,20 +80,3 @@ chown:
 
 php-bash:
 	${DOCKER_COMPOSE_EXEC_WWW} app bash
-
-
-NODEJS_REPO = npm config set registry https://hub.jcdev.net/repository/npm/
-NODEJS_BASH_CMD = docker-compose run -w /var/www/html nodejs bash
-NODEJS_WORK_DIR = cd /var/www/html &&
-
-nodejs-bash:
-	$(NODEJS_BASH_CMD)
-
-npm-i:
-	$(NODEJS_BASH_CMD) -c 'npm ci'
-
-npm-build:
-	$(NODEJS_BASH_CMD) -c 'npm run prod'
-
-npm-watch:
-	$(NODEJS_BASH_CMD) -c 'npm run watch-poll'
