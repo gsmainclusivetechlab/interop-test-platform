@@ -54,7 +54,7 @@ test_steps:
           headers:
               accept: 'application/json'
               content-type: 'application/json'
-              x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
+              x-callback-url: '${SP_BASE_URI}/callback'
               x-date: '2000-01-01T00:00:00.000Z'
           body:
               amount: '18'

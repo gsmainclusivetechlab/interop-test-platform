@@ -2,6 +2,8 @@
 
 namespace App\Http\Client;
 
+use App\Models\Component;
+use App\Models\Session;
 use App\Models\TestSetup;
 use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
@@ -59,6 +61,72 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
         foreach ($setup->values as $key => $value) {
             Arr::set($data, $key, $value);
         }
+
+        return new self(
+            new ServerRequest(
+                $data['method'],
+                $data['uri'],
+                $data['headers'],
+                json_encode($data['body'])
+            )
+        );
+    }
+
+    /**
+     * @param Session $session
+     * @return $this
+     */
+    public function withSubstitutions(Session $session)
+    {
+        $substitute = function (string &$value) use ($session) {
+            if (is_string($value)) {
+                /** @noinspection RegExpRedundantEscape */
+                $value = preg_replace_callback(
+                    '/\\$\{([^\}]+)\}/',
+                    function ($matches) use ($session) {
+                        switch ($matches[1]) {
+                            case 'SP_BASE_URI':
+                                return $session->getBaseUriOfComponent(
+                                    Component::whereIn('name', [
+                                        'Service Provider',
+                                    ])->firstOrFail()
+                                );
+                            case 'MMO1_BASE_URI':
+                                return $session->getBaseUriOfComponent(
+                                    Component::whereIn('name', [
+                                        'Mobile Money Operator 1',
+                                    ])->firstOrFail()
+                                );
+                            case 'MOJALOOP_BASE_URI':
+                                return $session->getBaseUriOfComponent(
+                                    Component::whereIn('name', [
+                                        'Mojaloop',
+                                    ])->firstOrFail()
+                                );
+                            case 'MMO2_BASE_URI':
+                                return $session->getBaseUriOfComponent(
+                                    Component::whereIn('name', [
+                                        'Mobile Money Operator 2',
+                                    ])->firstOrFail()
+                                );
+                            case 'CURRENT_TIMESTAMP_ISO8601':
+                                // used in mobile money API
+                                return date("c");
+                            case 'CURRENT_TIMESTAMP_RFC2822':
+                                // used in Mojaloop API
+                                return date("r");
+                            default:
+                                // leave unmatched strings untouched
+                                return $matches[0];
+                        }
+                    },
+                    $value
+                );
+            }
+        };
+
+        $data = $this->toArray();
+        array_walk_recursive($data, $substitute);
 
         return new self(
             new ServerRequest(
