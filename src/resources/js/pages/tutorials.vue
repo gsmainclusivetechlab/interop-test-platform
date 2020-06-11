@@ -77,8 +77,7 @@
                             How do I execute a session as a Mobile Money Operator?
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to learn more about how you can simulate a Service
-                            Provider.
+                            Click here to learn more about how you can execute test cases as a Mobile Money Operator.
                         </div>
                     </a>
                 </section>
