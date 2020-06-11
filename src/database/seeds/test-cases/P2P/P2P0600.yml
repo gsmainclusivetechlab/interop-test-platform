@@ -9,14 +9,20 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Mojaloop is responsible to access the Account Lookup System.
-  - Payeer request a 600 transfer.
+  - Configuration for MMO1 as SUT:
+  -- fspiop-source: 'mmo1fsp'.
+  -- fspiop-destination: 'mmo2fsp'.
+  - Configuration for MMO2 as SUT:
+  -- fspiop-source: 'mmo2fsp'.
+  -- fspiop-destination: 'mmo1fsp'.
+  - Payeer request a transfer of 600.
   - PayeeFsp Fee should be the value 1.
   - PayerFsp Fee should be the value 1.
   - Required Parameters for Execution:
   -- Transfer Amount: 599.
-  -- Payer and Payee account identifier: MSISDN
-  -- Payer Identifier value: +33555123456
-  -- Payee Identifier value: +2000008888
+  -- Payer and Payee account identifier: MSISDN.
+  -- Payer Identifier value: +33555123456.
+  -- Payee Identifier value: +2000008888.
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
