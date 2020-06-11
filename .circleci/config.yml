@@ -1,187 +1,116 @@
 # Interop Test Platofrm CircleCI
 
 version: 2.1
+
 orbs:
   coverage-reporter: codacy/coverage-reporter@10.0.3
+  node: circleci/node@3.0.0
+
 executors:
-  # Define a machine who has support for docker compose 3.7
   standard:
     machine:
-      image: ubuntu-1604:201903-01
+      image: circleci/classic:201808-01
     working_directory: ~/repo
-  test:
-    docker:
-      - image: gsmainclusivetechlab/interop-php-fpm:latest
-      - image: circleci/mysql:5.7
-        environment:
-          MYSQL_ROOT_HOST: "%"
-          MYSQL_ROOT_PASSWORD: developer
-          MYSQL_DATABASE: itp-test-control
-          MYSQL_USER: itp-test-control
-          MYSQL_PASSWORD: developer
-        command: [--max-allowed-packet=536870912]
-          
-    working_directory: ~/repo
+
 jobs:
-  build:
+  build-and-test:
     executor: standard
-    
     steps:
       - checkout
-
-      - run: 
-          name: Generate configuration files
-          command: make init
-
-      - run: 
-          name: Run docker containers
-          command: | 
-            make run
-            sleep 15
-          
-      - restore_cache: 
-          keys:
-            - composer-v2-{{ checksum "src/composer.lock" }}
-            - composer-v2-
-               
-      - restore_cache: 
-          keys:
-            - node-v2-{{ checksum "src/package-lock.json" }}
-            - node-v2-
-
-      - run: 
-          name: Install Componser and Node dependecies
-          command: make install
-      
-      - save_cache:
-          key: composer-v2-{{ checksum "src/composer.lock" }}
-          paths:
-            - src/vendor
-      
-      - save_cache:
-          key: node-v2-{{ checksum "src/package-lock.json" }}
-          paths:
-            - src/node_modules
-
-      - run: 
-          name: Check installation
-          command: |
-            FILE=./runtime/installed
-            if test -f "$FILE"; then
-                echo "Installation succesful"
-            else 
-                echo "Installation fail"
-                exit 2
-            fi
-         
-  test-run:
-    executor: test
-    
-    steps:
-      - checkout
-       
       - run:
-          name: Update php.ini
-          command: sudo cp build/php-ini-development.ini /usr/local/etc/php/conf.d/zz-force-conf.ini
-          
-      - run: 
-          name: Generate configuration files
-          command: make init
-            
-      - restore_cache: 
-          keys:
-            - composer-v1-test{{ checksum "src/composer.lock" }}
-            - composer-v1-test
-     
-      - restore_cache: 
-          keys:
-            - node-v1-test{{ checksum "src/package-lock.json" }}
-            - node-v1-test
-            
-      - run: 
-          name: Install Componser dependecies
-          command: |
-            sleep 15
-            cd src
-            make install
-      
-      - save_cache:
-          key: composer-v1-test{{ checksum "src/composer.lock" }}
-          paths:
-            - src/vendor
-            
-      - save_cache:
-          key: node-v1-test{{ checksum "src/package-lock.json" }}
-          paths:
-            - src/node_modules
-            
+          name: Copy configuration files
+          command: cp ./src/.env.example ./src/.env && cp .env.example .env
+      - node/install:
+          node-version: lts
+      - node/install-packages:
+          app-dir: ~/repo
       - run:
-          name: Run Tests
-          command: |
-            cd src
-            make test
-          
+          name: Build client assets
+          command: npm run prod
       - run:
-          name: Run Tests Coverage
+          name: Build PHP Image
           command: |
-            cd src
-            make test-coverage
- 
-      - store_test_results:
-          path: src/tests/results
-      - store_artifacts:
-          path: src/tests/results
-      - store_artifacts:
-          path: src/tests/Browser/screenshots
-          
-      - persist_to_workspace:      
-          root: ~/repo/src/tests
-          paths:
-            - results
-          
-  test-coverage-codacy:
-    docker:
-      - image: gsmainclusivetechlab/interop-php-fpm:latest
-    working_directory: ~/repo
-    
-    steps:
-      - attach_workspace:
-          at: ~/repo/src/tests
-          
+            echo "Building Docker Image: gsmainclusivetechlab/interop-test-platform/php:$CIRCLE_SHA1"
+            docker build -t gsmainclusivetechlab/interop-test-platform/php:$CIRCLE_SHA1 -f ./src/build/Dockerfile.php ./src
+      - run:
+          name: Build NGINX Image
+          command: |
+            echo "Building Docker Image: gsmainclusivetechlab/interop-test-platform/web:$CIRCLE_SHA1"
+            docker build -t gsmainclusivetechlab/interop-test-platform/web:$CIRCLE_SHA1 -f ./src/build/Dockerfile.web ./src
+      - run:
+          name: Set docker user
+          command: echo UID=`id -u`:`id -g` >> .env
+      - run:
+          name: Run Tests and get coverage
+          # N.B. We move the `html` to `src` directory so paths are mapped correctly in coverage report
+          command: |
+            docker-compose run \
+              -v /tmp/results:/tmp/results \
+              php bash -c "\
+              WAIT_HOSTS=mysqldb:3306 /wait
+              cd ..
+              mv html src
+              cd src
+              phpdbg -qrr vendor/bin/phpunit \
+                --coverage-html /tmp/results/coverage-report-html \
+                --coverage-clover /tmp/results/coverage-report-clover/clover.xml \
+            "
       - coverage-reporter/send_report:
-          coverage-reports: src/tests/results/coverage-report-clover/clover.xml
+          coverage-reports: /tmp/results/coverage-report-clover/clover.xml
           project-token: $CODACY_PROJECT_TOKEN
-      
       - run:
           name: Copy codacy json report to artifact
-          command: sudo cp /var/tmp/codacy-coverage-*.json ~/repo/src/tests/results/
-          
+          command: sudo cp /var/tmp/codacy-coverage-*.json /tmp/results/
       - store_test_results:
-          path: src/tests/results
+          path: /tmp/results
       - store_artifacts:
-          path: src/tests/results
-    
+          path: /tmp/results
+      # TODO: fix browser testing and include screenshots
+      # - store_artifacts: 
+      #   path: src/tests/Browser/screenshots
+
+      # Using workspaces is pretty slow - better if we can avoid it unless we have high parallelism to justify complex workflows
+      # - run:
+      #     name: Save PHP image to workspace
+      #     command: |
+      #       docker save gsmainclusivetechlab/interop-test-platform/php:$CIRCLE_SHA1 > /tmp/image-php.tar
+      # - run:
+      #     name: Save NGINX image to workspace
+      #     command: |
+      #       docker save gsmainclusivetechlab/interop-test-platform/web:$CIRCLE_SHA1 > /tmp/image-web.tar
+      # - persist_to_workspace:
+      #     root: /tmp
+      #     paths:
+      #       - ./image-php.tar
+      #       - ./image-web.tar
+
+  publish:
+    executor: standard
+    steps:
+      - run:
+          name: TODO
+          command: echo "coming soon"
+
 workflows:
   version: 2
-  build_and_test:
+  build_and_deploy:
     jobs:
-      - build:
+      - build-and-test
+      - approve-publish:
+          type: approval 
+          requires: 
+            - build-and-test
           filters:
             branches:
-              only:
-                - master
-                - develop
-      - test-run:
+              ignore: /.*/
+            tags:
+              only: /.*/
+      - publish:
+          requires: 
+            - build-and-test
+            - approve-publish
           filters:
             branches:
-              only:
-                - master
-                - develop
-      - test-coverage-codacy:
-          filters:
-            branches:
-              only:
-                - master
-                - develop
-          requires:
-            - test-run
+              ignore: /.*/
+            tags:
+              only: /.*/

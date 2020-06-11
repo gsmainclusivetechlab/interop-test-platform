@@ -2,14 +2,14 @@
     "private": true,
     "scripts": {
         "build": "webpack --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "dev": "cross-env NODE_ENV=development npm run build",
-        "prod": "cross-env NODE_ENV=production npm run build",
+        "dev": "cross-env NODE_ENV=development npm run build -- ",
+        "prod": "cross-env NODE_ENV=production npm run build --",
         "watch": "npm run dev -- --watch",
         "watch-poll": "npm run watch -- --watch-poll",
         "prettier": "npm run prettier . --write",
         "docker-test": "docker-compose run -v $(pwd)/runtime/results:/tmp/results php bash",
-        "test": "npm run test -- -c \"php artisan test --log-junit /tmp/results/results.xml\"",
-        "test-coverage": "npm run test -- -c \"phpdbg -qrr vendor/bin/phpunit --coverage-html /tmp/results/coverage-report-html --coverage-clover /tmp/results/coverage-report-clover/clover.xml\""
+        "test": "npm run test -- -c \"WAIT_HOSTS=mysqldb:3306 /wait && php artisan test --log-junit /tmp/results/results.xml\"",
+        "test-coverage": "npm run test -- -c \"WAIT_HOSTS=mysqldb:3306 /wait && phpdbg -qrr vendor/bin/phpunit --coverage-html /tmp/results/coverage-report-html --coverage-clover /tmp/results/coverage-report-clover/clover.xml\""
     },
     "devDependencies": {
         "@inertiajs/inertia-vue": "^0.1.2",
