@@ -9,7 +9,7 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Required Parameters for Execution:
-  -- Amount should be the value "1009".
+  -- Amount should be the value "209".
 components:
   - Service Provider
 test_steps:
@@ -20,7 +20,7 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: MM v1.1.2
     trigger:
-      amount: '1009'
+      amount: '209'
     test_response_setups:
       - name: Override response
         values:
@@ -36,7 +36,7 @@ test_steps:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Amount is specified correctly
         rules:
-          body.amount: 'required|in:1009'
+          body.amount: 'required|in:209'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'required|in:merchantpay'
@@ -57,7 +57,7 @@ test_steps:
         x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
-        amount: '1009'
+        amount: '209'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
