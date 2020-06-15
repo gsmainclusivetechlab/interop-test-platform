@@ -2,6 +2,102 @@
 
 version: 2.1
 
+x-filter-tags: &filter-tags
+  filters:
+    # branches:
+    #   ignore: /.*/
+    tags:
+      only: /.*/
+
+commands:
+  setup:
+    description: "Set up dependencies and build node"
+    parameters:
+      node:
+        type: boolean
+        default: false
+    steps:
+      - checkout
+      - run:
+          name: Copy configuration files
+          command: cp ./src/.env.example ./src/.env && cp .env.example .env
+      - when:
+          condition: << parameters.node >>
+          steps:
+            - node/install:
+                node-version: lts
+            - node/install-packages:
+                app-dir: ~/repo
+            - run:
+                name: Build client assets
+                command: npm run prod
+  build_and_persist:
+    description: "Build a tagged image with docker, and persist to workspace for future jobs."
+    parameters:
+      service:
+        type: string
+      repo:
+        type: string
+        default: gsmainclusivetechlab/interop-test-platform
+      tag:
+        type: string
+        default: $CIRCLE_SHA1
+    steps:
+      - run:
+          name: Build << parameters.service >> Image
+          command: |
+            echo "Building Docker Image: << parameters.repo >>/<< parameters.service >>:<< parameters.tag >>"
+            docker build -t << parameters.repo >>/<< parameters.service >>:<< parameters.tag >> \
+               -f ./src/build/Dockerfile.<< parameters.service >> ./src
+      - run:
+          name: Save << parameters.service >> image to workspace
+          command: |
+            docker save << parameters.repo >>/<< parameters.service >>:<< parameters.tag >> > /tmp/image-<< parameters.service >>.tar
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - ./image-<< parameters.service >>.tar
+  load_image:
+    description: "Load an image from the persisted workspace for further use."
+    parameters:
+      service:
+        type: string
+    steps:
+      - run:
+          name: Load the << parameters.service >> image from workspace
+          command: docker load -i /tmp/image-<< parameters.service >>.tar
+  publish_image:
+    description: "Tag an image with current git tag and publish to docker hub"
+    parameters:
+      service:
+        type: string
+      repo:
+        type: string
+        default: gsmainclusivetechlab/interop-test-platform
+      release_tag:
+        type: string
+        default: $CIRCLE_TAG
+      tag:
+        type: string
+        default: $CIRCLE_SHA1
+    steps:
+      - load_image:
+          service: << parameters.service >>
+      - run:
+          name: Login to Docker Hub
+          command: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
+      - run:
+          name: Re-tag pre built image
+          command: |
+            docker tag << parameters.repo >>/<< parameters.service >>:<< parameters.tag >> \
+              << parameters.repo >>/<< parameters.service >>:<< parameters.release_tag >>
+      - run:
+          name: Publish Docker image << parameters.release_tag >>
+          command: |
+            docker push << parameters.repo >>/<< parameters.service >>:<< parameters.release_tag >>
+
+
+
 orbs:
   coverage-reporter: codacy/coverage-reporter@10.0.3
   node: circleci/node@3.0.0
@@ -13,30 +109,33 @@ executors:
     working_directory: ~/repo
 
 jobs:
-  build-and-test:
+  build-php:
     executor: standard
     steps:
-      - checkout
-      - run:
-          name: Copy configuration files
-          command: cp ./src/.env.example ./src/.env && cp .env.example .env
-      - node/install:
-          node-version: lts
-      - node/install-packages:
-          app-dir: ~/repo
-      - run:
-          name: Build client assets
-          command: npm run prod
-      - run:
-          name: Build PHP Image
-          command: |
-            echo "Building Docker Image: gsmainclusivetechlab/interop-test-platform/php:$CIRCLE_SHA1"
-            docker build -t gsmainclusivetechlab/interop-test-platform/php:$CIRCLE_SHA1 -f ./src/build/Dockerfile.php ./src
-      - run:
-          name: Build NGINX Image
-          command: |
-            echo "Building Docker Image: gsmainclusivetechlab/interop-test-platform/web:$CIRCLE_SHA1"
-            docker build -t gsmainclusivetechlab/interop-test-platform/web:$CIRCLE_SHA1 -f ./src/build/Dockerfile.web ./src
+      - setup:
+          node: true
+      - build_and_persist:
+          service: php
+
+  build-web:
+    executor: standard
+    steps:
+      - setup:
+          node: true
+      - build_and_persist:
+          service: web
+
+  test:
+    executor: standard
+    steps:
+      # checkout code so that we can access docker-compose
+      - setup
+      - attach_workspace:
+          at: /tmp
+      - load_image:
+          service: web
+      - load_image:
+          service: php
       - run:
           name: Set docker user
           command: echo UID=`id -u`:`id -g` >> .env
@@ -69,48 +168,73 @@ jobs:
       # - store_artifacts: 
       #   path: src/tests/Browser/screenshots
 
-      # Using workspaces is pretty slow - better if we can avoid it unless we have high parallelism to justify complex workflows
-      # - run:
-      #     name: Save PHP image to workspace
-      #     command: |
-      #       docker save gsmainclusivetechlab/interop-test-platform/php:$CIRCLE_SHA1 > /tmp/image-php.tar
-      # - run:
-      #     name: Save NGINX image to workspace
-      #     command: |
-      #       docker save gsmainclusivetechlab/interop-test-platform/web:$CIRCLE_SHA1 > /tmp/image-web.tar
-      # - persist_to_workspace:
-      #     root: /tmp
-      #     paths:
-      #       - ./image-php.tar
-      #       - ./image-web.tar
-
   publish:
     executor: standard
     steps:
+      - attach_workspace:
+          at: /tmp
+      - publish_image:
+          service: php
+      - publish_image:
+          service: web
+
+
+  deploy:
+    executor: standard
+    steps:
+      - setup
+      - attach_workspace:
+          at: /tmp
+      - load_image:
+          service: web
+      - load_image:
+          service: php
+      - add_ssh_keys:
+          fingerprints:
+            # TODO: Add valid SSH fingerprint here after setting up keys in CircleCI
+            - "SO:ME:FIN:G:ER:PR:IN:T"
       - run:
-          name: TODO
-          command: echo "coming soon"
+          # Reference: https://blog.scottlowe.org/2019/08/01/accessing-docker-daemon-via-ssh-bastion-host/
+          name: Add Bastion SSH config
+          command: |
+            echo "Host bastion-host
+              HostName bastion.gsmainclusivetechlab.io
+              User ubuntu
+              IdentityFile ~/.ssh/sshkey_rsa
+
+            Host staging.interop.gsmainclusivetechlab.io
+              User ubuntu
+              IdentityFile ~/.ssh/sshkey_rsa
+              ProxyCommand ssh bastion-host -W %h:%p" >> ~/.ssh/config
+      # TODO: replace this with actual deployment step
+      - run:
+          name: View running processes
+          command: docker -H ssh://staging.interop.gsmainclusivetechlab.io ps
+      - run:
+          name: Run docker-compose up
+          comment: docker-compose -f docker-compose.yml -f development/production.yml up --force-recreate -d
 
 workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build-and-test
+      - build-php
+      - build-web
+      - test:
+          requires:
+            - build-php
+            - build-web
       - approve-publish:
+          <<: *filter-tags
           type: approval 
           requires: 
-            - build-and-test
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /.*/
+            - test
+            - build-php
+            - build-web
       - publish:
+          <<: *filter-tags
+          context: GSMA-itp
           requires: 
-            - build-and-test
             - approve-publish
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /.*/
+            - build-php
+            - build-web
