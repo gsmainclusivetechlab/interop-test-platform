@@ -457,7 +457,7 @@ test_steps:
     test_response_scripts:
     - name: Transaction was successfully declined
       rules:
-        status: 'required|in:204'
+        status: 'required|in:14'
     request:
       method: 'PUT'
       uri: 'http://example.com/example'
@@ -468,4 +468,4 @@ test_steps:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
     response:
-      status: 204
+      status: 14

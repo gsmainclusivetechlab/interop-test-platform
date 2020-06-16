@@ -15,7 +15,7 @@ precondition: |
   -- fspiop-source: 'mmo2fsp'.
   -- fspiop-destination: 'mmo1fsp'.
   - Required Parameters for Execution:
-  -- Amount should be the value "203".
+  -- Amount should be the value "13".
 components:
   - Service Provider
   - Mobile Money Operator 1
@@ -28,14 +28,14 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: MM v1.1.2
     trigger:
-      amount: '203'
+      amount: '13'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
           headers.x-callback-url.*: 'required|regex:/.*/'
       - name: Amount is specified correctly
         rules:
-          body.amount: 'required|in:203'
+          body.amount: 'required|in:13'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'required|in:merchantpay'
@@ -58,7 +58,7 @@ test_steps:
         x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
         x-date: '2000-01-01T00:00:00.000Z'
       body:
-        amount: '203'
+        amount: '13'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
@@ -84,7 +84,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '203'
+        amount: '13'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -96,7 +96,7 @@ test_steps:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Amount is specified correctly
         rules:
-          body.amount.amount: 'required|in:203'
+          body.amount.amount: 'required|in:13'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -119,7 +119,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '203'
+          amount: '13'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -136,7 +136,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '203'
+        amount: '13'
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
         rules:
@@ -148,7 +148,7 @@ test_steps:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
       - name: Amount is specified correctly
         rules:
-          body.amount.amount: 'required|in:203'
+          body.amount.amount: 'required|in:13'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -171,7 +171,7 @@ test_steps:
           partyIdType: 'MSISDN'
           partyIdentifier: "+33555123456"
         amount:
-          amount: '203'
+          amount: '13'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -248,7 +248,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '203'
+        amount: '13'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -264,7 +264,7 @@ test_steps:
           body.amountType: 'required|in:SEND'
       - name: Amount is specified correctly
         rules:
-          body.amount.amount: 'required|in:203'
+          body.amount.amount: 'required|in:13'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -297,7 +297,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '203'
+          amount: '13'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -312,7 +312,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '203'
+        amount: '13'
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
@@ -328,7 +328,7 @@ test_steps:
           body.amountType: 'required|in:SEND'
       - name: Amount is specified correctly
         rules:
-          body.amount.amount: 'required|in:203'
+          body.amount.amount: 'required|in:13'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -361,7 +361,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '203'
+          amount: '13'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -376,14 +376,14 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '203'
+        amount: '13'
     test_request_scripts:
       - name: ID is Valid
         rules:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount is specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:203'
+          body.transferAmount.amount: 'required|in:13'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -399,7 +399,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '203'
+          amount: '13'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -413,14 +413,14 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '203'
+        amount: '13'
     test_request_scripts:
       - name: ID is Valid
         rules:
           path: 'required|regex:/quotes\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
       - name: Amount is specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:203'
+          body.transferAmount.amount: 'required|in:13'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -436,7 +436,7 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '203'
+          amount: '13'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -517,7 +517,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully declined
         rules:
-          status: 'required|in:204'
+          status: 'required|in:14'
     request:
       method: 'PUT'
       uri: 'http://example.com/example'
@@ -528,4 +528,4 @@ test_steps:
         errorCategory: 'businessRule'
         errorCode: 'genericError'
     response:
-      status: 204
+      status: 14
