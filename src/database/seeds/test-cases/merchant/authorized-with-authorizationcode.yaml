@@ -579,7 +579,7 @@ test_steps:
         currency: 'USD'
 
     response:
-      status: 11
+      status: 201
       headers:
         content-type: 'application/json'
         x-date: '2000-01-01T00:00:00.000Z'
@@ -788,7 +788,7 @@ test_steps:
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
-          status: 'required|in:14'
+          status: 'required|in:204'
 
     request:
       method: 'PUT'
@@ -810,7 +810,7 @@ test_steps:
             value: '+33555789123'
 
     response:
-      status: 14
+      status: 204
 
   ##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
   - path: /transfers/{ID}
