@@ -9,7 +9,7 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Required Parameters for Execution:
-  -- Amount should be the value "15".
+    - Amount should be the value "15".
 components:
   - Service Provider
 test_steps:

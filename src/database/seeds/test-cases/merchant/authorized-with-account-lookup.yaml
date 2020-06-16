@@ -9,16 +9,16 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Configuration for MMO1 as SUT:
-  -- fspiop-source: 'mmo1fsp'.
-  -- fspiop-destination: 'mmo2fsp'.
+    - fspiop-source: 'mmo1fsp'.
+    - fspiop-destination: 'mmo2fsp'.
   - Configuration for MMO2 as SUT:
-  -- fspiop-source: 'mmo2fsp'.
-  -- fspiop-destination: 'mmo1fsp'.
+    - fspiop-source: 'mmo2fsp'.
+    - fspiop-destination: 'mmo1fsp'.
   - Required Parameters for Execution:
-  -- Amount should be the value "21".
-  -- Payer and Payee account identifier: MSISDN.
-  -- Debit party should be identified by account identifier "msisdn" with the value "+2000009999".
-  -- Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+    - Amount should be the value "21".
+    - Payer and Payee account identifier: MSISDN.
+    - Debit party should be identified by account identifier "msisdn" with the value "+2000009999".
+    - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
   - Service Provider
   - Mobile Money Operator 1
