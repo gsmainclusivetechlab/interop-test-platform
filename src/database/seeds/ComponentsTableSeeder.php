@@ -14,7 +14,11 @@ class ComponentsTableSeeder extends Seeder
         factory(Component::class)
             ->createMany($this->getComponentsData())
             ->each(function (Component $component, $key) {
-                $component->connections()->attach(Arr::get($this->getComponentConnectionsData(), $key, []));
+                $component
+                    ->connections()
+                    ->attach(
+                        Arr::get($this->getComponentConnectionsData(), $key, [])
+                    );
             });
     }
 
@@ -57,9 +61,16 @@ class ComponentsTableSeeder extends Seeder
     protected function getComponentConnectionsData()
     {
         return [
-            Component::whereIn('name', ['Mobile Money Operator 1'])->pluck('id'),
-            Component::whereIn('name', ['Service Provider', 'Mojaloop'])->pluck('id'),
-            Component::whereIn('name', ['Mobile Money Operator 1', 'Mobile Money Operator 2'])->pluck('id'),
+            Component::whereIn('name', ['Mobile Money Operator 1'])->pluck(
+                'id'
+            ),
+            Component::whereIn('name', ['Service Provider', 'Mojaloop'])->pluck(
+                'id'
+            ),
+            Component::whereIn('name', [
+                'Mobile Money Operator 1',
+                'Mobile Money Operator 2',
+            ])->pluck('id'),
             Component::whereIn('name', ['Mojaloop'])->pluck('id'),
         ];
     }

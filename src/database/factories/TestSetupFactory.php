@@ -20,7 +20,9 @@ use Faker\Generator as Faker;
 $factory->define(TestSetup::class, function (Faker $faker) {
     return [
         'test_step_id' => function () {
-            return factory(TestStep::class)->create()->getKey();
+            return factory(TestStep::class)
+                ->create()
+                ->getKey();
         },
         'name' => $faker->text,
         'type' => $faker->randomElement([

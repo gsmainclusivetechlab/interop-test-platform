@@ -493,7 +493,16 @@
                                     </b-collapse>
                                     <div
                                         class="d-flex"
-                                        v-if="!collect(session.components.data).where('id', testResult.testStep.data.source.id).count() && testResultRequestSetups.count()"
+                                        v-if="
+                                            !collect(session.components.data)
+                                                .where(
+                                                    'id',
+                                                    testResult.testStep.data
+                                                        .source.id
+                                                )
+                                                .count() &&
+                                            testResultRequestSetups.count()
+                                        "
                                     >
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
@@ -638,7 +647,16 @@
                                     </b-collapse>
                                     <div
                                         class="d-flex"
-                                        v-if="!collect(session.components.data).where('id', testResult.testStep.data.target.id).count() && testResultResponseSetups.count()"
+                                        v-if="
+                                            !collect(session.components.data)
+                                                .where(
+                                                    'id',
+                                                    testResult.testStep.data
+                                                        .target.id
+                                                )
+                                                .count() &&
+                                            testResultResponseSetups.count()
+                                        "
                                     >
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
