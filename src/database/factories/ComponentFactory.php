@@ -24,6 +24,12 @@ $factory->define(Component::class, function (Faker $faker) {
     ];
 });
 
-$factory->afterCreatingState(Component::class, 'withConnection', function (Component $component) {
-    $component->connections()->attach(factory(Component::class)->create()->getKey());
+$factory->afterCreatingState(Component::class, 'withConnection', function (
+    Component $component
+) {
+    $component->connections()->attach(
+        factory(Component::class)
+            ->create()
+            ->getKey()
+    );
 });

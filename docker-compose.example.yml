@@ -1,7 +1,6 @@
-version: "3.7"
+version: '3.7'
 
-x-php-defaults: &php-defaults
-    #build: ./build/php-fpm
+x-php-defaults: &php-defaults #build: ./build/php-fpm
     image: gsmainclusivetechlab/interop-php-fpm:latest
     cap_add:
         - SYS_PTRACE
@@ -37,7 +36,7 @@ services:
             XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
             PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
         ports:
-            - "${HOST_SSHD_PORT}:22"
+            - '${HOST_SSHD_PORT}:22'
 
     queue:
         <<: *php-defaults
@@ -56,7 +55,7 @@ services:
     web:
         image: nginx:latest
         ports:
-            - "${HOST_WEB_PORT}:80"
+            - '${HOST_WEB_PORT}:80'
         depends_on:
             - app
         volumes:
@@ -68,14 +67,14 @@ services:
         image: mysql:8
         restart: always
         ports:
-            - "${HOST_DB_PORT}:3306"
+            - '${HOST_DB_PORT}:3306'
         environment:
             MYSQL_ROOT_PASSWORD: developer
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
         healthcheck:
-            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
             timeout: 20s
             retries: 10
         volumes:
@@ -93,4 +92,4 @@ services:
     mailhog:
         image: mailhog/mailhog
         ports:
-            - "${HOST_MAILHOG_PORT}:8025"
+            - '${HOST_MAILHOG_PORT}:8025'

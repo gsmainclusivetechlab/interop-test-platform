@@ -15,9 +15,17 @@ class CreateTestCaseComponentsTable extends Migration
     {
         Schema::create('test_case_components', function (Blueprint $table) {
             $table->unsignedBigInteger('test_case_id');
-            $table->foreign('test_case_id')->references('id')->on('test_cases')->onDelete('cascade');
+            $table
+                ->foreign('test_case_id')
+                ->references('id')
+                ->on('test_cases')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('component_id');
-            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
+            $table
+                ->foreign('component_id')
+                ->references('id')
+                ->on('components')
+                ->onDelete('cascade');
             $table->primary(['test_case_id', 'component_id']);
         });
     }

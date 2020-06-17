@@ -16,7 +16,11 @@ class CreateTestExecutionsTable extends Migration
         Schema::create('test_executions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('test_result_id');
-            $table->foreign('test_result_id')->references('id')->on('test_results')->onDelete('cascade');
+            $table
+                ->foreign('test_result_id')
+                ->references('id')
+                ->on('test_results')
+                ->onDelete('cascade');
             $table->string('name');
             $table->json('actual');
             $table->json('expected');

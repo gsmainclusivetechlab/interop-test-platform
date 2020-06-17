@@ -17,7 +17,11 @@ class CreateTestCasesTable extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('use_case_id');
-            $table->foreign('use_case_id')->references('id')->on('use_cases')->onDelete('cascade');
+            $table
+                ->foreign('use_case_id')
+                ->references('id')
+                ->on('use_cases')
+                ->onDelete('cascade');
             $table->string('name');
             $table->boolean('public');
             $table->string('behavior');

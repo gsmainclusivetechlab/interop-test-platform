@@ -28,12 +28,16 @@ class ApiSpecsTableSeeder extends Seeder
             [
                 'name' => 'MM v1.1.2',
                 'description' => '',
-                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapis/mm.yaml')),
+                'openapi' => Reader::readFromYamlFile(
+                    database_path('seeds/openapis/mm.yaml')
+                ),
             ],
             [
                 'name' => 'Mojaloop v1.0',
                 'description' => '',
-                'openapi' => Reader::readFromYamlFile(database_path('seeds/openapis/mojaloop.yaml')),
+                'openapi' => Reader::readFromYamlFile(
+                    database_path('seeds/openapis/mojaloop.yaml')
+                ),
             ],
         ];
     }

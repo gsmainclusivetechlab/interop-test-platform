@@ -21,7 +21,9 @@ $factory->define(ApiSpec::class, function (Faker $faker) {
     return [
         'name' => $faker->text,
         'openapi' => function () use ($faker) {
-            return Reader::readFromJsonFile('https://petstore.swagger.io/v2/swagger.json');
+            return Reader::readFromJsonFile(
+                'https://petstore.swagger.io/v2/swagger.json'
+            );
         },
         'description' => $faker->text,
     ];

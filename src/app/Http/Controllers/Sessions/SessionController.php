@@ -154,12 +154,12 @@ class SessionController extends Controller
 
         foreach ($rows as $row) {
             $data[0]['data'][] = [
-                'x' => substr($row['date'],2, 6),
+                'x' => substr($row['date'], 2, 6),
                 'y' => $row['pass'],
             ];
 
             $data[1]['data'][] = [
-                'x' => substr($row['date'],2, 6),
+                'x' => substr($row['date'], 2, 6),
                 'y' => $row['fail'],
             ];
         }
