@@ -64,6 +64,7 @@ services:
     mysqldb:
         image: mysql:8
         restart: always
+        user: ${UID}
         environment:
             MYSQL_ROOT_PASSWORD: developer
             MYSQL_DATABASE: ${DB_DATABASE}
