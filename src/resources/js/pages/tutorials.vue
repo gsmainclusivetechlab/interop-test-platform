@@ -77,8 +77,7 @@
                             How do I execute a session as a Mobile Money Operator?
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to learn more about how you can simulate a Service
-                            Provider.
+                            Click here to learn more about how you can execute test cases as a Mobile Money Operator.
                         </div>
                     </a>
                 </section>
@@ -86,7 +85,7 @@
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#postman-collections"
-                        v-b-toggle.accordion-3
+                        v-b-toggle.accordion-4
                     >
                         <h4
                             id="scenario-heading"
@@ -108,7 +107,7 @@
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#mojaloop-info"
-                        v-b-toggle.accordion-4
+                        v-b-toggle.accordion-5
                     >
                         <h4
                             id="scenario-heading"
@@ -130,7 +129,7 @@
                     <a
                         class="d-inline-block btn scenario-card"
                         href="#mobile-money-api-info"
-                        v-b-toggle.accordion-5
+                        v-b-toggle.accordion-6
                     >
                         <h4
                             id="scenario-heading"
