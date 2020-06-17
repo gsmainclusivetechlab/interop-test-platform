@@ -398,7 +398,7 @@
                                 <ul class="mb-0">
                                     <li>
                                         <a
-                                            href="https://documenter.getpostman.com/view/1386725/SzYUaM2p"
+                                            href="https://explore.postman.com/api/5380/interoperability-test-platform---service-provider-simulator"
                                             target="_blank"
                                             class="ml-1"
                                             >Service Provider Simulator</a
