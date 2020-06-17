@@ -207,7 +207,7 @@
                                                     ),
                                                 }"
                                             >
-                                                Flow
+                                                Test Flow
                                             </inertia-link>
                                         </li>
                                     </ul>
