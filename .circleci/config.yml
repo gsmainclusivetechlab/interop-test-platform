@@ -31,7 +31,9 @@ jobs:
 
             - run:
                   name: Generate configuration files
-                  command: make init
+                  command: |
+                      make init;
+                      sed -i "s/UID=.*$/UID=`id -u`:`id -g`/" .env
 
             - run:
                   name: Run docker containers
@@ -86,7 +88,9 @@ jobs:
 
             - run:
                   name: Generate configuration files
-                  command: make init
+                  command: |
+                      make init;
+                      sed -i "s/UID=.*$/UID=`id -u`:`id -g`/" .env
 
             - restore_cache:
                   keys:

@@ -30,7 +30,9 @@ Thumbs.db
 /src/bootstrap/cache/*
 
 # runtime assets
-/runtime
+/runtime/installed
+/runtime/mysql/*
+/runtime/redis/*
 /src/public/hot
 /src/public/storage
 /src/storage/framework/cache/*
