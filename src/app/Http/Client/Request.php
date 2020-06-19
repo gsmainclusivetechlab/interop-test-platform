@@ -5,9 +5,11 @@ namespace App\Http\Client;
 use App\Models\Component;
 use App\Models\Session;
 use App\Models\TestSetup;
+use DateTime;
 use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Psr\Http\Message\RequestInterface;
 
 class Request extends \Illuminate\Http\Client\Request implements Arrayable
@@ -111,10 +113,10 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                                 );
                             case 'CURRENT_TIMESTAMP_ISO8601':
                                 // used in mobile money API
-                                return date("c");
+                                return Carbon::now()->toIso8601String();
                             case 'CURRENT_TIMESTAMP_RFC2822':
                                 // used in Mojaloop API
-                                return date("r");
+                                return Carbon::now()->toRfc2822String();
                             default:
                                 // leave unmatched strings untouched
                                 return $matches[0];
@@ -136,5 +138,10 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 json_encode($data['body'])
             )
         );
+    }
+
+    protected function getDate(?string $time = null): DateTime
+    {
+        return new DateTime($time);
     }
 }
