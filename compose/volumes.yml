@@ -1,0 +1,15 @@
+#  Adds volumes allowing local modifications to files inside the running container
+version: '3.7'
+
+services:
+    app:
+        volumes:
+            - ./src/build/php-ini-development.ini:/usr/local/etc/php/conf.d/zz-force-conf.ini
+            - ./src/build/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-www.conf
+            - ./src/build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+            - ./src/build/nginx-server.conf:/etc/nginx/conf.d/default.conf
+            - ./src:/var/www/html
+
+    mysqldb:
+        volumes:
+            - ./mysqldb/my.cnf:/etc/mysql/my.cnf

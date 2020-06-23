@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+    app:
+        restart: always
+    # scheduler:
+    # restart: always
+    queue:
+        restart: always
+    redis:
+        restart: always
+    mysqldb:
+        restart: always
+
+# TODO: mount to well-defined directory on host for backup purposes
+volumes:
+    mysqldata:
+    redisdata:
