@@ -1,0 +1,11 @@
+# Connect to an external docker network to allow communication with the test platform
+
+version: '3.7'
+
+services:
+    app:
+        ports:
+            - '${HOST_WEB_PORT}:80'
+    mailhog:
+        ports:
+            - '${HOST_MAILHOG_PORT}:8025'

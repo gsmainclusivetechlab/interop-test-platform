@@ -1,0 +1,32 @@
+version: '3.7'
+
+x-migration-service: &migration-service
+    image: gsmainclusivetechlab/interop-test-platform/php:${CIRCLE_SHA1:-latest}
+    build:
+        context: src
+    depends_on:
+        - mysqldb
+    environment:
+        MYSQL_HOST: mysqldb
+        MYSQL_DATABASE: ${DB_DATABASE}
+        MYSQL_USER: ${DB_USERNAME}
+        MYSQL_PASSWORD: ${DB_PASSWORD}
+        FOREGROUND_PROCESS: php-fpm
+        CONTAINER_ENABLED: 1
+        WAIT_HOSTS: mysqldb:3306
+        WAIT_SLEEP_INTERVAL: 5
+    networks:
+        internal:
+
+    # Include the src volume so that the containers have access to the latest seed scripts
+    volumes:
+        - ./src:/var/www/html
+
+services:
+    seed:
+        <<: *migration-service
+        command: sh -c "/wait && php artisan migrate:refresh --seed"
+
+    migrate:
+        <<: *migration-service
+        command: sh -c "/wait && php artisan migrate"
