@@ -1,5 +1,4 @@
 Dockerfile
-.env
 /node_modules
 /public/hot
 /public/storage
@@ -7,7 +6,6 @@ Dockerfile
 /storage/logs
 /public/assets
 /vendor
-.env.backup
 .idea
 .phpunit.result.cache
 Homestead.json

@@ -1,191 +1,260 @@
-# Interop Test Platofrm CircleCI
+# Interop Test Platform CircleCI
 
 version: 2.1
+
+x_filter_develop: &develop_filter
+  filters:
+    branches:
+      only: /develop/
+
+x_filter_release: &release_filter
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /.*/
+
+commands:
+  setup_docker_host:
+    description: 'Connect to a GSMA docker host via SSH'
+    parameters:
+      host:
+        type: string
+      user:
+        type: string
+        default: circleci
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - 'a8:10:b9:85:49:e6:b9:d3:09:2c:83:76:4b:4d:0a:a9'
+      - run:
+          name: Update Docker Compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.26.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+            sudo mv docker-compose /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+      - run:
+          name: Add Bastion SSH config
+          command: |
+            mkdir -p ~/.ssh
+
+            echo "Host bastion
+              HostName 35.177.12.169
+              User << parameters.user >>
+
+            Host << parameters.host >>
+              User << parameters.user >>
+              StrictHostKeyChecking no
+              ProxyCommand ssh bastion -W %h:%p" >> ~/.ssh/config;
+
+            echo '35.177.12.169 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOY9bFCp+EEYgca6hsbnl+Bn1t0ye1pbpJboZZV0C7Ju/Fs/Q16JhdsZEYLxlEprWu/r6zINjg2eTz17Y5GaYjOoWUMo0OB0TJSlQ2WDVAk60gYTC0yaVaVBoI+mWXPt3YPN7YzVOs+CTEp4S19Al3T8X964/YdR/IL/FntmXPb2/0c+lWqFoVNAwS5gyfFAbEhj/TcK9V55gy4Rw9+mWtxE3CV739XeRxgW60uNsKwdzPPLLBcoxErr61I558aZw1P3VBIoOdq8w/dk96Yaz0jDnjBK2oIE9XASRcw/JKfBBR8Yxu8FESRj35VZgvmJbw3u4ggr5sh8XojDiBA+HN
+            ' >> ~/.ssh/known_hosts
+      - run:
+          name: Create docker context
+          command: |
+            docker context create remote --docker "host=ssh://<< parameters.host >>";
+            docker context use remote;
+  setup_dependencies:
+    description: 'Set up dependencies and build node'
+    parameters:
+      node:
+        type: boolean
+        default: false
+    steps:
+      - checkout
+      - run:
+          name: Install gettext for envsubst
+          command: sudo apt-get update && sudo apt-get install gettext-base
+      - run:
+          name: Copy configuration files
+          command: 'envsubst < service.example.env > service.env'
+
 orbs:
-    coverage-reporter: codacy/coverage-reporter@10.0.3
+  coverage-reporter: codacy/coverage-reporter@10.0.3
+  node: circleci/node@3.0.0
+
 executors:
-    # Define a machine who has support for docker compose 3.7
-    standard:
-        machine:
-            image: ubuntu-1604:201903-01
-        working_directory: ~/repo
-    test:
-        docker:
-            - image: gsmainclusivetechlab/interop-php-fpm:latest
-            - image: circleci/mysql:5.7
-              environment:
-                  MYSQL_ROOT_HOST: '%'
-                  MYSQL_ROOT_PASSWORD: developer
-                  MYSQL_DATABASE: itp-test-control
-                  MYSQL_USER: itp-test-control
-                  MYSQL_PASSWORD: developer
-              command: [--max-allowed-packet=536870912]
+  standard:
+    docker:
+      # Must be Ubuntu 18.04 or SSH clashes with servers
+      - image: 'cimg/node:12.18.0'
 
-        working_directory: ~/repo
 jobs:
-    build:
-        executor: standard
+  build:
+    executor: standard
+    parameters:
+      host:
+        type: string
+        default: ''
+    steps:
+      - when:
+          condition: << parameters.host >>
+          steps:
+            - setup_docker_host:
+                host: << parameters.host >>
+                user: circleci
+      - unless:
+          condition: << parameters.host >>
+          steps:
+            - setup_remote_docker
+      - setup_dependencies
+      - run:
+          name: Build Images
+          command: |
+            echo "Building Docker Image"
+            docker-compose build app
+            docker-compose build mysqldb
+            docker-compose pull
+      - run:
+          name: Run Tests and get coverage
+          command: |
+            npm run test
+            docker-compose down -v
+      - coverage-reporter/send_report:
+          coverage-reports: ./results/coverage-report-clover/clover.xml
+          project-token: $CODACY_PROJECT_TOKEN
+      - run:
+          name: Copy codacy json report to artifact
+          command: sudo cp /var/tmp/codacy-coverage-*.json ./results/
+      - run:
+          name: Login to Docker Hub
+          command:
+            echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+      - store_test_results:
+          path: ./results
+      - store_artifacts:
+          path: ./results
+      - run:
+          name: Publish Docker image 
+          command:
+            docker-compose push app
+      # TODO: fix browser testing and include screenshots
+      # - store_artifacts:
+      #   path: src/tests/Browser/screenshots
+   
+  check_build: 
+    executor: standard
+    parameters:
+      repo:
+        type: string
+        default: gsmainclusivetechlab/interop-test-platform
+      tag:
+        type: string
+        default: $CIRCLE_SHA1
+    steps:
+      - run:
+          name: Checking current commit has been built
+          command: curl -f https://index.docker.io/v1/repositories/<< parameters.repo >>/tags/<< parameters.tag >> 
 
-        steps:
-            - checkout
+  publish:
+    executor: standard
+    parameters:
+      repo:
+        type: string
+        default: gsmainclusivetechlab/interop-test-platform
+      release_tag:
+        type: string
+        default: $CIRCLE_TAG
+      tag:
+        type: string
+        default: $CIRCLE_SHA1
+    steps:
+      - run:
+          name: Login to Docker Hub
+          command:
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_ACCESS_TOKEN
+      - run:
+          name: Download previously built image
+          command:
+            docker image prune
+            docker pull << parameters.repo >>:<< parameters.tag >> 
+      - run:
+          name: Re-tag pre-built image
+          command: |
+            docker tag << parameters.repo >>:<< parameters.tag >> \
+              << parameters.repo >>:<< parameters.release_tag >>
+      - run:
+          name: Publish image as << parameters.release_tag >>
+          command:
+            docker push << parameters.repo >>:<< parameters.release_tag >>
 
-            - run:
-                  name: Generate configuration files
-                  command: |
-                      make init;
-                      sed -i "s/UID=.*$/UID=`id -u`:`id -g`/" .env
-
-            - run:
-                  name: Run docker containers
-                  command: |
-                      make run
-                      sleep 15
-
-            - restore_cache:
-                  keys:
-                      - composer-v2-{{ checksum "src/composer.lock" }}
-                      - composer-v2-
-
-            - restore_cache:
-                  keys:
-                      - node-v2-{{ checksum "src/package-lock.json" }}
-                      - node-v2-
-
-            - run:
-                  name: Install Componser and Node dependecies
-                  command: make install
-
-            - save_cache:
-                  key: composer-v2-{{ checksum "src/composer.lock" }}
-                  paths:
-                      - src/vendor
-
-            - save_cache:
-                  key: node-v2-{{ checksum "src/package-lock.json" }}
-                  paths:
-                      - src/node_modules
-
-            - run:
-                  name: Check installation
-                  command: |
-                      FILE=./runtime/installed
-                      if test -f "$FILE"; then
-                          echo "Installation succesful"
-                      else 
-                          echo "Installation fail"
-                          exit 2
-                      fi
-
-    test-run:
-        executor: test
-
-        steps:
-            - checkout
-
-            - run:
-                  name: Update php.ini
-                  command: sudo cp build/php-ini-development.ini /usr/local/etc/php/conf.d/zz-force-conf.ini
-
-            - run:
-                  name: Generate configuration files
-                  command: |
-                      make init;
-                      sed -i "s/UID=.*$/UID=`id -u`:`id -g`/" .env
-
-            - restore_cache:
-                  keys:
-                      - composer-v1-test{{ checksum "src/composer.lock" }}
-                      - composer-v1-test
-
-            - restore_cache:
-                  keys:
-                      - node-v1-test{{ checksum "src/package-lock.json" }}
-                      - node-v1-test
-
-            - run:
-                  name: Install Componser dependecies
-                  command: |
-                      sleep 15
-                      cd src
-                      make install
-
-            - save_cache:
-                  key: composer-v1-test{{ checksum "src/composer.lock" }}
-                  paths:
-                      - src/vendor
-
-            - save_cache:
-                  key: node-v1-test{{ checksum "src/package-lock.json" }}
-                  paths:
-                      - src/node_modules
-
-            - run:
-                  name: Run Tests
-                  command: |
-                      cd src
-                      make test
-
-            - run:
-                  name: Run Tests Coverage
-                  command: |
-                      cd src
-                      make test-coverage
-
-            - store_test_results:
-                  path: src/tests/results
-            - store_artifacts:
-                  path: src/tests/results
-            - store_artifacts:
-                  path: src/tests/Browser/screenshots
-
-            - persist_to_workspace:
-                  root: ~/repo/src/tests
-                  paths:
-                      - results
-
-    test-coverage-codacy:
-        docker:
-            - image: gsmainclusivetechlab/interop-php-fpm:latest
-        working_directory: ~/repo
-
-        steps:
-            - attach_workspace:
-                  at: ~/repo/src/tests
-
-            - coverage-reporter/send_report:
-                  coverage-reports: src/tests/results/coverage-report-clover/clover.xml
-                  project-token: $CODACY_PROJECT_TOKEN
-
-            - run:
-                  name: Copy codacy json report to artifact
-                  command: sudo cp /var/tmp/codacy-coverage-*.json ~/repo/src/tests/results/
-
-            - store_test_results:
-                  path: src/tests/results
-            - store_artifacts:
-                  path: src/tests/results
+  deploy:
+    executor: standard
+    parameters:
+      host:
+        type: string
+    steps:
+      - setup_dependencies
+      - setup_docker_host:
+          host: << parameters.host >>
+          user: circleci
+      - run:
+          name: Build mysqldb image
+          command:
+            docker-compose build mysqldb
+      - run:
+          name: Backup current mysql database
+          command: |
+            (npm run --silent has-db \
+              && (echo "Backing up DB" && npm run --silent backup > ./backup.sql)) \
+              || (echo "No DB to back up" && touch ./backup.sql)
+      - run:
+          name: Run migrations
+          command: |
+            (npm run --silent has-db \
+              && (echo "Migrating DB" && npm run --silent migrate)) \
+              || (echo "Seeding DB" && npm run --silent seed)
+      - store_artifacts:
+          path: ./backup.sql
+      - run:
+          name: Run docker-compose up
+          command: npm run prod 
 
 workflows:
-    version: 2
-    build_and_test:
-        jobs:
-            - build:
-                  filters:
-                      branches:
-                          only:
-                              - master
-                              - develop
-            - test-run:
-                  filters:
-                      branches:
-                          only:
-                              - master
-                              - develop
-            - test-coverage-codacy:
-                  filters:
-                      branches:
-                          only:
-                              - master
-                              - develop
-                  requires:
-                      - test-run
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+          # Quicker (has layer caching), but possibly more disruptive to use our own build host - for example will mess up database
+          # host: mojaloop.dev.interop.gsmainclusivetechlab.io
+          context: GSMA-itp
+      - approve_sta_deploy:
+          <<: *develop_filter
+          type: approval
+          requires:
+            - build
+      - deploy:
+          <<: *develop_filter
+          context: GSMA-itp
+          host: staging.interop.gsmainclusivetechlab.io
+          requires:
+            - approve_sta_deploy
+            - build
+
+  publish_release:
+    jobs:
+      - check_build:
+          <<: *release_filter
+      - approve_release:
+          <<: *release_filter
+          type: approval
+          requires:
+            - check_build
+      - deploy:
+          <<: *release_filter
+          context: GSMA-itp-prod
+          host: interop.gsmainclusivetechlab.io
+          requires:
+            - check_build
+            - approve_release
+      - publish:
+          <<: *release_filter
+          context: GSMA-itp-prod
+          requires:
+            - check_build
+            - approve_release
+            - deploy
+
+
+

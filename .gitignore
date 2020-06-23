@@ -1,6 +1,7 @@
 # configs and main entry
-.env*
-!.env.example
+/.env
+/service.env
+/!.env.example
 
 # IDE config
 /src/.idea

@@ -1,22 +1,16 @@
 version: '3.7'
 
-x-mysql-credentials: &mysql-credentials
-  MYSQL_HOST: mysqldb
-  MYSQL_DATABASE: ${DB_DATABASE}
-  MYSQL_USER: ${DB_USERNAME}
-  MYSQL_PASSWORD: ${DB_PASSWORD}
-
 x-php-defaults: &php-defaults
-  image: gsmainclusivetechlab/interop-test-platform/app:${CIRCLE_SHA1:-latest}
+  image: gsmainclusivetechlab/interop-test-platform:${CIRCLE_SHA1:-latest}
   build:
     context: src
+    args:
+      PHP_INI_TEMPLATE: $PHP_INI_TEMPLATE
   cap_add:
     - SYS_PTRACE
   security_opt:
     - apparmor:unconfined
-  environment: &php-env-defaults
-    <<: *mysql-credentials
-    PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
+  env_file: service.env
   depends_on:
     - redis
     - mysqldb
@@ -31,13 +25,11 @@ services:
   app:
     <<: *php-defaults
     environment:
-      <<: *php-env-defaults
       CONTAINER_ROLE: app
 
   queue:
     <<: *php-defaults
     environment:
-      <<: *php-env-defaults
       CONTAINER_ROLE: queue
 
   redis:
@@ -53,9 +45,7 @@ services:
     image: gsmainclusivetechlab/interop-test-platform/mysqldb:${CIRCLE_SHA1:-latest}
     build:
       context: mysqldb
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      <<: *mysql-credentials
+    env_file: service.env
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s

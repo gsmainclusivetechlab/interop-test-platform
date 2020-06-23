@@ -12,7 +12,7 @@ services:
     mysqldb:
         restart: always
 
-# TODO: mount to well-defined directory on host for backup purposes
+# TODO?: mount to well-defined directory on host 
 volumes:
     mysqldata:
     redisdata:
