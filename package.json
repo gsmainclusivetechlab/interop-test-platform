@@ -1,9 +1,28 @@
 {
+    "private": true,
     "scripts": {
-        "lint": "prettier . --write"
+
+        "lint-all": "prettier . --write",
+        "lint-staged": "precise-commits",
+        "precommit": "npm run precise-commits",
+
+        "build": "docker-compose build",
+        "docker-base": "docker-compose -f docker-compose.yml",
+
+        "docker-test": "npm run docker-base -- run -u 0 -v $(pwd)/results:/results app sh",
+        "test": "npm run docker-test -- -c \"WAIT_HOSTS=mysqldb:3306 /wait && whoami && ls -la /results && php artisan test --log-junit /results/results.xml\"",
+        "test-coverage": "npm run docker-test -- -c \"WAIT_HOSTS=mysqldb:3306 /wait && phpdbg -qrr vendor/bin/phpunit --coverage-html /results/coverage-report-html --coverage-clover /results/coverage-report-clover/clover.xml\"",
+
+        "dev": "npm run docker-base -- -f compose/expose-web.yml -f compose/mailhog.yml -f compose/network.yml -f compose/phpmyadmin.yml -f compose/volumes.yml up",
+        "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up",
+        "seed": "npm run docker-base -- -f compose/migrate.yml run seed",
+        "migrate": "npm run docker-base -- -f compose/migrate.yml run migrate",
+        "down": "npm run docker-base -- down"
     },
     "devDependencies": {
         "@prettier/plugin-php": "^0.14.2",
+        "husky": "^4.2.5",
+        "precise-commits": "^1.0.2",
         "prettier": "^2.0.5"
     }
 }
