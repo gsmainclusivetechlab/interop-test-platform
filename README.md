@@ -34,10 +34,9 @@ The API simulator is built using microservices, coordinated using
 
 1. Clone this repository
 2. Navigate to the project directory
-3. Copy the example environment files, and make any adjustments to reflect your
+3. Copy the example environment file, and make any adjustments to reflect your
    own environment:
     - [.env.example](./.env.example) should be copied to `.env`
-    - [src/.env.example](./src/.env.example) should be copied to `src/.env`
 4. Install development dependencies with `yarn install`
 
 ### First run
@@ -79,8 +78,9 @@ slightly different way. In particular, it is annoying to continually rebuild
 images for every small change. Additional configuration files have been set up
 to cover some such cases:
 
--   [`compose/migrate.yml`](./compose/migrate.yml): Defines two short-lived
-    services `migrate` and `seed` to update or setup the database respectively.
+-   [`compose/ops.yml`](./compose/ops.yml): Defines short-lived services
+    `migrate` and `seed` to update or setup the database respectively, and
+    `test` to run unit tests.
 -   [`compose/volumes.yml`](./compose/volumes.yml): Set up shared volumes
     between your local files and the files inside the running containers, which
     allows your local changes to immediately be reflected in the running

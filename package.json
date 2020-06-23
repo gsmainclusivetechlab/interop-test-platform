@@ -8,16 +8,17 @@
 
         "build": "docker-compose build",
         "docker-base": "docker-compose -f docker-compose.yml",
-
-        "docker-test": "npm run docker-base -- run -u 0 -v $(pwd)/results:/results app sh",
-        "test": "npm run docker-test -- -c \"WAIT_HOSTS=mysqldb:3306 /wait && whoami && ls -la /results && php artisan test --log-junit /results/results.xml\"",
-        "test-coverage": "npm run docker-test -- -c \"WAIT_HOSTS=mysqldb:3306 /wait && phpdbg -qrr vendor/bin/phpunit --coverage-html /results/coverage-report-html --coverage-clover /results/coverage-report-clover/clover.xml\"",
+        "docker-ops": "npm run docker-base -- -f compose/ops.yml run",
 
         "dev": "npm run docker-base -- -f compose/expose-web.yml -f compose/mailhog.yml -f compose/network.yml -f compose/phpmyadmin.yml -f compose/volumes.yml up",
-        "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up",
-        "seed": "npm run docker-base -- -f compose/migrate.yml run seed",
-        "migrate": "npm run docker-base -- -f compose/migrate.yml run migrate",
-        "down": "npm run docker-base -- down"
+        "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up -d --force-recreate ",
+        "down": "npm run docker-base -- down",
+
+        "has-db": "npm run docker-ops has-db",
+        "backup": "npm run docker-ops backup",
+        "seed": "npm run docker-ops seed",
+        "migrate": "npm run docker-ops migrate",
+        "test": "npm run docker-ops test && docker cp `docker-compose -f docker-compose.yml -f compose/ops.yml ps --all -q test  | head -n 1`:/var/www/results ./results"
     },
     "devDependencies": {
         "@prettier/plugin-php": "^0.14.2",
