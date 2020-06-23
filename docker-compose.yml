@@ -1,92 +1,70 @@
 version: '3.7'
 
-x-php-defaults: &php-defaults #build: ./build/php-fpm
-    image: gsmainclusivetechlab/interop-php-fpm:latest
-    cap_add:
-        - SYS_PTRACE
-    security_opt:
-        - apparmor:unconfined
-    volumes:
-        - ./build/php-ini-${PHP_INI_TEMPLATE}.ini:/usr/local/etc/php/conf.d/zz-force-conf.ini
-        - ./build/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-www.conf
-        - ./build/crontab:/usr/local/etc/crontab
-        - ./build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-        - ./src:/var/www/html
-        - ~/.composer-cache/:/root/.composer/cache
-    environment: &php-env-defaults
-        PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
-        # db cred
-        MYSQL_HOST: mysqldb
-        MYSQL_DATABASE: ${DB_DATABASE}
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-    depends_on:
-        - mysqldb
+x-mysql-credentials: &mysql-credentials
+  MYSQL_HOST: mysqldb
+  MYSQL_DATABASE: ${DB_DATABASE}
+  MYSQL_USER: ${DB_USERNAME}
+  MYSQL_PASSWORD: ${DB_PASSWORD}
+
+x-php-defaults: &php-defaults
+  image: gsmainclusivetechlab/interop-test-platform/app:${CIRCLE_SHA1:-latest}
+  build:
+    context: src
+  cap_add:
+    - SYS_PTRACE
+  security_opt:
+    - apparmor:unconfined
+  environment: &php-env-defaults
+    <<: *mysql-credentials
+    PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
+  depends_on:
+    - redis
+    - mysqldb
+  networks:
+    - internal
+
+networks:
+  internal:
+    driver: bridge
 
 services:
-    app:
-        <<: *php-defaults
-        environment:
-            <<: *php-env-defaults
-            FOREGROUND_PROCESS: php-fpm
-            CONTAINER_ENABLED: 1
-            SSHD_ENABLED: ${SSHD_ENABLED}
-            PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
-            PHP_XDEBUG_ENABLED: ${PHP_XDEBUG_ENABLED}
-            XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
-            PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+  app:
+    <<: *php-defaults
+    environment:
+      <<: *php-env-defaults
+      CONTAINER_ROLE: app
 
-    queue:
-        <<: *php-defaults
-        environment:
-            <<: *php-env-defaults
-            FOREGROUND_PROCESS: supervisor
-            CONTAINER_ENABLED: ${QUEUE_ENABLED}
+  queue:
+    <<: *php-defaults
+    environment:
+      <<: *php-env-defaults
+      CONTAINER_ROLE: queue
 
-    redis:
-        image: redis:5
-        volumes:
-            - ./runtime/redis:/data
-        environment:
-            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+  redis:
+    image: redis:5
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    networks:
+      - internal
+    volumes:
+      - redisdata:/data
 
-    web:
-        image: nginx:latest
-        ports:
-            - '${HOST_WEB_PORT}:80'
-        depends_on:
-            - app
-        volumes:
-            - ./src:/var/www/html
-            - ./build/nginx-server.conf:/etc/nginx/conf.d/default.conf
-            - ./build/ssl:/etc/nginx/ssl
+  mysqldb:
+    image: gsmainclusivetechlab/interop-test-platform/mysqldb:${CIRCLE_SHA1:-latest}
+    build:
+      context: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      <<: *mysql-credentials
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+    networks:
+      internal:
+    volumes:
+      - mysqldata:/var/lib/mysql
 
-    mysqldb:
-        image: mysql:8
-        restart: always
-        user: ${UID}
-        environment:
-            MYSQL_ROOT_PASSWORD: developer
-            MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_USER: ${DB_USERNAME}
-            MYSQL_PASSWORD: ${DB_PASSWORD}
-        healthcheck:
-            test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
-            timeout: 20s
-            retries: 10
-        volumes:
-            - ./runtime/mysql:/var/lib/mysql
-            - ./build/my.cnf:/etc/mysql/my.cnf
-
-    nodejs:
-        image: gsmainclusivetechlab/interop-nodejs:latest
-        # enable watch poll mode if not supported by js builder.
-        #    environment:
-        #      CHOKIDAR_USEPOLLING: 1
-        volumes:
-            - ./src:/var/www/html
-
-    mailhog:
-        image: mailhog/mailhog
-        ports:
-            - '${HOST_MAILHOG_PORT}:8025'
+volumes:
+  mysqldata:
+  redisdata:
