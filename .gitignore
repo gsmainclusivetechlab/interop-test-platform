@@ -47,6 +47,7 @@ Thumbs.db
 /src/tests/Browser/screenshots
 /src/tests/results
 /src/.phpunit.result.cache
+/results
 
 # Logs
 /src/npm-debug.log

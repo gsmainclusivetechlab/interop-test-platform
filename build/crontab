@@ -1,2 +1,0 @@
-*/5 * * * * /usr/local/bin/php /var/www/html/artisan schedule:run >> /var/www/html/storage/logs/cron-scheduler.log 2>&1
-# Don't remove the last line!
