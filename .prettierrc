@@ -4,10 +4,11 @@
     "tabWidth": 4,
     "overrides": [
         {
-            "files": "*.{css,scss}",
+            "files": "*.{css,scss,yml,yaml}",
             "options": {
                 "tabWidth": 2
             }
         }
-    ]
+    ],
+    "proseWrap": "always"
 }
