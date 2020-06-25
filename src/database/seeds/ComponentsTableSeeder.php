@@ -36,7 +36,7 @@ class ComponentsTableSeeder extends Seeder
             ],
             [
                 'uuid' => 'e5f5e817-94d6-4a43-a7ec-f7274b6d85c2',
-                'name' => 'Mobile Money Operator 1',
+                'name' => 'Financial Services Provider 1',
                 'description' => '',
                 'base_url' => env('API_SERVICE_MM_SIMULATOR_URL'),
             ],
@@ -48,7 +48,7 @@ class ComponentsTableSeeder extends Seeder
             ],
             [
                 'uuid' => 'e602a859-a25f-4d37-9abe-0ac09fb734af',
-                'name' => 'Mobile Money Operator 2',
+                'name' => 'Financial Services Provider 2',
                 'description' => '',
                 'base_url' => env('API_SERVICE_MOJALOOP_SIMULATOR_URL'),
             ],
@@ -61,15 +61,15 @@ class ComponentsTableSeeder extends Seeder
     protected function getComponentConnectionsData()
     {
         return [
-            Component::whereIn('name', ['Mobile Money Operator 1'])->pluck(
+            Component::whereIn('name', ['Financial Services Provider 1'])->pluck(
                 'id'
             ),
             Component::whereIn('name', ['Service Provider', 'Mojaloop'])->pluck(
                 'id'
             ),
             Component::whereIn('name', [
-                'Mobile Money Operator 1',
-                'Mobile Money Operator 2',
+                'Financial Services Provider 1',
+                'Financial Services Provider 2',
             ])->pluck('id'),
             Component::whereIn('name', ['Mojaloop'])->pluck('id'),
         ];

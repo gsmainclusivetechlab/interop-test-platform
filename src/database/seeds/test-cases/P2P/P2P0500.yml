@@ -25,15 +25,15 @@ precondition: |
       - Payer Identifier value: +33555123456.
       - Payee Identifier value: +2000008888.
 components:
-    - Mobile Money Operator 1
-    - Mobile Money Operator 2
+    - Financial Services Provider 1
+    - Financial Services Provider 2
 
 test_steps:
     ## GET/Participants: MMO1 -> Mojaloop ##
     - path: /participants/{Type}/{ID}
       pattern: '^participants/MSISDN/[+]2000008888$'
       method: GET
-      source: Mobile Money Operator 1
+      source: Financial Services Provider 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
 
@@ -53,7 +53,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
 
       response:
@@ -65,7 +65,7 @@ test_steps:
       pattern: '^participants/MSISDN/[+]2000008888$'
       method: PUT
       source: Mojaloop
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: Mojaloop v1.0
 
       test_request_scripts:
@@ -84,7 +84,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-destination: 'mmo1fsp'
           body:
               fspId: 'mmo2fsp'
@@ -96,7 +96,7 @@ test_steps:
     - path: /quotes
       pattern: '^quotes$'
       method: POST
-      source: Mobile Money Operator 1
+      source: Financial Services Provider 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -143,7 +143,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -180,7 +180,7 @@ test_steps:
       pattern: '^quotes$'
       method: POST
       source: Mojaloop
-      target: Mobile Money Operator 2
+      target: Financial Services Provider 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -221,7 +221,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -257,7 +257,7 @@ test_steps:
     - path: /quotes/{ID}
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Mobile Money Operator 2
+      source: Financial Services Provider 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -295,7 +295,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -320,7 +320,7 @@ test_steps:
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: Mojaloop v1.0
       trigger:
           transferAmount:
@@ -347,7 +347,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -371,7 +371,7 @@ test_steps:
     - path: /transfers
       pattern: '^transfers$'
       method: POST
-      source: Mobile Money Operator 1
+      source: Financial Services Provider 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -415,7 +415,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -437,7 +437,7 @@ test_steps:
       pattern: '^transfers$'
       method: POST
       source: Mojaloop
-      target: Mobile Money Operator 2
+      target: Financial Services Provider 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -480,7 +480,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -501,7 +501,7 @@ test_steps:
     - path: /transfers/{ID}
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Mobile Money Operator 2
+      source: Financial Services Provider 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
 
@@ -532,7 +532,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -551,7 +551,7 @@ test_steps:
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: Mojaloop v1.0
 
       test_request_scripts:
@@ -581,7 +581,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
