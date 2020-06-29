@@ -22,7 +22,7 @@ precondition: |
       - Transfer Amount: 599.
       - Payer and Payee account identifier: MSISDN.
       - Payer Identifier value: +33555123456.
-      - Payee Identifier value: +2000008888.
+      - Payee Identifier value: +2000018888.
 components:
     - Mobile Money Operator 1
     - Mobile Money Operator 2
