@@ -1,4 +1,4 @@
-name: Authorized Transaction by Payer FSP
+name: Authorized Transaction by Payer FSP 
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
@@ -55,8 +55,8 @@ test_steps:
           headers:
               accept: 'application/json'
               content-type: 'application/json'
-              x-callback-url: '${SP_BASE_URL}/callback'
-              x-date: '2000-01-01T00:00:00.000Z'
+              x-callback-url: '${SP_BASE_URI}/callback'
+              x-date: '${CURRENT_TIMESTAMP_ISO8601}'
           body:
               amount: '5'
               currency: 'USD'
@@ -71,7 +71,7 @@ test_steps:
           status: 202
           headers:
               content-type: 'application/json'
-              x-date: '2000-01-01T00:00:00.000Z'
+              x-date: '${CURRENT_TIMESTAMP_ISO8601}'
           body:
               serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
               status: 'pending'
@@ -106,7 +106,7 @@ test_steps:
           uri: /transactionsRequests
           headers:
               content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -158,7 +158,7 @@ test_steps:
           uri: /transactionsRequests
           headers:
               content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -203,7 +203,7 @@ test_steps:
           uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
           headers:
               content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -233,7 +233,7 @@ test_steps:
           uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
           headers:
               content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -274,7 +274,7 @@ test_steps:
           uri: /quotes
           headers:
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -338,7 +338,7 @@ test_steps:
           uri: /quotes
           headers:
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -390,7 +390,7 @@ test_steps:
           uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
           headers:
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -424,7 +424,7 @@ test_steps:
           uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
           headers:
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -467,7 +467,7 @@ test_steps:
           uri: /transfers
           headers:
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -513,7 +513,7 @@ test_steps:
           uri: /transfers
           headers:
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -554,7 +554,7 @@ test_steps:
           uri: 'http://example.com/example'
           headers:
               content-type: 'application/json'
-              x-date: '2000-01-01T00:00:00.000Z'
+              x-date: '${CURRENT_TIMESTAMP_ISO8601}'
           body:
               amount: '5'
               currency: 'USD'
@@ -599,7 +599,7 @@ test_steps:
           uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
           headers:
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -644,7 +644,7 @@ test_steps:
           uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
           headers:
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
