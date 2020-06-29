@@ -1,4 +1,4 @@
-name: P2P Accepted - Receive / Disclosing
+name: P2P Accepted - Receive / Disclosing 
 use_case: P2P
 test_case: P2P0300
 behavior: positive
@@ -21,15 +21,15 @@ precondition: |
     - Required Parameters for Execution:
       - Transfer Amount: 300.
 components:
-    - Financial Services Provider 1
-    - Financial Services Provider 2
+    - Mobile Money Operator 1
+    - Mobile Money Operator 2
 
 test_steps:
     ## POST/Quotes: MMO1 -> Mojaloop ##
     - path: /quotes
       pattern: '^quotes$'
       method: POST
-      source: Financial Services Provider 1
+      source: Mobile Money Operator 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -113,7 +113,7 @@ test_steps:
       pattern: '^quotes$'
       method: POST
       source: Mojaloop
-      target: Financial Services Provider 2
+      target: Mobile Money Operator 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -195,7 +195,7 @@ test_steps:
     - path: /quotes/{ID}
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Financial Services Provider 2
+      source: Mobile Money Operator 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -258,7 +258,7 @@ test_steps:
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: Mojaloop v1.0
       trigger:
           transferAmount:
@@ -309,7 +309,7 @@ test_steps:
     - path: /transfers
       pattern: '^transfers$'
       method: POST
-      source: Financial Services Provider 1
+      source: Mobile Money Operator 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -375,7 +375,7 @@ test_steps:
       pattern: '^transfers$'
       method: POST
       source: Mojaloop
-      target: Financial Services Provider 2
+      target: Mobile Money Operator 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -439,7 +439,7 @@ test_steps:
     - path: /transfers/{ID}
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Financial Services Provider 2
+      source: Mobile Money Operator 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
 
@@ -489,7 +489,7 @@ test_steps:
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: Mojaloop v1.0
 
       test_request_scripts:

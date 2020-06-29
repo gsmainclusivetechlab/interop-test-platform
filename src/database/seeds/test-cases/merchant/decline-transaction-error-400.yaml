@@ -1,4 +1,4 @@
-name: Decline Transaction with Error 400 by Payee FSP
+name: Decline Transaction with Error 400 by Payee FSP 
 use_case: Merchant-Initiated Merchant Payment
 behavior: negative
 description: |
@@ -17,7 +17,7 @@ test_steps:
       pattern: '^transactions$'
       method: POST
       source: Service Provider
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: MM v1.1.2
       trigger:
           amount: '15'
@@ -28,7 +28,7 @@ test_steps:
                 body:
                     errorCode: 'genericError'
                     errorCategory: 'businessRule'
-                    errorDateTime: '${CURRENT_TIMESTAMP_ISO8601}'
+                    errorDateTime: '2000-01-01T00:00:00.000Z'
                     errorDescription: 'The specified property contents do not conform to the format required for this Property.'
       test_request_scripts:
           - name: Header has the Url Callback
@@ -74,5 +74,5 @@ test_steps:
           body:
               errorCode: 'genericError'
               errorCategory: 'businessRule'
-              errorDateTime: '${CURRENT_TIMESTAMP_ISO8601}'
+              errorDateTime: '2000-01-01T00:00:00.000Z'
               errorDescription: 'The specified property contents do not conform to the format required for this Property.'

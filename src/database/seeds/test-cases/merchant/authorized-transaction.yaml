@@ -1,4 +1,4 @@
-name: Authorized Transaction by Payer FSP
+name: Authorized Transaction by Payer FSP 
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
@@ -18,14 +18,14 @@ precondition: |
       - Amount should be the value "5".
 components:
     - Service Provider
-    - Financial Services Provider 1
-    - Financial Services Provider 2
+    - Mobile Money Operator 1
+    - Mobile Money Operator 2
 test_steps:
     - path: /transactions
       pattern: '^transactions$'
       method: POST
       source: Service Provider
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: MM v1.1.2
       trigger:
           amount: '5'
@@ -55,7 +55,7 @@ test_steps:
           headers:
               accept: 'application/json'
               content-type: 'application/json'
-              x-callback-url: '${SP_BASE_URL}/callback'
+              x-callback-url: '${SP_BASE_URI}/callback'
               x-date: '${CURRENT_TIMESTAMP_ISO8601}'
           body:
               amount: '5'
@@ -79,7 +79,7 @@ test_steps:
     - path: /transactionRequests
       pattern: '^transactionRequests$'
       method: POST
-      source: Financial Services Provider 1
+      source: Mobile Money Operator 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -132,7 +132,7 @@ test_steps:
       pattern: '^transactionRequests$'
       method: POST
       source: Mojaloop
-      target: Financial Services Provider 2
+      target: Mobile Money Operator 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -183,7 +183,7 @@ test_steps:
     - path: /transactionRequests/{ID}
       pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Financial Services Provider 2
+      source: Mobile Money Operator 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
       test_request_scripts:
@@ -214,7 +214,7 @@ test_steps:
       pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: Mojaloop v1.0
       test_request_scripts:
           - name: ID is Valid
@@ -243,7 +243,7 @@ test_steps:
     - path: /quotes
       pattern: '^quotes$'
       method: POST
-      source: Financial Services Provider 2
+      source: Mobile Money Operator 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -308,7 +308,7 @@ test_steps:
       pattern: '^quotes$'
       method: POST
       source: Mojaloop
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -371,7 +371,7 @@ test_steps:
     - path: /quotes/{ID}
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Financial Services Provider 1
+      source: Mobile Money Operator 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -406,7 +406,7 @@ test_steps:
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Financial Services Provider 2
+      target: Mobile Money Operator 2
       api_spec: Mojaloop v1.0
       trigger:
           transferAmount:
@@ -439,7 +439,7 @@ test_steps:
     - path: /transfers
       pattern: '^transfers$'
       method: POST
-      source: Financial Services Provider 2
+      source: Mobile Money Operator 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -486,7 +486,7 @@ test_steps:
       pattern: '^transfers$'
       method: POST
       source: Mojaloop
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -531,7 +531,7 @@ test_steps:
     - path: '{X-Callback-URL}'
       pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
       method: PUT
-      source: Financial Services Provider 1
+      source: Mobile Money Operator 1
       target: Service Provider
       trigger:
           amount: '5'
@@ -572,7 +572,7 @@ test_steps:
     - path: /transfers/{ID}
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Financial Services Provider 1
+      source: Mobile Money Operator 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       test_request_scripts:
@@ -618,7 +618,7 @@ test_steps:
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Financial Services Provider 2
+      target: Mobile Money Operator 2
       api_spec: Mojaloop v1.0
       test_request_scripts:
           - name: ID is Valid

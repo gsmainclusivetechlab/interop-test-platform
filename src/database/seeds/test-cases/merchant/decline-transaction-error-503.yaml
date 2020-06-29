@@ -17,7 +17,7 @@ test_steps:
       pattern: '^transactions$'
       method: POST
       source: Service Provider
-      target: Financial Services Provider 1
+      target: Mobile Money Operator 1
       api_spec: MM v1.1.2
       trigger:
           amount: '19'
@@ -28,7 +28,7 @@ test_steps:
                 body:
                     errorCode: 'genericError'
                     errorCategory: 'internal'
-                    errorDateTime: '${CURRENT_TIMESTAMP_ISO8601}'
+                    errorDateTime: '2000-01-01T00:00:00.000Z'
                     errorDescription: 'The service is not currently available. This could be due to network issues, issues with individual components or complete systems outages. Regardless of the cause, the result means that the request cannot be performed.'
       test_request_scripts:
           - name: Header has the Url Callback
@@ -74,5 +74,5 @@ test_steps:
           body:
               errorCode: 'genericError'
               errorCategory: 'internal'
-              errorDateTime: '${CURRENT_TIMESTAMP_ISO8601}'
+              errorDateTime: '2000-01-01T00:00:00.000Z'
               errorDescription: 'The service is not currently available. This could be due to network issues, issues with individual components or complete systems outages. Regardless of the cause, the result means that the request cannot be performed.'
