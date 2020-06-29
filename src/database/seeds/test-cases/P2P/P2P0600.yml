@@ -1,4 +1,4 @@
-name: P2P Accepted with Account Lookup - Send / Non-Disclosing
+name: P2P Accepted with Account Lookup - Send / Non-Disclosing 
 use_case: P2P
 test_case: P2P0600
 behavior: positive
@@ -22,7 +22,7 @@ precondition: |
       - Transfer Amount: 599.
       - Payer and Payee account identifier: MSISDN.
       - Payer Identifier value: +33555123456.
-      - Payee Identifier value: +2000008888.
+      - Payee Identifier value: +2000018888.
 components:
     - Mobile Money Operator 1
     - Mobile Money Operator 2
@@ -52,7 +52,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
 
       response:
@@ -83,7 +83,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-destination: 'mmo1fsp'
           body:
               fspId: 'mmo2fsp'
@@ -142,7 +142,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -220,7 +220,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -294,7 +294,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -346,7 +346,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -414,7 +414,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -479,7 +479,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo1fsp'
               fspiop-destination: 'mmo2fsp'
           body:
@@ -531,7 +531,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
@@ -580,7 +580,7 @@ test_steps:
           headers:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-              date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+              date: '${CURRENT_TIMESTAMP_RFC2822}'
               fspiop-source: 'mmo2fsp'
               fspiop-destination: 'mmo1fsp'
           body:
