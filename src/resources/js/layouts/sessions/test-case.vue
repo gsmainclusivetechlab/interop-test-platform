@@ -30,10 +30,10 @@
                                 />
                                 <small>
                                     {{
-                                        session.testCases
-                                            ? collect(session.testCases.data)
-                                                  .unique('use_case_id')
-                                                  .count()
+                                        session.testCases.data
+                                            ? collect(session.testCases.data).map(function ($value) {
+                                                return $value['useCase']['id'];
+                                            }).unique().count()
                                             : 0
                                     }}
                                 </small>
