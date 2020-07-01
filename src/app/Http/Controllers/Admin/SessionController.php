@@ -41,7 +41,7 @@ class SessionController extends Controller
                     ->with([
                         'owner',
                         'testCases' => function ($query) {
-                            return $query->with(['lastTestRun']);
+                            return $query->with(['useCase']);
                         },
                         'lastTestRun',
                     ])

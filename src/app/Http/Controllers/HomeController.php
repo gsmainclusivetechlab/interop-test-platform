@@ -27,7 +27,7 @@ class HomeController extends Controller
                     ->sessions()
                     ->with([
                         'testCases' => function ($query) {
-                            return $query->with(['lastTestRun']);
+                            return $query->with(['useCase']);
                         },
                         'lastTestRun',
                     ])

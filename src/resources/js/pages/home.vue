@@ -67,9 +67,9 @@
                                 />
                                 {{
                                     session.testCases
-                                        ? collect(session.testCases)
-                                              .unique('use_case_id')
-                                              .count()
+                                        ? collect(session.testCases).map(function ($value) {
+                                            return $value['useCase']['id'];
+                                        }).unique().count()
                                         : 0
                                 }}
                             </li>
