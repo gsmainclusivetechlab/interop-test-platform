@@ -27,9 +27,9 @@ class ClientRequestTest extends TestCase
                 "uri": "/other-urls",
                 "body": {
                     "mojaloop": "${MOJALOOP_BASE_URI}",
-                    "mmos": {
-                        "mmo2": "${MMO2_BASE_URI}",
-                        "mmo1": "${MMO1_BASE_URI}"
+                    "fsps": {
+                        "fsp2": "${FSP2_BASE_URI}",
+                        "fsp1": "${FSP1_BASE_URI}"
                     },
                     "template_string": "${UNASSIGNED_TOKEN}"
                 },
@@ -63,9 +63,9 @@ body
                 ],
                 'body' => [
                     'mojaloop' => env('API_SERVICE_MOJALOOP_HUB_URL'),
-                    'mmos' => [
-                        'mmo1' => env('API_SERVICE_MM_SIMULATOR_URL'),
-                        'mmo2' => env('API_SERVICE_MOJALOOP_SIMULATOR_URL'),
+                    'fsps' => [
+                        'fsp1' => env('API_SERVICE_MM_SIMULATOR_URL'),
+                        'fsp2' => env('API_SERVICE_MOJALOOP_SIMULATOR_URL'),
                     ],
                     'template_string' => "\${UNASSIGNED_TOKEN}",
                 ],
