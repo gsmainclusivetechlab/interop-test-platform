@@ -525,7 +525,7 @@ const executeFSPImgPath = 'assets/images/tutorials/financial-services-provider/'
 const createSession = [
     [
         `${createImgPath}dashboard.png`,
-        [1150, 35],
+        [585, 190],
         'Start by creating a new session',
     ],
     [
@@ -538,7 +538,7 @@ const createSession = [
         [415, 410],
         "Let's select Service Provider, and enter our URL",
     ],
-    [`${createImgPath}select_sut_3.png`, [785, 460], 'Press Next'],
+    [`${createImgPath}select_sut_2.png`, [785, 460], 'Press Next'],
     [
         `${createImgPath}session_info.png`,
         [616, 337],
