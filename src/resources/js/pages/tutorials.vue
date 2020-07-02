@@ -61,7 +61,7 @@
 
                     <a
                         class="d-inline-block btn scenario-card demo3"
-                        href="#mobile-money-operator"
+                        href="#financial-services-provider"
                         v-b-toggle.accordion-3
                         @click="initDemo"
                     >
@@ -74,12 +74,11 @@
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
-                            How do I execute a session as a Mobile Money
-                            Operator?
+                            How do I execute a session as a Financial Services Provider?
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
                             Click here to learn more about how you can execute
-                            test cases as a Mobile Money Operator.
+                            test cases as a Financial Services Provider.
                         </div>
                     </a>
                 </section>
@@ -302,7 +301,7 @@
 
                 <article class="mb-3 card">
                     <header
-                        id="mobile-money-operator"
+                        id="financial-services-provider"
                         class="pl-0 card-header"
                         role="tab"
                     >
@@ -313,8 +312,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                How do I execute a session as a Mobile Money
-                                Operator?
+                                How do I execute a session as a Financial Services Provider?
                             </h3>
                         </button>
                     </header>
@@ -334,7 +332,7 @@
                                 </p>
                             </div>
                             <div
-                                class="demo-mobile-money-operator mt-3 mx-auto"
+                                class="demo-financial-services-provider mt-3 mx-auto"
                             >
                                 <div class="demo-inner-container mb-4">
                                     <div class="image-holder">
@@ -522,7 +520,7 @@ import Layout from '@/layouts/main';
 
 const createImgPath = '/assets/images/tutorials/create-session/';
 const executeSPImgPath = '/assets/images/tutorials/service-provider/';
-const executeMMOImgPath = 'assets/images/tutorials/mobile-money-operator/';
+const executeFSPImgPath = 'assets/images/tutorials/financial-services-provider/';
 
 const createSession = [
     [
@@ -577,7 +575,7 @@ const createSession = [
 const serviceProvider = [
     [
         `${executeSPImgPath}1-session-page.png`,
-        [3, 185],
+        [3, 150],
         'First, select the session you would like to execute',
     ],
     [
@@ -601,13 +599,13 @@ const serviceProvider = [
         'Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press "Send"',
     ],
     [
-        `${executeSPImgPath}9-test-runs.png`,
+        `${executeSPImgPath}3-test-runs.png`,
         [384, 209],
         'You should now see your test run. Click to be taken to the test run page',
     ],
     [
         `${executeSPImgPath}10-test-details-1.png`,
-        [604, 437],
+        [604, 393],
         'On this page are all the details about the test run. Clicking on any particular test will give you more information',
     ],
     [
@@ -618,49 +616,49 @@ const serviceProvider = [
     ],
 ];
 
-const mobileMoneyOperator = [
+const financialServicesProvider = [
     [
-        `${executeMMOImgPath}1-session-page.png`,
-        [5, 240],
+        `${executeFSPImgPath}1-session-page.png`,
+        [5, 185],
         'First, select the session you would like to execute',
     ],
     [
-        `${executeMMOImgPath}2-test-usecase.png`,
+        `${executeFSPImgPath}2-test-usecase.png`,
         [65, 215],
         'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test',
     ],
     [
-        `${executeMMOImgPath}3-test-runs.png`,
-        [430, 120],
+        `${executeFSPImgPath}3-test-runs.png`,
+        [437, 120],
         'This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test',
     ],
     [
-        `${executeMMOImgPath}4-test-flow.png`,
+        `${executeFSPImgPath}4-test-flow.png`,
         [109, 225],
         'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs',
     ],
     [
-        `${executeMMOImgPath}4-test-flow.png`,
+        `${executeFSPImgPath}4-test-flow.png`,
         [1150, 115],
         'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run',
     ],
     [
-        `${executeMMOImgPath}5-run-test.png`,
+        `${executeFSPImgPath}4-test-flow.png`,
         [315, 119],
         'We should now be able to see the test run by returning to the test run page',
     ],
     [
-        `${executeMMOImgPath}6-test-runs-2.png`,
+        `${executeFSPImgPath}3-test-runs.png`,
         [370, 205],
         'Click the test run to see more details',
     ],
     [
-        `${executeMMOImgPath}7-test-details.png`,
+        `${executeFSPImgPath}7-test-details.png`,
         [600, 395],
         'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results',
     ],
     [
-        `${executeMMOImgPath}8-test-details-2.png`,
+        `${executeFSPImgPath}8-test-details-2.png`,
         [5, 240],
         'You can also see the request and response data and validation for each step of the use case flow. To start the demo again press "Reset Demo"',
         true,
@@ -716,9 +714,9 @@ export default {
             }
 
             if ($target.hasClass('demo3')) {
-                this.steps = mobileMoneyOperator;
+                this.steps = financialServicesProvider;
                 this.screenshotUrl =
-                    'assets/images/tutorials/mobile-money-operator/1-session-page.png';
+                    'assets/images/tutorials/financial-services-provider/1-session-page.png';
             }
 
             this.demoUpdateCircle();
