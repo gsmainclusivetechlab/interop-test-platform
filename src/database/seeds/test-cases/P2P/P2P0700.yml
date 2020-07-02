@@ -5,16 +5,16 @@ behavior: positive
 description: |
     This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating the lookup for Payee location and an approved P2P transaction considering AmountType: Receive and Disclosing Fees.
 precondition: |
-    - Mobile Money Operator is capable to handle async calls.
-    - Payee and Payer MMOs exist in Mojaloop as Participants.
+    - Financial Services Provider is capable to handle async calls.
+    - Payee and Payer FSPs exist in Mojaloop as Participants.
     - Payee and Payer exist in Mojaloop as Parties.
     - Mojaloop is responsible to access the Account Lookup System.
-    - Configuration for MMO1 as SUT:
-      - fspiop-source: 'mmo1fsp'.
-      - fspiop-destination: 'mmo2fsp'.
-    - Configuration for MMO2 as SUT:
-      - fspiop-source: 'mmo2fsp'.
-      - fspiop-destination: 'mmo1fsp'.
+    - Configuration for FSP1 as SUT:
+      - fspiop-source: 'fsp1'.
+      - fspiop-destination: 'fsp2'.
+    - Configuration for FSP2 as SUT:
+      - fspiop-source: 'fsp2'.
+      - fspiop-destination: 'fsp1'.
     - Payeer request a transfer of 700.
     - PayeeFsp gives 1 as Comission.
     - PayerFsp receives 1 as Comission.
@@ -25,15 +25,15 @@ precondition: |
       - Payer Identifier value: +33555123456.
       - Payee Identifier value: +2000008888.
 components:
-    - Mobile Money Operator 1
-    - Mobile Money Operator 2
+    - Financial Services Provider 1
+    - Financial Services Provider 2
 
 test_steps:
-    ## GET/Participants: MMO1 -> Mojaloop ##
+    ## GET/Participants: FSP1 -> Mojaloop ##
     - path: /participants/{Type}/{ID}
       pattern: '^participants/MSISDN/[+]2000028888$'
       method: GET
-      source: Mobile Money Operator 1
+      source: Financial Services Provider 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
 
@@ -54,18 +54,18 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.participants+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo1fsp'
+              fspiop-source: 'fsp1'
 
       response:
           status: 202
 
-    ## PUT/Participants: Mojaloop -> MMO1 ##
+    ## PUT/Participants: Mojaloop -> FSP1 ##
 
     - path: /participants/{Type}/{ID}
       pattern: '^participants/MSISDN/[+]2000028888$'
       method: PUT
       source: Mojaloop
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: Mojaloop v1.0
 
       test_request_scripts:
@@ -85,18 +85,18 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.participants+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-destination: 'mmo1fsp'
+              fspiop-destination: 'fsp1'
           body:
-              fspId: 'mmo2fsp'
+              fspId: 'fsp2'
 
       response:
           status: 200
 
-    ## POST/Quotes: MMO1 -> Mojaloop ##
+    ## POST/Quotes: FSP1 -> Mojaloop ##
     - path: /quotes
       pattern: '^quotes$'
       method: POST
-      source: Mobile Money Operator 1
+      source: Financial Services Provider 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -148,8 +148,8 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo1fsp'
-              fspiop-destination: 'mmo2fsp'
+              fspiop-source: 'fsp1'
+              fspiop-destination: 'fsp2'
           body:
               quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
               transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
@@ -182,12 +182,12 @@ test_steps:
       response:
           status: 202
 
-    ## POST/Quotes: Mojaloop -> MMO2 ##
+    ## POST/Quotes: Mojaloop -> FSP2 ##
     - path: /quotes
       pattern: '^quotes$'
       method: POST
       source: Mojaloop
-      target: Mobile Money Operator 2
+      target: Financial Services Provider 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -231,8 +231,8 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo1fsp'
-              fspiop-destination: 'mmo2fsp'
+              fspiop-source: 'fsp1'
+              fspiop-destination: 'fsp2'
           body:
               quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
               transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
@@ -265,11 +265,11 @@ test_steps:
       response:
           status: 202
 
-    ## PUT/Quotes/{ID}: MMO2 -> Mojaloop ##
+    ## PUT/Quotes/{ID}: FSP2 -> Mojaloop ##
     - path: /quotes/{ID}
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Mobile Money Operator 2
+      source: Financial Services Provider 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -308,8 +308,8 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo2fsp'
-              fspiop-destination: 'mmo1fsp'
+              fspiop-source: 'fsp2'
+              fspiop-destination: 'fsp1'
           body:
               transferAmount:
                   currency: 'USD'
@@ -327,12 +327,12 @@ test_steps:
       response:
           status: 200
 
-    ## PUT/Quotes/{ID}: Mojaloop -> MMO1 ##
+    ## PUT/Quotes/{ID}: Mojaloop -> FSP1 ##
     - path: /quotes/{ID}
       pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: Mojaloop v1.0
       trigger:
           transferAmount:
@@ -360,8 +360,8 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo2fsp'
-              fspiop-destination: 'mmo1fsp'
+              fspiop-source: 'fsp2'
+              fspiop-destination: 'fsp1'
           body:
               transferAmount:
                   currency: 'USD'
@@ -379,11 +379,11 @@ test_steps:
       response:
           status: 200
 
-    ## POST/Transfers: MMO1 -> Mojaloop ##
+    ## POST/Transfers: FSP1 -> Mojaloop ##
     - path: /transfers
       pattern: '^transfers$'
       method: POST
-      source: Mobile Money Operator 1
+      source: Financial Services Provider 1
       target: Mojaloop
       api_spec: Mojaloop v1.0
       trigger:
@@ -428,12 +428,12 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo1fsp'
-              fspiop-destination: 'mmo2fsp'
+              fspiop-source: 'fsp1'
+              fspiop-destination: 'fsp2'
           body:
               transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-              payeeFsp: 'mmo2fsp'
-              payerFsp: 'mmo1fsp'
+              payeeFsp: 'fsp2'
+              payerFsp: 'fsp1'
               amount:
                   currency: 'USD'
                   amount: '699'
@@ -444,12 +444,12 @@ test_steps:
       response:
           status: 202
 
-    ## POST/Transfers: Mojaloop -> MMO2 ##
+    ## POST/Transfers: Mojaloop -> FSP2 ##
     - path: /transfers
       pattern: '^transfers$'
       method: POST
       source: Mojaloop
-      target: Mobile Money Operator 2
+      target: Financial Services Provider 2
       api_spec: Mojaloop v1.0
       trigger:
           amount:
@@ -493,12 +493,12 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo1fsp'
-              fspiop-destination: 'mmo2fsp'
+              fspiop-source: 'fsp1'
+              fspiop-destination: 'fsp2'
           body:
               transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-              payeeFsp: 'mmo2fsp'
-              payerFsp: 'mmo1fsp'
+              payeeFsp: 'fsp2'
+              payerFsp: 'fsp1'
               amount:
                   currency: 'USD'
                   amount: '699'
@@ -509,11 +509,11 @@ test_steps:
       response:
           status: 202
 
-    ## PUT/Transfers/{ID}: MMO2 -> Mojaloop ##
+    ## PUT/Transfers/{ID}: FSP2 -> Mojaloop ##
     - path: /transfers/{ID}
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
-      source: Mobile Money Operator 2
+      source: Financial Services Provider 2
       target: Mojaloop
       api_spec: Mojaloop v1.0
 
@@ -545,12 +545,12 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo2fsp'
-              fspiop-destination: 'mmo1fsp'
+              fspiop-source: 'fsp2'
+              fspiop-destination: 'fsp1'
           body:
               transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-              payeeFsp: 'mmo2fsp'
-              payerFsp: 'mmo1fsp'
+              payeeFsp: 'fsp2'
+              payerFsp: 'fsp1'
               ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
               condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
               expiration: '2000-01-01T00:00:00.000Z'
@@ -558,12 +558,12 @@ test_steps:
       response:
           status: 200
 
-    ## PUT/Transfers/{ID}: Mojaloop -> MMO1 ##
+    ## PUT/Transfers/{ID}: Mojaloop -> FSP1 ##
     - path: /transfers/{ID}
       pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
       method: PUT
       source: Mojaloop
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: Mojaloop v1.0
 
       test_request_scripts:
@@ -594,12 +594,12 @@ test_steps:
               accept: 'application/vnd.interoperability.participants+json;version=1.0'
               content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
               date: '${CURRENT_TIMESTAMP_RFC2822}'
-              fspiop-source: 'mmo2fsp'
-              fspiop-destination: 'mmo1fsp'
+              fspiop-source: 'fsp2'
+              fspiop-destination: 'fsp1'
           body:
               transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-              payeeFsp: 'mmo2fsp'
-              payerFsp: 'mmo1fsp'
+              payeeFsp: 'fsp2'
+              payerFsp: 'fsp1'
               ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
               condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
               expiration: '2000-01-01T00:00:00.000Z'

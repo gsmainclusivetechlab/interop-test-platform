@@ -6,7 +6,7 @@ description: |
 precondition: |
     - Service Provider has GSMA Mobile Money API Implemented.
     - Service Provider is capable of handled async calls.
-    - Payee and Payer MMOs exist in Mojaloop as Participants.
+    - Payee and Payer FSPs exist in Mojaloop as Participants.
     - Payee and Payer exist in Mojaloop as Parties.
     - Required Parameters for Execution:
       - Amount should be the value "19".
@@ -17,7 +17,7 @@ test_steps:
       pattern: '^transactions$'
       method: POST
       source: Service Provider
-      target: Mobile Money Operator 1
+      target: Financial Services Provider 1
       api_spec: MM v1.1.2
       trigger:
           amount: '19'

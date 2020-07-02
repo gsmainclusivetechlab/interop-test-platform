@@ -93,10 +93,10 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                                         'Service Provider',
                                     ])->firstOrFail()
                                 );
-                            case 'MMO1_BASE_URI':
+                            case 'FSP1_BASE_URI':
                                 return $session->getBaseUriOfComponent(
                                     Component::whereIn('name', [
-                                        'Mobile Money Operator 1',
+                                        'Financial Services Provider 1',
                                     ])->firstOrFail()
                                 );
                             case 'MOJALOOP_BASE_URI':
@@ -105,10 +105,10 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                                         'Mojaloop',
                                     ])->firstOrFail()
                                 );
-                            case 'MMO2_BASE_URI':
+                            case 'FSP2_BASE_URI':
                                 return $session->getBaseUriOfComponent(
                                     Component::whereIn('name', [
-                                        'Mobile Money Operator 2',
+                                        'Financial Services Provider 2',
                                     ])->firstOrFail()
                                 );
                             case 'CURRENT_TIMESTAMP_ISO8601':
