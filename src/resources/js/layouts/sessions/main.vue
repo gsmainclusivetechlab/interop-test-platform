@@ -25,9 +25,9 @@
                                 />
                                 <small>
                                     {{
-                                        session.testCases.data
-                                            ? collect(session.testCases.data).map(function ($value) {
-                                                return $value['useCase']['id'];
+                                        session.testCases
+                                            ? collect(session.testCases.data).map(function (value) {
+                                                return value.useCase.id;
                                             }).unique().count()
                                             : 0
                                     }}

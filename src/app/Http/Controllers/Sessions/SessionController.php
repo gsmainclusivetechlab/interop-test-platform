@@ -35,7 +35,7 @@ class SessionController extends Controller
                     })
                     ->with([
                         'testCases' => function ($query) {
-                            return $query->with(['useCase']);
+                            return $query->with(['useCase', 'lastTestRun']);
                         },
                         'lastTestRun',
                     ])
@@ -61,7 +61,7 @@ class SessionController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['useCase']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                 ])
             ))->resolve(),

@@ -72,8 +72,8 @@
                                 <td>
                                     {{
                                         session.testCases
-                                            ? collect(session.testCases).map(function ($value) {
-                                                return $value['useCase']['id'];
+                                            ? collect(session.testCases).map(function (value) {
+                                                return value.useCase.id;
                                             }).unique().count()
                                             : 0
                                     }}
