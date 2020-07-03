@@ -44,7 +44,7 @@ class TestCaseController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['useCase']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                     'components' => function ($query) {
                         return $query->with(['connections']);

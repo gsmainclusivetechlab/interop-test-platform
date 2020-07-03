@@ -54,7 +54,7 @@ class TestRunController extends Controller
                 $session->load([
                     'components',
                     'testCases' => function ($query) {
-                        return $query->with(['useCase']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                 ])
             ))->resolve(),
