@@ -26,9 +26,12 @@
                                 <small>
                                     {{
                                         session.testCases
-                                            ? collect(session.testCases.data).map(function (value) {
-                                                return value.useCase.id;
-                                            }).unique().count()
+                                            ? collect(session.testCases.data)
+                                                  .map(function (value) {
+                                                      return value.useCase.id;
+                                                  })
+                                                  .unique()
+                                                  .count()
                                             : 0
                                     }}
                                 </small>
