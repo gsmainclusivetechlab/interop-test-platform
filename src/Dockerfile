@@ -4,7 +4,7 @@ COPY package*.json ./
 RUN npm ci
 COPY webpack.mix.js webpack.mix.js
 COPY resources resources
-# TODO: Add a way to run this as a standalone container with a shared volume for watch mode
+
 RUN npm run prod
 
 FROM composer:1.10.8 AS composer

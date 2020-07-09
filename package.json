@@ -1,19 +1,15 @@
 {
     "private": true,
     "scripts": {
-
         "lint-all": "prettier . --write",
         "lint-staged": "precise-commits",
         "precommit": "npm run precise-commits",
-
         "build": "docker-compose build",
         "docker-base": "docker-compose -f docker-compose.yml",
-        "docker-ops": "npm run docker-base -- -f compose/ops.yml run",
-
-        "dev": "npm run docker-base -- -f compose/expose-web.yml -f compose/mailhog.yml -f compose/network.yml -f compose/phpmyadmin.yml -f compose/volumes.yml up",
+        "docker-ops": "npm run docker-base -- -f compose/ops.yml `[ -z \"$CI\" ] && echo \"-f compose/ops-volumes.yml\"` run",
+        "dev": "npm run docker-base -- -f compose/expose-web.yml -f compose/mailhog.yml -f compose/network.yml -f compose/phpmyadmin.yml -f compose/volumes.yml -f compose/webpack.yml up",
         "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up -d --force-recreate ",
-        "down": "npm run docker-base -- down",
-
+        "down": "npm run docker-base -- -f compose/expose-web.yml -f compose/mailhog.yml -f compose/network.yml -f compose/phpmyadmin.yml -f compose/volumes.yml down --remove-orphans",
         "has-db": "npm run docker-ops has-db",
         "backup": "npm run docker-ops backup",
         "seed": "npm run docker-ops seed",

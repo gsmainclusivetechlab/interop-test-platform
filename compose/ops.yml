@@ -35,8 +35,8 @@ services:
     env_file: service.env
     command:
       sh -c "/wait && mysql -h mysqldb -u $$DB_USERNAME -p$$DB_PASSWORD -e
-      \"SELECT * FROM migrations\" -N -B $$DB_DATABASE >/dev/null && 
-      echo \"Database already setup.\"" || (echo "No database found" && false)
+      \"SELECT * FROM migrations\" -N -B $$DB_DATABASE >/dev/null && echo
+      \"Database already setup.\"" || (echo "No database found" && false)
 
   backup:
     <<: *ops-service

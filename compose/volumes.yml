@@ -2,14 +2,14 @@
 version: '3.7'
 
 services:
-    app:
-        volumes:
-            - ./src/build/php-ini-development.ini:/usr/local/etc/php/conf.d/zz-force-conf.ini
-            - ./src/build/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-www.conf
-            - ./src/build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-            - ./src/build/nginx-server.conf:/etc/nginx/conf.d/default.conf
-            - ./src:/var/www/html
+  app:
+    volumes:
+      - ./src/build/nginx-server.conf:/etc/nginx/nginx.conf
+      - ./src/build/php-ini-${PHP_INI_TEMPLATE}.ini:/usr/local/etc/php/custom.ini
+      - ./src/build/php-fpm.conf:/etc/php7/php-fpm.d/www.conf
+      - ./src/build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ./src:/var/www/html
 
-    mysqldb:
-        volumes:
-            - ./mysqldb/my.cnf:/etc/mysql/my.cnf
+  mysqldb:
+    volumes:
+      - ./mysqldb/my.cnf:/etc/mysql/my.cnf

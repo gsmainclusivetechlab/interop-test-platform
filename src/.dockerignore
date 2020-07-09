@@ -1,3 +1,4 @@
+webpack.Dockerfile
 Dockerfile
 /node_modules
 /public/hot
