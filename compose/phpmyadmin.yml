@@ -1,14 +1,16 @@
 version: '3.7'
 
 services:
-    phpmyadmin:
-        depends_on:
-            - mysqldb
-        image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin
-        environment:
-            - PMA_HOST=mysqldb
-        ports:
-            - '${HOST_PHPMYADMIN_PORT}:80'
-        volumes:
-            - /sessions
+  phpmyadmin:
+    depends_on:
+      - mysqldb
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_HOST=mysqldb
+    ports:
+      - '${HOST_PHPMYADMIN_PORT}:80'
+    networks:
+      - internal
+    volumes:
+      - /sessions

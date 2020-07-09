@@ -5,7 +5,6 @@ role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
 
 if [ "$role" = "app" ]; then
-    php /var/www/html/artisan key:generate --ansi
 	exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
 
 elif [ "$role" = "queue" ]; then

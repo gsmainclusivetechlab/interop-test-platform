@@ -3,13 +3,13 @@
 version: '3.7'
 
 services:
-    app:
-        networks:
-            interop-network:
-                aliases:
-                    - itp-core
+  app:
+    networks:
+      itp:
+        aliases:
+          - itp-core
 
 networks:
-    itp:
-        name: interop-network
-        driver: bridge
+  itp:
+    name: interop-network
+    driver: bridge

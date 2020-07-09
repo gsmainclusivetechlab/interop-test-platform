@@ -120,20 +120,20 @@ jobs:
       - run:
           name: Login to Docker Hub
           command:
-            echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+            echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USERNAME
+            --password-stdin
       - store_test_results:
           path: ./results
       - store_artifacts:
           path: ./results
       - run:
-          name: Publish Docker image 
-          command:
-            docker-compose push app
+          name: Publish Docker image
+          command: docker-compose push app
       # TODO: fix browser testing and include screenshots
       # - store_artifacts:
       #   path: src/tests/Browser/screenshots
-   
-  check_build: 
+
+  check_build:
     executor: standard
     parameters:
       repo:
@@ -145,7 +145,9 @@ jobs:
     steps:
       - run:
           name: Checking current commit has been built
-          command: curl -f https://index.docker.io/v1/repositories/<< parameters.repo >>/tags/<< parameters.tag >> 
+          command:
+            curl -f
+            https://index.docker.io/v1/repositories/<<parameters.repo>>/tags/<<parameters.tag>>
 
   publish:
     executor: standard
@@ -167,8 +169,8 @@ jobs:
       - run:
           name: Download previously built image
           command:
-            docker image prune
-            docker pull << parameters.repo >>:<< parameters.tag >> 
+            docker image prune docker pull
+            <<parameters.repo>>:<<parameters.tag>>
       - run:
           name: Re-tag pre-built image
           command: |
@@ -191,8 +193,7 @@ jobs:
           user: circleci
       - run:
           name: Build mysqldb image
-          command:
-            docker-compose build mysqldb
+          command: docker-compose build mysqldb
       - run:
           name: Backup current mysql database
           command: |
@@ -209,7 +210,7 @@ jobs:
           path: ./backup.sql
       - run:
           name: Run docker-compose up
-          command: npm run prod 
+          command: npm run prod
 
 workflows:
   version: 2
@@ -255,6 +256,3 @@ workflows:
             - check_build
             - approve_release
             - deploy
-
-
-

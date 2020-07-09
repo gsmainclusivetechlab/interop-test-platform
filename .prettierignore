@@ -33,6 +33,7 @@ Thumbs.db
 /runtime
 /src/public/hot
 /src/public/storage
+/src/storage/debugbar/*
 /src/storage/framework/cache/*
 /src/storage/framework/sessions/*
 /src/storage/framework/testing/*
