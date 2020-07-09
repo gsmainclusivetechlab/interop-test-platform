@@ -72,9 +72,12 @@
                                 <td>
                                     {{
                                         session.testCases
-                                            ? collect(session.testCases).map(function (value) {
-                                                return value.useCase.id;
-                                            }).unique().count()
+                                            ? collect(session.testCases)
+                                                  .map(function (value) {
+                                                      return value.useCase.id;
+                                                  })
+                                                  .unique()
+                                                  .count()
                                             : 0
                                     }}
                                 </td>
