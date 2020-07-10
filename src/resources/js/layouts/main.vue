@@ -58,6 +58,7 @@
                                 $page.auth.user.can.sessions.viewAny ||
                                 $page.auth.user.can.api_specs.viewAny ||
                                 $page.auth.user.can.use_cases.viewAny ||
+                                $page.auth.user.can.message_log.viewAny ||
                                 $page.auth.user.can.test_cases.viewAny
                             )"
                         >
@@ -111,6 +112,14 @@
                                     class="text-reset dropdown-item"
                                 >
                                     Test Cases
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.message_log.viewAny">
+                                <inertia-link
+                                    :href="route('admin.message-log')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Message Log
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
