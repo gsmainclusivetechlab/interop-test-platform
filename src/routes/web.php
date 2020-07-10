@@ -59,6 +59,10 @@ Route::name('sessions.')
             'chart'
         );
         Route::get(
+            '{session}/message-log',
+            '\App\Http\Controllers\MessageLogController@index'
+        )->name('message-log.index');
+        Route::get(
             '{session}/test-cases/{testCase}',
             'TestCaseController@show'
         )->name('test-cases.show');
@@ -131,7 +135,7 @@ Route::name('testing.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{session:uuid}/{component:uuid}/{connection:uuid}/sut/{path?}',
+            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
             'SutController'
         )
             ->name('sut')
@@ -175,6 +179,10 @@ Route::name('admin.')
                 )->name('promote-role');
             });
         Route::resource('groups', 'GroupController')->except(['show']);
+        Route::get(
+            'message-log',
+            '\App\Http\Controllers\MessageLogController@admin'
+        )->name('message-log');
         Route::resource('sessions', 'SessionController')->only(['index']);
         Route::resource('api-specs', 'ApiSpecController')->only([
             'index',
@@ -210,3 +218,7 @@ Route::name('admin.')
                 )->name('toggle-public');
             });
     });
+
+Route::get('/health', function () {
+    return 'ok';
+});

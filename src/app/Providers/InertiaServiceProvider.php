@@ -7,6 +7,7 @@ use App\Models\Session;
 use App\Models\ApiSpec;
 use App\Models\TestCase;
 use App\Models\UseCase;
+use App\Models\MessageLog;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\ViewErrorBag;
@@ -98,6 +99,11 @@ class InertiaServiceProvider extends ServiceProvider
                                     'create' => auth()
                                         ->user()
                                         ->can('create', TestCase::class),
+                                ],
+                                'message_log' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', MessageLog::class),
                                 ],
                             ],
                         ]

@@ -2,7 +2,7 @@
     <layout>
         <div class="row">
             <div class="col-md-12">
-                <div class="row border-bottom pb-4 align-items-center">
+                <div class="row border-bottom pb-4 align-items-stretch">
                     <div class="col-6 d-flex flex-column">
                         <div class="page-pretitle font-weight-normal">
                             <breadcrumb
@@ -14,7 +14,18 @@
                             <b>{{ session.name }}</b>
                         </h1>
                     </div>
-                    <div class="ml-auto col-2 d-flex justify-content-end">
+                    <div class="ml-auto col-1 d-flex justify-content-end">
+                        <inertia-link
+                            :href="
+                                route('sessions.message-log.index', session.id)
+                            "
+                            class="btn btn-secondary mr-2"
+                        >
+                            <icon name="list"></icon>
+                            Log
+                        </inertia-link>
+                    </div>
+                    <div class="col-2 d-flex justify-content-end">
                         <div class="w-100">
                             <div>
                                 Execution:
@@ -64,7 +75,10 @@
                             </div>
                             <div class="card-body p-0">
                                 <ul class="list-unstyled">
-                                    <li v-for="useCase in useCases.data">
+                                    <li
+                                        v-for="useCase in useCases.data"
+                                        v-bind:key="useCase.id"
+                                    >
                                         <b
                                             class="d-block dropdown-toggle py-2 px-3 border-bottom"
                                             v-b-toggle="
@@ -111,6 +125,9 @@
                                                                         'positive'
                                                                     )
                                                                     .all()"
+                                                                v-bind:key="
+                                                                    positiveTestCase.id
+                                                                "
                                                                 class="list-group-item-action border-bottom"
                                                                 v-bind:class="{
                                                                     'bg-body':
@@ -211,6 +228,9 @@
                                                                         'negative'
                                                                     )
                                                                     .all()"
+                                                                v-bind:key="
+                                                                    negativeTestCase.id
+                                                                "
                                                                 class="list-group-item-action border-bottom"
                                                                 v-bind:class="{
                                                                     'bg-body':
