@@ -15,11 +15,6 @@ The API simulator is built using microservices, coordinated using
     installed with composer and artisan.
 -   `queue`: Provides an environment to run Laravel queues. Uses the same image
     as `app`.
--   `migrate`: A short-lived service which simply runs database migrations
-    before exiting. Uses the same image as `app`, which contains
-    [wait](https://github.com/ufoscout/docker-compose-wait), which allows the
-    service to wait for the `mysqldb` container to be running before attempting
-    the migrations.
 -   `mysqldb`: Provides a database for the app. Uses a lightly-customised
     off-the-shelf [mysql image](./mysqldb/Dockerfile.mysqldb). The customisation
     is just to inject our [mysql config](./mysqldb/my.cnf) into the container.
@@ -29,6 +24,8 @@ The API simulator is built using microservices, coordinated using
     off-the-shelf mailhog image.
 -   `phpmyadmin`: Optionally provides a DB administration interface, useful for
     local debugging.
+-   `webpack`: Optionally provides a file watcher which recompiles front-end
+    assets as soon as they change. Useful for local development.
 
 ## Project setup
 
@@ -37,6 +34,8 @@ The API simulator is built using microservices, coordinated using
 3. Copy the example environment file, and make any adjustments to reflect your
    own environment:
     - [.example.env](./.example.env) should be copied to `.env`
+    - [service.example.env](./service.example.env) should be copied to
+      `service.env`
 4. Install development dependencies with `yarn install`
 
 ### First run
@@ -85,6 +84,9 @@ to cover some such cases:
     between your local files and the files inside the running containers, which
     allows your local changes to immediately be reflected in the running
     containers without rebuilding.
+-   [`compose/ops-volumes.yml`](./compose/ops-volumes.yml): Does the same things
+    as `compose/volumes.yml` but targetting the services defined in `ops`.
+    Useful for running new migrations or tests.
 -   [`compose/network.yml`](./compose/network.yml): Set up a shared external
     docker network. This is useful when you also have other test components
     (e.g. simulators) running locally, as it will allow all services to
@@ -100,6 +102,14 @@ to cover some such cases:
     service running [PHPMyAdmin](https://www.phpmyadmin.net/) for inspecting the
     test platform database. To use these configurations, select the config files
     when running any `docker-compose` command:
+-   [`compose/webpack.yml`](./compose/webpack.yml): Add an additional service
+    running Webpack, which will watch for changes to the front-end javascript
+    assets (e.g. Vue templates) and recompile them automatically. This must be
+    used in conjunction with the `compose/volumes.yml` config, otherwise the
+    changes will not be reflected inside running container.
+
+To use these configurations, select the config files when running any
+`docker-compose` command:
 
 ```
 $ docker-compose -f ./docker-compose.yml \
@@ -113,19 +123,9 @@ These configuration files can be used in any combination, however several preset
 combinations have been added to the top-level package.json file to allow
 shortcuts for common use-cases:
 
--   `yarn dev`: includes `expose-web`, `mailhog`, `network`, `phpmyadmin` and
-    `volumes`.
+-   `yarn dev`: includes `expose-web`, `mailhog`, `network`, `phpmyadmin`,
+    `volumes` and `webpack`.
 -   `yarn prod`: includes `expose-web` and `production.yml`
-
-### Modifying client assets - TODO: this is going to change
-
-Client assets (javascript, scss, images, etc) are compiled by webpack using
-Laravel Mix. Each time the source for these assets is modified, they will need
-to be recompiled. ~Webpack can optionally watch the files for changes, and
-automatically recompile them as soon as they have been modified. To enable this,
-run `yarn watch` instead of `yarn dev`. If you have started a running container
-using the `./compose/volumes.yml` configuration, changes should be visible
-inside the browser immediately.~
 
 ### Inspecting Running Containers
 
