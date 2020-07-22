@@ -3,6 +3,8 @@
 use App\Http\Client\Request;
 use App\Models\Session;
 use App\Models\TestStep;
+use App\Models\TestScript;
+use App\Testing\Tests\RequestScriptValidationTest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
@@ -72,5 +74,34 @@ body
             ],
             $mapped->toArray()
         );
+    }
+
+    public function testRequestValidationPass()
+    {
+        /** @var TestStep $step */
+        $step = factory(TestStep::class)->make([
+            'request' => <<<'body'
+             {
+                "uri": "/other-urls",
+                "body": {},
+                "method": "POST",
+                "headers": {
+                    "x-callback-url": "http://sp.staging.interop.gsmainclusivelab.io/callback"
+                 }
+              }
+body
+            ,
+        ]);
+
+        /** @var Request $request */
+        $request = $step->request;
+
+        $testscript = factory(TestScript::class)->make();
+        $testscript->rules = [
+            'headers.x-callback-url.*' => 'required|url'
+        ];
+
+        $result = new RequestScriptValidationTest($request, $testscript);
+        $this->assertNull($result->test()); // no errors = null
     }
 }
