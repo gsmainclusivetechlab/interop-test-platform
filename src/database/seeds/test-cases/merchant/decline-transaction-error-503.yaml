@@ -37,7 +37,7 @@ test_steps:
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
-          headers.x-callback-url.*: 'required|regex:/.*/'
+          headers.x-callback-url.*: 'required|url'
       - name: Amount is specified correctly
         rules:
           body.amount: 'required|in:19'
