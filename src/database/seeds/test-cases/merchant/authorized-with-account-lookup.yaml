@@ -8,9 +8,17 @@ precondition: |
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "1010".
-  - Debit party should be identified by account identifier "msisdn" with the value "+2000009999".
-  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Configuration for MMO1 as SUT:
+    - fspiop-source: 'mmo1fsp'.
+    - fspiop-destination: 'mmo2fsp'.
+  - Configuration for MMO2 as SUT:
+    - fspiop-source: 'mmo2fsp'.
+    - fspiop-destination: 'mmo1fsp'.
+  - Required Parameters for Execution:
+    - Amount should be the value "24".
+    - Payer and Payee account identifier: MSISDN.
+    - Debit party should be identified by account identifier "msisdn" with the value "+2000009999".
+    - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
 components:
   - Service Provider
   - Mobile Money Operator 1
@@ -25,22 +33,15 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: MM v1.1.2
     trigger:
-      amount: '1010'
+      amount: '24'
 
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
           headers.x-callback-url.*: 'required|regex:/.*/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
+      - name: Amount is specified correctly
         rules:
-          body.debitParty.*.key: 'required|in:msisdn'
-          body.debitParty.*.value: 'required|in:+2000009999'
-          body.creditParty.*.key: 'required|in:msisdn'
-          body.creditParty.*.value: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount: 'required|in:1010'
-          body.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount: 'required|in:24'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'required|in:merchantpay'
@@ -49,9 +50,6 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'required|in:202'
-      - name: Server Correlation Id is specified correctly
-        rules:
-          body.serverCorrelationId: 'required|regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
       - name: Status is specified correctly
         rules:
           body.status: 'required|in:pending'
@@ -66,14 +64,14 @@ test_steps:
         accept: 'application/json'
         content-type: 'application/json'
         x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
-        amount: '1010'
+        amount: '24'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
           - key: 'msisdn'
-            value: "+2000009999"
+            value: '+2000009999'
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
@@ -82,7 +80,7 @@ test_steps:
       status: 202
       headers:
         content-type: 'application/json'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
@@ -112,7 +110,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
 
     response:
@@ -144,7 +142,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-destination: 'mmo1fsp'
       body:
         fspId: 'mmo2fsp'
@@ -161,7 +159,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
@@ -172,16 +170,9 @@ test_steps:
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
+      - name: Amount is specified correctly
         rules:
-          body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+2000009999'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount.amount: 'required|in:1010'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -193,7 +184,7 @@ test_steps:
       uri: /transactionsRequests
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -201,12 +192,12 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdType: 'MSISDN'
-          partyIdentifier: "+2000009999"
+          partyIdentifier: '+2000009999'
         amount:
-          amount: '1010'
+          amount: '24'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -226,7 +217,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
       - name: Transaction Type is a Merchant Payment
@@ -237,16 +228,9 @@ test_steps:
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
+      - name: Amount is specified correctly
         rules:
-          body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+2000009999'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount.amount: 'required|in:1010'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -258,7 +242,7 @@ test_steps:
       uri: /transactionsRequests
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -266,12 +250,12 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdType: 'MSISDN'
-          partyIdentifier: "+2000009999"
+          partyIdentifier: '+2000009999'
         amount:
-          amount: '1010'
+          amount: '24'
           currency: 'USD'
         type: 'merchantpay'
         transactionType:
@@ -309,7 +293,7 @@ test_steps:
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -345,7 +329,7 @@ test_steps:
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -363,7 +347,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -378,16 +362,9 @@ test_steps:
       - name: Payer wants to send money to Payee
         rules:
           body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
+      - name: Amount is specified correctly
         rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+2000009999'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount.amount: 'required|in:1010'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -399,7 +376,7 @@ test_steps:
       uri: /quotes
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -408,11 +385,11 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+2000009999"
+            partyIdentifier: '+2000009999'
           personalInfo:
             complexName:
               firstName: 'John'
@@ -422,7 +399,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -440,7 +417,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -455,16 +432,9 @@ test_steps:
       - name: Payer wants to send money to Payee
         rules:
           body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
+      - name: Amount is specified correctly
         rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+2000009999'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount.amount: 'required|in:1010'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -476,7 +446,7 @@ test_steps:
       uri: /quotes
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -485,11 +455,11 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+2000009999"
+            partyIdentifier: '+2000009999'
           personalInfo:
             complexName:
               firstName: 'John'
@@ -499,7 +469,7 @@ test_steps:
         amountType: 'SEND'
         amount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -517,13 +487,12 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:1010'
-          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+          body.transferAmount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -535,13 +504,13 @@ test_steps:
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -561,10 +530,9 @@ test_steps:
         amount: '1000'
 
     test_request_scripts:
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:1010'
-          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+          body.transferAmount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -576,13 +544,13 @@ test_steps:
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -599,7 +567,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -611,21 +579,9 @@ test_steps:
       - name: Payer Fsp Fsp is specified correctly
         rules:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
-          body.amount.amount: 'required|in:1010'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-      - name: Expiration is specified correctly
-        rules:
-          body.expiration:
-            - 'required'
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
-      - name: ilpPacket is specified correctly
-        rules:
-          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
-      - name: condition is specified correctly
-        rules:
-          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+          body.amount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -637,7 +593,7 @@ test_steps:
       uri: /transfers
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -646,7 +602,7 @@ test_steps:
         payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -663,7 +619,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '1010'
+        amount: '24'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -675,21 +631,9 @@ test_steps:
       - name: Payer Fsp Fsp is specified correctly
         rules:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
-          body.amount.amount: 'required|in:1010'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-      - name: Expiration is specified correctly
-        rules:
-          body.expiration:
-            - 'required'
-            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
-      - name: ilpPacket is specified correctly
-        rules:
-          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
-      - name: condition is specified correctly
-        rules:
-          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+          body.amount.amount: 'required|in:24'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -701,7 +645,7 @@ test_steps:
       uri: /transfers
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -710,7 +654,7 @@ test_steps:
         payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -725,19 +669,12 @@ test_steps:
     source: Mobile Money Operator 1
     target: Service Provider
     trigger:
-      amount: '1010'
+      amount: '24'
 
     test_request_scripts:
-      - name: Debit and credit party is valid
+      - name: Amount is specified correctly
         rules:
-          body.debitParty.*.key: 'required|in:msisdn'
-          body.debitParty.*.value: 'required|in:+2000009999'
-          body.creditParty.*.key: 'required|in:msisdn'
-          body.creditParty.*.value: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount: 'required|in:1010'
-          body.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount: 'required|in:24'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'required|in:merchantpay'
@@ -752,19 +689,19 @@ test_steps:
 
     request:
       method: 'PUT'
-      uri: 'http://example.com/example'
+      uri: '{SP_BASE_URI}/callback'
       headers:
         content-type: 'application/json'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
-        amount: '1010'
+        amount: '24'
         currency: 'USD'
         type: 'merchantpay'
         transactionReference: ''
         transactionStatus: 'Completed'
         debitParty:
           - key: 'msisdn'
-            value: "+2000009999"
+            value: '+2000009999'
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
@@ -806,7 +743,7 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -815,7 +752,7 @@ test_steps:
         payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -857,7 +794,7 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -866,7 +803,7 @@ test_steps:
         payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
-          amount: '1010'
+          amount: '24'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'

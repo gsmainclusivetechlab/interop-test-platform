@@ -19,7 +19,9 @@ class TestCasesTableSeeder extends Seeder
             ->in(database_path('seeds/test-cases'));
 
         foreach ($finder as $file) {
-            $testCase = (new TestCaseImport())->import(Yaml::parse($file->getContents()));
+            $testCase = (new TestCaseImport())->import(
+                Yaml::parse($file->getContents())
+            );
             $testCase->update(['public' => true]);
         }
     }

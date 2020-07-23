@@ -8,9 +8,14 @@ precondition: |
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "51.01".
-  - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
-  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Configuration for MMO1 as SUT:
+    - fspiop-source: 'mmo1fsp'.
+    - fspiop-destination: 'mmo2fsp'.
+  - Configuration for MMO2 as SUT:
+    - fspiop-source: 'mmo2fsp'.
+    - fspiop-destination: 'mmo1fsp'.
+  - Required Parameters for Execution:
+    - Amount should be the value "51.01".
 components:
   - Service Provider
   - Mobile Money Operator 1
@@ -28,16 +33,9 @@ test_steps:
       - name: Header has the Url Callback
         rules:
           headers.x-callback-url.*: 'required|regex:/.*/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.debitParty.*.key: 'required|in:msisdn'
-          body.debitParty.*.value: 'required|in:+33555123456'
-          body.creditParty.*.key: 'required|in:msisdn'
-          body.creditParty.*.value: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
           body.amount: 'required|in:51.01'
-          body.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'required|in:merchantpay'
@@ -45,9 +43,6 @@ test_steps:
       - name: Transaction was successfully accepted
         rules:
           status: 'required|in:202'
-      - name: Server Correlation Id is specified correctly
-        rules:
-          body.serverCorrelationId: 'required|regex:/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/'
       - name: Status is specified correctly
         rules:
           body.status: 'required|in:pending'
@@ -60,15 +55,15 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-callback-url: '${SP_BASE_URI}/callback'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
         amount: '51.01'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
           - key: 'msisdn'
-            value: "+33555123456"
+            value: '+33555123456'
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
@@ -76,7 +71,7 @@ test_steps:
       status: 202
       headers:
         content-type: 'application/json'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
@@ -99,16 +94,9 @@ test_steps:
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-          body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+33555123456'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
           body.amount.amount: 'required|in:51.01'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -118,7 +106,7 @@ test_steps:
       uri: /transactionsRequests
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -126,10 +114,10 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdType: 'MSISDN'
-          partyIdentifier: "+33555123456"
+          partyIdentifier: '+33555123456'
         amount:
           amount: '51.01'
           currency: 'USD'
@@ -158,16 +146,9 @@ test_steps:
       - name: Transaction Request Id created
         rules:
           body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-          body.payer.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdentifier: 'required|in:+33555123456'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
           body.amount.amount: 'required|in:51.01'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -177,7 +158,7 @@ test_steps:
       uri: /transactionsRequests
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -185,10 +166,10 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdType: 'MSISDN'
-          partyIdentifier: "+33555123456"
+          partyIdentifier: '+33555123456'
         amount:
           amount: '51.01'
           currency: 'USD'
@@ -224,7 +205,7 @@ test_steps:
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -256,7 +237,7 @@ test_steps:
       uri: /transactionsRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -285,16 +266,9 @@ test_steps:
       - name: Payer wants to send money to Payee
         rules:
           body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
           body.amount.amount: 'required|in:51.01'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -304,7 +278,7 @@ test_steps:
       uri: /quotes
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -313,11 +287,11 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555123456"
+            partyIdentifier: '+33555123456'
           personalInfo:
             complexName:
               firstName: 'John'
@@ -356,16 +330,9 @@ test_steps:
       - name: Payer wants to send money to Payee
         rules:
           body.amountType: 'required|in:SEND'
-      - name: Debit and Credit party is present and is a Valid Party in the network
-        rules:
-          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payer.partyIdInfo.partyIdentifier: 'required|in:+33555123456'
-          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
-          body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
+      - name: Amount is specified correctly
         rules:
           body.amount.amount: 'required|in:51.01'
-          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -375,7 +342,7 @@ test_steps:
       uri: /quotes
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -384,11 +351,11 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555789123"
+            partyIdentifier: '+33555789123'
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555123456"
+            partyIdentifier: '+33555123456'
           personalInfo:
             complexName:
               firstName: 'John'
@@ -428,13 +395,13 @@ test_steps:
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
-          amount: '1002'
+          amount: '202'
         expiration: '2000-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -463,7 +430,7 @@ test_steps:
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -481,22 +448,22 @@ test_steps:
     source: Mobile Money Operator 1
     target: Service Provider
     test_request_scripts:
-    - name: Error category is valid
-      rules:
-        body.errorCategory: 'required|in:businessRule'
-    - name: Error code is valid
-      rules:
-        body.errorCode: 'required|in:genericError'
+      - name: Error category is valid
+        rules:
+          body.errorCategory: 'required|in:businessRule'
+      - name: Error code is valid
+        rules:
+          body.errorCode: 'required|in:genericError'
     test_response_scripts:
-    - name: Transaction was successfully declined
-      rules:
-        status: 'required|in:204'
+      - name: Transaction was successfully declined
+        rules:
+          status: 'required|in:204'
     request:
       method: 'PUT'
-      uri: 'http://example.com/example'
+      uri: '${SP_BASE_URI}/callback'
       headers:
         content-type: 'application/json'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
         errorCategory: 'businessRule'
         errorCode: 'genericError'

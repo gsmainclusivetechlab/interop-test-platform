@@ -54,7 +54,7 @@ class TestRunController extends Controller
                 $session->load([
                     'components',
                     'testCases' => function ($query) {
-                        return $query->with(['lastTestRun']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                 ])
             ))->resolve(),
@@ -88,18 +88,27 @@ class TestRunController extends Controller
             'components' => ComponentResource::collection(
                 Component::with([
                     'connections' => function ($query) use ($testCase) {
-                        $query->whereHas('sourceTestSteps', function ($query) use ($testCase) {
-                            $query->where('test_case_id', $testCase->id);
-                        })
-                            ->orWhereHas('targetTestSteps', function ($query) use ($testCase) {
+                        $query
+                            ->whereHas('sourceTestSteps', function (
+                                $query
+                            ) use ($testCase) {
+                                $query->where('test_case_id', $testCase->id);
+                            })
+                            ->orWhereHas('targetTestSteps', function (
+                                $query
+                            ) use ($testCase) {
                                 $query->where('test_case_id', $testCase->id);
                             });
-                    }
+                    },
                 ])
-                    ->whereHas('sourceTestSteps', function ($query) use ($testCase) {
+                    ->whereHas('sourceTestSteps', function ($query) use (
+                        $testCase
+                    ) {
                         $query->where('test_case_id', $testCase->id);
                     })
-                    ->orWhereHas('targetTestSteps', function ($query) use ($testCase) {
+                    ->orWhereHas('targetTestSteps', function ($query) use (
+                        $testCase
+                    ) {
                         $query->where('test_case_id', $testCase->id);
                     })
                     ->get()

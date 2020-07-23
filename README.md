@@ -1,49 +1,155 @@
-## Interoperability Test Platform
+# GSMA Interoperability Test Platform
 
-[![Codacy grade](https://img.shields.io/codacy/grade/8ff2b7590e13431dad7032a973d908fd?logo=codacy)](https://www.codacy.com/gh/gsmainclusivetechlab/interop-test-platform?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gsmainclusivetechlab/interop-test-platform&amp;utm_campaign=Badge_Grade)
+[![Codacy grade](https://img.shields.io/codacy/grade/8ff2b7590e13431dad7032a973d908fd?logo=codacy)](https://www.codacy.com/gh/gsmainclusivetechlab/interop-test-platform?utm_source=github.com&utm_medium=referral&utm_content=gsmainclusivetechlab/interop-test-platform&utm_campaign=Badge_Grade)
 
 [![CircleCI](https://img.shields.io/circleci/build/github/gsmainclusivetechlab/interop-test-platform/master?label=Master&logo=circleCI&token=7cc80f8c435154849e1f57a8708d8765da9ffa1a)](https://app.circleci.com/pipelines/github/gsmainclusivetechlab/interop-test-platform?branch=master)
 [![CircleCI](https://img.shields.io/circleci/build/github/gsmainclusivetechlab/interop-test-platform/develop?label=Develop&logo=circleCI&token=7cc80f8c435154849e1f57a8708d8765da9ffa1a)](https://app.circleci.com/pipelines/github/gsmainclusivetechlab/interop-test-platform?branch=develop)
 
-### Installation
+## Project Architecture
 
-Project can be setup with Docker.
+The API simulator is built using microservices, coordinated using
+`docker-compose`. Our services are:
 
-1. Clone repository
-2. Navigate to your project directory
-3. Run `make init`, this command will copy important files from examples:
-    - .env
-    - docker-compose.yml
-    - src/.env
-    - build/nginx-server.conf
-4. Check .env files for correct configurations.
-5. Run containers with `make run`
-6. Run installation `make install`  
+-   `app`: Main service containing application code and an nginx server. Uses a
+    [custom image](./src/Dockerfile) based on Alpine Linux. PHP dependencies are
+    installed with composer and artisan.
+-   `queue`: Provides an environment to run Laravel queues. Uses the same image
+    as `app`.
+-   `mysqldb`: Provides a database for the app. Uses a lightly-customised
+    off-the-shelf [mysql image](./mysqldb/Dockerfile.mysqldb). The customisation
+    is just to inject our [mysql config](./mysqldb/my.cnf) into the container.
+-   `redis`: Provides a durable message queue to communicate between parts of
+    our app. Uses an off-the-shelf redis image.
+-   `mailhog`: Optionally provides an SMTP server to send emails. Uses an
+    off-the-shelf mailhog image.
+-   `phpmyadmin`: Optionally provides a DB administration interface, useful for
+    local debugging.
+-   `webpack`: Optionally provides a file watcher which recompiles front-end
+    assets as soon as they change. Useful for local development.
 
-### Docker PHP Container
+## Project setup
 
-To get inside PHP container to run composer/php commands run this command:
+1. Clone this repository
+2. Navigate to the project directory
+3. Copy the example environment file, and make any adjustments to reflect your
+   own environment:
+    - [.example.env](./.example.env) should be copied to `.env`
+    - [service.example.env](./service.example.env) should be copied to
+      `service.env`
+4. Install development dependencies with `yarn install`
 
-`make php-bash`
+### First run
 
-Inside PHP container there is also GNU Make utility, run `make` without any parameters to get available commands list.
+1. Build new docker images:
+    ```bash
+    $ yarn build
+    ```
+2. Set up the database using Laravel's migration tool
+    ```bash
+    $ yarn seed
+    ```
+3. Launch containers using the new images:
+    ```bash
+    $ yarn prod
+    ```
 
-### Docker nodejs container
+### Updates
 
-To build nodejs you can use make helpers:
+After making changes to the code, you can deploy your changes by running almost
+the same steps as the first run. The only difference is the migration service to
+run, which should not seed the database with initial contents:
 
-`make npm-i`
-`make npm-build`
-`make npm-watch`
+```bash
+# rebuild all images to include the new code
+$ yarn build
 
-To open nodejs container permanently just run:
+# run the default migration script, which updates but does not seed the database
+$ yarn migrate
 
-`make nodejs-bash`
+# stop and destroy existing containers, then recreate using the new images
+$ yarn prod
+```
 
-### Site access:
+## Local development
 
-Access your site via URL: <http://localhost:8084>
+When running in different environments, we may want our services to operate in a
+slightly different way. In particular, it is annoying to continually rebuild
+images for every small change. Additional configuration files have been set up
+to cover some such cases:
 
-Mail catcher: <http://localhost:8086>
+-   [`compose/ops.yml`](./compose/ops.yml): Defines short-lived services
+    `migrate`, `seed` and `backup` to update, setup or backup the database
+    respectively, and `test` to run unit tests.
+-   [`compose/volumes.yml`](./compose/volumes.yml): Set up shared volumes
+    between your local files and the files inside the running containers, which
+    allows your local changes to immediately be reflected in the running
+    containers without rebuilding.
+-   [`compose/ops-volumes.yml`](./compose/ops-volumes.yml): Does the same things
+    as `compose/volumes.yml` but targetting the services defined in `ops`.
+    Useful for running new migrations or tests.
+-   [`compose/network.yml`](./compose/network.yml): Set up a shared external
+    docker network. This is useful when you also have other test components
+    (e.g. simulators) running locally, as it will allow all services to
+    communicate across the same docker network.
+-   [`compose/expose-web.yml`](./compose/expose-web.yml): Allow the test
+    platform to be accessed on your local machine under port 8084 (or whatever
+    is configured as `HOST_WEB_PORT` in [.env](./.example.env)).
+-   [`compose/production.yml`](./compose/production.yml): Configure all services
+    to restart automatically when they crash (or the server restarts).
+-   [`compose/mailhog.yml`](./compose/mailhog.yml): Set up a mailhog service,
+    allowing emails to be tested without a real SMTP server.
+-   [`compose/phpmyadmin.yml`](./compose/phpmyadmin.yml): Add an additional
+    service running [PHPMyAdmin](https://www.phpmyadmin.net/) for inspecting the
+    test platform database. To use these configurations, select the config files
+    when running any `docker-compose` command:
+-   [`compose/webpack.yml`](./compose/webpack.yml): Add an additional service
+    running Webpack, which will watch for changes to the front-end javascript
+    assets (e.g. Vue templates) and recompile them automatically. This must be
+    used in conjunction with the `compose/volumes.yml` config, otherwise the
+    changes will not be reflected inside running container.
 
-Superadmin login: superadmin@gsma.com / qzRBHEzStdG8XWhy
+To use these configurations, select the config files when running any
+`docker-compose` command:
+
+```
+$ docker-compose -f ./docker-compose.yml \
+                 -f ./compose/expose-web.yml
+                 -f ./compose/network.yml
+                 -f ./compose/volumes.yml
+                 up -d
+```
+
+These configuration files can be used in any combination, however several preset
+combinations have been added to the top-level package.json file to allow
+shortcuts for common use-cases:
+
+-   `yarn dev`: includes `expose-web`, `mailhog`, `network`, `phpmyadmin`,
+    `volumes` and `webpack`.
+-   `yarn prod`: includes `expose-web` and `production.yml`
+
+### Inspecting Running Containers
+
+Running containers should not be modified, since the changes will be lost each
+time the container restarts. However, it can be useful to connect to a running
+container in order to inspect the environment and debug. To do that, use the
+following command, where `{service}` can be any of the services listed above.
+
+```
+$ docker-compose exec {service} sh
+```
+
+### Running Tests
+
+The current test suite only targets PHP code, which means that the test runner
+must run inside the php containers. Before running the tests, make sure that no
+containers are already running using `yarn down`. Once everything has stopped,
+you can run tests using `yarn test`. After the tests run, this will copy the
+test result files into the `./results` directory. Coverage reports will also be
+generated inside the `./results` directory in both HTML and clover formats.
+
+### Site access
+
+If you have used the `./compose/expose-web.yml` config, you can access the app
+at http://localhost:8080 and the mail catcher at http://localhost:8086.
+
+Default superadmin login: superadmin@gsma.com / qzRBHEzStdG8XWhy

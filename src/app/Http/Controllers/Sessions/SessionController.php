@@ -35,7 +35,7 @@ class SessionController extends Controller
                     })
                     ->with([
                         'testCases' => function ($query) {
-                            return $query->with(['lastTestRun']);
+                            return $query->with(['useCase', 'lastTestRun']);
                         },
                         'lastTestRun',
                     ])
@@ -61,7 +61,7 @@ class SessionController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['lastTestRun']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                 ])
             ))->resolve(),
@@ -142,24 +142,24 @@ class SessionController extends Controller
             ->completed()
             ->selectRaw('COUNT(IF (total = passed, 1, NULL)) AS pass')
             ->selectRaw('COUNT(IF (total != passed, 1, NULL)) AS fail')
-            ->selectRaw('DATE_FORMAT(created_at, "%e %b") as date')
+            ->selectRaw('DATE_FORMAT(created_at, "%c %d %b") as date')
             ->whereRaw(
-                'DATE_FORMAT(completed_at, "%e %b") < DATE_ADD(NOW(), INTERVAL -1 MONTH)'
+                'DATE_FORMAT(completed_at, "%c %e %b") < DATE_ADD(NOW(), INTERVAL -1 MONTH)'
             )
-            ->groupByRaw('DATE_FORMAT(created_at, "%e %b")')
-            ->orderByRaw('DATE_FORMAT(created_at, "%e %b") ASC')
+            ->groupByRaw('DATE_FORMAT(created_at, "%c %d %b")')
+            ->orderByRaw('DATE_FORMAT(created_at, "%c %d %b") ASC')
             ->limit(30)
             ->get()
             ->toArray();
 
         foreach ($rows as $row) {
             $data[0]['data'][] = [
-                'x' => $row['date'],
+                'x' => substr($row['date'], 2, 6),
                 'y' => $row['pass'],
             ];
 
             $data[1]['data'][] = [
-                'x' => $row['date'],
+                'x' => substr($row['date'], 2, 6),
                 'y' => $row['fail'],
             ];
         }

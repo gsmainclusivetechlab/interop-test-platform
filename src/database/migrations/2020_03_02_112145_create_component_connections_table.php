@@ -15,9 +15,17 @@ class CreateComponentConnectionsTable extends Migration
     {
         Schema::create('component_connections', function (Blueprint $table) {
             $table->unsignedBigInteger('source_id');
-            $table->foreign('source_id')->references('id')->on('components')->onDelete('cascade');
+            $table
+                ->foreign('source_id')
+                ->references('id')
+                ->on('components')
+                ->onDelete('cascade');
             $table->unsignedBigInteger('target_id');
-            $table->foreign('target_id')->references('id')->on('components')->onDelete('cascade');
+            $table
+                ->foreign('target_id')
+                ->references('id')
+                ->on('components')
+                ->onDelete('cascade');
             $table->primary(['source_id', 'target_id']);
         });
     }

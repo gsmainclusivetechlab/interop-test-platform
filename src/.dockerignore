@@ -1,0 +1,17 @@
+webpack.Dockerfile
+Dockerfile
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/storage/logs
+/public/assets
+/vendor
+.idea
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+_ide_helper.php
+.phpstorm.meta.php

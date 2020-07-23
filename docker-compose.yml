@@ -1,0 +1,60 @@
+version: '3.7'
+
+x-php-defaults: &php-defaults
+  image: gsmainclusivetechlab/interop-test-platform:${CIRCLE_SHA1:-latest}
+  build:
+    context: src
+    args:
+      PHP_INI_TEMPLATE: $PHP_INI_TEMPLATE
+  cap_add:
+    - SYS_PTRACE
+  security_opt:
+    - apparmor:unconfined
+  env_file: service.env
+  depends_on:
+    - redis
+    - mysqldb
+  networks:
+    - internal
+
+networks:
+  internal:
+    driver: bridge
+
+services:
+  app:
+    <<: *php-defaults
+    environment:
+      CONTAINER_ROLE: app
+
+  queue:
+    <<: *php-defaults
+    environment:
+      CONTAINER_ROLE: queue
+
+  redis:
+    image: redis:5
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    networks:
+      - internal
+    volumes:
+      - redisdata:/data
+
+  mysqldb:
+    image: gsmainclusivetechlab/interop-test-platform/mysqldb:${CIRCLE_SHA1:-latest}
+    build:
+      context: mysqldb
+    env_file: service.env
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+    networks:
+      internal:
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:
+  redisdata:

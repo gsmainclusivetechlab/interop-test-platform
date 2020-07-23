@@ -22,14 +22,13 @@ precondition: |
     - Transfer Amount: 599.
     - Payer and Payee account identifier: MSISDN.
     - Payer Identifier value: +33555123456.
-    - Payee Identifier value: +2000008888.
+    - Payee Identifier value: +2000018888.
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
 
 test_steps:
-
-## GET/Participants: MMO1 -> Mojaloop ##
+  ## GET/Participants: MMO1 -> Mojaloop ##
   - path: /participants/{Type}/{ID}
     pattern: '^participants/MSISDN/[+]2000018888$'
     method: GET
@@ -53,13 +52,13 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
 
     response:
       status: 202
 
-## PUT/Participants: Mojaloop -> MMO1 ##
+  ## PUT/Participants: Mojaloop -> MMO1 ##
 
   - path: /participants/{Type}/{ID}
     pattern: '^participants/MSISDN/[+]2000018888$'
@@ -84,15 +83,15 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.participants+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-destination: 'mmo1fsp'
       body:
         fspId: 'mmo2fsp'
 
     response:
-        status: 200
+      status: 200
 
-## POST/Quotes: MMO1 -> Mojaloop ##
+  ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
     method: POST
@@ -143,7 +142,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -152,11 +151,11 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+2000018888"
+            partyIdentifier: '+2000018888'
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555123456"
+            partyIdentifier: '+33555123456'
           personalInfo:
             complexName:
               firstName: 'John'
@@ -175,7 +174,7 @@ test_steps:
     response:
       status: 202
 
-## POST/Quotes: Mojaloop -> MMO2 ##
+  ## POST/Quotes: Mojaloop -> MMO2 ##
   - path: /quotes
     pattern: '^quotes$'
     method: POST
@@ -221,7 +220,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -230,11 +229,11 @@ test_steps:
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+2000018888"
+            partyIdentifier: '+2000018888'
         payer:
           partyIdInfo:
             partyIdType: 'MSISDN'
-            partyIdentifier: "+33555123456"
+            partyIdentifier: '+33555123456'
           personalInfo:
             complexName:
               firstName: 'John'
@@ -253,7 +252,7 @@ test_steps:
     response:
       status: 202
 
-## PUT/Quotes/{ID}: MMO2 -> Mojaloop ##
+  ## PUT/Quotes/{ID}: MMO2 -> Mojaloop ##
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -295,7 +294,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -315,7 +314,7 @@ test_steps:
     response:
       status: 200
 
-## PUT/Quotes/{ID}: Mojaloop -> MMO1 ##
+  ## PUT/Quotes/{ID}: Mojaloop -> MMO1 ##
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -347,7 +346,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -367,7 +366,7 @@ test_steps:
     response:
       status: 200
 
-## POST/Transfers: MMO1 -> Mojaloop ##
+  ## POST/Transfers: MMO1 -> Mojaloop ##
   - path: /transfers
     pattern: '^transfers$'
     method: POST
@@ -415,7 +414,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -432,7 +431,7 @@ test_steps:
     response:
       status: 202
 
-## POST/Transfers: Mojaloop -> MMO2 ##
+  ## POST/Transfers: Mojaloop -> MMO2 ##
   - path: /transfers
     pattern: '^transfers$'
     method: POST
@@ -480,7 +479,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -497,7 +496,7 @@ test_steps:
     response:
       status: 202
 
-## PUT/Transfers/{ID}: MMO2 -> Mojaloop ##
+  ## PUT/Transfers/{ID}: MMO2 -> Mojaloop ##
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -532,7 +531,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -546,7 +545,7 @@ test_steps:
     response:
       status: 200
 
-## PUT/Transfers/{ID}: Mojaloop -> MMO1 ##
+  ## PUT/Transfers/{ID}: Mojaloop -> MMO1 ##
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
@@ -581,7 +580,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.participants+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: 'Sat, 01 Jan 2000 00:00:00 GMT'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -593,4 +592,4 @@ test_steps:
         expiration: '2000-01-01T00:00:00.000Z'
 
     response:
-        status: 200
+      status: 200

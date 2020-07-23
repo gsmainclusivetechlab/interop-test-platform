@@ -32,7 +32,10 @@
                                     {{
                                         session.testCases
                                             ? collect(session.testCases.data)
-                                                  .unique('use_case_id')
+                                                  .map(function (value) {
+                                                      return value.useCase.id;
+                                                  })
+                                                  .unique()
                                                   .count()
                                             : 0
                                     }}
@@ -207,7 +210,7 @@
                                                     ),
                                                 }"
                                             >
-                                                Flow
+                                                Test Flow
                                             </inertia-link>
                                         </li>
                                     </ul>

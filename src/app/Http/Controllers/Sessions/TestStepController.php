@@ -42,7 +42,7 @@ class TestStepController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['lastTestRun']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                     'components' => function ($query) {
                         return $query->with(['connections']);
@@ -106,7 +106,7 @@ class TestStepController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'testCases' => function ($query) {
-                        return $query->with(['lastTestRun']);
+                        return $query->with(['useCase', 'lastTestRun']);
                     },
                     'components' => function ($query) {
                         return $query->with(['connections']);

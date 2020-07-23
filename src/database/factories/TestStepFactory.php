@@ -24,22 +24,31 @@ use GuzzleHttp\Psr7\Response as PsrResponse;
 */
 
 $factory->define(TestStep::class, function (Faker $faker) {
-    $componentWithConnection = factory(Component::class)->state('withConnection')->create();
+    $componentWithConnection = factory(Component::class)
+        ->state('withConnection')
+        ->create();
 
     return [
         'test_case_id' => function () {
-            return factory(TestCase::class)->create()->getKey();
+            return factory(TestCase::class)
+                ->create()
+                ->getKey();
         },
         'api_spec_id' => function () {
-            return factory(ApiSpec::class)->create()->getKey();
+            return factory(ApiSpec::class)
+                ->create()
+                ->getKey();
         },
         'source_id' => $componentWithConnection->getKey(),
-        'target_id' => $componentWithConnection->connections()->first()->getKey(),
+        'target_id' => $componentWithConnection
+            ->connections()
+            ->first()
+            ->getKey(),
         'path' => $faker->text,
         'method' => $faker->text,
         'pattern' => $faker->text,
         'trigger' => $faker->randomElements(),
-        'request' => (new Request(new ServerRequest('get', $faker->url))),
-        'response' => (new Response(new PsrResponse())),
+        'request' => new Request(new ServerRequest('get', $faker->url)),
+        'response' => new Response(new PsrResponse()),
     ];
 });

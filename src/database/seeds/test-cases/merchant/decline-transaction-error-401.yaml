@@ -8,9 +8,8 @@ precondition: |
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
-  - Amount should be the value "1006".
-  - Debit party should be identified by account identifier "msisdn" with the value "+33555123456".
-  - Credit party should be identified by account identifier "msisdn" with the value "+33555789123".
+  - Required Parameters for Execution:
+    - Amount should be the value "16".
 components:
   - Service Provider
 test_steps:
@@ -21,30 +20,25 @@ test_steps:
     target: Mobile Money Operator 1
     api_spec: MM v1.1.2
     trigger:
-      amount: '1006'
+      amount: '16'
     test_response_setups:
       - name: Override response
         values:
           status: 401
           body:
-            errorCode: "genericError"
-            errorCategory: "authorisation"
-            errorDateTime: "2000-01-01T00:00:00.000Z"
-            errorDescription: "General Client Authentication failure. No further details provided to prevent leakage of security information."
+            errorCode: 'genericError'
+            errorCategory: 'authorisation'
+            errorDateTime: '2000-01-01T00:00:00.000Z'
+            errorDescription:
+              'General Client Authentication failure. No further details
+              provided to prevent leakage of security information.'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
           headers.x-callback-url.*: 'required|regex:/.*/'
-      - name: Debit and Credit party is present and is a Valid Party in the network
+      - name: Amount is specified correctly
         rules:
-          body.debitParty.*.key: 'required|in:msisdn'
-          body.debitParty.*.value: 'required|in:+33555123456'
-          body.creditParty.*.key: 'required|in:msisdn'
-          body.creditParty.*.value: 'required|in:+33555789123'
-      - name: Amount and currency are specified correctly
-        rules:
-          body.amount: 'required|in:1006'
-          body.currency: 'required|regex:/^[A-Z]{3}/'
+          body.amount: 'required|in:16'
       - name: Transaction is a Merchant Payment
         rules:
           body.type: 'required|in:merchantpay'
@@ -62,25 +56,27 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: 'http://sp.interop.gsmainclusivetechlab.io/callback'
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-callback-url: '${SP_BASE_URI}/callback'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
       body:
-        amount: '1006'
+        amount: '16'
         currency: 'USD'
         type: 'merchantpay'
         debitParty:
           - key: 'msisdn'
-            value: "+33555123456"
+            value: '+33555123456'
         creditParty:
           - key: 'msisdn'
             value: '+33555789123'
     response:
       status: 401
       headers:
-        x-date: '2000-01-01T00:00:00.000Z'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
         content-type: 'application/json'
       body:
-        errorCode: "genericError"
-        errorCategory: "authorisation"
-        errorDateTime: "2000-01-01T00:00:00.000Z"
-        errorDescription: "General Client Authentication failure. No further details provided to prevent leakage of security information."
+        errorCode: 'genericError'
+        errorCategory: 'authorisation'
+        errorDateTime: '2000-01-01T00:00:00.000Z'
+        errorDescription:
+          'General Client Authentication failure. No further details provided to
+          prevent leakage of security information.'

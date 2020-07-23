@@ -217,6 +217,22 @@
                         </li>
                         <li class="nav-item">
                             <a
+                                href="https://docs.interop.gsmainclusivetechlab.io/"
+                                class="nav-link"
+                                target="_blank"
+                            >
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="book" />
+                                </span>
+                                <span class="nav-link-title">
+                                    Documentation
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a
                                 href="https://www.gsma.com/lab"
                                 class="nav-link"
                                 target="_blank"
