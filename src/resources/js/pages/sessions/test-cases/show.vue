@@ -40,6 +40,7 @@
                     <table class="table table-striped table-hover card-table">
                         <thead>
                             <tr>
+                                <th class="text-nowrap w-auto">ID</th>
                                 <th class="text-nowrap w-auto">Run ID</th>
                                 <th class="text-nowrap w-auto">Status</th>
                                 <th class="text-nowrap w-auto">Duration</th>
@@ -48,6 +49,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="testRun in testRuns.data">
+                                <td>{{ testRun.id }}</td>
                                 <td>
                                     <inertia-link
                                         :href="
