@@ -240,6 +240,7 @@
                                                                         testCase.name
                                                                     }}
                                                                 </span>
+                                                                <span class="btn btn-outline-primary" v-if="!testCase.public">Not Public</span>
                                                             </label>
                                                         </li>
                                                     </ul>
