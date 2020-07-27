@@ -73,6 +73,12 @@
                                     hide-header-close
                                     title="Request"
                                 >
+                                    <clipboard-copy-btn
+                                        :data="jsonToCurl(testStep.request)"
+                                        :show-copy-icon="false"
+                                        :show-curl-text="true"
+                                        class="btn-primary"
+                                    ></clipboard-copy-btn>
                                     <div class="border">
                                         <div
                                             class="d-flex"
@@ -291,5 +297,18 @@ export default {
             required: true,
         },
     },
+    methods: {
+        jsonToCurl: function (request) {
+            let result = 'curl --location --request ';
+
+            result = result.concat(request['method']," 'Session_URL",request['uri'],"' \\  ")
+            for (let h in request['headers']) {
+                result += "--header '"+h+": "+ request['headers'][h][0]+"' \\  "
+            }
+            result = result.concat("--data-raw '",JSON.stringify(request['body']), "'")
+
+            return result;
+        }
+    }
 };
 </script>
