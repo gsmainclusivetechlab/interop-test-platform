@@ -113,9 +113,9 @@ To use these configurations, select the config files when running any
 
 ```
 $ docker-compose -f ./docker-compose.yml \
-                 -f ./compose/expose-web.yml
-                 -f ./compose/network.yml
-                 -f ./compose/volumes.yml
+                 -f ./compose/expose-web.yml \
+                 -f ./compose/network.yml \
+                 -f ./compose/volumes.yml \
                  up -d
 ```
 
@@ -137,6 +137,40 @@ following command, where `{service}` can be any of the services listed above.
 ```
 $ docker-compose exec {service} sh
 ```
+
+### Node dependencies
+
+Mounting a single file (such as package.json) into a container using
+docker-compose volumes makes it impossible to update that file from within the
+container. To work around this, these files are placed inside the `.npm-package`
+directory, which can be mounted without these problems. It's possible to install
+new dependencies like so:
+
+```bash
+$ docker-compose -f docker-compose.yml \
+    -f compose/webpack.yml \
+    exec webpack npm install my-package --save-dev
+
+# OR
+
+$ docker-compose -f docker-compose.yml -f compose/webpack.yml exec webpack sh
+$ npm install my-package --save-dev
+
+# OR
+
+# requires node on host machine, and creates a copy of node_modules on the host
+$ npm install my-package --save-dev
+```
+
+Use `run` instead of `exec` if the containers are not already running.
+
+By default, `node_modules` is not present on the host machine, since node need
+not be installed there. If you would like to have the dependencies present on
+the host (e.g. for IDE compatibility), you can simply run `npm install` on the
+host machine. This will create a `node_modules` directory on the host, but note
+that this will not be copied into the running container (instead it will be
+independently re-created as part of the image build process using `package.json`
+and `package-lock.json`).
 
 ### Running Tests
 
