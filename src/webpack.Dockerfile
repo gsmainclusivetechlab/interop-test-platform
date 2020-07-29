@@ -4,9 +4,8 @@ USER node
 WORKDIR /usr/src/app
 # We'll place our files in npm-package and mount a volume there. This is messy
 # but it avoids problems with npm being unable to write to a single-mounted file
-RUN mkdir ./npm-package
-COPY --chown=node:node ./package.json ./npm-package/package.json
-COPY --chown=node:node ./package-lock.json ./npm-package/package-lock.json
+# RUN mkdir ./npm-package
+COPY --chown=node:node ./.npm-package ./npm-package
 RUN ln -s ./npm-package/package.json ./package.json && \
 	ln -s ./npm-package/package-lock.json ./package-lock.json
 RUN npm install
