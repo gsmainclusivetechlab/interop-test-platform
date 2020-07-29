@@ -22,10 +22,10 @@
                     </div>
                 </div>
                 <div class="row align-items-start">
-                    <div class="col-9 mt-3">
+                    <div class="col-12">
                         <div class="row">
-                            <div class="col">
-                                <slot></slot>
+                            <div class="col mt-3">
+                                <slot />
                             </div>
                         </div>
                     </div>

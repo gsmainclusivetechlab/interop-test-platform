@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GroupResource extends JsonResource
+class GroupMemberResource extends JsonResource
 {
     /**
      * @param  \Illuminate\Http\Request  $request
@@ -15,18 +15,13 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'domain' => $this->domain,
-            'description' => $this->description,
-            'members' => GroupMemberResource::collection(
-                $this->whenLoaded('members')
-            ),
+            'email' => $this->email,
+            'company' => $this->company,
+            'role' => $this->role,
             'can' => [
-                'update' => auth()
-                    ->user()
-                    ->can('update', $this->resource),
                 'delete' => auth()
                     ->user()
-                    ->can('delete', $this->resource),
+                    ->can('delete', $this->pivot),
             ],
         ];
     }

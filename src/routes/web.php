@@ -35,6 +35,7 @@ Route::name('groups.')
         Route::get('{group}/members/create', 'MemberController@create')->name('members.create');
         Route::post('{group}/members/store', 'MemberController@store')->name('members.store');
         Route::get('{group}/members/candidates', 'MemberController@candidates')->name('members.candidates');
+        Route::delete('{group}/members/{member}/destroy', 'MemberController@destroy')->name('members.destroy');
     });
 
 /**

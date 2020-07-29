@@ -33,7 +33,11 @@ class MemberController extends Controller
         ]);
     }
 
-
+    /**
+     * @param Group $group
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Group $group, Request $request)
     {
         $request->validate([
@@ -62,15 +66,16 @@ class MemberController extends Controller
     public function candidates(Group $group)
     {
         return UserResource::collection(
-            User::when(request('q'), function (Builder $query, $q) {
-                $query
-                    ->whereRaw(
-                        'CONCAT(first_name, " ", last_name) like ?',
-                        "%{$q}%"
-                    )
-                    ->orWhere('email', 'like', "%{$q}%");
+            User::when(request('q'), function (Builder $query, $q) use ($group) {
+                $query->whereRaw(
+                    'CONCAT(first_name, " ", last_name) like ?',
+                    "%{$q}%"
+                );
             })
                 ->where('email', 'like', "%{$group->domain}")
+                ->whereDoesntHave('groups', function (Builder $query) use ($group) {
+                    $query->where('id', $group->id);
+                })
                 ->latest()
                 ->paginate()
         );

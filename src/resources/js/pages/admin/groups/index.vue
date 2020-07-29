@@ -62,8 +62,8 @@
                             </td>
                             <td>
                                 {{
-                                    group.users
-                                        ? group.users.length
+                                    group.members
+                                        ? group.members.length
                                         : 0
                                 }}
                             </td>
