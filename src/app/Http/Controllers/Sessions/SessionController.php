@@ -42,6 +42,7 @@ class SessionController extends Controller
                     ->latest()
                     ->paginate()
             ),
+            'sessionsCount' => auth()->user()->sessions()->count(),
             'filter' => [
                 'q' => request('q'),
             ],
