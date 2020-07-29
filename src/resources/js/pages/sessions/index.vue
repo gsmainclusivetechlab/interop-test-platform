@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="empty h-auto" v-if="!sessions.data.length">
+            <div class="empty h-auto" v-if="!sessionsCount">
                 <div class="row">
                     <div class="col-10 mx-auto">
                         <p class="empty-title h3 mb-3">You have no sessions</p>
@@ -131,6 +131,11 @@
                                     </b-dropdown>
                                 </td>
                             </tr>
+                            <tr v-if="!sessions.data.length">
+                                <td class="text-center" colspan="6">
+                                    No Results
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -159,6 +164,10 @@ export default {
     props: {
         sessions: {
             type: Object,
+            required: true,
+        },
+        sessionsCount: {
+            type: Number,
             required: true,
         },
         filter: {

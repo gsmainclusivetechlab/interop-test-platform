@@ -24,6 +24,17 @@ Route::name('legal.')
 Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
 
 /**
+ * Groups Routes
+ */
+Route::name('groups.')
+    ->prefix('groups')
+    ->namespace('Groups')
+    ->group(function () {
+        Route::get('/', 'GroupController@index')->name('index');
+        Route::get('{group}', 'GroupController@show')->name('show');
+    });
+
+/**
  * Sessions Routes
  */
 Route::name('sessions.')
@@ -154,6 +165,7 @@ Route::name('admin.')
                     'UserController@promoteRole'
                 )->name('promote-role');
             });
+        Route::resource('groups', 'GroupController')->except(['show']);
         Route::resource('sessions', 'SessionController')->only(['index']);
         Route::resource('api-specs', 'ApiSpecController')->only([
             'index',

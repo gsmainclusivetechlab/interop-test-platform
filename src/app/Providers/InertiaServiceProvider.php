@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Group;
 use App\Models\Session;
 use App\Models\ApiSpec;
 use App\Models\TestCase;
@@ -59,6 +60,14 @@ class InertiaServiceProvider extends ServiceProvider
                                     'viewAny' => auth()
                                         ->user()
                                         ->can('viewAny', User::class),
+                                ],
+                                'groups' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', Group::class),
+                                    'create' => auth()
+                                        ->user()
+                                        ->can('create', Group::class),
                                 ],
                                 'sessions' => [
                                     'viewAny' => auth()

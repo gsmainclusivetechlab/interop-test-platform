@@ -54,6 +54,7 @@
                             class="admin-settings-dropdown"
                             v-if="(
                                 $page.auth.user.can.users.viewAny ||
+                                $page.auth.user.can.groups.viewAny ||
                                 $page.auth.user.can.sessions.viewAny ||
                                 $page.auth.user.can.api_specs.viewAny ||
                                 $page.auth.user.can.use_cases.viewAny ||
@@ -70,6 +71,14 @@
                                     class="text-reset dropdown-item"
                                 >
                                     Users
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.groups.viewAny">
+                                <inertia-link
+                                    :href="route('admin.groups.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Groups
                                 </inertia-link>
                             </li>
                             <li v-if="$page.auth.user.can.sessions.viewAny">
@@ -192,6 +201,26 @@
                                 </span>
                                 <span class="nav-link-title">
                                     Sessions
+                                </span>
+                            </inertia-link>
+                        </li>
+                        <li
+                            class="nav-item"
+                            v-bind:class="{
+                                active: route().current('groups.*'),
+                            }"
+                        >
+                            <inertia-link
+                                :href="route('groups.index')"
+                                class="nav-link"
+                            >
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="users" />
+                                </span>
+                                <span class="nav-link-title">
+                                    Groups
                                 </span>
                             </inertia-link>
                         </li>
