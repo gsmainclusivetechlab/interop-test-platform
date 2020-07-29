@@ -44,14 +44,23 @@ The API simulator is built using microservices, coordinated using
     ```bash
     $ yarn build
     ```
-2. Set up the database using Laravel's migration tool
+2. Copy dependencies to your local dev environment[\*](#1)
+    ```bash
+    $ yarn prepare:dev
+    ```
+3. Set up the database using Laravel's migration tool
     ```bash
     $ yarn seed
     ```
-3. Launch containers using the new images:
+4. Launch containers using the new images:
     ```bash
     $ yarn prod
     ```
+
+<span id="1">\*</span>This is required to populate dependencies on the host
+(useful for IDEs) and when using volumes to synchronise source code (otherwise
+the empty host dependency directories will overwrite those inside the
+container).
 
 ### Updates
 
@@ -125,6 +134,8 @@ shortcuts for common use-cases:
 
 -   `yarn dev`: includes `expose-web`, `mailhog`, `network`, `phpmyadmin`,
     `volumes` and `webpack`.
+-   `yarn dev:run`: includes the same services as `yarn dev` but uses
+    `docker-compose run` for one-time operations instead of `docker-compose up`.
 -   `yarn prod`: includes `expose-web` and `production.yml`
 
 ### Inspecting Running Containers
@@ -138,39 +149,29 @@ following command, where `{service}` can be any of the services listed above.
 $ docker-compose exec {service} sh
 ```
 
-### Node dependencies
+### Installing dependencies
 
-Mounting a single file (such as package.json) into a container using
-docker-compose volumes makes it impossible to update that file from within the
-container. To work around this, these files are placed inside the `.npm-package`
-directory, which can be mounted without these problems. It's possible to install
-new dependencies like so:
+It's possible to install new dependencies like so:
 
 ```bash
-$ docker-compose -f docker-compose.yml \
-    -f compose/webpack.yml \
-    exec webpack npm install my-package --save-dev
-
-# OR
-
-$ docker-compose -f docker-compose.yml -f compose/webpack.yml exec webpack sh
-$ npm install my-package --save-dev
-
-# OR
-
-# requires node on host machine, and creates a copy of node_modules on the host
-$ npm install my-package --save-dev
+# Composer
+$ yarn dev:run app composer require {package}
+# NPM
+$ yarn dev:run webpack npm install {package} --save-dev
 ```
 
-Use `run` instead of `exec` if the containers are not already running.
+Remember to run `yarn dev:prepare` to copy dependencies from the containers onto
+the host. If you don't do this, mounting any shared volumes will overwrite the
+dependency directory within the running containers with the empty one from the
+host. Adding dependencies with `dev:run` as above will actually add the
+dependency to the host via a mounted volume. To permanently add the dependency
+to the running container so that it is present in production mode, the image
+will need to be rebuilt with `yarn build`.
 
-By default, `node_modules` is not present on the host machine, since node need
-not be installed there. If you would like to have the dependencies present on
-the host (e.g. for IDE compatibility), you can simply run `npm install` on the
-host machine. This will create a `node_modules` directory on the host, but note
-that this will not be copied into the running container (instead it will be
-independently re-created as part of the image build process using `package.json`
-and `package-lock.json`).
+It's also important to set `HOST_UID` in the `.env` file to correspond to your
+user ID on the host machine (run `id -u` to get this). This allows the
+containers to write to files on the volume which are owned by your user (e.g. to
+update package.json).
 
 ### Running Tests
 
