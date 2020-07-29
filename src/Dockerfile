@@ -20,7 +20,7 @@ RUN composer install \
 
 # Add application code
 COPY . .
-RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize && composer update
 
 FROM php:fpm-alpine3.12
 ENV WAIT_VERSION 2.7.2
