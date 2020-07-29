@@ -57,6 +57,9 @@ Vue.component('breadcrumb', () =>
 Vue.component('pagination', () =>
     import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
 );
+Vue.component('selectize', () =>
+    import(/* webpackChunkName: "selectize" */ '@/components/selectize.vue')
+);
 Vue.component('confirm-link', () =>
     import(
         /* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue'

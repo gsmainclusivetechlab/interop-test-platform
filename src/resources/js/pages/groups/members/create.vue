@@ -26,7 +26,7 @@
                                     :preload="true"
                                     valueField="id"
                                     labelField="name"
-                                    :searchField="['name', 'email']"
+                                    searchField="name"
                                  />
                                 <span
                                     v-if="$page.errors.user_id"
@@ -80,7 +80,6 @@
 
 <script>
 import Layout from '@/layouts/main';
-import Selectize from '@/components/selectize';
 
 export default {
     metaInfo() {
@@ -89,8 +88,7 @@ export default {
         };
     },
     components: {
-        Layout,
-        Selectize,
+        Layout
     },
     props: {
         group: {
@@ -114,9 +112,6 @@ export default {
                 }
             }
         };
-    },
-    mounted() {
-
     },
     methods: {
         submit() {

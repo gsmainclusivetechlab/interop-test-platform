@@ -29,6 +29,7 @@ class Group extends Model
             'group_members',
             'group_id',
             'user_id'
-        );
+        )
+            ->using(GroupMember::class);
     }
 }
