@@ -10,4 +10,4 @@ services:
     volumes:
       - ./src/resources:/usr/src/app/resources
       - ./src/public/assets:/usr/src/app/public/assets
-      - ${PWD}/src/.npm-package:/usr/src/app/npm-package
+      - ./src/.npm-package:/usr/src/app/npm-package

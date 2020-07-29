@@ -44,6 +44,14 @@ RUN mkdir -p /usr/src/php/ext/redis && \
     chown -R www-data:www-data /run && \
     docker-php-ext-install pdo pdo_mysql pdo_pgsql mysqli opcache redis pcntl gd bcmath posix zip xmlrpc sockets soap xsl
 
+ARG APP_ENV=prod
+
+# Install composer
+RUN if [ "${APP_ENV}" = "development" ]; then \
+        php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer; \
+        composer global require hirak/prestissimo; \
+    fi;
+
 # Use custom user to ensure correct permissions
 USER www-data
 WORKDIR /var/www/html
@@ -55,13 +63,19 @@ COPY build/nginx-server.conf /etc/nginx/nginx.conf
 # Configure PHP-FPM
 COPY build/php-fpm.conf /etc/php7/php-fpm.d/www.conf
 ARG PHP_INI_TEMPLATE
-COPY build/php-ini-${PHP_INI_TEMPLATE}.ini $PHP_INI_DIR/custom.ini
+COPY build/php-ini-${PHP_INI_TEMPLATE}.ini $PHP_INI_DIR/php.ini
 
 # Configure supervisord
 COPY build/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # copy in code and dependencies 
 COPY --from=composer --chown=www-data:www-data /app /var/www/html
+
+# Setup IDE helpers 
+RUN if [ "${APP_ENV}" = "development" ]; then \
+        composer update; \
+    fi;
+
 
 # copy in assets built in node image
 COPY --from=frontend --chown=www-data:www-data /usr/src/app/public/assets /var/www/html/public/assets
