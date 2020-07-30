@@ -35,6 +35,21 @@ class Group extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function sessions()
+    {
+        return $this->belongsToMany(
+            Session::class,
+            'group_members',
+            'group_id',
+            'user_id',
+            'id',
+            'owner_id'
+        );
+    }
+
+    /**
      * @param User $user
      * @return bool
      */
