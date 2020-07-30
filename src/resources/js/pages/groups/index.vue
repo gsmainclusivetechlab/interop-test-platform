@@ -32,6 +32,7 @@
                             <th class="text-nowrap w-25">Name</th>
                             <th class="text-nowrap">Domain</th>
                             <th class="text-nowrap">Members</th>
+                            <th class="text-nowrap">Sessions</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
@@ -51,8 +52,15 @@
                             </td>
                             <td>
                                 {{
-                                group.users
-                                    ? group.users.length
+                                group.members
+                                    ? group.members.length
+                                    : 0
+                                }}
+                            </td>
+                            <td>
+                                {{
+                                group.sessions
+                                    ? group.sessions.length
                                     : 0
                                 }}
                             </td>

@@ -20,6 +20,9 @@ class GroupResource extends JsonResource
             'members' => GroupMemberResource::collection(
                 $this->whenLoaded('members')
             ),
+            'sessions' => GroupMemberResource::collection(
+                $this->whenLoaded('sessions')
+            ),
             'can' => [
                 'update' => auth()
                     ->user()

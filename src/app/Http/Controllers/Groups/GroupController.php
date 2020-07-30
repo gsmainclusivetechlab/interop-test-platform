@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Groups;
 
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\GroupResource;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\SessionResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
-use App\Models\GroupMember;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 
@@ -35,6 +33,7 @@ class GroupController extends Controller
                     ->when(request('q'), function (Builder $query, $q) {
                     $query->where('name', 'like', "%{$q}%");
                 })
+                    ->with(['members', 'sessions'])
                     ->latest()
                     ->paginate()
             ),
@@ -55,22 +54,23 @@ class GroupController extends Controller
 
         return Inertia::render('groups/show', [
             'group' => (new GroupResource($group))->resolve(),
-            'members' => GroupMemberResource::collection(
-                $group->members()->when(request('q'), function (Builder $query, $q) {
-                    $query
-                        ->whereRaw(
-                            'CONCAT(first_name, " ", last_name) like ?',
-                            "%{$q}%"
-                        )
-                        ->orWhere('email', 'like', "%{$q}%")
-                        ->orWhere('company', 'like', "%{$q}%");
-                })
+            'sessions' => SessionResource::collection(
+                $group->sessions()
+                    ->with([
+                        'owner',
+                        'testCases' => function ($query) {
+                            return $query->with(['lastTestRun']);
+                        },
+                        'lastTestRun',
+                    ])
                     ->latest()
                     ->paginate()
             ),
-            'filter' => [
-                'q' => request('q'),
-            ],
+            'members' => GroupMemberResource::collection(
+                $group->members()
+                    ->latest()
+                    ->get()
+            ),
         ]);
     }
 }

@@ -32,7 +32,7 @@ class GroupController extends Controller
                 Group::when(request('q'), function (Builder $query, $q) {
                     $query->where('name', 'like', "%{$q}%");
                 })
-                    ->with(['members'])
+                    ->with(['members', 'sessions'])
                     ->latest()
                     ->paginate()
             ),
