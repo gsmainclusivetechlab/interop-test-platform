@@ -26,13 +26,22 @@ Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
 /**
  * Groups Routes
  */
-Route::namespace('Groups')
-    ->group(function () {
-        Route::resource('groups', 'GroupController')->only(['index', 'show']);
-        Route::resource('groups.members', 'MemberController')->only(['create', 'store', 'destroy']);
-        Route::get('groups/{group}/members/candidates', 'MemberController@candidates')->name('groups.members.candidates');
-        Route::put('groups/{group}/members/{member}/toggle-admin', 'MemberController@toggleAdmin')->name('groups.members.toggle-admin');
-    });
+Route::namespace('Groups')->group(function () {
+    Route::resource('groups', 'GroupController')->only(['index', 'show']);
+    Route::resource('groups.members', 'MemberController')->only([
+        'create',
+        'store',
+        'destroy',
+    ]);
+    Route::get(
+        'groups/{group}/members/candidates',
+        'MemberController@candidates'
+    )->name('groups.members.candidates');
+    Route::put(
+        'groups/{group}/members/{member}/toggle-admin',
+        'MemberController@toggleAdmin'
+    )->name('groups.members.toggle-admin');
+});
 
 /**
  * Sessions Routes

@@ -29,9 +29,12 @@ class SessionController extends Controller
         return Inertia::render('sessions/index', [
             'sessions' => SessionResource::collection(
                 Session::whereHas('owner', function (Builder $query) {
-                    $query->whereKey(auth()->user())
+                    $query
+                        ->whereKey(auth()->user())
                         ->orWhereHas('groups', function (Builder $query) {
-                            $query->whereHas('members', function (Builder $query) {
+                            $query->whereHas('members', function (
+                                Builder $query
+                            ) {
                                 $query->whereKey(auth()->user());
                             });
                         });
@@ -49,7 +52,10 @@ class SessionController extends Controller
                     ->latest()
                     ->paginate()
             ),
-            'sessionsCount' => auth()->user()->sessions()->count(),
+            'sessionsCount' => auth()
+                ->user()
+                ->sessions()
+                ->count(),
             'filter' => [
                 'q' => request('q'),
             ],

@@ -31,8 +31,8 @@ class GroupController extends Controller
                     ->user()
                     ->groups()
                     ->when(request('q'), function (Builder $query, $q) {
-                    $query->where('name', 'like', "%{$q}%");
-                })
+                        $query->where('name', 'like', "%{$q}%");
+                    })
                     ->with(['members', 'sessions'])
                     ->latest()
                     ->paginate()
@@ -55,7 +55,8 @@ class GroupController extends Controller
         return Inertia::render('groups/show', [
             'group' => (new GroupResource($group))->resolve(),
             'sessions' => SessionResource::collection(
-                $group->sessions()
+                $group
+                    ->sessions()
                     ->with([
                         'owner',
                         'testCases' => function ($query) {
@@ -67,7 +68,8 @@ class GroupController extends Controller
                     ->paginate()
             ),
             'members' => GroupMemberResource::collection(
-                $group->members()
+                $group
+                    ->members()
                     ->latest()
                     ->get()
             ),

@@ -119,10 +119,7 @@ export default {
         submit() {
             this.sending = true;
             this.$inertia
-                .put(
-                    route('admin.groups.update', this.group.id),
-                    this.form
-                )
+                .put(route('admin.groups.update', this.group.id), this.form)
                 .then(() => (this.sending = false));
         },
     },

@@ -28,7 +28,8 @@ class SessionPolicy
     {
         return $user->canAdmin() ||
             $model->owner->is($user) ||
-            $user->groups()
+            $user
+                ->groups()
                 ->whereHas('members', function ($query) use ($model) {
                     $query->whereKey($model->owner);
                 })

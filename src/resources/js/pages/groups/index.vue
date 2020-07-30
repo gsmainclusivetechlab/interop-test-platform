@@ -40,9 +40,7 @@
                         <tr v-for="group in groups.data">
                             <td class="text-break">
                                 <inertia-link
-                                    :href="
-                                        route('groups.show', group.id)
-                                    "
+                                    :href="route('groups.show', group.id)"
                                 >
                                     {{ group.name }}
                                 </inertia-link>
@@ -51,24 +49,14 @@
                                 {{ group.domain }}
                             </td>
                             <td>
-                                {{
-                                group.members
-                                    ? group.members.length
-                                    : 0
-                                }}
+                                {{ group.members ? group.members.length : 0 }}
                             </td>
                             <td>
-                                {{
-                                group.sessions
-                                    ? group.sessions.length
-                                    : 0
-                                }}
+                                {{ group.sessions ? group.sessions.length : 0 }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="
-                                    group.can.update || group.can.delete
-                                "
+                                    v-if="group.can.update || group.can.delete"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -82,11 +70,11 @@
                                         <inertia-link
                                             class="dropdown-item"
                                             :href="
-                                            route(
-                                                'admin.groups.edit',
-                                                group.id
-                                            )
-                                        "
+                                                route(
+                                                    'admin.groups.edit',
+                                                    group.id
+                                                )
+                                            "
                                         >
                                             Edit
                                         </inertia-link>
@@ -95,11 +83,11 @@
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="
-                                            route(
-                                                'admin.groups.destroy',
-                                                group.id
-                                            )
-                                        "
+                                                route(
+                                                    'admin.groups.destroy',
+                                                    group.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="`Are you sure you want to delete ${group.name}?`"

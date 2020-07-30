@@ -55,6 +55,7 @@ class GroupMemberPolicy
      */
     public function delete(User $user, GroupMember $model)
     {
-        return $user->canAdmin() || (!$model->admin && $model->group->hasAdminMember($user));
+        return $user->canAdmin() ||
+            (!$model->admin && $model->group->hasAdminMember($user));
     }
 }
