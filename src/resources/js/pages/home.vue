@@ -58,9 +58,6 @@
                         </p>
                     </div>
                     <div class="card-body flex-shrink-0 py-4">
-                        <p class="text-muted small">
-                            {{ `Owner: ${session.owner.name}` }}
-                        </p>
                         <ul class="list-unstyled">
                             <li>
                                 <icon
@@ -98,6 +95,14 @@
                                     title="Last Run"
                                 />
                                 {{ session.lastTestRun.created_at }}
+                            </li>
+                            <li>
+                                <icon
+                                    name="user"
+                                    v-b-tooltip.hover
+                                    title="Owner"
+                                />
+                                {{ session.owner.name }}
                             </li>
                         </ul>
                     </div>
