@@ -17,10 +17,10 @@ class GroupResource extends JsonResource
             'name' => $this->name,
             'domain' => $this->domain,
             'description' => $this->description,
-            'members' => GroupMemberResource::collection(
-                $this->whenLoaded('members')
+            'users' => GroupUserResource::collection(
+                $this->whenLoaded('users')
             ),
-            'sessions' => GroupMemberResource::collection(
+            'sessions' => GroupUserResource::collection(
                 $this->whenLoaded('sessions')
             ),
             'can' => [

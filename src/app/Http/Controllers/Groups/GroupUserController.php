@@ -12,10 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
-class MemberController extends Controller
+class GroupUserController extends Controller
 {
     /**
-     * MemberController constructor.
+     * GroupUserController constructor.
      */
     public function __construct()
     {
@@ -30,7 +30,7 @@ class MemberController extends Controller
     public function create(Group $group)
     {
         $this->authorize('invite', $group);
-        return Inertia::render('groups/members/create', [
+        return Inertia::render('groups/invite', [
             'group' => (new GroupResource($group))->resolve(),
         ]);
     }
@@ -48,58 +48,58 @@ class MemberController extends Controller
             'user_id' => [
                 'required',
                 'exists:users,id',
-                Rule::unique('group_members', 'user_id')->where(function (
+                Rule::unique('group_users', 'user_id')->where(function (
                     $query
                 ) use ($group) {
                     return $query->where('group_id', $group->id);
                 }),
             ],
         ]);
-        $group->members()->attach($request->input('user_id'), [
+        $group->users()->attach($request->input('user_id'), [
             'admin' => false,
         ]);
 
         return redirect()
             ->route('groups.show', $group)
-            ->with('success', __('Member invited successfully to group'));
+            ->with('success', __('User invited successfully to group'));
     }
 
     /**
      * @param Group $group
-     * @param User $member
+     * @param User $user
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function destroy(Group $group, User $member)
+    public function destroy(Group $group, User $user)
     {
-        $member = $group
-            ->members()
-            ->whereKey($member)
+        $user = $group
+            ->users()
+            ->whereKey($user)
             ->firstOrFail();
-        $this->authorize('delete', $member->pivot);
-        $group->members()->detach($member);
+        $this->authorize('delete', $user->pivot);
+        $group->users()->detach($user);
 
         return redirect()
             ->back()
-            ->with('success', __('Member deleted successfully from group'));
+            ->with('success', __('User deleted successfully from group'));
     }
 
     /**
      * @param Group $group
-     * @param User $member
+     * @param User $user
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function toggleAdmin(Group $group, User $member)
+    public function toggleAdmin(Group $group, User $user)
     {
-        $member = $group
-            ->members()
-            ->whereKey($member)
+        $user = $group
+            ->users()
+            ->whereKey($user)
             ->firstOrFail();
-        $this->authorize('update', $member->pivot);
+        $this->authorize('update', $user->pivot);
         $group
-            ->members()
-            ->updateExistingPivot($member, ['admin' => !$member->pivot->admin]);
+            ->users()
+            ->updateExistingPivot($user, ['admin' => !$user->pivot->admin]);
 
         return redirect()->back();
     }
@@ -125,7 +125,7 @@ class MemberController extends Controller
                 ->whereDoesntHave('groups', function (Builder $query) use (
                     $group
                 ) {
-                    $query->where('id', $group->id);
+                    $query->whereKey($group);
                 })
                 ->latest()
                 ->paginate()

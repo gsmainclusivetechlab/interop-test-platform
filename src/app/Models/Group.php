@@ -22,16 +22,16 @@ class Group extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function members()
+    public function users()
     {
         return $this->belongsToMany(
             User::class,
-            'group_members',
+            'group_users',
             'group_id',
             'user_id'
         )
             ->withPivot('admin')
-            ->using(GroupMember::class);
+            ->using(GroupUser::class);
     }
 
     /**
@@ -41,7 +41,7 @@ class Group extends Model
     {
         return $this->belongsToMany(
             Session::class,
-            'group_members',
+            'group_users',
             'group_id',
             'user_id',
             'id',
@@ -53,9 +53,9 @@ class Group extends Model
      * @param User $user
      * @return bool
      */
-    public function hasMember(User $user)
+    public function hasUser(User $user)
     {
-        return $this->members()
+        return $this->users()
             ->whereKey($user)
             ->exists();
     }
@@ -64,9 +64,9 @@ class Group extends Model
      * @param User $user
      * @return bool
      */
-    public function hasAdminMember(User $user)
+    public function hasAdminUser(User $user)
     {
-        return $this->members()
+        return $this->users()
             ->whereKey($user)
             ->wherePivot('admin', true)
             ->exists();

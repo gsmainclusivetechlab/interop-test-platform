@@ -121,7 +121,7 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Members</h4>
+                        <h4 class="card-title">Users</h4>
                     </div>
                     <div class="table-responsive mb-0">
                         <table
@@ -135,25 +135,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="member in members.data">
+                                <tr v-for="user in users.data">
                                     <td class="text-break">
-                                        {{ member.name }}
+                                        {{ user.name }}
                                     </td>
                                     <td class="text-break">
                                         <label class="form-check form-switch">
                                             <input
-                                                v-if="member.can.update"
+                                                v-if="user.can.update"
                                                 class="form-check-input"
                                                 type="checkbox"
-                                                :checked="member.admin"
+                                                :checked="user.admin"
                                                 @change.prevent="
                                                     $inertia.put(
                                                         route(
-                                                            'groups.members.toggle-admin',
-                                                            [
-                                                                group.id,
-                                                                member.id,
-                                                            ]
+                                                            'groups.users.toggle-admin',
+                                                            [group.id, user.id]
                                                         )
                                                     )
                                                 "
@@ -163,13 +160,13 @@
                                                 class="form-check-input"
                                                 type="checkbox"
                                                 disabled
-                                                :checked="member.admin"
+                                                :checked="user.admin"
                                             />
                                         </label>
                                     </td>
                                     <td class="text-center text-break">
                                         <b-dropdown
-                                            v-if="member.can.delete"
+                                            v-if="user.can.delete"
                                             no-caret
                                             right
                                             toggle-class="align-items-center text-muted"
@@ -181,21 +178,18 @@
                                                     name="dots-vertical"
                                                 ></icon>
                                             </template>
-                                            <li v-if="member.can.delete">
+                                            <li v-if="user.can.delete">
                                                 <confirm-link
                                                     class="dropdown-item"
                                                     :href="
                                                         route(
-                                                            'groups.members.destroy',
-                                                            [
-                                                                group.id,
-                                                                member.id,
-                                                            ]
+                                                            'groups.users.destroy',
+                                                            [group.id, user.id]
                                                         )
                                                     "
                                                     method="delete"
                                                     :confirm-title="'Confirm delete'"
-                                                    :confirm-text="`Are you sure you want to delete ${member.name}?`"
+                                                    :confirm-text="`Are you sure you want to delete ${user.name}?`"
                                                 >
                                                     Delete
                                                 </confirm-link>
@@ -203,7 +197,7 @@
                                         </b-dropdown>
                                     </td>
                                 </tr>
-                                <tr v-if="!members.data.length">
+                                <tr v-if="!users.data.length">
                                     <td class="text-center" colspan="3">
                                         No Results
                                     </td>
@@ -235,11 +229,7 @@ export default {
             type: Object,
             required: true,
         },
-        members: {
-            type: Object,
-            required: true,
-        },
-        filter: {
+        users: {
             type: Object,
             required: true,
         },

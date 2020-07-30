@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>{{ `Invite new member to ${group.name}` }}</b>
+                    <b>{{ `Invite new user to ${group.name}` }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -66,7 +66,7 @@ import Layout from '@/layouts/main';
 export default {
     metaInfo() {
         return {
-            title: `Invite new member to ${this.group.name}`,
+            title: `Invite new user to ${this.group.name}`,
         };
     },
     components: {
@@ -104,12 +104,12 @@ export default {
         submit() {
             this.sending = true;
             this.$inertia
-                .post(route('groups.members.store', this.group), this.form)
+                .post(route('groups.users.store', this.group), this.form)
                 .then(() => (this.sending = false));
         },
         loadUsersItems(query, callback) {
             axios
-                .get(route('groups.members.candidates', this.group), {
+                .get(route('groups.users.candidates', this.group), {
                     params: { q: query },
                 })
                 .then((result) => {

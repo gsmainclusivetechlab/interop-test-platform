@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Models\Component;
 use App\Models\Group;
-use App\Models\GroupMember;
+use App\Models\GroupUser;
 use App\Models\Session;
 use App\Models\ApiSpec;
 use App\Models\TestCase;
@@ -12,7 +12,7 @@ use App\Models\TestStep;
 use App\Models\UseCase;
 use App\Models\User;
 use App\Policies\ComponentPolicy;
-use App\Policies\GroupMemberPolicy;
+use App\Policies\GroupUserPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\SessionPolicy;
 use App\Policies\ApiSpecPolicy;
@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         User::class => UserPolicy::class,
         Group::class => GroupPolicy::class,
-        GroupMember::class => GroupMemberPolicy::class,
+        GroupUser::class => GroupUserPolicy::class,
         Session::class => SessionPolicy::class,
         Component::class => ComponentPolicy::class,
         ApiSpec::class => ApiSpecPolicy::class,
