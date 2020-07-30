@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Groups;
 
-use App\Http\Resources\GroupMemberResource;
+use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\SessionResource;
 use App\Models\Group;
@@ -33,7 +33,7 @@ class GroupController extends Controller
                     ->when(request('q'), function (Builder $query, $q) {
                         $query->where('name', 'like', "%{$q}%");
                     })
-                    ->with(['members', 'sessions'])
+                    ->with(['users', 'sessions'])
                     ->latest()
                     ->paginate()
             ),
@@ -67,9 +67,9 @@ class GroupController extends Controller
                     ->latest()
                     ->paginate()
             ),
-            'members' => GroupMemberResource::collection(
+            'users' => GroupUserResource::collection(
                 $group
-                    ->members()
+                    ->users()
                     ->latest()
                     ->get()
             ),

@@ -32,7 +32,7 @@ class SessionController extends Controller
                     $query
                         ->whereKey(auth()->user())
                         ->orWhereHas('groups', function (Builder $query) {
-                            $query->whereHas('members', function (
+                            $query->whereHas('users', function (
                                 Builder $query
                             ) {
                                 $query->whereKey(auth()->user());
@@ -52,10 +52,17 @@ class SessionController extends Controller
                     ->latest()
                     ->paginate()
             ),
-            'sessionsCount' => auth()
-                ->user()
-                ->sessions()
-                ->count(),
+            'sessionsCount' => Session::whereHas('owner', function (
+                Builder $query
+            ) {
+                $query
+                    ->whereKey(auth()->user())
+                    ->orWhereHas('groups', function (Builder $query) {
+                        $query->whereHas('users', function (Builder $query) {
+                            $query->whereKey(auth()->user());
+                        });
+                    });
+            })->count(),
             'filter' => [
                 'q' => request('q'),
             ],

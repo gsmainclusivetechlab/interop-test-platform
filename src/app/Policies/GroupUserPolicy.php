@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\GroupMember;
+use App\Models\GroupUser;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class GroupMemberPolicy
+class GroupUserPolicy
 {
     use HandlesAuthorization;
 
@@ -21,10 +21,10 @@ class GroupMemberPolicy
 
     /**
      * @param  User  $user
-     * @param  GroupMember  $model
+     * @param  GroupUser  $model
      * @return mixed
      */
-    public function view(User $user, GroupMember $model)
+    public function view(User $user, GroupUser $model)
     {
         return $user->canAdmin();
     }
@@ -40,22 +40,22 @@ class GroupMemberPolicy
 
     /**
      * @param  User  $user
-     * @param  GroupMember  $model
+     * @param  GroupUser  $model
      * @return mixed
      */
-    public function update(User $user, GroupMember $model)
+    public function update(User $user, GroupUser $model)
     {
         return $user->canAdmin();
     }
 
     /**
      * @param  User  $user
-     * @param  GroupMember  $model
+     * @param  GroupUser  $model
      * @return mixed
      */
-    public function delete(User $user, GroupMember $model)
+    public function delete(User $user, GroupUser $model)
     {
         return $user->canAdmin() ||
-            (!$model->admin && $model->group->hasAdminMember($user));
+            (!$model->admin && $model->group->hasAdminUser($user));
     }
 }

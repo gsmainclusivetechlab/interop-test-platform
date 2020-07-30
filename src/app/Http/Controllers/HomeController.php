@@ -28,7 +28,7 @@ class HomeController extends Controller
                     $query
                         ->whereKey(auth()->user())
                         ->orWhereHas('groups', function (Builder $query) {
-                            $query->whereHas('members', function (
+                            $query->whereHas('users', function (
                                 Builder $query
                             ) {
                                 $query->whereKey(auth()->user());

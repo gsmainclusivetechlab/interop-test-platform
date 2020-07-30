@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 /**
  * @mixin \Eloquent
  */
-class GroupMember extends Pivot
+class GroupUser extends Pivot
 {
     /**
      * @var string
      */
-    protected $table = 'group_members';
+    protected $table = 'group_users';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -30,7 +30,7 @@ class SessionPolicy
             $model->owner->is($user) ||
             $user
                 ->groups()
-                ->whereHas('members', function ($query) use ($model) {
+                ->whereHas('users', function ($query) use ($model) {
                     $query->whereKey($model->owner);
                 })
                 ->exists();
