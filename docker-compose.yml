@@ -7,6 +7,7 @@ x-php-defaults: &php-defaults
     args:
       PHP_INI_TEMPLATE: $PHP_INI_TEMPLATE
       APP_ENV: $APP_ENV
+      HOST_UID: ${HOST_UID:-www-data:www-data}
   cap_add:
     - SYS_PTRACE
   security_opt:

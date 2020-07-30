@@ -171,7 +171,8 @@ will need to be rebuilt with `yarn build`.
 It's also important to set `HOST_UID` in the `.env` file to correspond to your
 user ID on the host machine (run `id -u` to get this). This allows the
 containers to write to files on the volume which are owned by your user (e.g. to
-update package.json).
+update package.json). This needs to be set _before_ the app images are built, as
+files are created inside the container assuming this same ID.
 
 ### Running Tests
 

@@ -12,6 +12,5 @@ services:
       - ./src:/var/www/html
 
   mysqldb:
-    user: $HOST_UID
     volumes:
       - ./mysqldb/my.cnf:/etc/mysql/my.cnf
