@@ -121,7 +121,12 @@ class GroupUserController extends Controller
                     "%{$q}%"
                 );
             })
-                ->where('email', 'like', "%{$group->domain}")
+                ->where(function (Builder $query) use ($group) {
+                    $domains = (array) explode(', ', $group->domain);
+                    foreach ($domains as $domain) {
+                        $query->orWhere('email', 'like', "%{$domain}");
+                    }
+                })
                 ->whereDoesntHave('groups', function (Builder $query) use (
                     $group
                 ) {

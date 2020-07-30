@@ -40,7 +40,7 @@ export default {
         searchField: {
             type: [String, Array],
             required: false,
-            default: ['text'],
+            default: 'text',
         },
     },
     mounted() {

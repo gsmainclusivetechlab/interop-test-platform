@@ -60,6 +60,11 @@ Vue.component('pagination', () =>
 Vue.component('selectize', () =>
     import(/* webpackChunkName: "selectize" */ '@/components/selectize.vue')
 );
+Vue.component('selectize-tags', () =>
+    import(
+        /* webpackChunkName: "selectize-tags" */ '@/components/selectize-tags.vue'
+    )
+);
 Vue.component('confirm-link', () =>
     import(
         /* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue'

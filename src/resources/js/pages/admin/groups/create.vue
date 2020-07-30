@@ -36,11 +36,9 @@
                                 <label class="form-label">
                                     Domain
                                 </label>
-                                <input
-                                    name="domain"
-                                    type="text"
-                                    class="form-control"
+                                <selectize-tags
                                     v-model="form.domain"
+                                    class="form-select"
                                     :class="{
                                         'is-invalid': $page.errors.domain,
                                     }"
