@@ -17,8 +17,11 @@ class GroupMemberResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'company' => $this->company,
-            'role' => $this->role,
+            'admin' => $this->pivot->admin,
             'can' => [
+                'update' => auth()
+                    ->user()
+                    ->can('update', $this->pivot),
                 'delete' => auth()
                     ->user()
                     ->can('delete', $this->pivot),

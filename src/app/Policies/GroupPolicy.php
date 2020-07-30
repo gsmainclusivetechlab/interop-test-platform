@@ -26,7 +26,7 @@ class GroupPolicy
      */
     public function view(User $user, Group $model)
     {
-        return $user->canAdmin();
+        return $user->canAdmin() || $model->hasMember($user);
     }
 
     /**
@@ -56,5 +56,15 @@ class GroupPolicy
     public function delete(User $user, Group $model)
     {
         return $user->canAdmin();
+    }
+
+    /**
+     * @param  User  $user
+     * @param  Group  $model
+     * @return mixed
+     */
+    public function invite(User $user, Group $model)
+    {
+        return $user->canAdmin() || $model->hasAdminMember($user);
     }
 }

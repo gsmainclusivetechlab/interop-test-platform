@@ -44,7 +44,7 @@
                         <tr>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap">Domain</th>
-                            <th class="text-nowrap">Users</th>
+                            <th class="text-nowrap">Members</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>

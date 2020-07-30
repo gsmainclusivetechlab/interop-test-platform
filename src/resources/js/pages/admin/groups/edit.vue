@@ -40,19 +40,9 @@
                                     name="domain"
                                     type="text"
                                     class="form-control"
-                                    v-model="form.domain"
-                                    :class="{
-                                        'is-invalid': $page.errors.domain,
-                                    }"
+                                    :value="form.domain"
+                                    disabled
                                 />
-                                <span
-                                    v-if="$page.errors.domain"
-                                    class="invalid-feedback"
-                                >
-                                    <strong>
-                                        {{ $page.errors.domain }}
-                                    </strong>
-                                </span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">

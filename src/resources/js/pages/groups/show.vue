@@ -23,27 +23,52 @@
                         <th class="text-nowrap w-25">Name</th>
                         <th class="text-nowrap w-25">Email</th>
                         <th class="text-nowrap w-25">Company</th>
-                        <th class="text-nowrap w-auto">Role</th>
+                        <th class="text-nowrap w-auto">Admin</th>
                         <th class="text-nowrap w-1"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="groupMember in groupMembers.data">
+                    <tr v-for="member in members.data">
                         <td class="text-break">
-                            {{ groupMember.name }}
+                            {{ member.name }}
                         </td>
                         <td class="text-break">
-                            <a :href="`mailto:${groupMember.email}`">
-                                {{ groupMember.email }}
+                            <a :href="`mailto:${member.email}`">
+                                {{ member.email }}
                             </a>
                         </td>
                         <td class="text-break">
-                            {{ groupMember.company }}
+                            {{ member.company }}
+                        </td>
+                        <td class="text-break">
+                            <label class="form-check form-switch">
+                                <input
+                                    v-if="member.can.update"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    :checked="member.admin"
+                                    @change.prevent="
+                                            $inertia.put(
+                                                route(
+                                                    'groups.members.toggle-admin',
+                                                    [group.id, member.id]
+                                                )
+                                            )
+                                        "
+                                />
+                                <input
+                                    v-else
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    disabled
+                                    :checked="member.admin"
+                                />
+                            </label>
                         </td>
                         <td class="text-center text-break">
                             <b-dropdown
                                 v-if="
-                                        groupMember.can.delete
+                                        member.can.delete
                                     "
                                 no-caret
                                 right
@@ -54,18 +79,18 @@
                                 <template v-slot:button-content>
                                     <icon name="dots-vertical"></icon>
                                 </template>
-                                <li v-if="groupMember.can.delete">
+                                <li v-if="member.can.delete">
                                     <confirm-link
                                         class="dropdown-item"
                                         :href="
                                                 route(
                                                     'groups.members.destroy',
-                                                    [group.id, groupMember.id]
+                                                    [group.id, member.id]
                                                 )
                                             "
                                         method="delete"
                                         :confirm-title="'Confirm delete'"
-                                        :confirm-text="`Are you sure you want to delete ${groupMember.name}?`"
+                                        :confirm-text="`Are you sure you want to delete ${member.name}?`"
                                     >
                                         Delete
                                     </confirm-link>
@@ -73,7 +98,7 @@
                             </b-dropdown>
                         </td>
                     </tr>
-                    <tr v-if="!groupMembers.data.length">
+                    <tr v-if="!members.data.length">
                         <td class="text-center" colspan="5">
                             No Results
                         </td>
@@ -82,8 +107,8 @@
                 </table>
             </div>
             <pagination
-                :meta="groupMembers.meta"
-                :links="groupMembers.links"
+                :meta="members.meta"
+                :links="members.links"
                 class="card-footer"
             />
         </div>
@@ -102,7 +127,7 @@
                 type: Object,
                 required: true,
             },
-            groupMembers: {
+            members: {
                 type: Object,
                 required: true,
             },
