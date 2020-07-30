@@ -92,7 +92,7 @@ export default {
                         item.name +
                         '</div>' +
                         '<div class="text-muted small">' +
-                        item.email +
+                        item.company +
                         '</div>' +
                         '</div>'
                     );
