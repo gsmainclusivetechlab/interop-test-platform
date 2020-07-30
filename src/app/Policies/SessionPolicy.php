@@ -26,7 +26,13 @@ class SessionPolicy
      */
     public function view(User $user, Session $model)
     {
-        return $user->canAdmin() || $model->owner->is($user);
+        return $user->canAdmin() ||
+            $model->owner->is($user) ||
+            $user->groups()
+                ->whereHas('members', function ($query) use ($model) {
+                    $query->whereKey($model->owner);
+                })
+                ->exists();
     }
 
     /**

@@ -51,6 +51,7 @@
                         <thead>
                             <tr>
                                 <th class="text-nowrap w-25">Name</th>
+                                <th class="text-nowrap w-auto">Owner</th>
                                 <th class="text-nowrap w-auto">Use Cases</th>
                                 <th class="text-nowrap w-auto">Test Cases</th>
                                 <th class="text-nowrap w-25">Status</th>
@@ -68,6 +69,9 @@
                                     >
                                         {{ session.name }}
                                     </inertia-link>
+                                </td>
+                                <td class="text-break">
+                                    {{ session.owner.name }}
                                 </td>
                                 <td>
                                     {{
@@ -132,7 +136,7 @@
                                 </td>
                             </tr>
                             <tr v-if="!sessions.data.length">
-                                <td class="text-center" colspan="6">
+                                <td class="text-center" colspan="7">
                                     No Results
                                 </td>
                             </tr>

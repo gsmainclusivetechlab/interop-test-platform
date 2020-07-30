@@ -8,6 +8,7 @@ use App\Http\Resources\TestRunResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
 use App\Models\UseCase;
+use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 
 class SessionController extends Controller
@@ -27,13 +28,19 @@ class SessionController extends Controller
     {
         return Inertia::render('sessions/index', [
             'sessions' => SessionResource::collection(
-                auth()
-                    ->user()
-                    ->sessions()
+                Session::whereHas('owner', function (Builder $query) {
+                    $query->whereKey(auth()->user())
+                        ->orWhereHas('groups', function (Builder $query) {
+                            $query->whereHas('members', function (Builder $query) {
+                                $query->whereKey(auth()->user());
+                            });
+                        });
+                })
                     ->when(request('q'), function ($query, $q) {
                         return $query->where('name', 'like', "%{$q}%");
                     })
                     ->with([
+                        'owner',
                         'testCases' => function ($query) {
                             return $query->with(['useCase', 'lastTestRun']);
                         },
