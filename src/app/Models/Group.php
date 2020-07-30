@@ -30,6 +30,25 @@ class Group extends Model
             'group_id',
             'user_id'
         )
+            ->withPivot('admin')
             ->using(GroupMember::class);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasMember(User $user)
+    {
+        return $this->members()->whereKey($user)->exists();
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasAdminMember(User $user)
+    {
+        return $this->members()->whereKey($user)->wherePivot('admin', true)->exists();
     }
 }

@@ -15,7 +15,11 @@
                         </h1>
                     </div>
                     <div class="ml-auto col-2 d-flex justify-content-end">
-                        <inertia-link :href="route('groups.members.create', group.id)" class="btn btn-primary">
+                        <inertia-link
+                            :href="route('groups.members.create', group.id)"
+                            class="btn btn-primary"
+                            v-if="group.can.invite"
+                        >
                             <icon name="user-plus" />
                             Invite Member
                         </inertia-link>

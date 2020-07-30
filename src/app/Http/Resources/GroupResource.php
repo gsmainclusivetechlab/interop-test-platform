@@ -27,6 +27,9 @@ class GroupResource extends JsonResource
                 'delete' => auth()
                     ->user()
                     ->can('delete', $this->resource),
+                'invite' => auth()
+                    ->user()
+                    ->can('invite', $this->resource),
             ],
         ];
     }

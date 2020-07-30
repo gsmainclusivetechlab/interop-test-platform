@@ -25,9 +25,11 @@ class MemberController extends Controller
     /**
      * @param Group $group
      * @return \Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Group $group)
     {
+        $this->authorize('invite', $group);
         return Inertia::render('groups/members/create', [
             'group' => (new GroupResource($group))->resolve(),
         ]);
@@ -37,9 +39,11 @@ class MemberController extends Controller
      * @param Group $group
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(Group $group, Request $request)
     {
+        $this->authorize('invite', $group);
         $request->validate([
             'user_id' => [
                 'required',
@@ -48,10 +52,9 @@ class MemberController extends Controller
                     return $query->where('group_id', $group->id);
                 }),
             ],
-            'admin' => ['required', 'bool'],
         ]);
         $group->members()->attach($request->input('user_id'), [
-            'admin' => $request->input('admin'),
+            'admin' => false,
         ]);
 
         return redirect()
@@ -61,10 +64,44 @@ class MemberController extends Controller
 
     /**
      * @param Group $group
+     * @param User $member
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy(Group $group, User $member)
+    {
+        $member = $group->members()->whereKey($member)->firstOrFail();
+        $this->authorize('delete', $member->pivot);
+        $group->members()->detach($member);
+
+        return redirect()
+            ->back()
+            ->with('success', __('Member deleted successfully from group'));
+    }
+
+    /**
+     * @param Group $group
+     * @param User $member
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function toggleAdmin(Group $group, User $member)
+    {
+        $member = $group->members()->whereKey($member)->firstOrFail();
+        $this->authorize('update', $member->pivot);
+        $group->members()->updateExistingPivot($member, ['admin' => !$member->pivot->admin]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * @param Group $group
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function candidates(Group $group)
     {
+        $this->authorize('invite', $group);
         return UserResource::collection(
             User::when(request('q'), function (Builder $query, $q) use ($group) {
                 $query->whereRaw(

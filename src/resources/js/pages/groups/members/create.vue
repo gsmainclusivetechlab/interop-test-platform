@@ -17,7 +17,7 @@
                                 <selectize
                                     v-model="form.user_id"
                                     class="form-select"
-                                    placeholder="Select member..."
+                                    placeholder="Select user..."
                                     :class="{
                                         'is-invalid': $page.errors.user_id,
                                     }"
@@ -34,24 +34,6 @@
                                 >
                                     <strong>
                                         {{ $page.errors.user_id }}
-                                    </strong>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-check">
-                                    <input
-                                        type="checkbox"
-                                        v-model="form.admin"
-                                        class="form-check-input"
-                                    />
-                                    <span class="form-check-label">Make administrator</span>
-                                </label>
-                                <span
-                                    v-if="$page.errors.admin"
-                                    class="invalid-feedback"
-                                >
-                                    <strong>
-                                        {{ $page.errors.admin }}
                                     </strong>
                                 </span>
                             </div>
@@ -101,7 +83,6 @@ export default {
             sending: false,
             form: {
                 user_id: null,
-                admin: false,
             },
             renderUsersItems: {
                 option: function(item) {
