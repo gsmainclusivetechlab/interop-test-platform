@@ -97,7 +97,8 @@ jobs:
       - unless:
           condition: << parameters.host >>
           steps:
-            - setup_remote_docker
+            - setup_remote_docker:
+                version: 19.03.12
       - setup_dependencies
       - run:
           name: Build Images
