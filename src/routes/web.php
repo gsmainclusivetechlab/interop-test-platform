@@ -32,6 +32,9 @@ Route::name('groups.')
     ->group(function () {
         Route::get('/', 'GroupController@index')->name('index');
         Route::get('{group}', 'GroupController@show')->name('show');
+        Route::get('{group}/members/create', 'MemberController@create')->name('members.create');
+        Route::post('{group}/members/store', 'MemberController@store')->name('members.store');
+        Route::get('{group}/members/candidates', 'MemberController@candidates')->name('members.candidates');
     });
 
 /**

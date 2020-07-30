@@ -67,6 +67,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Session::class, 'owner_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(
+            Group::class,
+            'group_members',
+            'user_id',
+            'group_id'
+        );
+    }
+
     public static function getRoleNames()
     {
         return [
