@@ -14,6 +14,7 @@
         "dev:all": "npm run docker-base -- -f compose/expose-web.yml -f compose/mailhog.yml -f compose/network.yml -f compose/phpmyadmin.yml -f compose/volumes.yml -f compose/webpack.yml",
         "dev": "npm run dev:all -- up",
         "dev:run": "npm run dev:all -- run",
+        "dev:exec": "npm run dev:all -- exec",
         "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up -d --force-recreate ",
         "down": "npm run dev:all -- down --remove-orphans",
         "has-db": "npm run docker-ops has-db",
