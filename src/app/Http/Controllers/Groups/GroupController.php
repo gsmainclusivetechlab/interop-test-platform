@@ -16,9 +16,6 @@ class GroupController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(Group::class, 'group', [
-            'only' => ['index', 'show'],
-        ]);
     }
 
     /**
@@ -28,7 +25,10 @@ class GroupController extends Controller
     {
         return Inertia::render('groups/index', [
             'groups' => GroupResource::collection(
-                Group::when(request('q'), function (Builder $query, $q) {
+                auth()
+                    ->user()
+                    ->groups()
+                    ->when(request('q'), function (Builder $query, $q) {
                     $query->where('name', 'like', "%{$q}%");
                 })
                     ->latest()
@@ -43,9 +43,12 @@ class GroupController extends Controller
     /**
      * @param Group $group
      * @return \Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Group $group)
     {
+        $this->authorize('view', $group);
+
         return Inertia::render('groups/show', [
             'group' => (new GroupResource($group))->resolve(),
         ]);

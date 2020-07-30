@@ -16,6 +16,7 @@ import {
 
 window.string = require('string');
 window.collect = require('collect.js');
+window.$ = window.jQuery = require('jquery');
 window.axios = require('axios');
 window.axios.defaults.withCredentials = true;
 
