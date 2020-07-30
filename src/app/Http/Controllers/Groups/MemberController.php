@@ -48,7 +48,9 @@ class MemberController extends Controller
             'user_id' => [
                 'required',
                 'exists:users,id',
-                Rule::unique('group_members', 'user_id')->where(function ($query) use ($group) {
+                Rule::unique('group_members', 'user_id')->where(function (
+                    $query
+                ) use ($group) {
                     return $query->where('group_id', $group->id);
                 }),
             ],
@@ -70,7 +72,10 @@ class MemberController extends Controller
      */
     public function destroy(Group $group, User $member)
     {
-        $member = $group->members()->whereKey($member)->firstOrFail();
+        $member = $group
+            ->members()
+            ->whereKey($member)
+            ->firstOrFail();
         $this->authorize('delete', $member->pivot);
         $group->members()->detach($member);
 
@@ -87,9 +92,14 @@ class MemberController extends Controller
      */
     public function toggleAdmin(Group $group, User $member)
     {
-        $member = $group->members()->whereKey($member)->firstOrFail();
+        $member = $group
+            ->members()
+            ->whereKey($member)
+            ->firstOrFail();
         $this->authorize('update', $member->pivot);
-        $group->members()->updateExistingPivot($member, ['admin' => !$member->pivot->admin]);
+        $group
+            ->members()
+            ->updateExistingPivot($member, ['admin' => !$member->pivot->admin]);
 
         return redirect()->back();
     }
@@ -103,14 +113,18 @@ class MemberController extends Controller
     {
         $this->authorize('invite', $group);
         return UserResource::collection(
-            User::when(request('q'), function (Builder $query, $q) use ($group) {
+            User::when(request('q'), function (Builder $query, $q) use (
+                $group
+            ) {
                 $query->whereRaw(
                     'CONCAT(first_name, " ", last_name) like ?',
                     "%{$q}%"
                 );
             })
                 ->where('email', 'like', "%{$group->domain}")
-                ->whereDoesntHave('groups', function (Builder $query) use ($group) {
+                ->whereDoesntHave('groups', function (Builder $query) use (
+                    $group
+                ) {
                     $query->where('id', $group->id);
                 })
                 ->latest()

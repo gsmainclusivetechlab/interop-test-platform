@@ -27,7 +27,7 @@
                                     valueField="id"
                                     labelField="name"
                                     searchField="name"
-                                 />
+                                />
                                 <span
                                     v-if="$page.errors.user_id"
                                     class="invalid-feedback"
@@ -70,7 +70,7 @@ export default {
         };
     },
     components: {
-        Layout
+        Layout,
     },
     props: {
         group: {
@@ -85,13 +85,19 @@ export default {
                 user_id: null,
             },
             renderUsersItems: {
-                option: function(item) {
-                    return '<div class="option">' +
-                        '<div>' + item.name + '</div>' +
-                        '<div class="text-muted small">' + item.email + '</div>' +
-                        '</div>';
-                }
-            }
+                option: function (item) {
+                    return (
+                        '<div class="option">' +
+                        '<div>' +
+                        item.name +
+                        '</div>' +
+                        '<div class="text-muted small">' +
+                        item.email +
+                        '</div>' +
+                        '</div>'
+                    );
+                },
+            },
         };
     },
     methods: {
@@ -102,9 +108,13 @@ export default {
                 .then(() => (this.sending = false));
         },
         loadUsersItems(query, callback) {
-            axios.get(route('groups.members.candidates', this.group), {params: {q: query}}).then((result) => {
-                callback(result.data.data);
-            });
+            axios
+                .get(route('groups.members.candidates', this.group), {
+                    params: { q: query },
+                })
+                .then((result) => {
+                    callback(result.data.data);
+                });
         },
     },
 };

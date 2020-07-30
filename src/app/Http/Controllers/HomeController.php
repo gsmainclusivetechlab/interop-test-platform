@@ -25,9 +25,12 @@ class HomeController extends Controller
         return Inertia::render('home', [
             'sessions' => SessionResource::collection(
                 Session::whereHas('owner', function (Builder $query) {
-                    $query->whereKey(auth()->user())
+                    $query
+                        ->whereKey(auth()->user())
                         ->orWhereHas('groups', function (Builder $query) {
-                            $query->whereHas('members', function (Builder $query) {
+                            $query->whereHas('members', function (
+                                Builder $query
+                            ) {
                                 $query->whereKey(auth()->user());
                             });
                         });

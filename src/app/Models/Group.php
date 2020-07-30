@@ -55,7 +55,9 @@ class Group extends Model
      */
     public function hasMember(User $user)
     {
-        return $this->members()->whereKey($user)->exists();
+        return $this->members()
+            ->whereKey($user)
+            ->exists();
     }
 
     /**
@@ -64,6 +66,9 @@ class Group extends Model
      */
     public function hasAdminMember(User $user)
     {
-        return $this->members()->whereKey($user)->wherePivot('admin', true)->exists();
+        return $this->members()
+            ->whereKey($user)
+            ->wherePivot('admin', true)
+            ->exists();
     }
 }

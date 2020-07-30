@@ -8,7 +8,7 @@ import 'selectize';
 export default {
     props: {
         value: {
-            required: false
+            required: false,
         },
         load: {
             type: Function,
@@ -30,17 +30,17 @@ export default {
         valueField: {
             type: String,
             required: false,
-            default: 'value'
+            default: 'value',
         },
         labelField: {
             type: String,
             required: false,
-            default: 'text'
+            default: 'text',
         },
         searchField: {
             type: [String, Array],
             required: false,
-            default: ['text']
+            default: ['text'],
         },
     },
     mounted() {
@@ -55,12 +55,12 @@ export default {
             searchField: this.searchField,
         });
         $select[0].selectize.setValue(this.value);
-        $select.on('change', function() {
+        $select.on('change', function () {
             $vm.$emit('input', this.value);
         });
     },
     watch: {
-        value: function(value) {
+        value: function (value) {
             $(this.$el).val(value).trigger('change');
         },
     },

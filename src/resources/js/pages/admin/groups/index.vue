@@ -62,24 +62,14 @@
                                 {{ group.domain }}
                             </td>
                             <td>
-                                {{
-                                group.members
-                                    ? group.members.length
-                                    : 0
-                                }}
+                                {{ group.members ? group.members.length : 0 }}
                             </td>
                             <td>
-                                {{
-                                    group.sessions
-                                        ? group.sessions.length
-                                        : 0
-                                }}
+                                {{ group.sessions ? group.sessions.length : 0 }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="
-                                        group.can.update || group.can.delete
-                                    "
+                                    v-if="group.can.update || group.can.delete"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"

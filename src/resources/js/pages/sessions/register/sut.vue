@@ -17,7 +17,7 @@
                             searchField="name"
                             class="form-select"
                             placeholder="Select SUT..."
-                         />
+                        />
                         <span
                             v-if="$page.errors.component_id"
                             class="invalid-feedback"
