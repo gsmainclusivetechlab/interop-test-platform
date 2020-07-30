@@ -58,7 +58,7 @@ class GroupController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'domain' => ['required', 'string', 'max:255', 'regex:/^@.+$/i'],
+            'domain' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
         ]);
         Group::create($request->input());
@@ -88,7 +88,7 @@ class GroupController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'domain' => ['required', 'string', 'max:255', 'regex:/^@.+$/i'],
+            'domain' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
         ]);
         $group->update($request->input());
