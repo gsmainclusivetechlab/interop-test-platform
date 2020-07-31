@@ -19,6 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
     const DELETED_AT = 'blocked_at';
 
     const ROLE_USER = 'user';
+    const ROLE_TEST_CASE_CREATOR = 'test-case-creator';
     const ROLE_ADMIN = 'admin';
     const ROLE_SUPERADMIN = 'superadmin';
 
@@ -80,10 +81,14 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    /**
+     * @return array
+     */
     public static function getRoleNames()
     {
         return [
             static::ROLE_USER => __('User'),
+            static::ROLE_TEST_CASE_CREATOR => __('TC Creator'),
             static::ROLE_ADMIN => __('Admin'),
             static::ROLE_SUPERADMIN => __('Superadmin'),
         ];
@@ -100,7 +105,19 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return bool
      */
-    public function canAdmin()
+    public function isTestCaseCreator()
+    {
+        return in_array($this->role, [
+            static::ROLE_TEST_CASE_CREATOR,
+            static::ROLE_ADMIN,
+            static::ROLE_SUPERADMIN,
+        ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
     {
         return in_array($this->role, [
             static::ROLE_ADMIN,
@@ -111,7 +128,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return bool
      */
-    public function canSuperadmin()
+    public function isSuperadmin()
     {
         return in_array($this->role, [static::ROLE_SUPERADMIN]);
     }

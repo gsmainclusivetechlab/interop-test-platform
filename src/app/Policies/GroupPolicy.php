@@ -16,7 +16,7 @@ class GroupPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -26,7 +26,7 @@ class GroupPolicy
      */
     public function view(User $user, Group $model)
     {
-        return $user->canAdmin() || $model->hasUser($user);
+        return $user->isAdmin() || $model->hasUser($user);
     }
 
     /**
@@ -35,7 +35,7 @@ class GroupPolicy
      */
     public function create(User $user)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -45,7 +45,7 @@ class GroupPolicy
      */
     public function update(User $user, Group $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -55,7 +55,7 @@ class GroupPolicy
      */
     public function delete(User $user, Group $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -65,6 +65,6 @@ class GroupPolicy
      */
     public function invite(User $user, Group $model)
     {
-        return $user->canAdmin() || $model->hasAdminUser($user);
+        return $user->isAdmin() || $model->hasAdminUser($user);
     }
 }
