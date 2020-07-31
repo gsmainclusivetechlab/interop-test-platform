@@ -16,8 +16,8 @@ class MessageLogPolicy
      */
     public function viewAny(User $user)
     {
-        debug('Checking messsage log canAdmin');
-        return $user->canAdmin();
+        debug('Checking messsage log isAdmin');
+        return $user->isAdmin();
     }
 
     /**
@@ -27,7 +27,7 @@ class MessageLogPolicy
      */
     public function view(User $user, MessageLog $model)
     {
-        if ($user->canAdmin()) {
+        if ($user->isAdmin()) {
             return true;
         }
         $session = $model->session();
