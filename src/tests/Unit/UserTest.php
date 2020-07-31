@@ -71,9 +71,9 @@ class UserTest extends TestCase
         $userSuperAdmin = factory(User::class)->create([
             'role' => User::ROLE_SUPERADMIN,
         ]);
-        $this->assertFalse($userNormal->canAdmin());
-        $this->assertTrue($userAdmin->canAdmin());
-        $this->assertTrue($userSuperAdmin->canAdmin());
+        $this->assertFalse($userNormal->isAdmin());
+        $this->assertTrue($userAdmin->isAdmin());
+        $this->assertTrue($userSuperAdmin->isAdmin());
     }
 
     /**
@@ -88,8 +88,8 @@ class UserTest extends TestCase
         $userSuperAdmin = factory(User::class)->create([
             'role' => User::ROLE_SUPERADMIN,
         ]);
-        $this->assertFalse($userNormal->canSuperadmin());
-        $this->assertFalse($userAdmin->canSuperadmin());
-        $this->assertTrue($userSuperAdmin->canSuperadmin());
+        $this->assertFalse($userNormal->isSuperadmin());
+        $this->assertFalse($userAdmin->isSuperadmin());
+        $this->assertTrue($userSuperAdmin->isSuperadmin());
     }
 }

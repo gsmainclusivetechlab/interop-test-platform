@@ -16,7 +16,7 @@ class TestCasePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -26,7 +26,7 @@ class TestCasePolicy
      */
     public function view(User $user, TestCase $model)
     {
-        return $user->canAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -35,7 +35,7 @@ class TestCasePolicy
      */
     public function create(User $user)
     {
-        return $user->canAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -45,7 +45,7 @@ class TestCasePolicy
      */
     public function update(User $user, TestCase $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -55,6 +55,6 @@ class TestCasePolicy
      */
     public function delete(User $user, TestCase $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 }

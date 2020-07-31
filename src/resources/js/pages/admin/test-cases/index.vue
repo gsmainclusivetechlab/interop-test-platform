@@ -46,6 +46,7 @@
                             <th class="text-nowrap">Public</th>
                             <th class="text-nowrap">Use Case</th>
                             <th class="text-nowrap">Test Steps</th>
+                            <th class="text-nowrap">Owner</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
@@ -89,6 +90,9 @@
                                         : 0
                                 }}
                             </td>
+                            <td class="text-break">
+                                {{ testCase.owner ? testCase.owner.name : '' }}
+                            </td>
                             <td class="text-center text-break">
                                 <b-dropdown
                                     v-if="testCase.can.delete"
@@ -121,7 +125,7 @@
                             </td>
                         </tr>
                         <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="5">
+                            <td class="text-center" colspan="6">
                                 No Results
                             </td>
                         </tr>
