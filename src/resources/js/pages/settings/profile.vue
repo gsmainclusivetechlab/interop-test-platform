@@ -10,6 +10,21 @@
                 <div class="mb-3">
                     <div class="row align-items-center">
                         <label class="col-sm-3">
+                            <b>Email</b>
+                        </label>
+                        <div class="col-sm-9">
+                            <input
+                                type="text"
+                                readonly
+                                class="form-control"
+                                :value="$page.auth.user.email"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-sm-3">
                             <b>First name</b>
                         </label>
                         <div class="col-sm-9">

@@ -35,6 +35,18 @@ class TestCaseController extends Controller
                     $query->where('test_cases.name', 'like', "%{$q}%");
                 })
                     ->with(['owner', 'useCase', 'testSteps'])
+                    ->where('public', true)
+                    ->orWhereHas('owner', function ($query) {
+                        $query->whereKey(auth()->user());
+                    })
+                    ->when(
+                        auth()
+                            ->user()
+                            ->can('viewAnyPrivate', TestCase::class),
+                        function ($query) {
+                            $query->orWhere('public', false);
+                        }
+                    )
                     ->latest()
                     ->paginate()
             ),

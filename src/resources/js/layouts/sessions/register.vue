@@ -58,7 +58,7 @@
                                     component.name
                                 }})<template
                                     v-if="
-                                        collect(sut).get('component_id') ===
+                                        collect(sut).get('component_id') ==
                                         component.id
                                     "
                                     >:::is-active</template

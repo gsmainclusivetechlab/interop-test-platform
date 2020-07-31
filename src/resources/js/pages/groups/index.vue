@@ -30,7 +30,7 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
-                            <th class="text-nowrap">Domain</th>
+                            <th class="text-nowrap">Email Filter</th>
                             <th class="text-nowrap">Users</th>
                             <th class="text-nowrap">Sessions</th>
                             <th class="text-nowrap w-1"></th>
