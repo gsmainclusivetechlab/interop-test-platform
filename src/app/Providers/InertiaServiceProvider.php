@@ -52,6 +52,7 @@ class InertiaServiceProvider extends ServiceProvider
                     'user' => !auth()->guest()
                         ? [
                             'name' => auth()->user()->name,
+                            'email' => auth()->user()->email,
                             'first_name' => auth()->user()->first_name,
                             'last_name' => auth()->user()->last_name,
                             'company' => auth()->user()->company,

@@ -83,12 +83,16 @@ class RegisterController extends Controller
                                         ->get('session.sut.component_id')
                                 );
                             })
+                            ->where('public', true)
+                            ->orWhereHas('owner', function ($query) {
+                                $query->whereKey(auth()->user());
+                            })
                             ->when(
-                                !auth()
+                                auth()
                                     ->user()
-                                    ->can('viewAny', TestCase::class),
+                                    ->can('viewAnyPrivate', TestCase::class),
                                 function ($query) {
-                                    $query->where('public', true);
+                                    $query->orWhere('public', false);
                                 }
                             );
                     },

@@ -21,12 +21,21 @@ class TestCasePolicy
 
     /**
      * @param  User  $user
+     * @return mixed
+     */
+    public function viewAnyPrivate(User $user)
+    {
+        return $user->isAdmin();
+    }
+
+    /**
+     * @param  User  $user
      * @param  TestCase  $model
      * @return mixed
      */
     public function view(User $user, TestCase $model)
     {
-        return $user->isTestCaseCreator();
+        return $user->isAdmin() || $user->is($model->owner);
     }
 
     /**
@@ -55,6 +64,6 @@ class TestCasePolicy
      */
     public function delete(User $user, TestCase $model)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || ($user->is($model->owner) && !$model->public);
     }
 }

@@ -34,7 +34,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Domain
+                                    Email Filter
                                 </label>
                                 <selectize-tags
                                     v-model="form.domain"
@@ -51,6 +51,9 @@
                                         {{ $page.errors.domain }}
                                     </strong>
                                 </span>
+                                <div class="mt-1 text-muted small">
+                                    Only users whose email matches these filters will be eligible to join the group
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">

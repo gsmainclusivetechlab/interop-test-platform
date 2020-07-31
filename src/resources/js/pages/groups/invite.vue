@@ -36,6 +36,9 @@
                                         {{ $page.errors.user_id }}
                                     </strong>
                                 </span>
+                                <div class="mt-1 text-muted small">
+                                    {{ `You can only invite registered users whose email address matches ${group.domain}` }}
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-right">

@@ -6,3 +6,7 @@
 .selectize-input input {
   width: auto !important;
 }
+.selectize-dropdown [data-selectable] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
