@@ -52,7 +52,8 @@
                                     </strong>
                                 </span>
                                 <div class="mt-1 text-muted small">
-                                    Only users whose email matches these filters will be eligible to join the group
+                                    Only users whose email matches these filters
+                                    will be eligible to join the group
                                 </div>
                             </div>
                             <div class="mb-3">

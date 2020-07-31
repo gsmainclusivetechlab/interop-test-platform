@@ -64,6 +64,7 @@ class TestCasePolicy
      */
     public function delete(User $user, TestCase $model)
     {
-        return $user->isAdmin() || ($user->is($model->owner) && !$model->public);
+        return $user->isAdmin() ||
+            ($user->is($model->owner) && !$model->public);
     }
 }
