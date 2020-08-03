@@ -36,8 +36,9 @@
                                 <label class="form-label">
                                     Email Filter
                                 </label>
-                                <selectize-tags
-                                    v-model="form.domain"
+                                <selectize
+                                    v-model="domains"
+                                    multiple
                                     class="form-select"
                                     :class="{
                                         'is-invalid': $page.errors.domain,
@@ -120,12 +121,21 @@ export default {
     data() {
         return {
             sending: false,
+            domains: this.group.domain.split(', '),
             form: {
                 name: this.group.name,
-                domain: this.group.domain,
+                domain: null,
                 description: this.group.description,
             },
         };
+    },
+    watch: {
+        domains: {
+            immediate: true,
+            handler: function (value) {
+                this.form.domain = value ? collect(value).implode(', ') : null;
+            },
+        },
     },
     methods: {
         submit() {

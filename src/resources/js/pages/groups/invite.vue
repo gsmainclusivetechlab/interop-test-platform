@@ -15,19 +15,26 @@
                                     User
                                 </label>
                                 <selectize
-                                    v-model="form.user_id"
+                                    v-model="user"
                                     class="form-select"
                                     placeholder="Select user..."
                                     :class="{
                                         'is-invalid': $page.errors.user_id,
                                     }"
-                                    :load="loadUsersItems"
-                                    :render="renderUsersItems"
-                                    :preload="true"
-                                    valueField="id"
-                                    labelField="name"
-                                    searchField="name"
-                                />
+                                    label="name"
+                                    :keys="['name']"
+                                    :options="users"
+                                    :createItem="false"
+                                    :searchFn="searchUsers"
+                                >
+                                    <template slot="item" slot-scope="{item}">
+                                        {{item.name}}
+                                    </template>
+                                    <template slot="option" slot-scope="{option}">
+                                        <div>{{ option.name }}</div>
+                                        <div class="text-muted small">{{ option.company }}</div>
+                                    </template>
+                                </selectize>
                                 <span
                                     v-if="$page.errors.user_id"
                                     class="invalid-feedback"
@@ -86,24 +93,23 @@ export default {
     data() {
         return {
             sending: false,
+            user: null,
+            users: [],
             form: {
                 user_id: null,
             },
-            renderUsersItems: {
-                option: function (item) {
-                    return (
-                        '<div class="option">' +
-                        '<div>' +
-                        item.name +
-                        '</div>' +
-                        '<div class="text-muted small">' +
-                        item.company +
-                        '</div>' +
-                        '</div>'
-                    );
-                },
-            },
         };
+    },
+    watch: {
+        user: {
+            immediate: true,
+            handler: function (value) {
+                this.form.user_id = value ? value.id : null;
+            },
+        },
+    },
+    mounted() {
+        this.loadUsers();
     },
     methods: {
         submit() {
@@ -112,14 +118,18 @@ export default {
                 .post(route('groups.users.store', this.group), this.form)
                 .then(() => (this.sending = false));
         },
-        loadUsersItems(query, callback) {
+        loadUsers(query = '') {
             axios
                 .get(route('groups.users.candidates', this.group), {
                     params: { q: query },
                 })
                 .then((result) => {
-                    callback(result.data.data);
+                    this.users = result.data.data;
                 });
+        },
+        searchUsers(query, callback) {
+            this.loadUsers(query);
+            callback();
         },
     },
 };
