@@ -50,6 +50,19 @@ class Group extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function testCases()
+    {
+        return $this->belongsToMany(
+            TestCase::class,
+            'group_test_cases',
+            'group_id',
+            'test_case_id'
+        );
+    }
+
+    /**
      * @param User $user
      * @return bool
      */

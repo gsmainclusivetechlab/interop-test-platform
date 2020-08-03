@@ -23,13 +23,10 @@
                                     }"
                                     label="name"
                                     :keys="['name']"
-                                    :options="users"
+                                    :options="userList"
                                     :createItem="false"
-                                    :searchFn="searchUsers"
+                                    :searchFn="searchUser"
                                 >
-                                    <template slot="item" slot-scope="{item}">
-                                        {{item.name}}
-                                    </template>
                                     <template slot="option" slot-scope="{option}">
                                         <div>{{ option.name }}</div>
                                         <div class="text-muted small">{{ option.company }}</div>
@@ -94,7 +91,7 @@ export default {
         return {
             sending: false,
             user: null,
-            users: [],
+            userList: [],
             form: {
                 user_id: null,
             },
@@ -109,7 +106,7 @@ export default {
         },
     },
     mounted() {
-        this.loadUsers();
+        this.loadUserList();
     },
     methods: {
         submit() {
@@ -118,17 +115,17 @@ export default {
                 .post(route('groups.users.store', this.group), this.form)
                 .then(() => (this.sending = false));
         },
-        loadUsers(query = '') {
+        loadUserList(query = '') {
             axios
-                .get(route('groups.users.candidates', this.group), {
+                .get(route('groups.user-candidates', this.group), {
                     params: { q: query },
                 })
                 .then((result) => {
-                    this.users = result.data.data;
+                    this.userList = result.data.data;
                 });
         },
-        searchUsers(query, callback) {
-            this.loadUsers(query);
+        searchUser(query, callback) {
+            this.loadUserList(query);
             callback();
         },
     },

@@ -75,6 +75,19 @@ class TestCase extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function groups()
+    {
+        return $this->belongsToMany(
+            Group::class,
+            'group_test_cases',
+            'test_case_id',
+            'group_id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function sessions()
     {
         return $this->belongsToMany(

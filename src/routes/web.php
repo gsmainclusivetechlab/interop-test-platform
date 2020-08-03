@@ -34,9 +34,9 @@ Route::namespace('Groups')->group(function () {
         'destroy',
     ]);
     Route::get(
-        'groups/{group}/users/candidates',
-        'GroupUserController@candidates'
-    )->name('groups.users.candidates');
+        'groups/{group}/user-candidates',
+        'GroupController@userCandidates'
+    )->name('groups.user-candidates');
     Route::put(
         'groups/{group}/users/{user}/toggle-admin',
         'GroupUserController@toggleAdmin'
@@ -218,6 +218,10 @@ Route::name('admin.')
                     '{testCase}/toggle-public',
                     'TestCaseController@togglePublic'
                 )->name('toggle-public');
+                Route::get(
+                    '{testCase}/group-candidates',
+                    'TestCaseController@groupCandidates'
+                )->name('group-candidates');
             });
     });
 

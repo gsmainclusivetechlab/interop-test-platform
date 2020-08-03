@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\TestCaseResource;
 use App\Imports\TestCaseImport;
+use App\Models\Group;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Symfony\Component\Yaml\Yaml;
 
@@ -35,17 +36,15 @@ class TestCaseController extends Controller
                 TestCase::when(request('q'), function (Builder $query, $q) {
                     $query->where('test_cases.name', 'like', "%{$q}%");
                 })
-                    ->with(['owner', 'useCase', 'testSteps'])
-                    ->where('public', true)
-                    ->orWhereHas('owner', function ($query) {
-                        $query->whereKey(auth()->user());
-                    })
+                    ->with(['owner', 'groups', 'useCase', 'testSteps'])
                     ->when(
-                        auth()
+                        !auth()
                             ->user()
                             ->can('viewAnyPrivate', TestCase::class),
                         function ($query) {
-                            $query->orWhere('public', false);
+                            $query->orWhereHas('owner', function ($query) {
+                                $query->whereKey(auth()->user());
+                            });
                         }
                     )
                     ->latest()
@@ -119,7 +118,7 @@ class TestCaseController extends Controller
     {
         return Inertia::render('admin/test-cases/edit', [
             'testCase' => (new TestCaseResource(
-                $testCase->load(['useCase'])
+                $testCase->load(['groups', 'useCase'])
             ))->resolve(),
         ]);
     }
@@ -134,13 +133,10 @@ class TestCaseController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
-            'groups.*' => [
-                'integer',
-                'exists:groups,id',
-                Rule::unique('group_users', 'group_id'),
-            ],
+            'groups_id.*' => ['integer', 'exists:groups,id'],
         ]);
         $testCase->update($request->input());
+        $testCase->groups()->sync($request->input('groups_id'));
 
         return redirect()
             ->route('admin.test-cases.index')
@@ -158,5 +154,27 @@ class TestCaseController extends Controller
         $testCase->update(['public' => !$testCase->public]);
 
         return redirect()->back();
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function groupCandidates(TestCase $testCase)
+    {
+        $this->authorize('update', $testCase);
+
+        return GroupResource::collection(
+            Group::when(request('q'), function (Builder $query, $q) {
+                $query->whereRaw('name like ?', "%{$q}%");
+            })->when(!auth()->user()->can('viewAny', Group::class), function (Builder $query) {
+                    $query->whereHas('users', function ($query) {
+                        $query->whereKey(auth()->user());
+                    });
+                })
+                ->latest()
+                ->paginate()
+        );
     }
 }

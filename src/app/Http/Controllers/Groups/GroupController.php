@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Groups;
 use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\SessionResource;
+use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
 
@@ -74,5 +76,39 @@ class GroupController extends Controller
                     ->get()
             ),
         ]);
+    }
+
+    /**
+     * @param Group $group
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function userCandidates(Group $group)
+    {
+        $this->authorize('invite', $group);
+
+        return UserResource::collection(
+            User::when(request('q'), function (Builder $query, $q) use (
+                $group
+            ) {
+                $query->whereRaw(
+                    'CONCAT(first_name, " ", last_name) like ?',
+                    "%{$q}%"
+                );
+            })
+                ->where(function (Builder $query) use ($group) {
+                    $domains = (array) explode(', ', $group->domain);
+                    foreach ($domains as $domain) {
+                        $query->orWhere('email', 'like', "%{$domain}");
+                    }
+                })
+                ->whereDoesntHave('groups', function (Builder $query) use (
+                    $group
+                ) {
+                    $query->whereKey($group);
+                })
+                ->latest()
+                ->paginate()
+        );
     }
 }
