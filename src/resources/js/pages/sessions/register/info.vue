@@ -160,6 +160,7 @@
                                                                     {{
                                                                         testCase.name
                                                                     }}
+                                                                    <icon name="lock" v-if="!testCase.public" class="text-muted" />
                                                                 </span>
                                                             </label>
                                                         </li>
@@ -239,6 +240,7 @@
                                                                     {{
                                                                         testCase.name
                                                                     }}
+                                                                    <icon name="lock" v-if="!testCase.public" class="text-muted" />
                                                                 </span>
                                                             </label>
                                                         </li>
