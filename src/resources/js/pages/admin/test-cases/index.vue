@@ -59,9 +59,9 @@
                             </td>
                             <td class="text-break">
                                 {{
-                                    collect($page.enums.test_case_behaviors).get(
-                                        testCase.behavior
-                                    )
+                                    collect(
+                                        $page.enums.test_case_behaviors
+                                    ).get(testCase.behavior)
                                 }}
                             </td>
                             <td class="text-break">
@@ -104,9 +104,7 @@
                             </td>
                             <td class="text-break">
                                 {{
-                                    testCase.groups
-                                        ? testCase.groups.length
-                                        : 0
+                                    testCase.groups ? testCase.groups.length : 0
                                 }}
                             </td>
                             <td class="text-center text-break">

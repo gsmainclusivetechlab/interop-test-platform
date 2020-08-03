@@ -168,11 +168,17 @@ class TestCaseController extends Controller
         return GroupResource::collection(
             Group::when(request('q'), function (Builder $query, $q) {
                 $query->whereRaw('name like ?', "%{$q}%");
-            })->when(!auth()->user()->can('viewAny', Group::class), function (Builder $query) {
-                    $query->whereHas('users', function ($query) {
-                        $query->whereKey(auth()->user());
-                    });
-                })
+            })
+                ->when(
+                    !auth()
+                        ->user()
+                        ->can('viewAny', Group::class),
+                    function (Builder $query) {
+                        $query->whereHas('users', function ($query) {
+                            $query->whereKey(auth()->user());
+                        });
+                    }
+                )
                 ->latest()
                 ->paginate()
         );

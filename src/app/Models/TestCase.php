@@ -146,6 +146,10 @@ class TestCase extends Model
      */
     public function getBehaviorNameAttribute()
     {
-        return Arr::get(static::getBehaviorNames(), $this->behavior, $this->behavior);
+        return Arr::get(
+            static::getBehaviorNames(),
+            $this->behavior,
+            $this->behavior
+        );
     }
 }
