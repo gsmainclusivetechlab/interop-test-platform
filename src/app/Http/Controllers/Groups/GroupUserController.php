@@ -96,7 +96,7 @@ class GroupUserController extends Controller
             ->users()
             ->whereKey($user)
             ->firstOrFail();
-        $this->authorize('update', $user->pivot);
+        $this->authorize('toggleAdmin', $user->pivot);
         $group
             ->users()
             ->updateExistingPivot($user, ['admin' => !$user->pivot->admin]);

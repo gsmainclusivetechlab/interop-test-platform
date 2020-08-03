@@ -58,7 +58,7 @@
                             <td class="text-break">
                                 <label class="form-check form-switch">
                                     <input
-                                        v-if="testCase.can.update"
+                                        v-if="testCase.can.togglePublic"
                                         class="form-check-input"
                                         type="checkbox"
                                         :checked="testCase.public"
@@ -105,6 +105,19 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
+                                    <li v-if="testCase.can.update">
+                                        <inertia-link
+                                            class="dropdown-item"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.edit',
+                                                    testCase.id
+                                                )
+                                            "
+                                        >
+                                            Edit
+                                        </inertia-link>
+                                    </li>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
                                             class="dropdown-item"

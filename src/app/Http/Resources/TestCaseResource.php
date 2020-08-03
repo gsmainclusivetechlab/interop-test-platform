@@ -46,6 +46,9 @@ class TestCaseResource extends JsonResource
                 'delete' => auth()
                     ->user()
                     ->can('delete', $this->resource),
+                'togglePublic' => auth()
+                    ->user()
+                    ->can('togglePublic', $this->resource),
             ],
         ];
     }
