@@ -8,6 +8,4 @@ services:
       context: src
       dockerfile: webpack.Dockerfile
     volumes:
-      - ./src/resources:/usr/src/app/resources
-      - ./src/public/assets:/usr/src/app/public/assets
-      - ./src/.npm-package:/usr/src/app/npm-package
+      - ./src:/usr/src/app

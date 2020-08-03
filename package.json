@@ -4,7 +4,7 @@
         "lint": "prettier . --write",
         "lint-staged": "precise-commits",
         "precommit": "npm run precise-commits",
-        "build": "docker-compose build",
+        "build": "npm run dev:all -- build",
         "docker-base": "docker-compose -f docker-compose.yml",
         "prepare:dev:node": "docker cp \"$(docker-compose -f docker-compose.yml -f compose/webpack.yml ps -q webpack):/usr/src/app/node_modules\" \"src/node_modules\"",
         "prepare:dev:ide_helper": "docker cp $(docker-compose ps -q app):/var/www/html/_ide_helper.php src && docker cp $(docker-compose ps -q app):/var/www/html/.phpstorm.meta.php src",
