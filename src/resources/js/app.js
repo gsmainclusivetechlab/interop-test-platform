@@ -16,7 +16,6 @@ import {
 
 window.string = require('string');
 window.collect = require('collect.js');
-window.$ = window.jQuery = require('jquery');
 window.axios = require('axios');
 window.axios.defaults.withCredentials = true;
 
@@ -58,12 +57,7 @@ Vue.component('pagination', () =>
     import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
 );
 Vue.component('selectize', () =>
-    import(/* webpackChunkName: "selectize" */ '@/components/selectize.vue')
-);
-Vue.component('selectize-tags', () =>
-    import(
-        /* webpackChunkName: "selectize-tags" */ '@/components/selectize-tags.vue'
-    )
+    import(/* webpackChunkName: "selectize" */ '@isneezy/vue-selectize')
 );
 Vue.component('confirm-link', () =>
     import(

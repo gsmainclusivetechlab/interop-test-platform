@@ -9,12 +9,13 @@
                     <div class="mb-3">
                         <label class="form-label">SUT</label>
                         <selectize
-                            v-model="form.component_id"
+                            v-model="component"
                             :class="{ 'is-invalid': $page.errors.component_id }"
                             :options="suts.data"
-                            valueField="id"
-                            labelField="name"
-                            searchField="name"
+                            keyBy="id"
+                            :keys="['name']"
+                            label="name"
+                            :createItem="false"
                             class="form-select"
                             placeholder="Select SUT..."
                         />
@@ -79,17 +80,25 @@ export default {
     data() {
         return {
             sending: false,
+            component: this.session && this.session.sut
+                ? collect(this.suts.data).where('id', this.session.sut.component_id).first()
+                : collect(this.suts.data).first(),
             form: {
                 base_url:
                     this.session && this.session.sut
                         ? this.session.sut.base_url
                         : null,
-                component_id:
-                    this.session && this.session.sut
-                        ? this.session.sut.component_id
-                        : this.suts.data && this.suts.data[0].id,
+                component_id: null,
             },
         };
+    },
+    watch: {
+        component: {
+            immediate: true,
+            handler: function (value) {
+                this.form.component_id = value ? value.id : null;
+            },
+        },
     },
     methods: {
         submit() {
