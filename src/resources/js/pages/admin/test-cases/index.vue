@@ -43,6 +43,7 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Behavior</th>
                             <th class="text-nowrap">Public</th>
                             <th class="text-nowrap">Use Case</th>
                             <th class="text-nowrap">Test Steps</th>
@@ -55,6 +56,13 @@
                         <tr v-for="testCase in testCases.data">
                             <td class="text-break">
                                 {{ testCase.name }}
+                            </td>
+                            <td class="text-break">
+                                {{
+                                    collect($page.enums.test_case_behaviors).get(
+                                        testCase.behavior
+                                    )
+                                }}
                             </td>
                             <td class="text-break">
                                 <label class="form-check form-switch">
@@ -146,7 +154,7 @@
                             </td>
                         </tr>
                         <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="7">
+                            <td class="text-center" colspan="8">
                                 No Results
                             </td>
                         </tr>

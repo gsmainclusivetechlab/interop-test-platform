@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
@@ -127,5 +128,24 @@ class TestCase extends Model
         return $this->hasOne(TestRun::class, 'test_case_id')
             ->completed()
             ->latest();
+    }
+
+    /**
+     * @return array
+     */
+    public static function getBehaviorNames()
+    {
+        return [
+            static::BEHAVIOR_NEGATIVE => __('Negative'),
+            static::BEHAVIOR_POSITIVE => __('Positive'),
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getBehaviorNameAttribute()
+    {
+        return Arr::get(static::getBehaviorNames(), $this->behavior, $this->behavior);
     }
 }

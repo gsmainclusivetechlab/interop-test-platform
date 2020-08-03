@@ -34,6 +34,17 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">
+                                    Behavior
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    :value="collect($page.enums.test_case_behaviors).get(testCase.behavior)"
+                                    readonly
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">
                                     Use Case
                                 </label>
                                 <input
@@ -175,7 +186,7 @@ export default {
                     params: { q: query },
                 })
                 .then((result) => {
-                    this.groupsList = result.data.data;
+                    this.groupsList = collect(result.data.data).whereNotIn('id', this.form.groups_id).all();
                 });
         },
         searchGroups(query, callback) {
