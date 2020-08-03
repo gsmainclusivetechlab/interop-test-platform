@@ -17,7 +17,7 @@ class TestCaseImport implements Importable
 {
     /**
      * @param array $rows
-     * @return Model
+     * @return TestCase
      * @throws \Throwable
      */
     public function import(array $rows): Model

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -30,21 +31,37 @@ class SutController extends Controller
         ]);
     }
 
+    public function getComponent(string $componentId, Session $session)
+    {
+        $component = Component::where('uuid', $componentId)->first();
+        if ($component === null) {
+            throw new MessageMismatchException(
+                $session,
+                404,
+                "Unable to find test component with id $componentId. Please check the request base URL"
+            );
+        }
+        return $component;
+    }
+
     /**
      * @param Session $session
-     * @param Component $component
-     * @param Component $connection
+     * @param string $componentId
+     * @param string $connectionId
      * @param string $path
      * @param ServerRequestInterface $request
      * @return mixed
      */
     public function __invoke(
         Session $session,
-        Component $component,
-        Component $connection,
+        string $componentId,
+        string $connectionId,
         string $path,
         ServerRequestInterface $request
     ) {
+        $component = $this->getComponent($componentId, $session);
+        $connection = $this->getComponent($connectionId, $session);
+
         $testStep = $session
             ->testSteps()
             ->where('method', $request->getMethod())
@@ -94,7 +111,15 @@ class SutController extends Controller
                         });
                     });
             })
-            ->firstOrFail();
+            ->first();
+
+        if ($testStep === null) {
+            throw new MessageMismatchException(
+                $session,
+                404,
+                'Unable to match SUT request with an awaited test step. Please check the test preconditions.'
+            );
+        }
 
         $testRun = $session
             ->testRuns()

@@ -8,15 +8,16 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">SUT</label>
-                        <select
+                        <selectize
                             v-model="form.component_id"
                             :class="{ 'is-invalid': $page.errors.component_id }"
+                            :options="suts.data"
+                            valueField="id"
+                            labelField="name"
+                            searchField="name"
                             class="form-select"
-                        >
-                            <option v-for="sut in suts.data" :value="sut.id">
-                                {{ sut.name }}
-                            </option>
-                        </select>
+                            placeholder="Select SUT..."
+                        />
                         <span
                             v-if="$page.errors.component_id"
                             class="invalid-feedback"

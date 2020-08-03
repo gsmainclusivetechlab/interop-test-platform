@@ -16,7 +16,7 @@ class SessionPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -26,7 +26,14 @@ class SessionPolicy
      */
     public function view(User $user, Session $model)
     {
-        return $user->canAdmin() || $model->owner->is($user);
+        return $user->isAdmin() ||
+            $model->owner->is($user) ||
+            $user
+                ->groups()
+                ->whereHas('users', function ($query) use ($model) {
+                    $query->whereKey($model->owner);
+                })
+                ->exists();
     }
 
     /**
@@ -45,7 +52,7 @@ class SessionPolicy
      */
     public function update(User $user, Session $model)
     {
-        return $user->canAdmin() || $model->owner->is($user);
+        return $user->isAdmin() || $model->owner->is($user);
     }
 
     /**
@@ -55,6 +62,6 @@ class SessionPolicy
      */
     public function delete(User $user, Session $model)
     {
-        return $user->canAdmin() || $model->owner->is($user);
+        return $user->isAdmin() || $model->owner->is($user);
     }
 }

@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="card">
-            <div class="empty h-auto" v-if="!sessions.data.length">
+            <div class="empty h-auto" v-if="!sessionsCount">
                 <div class="row">
                     <div class="col-10 mx-auto">
                         <p class="empty-title h3 mb-3">You have no sessions</p>
@@ -51,6 +51,7 @@
                         <thead>
                             <tr>
                                 <th class="text-nowrap w-25">Name</th>
+                                <th class="text-nowrap w-auto">Owner</th>
                                 <th class="text-nowrap w-auto">Use Cases</th>
                                 <th class="text-nowrap w-auto">Test Cases</th>
                                 <th class="text-nowrap w-25">Status</th>
@@ -68,6 +69,9 @@
                                     >
                                         {{ session.name }}
                                     </inertia-link>
+                                </td>
+                                <td class="text-break">
+                                    {{ session.owner.name }}
                                 </td>
                                 <td>
                                     {{
@@ -131,6 +135,11 @@
                                     </b-dropdown>
                                 </td>
                             </tr>
+                            <tr v-if="!sessions.data.length">
+                                <td class="text-center" colspan="7">
+                                    No Results
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -159,6 +168,10 @@ export default {
     props: {
         sessions: {
             type: Object,
+            required: true,
+        },
+        sessionsCount: {
+            type: Number,
             required: true,
         },
         filter: {

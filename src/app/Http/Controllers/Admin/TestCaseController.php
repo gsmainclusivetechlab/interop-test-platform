@@ -34,7 +34,19 @@ class TestCaseController extends Controller
                 TestCase::when(request('q'), function (Builder $query, $q) {
                     $query->where('test_cases.name', 'like', "%{$q}%");
                 })
-                    ->with(['useCase', 'testSteps'])
+                    ->with(['owner', 'useCase', 'testSteps'])
+                    ->where('public', true)
+                    ->orWhereHas('owner', function ($query) {
+                        $query->whereKey(auth()->user());
+                    })
+                    ->when(
+                        auth()
+                            ->user()
+                            ->can('viewAnyPrivate', TestCase::class),
+                        function ($query) {
+                            $query->orWhere('public', false);
+                        }
+                    )
                     ->latest()
                     ->paginate()
             ),
@@ -83,7 +95,11 @@ class TestCaseController extends Controller
                     ->file('file')
                     ->get()
             );
-            (new TestCaseImport())->import($rows);
+            $testCase = (new TestCaseImport())->import($rows);
+            $testCase
+                ->owner()
+                ->associate(auth()->user())
+                ->save();
             return redirect()
                 ->route('admin.test-cases.index')
                 ->with('success', __('Test case imported successfully'));

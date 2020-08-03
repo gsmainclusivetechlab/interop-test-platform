@@ -51,6 +51,14 @@ class TestCase extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function useCase()
     {
         return $this->belongsTo(UseCase::class, 'use_case_id');

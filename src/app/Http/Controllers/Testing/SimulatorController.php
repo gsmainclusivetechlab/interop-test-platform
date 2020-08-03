@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
@@ -88,7 +89,15 @@ class SimulatorController extends Controller
                     })
                     ->count()
             )
-            ->firstOrFail();
+            ->first();
+
+        if ($testStep === null) {
+            throw new MessageMismatchException(
+                $testRun->session,
+                404,
+                'Unable to match simulator request with an awaited test step. Please check the test preconditions.'
+            );
+        }
 
         $testResult = $testRun
             ->testResults()

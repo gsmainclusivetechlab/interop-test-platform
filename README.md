@@ -44,14 +44,23 @@ The API simulator is built using microservices, coordinated using
     ```bash
     $ yarn build
     ```
-2. Set up the database using Laravel's migration tool
+2. Copy dependencies to your local dev environment[\*](#1)
+    ```bash
+    $ yarn prepare:dev
+    ```
+3. Set up the database using Laravel's migration tool
     ```bash
     $ yarn seed
     ```
-3. Launch containers using the new images:
+4. Launch containers using the new images:
     ```bash
     $ yarn prod
     ```
+
+<span id="1">\*</span>This is required to populate dependencies on the host
+(useful for IDEs) and when using volumes to synchronise source code (otherwise
+the empty host dependency directories will overwrite those inside the
+container).
 
 ### Updates
 
@@ -113,9 +122,9 @@ To use these configurations, select the config files when running any
 
 ```
 $ docker-compose -f ./docker-compose.yml \
-                 -f ./compose/expose-web.yml
-                 -f ./compose/network.yml
-                 -f ./compose/volumes.yml
+                 -f ./compose/expose-web.yml \
+                 -f ./compose/network.yml \
+                 -f ./compose/volumes.yml \
                  up -d
 ```
 
@@ -125,6 +134,8 @@ shortcuts for common use-cases:
 
 -   `yarn dev`: includes `expose-web`, `mailhog`, `network`, `phpmyadmin`,
     `volumes` and `webpack`.
+-   `yarn dev:run`: includes the same services as `yarn dev` but uses
+    `docker-compose run` for one-time operations instead of `docker-compose up`.
 -   `yarn prod`: includes `expose-web` and `production.yml`
 
 ### Inspecting Running Containers
@@ -137,6 +148,31 @@ following command, where `{service}` can be any of the services listed above.
 ```
 $ docker-compose exec {service} sh
 ```
+
+### Installing dependencies
+
+It's possible to install new dependencies like so:
+
+```bash
+# Composer
+$ yarn dev:run app composer require {package}
+# NPM
+$ yarn dev:run webpack npm install {package} --save-dev
+```
+
+Remember to run `yarn dev:prepare` to copy dependencies from the containers onto
+the host. If you don't do this, mounting any shared volumes will overwrite the
+dependency directory within the running containers with the empty one from the
+host. Adding dependencies with `dev:run` as above will actually add the
+dependency to the host via a mounted volume. To permanently add the dependency
+to the running container so that it is present in production mode, the image
+will need to be rebuilt with `yarn build`.
+
+It's also important to set `HOST_UID` in the `.env` file to correspond to your
+user ID on the host machine (run `id -u` to get this). This allows the
+containers to write to files on the volume which are owned by your user (e.g. to
+update package.json). This needs to be set _before_ the app images are built, as
+files are created inside the container assuming this same ID.
 
 ### Running Tests
 

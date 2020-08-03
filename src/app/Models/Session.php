@@ -53,6 +53,27 @@ class Session extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testResults()
+    {
+        return $this->hasManyThrough(
+            TestResult::class,
+            TestRun::class,
+            'session_id',
+            'test_run_id'
+        );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function messageLog()
+    {
+        return $this->hasMany(MessageLog::class, 'session_id');
+    }
+
+    /**
      * @return mixed
      */
     public function lastTestRun()

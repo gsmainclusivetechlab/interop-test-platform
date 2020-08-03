@@ -16,7 +16,7 @@ class ApiSpecPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -26,7 +26,7 @@ class ApiSpecPolicy
      */
     public function view(User $user, ApiSpec $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -35,7 +35,7 @@ class ApiSpecPolicy
      */
     public function create(User $user)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -45,7 +45,7 @@ class ApiSpecPolicy
      */
     public function update(User $user, ApiSpec $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 
     /**
@@ -55,6 +55,6 @@ class ApiSpecPolicy
      */
     public function delete(User $user, ApiSpec $model)
     {
-        return $user->canAdmin();
+        return $user->isAdmin();
     }
 }

@@ -96,6 +96,14 @@
                                 />
                                 {{ session.lastTestRun.created_at }}
                             </li>
+                            <li>
+                                <icon
+                                    name="user"
+                                    v-b-tooltip.hover
+                                    title="Owner"
+                                />
+                                {{ session.owner.name }}
+                            </li>
                         </ul>
                     </div>
                 </div>
