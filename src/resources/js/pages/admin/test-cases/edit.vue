@@ -39,7 +39,11 @@
                                 <input
                                     type="text"
                                     class="form-control"
-                                    :value="collect($page.enums.test_case_behaviors).get(testCase.behavior)"
+                                    :value="
+                                        collect(
+                                            $page.enums.test_case_behaviors
+                                        ).get(testCase.behavior)
+                                    "
                                     readonly
                                 />
                             </div>
@@ -72,9 +76,14 @@
                                     :createItem="false"
                                     :searchFn="searchGroups"
                                 >
-                                    <template slot="option" slot-scope="{option}">
+                                    <template
+                                        slot="option"
+                                        slot-scope="{ option }"
+                                    >
                                         <div>{{ option.name }}</div>
-                                        <div class="text-muted small">{{ option.domain }}</div>
+                                        <div class="text-muted small">
+                                            {{ option.domain }}
+                                        </div>
                                     </template>
                                 </selectize>
                                 <span
@@ -82,7 +91,11 @@
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ collect($page.errors.groups_id).implode(' ') }}
+                                        {{
+                                            collect(
+                                                $page.errors.groups_id
+                                            ).implode(' ')
+                                        }}
                                     </strong>
                                 </span>
                             </div>
@@ -163,7 +176,11 @@ export default {
         groups: {
             immediate: true,
             handler: function (value) {
-                this.form.groups_id = value ? collect(value).map(item => item.id).all() : [];
+                this.form.groups_id = value
+                    ? collect(value)
+                          .map((item) => item.id)
+                          .all()
+                    : [];
             },
         },
     },
@@ -182,11 +199,19 @@ export default {
         },
         loadGroupsList(query = '') {
             axios
-                .get(route('admin.test-cases.group-candidates', this.testCase.id), {
-                    params: { q: query },
-                })
+                .get(
+                    route(
+                        'admin.test-cases.group-candidates',
+                        this.testCase.id
+                    ),
+                    {
+                        params: { q: query },
+                    }
+                )
                 .then((result) => {
-                    this.groupsList = collect(result.data.data).whereNotIn('id', this.form.groups_id).all();
+                    this.groupsList = collect(result.data.data)
+                        .whereNotIn('id', this.form.groups_id)
+                        .all();
                 });
         },
         searchGroups(query, callback) {

@@ -27,9 +27,14 @@
                                     :createItem="false"
                                     :searchFn="searchUser"
                                 >
-                                    <template slot="option" slot-scope="{option}">
+                                    <template
+                                        slot="option"
+                                        slot-scope="{ option }"
+                                    >
                                         <div>{{ option.name }}</div>
-                                        <div class="text-muted small">{{ option.company }}</div>
+                                        <div class="text-muted small">
+                                            {{ option.company }}
+                                        </div>
                                     </template>
                                 </selectize>
                                 <span

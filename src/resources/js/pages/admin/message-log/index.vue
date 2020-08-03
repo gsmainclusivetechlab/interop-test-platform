@@ -12,12 +12,6 @@
                 </div>
             </div>
         </div>
-        On the backend, a new table has been added, tracking mismatched
-        requests. Additionally, a MySQL View has been added, which combines
-        these mismatched requests with the well-matched test results table.
-        Corresponding Models, Controllers, Resources and Policies have also been
-        added. Additionally, the error messages returned to users when a message
-        is mismatched has been improved where possible.
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">

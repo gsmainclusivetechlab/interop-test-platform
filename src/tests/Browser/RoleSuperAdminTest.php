@@ -58,8 +58,7 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with(
                     '.card .table tbody tr:nth-child(2) td:last-child',
                     function ($td) {
-                        $td
-                            ->click('.dropdown-toggle')
+                        $td->click('.dropdown-toggle')
                             ->waitFor('.dropdown-menu')
                             ->with('.dropdown-menu', function ($dropdown) {
                                 $dropdown->clickLink('Block');
@@ -76,16 +75,16 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:first-child', function ($tr) use (
                     $admin
                 ) {
-                    $tr
-                        ->assertSeeLink($admin->email)
-                        ->with('td:last-child', function ($td) {
-                            $td
-                                ->click('.dropdown-toggle')
+                    $tr->assertSeeLink($admin->email)->with(
+                        'td:last-child',
+                        function ($td) {
+                            $td->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
                                     $dropdown->clickLink('Unblock');
                                 });
-                        });
+                        }
+                    );
                 })
                 ->waitForText('User unblocked successfully')
                 ->assertVisible('@notificationBox');
@@ -109,16 +108,16 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:nth-child(2)', function (
                     $tr
                 ) use ($admin) {
-                    $tr
-                        ->assertSeeLink($admin->email)
-                        ->with('td:last-child', function ($td) {
-                            $td
-                                ->click('.dropdown-toggle')
+                    $tr->assertSeeLink($admin->email)->with(
+                        'td:last-child',
+                        function ($td) {
+                            $td->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
                                     $dropdown->clickLink('Delete');
                                 });
-                        });
+                        }
+                    );
                 })
                 ->whenAvailable('.modal', function ($modal) {
                     $modal->press('Confirm');
@@ -145,8 +144,7 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with(
                     '.card .table tbody tr:nth-child(2) td:last-child',
                     function ($td) {
-                        $td
-                            ->click('.dropdown-toggle')
+                        $td->click('.dropdown-toggle')
                             ->waitFor('.dropdown-menu')
                             ->with('.dropdown-menu', function ($dropdown) {
                                 $dropdown->clickLink('Block');
@@ -163,16 +161,16 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:first-child', function ($tr) use (
                     $user
                 ) {
-                    $tr
-                        ->assertSeeLink($user->email)
-                        ->with('td:last-child', function ($td) {
-                            $td
-                                ->click('.dropdown-toggle')
+                    $tr->assertSeeLink($user->email)->with(
+                        'td:last-child',
+                        function ($td) {
+                            $td->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
                                     $dropdown->clickLink('Unblock');
                                 });
-                        });
+                        }
+                    );
                 })
                 ->waitForText('User unblocked successfully')
                 ->assertVisible('@notificationBox');
@@ -196,16 +194,16 @@ class RoleSuperAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:nth-child(2)', function (
                     $tr
                 ) use ($user) {
-                    $tr
-                        ->assertSeeLink($user->email)
-                        ->with('td:last-child', function ($td) {
-                            $td
-                                ->click('.dropdown-toggle')
+                    $tr->assertSeeLink($user->email)->with(
+                        'td:last-child',
+                        function ($td) {
+                            $td->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
                                     $dropdown->clickLink('Delete');
                                 });
-                        });
+                        }
+                    );
                 })
                 ->whenAvailable('.modal', function ($modal) {
                     $modal->press('Confirm');

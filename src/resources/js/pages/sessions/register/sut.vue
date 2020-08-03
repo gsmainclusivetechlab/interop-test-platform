@@ -80,9 +80,12 @@ export default {
     data() {
         return {
             sending: false,
-            component: this.session && this.session.sut
-                ? collect(this.suts.data).where('id', this.session.sut.component_id).first()
-                : collect(this.suts.data).first(),
+            component:
+                this.session && this.session.sut
+                    ? collect(this.suts.data)
+                          .where('id', this.session.sut.component_id)
+                          .first()
+                    : collect(this.suts.data).first(),
             form: {
                 base_url:
                     this.session && this.session.sut
