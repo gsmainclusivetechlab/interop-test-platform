@@ -76,7 +76,7 @@
                                     <clipboard-copy-btn
                                         :data="jsonToCurl(testStep.request)"
                                         :show-copy-icon="false"
-                                        :show-curl-text="true"
+                                        :copy-button-text="'Copy cURL'"
                                         style="position: inherit; top: -.5rem; left: 35rem;"
                                     ></clipboard-copy-btn>
                                     <div class="border">
