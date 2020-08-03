@@ -201,6 +201,8 @@ Route::name('admin.')
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
         Route::resource('test-cases', 'TestCaseController')->only([
             'index',
+            'edit',
+            'update',
             'destroy',
         ]);
         Route::name('test-cases.')

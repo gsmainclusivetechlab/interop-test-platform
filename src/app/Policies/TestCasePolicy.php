@@ -54,6 +54,16 @@ class TestCasePolicy
      */
     public function update(User $user, TestCase $model)
     {
+        return $user->isAdmin() || ($user->is($model->owner) && !$model->public);
+    }
+
+    /**
+     * @param  User  $user
+     * @param  TestCase  $model
+     * @return mixed
+     */
+    public function togglePublic(User $user, TestCase $model)
+    {
         return $user->isAdmin();
     }
 
@@ -64,7 +74,6 @@ class TestCasePolicy
      */
     public function delete(User $user, TestCase $model)
     {
-        return $user->isAdmin() ||
-            ($user->is($model->owner) && !$model->public);
+        return $user->isAdmin() || ($user->is($model->owner) && !$model->public);
     }
 }

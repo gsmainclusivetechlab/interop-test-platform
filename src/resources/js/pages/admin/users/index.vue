@@ -4,10 +4,10 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <div class="page-pretitle">
-                        administration
+                        Administration
                     </div>
                     <h2 class="page-title">
-                        <b>users</b>
+                        <b>Users</b>
                     </h2>
                 </div>
             </div>

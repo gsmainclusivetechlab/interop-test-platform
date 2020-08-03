@@ -142,7 +142,7 @@
                                     <td class="text-break">
                                         <label class="form-check form-switch">
                                             <input
-                                                v-if="user.can.update"
+                                                v-if="user.can.toggleAdmin"
                                                 class="form-check-input"
                                                 type="checkbox"
                                                 :checked="user.admin"

@@ -53,6 +53,16 @@ class GroupUserPolicy
      * @param  GroupUser  $model
      * @return mixed
      */
+    public function toggleAdmin(User $user, GroupUser $model)
+    {
+        return $user->isAdmin();
+    }
+
+    /**
+     * @param  User  $user
+     * @param  GroupUser  $model
+     * @return mixed
+     */
     public function delete(User $user, GroupUser $model)
     {
         return $user->isAdmin() ||
