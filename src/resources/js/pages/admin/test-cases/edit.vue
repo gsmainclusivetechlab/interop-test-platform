@@ -45,6 +45,38 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">
+                                    Groups
+                                </label>
+                                <selectize
+                                    v-model="groups"
+                                    multiple
+                                    class="form-select"
+                                    placeholder="Select groups..."
+                                    :class="{
+                                        'is-invalid': $page.errors.groups_id,
+                                    }"
+                                    label="name"
+                                    :keys="['name']"
+                                    :options="groupsList"
+                                    :createItem="false"
+                                    :searchFn="searchGroups"
+                                >
+                                    <template slot="option" slot-scope="{option}">
+                                        <div>{{ option.name }}</div>
+                                        <div class="text-muted small">{{ option.domain }}</div>
+                                    </template>
+                                </selectize>
+                                <span
+                                    v-if="$page.errors.groups_id"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ collect($page.errors.groups_id).implode(' ') }}
+                                    </strong>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">
                                     Description
                                 </label>
                                 <textarea
@@ -107,11 +139,25 @@ export default {
     data() {
         return {
             sending: false,
+            groups: this.testCase.groups ? this.testCase.groups.data : [],
+            groupsList: [],
             form: {
                 name: this.testCase.name,
                 description: this.testCase.description,
+                groups_id: null,
             },
         };
+    },
+    watch: {
+        groups: {
+            immediate: true,
+            handler: function (value) {
+                this.form.groups_id = value ? collect(value).map(item => item.id).all() : [];
+            },
+        },
+    },
+    mounted() {
+        this.loadGroupsList();
     },
     methods: {
         submit() {
@@ -122,6 +168,19 @@ export default {
                     this.form
                 )
                 .then(() => (this.sending = false));
+        },
+        loadGroupsList(query = '') {
+            axios
+                .get(route('admin.test-cases.group-candidates', this.testCase.id), {
+                    params: { q: query },
+                })
+                .then((result) => {
+                    this.groupsList = result.data.data;
+                });
+        },
+        searchGroups(query, callback) {
+            this.loadGroupsList(query);
+            callback();
         },
     },
 };

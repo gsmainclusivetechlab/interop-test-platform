@@ -26,13 +26,8 @@ class MessageLogPolicy
      */
     public function view(User $user, MessageLog $model)
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
-        $session = $model->session();
-        if ($session) {
-            return $session->owner->is($user);
-        }
-        return false;
+        return $user->isAdmin() || $model->session()->whereHas('owner', function ($query) use ($user) {
+            $query->whereKey($user);
+        })->exists();
     }
 }

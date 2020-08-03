@@ -22,6 +22,9 @@ class TestCaseResource extends JsonResource
             'description' => Markdown::parse($this->description)->toHtml(),
             'precondition' => Markdown::parse($this->precondition)->toHtml(),
             'owner' => new UserResource($this->whenLoaded('owner')),
+            'groups' => GroupResource::collection(
+                $this->whenLoaded('groups')
+            ),
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection(
                 $this->whenLoaded('testSteps')
