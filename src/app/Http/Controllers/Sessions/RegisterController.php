@@ -87,6 +87,11 @@ class RegisterController extends Controller
                             ->orWhereHas('owner', function ($query) {
                                 $query->whereKey(auth()->user());
                             })
+                            ->orWhereHas('groups', function ($query) {
+                                $query->whereHas('users', function ($query) {
+                                    $query->whereKey(auth()->user());
+                                });
+                            })
                             ->when(
                                 auth()
                                     ->user()

@@ -129,6 +129,7 @@ class InertiaServiceProvider extends ServiceProvider
             },
             'enums' => [
                 'user_roles' => User::getRoleNames(),
+                'test_case_behaviors' => TestCase::getBehaviorNames(),
             ],
         ]);
     }
