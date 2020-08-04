@@ -16,7 +16,6 @@ class MessageLogPolicy
      */
     public function viewAny(User $user)
     {
-        debug('Checking messsage log isAdmin');
         return $user->isAdmin();
     }
 

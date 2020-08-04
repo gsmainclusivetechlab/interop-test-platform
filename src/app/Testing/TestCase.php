@@ -39,16 +39,17 @@ abstract class TestCase extends Assert implements Test
     {
         $result = $result ?? new TestResult();
         $result->startTest($this);
-        Timer::start();
+        $timer = new Timer();
+        $timer->start();
 
         try {
             $this->test();
         } catch (AssertionFailedError $e) {
-            $result->addFailure($this, $e, Timer::stop());
+            $result->addFailure($this, $e, $timer->stop()->asMilliseconds());
         } catch (Throwable $e) {
-            $result->addError($this, $e, Timer::stop());
+            $result->addError($this, $e, $timer->stop()->asMilliseconds());
         } finally {
-            $result->endTest($this, Timer::stop());
+            $result->endTest($this, $timer->stop()->asMilliseconds());
         }
 
         return $result;
