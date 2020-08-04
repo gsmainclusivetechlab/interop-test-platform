@@ -387,6 +387,9 @@
                                     >
                                         Request
                                     </strong>
+                                    <clipboard-json-to-curl
+                                        :request="testResult.request"
+                                    ></clipboard-json-to-curl>
                                 </div>
                                 <div class="border">
                                     <div class="d-flex">
