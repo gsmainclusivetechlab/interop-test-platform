@@ -157,13 +157,12 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @param TestCase $testCase
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function groupCandidates(TestCase $testCase)
+    public function groupCandidates()
     {
-        $this->authorize('update', $testCase);
+        $this->authorize('viewAny', TestCase::class);
 
         return GroupResource::collection(
             Group::when(request('q'), function (Builder $query, $q) {

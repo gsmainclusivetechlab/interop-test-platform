@@ -25,6 +25,9 @@ class GroupUserResource extends JsonResource
                 'delete' => auth()
                     ->user()
                     ->can('delete', $this->pivot),
+                'toggleAdmin' => auth()
+                    ->user()
+                    ->can('toggleAdmin', $this->pivot),
             ],
         ];
     }
