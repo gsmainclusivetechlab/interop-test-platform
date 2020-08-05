@@ -8,15 +8,20 @@ use App\Imports\TestCaseImport;
 use App\Models\Group;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 use Symfony\Component\Yaml\Yaml;
 
 class TestCaseController extends Controller
 {
     /**
-     * TestCaseController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -27,7 +32,7 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -58,8 +63,8 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(TestCase $testCase)
     {
@@ -71,7 +76,7 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function showImportForm()
     {
@@ -80,7 +85,8 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function import()
     {
@@ -112,7 +118,7 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return \Inertia\Response
+     * @return Response
      */
     public function edit(TestCase $testCase)
     {
@@ -126,7 +132,7 @@ class TestCaseController extends Controller
     /**
      * @param TestCase $testCase
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(TestCase $testCase, Request $request)
     {
@@ -145,8 +151,8 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function togglePublic(TestCase $testCase)
     {
@@ -157,8 +163,8 @@ class TestCaseController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return AnonymousResourceCollection
+     * @throws AuthorizationException
      */
     public function groupCandidates()
     {

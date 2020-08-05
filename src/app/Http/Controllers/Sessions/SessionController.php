@@ -8,13 +8,17 @@ use App\Http\Resources\TestRunResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
 use App\Models\UseCase;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SessionController extends Controller
 {
     /**
-     * SessionController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -22,7 +26,7 @@ class SessionController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -71,8 +75,8 @@ class SessionController extends Controller
 
     /**
      * @param Session $session
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function show(Session $session)
     {
@@ -87,37 +91,12 @@ class SessionController extends Controller
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
-                UseCase::with([
-                    'testCases' => function ($query) use ($session) {
-                        $query
-                            ->with([
-                                'lastTestRun' => function ($query) use (
-                                    $session
-                                ) {
-                                    $query->where('session_id', $session->id);
-                                },
-                            ])
-                            ->whereHas('sessions', function ($query) use (
-                                $session
-                            ) {
-                                $query->whereKey($session->getKey());
-                            });
-                    },
-                ])
-                    ->whereHas('testCases', function ($query) use ($session) {
-                        $query->whereHas('sessions', function ($query) use (
-                            $session
-                        ) {
-                            $query->whereKey($session->getKey());
-                        });
-                    })
-                    ->get()
+                UseCase::withTestCasesOfSession($session)->get()
             ),
             'testRuns' => TestRunResource::collection(
                 $session
                     ->testRuns()
                     ->with(['session', 'testCase'])
-                    //                    ->completed()
                     ->latest()
                     ->paginate()
             ),
@@ -126,8 +105,8 @@ class SessionController extends Controller
 
     /**
      * @param Session $session
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Session $session)
     {
@@ -142,6 +121,7 @@ class SessionController extends Controller
     /**
      * @param Session $session
      * @return array[]
+     * @throws AuthorizationException
      */
     public function showChartData(Session $session)
     {

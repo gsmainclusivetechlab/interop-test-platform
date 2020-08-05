@@ -32,7 +32,7 @@ class AdminSessionsTest extends DuskTestCase
     public function testAdminCanDeleteSessionsCreatedByUsers()
     {
         $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
-        $session = factory(Session::class)->create();
+        factory(Session::class)->create();
         $this->browse(function ($browser) use ($admin) {
             $browser
                 ->loginAs($admin)

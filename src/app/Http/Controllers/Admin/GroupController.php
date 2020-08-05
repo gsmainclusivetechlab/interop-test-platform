@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GroupController extends Controller
 {
     /**
-     * GroupController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -23,7 +26,7 @@ class GroupController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -43,7 +46,7 @@ class GroupController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function create()
     {
@@ -52,7 +55,7 @@ class GroupController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -70,7 +73,7 @@ class GroupController extends Controller
 
     /**
      * @param Group $group
-     * @return \Inertia\Response
+     * @return Response
      */
     public function edit(Group $group)
     {
@@ -82,7 +85,7 @@ class GroupController extends Controller
     /**
      * @param Group $group
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(Group $group, Request $request)
     {
@@ -100,8 +103,8 @@ class GroupController extends Controller
 
     /**
      * @param Group $group
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Group $group)
     {

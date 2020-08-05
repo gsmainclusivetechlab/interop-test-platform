@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,5 +26,35 @@ class UseCase extends Model
     public function testCases()
     {
         return $this->hasMany(TestCase::class, 'use_case_id');
+    }
+
+    /**
+     * @param Builder $query
+     * @param Session $session
+     * @return mixed
+     */
+    public function scopeWithTestCasesOfSession($query, Session $session)
+    {
+        return $query
+            ->with([
+                'testCases' => function ($query) use ($session) {
+                    $query
+                        ->with([
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->getKey());
+                            },
+                        ])
+                        ->whereHas('sessions', function ($query) use (
+                            $session
+                        ) {
+                            $query->whereKey($session->getKey());
+                        });
+                },
+            ])
+            ->whereHas('testCases', function ($query) use ($session) {
+                $query->whereHas('sessions', function ($query) use ($session) {
+                    $query->whereKey($session->getKey());
+                });
+            });
     }
 }

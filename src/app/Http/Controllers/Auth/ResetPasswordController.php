@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ResetPasswordController extends Controller
 {
@@ -20,8 +24,8 @@ class ResetPasswordController extends Controller
 
     /**
      * @param Request $request
-     * @param null $token
-     * @return \Inertia\Response
+     * @param string|null $token
+     * @return Response
      */
     public function showResetForm(Request $request, $token = null)
     {
@@ -34,7 +38,7 @@ class ResetPasswordController extends Controller
     /**
      * @param Request $request
      * @param string $response
-     * @return \Illuminate\Contracts\Foundation\Application|JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|JsonResponse|RedirectResponse|Redirector
      */
     protected function sendResetResponse(Request $request, $response)
     {

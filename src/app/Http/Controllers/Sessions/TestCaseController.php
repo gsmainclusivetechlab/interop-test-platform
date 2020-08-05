@@ -12,12 +12,15 @@ use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\UseCase;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TestCaseController extends Controller
 {
     /**
-     * TestCaseController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -27,8 +30,8 @@ class TestCaseController extends Controller
     /**
      * @param Session $session
      * @param TestCase $testCase
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function show(Session $session, TestCase $testCase)
     {
@@ -52,31 +55,7 @@ class TestCaseController extends Controller
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
-                UseCase::with([
-                    'testCases' => function ($query) use ($session) {
-                        $query
-                            ->with([
-                                'lastTestRun' => function ($query) use (
-                                    $session
-                                ) {
-                                    $query->where('session_id', $session->id);
-                                },
-                            ])
-                            ->whereHas('sessions', function ($query) use (
-                                $session
-                            ) {
-                                $query->whereKey($session->getKey());
-                            });
-                    },
-                ])
-                    ->whereHas('testCases', function ($query) use ($session) {
-                        $query->whereHas('sessions', function ($query) use (
-                            $session
-                        ) {
-                            $query->whereKey($session->getKey());
-                        });
-                    })
-                    ->get()
+                UseCase::withTestCasesOfSession($session)->get()
             ),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'testStepFirstSource' => (new ComponentResource(
@@ -97,8 +76,8 @@ class TestCaseController extends Controller
     /**
      * @param Session $session
      * @param TestCase $testCase
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function run(Session $session, TestCase $testCase)
     {

@@ -23,7 +23,6 @@ class SendingRejectedHandler
 
     /**
      * @param Throwable $exception
-     * @return Throwable
      */
     public function __invoke(Throwable $exception)
     {

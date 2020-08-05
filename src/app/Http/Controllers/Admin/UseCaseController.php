@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\UseCaseResource;
 use App\Models\UseCase;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class UseCaseController extends Controller
 {
     /**
-     * UseCaseController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -23,7 +26,7 @@ class UseCaseController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -43,7 +46,7 @@ class UseCaseController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function create()
     {
@@ -52,7 +55,7 @@ class UseCaseController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
@@ -69,7 +72,7 @@ class UseCaseController extends Controller
 
     /**
      * @param UseCase $useCase
-     * @return \Inertia\Response
+     * @return Response
      */
     public function edit(UseCase $useCase)
     {
@@ -81,7 +84,7 @@ class UseCaseController extends Controller
     /**
      * @param UseCase $useCase
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(UseCase $useCase, Request $request)
     {
@@ -98,8 +101,8 @@ class UseCaseController extends Controller
 
     /**
      * @param UseCase $useCase
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(UseCase $useCase)
     {

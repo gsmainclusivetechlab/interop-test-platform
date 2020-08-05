@@ -18,13 +18,9 @@ class RoleSuperAdminTest extends DuskTestCase
         $superAdmin = factory(User::class)->create([
             'role' => User::ROLE_SUPERADMIN,
         ]);
-        $admin = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
-        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
-        $this->browse(function (Browser $browser) use (
-            $superAdmin,
-            $admin,
-            $user
-        ) {
+        factory(User::class)->create(['role' => User::ROLE_ADMIN]);
+        factory(User::class)->create(['role' => User::ROLE_USER]);
+        $this->browse(function (Browser $browser) use ($superAdmin) {
             $browser
                 ->loginAs($superAdmin)
                 ->visit(new AdminUsersPage())

@@ -199,12 +199,9 @@ export default {
         },
         loadGroupsList(query = '') {
             axios
-                .get(
-                    route('admin.test-cases.group-candidates'),
-                    {
-                        params: { q: query },
-                    }
-                )
+                .get(route('admin.test-cases.group-candidates'), {
+                    params: { q: query },
+                })
                 .then((result) => {
                     this.groupsList = collect(result.data.data)
                         .whereNotIn('id', this.form.groups_id)

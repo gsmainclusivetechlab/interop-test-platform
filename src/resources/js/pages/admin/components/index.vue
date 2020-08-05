@@ -70,7 +70,8 @@
                             <td class="text-center text-break">
                                 <b-dropdown
                                     v-if="
-                                        component.can.update || component.can.delete
+                                        component.can.update ||
+                                        component.can.delete
                                     "
                                     no-caret
                                     right

@@ -5,15 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\ComponentResource;
 use App\Models\Component;
 use App\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Inertia\Response;
+use Throwable;
 
 class ComponentController extends Controller
 {
     /**
-     * ComponentController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -24,7 +30,7 @@ class ComponentController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -43,7 +49,7 @@ class ComponentController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function create()
     {
@@ -52,7 +58,8 @@ class ComponentController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     * @throws Throwable
      */
     public function store(Request $request)
     {
@@ -60,7 +67,10 @@ class ComponentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'base_url' => ['required', 'url', 'max:255'],
             'description' => ['string', 'nullable'],
-            'connections_id.*' => ['integer', 'exists:component_connections,target_id'],
+            'connections_id.*' => [
+                'integer',
+                'exists:component_connections,target_id',
+            ],
         ]);
         DB::transaction(function () use ($request) {
             $component = Component::create($request->input());
@@ -74,7 +84,7 @@ class ComponentController extends Controller
 
     /**
      * @param Component $component
-     * @return \Inertia\Response
+     * @return Response
      */
     public function edit(Component $component)
     {
@@ -88,8 +98,8 @@ class ComponentController extends Controller
     /**
      * @param Component $component
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Throwable
+     * @return RedirectResponse
+     * @throws Throwable
      */
     public function update(Component $component, Request $request)
     {
@@ -97,7 +107,10 @@ class ComponentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'base_url' => ['required', 'url', 'max:255'],
             'description' => ['string', 'nullable'],
-            'connections_id.*' => ['integer', 'exists:component_connections,target_id'],
+            'connections_id.*' => [
+                'integer',
+                'exists:component_connections,target_id',
+            ],
         ]);
         DB::transaction(function () use ($component, $request) {
             $component->update($request->input());
@@ -111,8 +124,8 @@ class ComponentController extends Controller
 
     /**
      * @param Component $component
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Component $component)
     {
@@ -124,8 +137,8 @@ class ComponentController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return AnonymousResourceCollection
+     * @throws AuthorizationException
      */
     public function connectionCandidates()
     {
@@ -135,7 +148,10 @@ class ComponentController extends Controller
             Component::when(request('q'), function (Builder $query, $q) {
                 $query->whereRaw('name like ?', "%{$q}%");
             })
-                ->when(request('component_id'), function (Builder $query, $componentId) {
+                ->when(request('component_id'), function (
+                    Builder $query,
+                    $componentId
+                ) {
                     $query->whereKeyNot($componentId);
                 })
                 ->paginate()

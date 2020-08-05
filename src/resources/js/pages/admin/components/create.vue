@@ -64,7 +64,8 @@
                                     class="form-select"
                                     placeholder="Select connections..."
                                     :class="{
-                                        'is-invalid': $page.errors.connections_id,
+                                        'is-invalid':
+                                            $page.errors.connections_id,
                                     }"
                                     label="name"
                                     :keys="['name']"
@@ -169,8 +170,8 @@ export default {
             handler: function (value) {
                 this.form.connections_id = value
                     ? collect(value)
-                        .map((item) => item.id)
-                        .all()
+                          .map((item) => item.id)
+                          .all()
                     : [];
             },
         },
@@ -187,12 +188,9 @@ export default {
         },
         loadConnectionsList(query = '') {
             axios
-                .get(
-                    route('admin.components.connection-candidates'),
-                    {
-                        params: { q: query },
-                    }
-                )
+                .get(route('admin.components.connection-candidates'), {
+                    params: { q: query },
+                })
                 .then((result) => {
                     this.connectionsList = collect(result.data.data)
                         .whereNotIn('id', this.form.connections_id)

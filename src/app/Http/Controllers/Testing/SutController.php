@@ -16,12 +16,14 @@ use App\Models\Component;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
 {
     /**
-     * RunController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -31,6 +33,11 @@ class SutController extends Controller
         ]);
     }
 
+    /**
+     * @param string $componentId
+     * @param Session $session
+     * @return Builder|Model|object
+     */
     public function getComponent(string $componentId, Session $session)
     {
         $component = Component::where('uuid', $componentId)->first();

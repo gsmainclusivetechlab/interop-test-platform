@@ -55,6 +55,6 @@ class ComponentPolicy
      */
     public function delete(User $user, Component $model)
     {
-        return $user->isAdmin() && !($model->sourceTestSteps()->exists() || $model->targetTestSteps()->exists());
+        return $user->isAdmin();
     }
 }
