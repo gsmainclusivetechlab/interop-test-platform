@@ -57,6 +57,7 @@
                                 $page.auth.user.can.groups.viewAny ||
                                 $page.auth.user.can.sessions.viewAny ||
                                 $page.auth.user.can.api_specs.viewAny ||
+                                $page.auth.user.can.components.viewAny ||
                                 $page.auth.user.can.use_cases.viewAny ||
                                 $page.auth.user.can.message_log.viewAny ||
                                 $page.auth.user.can.test_cases.viewAny
@@ -96,6 +97,14 @@
                                     class="text-reset dropdown-item"
                                 >
                                     Api Specs
+                                </inertia-link>
+                            </li>
+                            <li v-if="$page.auth.user.can.components.viewAny">
+                                <inertia-link
+                                    :href="route('admin.components.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Components
                                 </inertia-link>
                             </li>
                             <li v-if="$page.auth.user.can.use_cases.viewAny">

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class PasswordController extends Controller
 {
@@ -19,7 +21,7 @@ class PasswordController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function showPasswordForm()
     {
@@ -28,7 +30,7 @@ class PasswordController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function updatePassword(Request $request)
     {

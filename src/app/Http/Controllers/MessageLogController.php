@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\MessageLogResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
 use App\Models\MessageLog;
 use App\Models\UseCase;
+use Illuminate\Auth\Access\AuthorizationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class MessageLogController extends Controller
 {
     /**
-     * TestCaseController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -22,9 +23,8 @@ class MessageLogController extends Controller
     }
 
     /**
-     * @param Session $session
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function admin()
     {
@@ -40,8 +40,8 @@ class MessageLogController extends Controller
 
     /**
      * @param Session $session
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function index(Session $session)
     {
@@ -53,37 +53,10 @@ class MessageLogController extends Controller
                     'testCases' => function ($query) {
                         return $query->with(['useCase', 'lastTestRun']);
                     },
-                    'components' => function ($query) {
-                        return $query->with(['connections']);
-                    },
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
-                UseCase::with([
-                    'testCases' => function ($query) use ($session) {
-                        $query
-                            ->with([
-                                'lastTestRun' => function ($query) use (
-                                    $session
-                                ) {
-                                    $query->where('session_id', $session->id);
-                                },
-                            ])
-                            ->whereHas('sessions', function ($query) use (
-                                $session
-                            ) {
-                                $query->whereKey($session->getKey());
-                            });
-                    },
-                ])
-                    ->whereHas('testCases', function ($query) use ($session) {
-                        $query->whereHas('sessions', function ($query) use (
-                            $session
-                        ) {
-                            $query->whereKey($session->getKey());
-                        });
-                    })
-                    ->get()
+                UseCase::withTestCasesOfSession($session)->get()
             ),
             'logItems' => MessageLogResource::collection(
                 $session

@@ -44,11 +44,28 @@ abstract class TestCase extends Assert implements Test
         try {
             $this->test();
         } catch (AssertionFailedError $e) {
-            $result->addFailure($this, $e, $this->calculateDurationNanoseconds($startTime)->asMilliseconds());
+            $result->addFailure(
+                $this,
+                $e,
+                $this->calculateDurationFromNanoseconds(
+                    $startTime
+                )->asMilliseconds()
+            );
         } catch (Throwable $e) {
-            $result->addError($this, $e, $this->calculateDurationNanoseconds($startTime)->asMilliseconds());
+            $result->addError(
+                $this,
+                $e,
+                $this->calculateDurationFromNanoseconds(
+                    $startTime
+                )->asMilliseconds()
+            );
         } finally {
-            $result->endTest($this, $this->calculateDurationNanoseconds($startTime)->asMilliseconds());
+            $result->endTest(
+                $this,
+                $this->calculateDurationFromNanoseconds(
+                    $startTime
+                )->asMilliseconds()
+            );
         }
 
         return $result;
@@ -66,7 +83,7 @@ abstract class TestCase extends Assert implements Test
      * @param float $startTime
      * @return Duration
      */
-    protected function calculateDurationNanoseconds(float $startTime)
+    protected function calculateDurationFromNanoseconds(float $startTime)
     {
         return Duration::fromNanoseconds((float) hrtime(true) - $startTime);
     }

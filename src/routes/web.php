@@ -198,6 +198,11 @@ Route::name('admin.')
                     'import.confirm'
                 );
             });
+        Route::resource('components', 'ComponentController')->except(['show']);
+        Route::get(
+            'components/connection-candidates',
+            'ComponentController@connectionCandidates'
+        )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
         Route::resource('test-cases', 'TestCaseController')->only([
             'index',
@@ -219,7 +224,7 @@ Route::name('admin.')
                     'TestCaseController@togglePublic'
                 )->name('toggle-public');
                 Route::get(
-                    '{testCase}/group-candidates',
+                    'group-candidates',
                     'TestCaseController@groupCandidates'
                 )->name('group-candidates');
             });

@@ -6,6 +6,7 @@ use App\Models\TestResult;
 use App\Testing\TestExecutionListener;
 use App\Testing\TestScriptLoader;
 use App\Testing\TestSpecLoader;
+use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use PHPUnit\Framework\TestResult as TestSuiteResult;
 use PHPUnit\Framework\TestSuite;
 use Psr\Http\Message\ResponseInterface;
@@ -28,6 +29,7 @@ class SendingFulfilledHandler
     /**
      * @param ResponseInterface $response
      * @return ResponseInterface
+     * @throws NoPath
      */
     public function __invoke(ResponseInterface $response)
     {

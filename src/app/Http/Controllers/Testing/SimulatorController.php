@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class SimulatorController extends Controller
 {
     /**
-     * SimulatorController constructor.
+     * @return void
      */
     public function __construct()
     {

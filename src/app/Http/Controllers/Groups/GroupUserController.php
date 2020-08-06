@@ -6,14 +6,17 @@ use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GroupUserController extends Controller
 {
     /**
-     * GroupUserController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -22,8 +25,8 @@ class GroupUserController extends Controller
 
     /**
      * @param Group $group
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function create(Group $group)
     {
@@ -36,8 +39,8 @@ class GroupUserController extends Controller
     /**
      * @param Group $group
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function store(Group $group, Request $request)
     {
@@ -65,8 +68,8 @@ class GroupUserController extends Controller
     /**
      * @param Group $group
      * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function destroy(Group $group, User $user)
     {
@@ -85,8 +88,8 @@ class GroupUserController extends Controller
     /**
      * @param Group $group
      * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function toggleAdmin(Group $group, User $user)
     {

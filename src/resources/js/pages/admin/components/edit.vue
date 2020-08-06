@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Update test case</b>
+                    <b>Update component</b>
                 </h1>
             </div>
             <div class="container">
@@ -34,47 +34,44 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Behavior
+                                    Base URL
                                 </label>
                                 <input
+                                    name="name"
                                     type="text"
                                     class="form-control"
-                                    :value="
-                                        collect(
-                                            $page.enums.test_case_behaviors
-                                        ).get(testCase.behavior)
-                                    "
-                                    readonly
+                                    v-model="form.base_url"
+                                    :class="{
+                                        'is-invalid': $page.errors.base_url,
+                                    }"
                                 />
+                                <span
+                                    v-if="$page.errors.base_url"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.base_url }}
+                                    </strong>
+                                </span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Use Case
-                                </label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :value="testCase.useCase.data.name"
-                                    readonly
-                                />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Groups
+                                    Connections
                                 </label>
                                 <selectize
-                                    v-model="groups"
+                                    v-model="connections"
                                     multiple
                                     class="form-select"
-                                    placeholder="Select groups..."
+                                    placeholder="Select connections..."
                                     :class="{
-                                        'is-invalid': $page.errors.groups_id,
+                                        'is-invalid':
+                                            $page.errors.connections_id,
                                     }"
                                     label="name"
                                     :keys="['name']"
-                                    :options="groupsList"
+                                    :options="connectionsList"
                                     :createItem="false"
-                                    :searchFn="searchGroups"
+                                    :searchFn="searchConnections"
                                 >
                                     <template
                                         slot="option"
@@ -82,7 +79,7 @@
                                     >
                                         <div>{{ option.name }}</div>
                                         <div class="text-muted small">
-                                            {{ option.domain }}
+                                            {{ option.base_url }}
                                         </div>
                                     </template>
                                 </selectize>
@@ -124,7 +121,7 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.test-cases.index')"
+                                :href="route('admin.components.index')"
                                 class="btn btn-link"
                             >
                                 Cancel
@@ -149,13 +146,13 @@ import Layout from '@/layouts/main';
 
 export default {
     metaInfo: {
-        title: 'Update test case',
+        title: 'Update component',
     },
     components: {
         Layout,
     },
     props: {
-        testCase: {
+        component: {
             type: Object,
             required: true,
         },
@@ -163,20 +160,23 @@ export default {
     data() {
         return {
             sending: false,
-            groups: this.testCase.groups ? this.testCase.groups.data : [],
-            groupsList: [],
+            connections: this.component.connections
+                ? this.component.connections.data
+                : [],
+            connectionsList: [],
             form: {
-                name: this.testCase.name,
-                description: this.testCase.description,
-                groups_id: null,
+                name: this.component.name,
+                base_url: this.component.base_url,
+                description: this.component.description,
+                connections_id: null,
             },
         };
     },
     watch: {
-        groups: {
+        connections: {
             immediate: true,
             handler: function (value) {
-                this.form.groups_id = value
+                this.form.connections_id = value
                     ? collect(value)
                           .map((item) => item.id)
                           .all()
@@ -185,31 +185,31 @@ export default {
         },
     },
     mounted() {
-        this.loadGroupsList();
+        this.loadConnectionsList();
     },
     methods: {
         submit() {
             this.sending = true;
             this.$inertia
                 .put(
-                    route('admin.test-cases.update', this.testCase.id),
+                    route('admin.components.update', this.component.id),
                     this.form
                 )
                 .then(() => (this.sending = false));
         },
-        loadGroupsList(query = '') {
+        loadConnectionsList(query = '') {
             axios
-                .get(route('admin.test-cases.group-candidates'), {
-                    params: { q: query },
+                .get(route('admin.components.connection-candidates'), {
+                    params: { q: query, component_id: this.component.id },
                 })
                 .then((result) => {
-                    this.groupsList = collect(result.data.data)
-                        .whereNotIn('id', this.form.groups_id)
+                    this.connectionsList = collect(result.data.data)
+                        .whereNotIn('id', this.form.connections_id)
                         .all();
                 });
         },
-        searchGroups(query, callback) {
-            this.loadGroupsList(query);
+        searchConnections(query, callback) {
+            this.loadConnectionsList(query);
             callback();
         },
     },

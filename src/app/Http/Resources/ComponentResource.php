@@ -17,9 +17,18 @@ class ComponentResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'base_url' => $this->base_url,
+            'position' => $this->position,
             'connections' => static::collection(
                 $this->whenLoaded('connections')
             ),
+            'can' => [
+                'update' => auth()
+                    ->user()
+                    ->can('update', $this->resource),
+                'delete' => auth()
+                    ->user()
+                    ->can('delete', $this->resource),
+            ],
         ];
     }
 }

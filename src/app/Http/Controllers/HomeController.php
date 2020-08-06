@@ -6,6 +6,7 @@ use App\Http\Resources\SessionResource;
 use App\Models\Session;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController extends Controller
 {
@@ -18,7 +19,7 @@ class HomeController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function __invoke()
     {

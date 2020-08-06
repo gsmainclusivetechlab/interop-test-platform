@@ -14,13 +14,15 @@ use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\TestRun;
 use App\Models\UseCase;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TestRunController extends Controller
 {
     /**
-     * TestRunController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -32,8 +34,8 @@ class TestRunController extends Controller
      * @param TestCase $testCase
      * @param TestRun $testRun
      * @param int $position
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function show(
         Session $session,
@@ -59,31 +61,7 @@ class TestRunController extends Controller
                 ])
             ))->resolve(),
             'useCases' => UseCaseResource::collection(
-                UseCase::with([
-                    'testCases' => function ($query) use ($session) {
-                        $query
-                            ->with([
-                                'lastTestRun' => function ($query) use (
-                                    $session
-                                ) {
-                                    $query->where('session_id', $session->id);
-                                },
-                            ])
-                            ->whereHas('sessions', function ($query) use (
-                                $session
-                            ) {
-                                $query->whereKey($session->getKey());
-                            });
-                    },
-                ])
-                    ->whereHas('testCases', function ($query) use ($session) {
-                        $query->whereHas('sessions', function ($query) use (
-                            $session
-                        ) {
-                            $query->whereKey($session->getKey());
-                        });
-                    })
-                    ->get()
+                UseCase::withTestCasesOfSession($session)->get()
             ),
             'components' => ComponentResource::collection(
                 Component::with([

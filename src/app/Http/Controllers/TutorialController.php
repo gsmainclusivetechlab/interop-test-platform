@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TutorialController extends Controller
 {
@@ -15,7 +16,7 @@ class TutorialController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function __invoke()
     {

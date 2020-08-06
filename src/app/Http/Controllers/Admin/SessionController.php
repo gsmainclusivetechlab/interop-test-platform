@@ -7,11 +7,12 @@ use App\Models\Session;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SessionController extends Controller
 {
     /**
-     * SessionController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -22,7 +23,7 @@ class SessionController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {

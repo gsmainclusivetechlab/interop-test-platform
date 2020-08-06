@@ -9,13 +9,16 @@ use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class GroupController extends Controller
 {
     /**
-     * GroupController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -23,7 +26,7 @@ class GroupController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -47,8 +50,8 @@ class GroupController extends Controller
 
     /**
      * @param Group $group
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function show(Group $group)
     {
@@ -80,8 +83,8 @@ class GroupController extends Controller
 
     /**
      * @param Group $group
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return AnonymousResourceCollection
+     * @throws AuthorizationException
      */
     public function userCandidates(Group $group)
     {

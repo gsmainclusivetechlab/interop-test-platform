@@ -5,16 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class UserController extends Controller
 {
     /**
-     * UserController constructor.
+     * @return void
      */
     public function __construct()
     {
@@ -26,7 +31,7 @@ class UserController extends Controller
 
     /**
      * @param string|null $trash
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index($trash = null)
     {
@@ -56,8 +61,8 @@ class UserController extends Controller
 
     /**
      * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(User $user)
     {
@@ -70,8 +75,8 @@ class UserController extends Controller
 
     /**
      * @param User $userOnlyTrashed
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function restore(User $userOnlyTrashed)
     {
@@ -85,8 +90,8 @@ class UserController extends Controller
 
     /**
      * @param User $userWithTrashed
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function forceDestroy(User $userWithTrashed)
     {
@@ -100,8 +105,8 @@ class UserController extends Controller
 
     /**
      * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function verify(User $user)
     {
@@ -117,8 +122,8 @@ class UserController extends Controller
      * @param User $user
      * @param string $role
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException|ValidationException
      */
     public function promoteRole(User $user, string $role, Request $request)
     {
