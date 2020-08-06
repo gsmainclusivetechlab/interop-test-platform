@@ -73,6 +73,10 @@
                                     hide-header-close
                                     title="Request"
                                 >
+                                    <clipboard-json-to-curl
+                                        :request="testStep.request"
+                                    >
+                                    </clipboard-json-to-curl>
                                     <div class="border">
                                         <div
                                             class="d-flex"

@@ -7,7 +7,8 @@
         :title="title"
         :data-clipboard-target="target"
     >
-        <icon name="copy" class="m-0" />
+        <icon v-if="showCopyIcon" name="copy" class="m-0" />
+        <a v-if="copyButtonText">{{ copyButtonText }}</a>
     </button>
 </template>
 
@@ -16,6 +17,13 @@ import Clipboard from 'clipboard';
 
 export default {
     props: {
+        showCopyIcon: {
+            type: Boolean,
+            default: true,
+        },
+        copyButtonText: {
+            type: String,
+        },
         data: {
             type: String,
         },

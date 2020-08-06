@@ -72,6 +72,9 @@ Vue.component('clipboard-copy-btn', () =>
         /* webpackChunkName: "clipboard-copy-btn" */ '@/components/clipboard-copy-btn.vue'
     )
 );
+Vue.component('clipboard-json-to-curl',() =>
+    import(/* webpackChunkName: "clipboard-json-to-curl" */ '@/components/clipboard-json-to-curl.vue')
+);
 
 let app = document.getElementById('app');
 
