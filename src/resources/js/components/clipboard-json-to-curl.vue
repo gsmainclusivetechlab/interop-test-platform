@@ -18,10 +18,10 @@ export default {
         jsonToCurl: function (request) {
             let headers = "";
             for (let h in request['headers']) {
-                headers += "--header '"+h+": "+ request['headers'][h][0]+"' \\  "
+                headers += `--header '${ h }: ${ request['headers'][h][0] } \\  `
             }
 
-            const info = request['method']+" '"+request['uri']+"' \\  "
+            const info = `${ request['method'] }  '${ request['uri'] }' \\  `
             const body = `--data-raw ${JSON.stringify(request['body'])}`;
             const result = `curl --location --request ${info} ${headers} ${body}`
 
