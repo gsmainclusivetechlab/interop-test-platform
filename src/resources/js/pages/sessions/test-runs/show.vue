@@ -383,7 +383,7 @@
                             <div class="py-2 px-4" v-if="testResult.request">
                                 <div class="d-flex mb-2">
                                     <strong
-                                        class="lead d-block mr-auto font-weight-bold"
+                                        class="lead d-block mr-auto mt-auto font-weight-bold"
                                     >
                                         Request
                                     </strong>
