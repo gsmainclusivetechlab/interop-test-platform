@@ -41,8 +41,8 @@
                     <table class="table table-striped table-hover card-table">
                         <thead>
                             <tr>
+                                <th class="text-nowrap w-auto">ID</th>
                                 <th class="text-nowrap w-auto">Test Case</th>
-                                <th class="text-nowrap w-auto">Run ID</th>
                                 <th class="text-nowrap w-auto">Status</th>
                                 <th class="text-nowrap w-auto">Duration</th>
                                 <th class="text-nowrap w-auto">Date</th>
@@ -53,6 +53,22 @@
                                 <td>
                                     <inertia-link
                                         :href="
+                                                route(
+                                                    'sessions.test-cases.test-runs.show',
+                                                    [
+                                                        testRun.session.id,
+                                                        testRun.testCase.id,
+                                                        testRun.id,
+                                                    ]
+                                                )
+                                            "
+                                    >
+                                        #{{ testRun.id }}
+                                    </inertia-link>
+                                </td>
+                                <td>
+                                    <inertia-link
+                                        :href="
                                             route('sessions.test-cases.show', [
                                                 testRun.session.id,
                                                 testRun.testCase.id,
@@ -60,22 +76,6 @@
                                         "
                                     >
                                         {{ testRun.testCase.name }}
-                                    </inertia-link>
-                                </td>
-                                <td>
-                                    <inertia-link
-                                        :href="
-                                            route(
-                                                'sessions.test-cases.test-runs.show',
-                                                [
-                                                    testRun.session.id,
-                                                    testRun.testCase.id,
-                                                    testRun.id,
-                                                ]
-                                            )
-                                        "
-                                    >
-                                        {{ testRun.uuid }}
                                     </inertia-link>
                                 </td>
                                 <td>
