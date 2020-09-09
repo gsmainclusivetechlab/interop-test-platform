@@ -187,6 +187,9 @@ jobs:
     parameters:
       host:
         type: string
+      mailhog:
+        type: boolean
+        default: false
     steps:
       - setup_dependencies
       - setup_docker_host:
@@ -212,6 +215,10 @@ jobs:
       - run:
           name: Run docker-compose up
           command: npm run prod
+      - when:
+          condition: << parameters.mailhog >>
+          steps:
+            - run: npm run docker-base -- -f compose/mailhog.yml up -d mailhog --force-recreate
 
 workflows:
   version: 2
@@ -230,6 +237,7 @@ workflows:
           <<: *develop_filter
           context: GSMA-itp
           host: staging.interop.gsmainclusivetechlab.io
+          mailhog: true
           requires:
             - approve_sta_deploy
             - build
