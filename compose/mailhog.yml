@@ -3,6 +3,7 @@ version: '3.7'
 services:
   mailhog:
     image: mailhog/mailhog
+    restart: always
     ports:
       - '${HOST_MAILHOG_PORT}:8025'
     networks:
