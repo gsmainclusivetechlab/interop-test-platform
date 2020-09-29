@@ -5,12 +5,20 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Resources\ComponentResource;
+use App\Http\Resources\GroupEnvironmentResource;
 use App\Http\Resources\UseCaseResource;
+use App\Http\Resources\UserResource;
 use App\Models\Component;
+use App\Models\Group;
+use App\Models\GroupEnvironment;
 use App\Models\TestCase;
 use App\Models\UseCase;
+use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -176,12 +184,21 @@ class RegisterController extends Controller
      */
     public function storeConfig(Request $request)
     {
+        $request->validate([
+            'environments.*.name' => ['required'],
+            'environments.*.value' => ['required'],
+        ]);
+
         try {
             $session = DB::transaction(function () use ($request) {
                 $session = auth()
                     ->user()
                     ->sessions()
-                    ->create($request->session()->get('session.info'));
+                    ->create(
+                        collect($request->session()->get('session.info'))
+                            ->merge($request->input())
+                            ->all()
+                    );
                 $session
                     ->testCases()
                     ->attach(
@@ -203,5 +220,27 @@ class RegisterController extends Controller
                 ->back()
                 ->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function environmentCandidates()
+    {
+        return GroupEnvironmentResource::collection(
+            GroupEnvironment::when(request('q'), function (Builder $query, $q) {
+                $query->whereRaw(
+                    'name like ?',
+                    "%{$q}%"
+                );
+            })
+                ->whereHas('group', function (Builder $query) {
+                    $query->whereHas('users', function (Builder $query) {
+                        $query->whereKey(auth()->user());
+                    });
+                })
+                ->latest()
+                ->paginate()
+        );
     }
 }

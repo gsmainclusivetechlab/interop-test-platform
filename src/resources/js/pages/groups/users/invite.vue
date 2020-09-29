@@ -52,7 +52,7 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('groups.show', group.id)"
+                                :href="route('groups.users.index', group.id)"
                                 class="btn btn-link"
                             >
                                 Cancel
@@ -120,7 +120,7 @@ export default {
         },
         loadUserList(query = '') {
             axios
-                .get(route('groups.user-candidates', this.group), {
+                .get(route('groups.users.candidates', this.group), {
                     params: { q: query },
                 })
                 .then((result) => {
