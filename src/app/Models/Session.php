@@ -21,7 +21,14 @@ class Session extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'name', 'description'];
+    protected $fillable = ['uuid', 'name', 'description', 'environments'];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'environments' => 'array',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

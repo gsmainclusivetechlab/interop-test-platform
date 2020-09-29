@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Group;
+use App\Models\GroupEnvironment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class GroupPolicy
+class GroupEnvironmentPolicy
 {
     use HandlesAuthorization;
 
@@ -21,12 +21,12 @@ class GroupPolicy
 
     /**
      * @param  User  $user
-     * @param  Group  $model
+     * @param  GroupEnvironment  $model
      * @return mixed
      */
-    public function view(User $user, Group $model)
+    public function view(User $user, GroupEnvironment $model)
     {
-        return $user->isAdmin() || $model->hasUser($user);
+        return $user->isAdmin();
     }
 
     /**
@@ -40,31 +40,21 @@ class GroupPolicy
 
     /**
      * @param  User  $user
-     * @param  Group  $model
+     * @param  GroupEnvironment  $model
      * @return mixed
      */
-    public function update(User $user, Group $model)
+    public function update(User $user, GroupEnvironment $model)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $model->group->hasAdminUser($user);
     }
 
     /**
      * @param  User  $user
-     * @param  Group  $model
+     * @param  GroupEnvironment  $model
      * @return mixed
      */
-    public function delete(User $user, Group $model)
+    public function delete(User $user, GroupEnvironment $model)
     {
-        return $user->isAdmin();
-    }
-
-    /**
-     * @param  User  $user
-     * @param  Group  $model
-     * @return mixed
-     */
-    public function admin(User $user, Group $model)
-    {
-        return $user->isAdmin() || $model->hasAdminUser($user);
+        return $user->isAdmin() || $model->group->hasAdminUser($user);
     }
 }

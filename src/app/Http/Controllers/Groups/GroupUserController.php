@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Groups;
 
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\GroupUserResource;
+use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,10 +32,30 @@ class GroupUserController extends Controller
      * @return Response
      * @throws AuthorizationException
      */
+    public function index(Group $group)
+    {
+        $this->authorize('view', $group);
+
+        return Inertia::render('groups/users/index', [
+            'group' => (new GroupResource($group))->resolve(),
+            'users' => GroupUserResource::collection(
+                $group
+                    ->users()
+                    ->latest()
+                    ->paginate()
+            ),
+        ]);
+    }
+
+    /**
+     * @param Group $group
+     * @return Response
+     * @throws AuthorizationException
+     */
     public function create(Group $group)
     {
-        $this->authorize('invite', $group);
-        return Inertia::render('groups/invite', [
+        $this->authorize('admin', $group);
+        return Inertia::render('groups/users/invite', [
             'group' => (new GroupResource($group))->resolve(),
         ]);
     }
@@ -44,7 +68,7 @@ class GroupUserController extends Controller
      */
     public function store(Group $group, Request $request)
     {
-        $this->authorize('invite', $group);
+        $this->authorize('admin', $group);
         $request->validate([
             'user_id' => [
                 'required',
@@ -61,7 +85,7 @@ class GroupUserController extends Controller
         ]);
 
         return redirect()
-            ->route('groups.show', $group)
+            ->route('groups.users.index', $group)
             ->with('success', __('User invited successfully to group'));
     }
 
@@ -103,5 +127,39 @@ class GroupUserController extends Controller
             ->updateExistingPivot($user, ['admin' => !$user->pivot->admin]);
 
         return redirect()->back();
+    }
+
+    /**
+     * @param Group $group
+     * @return AnonymousResourceCollection
+     * @throws AuthorizationException
+     */
+    public function candidates(Group $group)
+    {
+        $this->authorize('admin', $group);
+
+        return UserResource::collection(
+            User::when(request('q'), function (Builder $query, $q) use (
+                $group
+            ) {
+                $query->whereRaw(
+                    'CONCAT(first_name, " ", last_name) like ?',
+                    "%{$q}%"
+                );
+            })
+                ->where(function (Builder $query) use ($group) {
+                    $domains = (array) explode(', ', $group->domain);
+                    foreach ($domains as $domain) {
+                        $query->orWhere('email', 'like', "%{$domain}");
+                    }
+                })
+                ->whereDoesntHave('groups', function (Builder $query) use (
+                    $group
+                ) {
+                    $query->whereKey($group);
+                })
+                ->latest()
+                ->paginate()
+        );
     }
 }
