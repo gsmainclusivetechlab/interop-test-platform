@@ -41,9 +41,21 @@ class GroupUserController extends Controller
             'users' => GroupUserResource::collection(
                 $group
                     ->users()
+                    ->when(request('q'), function (Builder $query, $q) {
+                        $query
+                            ->whereRaw(
+                                'CONCAT(first_name, " ", last_name) like ?',
+                                "%{$q}%"
+                            )
+                            ->orWhere('email', 'like', "%{$q}%")
+                            ->orWhere('company', 'like', "%{$q}%");
+                    })
                     ->latest()
                     ->paginate()
             ),
+            'filter' => [
+                'q' => request('q'),
+            ],
         ]);
     }
 
