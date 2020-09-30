@@ -58,6 +58,16 @@ class GroupController extends Controller
             'sessions' => SessionResource::collection(
                 $group
                     ->sessions()
+                    ->whereHas('owner', function (Builder $query) {
+                        $query->when(request('q'), function (Builder $query, $q) {
+                            $query
+                                ->whereRaw(
+                                    'CONCAT(first_name, " ", last_name) like ?',
+                                    "%{$q}%"
+                                )
+                                ->orWhere('name', 'like', "%{$q}%");
+                        });
+                    })
                     ->with([
                         'owner',
                         'testCases' => function ($query) {
@@ -68,6 +78,9 @@ class GroupController extends Controller
                     ->latest()
                     ->paginate()
             ),
+            'filter' => [
+                'q' => request('q'),
+            ],
         ]);
     }
 }

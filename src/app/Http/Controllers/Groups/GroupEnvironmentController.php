@@ -8,6 +8,7 @@ use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\GroupEnvironment;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,9 +38,15 @@ class GroupEnvironmentController extends Controller
             'environments' => GroupEnvironmentResource::collection(
                 $group
                     ->environments()
+                    ->when(request('q'), function (Builder $query, $q) {
+                        $query->where('name', 'like', "%{$q}%");
+                    })
                     ->latest()
                     ->paginate()
             ),
+            'filter' => [
+                'q' => request('q'),
+            ],
         ]);
     }
 
