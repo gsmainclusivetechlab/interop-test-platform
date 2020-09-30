@@ -175,6 +175,11 @@ class RegisterController extends Controller
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
+            'hasGroupEnvironments' => GroupEnvironment::whereHas('group', function (Builder $query) {
+                    $query->whereHas('users', function (Builder $query) {
+                        $query->whereKey(auth()->user());
+                    });
+                })->exists(),
         ]);
     }
 
@@ -225,7 +230,7 @@ class RegisterController extends Controller
     /**
      * @return AnonymousResourceCollection
      */
-    public function environmentCandidates()
+    public function groupEnvironmentCandidates()
     {
         return GroupEnvironmentResource::collection(
             GroupEnvironment::when(request('q'), function (Builder $query, $q) {
