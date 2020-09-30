@@ -37,14 +37,15 @@
                             Environments
                         </label>
                         <selectize
-                            v-model="template"
+                            v-model="groupEnvironment"
                             class="form-select mb-3"
-                            placeholder="Select template..."
+                            placeholder="Select group environments..."
                             label="name"
                             :keys="['name']"
-                            :options="templatesList"
+                            :options="groupEnvironmentsList"
                             :createItem="false"
-                            :searchFn="searchTemplates"
+                            :searchFn="searchGroupEnvironments"
+                            v-if="hasGroupEnvironments"
                         />
                         <ul class="list-group">
                             <li class="list-group-item" v-for="(environment, index) in form.environments">
@@ -127,29 +128,35 @@ export default {
             type: Object,
             required: true,
         },
+        hasGroupEnvironments: {
+            type: Boolean,
+            required: true,
+        }
     },
     data() {
         return {
             sending: false,
-            template: null,
-            templatesList: [],
+            groupEnvironment: null,
+            groupEnvironmentsList: [],
             form: {
                 environments: []
             },
         };
     },
     watch: {
-        template: {
+        groupEnvironment: {
             immediate: true,
             handler: function (value) {
                 if (value !== null) {
-                    this.form.environments = value.variables;
+                    let environments = [];
+                    environments = environments.concat(value.variables);
+                    this.form.environments = environments;
                 }
             },
         },
     },
     mounted() {
-        this.loadTemplatesList();
+        this.loadGroupEnvironmentList();
     },
     methods: {
         submit() {
@@ -164,17 +171,17 @@ export default {
         deleteEnvironment(index) {
             this.form.environments.splice(index, 1);
         },
-        loadTemplatesList(query = '') {
+        loadGroupEnvironmentList(query = '') {
             axios
-                .get(route('sessions.register.environment-candidates'), {
+                .get(route('sessions.register.group-environment-candidates'), {
                     params: { q: query },
                 })
                 .then((result) => {
-                    this.templatesList = result.data.data;
+                    this.groupEnvironmentsList = result.data.data;
                 });
         },
-        searchTemplates(query, callback) {
-            this.loadTemplatesList(query);
+        searchGroupEnvironments(query, callback) {
+            this.loadGroupEnvironmentList(query);
             callback();
         },
     },

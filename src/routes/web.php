@@ -107,8 +107,8 @@ Route::name('sessions.')
                 );
                 Route::get(
                     'environment-candidates',
-                    'RegisterController@environmentCandidates'
-                )->name('environment-candidates');
+                    'RegisterController@groupEnvironmentCandidates'
+                )->name('group-environment-candidates');
             });
     });
 
