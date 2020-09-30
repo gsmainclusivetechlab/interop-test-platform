@@ -2,7 +2,17 @@
     <layout :group="group">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Members</h4>
+                <form class="input-icon" @submit.prevent="search">
+                    <input
+                        v-model="form.q"
+                        type="text"
+                        class="form-control"
+                        placeholder="Search..."
+                    />
+                    <span class="input-icon-addon">
+                        <icon name="search" />
+                    </span>
+                </form>
                 <div class="card-options">
                     <inertia-link
                         :href="route('groups.users.create', group.id)"
@@ -130,6 +140,24 @@ export default {
         users: {
             type: Object,
             required: true,
+        },
+        filter: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            form: {
+                q: this.filter.q,
+            },
+        };
+    },
+    methods: {
+        search() {
+            this.$inertia.replace(route('groups.users.index', this.group.id), {
+                data: this.form,
+            });
         },
     },
 };
