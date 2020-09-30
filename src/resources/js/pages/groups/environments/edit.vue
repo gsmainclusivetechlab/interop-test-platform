@@ -89,7 +89,7 @@
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Create
+                                Update
                             </button>
                         </div>
                     </form>
