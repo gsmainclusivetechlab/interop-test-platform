@@ -1,6 +1,6 @@
 <template>
     <layout :session="session">
-        <div class="col-6 m-auto mt-3">
+        <div class="col-10 m-auto mt-3">
             <form class="card" @submit.prevent="submit">
                 <div class="card-header">
                     <h3 class="card-title">
@@ -8,111 +8,117 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label class="col-sm-3">
-                            <b>Name</b>
-                        </label>
-                        <input
-                            type="text"
-                            v-model="form.name"
-                            class="form-control"
-                            :class="{
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>Name</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    v-model="form.name"
+                                    class="form-control"
+                                    :class="{
                                     'is-invalid': $page.errors.name,
                                 }"
-                        />
-                        <span
-                            v-if="$page.errors.name"
-                            class="invalid-feedback"
-                        >
-                            {{ $page.errors.name }}
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-sm-3">
-                            <b>Description</b>
-                        </label>
-                        <textarea
-                            class="form-control"
-                            rows="5"
-                            v-model="form.description"
-                            :class="{
+                                />
+                                <span
+                                    v-if="$page.errors.name"
+                                    class="invalid-feedback"
+                                >
+                                    {{ $page.errors.name }}
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>Description</b>
+                                </label>
+                                <textarea
+                                    class="form-control"
+                                    rows="5"
+                                    v-model="form.description"
+                                    :class="{
                                         'is-invalid': $page.errors.description,
                                     }"
-                        ></textarea>
-                        <span
-                            v-if="$page.errors.description"
-                            class="invalid-feedback"
-                        >
-                            {{ $page.errors.description }}
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-sm-3">
-                            <b>SUT</b>
-                        </label>
-                        <input
-                            type="text"
-                            :value="component.name"
-                            readonly
-                            class="form-control"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-sm-3">
-                            <b>SUT URL</b>
-                        </label>
-                        <input
-                            type="text"
-                            v-model="form.component_base_url"
-                            class="form-control"
-                            :class="{
+                                ></textarea>
+                                <span
+                                    v-if="$page.errors.description"
+                                    class="invalid-feedback"
+                                >
+                                    {{ $page.errors.description }}
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>SUT</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    :value="component.name"
+                                    readonly
+                                    class="form-control"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>SUT URL</b>
+                                </label>
+                                <input
+                                    type="text"
+                                    v-model="form.component_base_url"
+                                    class="form-control"
+                                    :class="{
                                     'is-invalid': $page.errors.component_base_url,
                                 }"
-                        />
-                        <span
-                            v-if="$page.errors.component_base_url"
-                            class="invalid-feedback"
-                        >
-                            {{ $page.errors.component_base_url }}
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-sm-3">
-                            <b>Environments</b>
-                        </label>
-                        <selectize
-                            v-model="groupEnvironment"
-                            class="form-select mb-3"
-                            placeholder="Group environments..."
-                            label="name"
-                            :keys="['name']"
-                            :options="groupEnvironmentsList"
-                            :createItem="false"
-                            :searchFn="searchGroupEnvironments"
-                            v-if="hasGroupEnvironments"
-                        />
-                        <environments v-model="form.environments" />
-                        <div
-                            class="text-danger small mt-2"
-                            v-if="$page.errors.environments"
-                        >
-                            <strong>{{ $page.errors.environments }}</strong>
+                                />
+                                <span
+                                    v-if="$page.errors.component_base_url"
+                                    class="invalid-feedback"
+                                >
+                                    {{ $page.errors.component_base_url }}
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>Environments</b>
+                                </label>
+                                <selectize
+                                    v-model="groupEnvironment"
+                                    class="form-select mb-3"
+                                    placeholder="Group environments..."
+                                    label="name"
+                                    :keys="['name']"
+                                    :options="groupEnvironmentsList"
+                                    :createItem="false"
+                                    :searchFn="searchGroupEnvironments"
+                                    v-if="hasGroupEnvironments"
+                                />
+                                <environments v-model="form.environments" />
+                                <div
+                                    class="text-danger small mt-2"
+                                    v-if="$page.errors.environments"
+                                >
+                                    <strong>{{ $page.errors.environments }}</strong>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-sm-3">
-                            <b>Environments</b>
-                        </label>
-                        <test-case-checkboxes
-                            style="max-height: 320px;"
-                            :useCases="useCases"
-                            v-model="form.test_cases"
-                        />
-                        <div
-                            class="text-danger small mt-3"
-                            v-if="$page.errors.test_cases"
-                        >
-                            <strong>{{ $page.errors.test_cases }}</strong>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>Test Cases</b>
+                                </label>
+                                <test-case-checkboxes
+                                    style="max-height: 485px;"
+                                    :useCases="useCases"
+                                    v-model="form.test_cases"
+                                />
+                                <div
+                                    class="text-danger small mt-3"
+                                    v-if="$page.errors.test_cases"
+                                >
+                                    <strong>{{ $page.errors.test_cases }}</strong>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
