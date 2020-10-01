@@ -91,11 +91,11 @@ class RegisterController extends Controller
                             })
                             ->where('public', true)
                             ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(auth()->user());
+                                $query->whereKey(auth()->user()->getAuthIdentifier());
                             })
                             ->orWhereHas('groups', function ($query) {
                                 $query->whereHas('users', function ($query) {
-                                    $query->whereKey(auth()->user());
+                                    $query->whereKey(auth()->user()->getAuthIdentifier());
                                 });
                             })
                             ->when(
@@ -173,7 +173,7 @@ class RegisterController extends Controller
             ),
             'hasGroupEnvironments' => GroupEnvironment::whereHas('group', function (Builder $query) {
                     $query->whereHas('users', function (Builder $query) {
-                        $query->whereKey(auth()->user());
+                        $query->whereKey(auth()->user()->getAuthIdentifier());
                     });
                 })->exists(),
         ]);
@@ -237,7 +237,7 @@ class RegisterController extends Controller
             })
                 ->whereHas('group', function (Builder $query) {
                     $query->whereHas('users', function (Builder $query) {
-                        $query->whereKey(auth()->user());
+                        $query->whereKey(auth()->user()->getAuthIdentifier());
                     });
                 })
                 ->latest()

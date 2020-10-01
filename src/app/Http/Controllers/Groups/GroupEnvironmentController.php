@@ -95,7 +95,7 @@ class GroupEnvironmentController extends Controller
     {
         $environment = $group
             ->environments()
-            ->whereKey($environment)
+            ->whereKey($environment->getKey())
             ->firstOrFail();
         $this->authorize('update', $environment);
         return Inertia::render('groups/environments/edit', [
@@ -115,7 +115,7 @@ class GroupEnvironmentController extends Controller
     {
         $environment = $group
             ->environments()
-            ->whereKey($environment)
+            ->whereKey($environment->getKey())
             ->firstOrFail();
         $this->authorize('update', $group);
         $request->validate([
@@ -142,7 +142,7 @@ class GroupEnvironmentController extends Controller
     {
         $environment = $group
             ->environments()
-            ->whereKey($environment)
+            ->whereKey($environment->getKey())
             ->firstOrFail();
         $this->authorize('delete', $environment);
         $environment->delete();

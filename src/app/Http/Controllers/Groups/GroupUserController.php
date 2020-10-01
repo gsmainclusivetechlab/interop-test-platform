@@ -111,7 +111,7 @@ class GroupUserController extends Controller
     {
         $user = $group
             ->users()
-            ->whereKey($user)
+            ->whereKey($user->getKey())
             ->firstOrFail();
         $this->authorize('delete', $user->pivot);
         $group->users()->detach($user);
@@ -131,7 +131,7 @@ class GroupUserController extends Controller
     {
         $user = $group
             ->users()
-            ->whereKey($user)
+            ->whereKey($user->getKey())
             ->firstOrFail();
         $this->authorize('toggleAdmin', $user->pivot);
         $group
@@ -168,7 +168,7 @@ class GroupUserController extends Controller
                 ->whereDoesntHave('groups', function (Builder $query) use (
                     $group
                 ) {
-                    $query->whereKey($group);
+                    $query->whereKey($group->getKey());
                 })
                 ->latest()
                 ->paginate()

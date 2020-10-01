@@ -36,39 +36,7 @@
                                 <label class="form-label">
                                     Variables
                                 </label>
-                                <ul class="list-group">
-                                    <li class="list-group-item" v-for="(environment, index) in form.variables">
-                                        <div class="input-group">
-                                            <input
-                                                type="text"
-                                                placeholder="Name"
-                                                class="form-control"
-                                                v-model="environment.name"
-                                                :class="{
-                                                    'is-invalid': collect($page.errors).has(`variables.${index}.name`),
-                                                }"
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Value"
-                                                class="form-control"
-                                                v-model="environment.value"
-                                                :class="{
-                                                    'is-invalid': collect($page.errors).has(`variables.${index}.value`),
-                                                }"
-                                            />
-                                            <button type="button" class="btn btn-secondary btn-icon" @click="deleteVariable(index)">
-                                                <icon name="trash" />
-                                            </button>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <button type="button" class="btn btn-block btn-secondary" @click="addVariable">
-                                            <icon name="plus" />
-                                            Add New
-                                        </button>
-                                    </li>
-                                </ul>
+                                <environments v-model="form.variables" />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.errors.variables"
@@ -101,6 +69,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import Environments from '@/components/environments';
 
 export default {
     metaInfo() {
@@ -110,6 +79,7 @@ export default {
     },
     components: {
         Layout,
+        Environments,
     },
     props: {
         group: {
@@ -137,12 +107,6 @@ export default {
                 .put(route('groups.environments.update', [this.group, this.environment]), this.form)
                 .then(() => (this.sending = false));
         },
-        addVariable() {
-            this.form.variables.push({name: '', value: ''});
-        },
-        deleteVariable(index) {
-            this.form.variables.splice(index, 1);
-        }
     },
 };
 </script>

@@ -77,7 +77,7 @@ class Group extends Model
     public function hasUser(User $user)
     {
         return $this->users()
-            ->whereKey($user)
+            ->whereKey($user->getKey())
             ->exists();
     }
 
@@ -88,7 +88,7 @@ class Group extends Model
     public function hasAdminUser(User $user)
     {
         return $this->users()
-            ->whereKey($user)
+            ->whereKey($user->getKey())
             ->wherePivot('admin', true)
             ->exists();
     }
