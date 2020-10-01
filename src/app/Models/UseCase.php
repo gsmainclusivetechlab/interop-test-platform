@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
+ * @method static withTestCasesOfSession(Session $session)
  */
 class UseCase extends Model
 {

@@ -2,7 +2,6 @@
     <layout
         :session="session"
         :testCase="testCase"
-        :useCases="useCases"
         :testStepFirstSource="testStepFirstSource"
     >
         <div class="card mb-0">
@@ -47,10 +46,6 @@ export default {
             required: true,
         },
         testCase: {
-            type: Object,
-            required: true,
-        },
-        useCases: {
             type: Object,
             required: true,
         },
