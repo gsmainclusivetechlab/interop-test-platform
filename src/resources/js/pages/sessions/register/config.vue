@@ -47,39 +47,7 @@
                             :searchFn="searchGroupEnvironments"
                             v-if="hasGroupEnvironments"
                         />
-                        <ul class="list-group">
-                            <li class="list-group-item" v-for="(environment, index) in form.environments">
-                                <div class="input-group">
-                                    <input
-                                        type="text"
-                                        placeholder="Name"
-                                        class="form-control"
-                                        v-model="environment.name"
-                                        :class="{
-                                                    'is-invalid': collect($page.errors).has(`environments.${index}.name`),
-                                                }"
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Value"
-                                        class="form-control"
-                                        v-model="environment.value"
-                                        :class="{
-                                                    'is-invalid': collect($page.errors).has(`environments.${index}.value`),
-                                                }"
-                                    />
-                                    <button type="button" class="btn btn-secondary btn-icon" @click="deleteEnvironment(index)">
-                                        <icon name="trash" />
-                                    </button>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <button type="button" class="btn btn-block btn-secondary" @click="addEnvironment">
-                                    <icon name="plus" />
-                                    Add New
-                                </button>
-                            </li>
-                        </ul>
+                        <environments v-model="form.environments" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.errors.environments"
@@ -110,10 +78,12 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
+import Environments from '@/components/environments';
 
 export default {
     components: {
         Layout,
+        Environments,
     },
     props: {
         session: {
@@ -164,12 +134,6 @@ export default {
             this.$inertia
                 .post(route('sessions.register.config.store'), this.form)
                 .then(() => (this.sending = false));
-        },
-        addEnvironment() {
-            this.form.environments.push({name: '', value: ''});
-        },
-        deleteEnvironment(index) {
-            this.form.environments.splice(index, 1);
         },
         loadGroupEnvironmentList(query = '') {
             axios

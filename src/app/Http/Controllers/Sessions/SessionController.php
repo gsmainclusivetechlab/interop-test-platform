@@ -9,6 +9,7 @@ use App\Http\Resources\TestRunResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\GroupEnvironment;
 use App\Models\Session;
+use App\Models\TestCase;
 use App\Models\UseCase;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -39,12 +40,12 @@ class SessionController extends Controller
             'sessions' => SessionResource::collection(
                 Session::whereHas('owner', function (Builder $query) {
                     $query
-                        ->whereKey(auth()->user())
+                        ->whereKey(auth()->user()->getAuthIdentifier())
                         ->orWhereHas('groups', function (Builder $query) {
                             $query->whereHas('users', function (
                                 Builder $query
                             ) {
-                                $query->whereKey(auth()->user());
+                                $query->whereKey(auth()->user()->getAuthIdentifier());
                             });
                         });
                 })
@@ -65,10 +66,10 @@ class SessionController extends Controller
                 Builder $query
             ) {
                 $query
-                    ->whereKey(auth()->user())
+                    ->whereKey(auth()->user()->getAuthIdentifier())
                     ->orWhereHas('groups', function (Builder $query) {
                         $query->whereHas('users', function (Builder $query) {
-                            $query->whereKey(auth()->user());
+                            $query->whereKey(auth()->user()->getAuthIdentifier());
                         });
                     });
             })->count(),
@@ -116,6 +117,7 @@ class SessionController extends Controller
     public function edit(Session $session)
     {
         $this->authorize('update', $session);
+        $component = $session->components()->firstOrFail();
 
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource(
@@ -125,12 +127,52 @@ class SessionController extends Controller
                     },
                 ])
             ))->resolve(),
-            'component' => (new ComponentResource(
-                $session->components()->firstOrFail(),
-            ))->resolve(),
+            'component' => (new ComponentResource($component))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::with([
+                    'testCases' => function ($query) use ($component) {
+                        $query
+                            ->whereHas('components', function ($query) use ($component) {
+                                $query->whereKey($component->getKey());
+                            })
+                            ->where('public', true)
+                            ->orWhereHas('owner', function ($query) {
+                                $query->whereKey(auth()->user()->getAuthIdentifier());
+                            })
+                            ->orWhereHas('groups', function ($query) {
+                                $query->whereHas('users', function ($query) {
+                                    $query->whereKey(auth()->user()->getAuthIdentifier());
+                                });
+                            })
+                            ->when(
+                                auth()
+                                    ->user()
+                                    ->can('viewAnyPrivate', TestCase::class),
+                                function ($query) {
+                                    $query->orWhere('public', false);
+                                }
+                            );
+                    },
+                ])
+                    ->whereHas('testCases', function ($query) use ($component) {
+                        $query
+                            ->whereHas('components', function ($query) use ($component) {
+                                $query->whereKey($component->getKey());
+                            })
+                            ->when(
+                                !auth()
+                                    ->user()
+                                    ->can('viewAny', TestCase::class),
+                                function ($query) {
+                                    $query->where('public', true);
+                                }
+                            );
+                    })
+                    ->get()
+            ),
             'hasGroupEnvironments' => GroupEnvironment::whereHas('group', function (Builder $query) {
                 $query->whereHas('users', function (Builder $query) {
-                    $query->whereKey(auth()->user());
+                    $query->whereKey(auth()->user()->getAuthIdentifier());
                 });
             })->exists(),
         ]);
@@ -153,7 +195,10 @@ class SessionController extends Controller
             'environments.*.value' => ['required'],
             'component_id' => ['required', 'exists:components,id'],
             'component_base_url' => ['required', 'url', 'max:255'],
+            'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
+
+        dd($request->input());
 
         try {
             $session = DB::transaction(function () use ($session, $request) {

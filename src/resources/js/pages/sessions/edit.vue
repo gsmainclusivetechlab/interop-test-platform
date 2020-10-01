@@ -4,7 +4,7 @@
             <form class="card" @submit.prevent="submit">
                 <div class="card-header">
                     <h3 class="card-title">
-                        Session info
+                        Update session info
                     </h3>
                 </div>
                 <div class="card-body">
@@ -91,44 +91,28 @@
                             :searchFn="searchGroupEnvironments"
                             v-if="hasGroupEnvironments"
                         />
-                        <ul class="list-group">
-                            <li class="list-group-item" v-for="(environment, index) in form.environments">
-                                <div class="input-group">
-                                    <input
-                                        type="text"
-                                        placeholder="Name"
-                                        class="form-control"
-                                        v-model="environment.name"
-                                        :class="{
-                                                        'is-invalid': collect($page.errors).has(`environments.${index}.name`),
-                                                    }"
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Value"
-                                        class="form-control"
-                                        v-model="environment.value"
-                                        :class="{
-                                                        'is-invalid': collect($page.errors).has(`environments.${index}.value`),
-                                                    }"
-                                    />
-                                    <button type="button" class="btn btn-secondary btn-icon" @click="deleteEnvironment(index)">
-                                        <icon name="trash" />
-                                    </button>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <button type="button" class="btn btn-block btn-secondary" @click="addEnvironment">
-                                    <icon name="plus" />
-                                    Add New
-                                </button>
-                            </li>
-                        </ul>
+                        <environments v-model="form.environments" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.errors.environments"
                         >
                             <strong>{{ $page.errors.environments }}</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-sm-3">
+                            <b>Environments</b>
+                        </label>
+                        <test-case-checkboxes
+                            style="max-height: 320px;"
+                            :useCases="useCases"
+                            v-model="form.test_cases"
+                        />
+                        <div
+                            class="text-danger small mt-3"
+                            v-if="$page.errors.test_cases"
+                        >
+                            <strong>{{ $page.errors.test_cases }}</strong>
                         </div>
                     </div>
                 </div>
@@ -154,13 +138,21 @@
 
 <script>
 import Layout from '@/layouts/sessions/app';
+import Environments from '@/components/environments';
+import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 
 export default {
     components: {
         Layout,
+        Environments,
+        TestCaseCheckboxes,
     },
     props: {
         session: {
+            type: Object,
+            required: true,
+        },
+        useCases: {
             type: Object,
             required: true,
         },
@@ -184,6 +176,7 @@ export default {
                 environments: this.session.environments ?? [],
                 component_id: this.component.id,
                 component_base_url: this.component.base_url,
+                test_cases: collect(this.session.testCases.data).pluck('id').all(),
             },
         };
     },
@@ -208,12 +201,6 @@ export default {
             this.$inertia
                 .put(route('sessions.update', this.session.id), this.form)
                 .then(() => (this.sending = false));
-        },
-        addEnvironment() {
-            this.form.environments.push({name: '', value: ''});
-        },
-        deleteEnvironment(index) {
-            this.form.environments.splice(index, 1);
         },
         loadGroupEnvironmentList(query = '') {
             axios
