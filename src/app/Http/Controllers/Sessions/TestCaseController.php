@@ -7,11 +7,9 @@ use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestRunResource;
-use App\Http\Resources\UseCaseResource;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
 use App\Models\Session;
-use App\Models\UseCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -54,9 +52,6 @@ class TestCaseController extends Controller
                     },
                 ])
             ))->resolve(),
-            'useCases' => UseCaseResource::collection(
-                UseCase::withTestCasesOfSession($session)->get()
-            ),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource

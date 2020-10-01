@@ -1,40 +1,84 @@
 <template>
-    <layout :sut="session.sut" :components="components">
-        <form @submit.prevent="submit" class="col-8 m-auto">
-            <div class="card">
-                <div class="card-header border-0">
-                    <h3 class="card-title">Configure components</h3>
+    <layout :session="session">
+        <div class="col-6 m-auto mt-3">
+            <form class="card" @submit.prevent="submit">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Session info
+                    </h3>
                 </div>
                 <div class="card-body">
-                    <template v-for="connection in sut.connections.data">
-                        <div class="mb-3">
-                            <label class="form-label">
-                                {{ connection.name }}
-                            </label>
-                            <div class="input-group">
-                                <input
-                                    :id="`testing-${connection.id}`"
-                                    type="text"
-                                    :value="
-                                        route('testing.sut', [
-                                            session.info.uuid,
-                                            sut.uuid,
-                                            connection.uuid,
-                                        ])
-                                    "
-                                    class="form-control"
-                                    readonly
-                                />
-                                <clipboard-copy-btn
-                                    :target="`#testing-${connection.id}`"
-                                    title="Copy"
-                                ></clipboard-copy-btn>
-                            </div>
-                        </div>
-                    </template>
                     <div class="mb-3">
-                        <label class="form-label">
-                            Environments
+                        <label class="col-sm-3">
+                            <b>Name</b>
+                        </label>
+                        <input
+                            type="text"
+                            v-model="form.name"
+                            class="form-control"
+                            :class="{
+                                    'is-invalid': $page.errors.name,
+                                }"
+                        />
+                        <span
+                            v-if="$page.errors.name"
+                            class="invalid-feedback"
+                        >
+                            {{ $page.errors.name }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-sm-3">
+                            <b>Description</b>
+                        </label>
+                        <textarea
+                            class="form-control"
+                            rows="5"
+                            v-model="form.description"
+                            :class="{
+                                        'is-invalid': $page.errors.description,
+                                    }"
+                        ></textarea>
+                        <span
+                            v-if="$page.errors.description"
+                            class="invalid-feedback"
+                        >
+                            {{ $page.errors.description }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-sm-3">
+                            <b>SUT</b>
+                        </label>
+                        <input
+                            type="text"
+                            :value="component.name"
+                            readonly
+                            class="form-control"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-sm-3">
+                            <b>SUT URL</b>
+                        </label>
+                        <input
+                            type="text"
+                            v-model="form.component_base_url"
+                            class="form-control"
+                            :class="{
+                                    'is-invalid': $page.errors.component_base_url,
+                                }"
+                        />
+                        <span
+                            v-if="$page.errors.component_base_url"
+                            class="invalid-feedback"
+                        >
+                            {{ $page.errors.component_base_url }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-sm-3">
+                            <b>Environments</b>
                         </label>
                         <selectize
                             v-model="groupEnvironment"
@@ -56,8 +100,8 @@
                                         class="form-control"
                                         v-model="environment.name"
                                         :class="{
-                                                    'is-invalid': collect($page.errors).has(`environments.${index}.name`),
-                                                }"
+                                                        'is-invalid': collect($page.errors).has(`environments.${index}.name`),
+                                                    }"
                                     />
                                     <input
                                         type="text"
@@ -65,8 +109,8 @@
                                         class="form-control"
                                         v-model="environment.value"
                                         :class="{
-                                                    'is-invalid': collect($page.errors).has(`environments.${index}.value`),
-                                                }"
+                                                        'is-invalid': collect($page.errors).has(`environments.${index}.value`),
+                                                    }"
                                     />
                                     <button type="button" class="btn btn-secondary btn-icon" @click="deleteEnvironment(index)">
                                         <icon name="trash" />
@@ -88,28 +132,28 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-between">
-                <inertia-link
-                    :href="route('sessions.register.info')"
-                    class="btn btn-outline-primary"
-                >
-                    Back
-                </inertia-link>
-                <button type="submit" class="btn btn-primary">
+                <div class="card-footer text-right">
+                    <inertia-link
+                        :href="route('sessions.show', session.id)"
+                        class="btn btn-link"
+                    >
+                        Cancel
+                    </inertia-link>
+                    <button type="submit" class="btn btn-primary btn-space">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Confirm
-                </button>
-            </div>
-        </form>
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
     </layout>
 </template>
 
 <script>
-import Layout from '@/layouts/sessions/register';
+import Layout from '@/layouts/sessions/app';
 
 export default {
     components: {
@@ -120,11 +164,7 @@ export default {
             type: Object,
             required: true,
         },
-        sut: {
-            type: Object,
-            required: true,
-        },
-        components: {
+        component: {
             type: Object,
             required: true,
         },
@@ -139,7 +179,11 @@ export default {
             groupEnvironment: null,
             groupEnvironmentsList: [],
             form: {
-                environments: []
+                name: this.session.name,
+                description: this.session.description,
+                environments: this.session.environments ?? [],
+                component_id: this.component.id,
+                component_base_url: this.component.base_url,
             },
         };
     },
@@ -162,7 +206,7 @@ export default {
         submit() {
             this.sending = true;
             this.$inertia
-                .post(route('sessions.register.config.store'), this.form)
+                .put(route('sessions.update', this.session.id), this.form)
                 .then(() => (this.sending = false));
         },
         addEnvironment() {

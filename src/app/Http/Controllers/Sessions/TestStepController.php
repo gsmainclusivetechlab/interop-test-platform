@@ -7,10 +7,8 @@ use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestStepResource;
-use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
 use App\Models\TestCase;
-use App\Models\UseCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -52,9 +50,6 @@ class TestStepController extends Controller
                     },
                 ])
             ))->resolve(),
-            'useCases' => UseCaseResource::collection(
-                UseCase::withTestCasesOfSession($session)->get()
-            ),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource
@@ -92,9 +87,6 @@ class TestStepController extends Controller
                     },
                 ])
             ))->resolve(),
-            'useCases' => UseCaseResource::collection(
-                UseCase::withTestCasesOfSession($session)->get()
-            ),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource
