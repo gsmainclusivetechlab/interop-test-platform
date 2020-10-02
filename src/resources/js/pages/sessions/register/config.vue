@@ -39,7 +39,7 @@
                         <selectize
                             v-model="groupEnvironment"
                             class="form-select mb-3"
-                            placeholder="Group environments..."
+                            placeholder="Group environment..."
                             label="name"
                             :keys="['name']"
                             :options="groupEnvironmentsList"
@@ -109,6 +109,7 @@ export default {
             groupEnvironment: null,
             groupEnvironmentsList: [],
             form: {
+                group_environment_id: null,
                 environments: []
             },
         };
@@ -117,6 +118,7 @@ export default {
         groupEnvironment: {
             immediate: true,
             handler: function (value) {
+                this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     let environments = [];
                     environments = environments.concat(value.variables);

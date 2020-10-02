@@ -19,6 +19,7 @@ class SessionResource extends JsonResource
             'description' => $this->description,
             'environments' => $this->environments,
             'owner' => new UserResource($this->whenLoaded('owner')),
+            'groupEnvironment' => new GroupEnvironmentResource($this->whenLoaded('groupEnvironment')),
             'components' => ComponentResource::collection(
                 $this->whenLoaded('components')
             ),

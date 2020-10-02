@@ -21,7 +21,7 @@ class Session extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'name', 'description', 'environments'];
+    protected $fillable = ['uuid', 'name', 'description', 'group_environment_id', 'environments'];
 
     /**
      * @var array
@@ -36,6 +36,14 @@ class Session extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function groupEnvironment()
+    {
+        return $this->belongsTo(GroupEnvironment::class, 'group_environment_id');
     }
 
     /**
