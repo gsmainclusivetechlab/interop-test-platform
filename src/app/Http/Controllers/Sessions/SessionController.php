@@ -198,15 +198,45 @@ class SessionController extends Controller
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
 
-        dd($request->input());
-
         try {
             $session = DB::transaction(function () use ($session, $request) {
                 $session->update($request->input());
+
                 $session->components()
                     ->updateExistingPivot($request->input('component_id'), [
                         'base_url' => $request->input('component_base_url'),
                     ]);
+
+                $session->testCasesWithSoftDeletes()
+                    ->whereKey($request->input('test_cases'))
+                    ->each(function ($testCase) {
+                        $testCase->pivot->update(['deleted_at' => null]);
+                    });
+
+                $session->testCasesWithSoftDeletes()
+                    ->whereKeyNot($request->input('test_cases'))
+                    ->whereHas('testRunsWithSoftDeletesTestCases', function ($query) use ($session) {
+                        $query->where('session_id', $session->getKey());
+                    })
+                    ->each(function ($testCase) {
+                        $testCase->pivot->update(['deleted_at' => $testCase->fromDateTime($testCase->freshTimestamp())]);
+                    });
+
+                $session->testCasesWithSoftDeletes()
+                    ->whereKeyNot($request->input('test_cases'))
+                    ->whereDoesntHave('testRunsWithSoftDeletesTestCases', function ($query) use ($session) {
+                        $query->where('session_id', $session->getKey());
+                    })
+                    ->each(function ($testCase) use ($session) {
+                        $testCase->pivot->delete();
+                    });
+
+                $session->testCasesWithSoftDeletes()
+                    ->attach(
+                        collect($request->input('test_cases'))
+                            ->diff($session->testCasesWithSoftDeletes()->pluck('id'))
+                            ->all()
+                    );
 
                 return $session;
             });

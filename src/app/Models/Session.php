@@ -100,7 +100,7 @@ class Session extends Model
             'session_test_cases',
             'session_id',
             'test_case_id'
-        )->using(SessionTestCase::class)->withPivot(['deleted_at'])->wherePivot('deleted_at', null);
+        )->withPivot(['deleted_at'])->wherePivot('deleted_at', null);
     }
 
     /**
@@ -113,7 +113,7 @@ class Session extends Model
             'session_test_cases',
             'session_id',
             'test_case_id'
-        )->using(SessionTestCase::class);
+        )->withPivot(['deleted_at']);
     }
 
     /**
