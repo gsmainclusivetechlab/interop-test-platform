@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\Groups;
 
-use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\SessionResource;
-use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -62,6 +58,16 @@ class GroupController extends Controller
             'sessions' => SessionResource::collection(
                 $group
                     ->sessions()
+                    ->whereHas('owner', function (Builder $query) {
+                        $query->when(request('q'), function (Builder $query, $q) {
+                            $query
+                                ->whereRaw(
+                                    'CONCAT(first_name, " ", last_name) like ?',
+                                    "%{$q}%"
+                                )
+                                ->orWhere('name', 'like', "%{$q}%");
+                        });
+                    })
                     ->with([
                         'owner',
                         'testCases' => function ($query) {
@@ -72,46 +78,9 @@ class GroupController extends Controller
                     ->latest()
                     ->paginate()
             ),
-            'users' => GroupUserResource::collection(
-                $group
-                    ->users()
-                    ->latest()
-                    ->get()
-            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
         ]);
-    }
-
-    /**
-     * @param Group $group
-     * @return AnonymousResourceCollection
-     * @throws AuthorizationException
-     */
-    public function userCandidates(Group $group)
-    {
-        $this->authorize('invite', $group);
-
-        return UserResource::collection(
-            User::when(request('q'), function (Builder $query, $q) use (
-                $group
-            ) {
-                $query->whereRaw(
-                    'CONCAT(first_name, " ", last_name) like ?',
-                    "%{$q}%"
-                );
-            })
-                ->where(function (Builder $query) use ($group) {
-                    $domains = (array) explode(', ', $group->domain);
-                    foreach ($domains as $domain) {
-                        $query->orWhere('email', 'like', "%{$domain}");
-                    }
-                })
-                ->whereDoesntHave('groups', function (Builder $query) use (
-                    $group
-                ) {
-                    $query->whereKey($group);
-                })
-                ->latest()
-                ->paginate()
-        );
     }
 }

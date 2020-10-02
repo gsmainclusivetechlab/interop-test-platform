@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Sessions;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Resources\ComponentResource;
+use App\Http\Resources\GroupEnvironmentResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\Component;
+use App\Models\GroupEnvironment;
 use App\Models\TestCase;
 use App\Models\UseCase;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -87,11 +91,11 @@ class RegisterController extends Controller
                             })
                             ->where('public', true)
                             ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(auth()->user());
+                                $query->whereKey(auth()->user()->getAuthIdentifier());
                             })
                             ->orWhereHas('groups', function ($query) {
                                 $query->whereHas('users', function ($query) {
-                                    $query->whereKey(auth()->user());
+                                    $query->whereKey(auth()->user()->getAuthIdentifier());
                                 });
                             })
                             ->when(
@@ -167,6 +171,11 @@ class RegisterController extends Controller
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
+            'hasGroupEnvironments' => GroupEnvironment::whereHas('group', function (Builder $query) {
+                    $query->whereHas('users', function (Builder $query) {
+                        $query->whereKey(auth()->user()->getAuthIdentifier());
+                    });
+                })->exists(),
         ]);
     }
 
@@ -176,12 +185,22 @@ class RegisterController extends Controller
      */
     public function storeConfig(Request $request)
     {
+        $request->validate([
+            'group_environment_id' => ['nullable', 'exists:group_environments,id'],
+            'environments.*.name' => ['required'],
+            'environments.*.value' => ['required'],
+        ]);
+
         try {
             $session = DB::transaction(function () use ($request) {
                 $session = auth()
                     ->user()
                     ->sessions()
-                    ->create($request->session()->get('session.info'));
+                    ->create(
+                        collect($request->session()->get('session.info'))
+                            ->merge($request->input())
+                            ->all()
+                    );
                 $session
                     ->testCases()
                     ->attach(
@@ -203,5 +222,27 @@ class RegisterController extends Controller
                 ->back()
                 ->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function groupEnvironmentCandidates()
+    {
+        return GroupEnvironmentResource::collection(
+            GroupEnvironment::when(request('q'), function (Builder $query, $q) {
+                $query->whereRaw(
+                    'name like ?',
+                    "%{$q}%"
+                );
+            })
+                ->whereHas('group', function (Builder $query) {
+                    $query->whereHas('users', function (Builder $query) {
+                        $query->whereKey(auth()->user()->getAuthIdentifier());
+                    });
+                })
+                ->latest()
+                ->paginate()
+        );
     }
 }

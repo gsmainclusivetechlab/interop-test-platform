@@ -13,6 +13,16 @@
                         <icon name="search" />
                     </span>
                 </form>
+                <div class="card-options">
+                    <inertia-link
+                        :href="route('groups.environments.create', group.id)"
+                        v-if="group.can.admin"
+                        class="btn btn-primary"
+                    >
+                        <icon name="plus" />
+                        New Environment
+                    </inertia-link>
+                </div>
             </div>
             <div class="table-responsive mb-0">
                 <table
@@ -20,67 +30,22 @@
                 >
                     <thead>
                     <tr>
-                        <th class="text-nowrap w-25">Name</th>
-                        <th class="text-nowrap w-auto">Owner</th>
-                        <th class="text-nowrap w-auto">
-                            Use Cases
-                        </th>
-                        <th class="text-nowrap w-auto">
-                            Test Cases
-                        </th>
-                        <th class="text-nowrap w-25">Status</th>
-                        <th class="text-nowrap w-auto">Last Run</th>
+                        <th class="text-nowrap">Name</th>
+                        <th class="text-nowrap w-auto">Variables</th>
                         <th class="text-nowrap w-1"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="session in sessions.data">
+                    <tr v-for="environment in environments.data">
                         <td class="text-break">
-                            <inertia-link
-                                :href="
-                                                route(
-                                                    'sessions.show',
-                                                    session.id
-                                                )
-                                            "
-                            >
-                                {{ session.name }}
-                            </inertia-link>
+                            {{ environment.name }}
                         </td>
                         <td class="text-break">
-                            {{ session.owner.name }}
-                        </td>
-                        <td>
-                            {{
-                                session.testCases
-                                    ? collect(session.testCases)
-                                        .unique('use_case_id')
-                                        .count()
-                                    : 0
-                            }}
-                        </td>
-                        <td>
-                            {{
-                                session.testCases
-                                    ? session.testCases.length
-                                    : 0
-                            }}
-                        </td>
-                        <td>
-                            <session-progress
-                                :testCases="session.testCases"
-                            />
-                        </td>
-                        <td>
-                            {{
-                                session.lastTestRun
-                                    ? session.lastTestRun.created_at
-                                    : ''
-                            }}
+                            {{ environment.variables.length }}
                         </td>
                         <td class="text-center text-break">
                             <b-dropdown
-                                v-if="session.can.delete"
+                                v-if="environment.can.update || environment.can.delete"
                                 no-caret
                                 right
                                 toggle-class="align-items-center text-muted"
@@ -92,18 +57,31 @@
                                         name="dots-vertical"
                                     ></icon>
                                 </template>
-                                <li v-if="session.can.delete">
+                                <li v-if="environment.can.update">
+                                    <inertia-link
+                                        class="dropdown-item"
+                                        :href="
+                                                route(
+                                                    'groups.environments.edit',
+                                                    [group.id, environment.id]
+                                                )
+                                            "
+                                    >
+                                        Edit
+                                    </inertia-link>
+                                </li>
+                                <li v-if="environment.can.delete">
                                     <confirm-link
                                         class="dropdown-item"
                                         :href="
                                                         route(
-                                                            'sessions.destroy',
-                                                            session.id
+                                                            'groups.environments.destroy',
+                                                            [group.id, environment.id]
                                                         )
                                                     "
                                         method="delete"
                                         :confirm-title="'Confirm delete'"
-                                        :confirm-text="`Are you sure you want to delete ${session.name}?`"
+                                        :confirm-text="`Are you sure you want to delete ${environment.name}?`"
                                     >
                                         Delete
                                     </confirm-link>
@@ -111,8 +89,8 @@
                             </b-dropdown>
                         </td>
                     </tr>
-                    <tr v-if="!sessions.data.length">
-                        <td class="text-center" colspan="7">
+                    <tr v-if="!environments.data.length">
+                        <td class="text-center" colspan="5">
                             No Results
                         </td>
                     </tr>
@@ -120,8 +98,8 @@
                 </table>
             </div>
             <pagination
-                :meta="sessions.meta"
-                :links="sessions.links"
+                :meta="environments.meta"
+                :links="environments.links"
                 class="card-footer"
             />
         </div>
@@ -130,19 +108,17 @@
 
 <script>
 import Layout from '@/layouts/groups/main';
-import SessionProgress from '@/components/sessions/progress';
 
 export default {
     components: {
         Layout,
-        SessionProgress,
     },
     props: {
         group: {
             type: Object,
             required: true,
         },
-        sessions: {
+        environments: {
             type: Object,
             required: true,
         },
@@ -160,7 +136,7 @@ export default {
     },
     methods: {
         search() {
-            this.$inertia.replace(route('groups.show', this.group.id), {
+            this.$inertia.replace(route('groups.environments.index', this.group.id), {
                 data: this.form,
             });
         },

@@ -6,7 +6,7 @@
                     <h3 class="card-title">Configure components</h3>
                 </div>
                 <div class="card-body">
-                    <div v-for="connection in sut.connections.data">
+                    <template v-for="connection in sut.connections.data">
                         <div class="mb-3">
                             <label class="form-label">
                                 {{ connection.name }}
@@ -30,6 +30,29 @@
                                     title="Copy"
                                 ></clipboard-copy-btn>
                             </div>
+                        </div>
+                    </template>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Environments
+                        </label>
+                        <selectize
+                            v-model="groupEnvironment"
+                            class="form-select mb-3"
+                            placeholder="Group environment..."
+                            label="name"
+                            :keys="['name']"
+                            :options="groupEnvironmentsList"
+                            :createItem="false"
+                            :searchFn="searchGroupEnvironments"
+                            v-if="hasGroupEnvironments"
+                        />
+                        <environments v-model="form.environments" />
+                        <div
+                            class="text-danger small mt-2"
+                            v-if="$page.errors.environments"
+                        >
+                            <strong>{{ $page.errors.environments }}</strong>
                         </div>
                     </div>
                 </div>
@@ -55,10 +78,12 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
+import Environments from '@/components/environments';
 
 export default {
     components: {
         Layout,
+        Environments,
     },
     props: {
         session: {
@@ -73,12 +98,37 @@ export default {
             type: Object,
             required: true,
         },
+        hasGroupEnvironments: {
+            type: Boolean,
+            required: true,
+        }
     },
     data() {
         return {
             sending: false,
-            form: {},
+            groupEnvironment: null,
+            groupEnvironmentsList: [],
+            form: {
+                group_environment_id: null,
+                environments: []
+            },
         };
+    },
+    watch: {
+        groupEnvironment: {
+            immediate: true,
+            handler: function (value) {
+                this.form.group_environment_id = value ? value.id : null;
+                if (value !== null) {
+                    let environments = [];
+                    environments = environments.concat(value.variables);
+                    this.form.environments = environments;
+                }
+            },
+        },
+    },
+    mounted() {
+        this.loadGroupEnvironmentList();
     },
     methods: {
         submit() {
@@ -86,6 +136,19 @@ export default {
             this.$inertia
                 .post(route('sessions.register.config.store'), this.form)
                 .then(() => (this.sending = false));
+        },
+        loadGroupEnvironmentList(query = '') {
+            axios
+                .get(route('sessions.register.group-environment-candidates'), {
+                    params: { q: query },
+                })
+                .then((result) => {
+                    this.groupEnvironmentsList = result.data.data;
+                });
+        },
+        searchGroupEnvironments(query, callback) {
+            this.loadGroupEnvironmentList(query);
+            callback();
         },
     },
 };

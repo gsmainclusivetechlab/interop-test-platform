@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ComponentResource extends JsonResource
+class GroupEnvironmentResource extends JsonResource
 {
     /**
      * @param  \Illuminate\Http\Request  $request
@@ -14,15 +14,8 @@ class ComponentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'uuid' => $this->uuid,
             'name' => $this->name,
-            'base_url' => $this->whenPivotLoaded('session_components', function () {
-                return $this->pivot->base_url;
-            }, $this->base_url),
-            'position' => $this->position,
-            'connections' => static::collection(
-                $this->whenLoaded('connections')
-            ),
+            'variables' => $this->variables,
             'can' => [
                 'update' => auth()
                     ->user()

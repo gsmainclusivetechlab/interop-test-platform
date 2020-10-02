@@ -31,7 +31,7 @@ class SessionPolicy
             $user
                 ->groups()
                 ->whereHas('users', function ($query) use ($model) {
-                    $query->whereKey($model->owner);
+                    $query->whereKey($model->owner->getKey());
                 })
                 ->exists();
     }
