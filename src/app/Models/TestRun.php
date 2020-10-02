@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin \Eloquent
@@ -45,6 +47,22 @@ class TestRun extends Model
      * @var array
      */
     protected $observables = ['complete'];
+
+    /**
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('session_test_case', function (Builder $builder) {
+            $builder->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('session_test_cases')
+                    ->where('session_test_cases.deleted_at', null)
+                    ->whereColumn('session_test_cases.session_id', 'test_runs.session_id')
+                    ->whereColumn('session_test_cases.test_case_id', 'test_runs.test_case_id');
+            });
+        });
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
