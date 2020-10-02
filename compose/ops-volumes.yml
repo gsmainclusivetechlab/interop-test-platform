@@ -2,6 +2,9 @@
 version: '3.7'
 
 services:
+  dusk:
+    volumes:
+      - ./src:/var/www/html
   test:
     volumes:
       - ./src:/var/www/html
