@@ -186,6 +186,7 @@ class RegisterController extends Controller
     public function storeConfig(Request $request)
     {
         $request->validate([
+            'group_environment_id' => ['nullable', 'exists:group_environments,id'],
             'environments.*.name' => ['required'],
             'environments.*.value' => ['required'],
         ]);

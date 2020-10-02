@@ -125,6 +125,7 @@ class SessionController extends Controller
                     'testCases' => function ($query) {
                         return $query->with(['useCase', 'lastTestRun']);
                     },
+                    'groupEnvironment',
                 ])
             ))->resolve(),
             'component' => (new ComponentResource($component))->resolve(),
@@ -191,6 +192,7 @@ class SessionController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
+            'group_environment_id' => ['nullable', 'exists:group_environments,id'],
             'environments.*.name' => ['required'],
             'environments.*.value' => ['required'],
             'component_id' => ['required', 'exists:components,id'],

@@ -85,7 +85,7 @@
                                 <selectize
                                     v-model="groupEnvironment"
                                     class="form-select mb-3"
-                                    placeholder="Group environments..."
+                                    placeholder="Group environment..."
                                     label="name"
                                     :keys="['name']"
                                     :options="groupEnvironmentsList"
@@ -174,11 +174,12 @@ export default {
     data() {
         return {
             sending: false,
-            groupEnvironment: null,
+            groupEnvironment: this.session.groupEnvironment ? this.session.groupEnvironment.data : null,
             groupEnvironmentsList: [],
             form: {
                 name: this.session.name,
                 description: this.session.description,
+                group_environment_id: this.session.groupEnvironment ? this.session.groupEnvironment.data.id : null,
                 environments: this.session.environments ?? [],
                 component_id: this.component.id,
                 component_base_url: this.component.base_url,
@@ -188,8 +189,9 @@ export default {
     },
     watch: {
         groupEnvironment: {
-            immediate: true,
+            immediate: false,
             handler: function (value) {
+                this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     let environments = [];
                     environments = environments.concat(value.variables);

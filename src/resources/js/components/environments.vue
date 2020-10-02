@@ -42,6 +42,12 @@ export default {
         };
     },
     watch: {
+        value: {
+            immediate: true,
+            handler: function (value) {
+                this.environments = value;
+            },
+        },
         environments: {
             immediate: true,
             handler: function (value) {
