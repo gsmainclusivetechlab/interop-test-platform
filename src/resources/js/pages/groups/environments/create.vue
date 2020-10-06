@@ -92,7 +92,7 @@ export default {
             sending: false,
             form: {
                 name: null,
-                variables: [],
+                variables: null,
             },
         };
     },

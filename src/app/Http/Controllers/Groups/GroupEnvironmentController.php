@@ -74,9 +74,7 @@ class GroupEnvironmentController extends Controller
         $this->authorize('admin', $group);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'variables' => ['required'],
-            'variables.*.name' => ['required'],
-            'variables.*.value' => ['required'],
+            'variables' => ['required', 'array'],
         ]);
         $group->environments()->create($request->input());
 
@@ -120,9 +118,7 @@ class GroupEnvironmentController extends Controller
         $this->authorize('update', $group);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'variables' => ['required'],
-            'variables.*.name' => ['required'],
-            'variables.*.value' => ['required'],
+            'variables' => ['required', 'array'],
         ]);
         $environment->update($request->input());
 
