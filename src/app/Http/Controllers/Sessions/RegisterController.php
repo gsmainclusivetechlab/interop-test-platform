@@ -187,8 +187,7 @@ class RegisterController extends Controller
     {
         $request->validate([
             'group_environment_id' => ['nullable', 'exists:group_environments,id'],
-            'environments.*.name' => ['required'],
-            'environments.*.value' => ['required'],
+            'environments' => ['nullable', 'array'],
         ]);
 
         try {

@@ -47,7 +47,7 @@
                             :searchFn="searchGroupEnvironments"
                             v-if="hasGroupEnvironments"
                         />
-                        <environments v-model="form.environments" />
+                        <environments v-model="form.environments" ref="environments" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.errors.environments"
@@ -110,7 +110,7 @@ export default {
             groupEnvironmentsList: [],
             form: {
                 group_environment_id: null,
-                environments: []
+                environments: null,
             },
         };
     },
@@ -120,9 +120,8 @@ export default {
             handler: function (value) {
                 this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
-                    let environments = [];
-                    environments = environments.concat(value.variables);
-                    this.form.environments = environments;
+                    this.form.environments = value.variables;
+                    this.$refs.environments.syncEnvironment(this.form.environments);
                 }
             },
         },

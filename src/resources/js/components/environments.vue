@@ -4,9 +4,9 @@
             <div class="input-group">
                 <input
                     type="text"
-                    placeholder="Name"
+                    placeholder="Key"
                     class="form-control"
-                    v-model="environment.name"
+                    v-model="environment.key"
                 />
                 <input
                     type="text"
@@ -32,32 +32,32 @@
 export default {
     props: {
         value: {
-            type: Array,
+            type: Object,
             required: false,
         },
     },
     data() {
         return {
-            environments: this.value,
+            environments: [],
         };
     },
     watch: {
-        value: {
-            immediate: true,
-            handler: function (value) {
-                this.environments = value;
-            },
-        },
-        environments: {
-            immediate: true,
-            handler: function (value) {
-                this.$emit('input', value);
-            },
+        environments: function (value) {
+            this.$emit('input', collect(value).filter((item) => item.key).mapWithKeys(item => [item.key, item.value]).all());
         },
     },
+    mounted() {
+        this.syncEnvironment(this.value);
+    },
     methods: {
+        syncEnvironment(value) {
+            this.environments = [];
+            for (let key in value) {
+                this.environments.push({key: key, value: value[key]})
+            }
+        },
         addEnvironment() {
-            this.environments.push({name: '', value: ''});
+            this.environments.push([]);
         },
         deleteEnvironment(index) {
             this.environments.splice(index, 1);

@@ -44,6 +44,7 @@ class MapResponseHandler
             }
         }
 
+        $testResponse = $testResponse->withSubstitutions($this->testResult->session->environments());
         $this->testResult->update(['response' => $testResponse]);
 
         return $testResponse->toPsrResponse();
