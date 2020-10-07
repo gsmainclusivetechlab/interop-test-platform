@@ -2,11 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
-use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
-use App\Http\Controllers\Testing\PendingRequest;
+use App\Http\Controllers\Testing\ProcessPendingRequest;
 use App\Http\Headers\TraceparentHeader;
 use App\Models\Session;
 use App\Models\TestCase;
@@ -76,12 +72,6 @@ class ExecuteTestRunJob implements ShouldQueue
                 )
             );
 
-        (new PendingRequest())
-            ->mapRequest(new MapRequestHandler($testResult))
-            ->mapResponse(new MapResponseHandler($testResult))
-            ->transfer($request)
-            ->then(new SendingFulfilledHandler($testResult))
-            ->otherwise(new SendingRejectedHandler($testResult))
-            ->wait();
+        (new ProcessPendingRequest($request, $testResult))();
     }
 }

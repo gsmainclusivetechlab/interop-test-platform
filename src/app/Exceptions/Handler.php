@@ -53,6 +53,10 @@ class Handler extends ExceptionHandler
         return parent::renderHttpException($e);
     }
 
+    /**
+     * @param Throwable $e
+     * @return MessageMismatchException|ModelNotFoundException|mixed|Throwable
+     */
     private function coerceToMessageMismatch(Throwable $e)
     {
         if ($e instanceof ModelNotFoundException) {
@@ -81,7 +85,7 @@ class Handler extends ExceptionHandler
 
     /**
      * @param Throwable $e
-     * @throws \Exception
+     * @throws \Exception|Throwable
      */
     public function report(Throwable $e)
     {
@@ -129,13 +133,11 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param Throwable $e
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
      */
-
     public function render($request, Throwable $e)
     {
         $e = $this->coerceToMessageMismatch($e);
