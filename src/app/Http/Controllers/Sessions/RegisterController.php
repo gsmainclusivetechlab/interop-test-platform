@@ -89,23 +89,39 @@ class RegisterController extends Controller
                                         ->get('session.sut.component_id')
                                 );
                             })
-                            ->where('public', true)
-                            ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(auth()->user()->getAuthIdentifier());
-                            })
-                            ->orWhereHas('groups', function ($query) {
-                                $query->whereHas('users', function ($query) {
-                                    $query->whereKey(auth()->user()->getAuthIdentifier());
-                                });
-                            })
-                            ->when(
-                                auth()
-                                    ->user()
-                                    ->can('viewAnyPrivate', TestCase::class),
-                                function ($query) {
-                                    $query->orWhere('public', false);
-                                }
-                            );
+                            ->where(function ($query) {
+                                $query
+                                    ->where('public', true)
+                                    ->orWhereHas('owner', function ($query) {
+                                        $query->whereKey(
+                                            auth()
+                                                ->user()
+                                                ->getAuthIdentifier()
+                                        );
+                                    })
+                                    ->orWhereHas('groups', function ($query) {
+                                        $query->whereHas('users', function (
+                                            $query
+                                        ) {
+                                            $query->whereKey(
+                                                auth()
+                                                    ->user()
+                                                    ->getAuthIdentifier()
+                                            );
+                                        });
+                                    })
+                                    ->when(
+                                        auth()
+                                            ->user()
+                                            ->can(
+                                                'viewAnyPrivate',
+                                                TestCase::class
+                                            ),
+                                        function ($query) {
+                                            $query->orWhere('public', false);
+                                        }
+                                    );
+                            });
                     },
                 ])
                     ->whereHas('testCases', function ($query) {
@@ -171,11 +187,18 @@ class RegisterController extends Controller
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
-            'hasGroupEnvironments' => GroupEnvironment::whereHas('group', function (Builder $query) {
+            'hasGroupEnvironments' => GroupEnvironment::whereHas(
+                'group',
+                function (Builder $query) {
                     $query->whereHas('users', function (Builder $query) {
-                        $query->whereKey(auth()->user()->getAuthIdentifier());
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
                     });
-                })->exists(),
+                }
+            )->exists(),
         ]);
     }
 
@@ -186,7 +209,10 @@ class RegisterController extends Controller
     public function storeConfig(Request $request)
     {
         $request->validate([
-            'group_environment_id' => ['nullable', 'exists:group_environments,id'],
+            'group_environment_id' => [
+                'nullable',
+                'exists:group_environments,id',
+            ],
             'environments' => ['nullable', 'array'],
         ]);
 
@@ -230,14 +256,15 @@ class RegisterController extends Controller
     {
         return GroupEnvironmentResource::collection(
             GroupEnvironment::when(request('q'), function (Builder $query, $q) {
-                $query->whereRaw(
-                    'name like ?',
-                    "%{$q}%"
-                );
+                $query->whereRaw('name like ?', "%{$q}%");
             })
                 ->whereHas('group', function (Builder $query) {
                     $query->whereHas('users', function (Builder $query) {
-                        $query->whereKey(auth()->user()->getAuthIdentifier());
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
                     });
                 })
                 ->latest()
