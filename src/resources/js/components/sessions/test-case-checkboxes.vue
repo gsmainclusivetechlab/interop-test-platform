@@ -1,17 +1,10 @@
 <template>
-    <ul
-        class="list-group overflow-auto"
-    >
-        <li
-            class="list-group-item"
-            v-for="useCase in useCases.data"
-        >
+    <ul class="list-group overflow-auto">
+        <li class="list-group-item" v-for="useCase in useCases.data">
             <div class="d-flex align-items-center">
                 <b
                     class="dropdown-toggle"
-                    v-b-toggle="
-                                                `use-case-${useCase.id}`
-                                            "
+                    v-b-toggle="`use-case-${useCase.id}`"
                 >
                     {{ useCase.name }}
                 </b>
@@ -24,41 +17,27 @@
                 </button>
             </div>
 
-            <b-collapse
-                :id="`use-case-${useCase.id}`"
-                visible
-            >
+            <b-collapse :id="`use-case-${useCase.id}`" visible>
                 <ul
                     class="list-group"
                     v-if="
-                                                collect(useCase.testCases)
-                                                    .where(
-                                                        'behavior',
-                                                        'positive'
-                                                    )
-                                                    .count()
-                                            "
+                        collect(useCase.testCases)
+                            .where('behavior', 'positive')
+                            .count()
+                    "
                 >
-                    <li
-                        class="list-group-item border-0 py-0"
-                    >
-                        <div
-                            class="d-flex align-items-center"
-                        >
-                                                    <span
-                                                        class="d-inline-block dropdown-toggle py-2 font-weight-medium"
-                                                        v-b-toggle="
-                                                            `positive-test-cases-${useCase.id}`
-                                                        "
-                                                    >
-                                                        Happy flow
-                                                    </span>
+                    <li class="list-group-item border-0 py-0">
+                        <div class="d-flex align-items-center">
+                            <span
+                                class="d-inline-block dropdown-toggle py-2 font-weight-medium"
+                                v-b-toggle="`positive-test-cases-${useCase.id}`"
+                            >
+                                Happy flow
+                            </span>
                             <button
                                 type="button"
                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
-                                @click.prevent="
-                                                            toggleCheckboxes
-                                                        "
+                                @click.prevent="toggleCheckboxes"
                             >
                                 <icon name="checkbox" />
                             </button>
@@ -72,41 +51,26 @@
                                 <li
                                     class="list-group-item"
                                     v-for="testCase in collect(
-                                                                useCase.testCases
-                                                            )
-                                                                .where(
-                                                                    'behavior',
-                                                                    'positive'
-                                                                )
-                                                                .all()"
+                                        useCase.testCases
+                                    )
+                                        .where('behavior', 'positive')
+                                        .all()"
                                 >
-                                    <label
-                                        class="form-check mb-0"
-                                    >
+                                    <label class="form-check mb-0">
                                         <input
-                                            :value="
-                                                                        testCase.id
-                                                                    "
-                                            v-model="
-                                                                        testCases
-                                                                    "
+                                            :value="testCase.id"
+                                            v-model="testCases"
                                             type="checkbox"
                                             class="form-check-input"
                                         />
-                                        <span
-                                            class="form-check-label"
-                                        >
-                                                                    {{
-                                                testCase.name
-                                            }}
-                                                                    <icon
-                                                                        name="lock"
-                                                                        v-if="
-                                                                            !testCase.public
-                                                                        "
-                                                                        class="text-muted"
-                                                                    />
-                                                                </span>
+                                        <span class="form-check-label">
+                                            {{ testCase.name }}
+                                            <icon
+                                                name="lock"
+                                                v-if="!testCase.public"
+                                                class="text-muted"
+                                            />
+                                        </span>
                                     </label>
                                 </li>
                             </ul>
@@ -117,34 +81,23 @@
                 <ul
                     class="list-group"
                     v-if="
-                                                collect(useCase.testCases)
-                                                    .where(
-                                                        'behavior',
-                                                        'negative'
-                                                    )
-                                                    .count()
-                                            "
+                        collect(useCase.testCases)
+                            .where('behavior', 'negative')
+                            .count()
+                    "
                 >
-                    <li
-                        class="list-group-item border-0 py-0"
-                    >
-                        <div
-                            class="d-flex align-items-center"
-                        >
-                                                    <span
-                                                        class="d-inline-block dropdown-toggle py-2 font-weight-medium"
-                                                        v-b-toggle="
-                                                            `negative-test-cases-${useCase.id}`
-                                                        "
-                                                    >
-                                                        Unhappy flow
-                                                    </span>
+                    <li class="list-group-item border-0 py-0">
+                        <div class="d-flex align-items-center">
+                            <span
+                                class="d-inline-block dropdown-toggle py-2 font-weight-medium"
+                                v-b-toggle="`negative-test-cases-${useCase.id}`"
+                            >
+                                Unhappy flow
+                            </span>
                             <button
                                 type="button"
                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
-                                @click.prevent="
-                                                            toggleCheckboxes
-                                                        "
+                                @click.prevent="toggleCheckboxes"
                             >
                                 <icon name="checkbox" />
                             </button>
@@ -158,41 +111,26 @@
                                 <li
                                     class="list-group-item"
                                     v-for="testCase in collect(
-                                                                useCase.testCases
-                                                            )
-                                                                .where(
-                                                                    'behavior',
-                                                                    'negative'
-                                                                )
-                                                                .all()"
+                                        useCase.testCases
+                                    )
+                                        .where('behavior', 'negative')
+                                        .all()"
                                 >
-                                    <label
-                                        class="form-check mb-0"
-                                    >
+                                    <label class="form-check mb-0">
                                         <input
-                                            :value="
-                                                                        testCase.id
-                                                                    "
-                                            v-model="
-                                                                        testCases
-                                                                    "
+                                            :value="testCase.id"
+                                            v-model="testCases"
                                             type="checkbox"
                                             class="form-check-input"
                                         />
-                                        <span
-                                            class="form-check-label"
-                                        >
-                                                                    {{
-                                                testCase.name
-                                            }}
-                                                                    <icon
-                                                                        name="lock"
-                                                                        v-if="
-                                                                            !testCase.public
-                                                                        "
-                                                                        class="text-muted"
-                                                                    />
-                                                                </span>
+                                        <span class="form-check-label">
+                                            {{ testCase.name }}
+                                            <icon
+                                                name="lock"
+                                                v-if="!testCase.public"
+                                                class="text-muted"
+                                            />
+                                        </span>
                                     </label>
                                 </li>
                             </ul>

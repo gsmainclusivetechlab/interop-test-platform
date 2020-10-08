@@ -53,13 +53,22 @@ class TestRun extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope('session_test_case', function (Builder $builder) {
+        static::addGlobalScope('session_test_case', function (
+            Builder $builder
+        ) {
             $builder->whereExists(function ($query) {
-                $query->select(DB::raw(1))
+                $query
+                    ->select(DB::raw(1))
                     ->from('session_test_cases')
                     ->where('session_test_cases.deleted_at', null)
-                    ->whereColumn('session_test_cases.session_id', 'test_runs.session_id')
-                    ->whereColumn('session_test_cases.test_case_id', 'test_runs.test_case_id');
+                    ->whereColumn(
+                        'session_test_cases.session_id',
+                        'test_runs.session_id'
+                    )
+                    ->whereColumn(
+                        'session_test_cases.test_case_id',
+                        'test_runs.test_case_id'
+                    );
             });
         });
     }

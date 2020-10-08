@@ -21,7 +21,13 @@ class Session extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'name', 'description', 'group_environment_id', 'environments'];
+    protected $fillable = [
+        'uuid',
+        'name',
+        'description',
+        'group_environment_id',
+        'environments',
+    ];
 
     /**
      * @var array
@@ -43,7 +49,10 @@ class Session extends Model
      */
     public function groupEnvironment()
     {
-        return $this->belongsTo(GroupEnvironment::class, 'group_environment_id');
+        return $this->belongsTo(
+            GroupEnvironment::class,
+            'group_environment_id'
+        );
     }
 
     /**
@@ -108,7 +117,9 @@ class Session extends Model
             'session_test_cases',
             'session_id',
             'test_case_id'
-        )->withPivot(['deleted_at'])->wherePivot('deleted_at', null);
+        )
+            ->withPivot(['deleted_at'])
+            ->wherePivot('deleted_at', null);
     }
 
     /**
@@ -149,13 +160,19 @@ class Session extends Model
                 Component::where('name', 'Service Provider')->firstOrFail()
             ),
             'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Mobile Money Operator 1')->firstOrFail()
+                Component::where(
+                    'name',
+                    'Mobile Money Operator 1'
+                )->firstOrFail()
             ),
             'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Mojaloop')->firstOrFail()
             ),
             'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Mobile Money Operator 2')->firstOrFail()
+                Component::where(
+                    'name',
+                    'Mobile Money Operator 2'
+                )->firstOrFail()
             ),
             'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
             'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),

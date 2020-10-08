@@ -22,7 +22,10 @@
                             v-bind:key="message.type + message.id"
                         >
                             <td>
-                                <div class="d-flex align-items-center" v-if="message.request">
+                                <div
+                                    class="d-flex align-items-center"
+                                    v-if="message.request"
+                                >
                                     {{ message.request.method }}
                                     {{
                                         message.type === 'MISMATCH'
@@ -64,10 +67,10 @@
                                     <mismatch-modal
                                         :message="message"
                                         :path="
-                                        processMismatchPath(
-                                            message.request.path
-                                        )
-                                    "
+                                            processMismatchPath(
+                                                message.request.path
+                                            )
+                                        "
                                     ></mismatch-modal>
                                 </template>
                             </td>

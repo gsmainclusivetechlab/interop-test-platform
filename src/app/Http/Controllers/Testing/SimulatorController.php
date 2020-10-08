@@ -82,7 +82,7 @@ class SimulatorController extends Controller
                     })
                     ->count()
             )
-            ->firstOr(function () use ($session)  {
+            ->firstOr(function () use ($session) {
                 throw new MessageMismatchException(
                     $session,
                     404,

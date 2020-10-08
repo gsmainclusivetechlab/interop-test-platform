@@ -41,13 +41,17 @@
                                     class="text-danger small mt-2"
                                     v-if="$page.errors.variables"
                                 >
-                                    <strong>{{ $page.errors.variables }}</strong>
+                                    <strong>{{
+                                        $page.errors.variables
+                                    }}</strong>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('groups.environments.index', group.id)"
+                                :href="
+                                    route('groups.environments.index', group.id)
+                                "
                                 class="btn btn-link"
                             >
                                 Cancel

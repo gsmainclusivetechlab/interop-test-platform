@@ -42,7 +42,10 @@ Route::namespace('Groups')->group(function () {
         'groups/{group}/users/{user}/toggle-admin',
         'GroupUserController@toggleAdmin'
     )->name('groups.users.toggle-admin');
-    Route::resource('groups.environments', 'GroupEnvironmentController')->except(['show']);
+    Route::resource(
+        'groups.environments',
+        'GroupEnvironmentController'
+    )->except(['show']);
 });
 
 /**
@@ -55,7 +58,9 @@ Route::name('sessions.')
         Route::get('/', 'SessionController@index')->name('index');
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
-        Route::put('{session}/update', 'SessionController@update')->name('update');
+        Route::put('{session}/update', 'SessionController@update')->name(
+            'update'
+        );
         Route::delete('{session}/destroy', 'SessionController@destroy')->name(
             'destroy'
         );

@@ -122,7 +122,10 @@ class SutController extends Controller
      */
     protected function getComponent(string $componentId, Session $session)
     {
-        return Component::where('uuid', $componentId)->firstOr(function () use ($session, $componentId) {
+        return Component::where('uuid', $componentId)->firstOr(function () use (
+            $session,
+            $componentId
+        ) {
             throw new MessageMismatchException(
                 $session,
                 404,

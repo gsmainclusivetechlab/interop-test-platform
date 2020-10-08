@@ -91,11 +91,19 @@ class RegisterController extends Controller
                             })
                             ->where('public', true)
                             ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(auth()->user()->getAuthIdentifier());
+                                $query->whereKey(
+                                    auth()
+                                        ->user()
+                                        ->getAuthIdentifier()
+                                );
                             })
                             ->orWhereHas('groups', function ($query) {
                                 $query->whereHas('users', function ($query) {
-                                    $query->whereKey(auth()->user()->getAuthIdentifier());
+                                    $query->whereKey(
+                                        auth()
+                                            ->user()
+                                            ->getAuthIdentifier()
+                                    );
                                 });
                             })
                             ->when(
@@ -186,7 +194,10 @@ class RegisterController extends Controller
     public function storeConfig(Request $request)
     {
         $request->validate([
-            'group_environment_id' => ['nullable', 'exists:group_environments,id'],
+            'group_environment_id' => [
+                'nullable',
+                'exists:group_environments,id',
+            ],
             'environments' => ['nullable', 'array'],
         ]);
 
@@ -230,14 +241,15 @@ class RegisterController extends Controller
     {
         return GroupEnvironmentResource::collection(
             GroupEnvironment::when(request('q'), function (Builder $query, $q) {
-                $query->whereRaw(
-                    'name like ?',
-                    "%{$q}%"
-                );
+                $query->whereRaw('name like ?', "%{$q}%");
             })
                 ->whereHas('group', function (Builder $query) {
                     $query->whereHas('users', function (Builder $query) {
-                        $query->whereKey(auth()->user()->getAuthIdentifier());
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
                     });
                 })
                 ->latest()

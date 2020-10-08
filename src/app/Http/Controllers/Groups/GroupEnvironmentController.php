@@ -98,7 +98,9 @@ class GroupEnvironmentController extends Controller
         $this->authorize('update', $environment);
         return Inertia::render('groups/environments/edit', [
             'group' => (new GroupResource($group))->resolve(),
-            'environment' => (new GroupEnvironmentResource($environment))->resolve(),
+            'environment' => (new GroupEnvironmentResource(
+                $environment
+            ))->resolve(),
         ]);
     }
 
@@ -109,8 +111,11 @@ class GroupEnvironmentController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function update(Group $group, GroupEnvironment $environment, Request $request)
-    {
+    public function update(
+        Group $group,
+        GroupEnvironment $environment,
+        Request $request
+    ) {
         $environment = $group
             ->environments()
             ->whereKey($environment->getKey())

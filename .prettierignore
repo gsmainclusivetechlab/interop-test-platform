@@ -13,6 +13,7 @@
 /.buildpath
 /.project
 /.settings
+/.circleci
 /jsconfig.json
 
 # vendor
@@ -21,6 +22,7 @@ node_modules
 *.hot-update.json
 *.hot-update.js
 composer.phar
+/src/composer.lock
 /src/node_modules
 /src/vendor
 

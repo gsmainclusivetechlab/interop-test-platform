@@ -44,7 +44,9 @@ class MapRequestHandler
             }
         }
 
-        $testRequest = $testRequest->withSubstitutions($this->testResult->session->environments());
+        $testRequest = $testRequest->withSubstitutions(
+            $this->testResult->session->environments()
+        );
         $this->testResult->update(['request' => $testRequest]);
 
         return $testRequest->toPsrRequest();

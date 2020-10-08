@@ -2,24 +2,20 @@
     <layout
         :session="session"
         :breadcrumbs="[
-                    { name: 'Sessions', url: route('sessions.index') },
-                    {
-                        name: session.name,
-                        url: route('sessions.show', session.id),
-                    },
-                    { name: testCase.name },
-                ]"
+            { name: 'Sessions', url: route('sessions.index') },
+            {
+                name: session.name,
+                url: route('sessions.show', session.id),
+            },
+            { name: testCase.name },
+        ]"
     >
         <div class="col-3 mt-3 pr-0">
             <div class="card">
                 <div class="card-header">
-                    <h2
-                        class="card-title d-flex align-items-center"
-                    >
+                    <h2 class="card-title d-flex align-items-center">
                         <inertia-link
-                            :href="
-                                            route('sessions.show', session.id)
-                                        "
+                            :href="route('sessions.show', session.id)"
                             class="d-inline-flex mr-1 text-decoration-none"
                         >
                             <icon name="corner-down-left"></icon>
@@ -33,10 +29,7 @@
                             <p>
                                 <strong>Configuration</strong>
                             </p>
-                            <div
-                                v-for="component in session
-                                                .components.data"
-                            >
+                            <div v-for="component in session.components.data">
                                 <div
                                     class="mb-3"
                                     v-for="connection in component.connections"
@@ -49,15 +42,12 @@
                                             :id="`testing-${connection.id}`"
                                             type="text"
                                             :value="
-                                                            route(
-                                                                'testing.sut',
-                                                                [
-                                                                    session.uuid,
-                                                                    component.uuid,
-                                                                    connection.uuid,
-                                                                ]
-                                                            )
-                                                        "
+                                                route('testing.sut', [
+                                                    session.uuid,
+                                                    component.uuid,
+                                                    connection.uuid,
+                                                ])
+                                            "
                                             class="form-control"
                                             readonly
                                         />
@@ -73,17 +63,13 @@
                             <p>
                                 <strong>Description</strong>
                             </p>
-                            <div
-                                v-html="testCase.description"
-                            ></div>
+                            <div v-html="testCase.description"></div>
                         </li>
                         <li v-if="testCase.precondition">
                             <p>
                                 <strong>Precondition</strong>
                             </p>
-                            <div
-                                v-html="testCase.precondition"
-                            ></div>
+                            <div v-html="testCase.precondition"></div>
                         </li>
                     </ul>
                 </div>
@@ -92,31 +78,26 @@
         <div class="col-9 mt-3">
             <div class="row">
                 <div class="col">
-                    <div
-                        class="d-flex align-items-baseline border-bottom mb-4"
-                    >
+                    <div class="d-flex align-items-baseline border-bottom mb-4">
                         <ul class="nav nav-tabs mx-0 border-0">
                             <li class="nav-item">
                                 <inertia-link
                                     :href="
-                                                    route(
-                                                        'sessions.test-cases.show',
-                                                        [
-                                                            session.id,
-                                                            testCase.id,
-                                                        ]
-                                                    )
-                                                "
+                                        route('sessions.test-cases.show', [
+                                            session.id,
+                                            testCase.id,
+                                        ])
+                                    "
                                     class="nav-link rounded-0"
                                     v-bind:class="{
-                                                    active:
-                                                        route().current(
-                                                            'sessions.test-cases.show'
-                                                        ) ||
-                                                        route().current(
-                                                            'sessions.test-cases.test-runs.*'
-                                                        ),
-                                                }"
+                                        active:
+                                            route().current(
+                                                'sessions.test-cases.show'
+                                            ) ||
+                                            route().current(
+                                                'sessions.test-cases.test-runs.*'
+                                            ),
+                                    }"
                                 >
                                     Test Runs
                                 </inertia-link>
@@ -124,20 +105,17 @@
                             <li class="nav-item">
                                 <inertia-link
                                     :href="
-                                                    route(
-                                                        'sessions.test-cases.test-steps.index',
-                                                        [
-                                                            session.id,
-                                                            testCase.id,
-                                                        ]
-                                                    )
-                                                "
+                                        route(
+                                            'sessions.test-cases.test-steps.index',
+                                            [session.id, testCase.id]
+                                        )
+                                    "
                                     class="nav-link rounded-0"
                                     v-bind:class="{
-                                                    active: route().current(
-                                                        'sessions.test-cases.test-steps.index'
-                                                    ),
-                                                }"
+                                        active: route().current(
+                                            'sessions.test-cases.test-steps.index'
+                                        ),
+                                    }"
                                 >
                                     Test Steps
                                 </inertia-link>
@@ -145,20 +123,17 @@
                             <li class="nav-item">
                                 <inertia-link
                                     :href="
-                                                    route(
-                                                        'sessions.test-cases.test-steps.flow',
-                                                        [
-                                                            session.id,
-                                                            testCase.id,
-                                                        ]
-                                                    )
-                                                "
+                                        route(
+                                            'sessions.test-cases.test-steps.flow',
+                                            [session.id, testCase.id]
+                                        )
+                                    "
                                     class="nav-link rounded-0"
                                     v-bind:class="{
-                                                    active: route().current(
-                                                        'sessions.test-cases.test-steps.flow'
-                                                    ),
-                                                }"
+                                        active: route().current(
+                                            'sessions.test-cases.test-steps.flow'
+                                        ),
+                                    }"
                                 >
                                     Test Flow
                                 </inertia-link>
@@ -167,25 +142,19 @@
                         <div
                             class="ml-auto"
                             v-if="
-                                            !collect(session.components.data)
-                                                .where(
-                                                    'id',
-                                                    testStepFirstSource.id
-                                                )
-                                                .count()
-                                        "
+                                !collect(session.components.data)
+                                    .where('id', testStepFirstSource.id)
+                                    .count()
+                            "
                         >
                             <div class="d-flex">
                                 <inertia-link
                                     :href="
-                                                    route(
-                                                        'sessions.test-cases.run',
-                                                        [
-                                                            session.id,
-                                                            testCase.id,
-                                                        ]
-                                                    )
-                                                "
+                                        route('sessions.test-cases.run', [
+                                            session.id,
+                                            testCase.id,
+                                        ])
+                                    "
                                     class="btn btn-primary"
                                     method="post"
                                 >

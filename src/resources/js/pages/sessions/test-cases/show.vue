@@ -50,15 +50,15 @@
                                 <td>
                                     <inertia-link
                                         :href="
-                                                route(
-                                                    'sessions.test-cases.test-runs.show',
-                                                    [
-                                                        testRun.session.id,
-                                                        testRun.testCase.id,
-                                                        testRun.id,
-                                                    ]
-                                                )
-                                            "
+                                            route(
+                                                'sessions.test-cases.test-runs.show',
+                                                [
+                                                    testRun.session.id,
+                                                    testRun.testCase.id,
+                                                    testRun.id,
+                                                ]
+                                            )
+                                        "
                                     >
                                         #{{ testRun.id }}
                                     </inertia-link>

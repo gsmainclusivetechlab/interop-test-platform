@@ -59,7 +59,10 @@ class GroupController extends Controller
                 $group
                     ->sessions()
                     ->whereHas('owner', function (Builder $query) {
-                        $query->when(request('q'), function (Builder $query, $q) {
+                        $query->when(request('q'), function (
+                            Builder $query,
+                            $q
+                        ) {
                             $query
                                 ->whereRaw(
                                     'CONCAT(first_name, " ", last_name) like ?',

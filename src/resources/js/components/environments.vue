@@ -1,6 +1,9 @@
 <template>
     <ul class="list-group">
-        <li class="list-group-item" v-for="(environment, index) in environments">
+        <li
+            class="list-group-item"
+            v-for="(environment, index) in environments"
+        >
             <div class="input-group">
                 <input
                     type="text"
@@ -14,13 +17,21 @@
                     class="form-control"
                     v-model="environment.value"
                 />
-                <button type="button" class="btn btn-secondary btn-icon" @click="deleteEnvironment(index)">
+                <button
+                    type="button"
+                    class="btn btn-secondary btn-icon"
+                    @click="deleteEnvironment(index)"
+                >
                     <icon name="trash" />
                 </button>
             </div>
         </li>
         <li class="list-group-item">
-            <button type="button" class="btn btn-block btn-secondary" @click="addEnvironment">
+            <button
+                type="button"
+                class="btn btn-block btn-secondary"
+                @click="addEnvironment"
+            >
                 <icon name="plus" />
                 Add New
             </button>
@@ -43,7 +54,13 @@ export default {
     },
     watch: {
         environments: function (value) {
-            this.$emit('input', collect(value).filter((item) => item.key).mapWithKeys(item => [item.key, item.value]).all());
+            this.$emit(
+                'input',
+                collect(value)
+                    .filter((item) => item.key)
+                    .mapWithKeys((item) => [item.key, item.value])
+                    .all()
+            );
         },
     },
     mounted() {
@@ -53,7 +70,7 @@ export default {
         syncEnvironment(value) {
             this.environments = [];
             for (let key in value) {
-                this.environments.push({key: key, value: value[key]})
+                this.environments.push({ key: key, value: value[key] });
             }
         },
         addEnvironment() {

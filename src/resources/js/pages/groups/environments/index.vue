@@ -21,71 +21,72 @@
                     class="table table-striped table-vcenter table-hover card-table"
                 >
                     <thead>
-                    <tr>
-                        <th class="text-nowrap">Name</th>
-                        <th class="text-nowrap w-auto">Variables</th>
-                        <th class="text-nowrap w-1"></th>
-                    </tr>
+                        <tr>
+                            <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap w-auto">Variables</th>
+                            <th class="text-nowrap w-1"></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="environment in environments.data">
-                        <td class="text-break">
-                            {{ environment.name }}
-                        </td>
-                        <td class="text-break">
-                            {{ environment.variables.length }}
-                        </td>
-                        <td class="text-center text-break">
-                            <b-dropdown
-                                v-if="environment.can.update || environment.can.delete"
-                                no-caret
-                                right
-                                toggle-class="align-items-center text-muted"
-                                variant="link"
-                                boundary="window"
-                            >
-                                <template v-slot:button-content>
-                                    <icon
-                                        name="dots-vertical"
-                                    ></icon>
-                                </template>
-                                <li v-if="environment.can.update">
-                                    <inertia-link
-                                        class="dropdown-item"
-                                        :href="
+                        <tr v-for="environment in environments.data">
+                            <td class="text-break">
+                                {{ environment.name }}
+                            </td>
+                            <td class="text-break">
+                                {{ environment.variables.length }}
+                            </td>
+                            <td class="text-center text-break">
+                                <b-dropdown
+                                    v-if="
+                                        environment.can.update ||
+                                        environment.can.delete
+                                    "
+                                    no-caret
+                                    right
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
+                                    boundary="window"
+                                >
+                                    <template v-slot:button-content>
+                                        <icon name="dots-vertical"></icon>
+                                    </template>
+                                    <li v-if="environment.can.update">
+                                        <inertia-link
+                                            class="dropdown-item"
+                                            :href="
                                                 route(
                                                     'groups.environments.edit',
                                                     [group.id, environment.id]
                                                 )
                                             "
-                                    >
-                                        Edit
-                                    </inertia-link>
-                                </li>
-                                <li v-if="environment.can.delete">
-                                    <confirm-link
-                                        class="dropdown-item"
-                                        :href="
-                                                        route(
-                                                            'groups.environments.destroy',
-                                                            [group.id, environment.id]
-                                                        )
-                                                    "
-                                        method="delete"
-                                        :confirm-title="'Confirm delete'"
-                                        :confirm-text="`Are you sure you want to delete ${environment.name}?`"
-                                    >
-                                        Delete
-                                    </confirm-link>
-                                </li>
-                            </b-dropdown>
-                        </td>
-                    </tr>
-                    <tr v-if="!environments.data.length">
-                        <td class="text-center" colspan="5">
-                            No Results
-                        </td>
-                    </tr>
+                                        >
+                                            Edit
+                                        </inertia-link>
+                                    </li>
+                                    <li v-if="environment.can.delete">
+                                        <confirm-link
+                                            class="dropdown-item"
+                                            :href="
+                                                route(
+                                                    'groups.environments.destroy',
+                                                    [group.id, environment.id]
+                                                )
+                                            "
+                                            method="delete"
+                                            :confirm-title="'Confirm delete'"
+                                            :confirm-text="`Are you sure you want to delete ${environment.name}?`"
+                                        >
+                                            Delete
+                                        </confirm-link>
+                                    </li>
+                                </b-dropdown>
+                            </td>
+                        </tr>
+                        <tr v-if="!environments.data.length">
+                            <td class="text-center" colspan="5">
+                                No Results
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -128,9 +129,12 @@ export default {
     },
     methods: {
         search() {
-            this.$inertia.replace(route('groups.environments.index', this.group.id), {
-                data: this.form,
-            });
+            this.$inertia.replace(
+                route('groups.environments.index', this.group.id),
+                {
+                    data: this.form,
+                }
+            );
         },
     },
 };
