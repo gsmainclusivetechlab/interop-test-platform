@@ -11,16 +11,8 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <form class="input-icon" @submit.prevent="search">
-                    <input
-                        v-model="form.q"
-                        type="text"
-                        class="form-control"
-                        placeholder="Search..."
-                    />
-                    <span class="input-icon-addon">
-                        <icon name="search" />
-                    </span>
+                <form @submit.prevent="search">
+                    <input-search v-model="form.q" />
                 </form>
             </div>
             <div class="table-responsive mb-0">

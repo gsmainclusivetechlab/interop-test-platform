@@ -26,9 +26,7 @@ class TestRunResource extends JsonResource
             'successful' => $this->successful,
             'duration' => $this->duration,
             'created_at' => $this->created_at->diffForHumans(),
-            'completed_at' => $this->completed_at
-                ? $this->completed_at->diffForHumans()
-                : '',
+            'completed_at' => optional($this->completed_at)->diffForHumans(),
         ];
     }
 }

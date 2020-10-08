@@ -15,7 +15,7 @@ class MessageLogResource extends JsonResource
         return [
             'id' => $this->id,
             'type' => $this->type,
-            'request' => $this->request->toArray(),
+            'request' => optional($this->request)->toArray(),
             'exception' => $this->exception,
             'created_at' => $this->created_at->diffForHumans(),
             'session' => new SessionResource($this->whenLoaded('session')),
