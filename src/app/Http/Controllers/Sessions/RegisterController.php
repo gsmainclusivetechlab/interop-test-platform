@@ -89,31 +89,33 @@ class RegisterController extends Controller
                                         ->get('session.sut.component_id')
                                 );
                             })
-                            ->where('public', true)
-                            ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(
-                                    auth()
-                                        ->user()
-                                        ->getAuthIdentifier()
-                                );
-                            })
-                            ->orWhereHas('groups', function ($query) {
-                                $query->whereHas('users', function ($query) {
-                                    $query->whereKey(
+                            ->where(function ($query) {
+                                $query->where('public', true)
+                                    ->orWhereHas('owner', function ($query) {
+                                        $query->whereKey(
+                                            auth()
+                                                ->user()
+                                                ->getAuthIdentifier()
+                                        );
+                                    })
+                                    ->orWhereHas('groups', function ($query) {
+                                        $query->whereHas('users', function ($query) {
+                                            $query->whereKey(
+                                                auth()
+                                                    ->user()
+                                                    ->getAuthIdentifier()
+                                            );
+                                        });
+                                    })
+                                    ->when(
                                         auth()
                                             ->user()
-                                            ->getAuthIdentifier()
+                                            ->can('viewAnyPrivate', TestCase::class),
+                                        function ($query) {
+                                            $query->orWhere('public', false);
+                                        }
                                     );
-                                });
-                            })
-                            ->when(
-                                auth()
-                                    ->user()
-                                    ->can('viewAnyPrivate', TestCase::class),
-                                function ($query) {
-                                    $query->orWhere('public', false);
-                                }
-                            );
+                            });
                     },
                 ])
                     ->whereHas('testCases', function ($query) {
