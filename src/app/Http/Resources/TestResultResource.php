@@ -14,8 +14,8 @@ class TestResultResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'request' => $this->request ? $this->request->toArray() : null,
-            'response' => $this->response ? $this->response->toArray() : null,
+            'request' => optional($this->request)->toArray(),
+            'response' => optional($this->response)->toArray(),
             'exception' => $this->exception,
             'successful' => $this->successful,
             'duration' => $this->duration,
