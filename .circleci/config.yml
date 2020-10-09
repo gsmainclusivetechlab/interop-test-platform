@@ -254,29 +254,29 @@ workflows:
 
   publish_release:
     jobs:
-      - check_build:
-          context:
-            - docker-hub
-          <<: *release_filter
+      # - check_build:
+      #     context:
+      #       - docker-hub
+      #     <<: *release_filter
       - approve_release:
           <<: *release_filter
           type: approval
-          requires:
-            - check_build
-      - deploy:
-          <<: *release_filter
-          context:
-            - docker-hub
-            - GSMA-itp-prod
-          host: interop.gsmainclusivetechlab.io
-          requires:
-            - check_build
-            - approve_release
-      - publish:
-          <<: *release_filter
-          context:
-            - docker-hub
-          requires:
-            - check_build
-            - approve_release
-            - deploy
+          # requires:
+          #   - check_build
+      # - deploy:
+      #     <<: *release_filter
+      #     context:
+      #       - docker-hub
+      #       - GSMA-itp-prod
+      #     host: interop.gsmainclusivetechlab.io
+      #     requires:
+      #       - check_build
+      #       - approve_release
+      # - publish:
+      #     <<: *release_filter
+      #     context:
+      #       - docker-hub
+      #     requires:
+      #       - check_build
+      #       - approve_release
+      #       - deploy
