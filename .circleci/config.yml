@@ -212,7 +212,9 @@ jobs:
               || (echo "No DB to back up" && touch ./backup.sql)
       - run:
           name: Store backup
-          command: scp ./backup.sql "<< parameters.host >>:/var/backups/circleci/`date +"%b%d-%Y-%H%M%S"`.backup.sql"
+          command:
+            scp ./backup.sql "<< parameters.host >>:/var/backups/circleci/`date
+            +"%b%d-%Y-%H%M%S"`.backup.sql"
       - run:
           name: Run migrations
           command: |
@@ -226,8 +228,8 @@ jobs:
           condition: << parameters.mailhog >>
           steps:
             - run:
-                npm run docker-base -- -f compose/mailhog.yml up -d mailhog
-                --force-recreate
+                npm run docker-base -- -f compose/mailhog.yml up
+                --force-recreate -d mailhog
 
 workflows:
   version: 2
