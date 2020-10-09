@@ -88,7 +88,7 @@ to cover some such cases:
 
 -   [`compose/ops.yml`](./compose/ops.yml): Defines short-lived services
     `migrate`, `seed` and `backup` to update, setup or backup the database
-    respectively, and `test` to run unit tests.
+    respectively, and `test`, `dusk` and `selenium` to run tests.
 -   [`compose/volumes.yml`](./compose/volumes.yml): Set up shared volumes
     between your local files and the files inside the running containers, which
     allows your local changes to immediately be reflected in the running
@@ -176,12 +176,15 @@ files are created inside the container assuming this same ID.
 
 ### Running Tests
 
-The current test suite only targets PHP code, which means that the test runner
-must run inside the php containers. Before running the tests, make sure that no
-containers are already running using `yarn down`. Once everything has stopped,
-you can run tests using `yarn test`. After the tests run, this will copy the
-test result files into the `./results` directory. Coverage reports will also be
-generated inside the `./results` directory in both HTML and clover formats.
+Before running the tests, make sure that no containers are already running using
+`yarn down`. Once everything has stopped, you can run tests using `yarn test`.
+After the tests run, this will copy the test result files into the `./results`
+directory. Coverage reports will also be generated inside the `./results`
+directory in both HTML and clover formats.
+
+As well as the PHP unit tests, it is possible to run browser tests through Dusk
+and Selenium with `yarn dusk`. When running this, an additional docker container
+will be launched to run an externally-controllable Selenium Chrome browser. 
 
 ### Site access
 

@@ -45,3 +45,22 @@ services:
     command:
       sh -c "(/wait > /dev/null) && mysqldump -h mysqldb -u $$DB_USERNAME
       -p$$DB_PASSWORD $$DB_DATABASE 2>/dev/null"
+
+  selenium:
+    image: selenium/standalone-chrome:85.0
+    links:
+      - app:sdnet.test
+    # this allows selenium to use the host's shared memory
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      internal:
+
+  dusk:
+    <<: *ops-service
+    depends_on:
+      - mysqldb
+      - selenium
+      - mailhog
+    command:
+      sh -c "/wait && php artisan dusk"
