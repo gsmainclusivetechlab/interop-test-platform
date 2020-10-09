@@ -211,13 +211,14 @@ jobs:
               && (echo "Backing up DB" && npm run --silent backup > ./backup.sql)) \
               || (echo "No DB to back up" && touch ./backup.sql)
       - run:
+          name: Store backup
+          command: scp ./backup.sql "<< parameters.host >>:/var/backups/circleci/`date +"%b%d-%Y-%H%M%S"`.backup.sql"
+      - run:
           name: Run migrations
           command: |
             (npm run --silent has-db \
               && (echo "Migrating DB" && npm run --silent migrate)) \
               || (echo "Seeding DB" && npm run --silent seed)
-      - store_artifacts:
-          path: ./backup.sql
       - run:
           name: Run docker-compose up
           command: npm run prod
