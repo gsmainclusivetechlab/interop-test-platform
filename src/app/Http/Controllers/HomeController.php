@@ -27,12 +27,12 @@ class HomeController extends Controller
             'sessions' => SessionResource::collection(
                 Session::whereHas('owner', function (Builder $query) {
                     $query
-                        ->whereKey(auth()->user()->getAuthIdentifier())
+                        ->whereKey(auth()->user())
                         ->orWhereHas('groups', function (Builder $query) {
                             $query->whereHas('users', function (
                                 Builder $query
                             ) {
-                                $query->whereKey(auth()->user()->getAuthIdentifier());
+                                $query->whereKey(auth()->user());
                             });
                         });
                 })

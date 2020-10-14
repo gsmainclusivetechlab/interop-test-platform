@@ -35,14 +35,6 @@ class Group extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function environments()
-    {
-        return $this->hasMany(GroupEnvironment::class, 'group_id');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function sessions()
@@ -77,7 +69,7 @@ class Group extends Model
     public function hasUser(User $user)
     {
         return $this->users()
-            ->whereKey($user->getKey())
+            ->whereKey($user)
             ->exists();
     }
 
@@ -88,7 +80,7 @@ class Group extends Model
     public function hasAdminUser(User $user)
     {
         return $this->users()
-            ->whereKey($user->getKey())
+            ->whereKey($user)
             ->wherePivot('admin', true)
             ->exists();
     }

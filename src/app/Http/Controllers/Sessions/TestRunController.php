@@ -8,10 +8,12 @@ use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestResultResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\UseCaseResource;
 use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\Session;
 use App\Models\TestRun;
+use App\Models\UseCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
@@ -58,6 +60,9 @@ class TestRunController extends Controller
                     },
                 ])
             ))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::withTestCasesOfSession($session)->get()
+            ),
             'components' => ComponentResource::collection(
                 Component::with([
                     'connections' => function ($query) use ($testCase) {

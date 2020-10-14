@@ -2,6 +2,7 @@
     <layout
         :session="session"
         :testCase="testCase"
+        :useCases="useCases"
         :testStepFirstSource="testStepFirstSource"
     >
         <div class="card">
@@ -274,6 +275,10 @@ export default {
     },
     props: {
         session: {
+            type: Object,
+            required: true,
+        },
+        useCases: {
             type: Object,
             required: true,
         },

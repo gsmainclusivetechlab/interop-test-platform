@@ -9,13 +9,11 @@ use Illuminate\Support\Arr;
 class Response extends \Illuminate\Http\Client\Response implements Arrayable
 {
     /**
-     * @param  string|null  $key
-     * @param  mixed  $default
      * @return array
      */
-    public function json($key = null, $default = null)
+    public function json()
     {
-        return parent::json($key, $default) ?? [];
+        return parent::json() ?? [];
     }
 
     /**

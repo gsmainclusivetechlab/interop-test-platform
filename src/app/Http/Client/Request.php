@@ -139,4 +139,9 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             )
         );
     }
+
+    protected function getDate(?string $time = null): DateTime
+    {
+        return new DateTime($time);
+    }
 }
