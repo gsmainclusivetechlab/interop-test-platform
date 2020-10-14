@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\ApiSpec;
 use App\Models\Component;
 use App\Models\Group;
-use App\Models\GroupEnvironment;
 use App\Models\GroupUser;
 use App\Models\MessageLog;
 use App\Models\Session;
@@ -15,7 +14,6 @@ use App\Models\UseCase;
 use App\Models\User;
 use App\Policies\ApiSpecPolicy;
 use App\Policies\ComponentPolicy;
-use App\Policies\GroupEnvironmentPolicy;
 use App\Policies\GroupUserPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\MessageLogPolicy;
@@ -35,7 +33,6 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Group::class => GroupPolicy::class,
         GroupUser::class => GroupUserPolicy::class,
-        GroupEnvironment::class => GroupEnvironmentPolicy::class,
         Session::class => SessionPolicy::class,
         Component::class => ComponentPolicy::class,
         ApiSpec::class => ApiSpecPolicy::class,

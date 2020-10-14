@@ -21,14 +21,7 @@ class Session extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'name', 'description', 'group_environment_id', 'environments'];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'environments' => 'array',
-    ];
+    protected $fillable = ['uuid', 'name', 'description'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -36,14 +29,6 @@ class Session extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function groupEnvironment()
-    {
-        return $this->belongsTo(GroupEnvironment::class, 'group_environment_id');
     }
 
     /**
@@ -108,20 +93,7 @@ class Session extends Model
             'session_test_cases',
             'session_id',
             'test_case_id'
-        )->withPivot(['deleted_at'])->wherePivot('deleted_at', null);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function testCasesWithSoftDeletes()
-    {
-        return $this->belongsToMany(
-            TestCase::class,
-            'session_test_cases',
-            'session_id',
-            'test_case_id'
-        )->withPivot(['deleted_at']);
+        );
     }
 
     /**

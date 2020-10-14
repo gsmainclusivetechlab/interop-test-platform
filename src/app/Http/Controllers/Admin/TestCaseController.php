@@ -48,7 +48,7 @@ class TestCaseController extends Controller
                             ->can('viewAnyPrivate', TestCase::class),
                         function ($query) {
                             $query->orWhereHas('owner', function ($query) {
-                                $query->whereKey(auth()->user()->getAuthIdentifier());
+                                $query->whereKey(auth()->user());
                             });
                         }
                     )
@@ -180,7 +180,7 @@ class TestCaseController extends Controller
                         ->can('viewAny', Group::class),
                     function (Builder $query) {
                         $query->whereHas('users', function ($query) {
-                            $query->whereKey(auth()->user()->getAuthIdentifier());
+                            $query->whereKey(auth()->user());
                         });
                     }
                 )

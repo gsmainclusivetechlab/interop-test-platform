@@ -121,14 +121,6 @@ class TestCase extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testRunsWithSoftDeletesTestCases()
-    {
-        return $this->testRuns()->withoutGlobalScope('session_test_case');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function lastTestRun()
