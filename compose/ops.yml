@@ -62,5 +62,4 @@ services:
       - mysqldb
       - selenium
       - mailhog
-    command:
-      sh -c "/wait && php artisan dusk"
+    command: sh -c "/wait && php artisan dusk"

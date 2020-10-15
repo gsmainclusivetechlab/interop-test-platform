@@ -15,9 +15,7 @@
                 </div>
 
                 <div class="col d-none d-md-block text-center text-primary">
-                    <h1 class="col-login__title mb-1">
-                        Inclusive Tech Lab
-                    </h1>
+                    <h1 class="col-login__title mb-1">Inclusive Tech Lab</h1>
                     <h2 class="col-login__subtitle mb-0">
                         Interoperability Test Platform
                     </h2>
@@ -52,7 +50,7 @@
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
                             class="admin-settings-dropdown"
-                            v-if="(
+                            v-if="
                                 $page.auth.user.can.users.viewAny ||
                                 $page.auth.user.can.groups.viewAny ||
                                 $page.auth.user.can.sessions.viewAny ||
@@ -61,7 +59,7 @@
                                 $page.auth.user.can.use_cases.viewAny ||
                                 $page.auth.user.can.message_log.viewAny ||
                                 $page.auth.user.can.test_cases.viewAny
-                            )"
+                            "
                         >
                             <template v-slot:button-content>
                                 <icon name="settings" />
@@ -197,9 +195,7 @@
                                 >
                                     <icon name="activity" />
                                 </span>
-                                <span class="nav-link-title">
-                                    Dashboard
-                                </span>
+                                <span class="nav-link-title"> Dashboard </span>
                             </inertia-link>
                         </li>
                         <li
@@ -217,9 +213,7 @@
                                 >
                                     <icon name="box" />
                                 </span>
-                                <span class="nav-link-title">
-                                    Sessions
-                                </span>
+                                <span class="nav-link-title"> Sessions </span>
                             </inertia-link>
                         </li>
                         <li
@@ -237,9 +231,7 @@
                                 >
                                     <icon name="users" />
                                 </span>
-                                <span class="nav-link-title">
-                                    Groups
-                                </span>
+                                <span class="nav-link-title"> Groups </span>
                             </inertia-link>
                         </li>
                         <li
@@ -257,9 +249,7 @@
                                 >
                                     <icon name="help" />
                                 </span>
-                                <span class="nav-link-title">
-                                    Tutorials
-                                </span>
+                                <span class="nav-link-title"> Tutorials </span>
                             </inertia-link>
                         </li>
                         <li class="nav-item">
@@ -289,9 +279,7 @@
                                 >
                                     <icon name="link" />
                                 </span>
-                                <span class="nav-link-title">
-                                    The Lab
-                                </span>
+                                <span class="nav-link-title"> The Lab </span>
                             </a>
                         </li>
                     </b-navbar-nav>

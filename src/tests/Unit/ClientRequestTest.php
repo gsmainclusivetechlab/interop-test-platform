@@ -91,7 +91,7 @@ body
                  }
               }
 body
-            ,
+        ,
         ]);
 
         /** @var Request $request */
@@ -99,7 +99,7 @@ body
 
         $testscript = factory(TestScript::class)->make();
         $testscript->rules = [
-            'headers.x-callback-url.*' => 'required|url'
+            'headers.x-callback-url.*' => 'required|url',
         ];
 
         $result = new RequestScriptValidationTest($request, $testscript);
@@ -120,7 +120,7 @@ body
                  }
               }
 body
-            ,
+        ,
         ]);
 
         /** @var Request $request */
@@ -128,7 +128,7 @@ body
 
         $testscript = factory(TestScript::class)->make();
         $testscript->rules = [
-            'headers.x-callback-url.*' => 'required|url'
+            'headers.x-callback-url.*' => 'required|url',
         ];
 
         $result = new RequestScriptValidationTest($request, $testscript);

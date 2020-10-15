@@ -9,9 +9,7 @@
                         </div>
                         <div class="card-body pt-0">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Name
-                                </label>
+                                <label class="form-label"> Name </label>
                                 <input
                                     name="name"
                                     type="text"
@@ -31,9 +29,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Description
-                                </label>
+                                <label class="form-label"> Description </label>
                                 <textarea
                                     name="description"
                                     class="form-control"
@@ -61,7 +57,7 @@
                         <div class="card-body pt-0 pl-0">
                             <ul
                                 class="list-group overflow-auto"
-                                style="max-height: 320px;"
+                                style="max-height: 320px"
                             >
                                 <li
                                     class="list-group-item"

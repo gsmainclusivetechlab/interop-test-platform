@@ -11,9 +11,7 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Name
-                                </label>
+                                <label class="form-label"> Name </label>
                                 <input
                                     name="name"
                                     type="text"
@@ -33,9 +31,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Behavior
-                                </label>
+                                <label class="form-label"> Behavior </label>
                                 <input
                                     type="text"
                                     class="form-control"
@@ -48,9 +44,7 @@
                                 />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Use Case
-                                </label>
+                                <label class="form-label"> Use Case </label>
                                 <input
                                     type="text"
                                     class="form-control"
@@ -59,9 +53,7 @@
                                 />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Groups
-                                </label>
+                                <label class="form-label"> Groups </label>
                                 <selectize
                                     v-model="groups"
                                     multiple
@@ -100,9 +92,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Description
-                                </label>
+                                <label class="form-label"> Description </label>
                                 <textarea
                                     name="description"
                                     class="form-control"

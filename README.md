@@ -184,7 +184,7 @@ directory in both HTML and clover formats.
 
 As well as the PHP unit tests, it is possible to run browser tests through Dusk
 and Selenium with `yarn dusk`. When running this, an additional docker container
-will be launched to run an externally-controllable Selenium Chrome browser. 
+will be launched to run an externally-controllable Selenium Chrome browser.
 
 ### Site access
 
