@@ -24,9 +24,8 @@ precondition: |
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
-  
-test_steps:
 
+test_steps:
   ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
@@ -130,7 +129,7 @@ test_steps:
           body.transactionType.scenario: 'WITHDRAWAL'
           body.transactionType.initiator: 'PAYER'
           body.transactionType.initiatorType: 'CONSUMER'
-    
+
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:

@@ -24,9 +24,8 @@ precondition: |
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
-  
-test_steps:
 
+test_steps:
   ## POST/Quotes: MMO1 -> Mojaloop ##
   - path: /quotes
     pattern: '^quotes$'
