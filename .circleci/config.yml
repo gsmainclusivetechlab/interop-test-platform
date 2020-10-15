@@ -7,12 +7,21 @@ x_filter_develop: &develop_filter
     branches:
       only: /develop/
 
+x_filter_deploy_sta: &deploy_sta_filter
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^staging$/
+
 x_filter_release: &release_filter
   filters:
     branches:
       ignore: /.*/
     tags:
-      only: /.*/
+      only: /^v\d+\.\d+\.\d+/
+
+
 
 commands:
   setup_docker_host:
@@ -254,6 +263,22 @@ workflows:
           requires:
             - approve_sta_deploy
             - build
+
+  deploy_sta:
+    jobs:
+      - check_build:
+          context:
+            - docker-hub
+          <<: *deploy_sta_filter
+      - deploy:
+          <<: *deploy_sta_filter
+          context:
+            - docker-hub
+            - GSMA-itp
+          host: staging.interop.gsmainclusivetechlab.io
+          mailhog: true
+          requires:
+            - check_build
 
   publish_release:
     jobs:
