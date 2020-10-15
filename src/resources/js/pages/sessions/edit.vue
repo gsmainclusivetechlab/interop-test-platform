@@ -19,8 +19,8 @@
                                     v-model="form.name"
                                     class="form-control"
                                     :class="{
-                                    'is-invalid': $page.errors.name,
-                                }"
+                                        'is-invalid': $page.errors.name,
+                                    }"
                                 />
                                 <span
                                     v-if="$page.errors.name"
@@ -68,8 +68,9 @@
                                     v-model="form.component_base_url"
                                     class="form-control"
                                     :class="{
-                                    'is-invalid': $page.errors.component_base_url,
-                                }"
+                                        'is-invalid':
+                                            $page.errors.component_base_url,
+                                    }"
                                 />
                                 <span
                                     v-if="$page.errors.component_base_url"
@@ -93,12 +94,17 @@
                                     :searchFn="searchGroupEnvironments"
                                     v-if="hasGroupEnvironments"
                                 />
-                                <environments v-model="form.environments" ref="environments" />
+                                <environments
+                                    v-model="form.environments"
+                                    ref="environments"
+                                />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.errors.environments"
                                 >
-                                    <strong>{{ $page.errors.environments }}</strong>
+                                    <strong>{{
+                                        $page.errors.environments
+                                    }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +122,9 @@
                                     class="text-danger small mt-3"
                                     v-if="$page.errors.test_cases"
                                 >
-                                    <strong>{{ $page.errors.test_cases }}</strong>
+                                    <strong>{{
+                                        $page.errors.test_cases
+                                    }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -130,10 +138,10 @@
                         Cancel
                     </inertia-link>
                     <button type="submit" class="btn btn-primary btn-space">
-                    <span
-                        v-if="sending"
-                        class="spinner-border spinner-border-sm mr-2"
-                    ></span>
+                        <span
+                            v-if="sending"
+                            class="spinner-border spinner-border-sm mr-2"
+                        ></span>
                         Update
                     </button>
                 </div>
@@ -169,21 +177,27 @@ export default {
         hasGroupEnvironments: {
             type: Boolean,
             required: true,
-        }
+        },
     },
     data() {
         return {
             sending: false,
-            groupEnvironment: this.session.groupEnvironment ? this.session.groupEnvironment.data : null,
+            groupEnvironment: this.session.groupEnvironment
+                ? this.session.groupEnvironment.data
+                : null,
             groupEnvironmentsList: [],
             form: {
                 name: this.session.name,
                 description: this.session.description,
-                group_environment_id: this.session.groupEnvironment ? this.session.groupEnvironment.data.id : null,
+                group_environment_id: this.session.groupEnvironment
+                    ? this.session.groupEnvironment.data.id
+                    : null,
                 environments: this.session.environments,
                 component_id: this.component.id,
                 component_base_url: this.component.base_url,
-                test_cases: collect(this.session.testCases.data).pluck('id').all(),
+                test_cases: collect(this.session.testCases.data)
+                    .pluck('id')
+                    .all(),
             },
         };
     },
@@ -194,7 +208,9 @@ export default {
                 this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     this.form.environments = value.variables;
-                    this.$refs.environments.syncEnvironment(this.form.environments);
+                    this.$refs.environments.syncEnvironments(
+                        this.form.environments
+                    );
                 }
             },
         },

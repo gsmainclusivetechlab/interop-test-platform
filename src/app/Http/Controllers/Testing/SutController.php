@@ -9,6 +9,7 @@ use App\Models\Component;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Illuminate\Support\Facades\DB;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
@@ -47,7 +48,6 @@ class SutController extends Controller
             ->whereHas('target', function ($query) use ($connection) {
                 $query->whereKey($connection->getKey());
             })
-            ->whereHasTestCasesOfSession($session)
             ->where(function ($query) {
                 $query
                     ->where(function ($query) {
