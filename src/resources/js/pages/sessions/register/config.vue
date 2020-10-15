@@ -124,7 +124,7 @@ export default {
                 this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     this.form.environments = value.variables;
-                    this.$refs.environments.syncEnvironment(
+                    this.$refs.environments.syncEnvironments(
                         this.form.environments
                     );
                 }

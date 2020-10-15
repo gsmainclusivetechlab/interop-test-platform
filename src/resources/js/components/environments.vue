@@ -2,6 +2,7 @@
     <ul class="list-group">
         <li
             class="list-group-item"
+            v-bind:key="index"
             v-for="(environment, index) in environments"
         >
             <div class="input-group">
@@ -9,12 +10,14 @@
                     type="text"
                     placeholder="Key"
                     class="form-control"
+                    @input="updateEnvironmentKey(index, $event.target.value)"
                     v-model="environment.key"
                 />
                 <input
                     type="text"
                     placeholder="Value"
                     class="form-control"
+                    @input="updateEnvironmentValue(index, $event.target.value)"
                     v-model="environment.value"
                 />
                 <button
@@ -54,20 +57,23 @@ export default {
     },
     watch: {
         environments: function (value) {
+            this.emitEnvironments(value);
+        },
+    },
+    mounted() {
+        this.syncEnvironments(this.value);
+    },
+    methods: {
+        emitEnvironments(values) {
             this.$emit(
                 'input',
-                collect(value)
+                collect(values)
                     .filter((item) => item.key)
                     .mapWithKeys((item) => [item.key, item.value])
                     .all()
             );
         },
-    },
-    mounted() {
-        this.syncEnvironment(this.value);
-    },
-    methods: {
-        syncEnvironment(value) {
+        syncEnvironments(value) {
             this.environments = [];
             for (let key in value) {
                 this.environments.push({ key: key, value: value[key] });
@@ -78,6 +84,14 @@ export default {
         },
         deleteEnvironment(index) {
             this.environments.splice(index, 1);
+        },
+        updateEnvironmentKey(index, value) {
+            this.environments[index].key = value;
+            this.emitEnvironments(this.environments);
+        },
+        updateEnvironmentValue(index, value) {
+            this.environments[index].value = value;
+            this.emitEnvironments(this.environments);
         },
     },
 };

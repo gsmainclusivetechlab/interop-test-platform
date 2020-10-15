@@ -147,7 +147,8 @@ class Session extends Model
             'test_case_id',
             'id',
             'test_case_id'
-        );
+        )
+            ->wherePivot('deleted_at', null);
     }
 
     /**
