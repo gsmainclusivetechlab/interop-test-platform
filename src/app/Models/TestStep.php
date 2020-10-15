@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
 use App\Models\Concerns\HasPosition;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin \Eloquent
@@ -117,5 +119,24 @@ class TestStep extends Model
     public function getPositionGroupColumn()
     {
         return ['test_case_id'];
+    }
+
+    /**
+     * @param Builder $query
+     * @param Session $session
+     * @return mixed
+     */
+    public function scopeWhereHasTestCasesOfSession($query, Session $session)
+    {
+        return $query->whereHas('testCase', function ($query) use ($session) {
+            $query->whereExists(function ($query) use ($session) {
+                $query
+                    ->select(DB::raw(1))
+                    ->from('session_test_cases')
+                    ->where('session_test_cases.deleted_at', null)
+                    ->where('session_test_cases.session_id', $session->getKey())
+                    ->whereColumn('session_test_cases.test_case_id', 'test_cases.id');
+            });
+        });
     }
 }

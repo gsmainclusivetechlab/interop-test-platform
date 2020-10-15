@@ -47,9 +47,7 @@ class SutController extends Controller
             ->whereHas('target', function ($query) use ($connection) {
                 $query->whereKey($connection->getKey());
             })
-            ->whereHas('testCase', function ($query) {
-                $query->where('deleted_at', null);
-            })
+            ->whereHasTestCasesOfSession($session)
             ->where(function ($query) {
                 $query
                     ->where(function ($query) {
