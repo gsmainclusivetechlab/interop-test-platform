@@ -12,7 +12,7 @@ x_filter_deploy_sta: &deploy_sta_filter
     branches:
       ignore: /.*/
     tags:
-      only: /sta-.*/
+      only: /^staging$/
 
 x_filter_release: &release_filter
   filters:
