@@ -54,9 +54,7 @@ class SimulatorController extends Controller
             ->whereHas('target', function ($query) use ($connection) {
                 $query->whereKey($connection->getKey());
             })
-            ->whereHas('testCase', function ($query) {
-                $query->where('deleted_at', null);
-            })
+            ->whereHasTestCasesOfSession($session)
             ->offset(
                 $testRun
                     ->testResults()
