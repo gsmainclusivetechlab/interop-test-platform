@@ -11,9 +11,7 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Name
-                                </label>
+                                <label class="form-label"> Name </label>
                                 <input
                                     name="name"
                                     type="text"
@@ -33,9 +31,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Base URL
-                                </label>
+                                <label class="form-label"> Base URL </label>
                                 <input
                                     name="name"
                                     type="text"
@@ -55,9 +51,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Connections
-                                </label>
+                                <label class="form-label"> Connections </label>
                                 <selectize
                                     v-model="connections"
                                     multiple
@@ -97,9 +91,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Description
-                                </label>
+                                <label class="form-label"> Description </label>
                                 <textarea
                                     name="description"
                                     class="form-control"

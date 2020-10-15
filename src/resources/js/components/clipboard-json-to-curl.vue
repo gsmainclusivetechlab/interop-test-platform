@@ -3,7 +3,7 @@
         :data="jsonToCurl(request)"
         :show-copy-icon="false"
         :copy-button-text="'Copy cURL'"
-        style="position: inherit; top: -0.5rem; left: 35rem;"
+        style="position: inherit; top: -0.5rem; left: 35rem"
     ></clipboard-copy-btn>
 </template>
 

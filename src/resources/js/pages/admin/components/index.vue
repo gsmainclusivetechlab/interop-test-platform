@@ -3,9 +3,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">
-                        Administration
-                    </div>
+                    <div class="page-pretitle">Administration</div>
                     <h2 class="page-title">
                         <b>Components</b>
                     </h2>
@@ -115,9 +113,7 @@
                             </td>
                         </tr>
                         <tr v-if="!components.data.length">
-                            <td class="text-center" colspan="5">
-                                No Results
-                            </td>
+                            <td class="text-center" colspan="5">No Results</td>
                         </tr>
                     </tbody>
                 </table>

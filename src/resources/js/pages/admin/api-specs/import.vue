@@ -11,9 +11,7 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Name
-                                </label>
+                                <label class="form-label"> Name </label>
                                 <input
                                     name="name"
                                     type="text"
@@ -33,9 +31,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    File
-                                </label>
+                                <label class="form-label"> File </label>
                                 <b-form-file
                                     v-model="form.file"
                                     placeholder="Choose file..."

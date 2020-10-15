@@ -250,9 +250,7 @@
                             </td>
                         </tr>
                         <tr v-if="!testSteps.data.length">
-                            <td class="text-center" colspan="6">
-                                No Results
-                            </td>
+                            <td class="text-center" colspan="6">No Results</td>
                         </tr>
                     </tbody>
                 </table>

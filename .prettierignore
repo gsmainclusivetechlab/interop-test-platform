@@ -21,6 +21,7 @@ node_modules
 *.hot-update.json
 *.hot-update.js
 composer.phar
+composer.lock
 /src/node_modules
 /src/vendor
 
@@ -46,6 +47,7 @@ Thumbs.db
 /src/tests/Browser/screenshots
 /src/tests/results
 /src/.phpunit.result.cache
+/results
 
 # Logs
 /src/npm-debug.log

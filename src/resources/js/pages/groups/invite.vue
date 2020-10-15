@@ -11,9 +11,7 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    User
-                                </label>
+                                <label class="form-label"> User </label>
                                 <selectize
                                     v-model="user"
                                     class="form-select"

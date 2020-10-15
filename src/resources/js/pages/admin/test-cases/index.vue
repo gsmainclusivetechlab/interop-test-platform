@@ -3,9 +3,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">
-                        Administration
-                    </div>
+                    <div class="page-pretitle">Administration</div>
                     <h2 class="page-title">
                         <b>Test Cases</b>
                     </h2>
@@ -152,9 +150,7 @@
                             </td>
                         </tr>
                         <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="8">
-                                No Results
-                            </td>
+                            <td class="text-center" colspan="8">No Results</td>
                         </tr>
                     </tbody>
                 </table>
