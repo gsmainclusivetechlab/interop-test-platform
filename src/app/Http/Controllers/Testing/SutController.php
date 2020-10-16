@@ -81,13 +81,15 @@ class SutController extends Controller
                         });
                     });
             })
-            ->firstOr(function () use ($session) {
-                throw new MessageMismatchException(
-                    $session,
-                    404,
-                    'Unable to match SUT request with an awaited test step. Please check the test preconditions.'
-                );
-            });
+            ->first();
+
+        if (!$testStep) {
+            throw new MessageMismatchException(
+                $session,
+                404,
+                'Unable to match simulator request with an awaited test step. Please check the test preconditions.'
+            );
+        }
 
         $testRun = $session
             ->testRuns()
@@ -120,12 +122,17 @@ class SutController extends Controller
      */
     protected function getComponent(string $componentId, Session $session)
     {
-        return Component::where('uuid', $componentId)->firstOr(function () use ($session, $componentId) {
+        if (
+            ($component = Component::where('uuid', $componentId)->first()) ==
+            null
+        ) {
             throw new MessageMismatchException(
                 $session,
                 404,
                 "Unable to find test component with id $componentId. Please check the request base URL"
             );
-        });
+        }
+
+        return $component;
     }
 }

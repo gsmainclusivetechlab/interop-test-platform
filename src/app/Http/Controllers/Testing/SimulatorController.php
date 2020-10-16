@@ -79,13 +79,15 @@ class SimulatorController extends Controller
                     })
                     ->count()
             )
-            ->firstOr(function () use ($session)  {
-                throw new MessageMismatchException(
-                    $session,
-                    404,
-                    'Unable to match simulator request with an awaited test step. Please check the test preconditions.'
-                );
-            });
+            ->first();
+
+        if (!$testStep) {
+            throw new MessageMismatchException(
+                $session,
+                404,
+                'Unable to match simulator request with an awaited test step. Please check the test preconditions.'
+            );
+        }
 
         $testResult = $testRun
             ->testResults()
