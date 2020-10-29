@@ -22,7 +22,7 @@ export default {
             }
 
             const info = `${request['method']} '${request['uri']}'`;
-            const body = `--data-raw ${JSON.stringify(request['body'])}`;
+            const body = `--data-raw '${JSON.stringify(request['body'])}'`;
             const result = `curl --location --request ${info} ${headers} ${body}`;
 
             return result;
