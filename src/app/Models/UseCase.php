@@ -47,21 +47,35 @@ class UseCase extends Model
                             },
                         ])
                         ->whereExists(function ($query) use ($session) {
-                            $query->select(DB::raw(1))
+                            $query
+                                ->select(DB::raw(1))
                                 ->from('session_test_cases')
                                 ->where('session_test_cases.deleted_at', null)
-                                ->where('session_test_cases.session_id', $session->getKey())
-                                ->whereColumn('session_test_cases.test_case_id', 'test_cases.id');
+                                ->where(
+                                    'session_test_cases.session_id',
+                                    $session->getKey()
+                                )
+                                ->whereColumn(
+                                    'session_test_cases.test_case_id',
+                                    'test_cases.id'
+                                );
                         });
                 },
             ])
             ->whereHas('testCases', function ($query) use ($session) {
                 $query->whereExists(function ($query) use ($session) {
-                    $query->select(DB::raw(1))
+                    $query
+                        ->select(DB::raw(1))
                         ->from('session_test_cases')
                         ->where('session_test_cases.deleted_at', null)
-                        ->where('session_test_cases.session_id', $session->getKey())
-                        ->whereColumn('session_test_cases.test_case_id', 'test_cases.id');
+                        ->where(
+                            'session_test_cases.session_id',
+                            $session->getKey()
+                        )
+                        ->whereColumn(
+                            'session_test_cases.test_case_id',
+                            'test_cases.id'
+                        );
                 });
             });
     }

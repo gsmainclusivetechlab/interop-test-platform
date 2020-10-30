@@ -21,8 +21,6 @@ x_filter_release: &release_filter
     tags:
       only: /^v\d+\.\d+\.\d+/
 
-
-
 commands:
   setup_docker_host:
     description: 'Connect to a GSMA docker host via SSH'

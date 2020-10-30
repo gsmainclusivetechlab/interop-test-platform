@@ -27,8 +27,12 @@ class TokenSubstitution
      */
     public function replace(string $content)
     {
-        return preg_replace_callback('/\\$\{([^\}]+)\}/', function ($matches) {
-            return $this->tokens[$matches[1]] ?? $matches[0];
-        }, $content);
+        return preg_replace_callback(
+            '/\\$\{([^\}]+)\}/',
+            function ($matches) {
+                return $this->tokens[$matches[1]] ?? $matches[0];
+            },
+            $content
+        );
     }
 }

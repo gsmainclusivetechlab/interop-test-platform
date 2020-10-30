@@ -10,7 +10,9 @@
                                 :items="breadcrumbs"
                             ></breadcrumb>
                         </div>
-                        <h1 class="page-title mw-100 mr-2 text-break d-flex align-items-center">
+                        <h1
+                            class="page-title mw-100 mr-2 text-break d-flex align-items-center"
+                        >
                             <b>{{ session.name }}</b>
                             <div class="btn-group ml-1">
                                 <inertia-link

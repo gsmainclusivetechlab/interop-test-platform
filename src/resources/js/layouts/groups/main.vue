@@ -21,18 +21,12 @@
                             <ul class="nav nav-tabs mx-0 border-0">
                                 <li class="nav-item">
                                     <inertia-link
-                                        :href="
-                                            route(
-                                                'groups.show',
-                                                group.id
-                                            )
-                                        "
+                                        :href="route('groups.show', group.id)"
                                         class="nav-link rounded-0"
                                         v-bind:class="{
-                                            active:
-                                                route().current(
-                                                    'groups.show'
-                                                ),
+                                            active: route().current(
+                                                'groups.show'
+                                            ),
                                         }"
                                     >
                                         Sessions
@@ -48,10 +42,9 @@
                                         "
                                         class="nav-link rounded-0"
                                         v-bind:class="{
-                                            active:
-                                                route().current(
-                                                    'groups.users.*'
-                                                ),
+                                            active: route().current(
+                                                'groups.users.*'
+                                            ),
                                         }"
                                     >
                                         Members
@@ -67,10 +60,9 @@
                                         "
                                         class="nav-link rounded-0"
                                         v-bind:class="{
-                                            active:
-                                                route().current(
-                                                    'groups.environments.*'
-                                                ),
+                                            active: route().current(
+                                                'groups.environments.*'
+                                            ),
                                         }"
                                     >
                                         Environments

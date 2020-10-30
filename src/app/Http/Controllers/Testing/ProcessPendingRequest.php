@@ -25,8 +25,10 @@ class ProcessPendingRequest
      * @param RequestInterface $request
      * @param TestResult $testResult
      */
-    public function __construct(RequestInterface $request, TestResult $testResult)
-    {
+    public function __construct(
+        RequestInterface $request,
+        TestResult $testResult
+    ) {
         $this->request = $request;
         $this->testResult = $testResult;
     }
