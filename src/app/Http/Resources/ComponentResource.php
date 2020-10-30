@@ -16,7 +16,13 @@ class ComponentResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
-            'base_url' => $this->base_url,
+            'base_url' => $this->whenPivotLoaded(
+                'session_components',
+                function () {
+                    return $this->pivot->base_url;
+                },
+                $this->base_url
+            ),
             'position' => $this->position,
             'connections' => static::collection(
                 $this->whenLoaded('connections')

@@ -3,54 +3,17 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Exceptions\MessageMismatchException;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
-use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
-use App\Http\Middleware\SetContentLengthHeaders;
-use App\Http\Middleware\SetJsonHeaders;
 use App\Models\Component;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
 {
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware([
-            SetJsonHeaders::class,
-            SetContentLengthHeaders::class,
-        ]);
-    }
-
-    /**
-     * @param string $componentId
-     * @param Session $session
-     * @return Builder|Model|object
-     */
-    public function getComponent(string $componentId, Session $session)
-    {
-        $component = Component::where('uuid', $componentId)->first();
-        if ($component === null) {
-            throw new MessageMismatchException(
-                $session,
-                404,
-                "Unable to find test component with id $componentId. Please check the request base URL"
-            );
-        }
-        return $component;
-    }
-
     /**
      * @param Session $session
      * @param string $componentId
@@ -120,11 +83,11 @@ class SutController extends Controller
             })
             ->first();
 
-        if ($testStep === null) {
+        if (!$testStep) {
             throw new MessageMismatchException(
                 $session,
                 404,
-                'Unable to match SUT request with an awaited test step. Please check the test preconditions.'
+                'Unable to match simulator request with an awaited test step. Please check the test preconditions.'
             );
         }
 
@@ -149,12 +112,27 @@ class SutController extends Controller
                 )->withQuery((string) request()->getQueryString())
             );
 
-        return (new PendingRequest())
-            ->mapRequest(new MapRequestHandler($testResult))
-            ->mapResponse(new MapResponseHandler($testResult))
-            ->transfer($request)
-            ->then(new SendingFulfilledHandler($testResult))
-            ->otherwise(new SendingRejectedHandler($testResult))
-            ->wait();
+        return (new ProcessPendingRequest($request, $testResult))();
+    }
+
+    /**
+     * @param string $componentId
+     * @param Session $session
+     * @return Component
+     */
+    protected function getComponent(string $componentId, Session $session)
+    {
+        if (
+            ($component = Component::where('uuid', $componentId)->first()) ==
+            null
+        ) {
+            throw new MessageMismatchException(
+                $session,
+                404,
+                "Unable to find test component with id $componentId. Please check the request base URL"
+            );
+        }
+
+        return $component;
     }
 }

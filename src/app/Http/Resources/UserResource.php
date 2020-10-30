@@ -18,9 +18,9 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'company' => $this->company,
             'role' => $this->role,
-            'email_verified_at' => $this->email_verified_at
-                ? $this->email_verified_at->toDateTimeString()
-                : null,
+            'email_verified_at' => optional(
+                $this->email_verified_at
+            )->toDateTimeString(),
             'trashed' => $this->trashed(),
             'can' => [
                 'verify' => auth()

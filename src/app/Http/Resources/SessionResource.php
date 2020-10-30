@@ -17,7 +17,11 @@ class SessionResource extends JsonResource
             'uuid' => $this->uuid,
             'name' => $this->name,
             'description' => $this->description,
+            'environments' => $this->environments,
             'owner' => new UserResource($this->whenLoaded('owner')),
+            'groupEnvironment' => new GroupEnvironmentResource(
+                $this->whenLoaded('groupEnvironment')
+            ),
             'components' => ComponentResource::collection(
                 $this->whenLoaded('components')
             ),
@@ -28,6 +32,9 @@ class SessionResource extends JsonResource
                 $this->whenLoaded('lastTestRun')
             ),
             'can' => [
+                'update' => auth()
+                    ->user()
+                    ->can('update', $this->resource),
                 'delete' => auth()
                     ->user()
                     ->can('delete', $this->resource),

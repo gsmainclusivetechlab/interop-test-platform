@@ -29,18 +29,23 @@ Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
 Route::namespace('Groups')->group(function () {
     Route::resource('groups', 'GroupController')->only(['index', 'show']);
     Route::resource('groups.users', 'GroupUserController')->only([
+        'index',
         'create',
         'store',
         'destroy',
     ]);
     Route::get(
-        'groups/{group}/user-candidates',
-        'GroupController@userCandidates'
-    )->name('groups.user-candidates');
+        'groups/{group}/users/candidates',
+        'GroupUserController@candidates'
+    )->name('groups.users.candidates');
     Route::put(
         'groups/{group}/users/{user}/toggle-admin',
         'GroupUserController@toggleAdmin'
     )->name('groups.users.toggle-admin');
+    Route::resource(
+        'groups.environments',
+        'GroupEnvironmentController'
+    )->except(['show']);
 });
 
 /**
@@ -52,6 +57,10 @@ Route::name('sessions.')
     ->group(function () {
         Route::get('/', 'SessionController@index')->name('index');
         Route::get('{session}', 'SessionController@show')->name('show');
+        Route::get('{session}/edit', 'SessionController@edit')->name('edit');
+        Route::put('{session}/update', 'SessionController@update')->name(
+            'update'
+        );
         Route::delete('{session}/destroy', 'SessionController@destroy')->name(
             'destroy'
         );
@@ -103,6 +112,10 @@ Route::name('sessions.')
                 Route::post('config', 'RegisterController@storeConfig')->name(
                     'config.store'
                 );
+                Route::get(
+                    'environment-candidates',
+                    'RegisterController@groupEnvironmentCandidates'
+                )->name('group-environment-candidates');
             });
     });
 

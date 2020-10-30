@@ -2,36 +2,75 @@
     <layout>
         <div class="row">
             <div class="col-md-12">
-                <div class="row border-bottom pb-4 align-items-center">
-                    <div class="col-6 d-flex flex-column">
-                        <div class="page-pretitle font-weight-normal">
-                            <breadcrumb
-                                class="breadcrumb-bullets"
-                                :items="breadcrumbs"
-                            ></breadcrumb>
-                        </div>
-                        <h1 class="page-title mw-100 mr-2 text-break">
-                            <b>{{ group.name }}</b>
-                        </h1>
+                <div class="row pb-2 align-items-center">
+                    <div class="page-pretitle font-weight-normal">
+                        <breadcrumb
+                            class="breadcrumb-bullets"
+                            :items="breadcrumbs"
+                        ></breadcrumb>
                     </div>
-                    <div class="ml-auto col-2 d-flex justify-content-end">
-                        <inertia-link
-                            :href="route('groups.users.create', group.id)"
-                            class="btn btn-primary"
-                            v-if="group.can.invite"
-                        >
-                            <icon name="user-plus" />
-                            Invite User
-                        </inertia-link>
-                    </div>
+                    <h1 class="page-title mw-100 mr-2 text-break">
+                        <b>{{ group.name }}</b>
+                    </h1>
                 </div>
-                <div class="row align-items-start">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col mt-3">
-                                <slot />
-                            </div>
+                <div class="row">
+                    <div class="col">
+                        <div
+                            class="d-flex align-items-baseline border-bottom mb-4"
+                        >
+                            <ul class="nav nav-tabs mx-0 border-0">
+                                <li class="nav-item">
+                                    <inertia-link
+                                        :href="route('groups.show', group.id)"
+                                        class="nav-link rounded-0"
+                                        v-bind:class="{
+                                            active: route().current(
+                                                'groups.show'
+                                            ),
+                                        }"
+                                    >
+                                        Sessions
+                                    </inertia-link>
+                                </li>
+                                <li class="nav-item">
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'groups.users.index',
+                                                group.id
+                                            )
+                                        "
+                                        class="nav-link rounded-0"
+                                        v-bind:class="{
+                                            active: route().current(
+                                                'groups.users.*'
+                                            ),
+                                        }"
+                                    >
+                                        Members
+                                    </inertia-link>
+                                </li>
+                                <li class="nav-item">
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'groups.environments.index',
+                                                group.id
+                                            )
+                                        "
+                                        class="nav-link rounded-0"
+                                        v-bind:class="{
+                                            active: route().current(
+                                                'groups.environments.*'
+                                            ),
+                                        }"
+                                    >
+                                        Environments
+                                    </inertia-link>
+                                </li>
+                            </ul>
                         </div>
+                        <slot />
                     </div>
                 </div>
             </div>

@@ -30,7 +30,7 @@ class MessageLogPolicy
             $model
                 ->session()
                 ->whereHas('owner', function ($query) use ($user) {
-                    $query->whereKey($user);
+                    $query->whereKey($user->getKey());
                 })
                 ->exists();
     }

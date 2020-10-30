@@ -1,7 +1,6 @@
 <template>
     <layout
         :session="session"
-        :useCases="useCases"
         :test-case="testCase"
         :testStepFirstSource="testStepFirstSource"
     >
@@ -129,10 +128,6 @@ export default {
     },
     props: {
         session: {
-            type: Object,
-            required: true,
-        },
-        useCases: {
             type: Object,
             required: true,
         },

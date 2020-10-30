@@ -3,14 +3,7 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Exceptions\MessageMismatchException;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
-use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
 use App\Http\Headers\TraceparentHeader;
-use App\Http\Middleware\SetContentLengthHeaders;
-use App\Http\Middleware\SetJsonHeaders;
 use App\Http\Middleware\ValidateTraceContext;
 use App\Models\Component;
 use App\Models\TestRun;
@@ -25,11 +18,8 @@ class SimulatorController extends Controller
      */
     public function __construct()
     {
-        $this->middleware([
-            SetJsonHeaders::class,
-            SetContentLengthHeaders::class,
-            ValidateTraceContext::class,
-        ]);
+        parent::__construct();
+        $this->middleware(ValidateTraceContext::class);
     }
 
     /**
@@ -91,9 +81,9 @@ class SimulatorController extends Controller
             )
             ->first();
 
-        if ($testStep === null) {
+        if (!$testStep) {
             throw new MessageMismatchException(
-                $testRun->session,
+                $session,
                 404,
                 'Unable to match simulator request with an awaited test step. Please check the test preconditions.'
             );
@@ -109,12 +99,6 @@ class SimulatorController extends Controller
             )->withQuery((string) request()->getQueryString())
         );
 
-        return (new PendingRequest())
-            ->mapRequest(new MapRequestHandler($testResult))
-            ->mapResponse(new MapResponseHandler($testResult))
-            ->transfer($request)
-            ->then(new SendingFulfilledHandler($testResult))
-            ->otherwise(new SendingRejectedHandler($testResult))
-            ->wait();
+        return (new ProcessPendingRequest($request, $testResult))();
     }
 }

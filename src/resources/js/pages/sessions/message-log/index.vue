@@ -22,7 +22,10 @@
                             v-bind:key="message.type + message.id"
                         >
                             <td>
-                                <div class="d-flex align-items-center">
+                                <div
+                                    class="d-flex align-items-center"
+                                    v-if="message.request"
+                                >
                                     {{ message.request.method }}
                                     {{
                                         message.type === 'MISMATCH'
@@ -58,14 +61,16 @@
                                 {{ message.created_at }}
                             </td>
                             <td>
-                                <mismatch-modal
-                                    :message="message"
-                                    :path="
-                                        processMismatchPath(
-                                            message.request.path
-                                        )
-                                    "
-                                ></mismatch-modal>
+                                <template v-if="message.request">
+                                    <mismatch-modal
+                                        :message="message"
+                                        :path="
+                                            processMismatchPath(
+                                                message.request.path
+                                            )
+                                        "
+                                    ></mismatch-modal>
+                                </template>
                             </td>
                         </tr>
                         <tr v-if="!logItems.data.length">
@@ -91,7 +96,7 @@ import MismatchModal from '@/components/mismatch-modal';
 export default {
     components: {
         Session,
-        'mismatch-modal': MismatchModal,
+        MismatchModal,
     },
     props: {
         session: {

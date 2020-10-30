@@ -63,7 +63,7 @@ class GroupPolicy
      * @param  Group  $model
      * @return mixed
      */
-    public function invite(User $user, Group $model)
+    public function admin(User $user, Group $model)
     {
         return $user->isAdmin() || $model->hasAdminUser($user);
     }

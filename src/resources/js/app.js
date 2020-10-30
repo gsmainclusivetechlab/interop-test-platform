@@ -56,6 +56,11 @@ Vue.component('breadcrumb', () =>
 Vue.component('pagination', () =>
     import(/* webpackChunkName: "pagination" */ '@/components/pagination.vue')
 );
+Vue.component('input-search', () =>
+    import(
+        /* webpackChunkName: "input-search" */ '@/components/input-search.vue'
+    )
+);
 Vue.component('selectize', () =>
     import(/* webpackChunkName: "selectize" */ '@isneezy/vue-selectize')
 );

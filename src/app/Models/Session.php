@@ -21,7 +21,20 @@ class Session extends Model
     /**
      * @var array
      */
-    protected $fillable = ['uuid', 'name', 'description'];
+    protected $fillable = [
+        'uuid',
+        'name',
+        'description',
+        'group_environment_id',
+        'environments',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'environments' => 'array',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -29,6 +42,17 @@ class Session extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function groupEnvironment()
+    {
+        return $this->belongsTo(
+            GroupEnvironment::class,
+            'group_environment_id'
+        );
     }
 
     /**
@@ -93,7 +117,22 @@ class Session extends Model
             'session_test_cases',
             'session_id',
             'test_case_id'
-        );
+        )
+            ->withPivot(['deleted_at'])
+            ->wherePivot('deleted_at', null);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function testCasesWithSoftDeletes()
+    {
+        return $this->belongsToMany(
+            TestCase::class,
+            'session_test_cases',
+            'session_id',
+            'test_case_id'
+        )->withPivot(['deleted_at']);
     }
 
     /**
@@ -108,7 +147,36 @@ class Session extends Model
             'test_case_id',
             'id',
             'test_case_id'
-        );
+        )->wherePivot('deleted_at', null);
+    }
+
+    /**
+     * @return array
+     */
+    public function environments()
+    {
+        return array_merge($this->environments, [
+            'SP_BASE_URI' => $this->getBaseUriOfComponent(
+                Component::where('name', 'Service Provider')->firstOrFail()
+            ),
+            'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
+                Component::where(
+                    'name',
+                    'Mobile Money Operator 1'
+                )->firstOrFail()
+            ),
+            'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
+                Component::where('name', 'Mojaloop')->firstOrFail()
+            ),
+            'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
+                Component::where(
+                    'name',
+                    'Mobile Money Operator 2'
+                )->firstOrFail()
+            ),
+            'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
+            'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),
+        ]);
     }
 
     /**
