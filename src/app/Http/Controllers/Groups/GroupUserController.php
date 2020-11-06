@@ -93,7 +93,7 @@ class GroupUserController extends Controller
             ],
         ]);
         $group->users()->attach($request->input('user_id'), [
-            'admin' => false,
+            'admin' => !$group->users()->exists(),
         ]);
 
         return redirect()
