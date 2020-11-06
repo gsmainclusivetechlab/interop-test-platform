@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\GroupUserInvitation as InvitationNotification;
 
@@ -31,7 +32,7 @@ class GroupUserInvitation extends Model
     protected $fillable = ['email', 'invitation_code', 'expired_at'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function group()
     {

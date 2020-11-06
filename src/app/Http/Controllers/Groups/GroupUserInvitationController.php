@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -93,7 +92,7 @@ class GroupUserInvitationController extends Controller
 
     /**
      * @param Group $group
-     * @param GroupUserInvitation $userInvitations
+     * @param GroupUserInvitation $userInvitation
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -118,10 +117,9 @@ class GroupUserInvitationController extends Controller
 
     /**
      * @param Group $group
-     * @param GroupUserInvitation $userInvitations
+     * @param GroupUserInvitation $userInvitation
      * @return RedirectResponse
      * @throws AuthorizationException
-     * @throws \Exception
      */
     public function destroy(Group $group, GroupUserInvitation $userInvitation)
     {
