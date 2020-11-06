@@ -3,12 +3,12 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>{{ `Invite new user to ${group.name}` }}</b>
+                    <b>{{ `Invite user to ${group.name}` }}</b>
                 </h1>
             </div>
             <div class="container">
                 <div class="col-8 m-auto">
-                    <form class="card" @submit.prevent="submit">
+                    <form class="card" @submit.prevent="inviteRegUser">
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label"> User </label>
@@ -20,7 +20,7 @@
                                         'is-invalid': $page.errors.user_id,
                                     }"
                                     label="name"
-                                    :keys="['name']"
+                                    :keys="['name', 'email']"
                                     :options="userList"
                                     :createItem="false"
                                     :searchFn="searchUser"
@@ -45,7 +45,7 @@
                                 </span>
                                 <div class="mt-1 text-muted small">
                                     {{
-                                        `You can only invite registered users whose email address matches ${group.domain}`
+                                        `You can invite registered users or input email address matches ${group.domain}`
                                     }}
                                 </div>
                             </div>
@@ -57,11 +57,23 @@
                             >
                                 Cancel
                             </inertia-link>
-                            <button type="submit" class="btn btn-primary">
+                            <button
+                                v-if="regUser.user_id"
+                                type="submit"
+                                class="btn btn-primary"
+                            >
                                 <span
-                                    v-if="sending"
+                                    v-if="regUser.sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
+                                Invite
+                            </button>
+                            <button
+                                v-if="!regUser.user_id"
+                                v-b-modal="`modal-response-${group.name}`"
+                                type="button"
+                                class="btn btn-primary"
+                            >
                                 Invite
                             </button>
                         </div>
@@ -69,11 +81,56 @@
                 </div>
             </div>
         </div>
+        <b-modal
+            :id="`modal-response-${group.name}`"
+            size="lg"
+            centered
+            hide-footer
+            title="Invite new user"
+        >
+            <form @submit.prevent="inviteNewUser">
+                <label class="form-label">New user</label>
+                <input
+                    v-model="newUser.user_email"
+                    class="form-control"
+                    :class="{
+                        'is-invalid': !checkEmail,
+                    }"
+                    type="email"
+                />
+                <span v-if="!checkEmail" class="invalid-feedback">
+                    <strong>
+                        {{
+                            `Please input correct email address matches ${group.domain}`
+                        }}
+                    </strong>
+                </span>
+                <div class="mt-1 text-muted small">
+                    {{
+                        `You can invite new users by email address matches ${group.domain}`
+                    }}
+                </div>
+                <div class="text-right">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        :disabled="!checkEmail"
+                    >
+                        <span
+                            v-if="newUser.sending"
+                            class="spinner-border spinner-border-sm mr-2"
+                        ></span>
+                        Invite
+                    </button>
+                </div>
+            </form>
+        </b-modal>
     </layout>
 </template>
 
 <script>
 import Layout from '@/layouts/main';
+import { strToRegexp } from '@/helpers/helpers';
 
 export default {
     metaInfo() {
@@ -92,11 +149,15 @@ export default {
     },
     data() {
         return {
-            sending: false,
             user: null,
             userList: [],
-            form: {
+            regUser: {
+                sending: false,
                 user_id: null,
+            },
+            newUser: {
+                sending: false,
+                user_email: '',
             },
         };
     },
@@ -104,7 +165,7 @@ export default {
         user: {
             immediate: true,
             handler: function (value) {
-                this.form.user_id = value ? value.id : null;
+                this.regUser.user_id = value ? value.id : null;
             },
         },
     },
@@ -112,11 +173,20 @@ export default {
         this.loadUserList();
     },
     methods: {
-        submit() {
-            this.sending = true;
+        inviteRegUser() {
+            this.regUser.sending = true;
+
             this.$inertia
-                .post(route('groups.users.store', this.group), this.form)
-                .then(() => (this.sending = false));
+                .post(route('groups.users.store', this.group), this.regUser)
+                .then(() => (this.regUser.sending = false));
+        },
+        inviteNewUser() {
+            this.newUser.sending = true;
+
+            this.$inertia
+                // TODO - change route for invite new user by email
+                .post(route('groups.users.store', this.group), this.newUser)
+                .then(() => (this.newUser.sending = false));
         },
         loadUserList(query = '') {
             axios
@@ -127,9 +197,19 @@ export default {
                     this.userList = result.data.data;
                 });
         },
-        searchUser(query, callback) {
-            this.loadUserList(query);
-            callback();
+        searchUser(query) {
+            this.newUser.user_email = query;
+        },
+    },
+    computed: {
+        checkEmail() {
+            const strValidate = strToRegexp(this.group.domain);
+
+            if (this.newUser.user_email.match(strValidate)) {
+                return true;
+            }
+
+            return false;
         },
     },
 };
