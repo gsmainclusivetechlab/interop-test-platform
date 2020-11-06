@@ -62,32 +62,23 @@ class GroupUserInvitationController extends Controller
     public function store(Group $group, Request $request)
     {
         $this->authorize('admin', $group);
-        $request->validate([
-            'user_email' => [
-                'required',
-                Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
-                    return $query->where('group_id', $group->id);
-                }),
+        $request->validate(
+            [
+                'user_email' => [
+                    'required',
+                    'email',
+                    Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
+                        return $query->where('group_id', $group->id);
+                    }),
+                ],
             ],
-        ]);
-//        $validator = Validator::make(
-//            $request->all(),
-//            [
-//                'user_email' => [
-//                    'required',
-//                    Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
-//                        return $query->where('group_id', $group->id);
-//                    })
-//                ]
-//            ],
-//            [
-//                'user_email.unique'  => 'lol'
-//            ]
-//        );
-//
-//        if ($validator->fails()) {
-//            return $validator->errors();
-//        }
+            ['user_email.unique' => 'Invitation for this email already exist.']
+        );
+        $request->validate(
+            ['user_email' => 'unique:users,email'],
+            ['user_email.unique' => 'User with this email already registered.']
+        );
+
         $userInvitation = $group->userInvitations()->create([
             'email' => $request->user_email,
             'invitation_code' => Str::random(15),
@@ -96,7 +87,7 @@ class GroupUserInvitationController extends Controller
         $userInvitation->sendEmailInvitationNotification();
 
         return redirect()
-            ->route('groups.users.index', $group)
+            ->route('groups.user-invitations.index', $group)
             ->with('success', __('User invited successfully to group'));
     }
 

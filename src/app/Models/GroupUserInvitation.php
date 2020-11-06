@@ -31,19 +31,6 @@ class GroupUserInvitation extends Model
     protected $fillable = ['email', 'invitation_code', 'expired_at'];
 
     /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-//            'email.required' => 'A title is required',
-            'email.unique' => 'A title is required',
-        ];
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function group()
