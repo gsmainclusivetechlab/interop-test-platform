@@ -54,6 +54,24 @@
                                     <inertia-link
                                         :href="
                                             route(
+                                                'groups.user-invitations.index',
+                                                group.id
+                                            )
+                                        "
+                                        class="nav-link rounded-0"
+                                        v-bind:class="{
+                                            active: route().current(
+                                                'groups.user-invitations.*'
+                                            ),
+                                        }"
+                                    >
+                                        Invitations
+                                    </inertia-link>
+                                </li>
+                                <li class="nav-item">
+                                    <inertia-link
+                                        :href="
+                                            route(
                                                 'groups.environments.index',
                                                 group.id
                                             )
