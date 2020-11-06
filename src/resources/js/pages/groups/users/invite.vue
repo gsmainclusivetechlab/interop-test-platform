@@ -184,8 +184,7 @@ export default {
             this.newUser.sending = true;
 
             this.$inertia
-                // TODO - change route for invite new user by email
-                .post(route('groups.users.store', this.group), this.newUser)
+                .post(route('groups.user-invitations.store', this.group), this.newUser)
                 .then(() => (this.newUser.sending = false));
         },
         loadUserList(query = '') {
