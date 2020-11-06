@@ -1,9 +1,9 @@
 <template>
     <layout>
         <div class="flex-fill d-flex flex-column justify-content-center">
-            <div class="page-header">
+            <div class="page-header" v-once>
                 <h1 class="page-title text-center">
-                    <b>{{ `Invite user to ${group.name}` }}</b>
+                    <b>{{ `Invite user to "${group.name}"` }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -13,7 +13,7 @@
                             <div class="mb-3">
                                 <label class="form-label"> User </label>
                                 <selectize
-                                    v-model="user"
+                                    v-model.trim="user"
                                     class="form-select"
                                     placeholder="Select user..."
                                     :class="{
@@ -25,10 +25,7 @@
                                     :createItem="false"
                                     :searchFn="searchUser"
                                 >
-                                    <template
-                                        slot="option"
-                                        slot-scope="{ option }"
-                                    >
+                                    <template #option="{ option }">
                                         <div>{{ option.name }}</div>
                                         <div class="text-muted small">
                                             {{ option.company }}
@@ -43,7 +40,7 @@
                                         {{ $page.errors.user_id }}
                                     </strong>
                                 </span>
-                                <div class="mt-1 text-muted small">
+                                <div class="mt-1 text-muted small" v-once>
                                     {{
                                         `You can invite registered users or input email address matches ${group.domain}`
                                     }}
@@ -54,6 +51,7 @@
                             <inertia-link
                                 :href="route('groups.users.index', group.id)"
                                 class="btn btn-link"
+                                v-once
                             >
                                 Cancel
                             </inertia-link>
@@ -91,7 +89,7 @@
             <form @submit.prevent="inviteNewUser">
                 <label class="form-label">New user</label>
                 <input
-                    v-model="newUser.user_email"
+                    v-model.trim="newUser.user_email"
                     class="form-control"
                     :class="{
                         'is-invalid': !checkEmail,
@@ -105,7 +103,7 @@
                         }}
                     </strong>
                 </span>
-                <div class="mt-1 text-muted small">
+                <div class="mt-1 text-muted small" v-once>
                     {{
                         `You can invite new users by email address matches ${group.domain}`
                     }}
@@ -184,8 +182,11 @@ export default {
             this.newUser.sending = true;
 
             this.$inertia
-                // TODO - change route for invite new user by email
-                .post(route('groups.users.store', this.group), this.newUser)
+                // TODO - add correct route for invite new user by email
+                .post(
+                    route('groups.user-invitations.store', this.group),
+                    this.newUser
+                )
                 .then(() => (this.newUser.sending = false));
         },
         loadUserList(query = '') {

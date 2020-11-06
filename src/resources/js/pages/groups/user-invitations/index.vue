@@ -29,7 +29,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="userInvitation in userInvitations.data">
+                        <tr v-for="(userInvitation, i) in userInvitations.data" :key="i">
                             <td class="text-break">
                                 <a :href="`mailto:${userInvitation.email}`">
                                     {{ userInvitation.email }}
