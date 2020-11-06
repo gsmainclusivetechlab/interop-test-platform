@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -62,17 +63,33 @@ class GroupUserInvitationController extends Controller
     {
         $this->authorize('admin', $group);
         $request->validate([
-            'email' => [
+            'user_email' => [
                 'required',
-                Rule::unique('email', 'group_id')->where(function (
-                    $query
-                ) use ($group) {
+                Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
                     return $query->where('group_id', $group->id);
                 }),
             ],
         ]);
+//        $validator = Validator::make(
+//            $request->all(),
+//            [
+//                'user_email' => [
+//                    'required',
+//                    Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
+//                        return $query->where('group_id', $group->id);
+//                    })
+//                ]
+//            ],
+//            [
+//                'user_email.unique'  => 'lol'
+//            ]
+//        );
+//
+//        if ($validator->fails()) {
+//            return $validator->errors();
+//        }
         $userInvitation = $group->userInvitations()->create([
-            'email' => $request->email,
+            'email' => $request->user_email,
             'invitation_code' => Str::random(15),
             'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
         ]);
