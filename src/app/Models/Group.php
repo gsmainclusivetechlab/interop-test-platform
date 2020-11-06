@@ -43,6 +43,14 @@ class Group extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userInvitations()
+    {
+        return $this->hasMany(GroupUserInvitation::class, 'group_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function sessions()

@@ -1,0 +1,131 @@
+<?php declare(strict_types=1);
+
+namespace App\Http\Controllers\Groups;
+
+use App\Http\Resources\GroupResource;
+use App\Http\Resources\GroupUserInvitationResource;
+use App\Models\Group;
+use App\Models\GroupUserInvitation;
+use App\Http\Controllers\Controller;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Env;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class GroupUserInvitationController extends Controller
+{
+    /**
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'verified']);
+    }
+
+    /**
+     * @param Group $group
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function index(Group $group)
+    {
+        $this->authorize('admin', $group);
+
+        return Inertia::render('groups/user-invitations/index', [
+            'group' => (new GroupResource($group))->resolve(),
+            'userInvitations' => GroupUserInvitationResource::collection(
+                $group->userInvitations()
+                    ->when(request('q'), function (Builder $query, $q) {
+                        $query->where('email', 'like', "%{$q}%");
+                    })
+                    ->latest()
+                    ->paginate()
+            ),
+            'filter' => [
+                'q' => request('q'),
+            ],
+        ]);
+    }
+
+    /**
+     * @param Group $group
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function store(Group $group, Request $request)
+    {
+        $this->authorize('admin', $group);
+        $request->validate([
+            'email' => [
+                'required',
+                Rule::unique('email', 'group_id')->where(function (
+                    $query
+                ) use ($group) {
+                    return $query->where('group_id', $group->id);
+                }),
+            ],
+        ]);
+        $userInvitation = $group->userInvitations()->create([
+            'email' => $request->email,
+            'invitation_code' => Str::random(15),
+            'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
+        ]);
+        $userInvitation->sendEmailInvitationNotification();
+
+        return redirect()
+            ->route('groups.users.index', $group)
+            ->with('success', __('User invited successfully to group'));
+    }
+
+    /**
+     * @param Group $group
+     * @param GroupUserInvitation $userInvitations
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function update(Group $group, GroupUserInvitation $userInvitation)
+    {
+        $userInvitation = $group
+            ->userInvitations()
+            ->whereKey($userInvitation->getKey())
+            ->firstOrFail();
+        $this->authorize('admin', $group);
+
+        $userInvitation->update([
+            'invitation_code' => Str::random(15),
+            'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
+        ]);
+        $userInvitation->sendEmailInvitationNotification();
+
+        return redirect()
+            ->route('groups.user-invitations.index', $group)
+            ->with('success', __('Invitation re-send successfully'));
+    }
+
+    /**
+     * @param Group $group
+     * @param GroupUserInvitation $userInvitations
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws \Exception
+     */
+    public function destroy(Group $group, GroupUserInvitation $userInvitation)
+    {
+        $userInvitation = $group
+            ->userInvitations()
+            ->whereKey($userInvitation->getKey())
+            ->firstOrFail();
+        $this->authorize('admin', $group);
+        $userInvitation->delete();
+
+        return redirect()
+            ->back()
+            ->with('success', __('Invitation deleted successfully'));
+    }
+}
