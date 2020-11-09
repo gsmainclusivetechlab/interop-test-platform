@@ -92,7 +92,7 @@
                     v-model.trim="newUser.user_email"
                     class="form-control"
                     :class="{
-                        'is-invalid': !checkEmail,
+                        'is-invalid': !checkEmail || $page.errors.user_email,
                     }"
                     type="email"
                 />
@@ -101,6 +101,11 @@
                         {{
                             `Please input correct email address matches ${group.domain}`
                         }}
+                    </strong>
+                </span>
+                <span v-if="$page.errors.user_email" class="invalid-feedback">
+                    <strong>
+                        {{ $page.errors.user_email }}
                     </strong>
                 </span>
                 <div class="mt-1 text-muted small" v-once>
@@ -182,12 +187,13 @@ export default {
             this.newUser.sending = true;
 
             this.$inertia
-                // TODO - add correct route for invite new user by email
                 .post(
                     route('groups.user-invitations.store', this.group),
                     this.newUser
                 )
-                .then(() => (this.newUser.sending = false));
+                .then((result) => {
+                    this.newUser.sending = false;
+                });
         },
         loadUserList(query = '') {
             axios
