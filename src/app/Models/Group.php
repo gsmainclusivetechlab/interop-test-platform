@@ -90,6 +90,27 @@ class Group extends Model
     }
 
     /**
+     * Generate regex validation rule for email by domain
+     *
+     * @return string
+     */
+    public function emailRegexRule()
+    {
+        $matchTo = str_replace(
+            '.',
+            '[.]',
+            str_replace(
+                ', ',
+                '|',
+                $this->domain
+            )
+        );
+        $matchTo = $matchTo ?? '*';
+
+        return 'regex:/(' . $matchTo . ')$/';
+    }
+
+    /**
      * @param User $user
      * @return bool
      */

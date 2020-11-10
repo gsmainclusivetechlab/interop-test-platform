@@ -68,6 +68,7 @@ class GroupUserInvitationController extends Controller
                     Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
                         return $query->where('group_id', $group->id);
                     }),
+                    $group->emailRegexRule()
                 ],
             ],
             ['user_email.unique' => 'Invitation for this email already exist.']
