@@ -1,6 +1,6 @@
 name: Sample Questionnaire
 questions:
-  section:
+  section-one:
     name: "Section One"
     description: "Some section description goes here"
     questions:
@@ -48,7 +48,7 @@ questions:
       - property: two-subcategory-first
         question: Which subcategory of "first" do you want?
         preconditions:
-          category:
+          two-category:
             in:
               - first
               - two
@@ -64,7 +64,7 @@ questions:
       - property: two-subcategory-sync
         question: Test?
         preconditions:
-          sync:
+          two-sync:
             in:
               - sync
         values:
@@ -78,6 +78,14 @@ test_cases:
   rejected-transaction-by-payer-fsp:
     subcategory-first: "in:B"
     sync: "in:async"
+  authorized-with-account-lookup:
+    sync: "in:async"
+  authorized-with-authorizationcode:
+    sync: "in:async"
+  decline-transaction-error-400:
+    sync: "in:sync"
+  decline-transaction-error-500:
+    sync: "in:sync"
   rejected-transaction-request-by-payer-fsp:
     subcategory-first: "in:B"
     sync: "in:sync"
