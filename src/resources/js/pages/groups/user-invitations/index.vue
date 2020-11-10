@@ -7,12 +7,12 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('groups.users.create', group.id)"
+                        :href="route('groups.user-invitations.create', group.id)"
                         v-if="group.can.admin"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        New Member
+                        Invite Member
                     </inertia-link>
                 </div>
             </div>

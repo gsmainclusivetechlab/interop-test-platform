@@ -53,6 +53,20 @@ class GroupUserInvitationController extends Controller
 
     /**
      * @param Group $group
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function create(Group $group)
+    {
+        $this->authorize('admin', $group);
+
+        return Inertia::render('groups/user-invitations/invite', [
+            'group' => (new GroupResource($group))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param Group $group
      * @param Request $request
      * @return RedirectResponse
      * @throws AuthorizationException

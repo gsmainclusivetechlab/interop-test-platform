@@ -46,11 +46,9 @@ Route::namespace('Groups')->group(function () {
         'groups.environments',
         'GroupEnvironmentController'
     )->except(['show']);
-    Route::resource('groups.user-invitations', 'GroupUserInvitationController')->only([
-        'index',
-        'update',
-        'store',
-        'destroy',
+    Route::resource('groups.user-invitations', 'GroupUserInvitationController')->except([
+        'show',
+        'edit',
     ]);
 });
 
