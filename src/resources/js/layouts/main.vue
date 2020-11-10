@@ -129,6 +129,14 @@
                                     Message Log
                                 </inertia-link>
                             </li>
+                            <li v-if="$page.auth.user.can.questionnaire.create">
+                                <inertia-link
+                                    :href="route('admin.questionnaire.import')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Import Questionnaire Definition
+                                </inertia-link>
+                            </li>
                         </b-nav-item-dropdown>
 
                         <b-nav-item-dropdown

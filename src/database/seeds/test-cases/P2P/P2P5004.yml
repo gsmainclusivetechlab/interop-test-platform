@@ -1,4 +1,5 @@
 name: P2P Rejected Quote by Payee FSP - Send / Disclosing
+slug: P2P5004
 use_case: P2P
 test_case: P2P5004
 behavior: negative

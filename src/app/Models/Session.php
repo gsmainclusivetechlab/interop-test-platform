@@ -13,6 +13,9 @@ class Session extends Model
 {
     use HasUuid;
 
+    const TYPE_TEST = 'test';
+    const TYPE_COMPLIANCE = 'compliance';
+
     /**
      * @var string
      */
@@ -24,6 +27,7 @@ class Session extends Model
     protected $fillable = [
         'uuid',
         'name',
+        'type',
         'description',
         'group_environment_id',
         'environments',
@@ -156,19 +160,19 @@ class Session extends Model
     public function environments()
     {
         return array_merge($this->environments, [
-            'SP_BASE_URI' => $this->getBaseUriOfComponent(
+            'SP_BASE_URI'               => $this->getBaseUriOfComponent(
                 Component::where('name', 'Service Provider')->firstOrFail()
             ),
-            'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
+            'MMO1_BASE_URI'             => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 1'
                 )->firstOrFail()
             ),
-            'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
+            'MOJALOOP_BASE_URI'         => $this->getBaseUriOfComponent(
                 Component::where('name', 'Mojaloop')->firstOrFail()
             ),
-            'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
+            'MMO2_BASE_URI'             => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 2'
@@ -181,6 +185,7 @@ class Session extends Model
 
     /**
      * @param Component $component
+     *
      * @return bool
      */
     public function hasComponent(Component $component)
@@ -192,6 +197,7 @@ class Session extends Model
 
     /**
      * @param Component $component
+     *
      * @return string
      */
     public function getBaseUriOfComponent(Component $component)
@@ -203,5 +209,29 @@ class Session extends Model
             'pivot.base_url',
             $component->base_url
         );
+    }
+
+    /**
+     * @return array
+     */
+    public static function types()
+    {
+        return [
+            static::TYPE_TEST       => __('Test'),
+            static::TYPE_COMPLIANCE => __('Compliance'),
+        ];
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public static function typesList()
+    {
+        return collect(static::types())->map(function ($label, $key) {
+            return [
+                'id' => $key,
+                'label' => $label
+            ];
+        })->values();
     }
 }

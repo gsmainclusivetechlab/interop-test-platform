@@ -1,0 +1,85 @@
+name: Sample Questionnaire
+questions:
+  section:
+    name: "Section One"
+    description: "Some section description goes here"
+    questions:
+      - property: category
+        question: What category do you want?
+        type: select
+        values:
+          first: The first one
+          second: The second one
+      - property: subcategory-first
+        question: Which subcategory of "first" do you want?
+        preconditions:
+          category:
+            in:
+              - first
+              - two
+        values:
+          A: Subcategory A
+          B: Subcategory B
+      - property: sync
+        question: Synchronous or Asynchronous?
+        type: multiselect
+        values:
+          sync: Synchronous
+          async: Asynchronous
+      - property: subcategory-sync
+        question: Test?
+        preconditions:
+          sync:
+            in:
+              - sync
+        values:
+          A: Subcategory A
+          B: Subcategory B
+  section-two:
+    name: "Section Two"
+    description: "Some section description goes here"
+    questions:
+      - property: two-category
+        question: What category do you want?
+        type: select
+        values:
+          first: The first one
+          second: The second one
+      - property: two-subcategory-first
+        question: Which subcategory of "first" do you want?
+        preconditions:
+          category:
+            in:
+              - first
+              - two
+        values:
+          A: Subcategory A
+          B: Subcategory B
+      - property: two-sync
+        question: Synchronous or Asynchronous?
+        type: multiselect
+        values:
+          sync: Synchronous
+          async: Asynchronous
+      - property: two-subcategory-sync
+        question: Test?
+        preconditions:
+          sync:
+            in:
+              - sync
+        values:
+          A: Subcategory A
+          B: Subcategory B
+
+test_cases:
+  COCI0001:
+    subcategory-first: "in:A"
+    sync: "in:async"
+  rejected-transaction-by-payer-fsp:
+    subcategory-first: "in:B"
+    sync: "in:async"
+  rejected-transaction-request-by-payer-fsp:
+    subcategory-first: "in:B"
+    sync: "in:sync"
+  authorized-transaction:
+    category: "in:second"

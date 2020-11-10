@@ -1,4 +1,5 @@
 name: P2P Accepted - Send / Disclosing
+slug: P2P0400
 use_case: P2P
 test_case: P2P0400
 behavior: positive

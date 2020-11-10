@@ -100,6 +100,15 @@ Route::name('sessions.')
                 Route::post('sut', 'RegisterController@storeSut')->name(
                     'sut.store'
                 );
+                Route::get('questionnaire/summary', 'RegisterController@questionnaireSummary')->name(
+                    'questionnaire.summary'
+                );
+                Route::get('questionnaire/{section}', 'RegisterController@showQuestionnaireForm')->name(
+                    'questionnaire'
+                );
+                Route::post('questionaire/{section}', 'RegisterController@storeQuestionnaire')->name(
+                    'questionnaire.store'
+                );
                 Route::get('info', 'RegisterController@showInfoForm')->name(
                     'info'
                 );
@@ -240,6 +249,16 @@ Route::name('admin.')
                     'group-candidates',
                     'TestCaseController@groupCandidates'
                 )->name('group-candidates');
+            });
+        Route::name('questionnaire.')
+            ->prefix('questionnaire')
+            ->group(function () {
+                Route::get('import', 'QuestionnaireController@showImportForm')->name(
+                    'import'
+                );
+                Route::post('import', 'QuestionnaireController@import')->name(
+                    'import.confirm'
+                );
             });
     });
 
