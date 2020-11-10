@@ -3,11 +3,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\GroupUserInvitation;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,11 +39,42 @@ class RegisterController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return Response
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
-        return Inertia::render('auth/register');
+        return Inertia::render('auth/register', [
+            'invitationCode' => $request->query('invitationCode')
+        ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param Request $request
+     * @return RedirectResponse|JsonResponse
+     * @throws ValidationException
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        $user = $this->create($request->all());
+
+        if ($request->invitation_code) {
+            $user->markEmailAsVerified();
+        }
+        event(new Registered($user));
+
+        $this->guard()->login($user);
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 201)
+            : redirect($this->redirectPath());
     }
 
     /**
@@ -56,6 +97,15 @@ class RegisterController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:8'],
             'terms' => ['required'],
+            'invitation_code' => [
+                'nullable',
+                Rule::requiredIf(Env::get('REQUIRE_INVITED_REGISTRATION', false)),
+                Rule::exists('group_user_invitations', 'invitation_code')->where(function ($query) use ($data) {
+                    return $query
+                        ->where('email', $data['email'])
+                        ->where('expired_at', '>', Carbon::now()->toDateTimeString());
+                }),
+            ],
         ]);
     }
 
@@ -73,5 +123,29 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'role' => User::ROLE_USER,
         ]);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param Request $request
+     * @param mixed $user
+     * @return mixed
+     * @throws Exception
+     */
+    protected function registered(Request $request, $user)
+    {
+        $invitations = GroupUserInvitation::where('email', $user->email)->get();
+
+        foreach ($invitations as $invitation) {
+            /** @var GroupUserInvitation $invitation */
+            if (GroupUserInvitation::STATUS_ACTIVE === $invitation->status) {
+                $groupUsers = $invitation->group->users();
+                $groupUsers->attach($user->id, [
+                    'admin' => !$groupUsers->exists(),
+                ]);
+            }
+            $invitation->delete();
+        }
     }
 }

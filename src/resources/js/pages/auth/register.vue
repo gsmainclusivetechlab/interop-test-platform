@@ -66,6 +66,19 @@
                     </span>
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">Invitation Code</label>
+                    <input
+                        v-model="form.invitation_code"
+                        :class="{ 'is-invalid': $page.errors.invitation_code }"
+                        type="text"
+                        class="form-control"
+                        name="invitation_code"
+                    />
+                    <span v-if="$page.errors.invitation_code" class="invalid-feedback">
+                        {{ $page.errors.invitation_code }}
+                    </span>
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Password</label>
                     <input
                         v-model="form.password"
@@ -150,6 +163,12 @@ export default {
     components: {
         Layout,
     },
+    props: {
+        invitationCode: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
             sending: false,
@@ -158,6 +177,7 @@ export default {
                 last_name: null,
                 email: null,
                 company: null,
+                invitation_code: this.invitationCode,
                 password: null,
                 password_confirmation: null,
                 terms: null,

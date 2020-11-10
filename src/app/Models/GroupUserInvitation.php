@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use App\Notifications\GroupUserInvitation as InvitationNotification;
 
 /**
@@ -55,6 +56,20 @@ class GroupUserInvitation extends Model
         return 0 < Carbon::now()->diffInSeconds($this->expired_at, false)
             ? self::STATUS_ACTIVE
             : self::STATUS_EXPIRED;
+    }
+
+    /**
+     * Generate invitation code.
+     *
+     * @return string
+     */
+    public static function generateInvitationCode()
+    {
+        do {
+            $invitationCode = Str::random(15);
+        } while (static::where('invitation_code', $invitationCode)->first());
+
+        return $invitationCode;
     }
 
     /**

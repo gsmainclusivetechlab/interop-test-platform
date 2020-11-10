@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -80,7 +79,7 @@ class GroupUserInvitationController extends Controller
 
         $userInvitation = $group->userInvitations()->create([
             'email' => $request->user_email,
-            'invitation_code' => Str::random(15),
+            'invitation_code' => GroupUserInvitation::generateInvitationCode(),
             'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
         ]);
         $userInvitation->sendEmailInvitationNotification();
@@ -105,7 +104,7 @@ class GroupUserInvitationController extends Controller
         $this->authorize('admin', $group);
 
         $userInvitation->update([
-            'invitation_code' => Str::random(15),
+            'invitation_code' => GroupUserInvitation::generateInvitationCode(),
             'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
         ]);
         $userInvitation->sendEmailInvitationNotification();
