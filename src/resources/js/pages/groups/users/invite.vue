@@ -162,6 +162,7 @@ export default {
                 sending: false,
                 user_email: '',
             },
+            emailPatterns: this.group.domain.split(', '),
         };
     },
     watch: {
@@ -210,10 +211,16 @@ export default {
     },
     computed: {
         checkEmail() {
-            const strValidate = strToRegexp(this.group.domain);
+            for (let i = 0; i < this.emailPatterns.length; i++) {
+                const strValidate = strToRegexp(this.emailPatterns[i]);
 
-            if (this.newUser.user_email.match(strValidate)) {
-                return true;
+                if (
+                    this.newUser.user_email.match(strValidate) &&
+                    this.newUser.user_email.split('@')[0]?.length > 0 &&
+                    this.newUser.user_email.split('@')[1]?.length === this.emailPatterns[i].length
+                ) {
+                    return true;
+                }
             }
 
             return false;
