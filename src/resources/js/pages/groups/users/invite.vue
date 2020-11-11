@@ -98,7 +98,6 @@ export default {
             userList: [],
             regUser: {
                 formSending: false,
-                userId: null,
             },
         };
     },
@@ -111,7 +110,7 @@ export default {
 
             this.$inertia
                 .post(route('groups.users.store', this.group), {
-                    user_id: this.regUser.userId,
+                    user_id: this.user?.id,
                 })
                 .then(() => (this.regUser.formSending = false));
         },
@@ -124,11 +123,6 @@ export default {
                     this.userList = result.data.data;
                 });
         },
-    },
-    computed: {
-        changeUser() {
-            return this.regUser.userId = this.user.id;
-        }
     },
 };
 </script>
