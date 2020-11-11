@@ -72,6 +72,7 @@
                         :class="{ 'is-invalid': $page.errors.invitation_code }"
                         type="text"
                         class="form-control"
+                        placeholder="e.g., gdI2EWG3hjHDG6d"
                         name="invitation_code"
                     />
                     <span v-if="$page.errors.invitation_code" class="invalid-feedback">

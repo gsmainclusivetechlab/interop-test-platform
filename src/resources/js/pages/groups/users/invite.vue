@@ -44,11 +44,10 @@
                                 matches {{ group.domain }}
                             </p>
                             <p class="text-muted small">
-                                If you want invite new user, please
-                                follow to
+                                User is not registered? Invite them to the "{{ group.name }}"
                                 <a
                                     :href="route('groups.user-invitations.create', group.id)"
-                                    >this link</a
+                                    >here</a
                                 >
                             </p>
                         </div>
@@ -62,7 +61,7 @@
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
-                                    v-if="regUser.sending"
+                                    v-if="regUser.formSending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
                                 Invite
@@ -81,7 +80,7 @@ import Layout from '@/layouts/main';
 export default {
     metaInfo() {
         return {
-            title: `Invite user to ${this.group.name}`,
+            title: `Add user to ${this.group.name}`,
         };
     },
     components: {
@@ -98,8 +97,7 @@ export default {
             user: null,
             userList: [],
             regUser: {
-                sending: false,
-                user_id: null,
+                formSending: false,
             },
         };
     },
@@ -108,11 +106,13 @@ export default {
     },
     methods: {
         inviteRegUser() {
-            this.regUser.sending = true;
+            this.regUser.formSending = true;
 
             this.$inertia
-                .post(route('groups.users.store', this.group), this.regUser)
-                .then(() => (this.regUser.sending = false));
+                .post(route('groups.users.store', this.group), {
+                    user_id: this.user?.id,
+                })
+                .then(() => (this.regUser.formSending = false));
         },
         loadUserList(query = '') {
             axios
@@ -123,11 +123,6 @@ export default {
                     this.userList = result.data.data;
                 });
         },
-    },
-    computed: {
-        changeUser() {
-            return this.regUser.user_id = this.user.id;
-        }
     },
 };
 </script>
