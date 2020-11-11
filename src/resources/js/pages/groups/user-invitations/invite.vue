@@ -8,37 +8,41 @@
             </div>
             <div class="container">
                 <div class="col-8 m-auto">
-                    <form class="card" @submit.prevent="showModal">
+                    <form class="card" @submit.prevent="formSubmit">
                         <div class="card-body">
                             <label class="form-label">New user</label>
                             <input
-                                v-model.trim="newUser.user_email"
+                                v-model.trim="newUser.userEmail"
+                                @blur="checkEmail"
                                 class="form-control"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors.user_email || !checkEmail,
+                                        $page.errors.userEmail || !newUser.emailValid,
                                 }"
                                 type="email"
                             />
                             <span
-                                v-if="$page.errors.user_email"
+                                v-if="$page.errors.userEmail"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors.user_email }}
+                                    {{ $page.errors.userEmail }}
                                 </strong>
                             </span>
-                            <span v-if="!checkEmail" class="invalid-feedback">
+                            <span v-if="!newUser.emailValid" class="invalid-feedback">
                                 <strong>
                                     Please input correct email address matches {{ group.domain }}
                                 </strong>
                             </span>
-                            <p class="text-muted small mt-3">
-                                If you want invite registered user, please
-                                follow to
+                            <p class="text-muted small mt-3" v-once>
+                                You can invite users email address
+                                matches {{ group.domain }}
+                            </p>
+                            <p class="text-muted small">
+                                User is already registered? Add them to the {{ group.name }}
                                 <a
                                     :href="route('groups.users.create', group.id)"
-                                    >this link</a
+                                    >here</a
                                 >
                             </p>
                         </div>
@@ -52,11 +56,10 @@
                             </inertia-link>
                             <button
                                 type="submit"
-                                :disabled="!checkEmail"
                                 class="btn btn-primary"
                             >
                                 <span
-                                    v-if="newUser.sending"
+                                    v-if="newUser.formSending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
                                 Invite
@@ -71,10 +74,9 @@
             size="lg"
             centered
             hide-footer
-            title="Invite new user"
+            title="Are you sure?"
         >
-            <label class="form-label">Email: {{ newUser.user_email }}</label>
-            <p>Are you sure to invite a new user by this email address?</p>
+            <p>An invitation code and registration instructions will be sent to <b>{{ newUser.userEmail }}</b></p>
             <div class="text-right">
                 <button
                     type="button"
@@ -116,25 +118,43 @@ export default {
     data() {
         return {
             newUser: {
-                sending: false,
-                user_email: '',
+                formSending: false,
+                userEmail: '',
+                emailValid: true,
             },
-            emailPatterns: this.group.domain.replace('@', '').split(', '),
+            emailPatterns: this.group.domain.replace(/@/g, '').split(', '),
         };
     },
     methods: {
         inviteNewUser() {
-            this.newUser.sending = true;
+            this.newUser.formSending = true;
 
             this.hideModal();
             this.$inertia
                 .post(
                     route('groups.user-invitations.store', this.group),
-                    this.newUser
-                )
+                    {
+                        user_email: this.newUser.userEmail,
+                    })
                 .then(() => {
-                    this.newUser.sending = false;
+                    this.newUser.formSending = false;
                 });
+        },
+        checkEmail() {
+            for (let i = 0; i < this.emailPatterns.length; i++) {
+                if (
+                    this.newUser.userEmail.includes(this.emailPatterns[i]) &&
+                    this.newUser.userEmail.split('@')[0]?.length > 0 &&
+                    this.newUser.userEmail.split('@')[1]?.length ===
+                        this.emailPatterns[i].length
+                ) {
+                    this.newUser.emailValid = true;
+
+                    return;
+                }
+            }
+
+            this.newUser.emailValid = false;
         },
         showModal() {
             this.$bvModal.show(`modal-response-${this.group.name}`);
@@ -142,21 +162,12 @@ export default {
         hideModal() {
             this.$bvModal.hide(`modal-response-${this.group.name}`);
         },
-    },
-    computed: {
-        checkEmail() {
-            for (let i = 0; i < this.emailPatterns.length; i++) {
-                if (
-                    this.newUser.user_email.includes(this.emailPatterns[i]) &&
-                    this.newUser.user_email.split('@')[0]?.length > 0 &&
-                    this.newUser.user_email.split('@')[1]?.length ===
-                        this.emailPatterns[i].length
-                ) {
-                    return true;
-                }
-            }
+        formSubmit() {
+            this.checkEmail();
 
-            return false;
+            if(this.newUser.emailValid) {
+                this.showModal();
+            }
         },
     },
 };
