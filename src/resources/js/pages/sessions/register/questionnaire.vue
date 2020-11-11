@@ -6,7 +6,8 @@
                     <h3 class="card-title">{{ sectionName }}</h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3" v-for="question in questions.data" :hidden="hidden[question.name]">
+                    <p>{{ sectionDescription }}</p>
+                    <div class="mb-3" v-for="(question, i) in questions.data" :hidden="hidden[question.name]" :key="i">
                         <label class="form-label">{{ question.question }}</label>
                         <selectize
                             v-model="answers[question.name]"
@@ -28,7 +29,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="section != firstSection
+                    :href="section !== firstSection
                         ? route('sessions.register.questionnaire', section - 1)
                         : route('sessions.register.sut')"
                     class="btn btn-outline-primary"
@@ -77,33 +78,16 @@
                     .where('id', parseInt(route().params.section))
                     .first()
                     .name,
+                sectionDescription: collect(this.sections.data)
+                    .where('id', parseInt(route().params.section))
+                    .first()
+                    .description,
                 form: {},
-                answers: {}
+                answers: {},
             };
         },
-        created() {
-            if (this.session && this.session.questionnaire && this.session.questionnaire[this.section]) {
-                const sessionAnswers = this.session.questionnaire[this.section];
-                const answers = {};
-
-                Object.keys(sessionAnswers).forEach(name => {
-                    const question = collect(this.questions.data)
-                        .where('name', name)
-                        .first()
-
-                    if (question.type === 'multiselect') {
-                        answers[name] = [];
-
-                        Object.values(sessionAnswers[name]).forEach(answer => {
-                            answers[name].push(this.getValue(question, answer))
-                        })
-                    } else {
-                        answers[name] = this.getValue(question, sessionAnswers[name])
-                    }
-                });
-
-                this.answers = answers;
-            }
+        mounted() {
+            this.formAutofill();
         },
         methods: {
             submit() {
@@ -111,6 +95,30 @@
                 this.$inertia
                     .post(route('sessions.register.questionnaire.store', this.section), this.form)
                     .then(() => (this.sending = false));
+            },
+            formAutofill() {
+                if (this.session && this.session.questionnaire && this.session.questionnaire[this.section]) {
+                    const sessionAnswers = this.session.questionnaire[this.section];
+                    const answers = {};
+
+                    Object.keys(sessionAnswers).forEach(name => {
+                        const question = collect(this.questions.data)
+                            .where('name', name)
+                            .first();
+
+                        if (question.type === 'multiselect') {
+                            answers[name] = [];
+
+                            Object.values(sessionAnswers[name]).forEach(answer => {
+                                answers[name].push(this.getValue(question, answer));
+                            });
+                        } else {
+                            answers[name] = this.getValue(question, sessionAnswers[name]);
+                        }
+                    });
+
+                    this.answers = answers;
+                }
             },
             availablePreconditions: function (question) {
                 const preconditions = question.preconditions;
@@ -140,10 +148,10 @@
                 return collect(question.values)
                     .where('id', name)
                     .first();
-            }
+            },
         },
         computed: {
-            hidden: function () {
+            hidden() {
                 let result = {}
                 Object.values(this.questions.data).forEach(question => {
                     result[question.name] = Object.keys(question.preconditions).length > 0 && !this.availablePreconditions(question);
@@ -156,7 +164,7 @@
             answers: {
                 deep: true,
                 immediate: true,
-                handler: function (answers) {
+                handler(answers) {
                     Object.values(this.questions.data).forEach(question => {
                         const name = question.name;
 
@@ -174,6 +182,22 @@
                             this.form[name] = null;
                         }
                     })
+                },
+            },
+            questions: {
+                immediate: true,
+                handler() {
+                    this.section = parseInt(route().params.section);
+                    this.sectionName = collect(this.sections.data)
+                        .where('id', parseInt(route().params.section))
+                        .first()
+                        .name;
+                    this.sectionDescription = collect(this.sections.data)
+                        .where('id', parseInt(route().params.section))
+                        .first()
+                        .description;
+
+                    this.formAutofill();
                 },
             },
         }
