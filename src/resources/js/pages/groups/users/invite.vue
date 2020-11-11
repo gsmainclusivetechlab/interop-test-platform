@@ -16,7 +16,7 @@
                                 class="form-select"
                                 placeholder="Select user..."
                                 :class="{
-                                    'is-invalid': $page.errors.userId,
+                                    'is-invalid': $page.errors.user_id,
                                 }"
                                 label="name"
                                 :keys="['name', 'email']"
@@ -32,11 +32,11 @@
                                 </template>
                             </selectize>
                             <span
-                                v-if="$page.errors.userId"
+                                v-if="$page.errors.user_id"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors.userId }}
+                                    {{ $page.errors.user_id }}
                                 </strong>
                             </span>
                             <p class="mt-3 text-muted small" v-once>
