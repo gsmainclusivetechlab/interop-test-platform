@@ -50,7 +50,9 @@
                                         Members
                                     </inertia-link>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item"
+                                    v-if="group.can.admin"
+                                >
                                     <inertia-link
                                         :href="
                                             route(

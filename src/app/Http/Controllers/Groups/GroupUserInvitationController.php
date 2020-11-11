@@ -85,11 +85,11 @@ class GroupUserInvitationController extends Controller
                     $group->emailRegexRule()
                 ],
             ],
-            ['user_email.unique' => 'Invitation for this email already exist.']
+            ['user_email.unique' => __('Invitation for this email already exist.')]
         );
         $request->validate(
             ['user_email' => 'unique:users,email'],
-            ['user_email.unique' => 'User with this email already registered.']
+            ['user_email.unique' => __('User with this email already registered.')]
         );
 
         $userInvitation = $group->userInvitations()->create([

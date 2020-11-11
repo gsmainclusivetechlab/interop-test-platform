@@ -164,8 +164,8 @@ export default {
         Layout,
     },
     props: {
-        invitationCode: {
-            type: String,
+        invitation: {
+            type: Object,
             required: true,
         },
     },
@@ -175,9 +175,9 @@ export default {
             form: {
                 first_name: null,
                 last_name: null,
-                email: null,
+                email: this.invitation.email,
                 company: null,
-                invitation_code: this.invitationCode,
+                invitation_code: this.invitation.code,
                 password: null,
                 password_confirmation: null,
                 terms: null,

@@ -45,7 +45,10 @@ class RegisterController extends Controller
     public function showRegistrationForm(Request $request)
     {
         return Inertia::render('auth/register', [
-            'invitationCode' => $request->query('invitationCode')
+            'invitation' => [
+                'code' => $request->query('invitationCode'),
+                'email' => $request->query('email')
+            ]
         ]);
     }
 
@@ -83,30 +86,36 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'unique:users',
+        return Validator::make(
+            $data,
+            [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => [
+                    'required',
+                    'string',
+                    'email',
+                    'max:255',
+                    'unique:users',
+                ],
+                'company' => ['required', 'string', 'max:255'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'password_confirmation' => ['required', 'string', 'min:8'],
+                'terms' => ['required'],
+                'invitation_code' => [
+                    'nullable',
+                    Rule::requiredIf(Env::get('REQUIRE_INVITED_REGISTRATION', false)),
+                    Rule::exists('group_user_invitations', 'invitation_code')->where(function ($query) use ($data) {
+                        return $query
+                            ->where('email', $data['email'])
+                            ->where('expired_at', '>', Carbon::now()->toDateTimeString());
+                    }),
+                ],
             ],
-            'company' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'password_confirmation' => ['required', 'string', 'min:8'],
-            'terms' => ['required'],
-            'invitation_code' => [
-                'nullable',
-                Rule::requiredIf(Env::get('REQUIRE_INVITED_REGISTRATION', false)),
-                Rule::exists('group_user_invitations', 'invitation_code')->where(function ($query) use ($data) {
-                    return $query
-                        ->where('email', $data['email'])
-                        ->where('expired_at', '>', Carbon::now()->toDateTimeString());
-                }),
-            ],
-        ]);
+            [
+                'invitation_code.exists' => __('Email address and Invitation code are mismatched.')
+            ]
+        );
     }
 
     /**

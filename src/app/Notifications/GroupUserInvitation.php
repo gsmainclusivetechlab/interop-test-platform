@@ -69,7 +69,10 @@ class GroupUserInvitation extends Notification
     {
         return action(
             [RegisterController::class, 'register'],
-            ['invitationCode' => $notifiable->invitation_code]
+            [
+                'email' => $notifiable->email,
+                'invitationCode' => $notifiable->invitation_code
+            ]
         );
     }
 }
