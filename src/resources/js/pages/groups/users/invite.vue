@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header" v-once>
                 <h1 class="page-title text-center">
-                    <b>{{ `Invite user to "${group.name}"` }}</b>
+                    <b>Add user to "{{ group.name }}"</b>
                 </h1>
             </div>
             <div class="container">
