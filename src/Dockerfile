@@ -45,7 +45,6 @@ RUN mkdir -p /usr/src/php/ext/redis && \
 # Install composer
 RUN if [ "${APP_ENV}" = "development" ]; then \
         php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer; \
-        composer global require hirak/prestissimo; \
     fi;
 
 # Use custom user to ensure correct permissions
@@ -69,7 +68,7 @@ COPY --from=frontend --chown=${HOST_UID} /usr/src/app/public/assets /var/www/htm
 # Configure nginx to use the custom user
 RUN echo -e "user ${HOST_UID};\n\n$(cat /etc/nginx/nginx.conf)" > /etc/nginx/nginx.conf
 
-# Setup IDE helpers 
+# Setup IDE helpers
 RUN if [ "${APP_ENV}" = "development" ]; then \
         composer update; \
     fi;

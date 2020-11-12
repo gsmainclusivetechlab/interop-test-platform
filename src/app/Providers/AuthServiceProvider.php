@@ -8,6 +8,7 @@ use App\Models\Group;
 use App\Models\GroupEnvironment;
 use App\Models\GroupUser;
 use App\Models\MessageLog;
+use App\Models\QuestionnaireSection;
 use App\Models\Session;
 use App\Models\TestCase;
 use App\Models\TestStep;
@@ -19,6 +20,7 @@ use App\Policies\GroupEnvironmentPolicy;
 use App\Policies\GroupUserPolicy;
 use App\Policies\GroupPolicy;
 use App\Policies\MessageLogPolicy;
+use App\Policies\QuestionnairePolicy;
 use App\Policies\SessionPolicy;
 use App\Policies\TestCasePolicy;
 use App\Policies\TestStepPolicy;
@@ -43,6 +45,7 @@ class AuthServiceProvider extends ServiceProvider
         TestStep::class => TestStepPolicy::class,
         UseCase::class => UseCasePolicy::class,
         MessageLog::class => MessageLogPolicy::class,
+        QuestionnaireSection::class => QuestionnairePolicy::class,
     ];
 
     /**

@@ -1,4 +1,5 @@
 name: Rejected Transaction Request by Payer FSP
+slug: rejected-transaction-request-by-payer-fsp
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |

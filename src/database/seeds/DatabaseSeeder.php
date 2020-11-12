@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             ApiSpecsTableSeeder::class,
             ComponentsTableSeeder::class,
             TestCasesTableSeeder::class,
+            QuestionnaireSeeder::class,
         ]);
     }
 }
