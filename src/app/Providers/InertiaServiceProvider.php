@@ -118,8 +118,11 @@ class InertiaServiceProvider extends ServiceProvider
                                 'questionnaire' => [
                                     'create' => auth()
                                         ->user()
-                                        ->can('create', QuestionnaireSection::class),
-                                ]
+                                        ->can(
+                                            'create',
+                                            QuestionnaireSection::class
+                                        ),
+                                ],
                             ],
                         ]
                         : [],

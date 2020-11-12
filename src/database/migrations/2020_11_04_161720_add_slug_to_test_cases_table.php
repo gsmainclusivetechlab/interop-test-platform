@@ -14,7 +14,11 @@ class AddSlugToTestCasesTable extends Migration
     public function up()
     {
         Schema::table('test_cases', function (Blueprint $table) {
-            $table->string('slug')->unique()->nullable()->after('name');
+            $table
+                ->string('slug')
+                ->unique()
+                ->nullable()
+                ->after('name');
         });
     }
 

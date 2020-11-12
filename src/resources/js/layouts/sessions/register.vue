@@ -24,6 +24,23 @@
                             </span>
                             <span
                                 class="step-item"
+                                v-if="session.type === 'compliance'"
+                                :class="{
+                                    active:
+                                        route().current(
+                                            'sessions.register.questionnaire'
+                                        ) ||
+                                        route().current(
+                                            'sessions.register.questionnaire.summary'
+                                        ),
+                                }"
+                            >
+                                <span class="d-inline-block mt-2">
+                                    Questionnaire
+                                </span>
+                            </span>
+                            <span
+                                class="step-item"
                                 :class="{
                                     active: route().current(
                                         'sessions.register.info'
@@ -58,8 +75,9 @@
                                     component.name
                                 }})<template
                                     v-if="
-                                        collect(sut).get('component_id') ==
-                                        component.id
+                                        collect(session.sut).get(
+                                            'component_id'
+                                        ) == component.id
                                     "
                                     >:::is-active</template
                                 ><template v-else></template>;
@@ -93,11 +111,11 @@ export default {
         Diagram,
     },
     props: {
-        sut: {
-            type: Object,
-            required: false,
-        },
         components: {
+            type: Object,
+            required: true,
+        },
+        session: {
             type: Object,
             required: true,
         },

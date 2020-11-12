@@ -1,8 +1,8 @@
 name: Sample Questionnaire
 questions:
   section-one:
-    name: "Section One"
-    description: "Some section description goes here"
+    name: 'Section One'
+    description: 'Some section description goes here'
     questions:
       - property: category
         question: What category do you want?
@@ -36,8 +36,8 @@ questions:
           A: Subcategory A
           B: Subcategory B
   section-two:
-    name: "Section Two"
-    description: "Some section description goes here"
+    name: 'Section Two'
+    description: 'Some section description goes here'
     questions:
       - property: two-category
         question: What category do you want?
@@ -73,21 +73,21 @@ questions:
 
 test_cases:
   COCI0001:
-    subcategory-first: "in:A"
-    sync: "in:async"
+    subcategory-first: 'in:A'
+    sync: 'in:async'
   rejected-transaction-by-payer-fsp:
-    subcategory-first: "in:B"
-    sync: "in:async"
+    subcategory-first: 'in:B'
+    sync: 'in:async'
   authorized-with-account-lookup:
-    sync: "in:async"
+    sync: 'in:async'
   authorized-with-authorizationcode:
-    sync: "in:async"
+    sync: 'in:async'
   decline-transaction-error-400:
-    sync: "in:sync"
+    sync: 'in:sync'
   decline-transaction-error-500:
-    sync: "in:sync"
+    sync: 'in:sync'
   rejected-transaction-request-by-payer-fsp:
-    subcategory-first: "in:B"
-    sync: "in:sync"
+    subcategory-first: 'in:B'
+    sync: 'in:sync'
   authorized-transaction:
-    category: "in:second"
+    category: 'in:second'

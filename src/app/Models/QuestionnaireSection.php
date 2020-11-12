@@ -64,8 +64,11 @@ class QuestionnaireSection extends Model
      *
      * @return QuestionnaireSection|\Illuminate\Database\Eloquent\Builder|Model|Builder|object|null
      */
-    protected static function getSection($operator, $sectionId, $orderDirection = 'asc')
-    {
+    protected static function getSection(
+        $operator,
+        $sectionId,
+        $orderDirection = 'asc'
+    ) {
         return static::where('id', $operator, $sectionId)
             ->orderBy('id', $orderDirection)
             ->first();

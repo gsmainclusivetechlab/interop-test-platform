@@ -22,12 +22,15 @@ class QuestionResource extends JsonResource
             'question' => $this->question,
             'preconditions' => $this->preconditions ?? [],
             'type' => $this->type,
-            'values' => collect($this->values)->map(function ($value, $key) {
-                return [
-                    'id' => $key,
-                    'label' => $value
-                ];
-            })->values()->toArray()
+            'values' => collect($this->values)
+                ->map(function ($value, $key) {
+                    return [
+                        'id' => $key,
+                        'label' => $value,
+                    ];
+                })
+                ->values()
+                ->toArray(),
         ];
     }
 }

@@ -35,23 +35,28 @@ class QuestionnaireImport
                         'question' => Arr::get($question, 'question'),
                         'preconditions' => Arr::get($question, 'preconditions'),
                         'type' => Arr::get($question, 'type', 'select'),
-                        'values' => Arr::get($question, 'values')
+                        'values' => Arr::get($question, 'values'),
                     ]);
                 }
             }
 
-            foreach (Arr::get($rows, 'test_cases', []) as $testCaseName => $matches) {
+            foreach (
+                Arr::get($rows, 'test_cases', [])
+                as $testCaseName => $matches
+            ) {
                 TestCase::query()
                     ->where(['slug' => $testCaseName])
                     ->existsOr(function () use ($testCaseName) {
-                        throw new NotFoundHttpException(__('Test case with slug ":testcase" not found', [
-                            'testcase' => $testCaseName
-                        ]));
+                        throw new NotFoundHttpException(
+                            __('Test case with slug ":testcase" not found', [
+                                'testcase' => $testCaseName,
+                            ])
+                        );
                     });
 
                 QuestionnaireTestCase::query()->create([
                     'test_case_slug' => $testCaseName,
-                    'matches' => $matches
+                    'matches' => $matches,
                 ]);
             }
         });

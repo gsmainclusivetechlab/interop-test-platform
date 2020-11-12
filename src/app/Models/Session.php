@@ -160,19 +160,19 @@ class Session extends Model
     public function environments()
     {
         return array_merge($this->environments, [
-            'SP_BASE_URI'               => $this->getBaseUriOfComponent(
+            'SP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Service Provider')->firstOrFail()
             ),
-            'MMO1_BASE_URI'             => $this->getBaseUriOfComponent(
+            'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 1'
                 )->firstOrFail()
             ),
-            'MOJALOOP_BASE_URI'         => $this->getBaseUriOfComponent(
+            'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Mojaloop')->firstOrFail()
             ),
-            'MMO2_BASE_URI'             => $this->getBaseUriOfComponent(
+            'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 2'
@@ -217,7 +217,7 @@ class Session extends Model
     public static function getTypeNames()
     {
         return [
-            static::TYPE_TEST       => __('Test'),
+            static::TYPE_TEST => __('Test'),
             static::TYPE_COMPLIANCE => __('Compliance'),
         ];
     }
@@ -227,12 +227,14 @@ class Session extends Model
      */
     public static function getTypesList()
     {
-        return collect(static::getTypeNames())->map(function ($label, $key) {
-            return [
-                'id' => $key,
-                'label' => $label
-            ];
-        })->values();
+        return collect(static::getTypeNames())
+            ->map(function ($label, $key) {
+                return [
+                    'id' => $key,
+                    'label' => $label,
+                ];
+            })
+            ->values();
     }
 
     /**

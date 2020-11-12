@@ -11,9 +11,7 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Name
-                                </label>
+                                <label class="form-label"> Name </label>
                                 <input
                                     name="name"
                                     type="text"
@@ -33,9 +31,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Variables
-                                </label>
+                                <label class="form-label"> Variables </label>
                                 <environments v-model="form.variables" />
                                 <div
                                     class="text-danger small mt-2"
