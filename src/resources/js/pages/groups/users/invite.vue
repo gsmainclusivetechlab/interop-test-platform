@@ -8,7 +8,7 @@
             </div>
             <div class="container">
                 <div class="col-8 m-auto">
-                    <form class="card" @submit.prevent="inviteRegUser">
+                    <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <label class="form-label">User</label>
                             <selectize
@@ -22,7 +22,7 @@
                                 :keys="['name', 'email']"
                                 :options="userList"
                                 :createItem="false"
-                                :searchFn="true"
+                                :searchFn="searchUser"
                             >
                                 <template #option="{ option }">
                                     <div>{{ option.name }}</div>
@@ -61,7 +61,7 @@
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
-                                    v-if="regUser.formSending"
+                                    v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
                                 Invite
@@ -96,23 +96,21 @@ export default {
         return {
             user: null,
             userList: [],
-            regUser: {
-                formSending: false,
-            },
+            sending: false,
         };
     },
     mounted() {
         this.loadUserList();
     },
     methods: {
-        inviteRegUser() {
-            this.regUser.formSending = true;
+        submit() {
+            this.sending = true;
 
             this.$inertia
                 .post(route('groups.users.store', this.group), {
                     user_id: this.user?.id,
                 })
-                .then(() => (this.regUser.formSending = false));
+                .then(() => (this.sending = false));
         },
         loadUserList(query = '') {
             axios
@@ -122,6 +120,10 @@ export default {
                 .then((result) => {
                     this.userList = result.data.data;
                 });
+        },
+        searchUser(query, callback) {
+            this.loadUserList(query);
+            callback();
         },
     },
 };

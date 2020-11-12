@@ -8,16 +8,16 @@
             </div>
             <div class="container">
                 <div class="col-8 m-auto">
-                    <form class="card" @submit.prevent="formSubmit">
+                    <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <label class="form-label">New user</label>
                             <input
-                                v-model.trim="newUser.userEmail"
+                                v-model.trim="form.userEmail"
                                 @blur="checkEmail"
                                 class="form-control"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors.user_email || !newUser.emailValid,
+                                        $page.errors.user_email || !emailValid,
                                 }"
                                 type="email"
                             />
@@ -29,7 +29,7 @@
                                     {{ $page.errors.user_email }}
                                 </strong>
                             </span>
-                            <span v-if="!newUser.emailValid" class="invalid-feedback">
+                            <span v-if="!emailValid" class="invalid-feedback">
                                 <strong>
                                     Please input correct email address matches {{ group.domain }}
                                 </strong>
@@ -59,7 +59,7 @@
                                 class="btn btn-primary"
                             >
                                 <span
-                                    v-if="newUser.formSending"
+                                    v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
                                 Invite
@@ -76,7 +76,7 @@
             hide-footer
             title="Are you sure?"
         >
-            <p>An invitation code and registration instructions will be sent to <b>{{ newUser.userEmail }}</b></p>
+            <p>An invitation code and registration instructions will be sent to <b>{{ form.userEmail }}</b></p>
             <div class="text-right">
                 <button
                     type="button"
@@ -117,44 +117,44 @@ export default {
     },
     data() {
         return {
-            newUser: {
-                formSending: false,
+            form: {
                 userEmail: '',
-                emailValid: true,
             },
             emailPatterns: this.group.domain.replace(/@/g, '').split(', '),
+            emailValid: true,
+            formSending: false,
         };
     },
     methods: {
         inviteNewUser() {
-            this.newUser.formSending = true;
+            this.sending = true;
 
             this.hideModal();
             this.$inertia
                 .post(
                     route('groups.user-invitations.store', this.group),
                     {
-                        user_email: this.newUser.userEmail,
+                        user_email: this.form.userEmail,
                     })
                 .then(() => {
-                    this.newUser.formSending = false;
+                    this.sending = false;
                 });
         },
         checkEmail() {
             for (let i = 0; i < this.emailPatterns.length; i++) {
                 if (
-                    this.newUser.userEmail.includes(this.emailPatterns[i]) &&
-                    this.newUser.userEmail.split('@')[0]?.length > 0 &&
-                    this.newUser.userEmail.split('@')[1]?.length ===
+                    this.form.userEmail.includes(this.emailPatterns[i]) &&
+                    this.form.userEmail.split('@')[0]?.length > 0 &&
+                    this.form.userEmail.split('@')[1]?.length ===
                         this.emailPatterns[i].length
                 ) {
-                    this.newUser.emailValid = true;
+                    this.emailValid = true;
 
                     return;
                 }
             }
 
-            this.newUser.emailValid = false;
+            this.emailValid = false;
         },
         showModal() {
             this.$bvModal.show(`modal-response-${this.group.name}`);
@@ -162,10 +162,10 @@ export default {
         hideModal() {
             this.$bvModal.hide(`modal-response-${this.group.name}`);
         },
-        formSubmit() {
+        submit() {
             this.checkEmail();
 
-            if(this.newUser.emailValid) {
+            if(this.emailValid) {
                 this.showModal();
             }
         },
