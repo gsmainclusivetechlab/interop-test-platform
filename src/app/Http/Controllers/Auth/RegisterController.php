@@ -6,13 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\GroupUserInvitation;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Arr;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -46,8 +45,8 @@ class RegisterController extends Controller
     {
         return Inertia::render('auth/register', [
             'invitation' => [
-                'code' => $request->query('invitationCode'),
-                'email' => $request->query('email')
+                'code' => $request->input('invitationCode'),
+                'email' => $request->input('email')
             ]
         ]);
     }
@@ -64,7 +63,7 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
         $user = $this->create($request->all());
 
-        if ($request->invitation_code) {
+        if ($request->input('invitation_code')) {
             $user->markEmailAsVerified();
         }
         event(new Registered($user));
@@ -104,11 +103,11 @@ class RegisterController extends Controller
                 'terms' => ['required'],
                 'invitation_code' => [
                     'nullable',
-                    Rule::requiredIf(Env::get('REQUIRE_INVITED_REGISTRATION', false)),
+                    Rule::requiredIf(env('INVITATION_ON_REGISTER', false)),
                     Rule::exists('group_user_invitations', 'invitation_code')->where(function ($query) use ($data) {
                         return $query
-                            ->where('email', $data['email'])
-                            ->where('expired_at', '>', Carbon::now()->toDateTimeString());
+                            ->where('email', Arr::get($data, 'email'))
+                            ->where('expired_at', '>', now()->toDateTimeString());
                     }),
                 ],
             ],
@@ -148,7 +147,7 @@ class RegisterController extends Controller
 
         foreach ($invitations as $invitation) {
             /** @var GroupUserInvitation $invitation */
-            if (GroupUserInvitation::STATUS_ACTIVE === $invitation->status) {
+            if ($invitation->isActive()) {
                 $groupUsers = $invitation->group->users();
                 $groupUsers->attach($user->id, [
                     'admin' => !$groupUsers->exists(),

@@ -11,7 +11,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Env;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -82,7 +81,7 @@ class GroupUserInvitationController extends Controller
                     Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
                         return $query->where('group_id', $group->id);
                     }),
-                    $group->emailRegexRule()
+                    $group->email_regex
                 ],
             ],
             ['user_email.unique' => __('Invitation for this email already exist.')]
@@ -94,8 +93,7 @@ class GroupUserInvitationController extends Controller
 
         $userInvitation = $group->userInvitations()->create([
             'email' => $request->user_email,
-            'invitation_code' => GroupUserInvitation::generateInvitationCode(),
-            'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
+            'expired_at' => env('INVITATION_EXPIRE', 432000)
         ]);
         $userInvitation->sendEmailInvitationNotification();
 
@@ -119,8 +117,7 @@ class GroupUserInvitationController extends Controller
         $this->authorize('admin', $group);
 
         $userInvitation->update([
-            'invitation_code' => GroupUserInvitation::generateInvitationCode(),
-            'expired_at' => Env::get('EXPIRE_INVITATION', GroupUserInvitation::DEFAULT_EXPIRE_INVITATION)
+            'expired_at' => env('INVITATION_EXPIRE', 432000)
         ]);
         $userInvitation->sendEmailInvitationNotification();
 

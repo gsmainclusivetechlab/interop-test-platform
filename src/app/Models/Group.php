@@ -90,11 +90,11 @@ class Group extends Model
     }
 
     /**
-     * Generate regex validation rule for email by domain
+     * Regex validation rule for email by domain
      *
      * @return string
      */
-    public function emailRegexRule()
+    public function getEmailRegexAttribute()
     {
         $matchTo = str_replace(
             '.',

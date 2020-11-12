@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use Arr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
@@ -17,10 +17,8 @@ class GroupUserInvitation extends Model
 {
     use Notifiable;
 
-    const STATUS_ACTIVE = 'Active';
-    const STATUS_EXPIRED = 'Expired';
-
-    const DEFAULT_EXPIRE_INVITATION = 432000;
+    const STATUS_ACTIVE = 'active';
+    const STATUS_EXPIRED = 'expired';
 
     /**
      * @var string
@@ -30,7 +28,30 @@ class GroupUserInvitation extends Model
     /**
      * @var array
      */
-    protected $fillable = ['email', 'invitation_code', 'expired_at'];
+    protected $fillable = ['email', 'expired_at'];
+
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::saving(function($model){
+            $model->attributes['invitation_code'] = Str::random(15);
+        });
+    }
+
+    /**
+     * @return array
+     */
+    public static function getBehaviorNames()
+    {
+        return [
+            static::STATUS_ACTIVE => __('Active'),
+            static::STATUS_EXPIRED => __('Expired'),
+        ];
+    }
 
     /**
      * @return BelongsTo
@@ -45,7 +66,17 @@ class GroupUserInvitation extends Model
      */
     public function setExpiredAtAttribute($ttl)
     {
-        $this->attributes['expired_at'] = Carbon::now()->addSeconds($ttl)->toDateTimeString();
+        $this->attributes['expired_at'] = now()->addSeconds($ttl)->toDateTimeString();
+    }
+
+    /**
+     * Get is active status
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return 0 < now()->diffInSeconds($this->expired_at, false);
     }
 
     /**
@@ -53,23 +84,17 @@ class GroupUserInvitation extends Model
      */
     public function getStatusAttribute()
     {
-        return 0 < Carbon::now()->diffInSeconds($this->expired_at, false)
-            ? self::STATUS_ACTIVE
-            : self::STATUS_EXPIRED;
-    }
-
-    /**
-     * Generate invitation code.
-     *
-     * @return string
-     */
-    public static function generateInvitationCode()
-    {
-        do {
-            $invitationCode = Str::random(15);
-        } while (static::where('invitation_code', $invitationCode)->first());
-
-        return $invitationCode;
+        return $this->isActive()
+            ? Arr::get(
+                static::getBehaviorNames(),
+                self::STATUS_ACTIVE,
+                self::STATUS_ACTIVE
+            )
+            : Arr::get(
+                static::getBehaviorNames(),
+                self::STATUS_EXPIRED,
+                self::STATUS_EXPIRED
+            );
     }
 
     /**

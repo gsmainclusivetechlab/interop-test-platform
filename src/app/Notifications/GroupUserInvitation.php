@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Lang;
 
 class GroupUserInvitation extends Notification
 {
@@ -31,16 +30,16 @@ class GroupUserInvitation extends Notification
         $registrationUrl = $this->registrationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject(Lang::get('Group Invitation'))
-            ->line(Lang::get(
+            ->subject(__('Group Invitation'))
+            ->line(__(
                 'You have been invited to **:groupName** group.',
                 ['groupName' => $notifiable->group->name]
             ))
-            ->line(Lang::get(
+            ->line(__(
                 'In order to join the group by passing a short registration, please click on the button below.'
             ))
-            ->action(Lang::get('Join'), $registrationUrl)
-            ->line(Lang::get(
+            ->action(__('Join'), $registrationUrl)
+            ->line(__(
                 '
                     Using this Invitation code **:code** with your email **:email** is mandatory to join
                     **:groupName** group on **[:itpLink](:itpLink)**.
@@ -52,11 +51,11 @@ class GroupUserInvitation extends Notification
                     'itpLink' => route('home'),
                 ]
             ))
-            ->line(Lang::get(
+            ->line(__(
                 'Please note that the invitation will expire on **:expire**.',
                 ['expire' => $notifiable->expired_at]
             ))
-            ->line(Lang::get('If you did not create an account, no further action is required.'));
+            ->line(__('If you did not create an account, no further action is required.'));
     }
 
     /**
