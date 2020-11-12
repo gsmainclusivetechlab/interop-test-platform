@@ -170,6 +170,8 @@ jobs:
         type: string
         default: $CIRCLE_SHA1
     steps:
+      - setup_remote_docker:
+          version: 19.03.12
       - run:
           name: Login to Docker Hub
           command:

@@ -43,6 +43,14 @@ class Group extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function userInvitations()
+    {
+        return $this->hasMany(GroupUserInvitation::class, 'group_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function sessions()
@@ -79,6 +87,23 @@ class Group extends Model
         return $this->users()
             ->whereKey($user->getKey())
             ->exists();
+    }
+
+    /**
+     * Regex validation rule for email by domain
+     *
+     * @return string
+     */
+    public function getEmailRegexAttribute()
+    {
+        $matchTo = str_replace(
+            '.',
+            '[.]',
+            str_replace(', ', '|', $this->domain)
+        );
+        $matchTo = $matchTo ?? '*';
+
+        return 'regex:/(' . $matchTo . ')$/';
     }
 
     /**
