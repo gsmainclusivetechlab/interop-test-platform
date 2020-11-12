@@ -48,12 +48,8 @@ class CreateQuestionnaireTables extends Migration
      */
     public function down()
     {
-        Schema::table('questionnaire_questions', function (Blueprint $table) {
-            $table->dropForeign(['section_id']);
-        });
-
-        Schema::dropIfExists('questionnaire_sections');
-        Schema::dropIfExists('questionnaire_questions');
         Schema::dropIfExists('questionnaire_test_cases');
+        Schema::dropIfExists('questionnaire_questions');
+        Schema::dropIfExists('questionnaire_sections');
     }
 }

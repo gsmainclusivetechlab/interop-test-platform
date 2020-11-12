@@ -16,7 +16,7 @@ class AddTypeToSessionsTable extends Migration
     {
         Schema::table('sessions', function (Blueprint $table) {
             $table->string('type', 20)
-                ->default(Session::TYPE_TEST)
+                ->default('test')
                 ->after('description');
         });
     }

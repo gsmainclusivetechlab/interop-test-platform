@@ -6,6 +6,7 @@ use App\Models\QuestionnaireSection;
 use App\Models\QuestionnaireTestCase;
 use App\Models\TestCase;
 use DB;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class QuestionnaireImport
@@ -19,25 +20,27 @@ class QuestionnaireImport
             QuestionnaireSection::query()->delete();
             QuestionnaireTestCase::query()->delete();
 
-            foreach ($rows['questions'] as $sectionRow) {
+            foreach (Arr::get($rows, 'questions', []) as $sectionRow) {
                 /** @var QuestionnaireSection $section */
-                $section = QuestionnaireSection::query()->create([
-                    'name' => $sectionRow['name'],
-                    'description' => $sectionRow['description']
-                ]);
+                $section = QuestionnaireSection::query()->create(
+                    Arr::only(
+                        $sectionRow,
+                        QuestionnaireSection::make()->getFillable()
+                    )
+                );
 
-                foreach ($sectionRow['questions'] as $question) {
+                foreach (Arr::get($sectionRow, 'questions', []) as $question) {
                     $section->questions()->create([
-                        'name' => $question['property'],
-                        'question' => $question['question'],
-                        'preconditions' => $question['preconditions'] ?? null,
-                        'type' => $question['type'] ?? 'select',
-                        'values' => $question['values']
+                        'name' => Arr::get($question, 'property'),
+                        'question' => Arr::get($question, 'question'),
+                        'preconditions' => Arr::get($question, 'preconditions'),
+                        'type' => Arr::get($question, 'type', 'select'),
+                        'values' => Arr::get($question, 'values')
                     ]);
                 }
             }
 
-            foreach ($rows['test_cases'] as $testCaseName => $matches) {
+            foreach (Arr::get($rows, 'test_cases', []) as $testCaseName => $matches) {
                 TestCase::query()
                     ->where(['slug' => $testCaseName])
                     ->existsOr(function () use ($testCaseName) {

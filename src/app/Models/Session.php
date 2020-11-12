@@ -214,7 +214,7 @@ class Session extends Model
     /**
      * @return array
      */
-    public static function types()
+    public static function getTypeNames()
     {
         return [
             static::TYPE_TEST       => __('Test'),
@@ -225,13 +225,23 @@ class Session extends Model
     /**
      * @return \Illuminate\Support\Collection
      */
-    public static function typesList()
+    public static function getTypesList()
     {
-        return collect(static::types())->map(function ($label, $key) {
+        return collect(static::getTypeNames())->map(function ($label, $key) {
             return [
                 'id' => $key,
                 'label' => $label
             ];
         })->values();
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function isCompliance($type): bool
+    {
+        return $type == static::TYPE_COMPLIANCE;
     }
 }

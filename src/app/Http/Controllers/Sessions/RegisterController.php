@@ -37,9 +37,10 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $questionnaireKeys = implode(',', QuestionnaireSection::all()->map(function (QuestionnaireSection $section) {
-            return "session.questionnaire.{$section->id}";
-        })->toArray());
+        $keys = QuestionnaireSection::query()->pluck('id');
+        $questionnaireKeys = implode(',', $keys->map(function ($section) {
+            return "session.questionnaire.{$section}";
+        })->all());
 
         $this->middleware(['auth', 'verified']);
         $this->middleware(EnsureSessionIsPresent::class . ":session.sut,{$questionnaireKeys}")->only(
@@ -63,7 +64,7 @@ class RegisterController extends Controller
             'components' => ComponentResource::collection(
                 Component::with(['connections'])->get()
             ),
-            'types'      => Session::typesList(),
+            'types'      => Session::getTypesList(),
         ]);
     }
 
@@ -77,13 +78,13 @@ class RegisterController extends Controller
         $request->validate([
             'base_url'     => ['required', 'url', 'max:255'],
             'component_id' => ['required', 'exists:components,id'],
-            'type'         => ['required', Rule::in(array_keys(Session::types()))],
+            'type'         => ['required', Rule::in(array_keys(Session::getTypeNames()))],
         ]);
         $request->session()->put('session.sut', $request->input());
 
-        return $request->type == Session::TYPE_TEST
-            ? redirect()->route('sessions.register.info')
-            : redirect()->route('sessions.register.questionnaire', QuestionnaireSection::query()->first());
+        return Session::isCompliance($request->type)
+            ? redirect()->route('sessions.register.questionnaire', QuestionnaireSection::query()->first())
+            : redirect()->route('sessions.register.info');
     }
 
     /**
@@ -93,9 +94,9 @@ class RegisterController extends Controller
      */
     public function showQuestionnaireForm(QuestionnaireSection $section)
     {
-        if (QuestionnaireSection::where('id', $previousId = $section->id - 1)
-                ->exists() && ! session()->exists("session.questionnaire.{$previousId}")) {
-            return redirect()->route('sessions.register.questionnaire', $previousId);
+        if (($previous = QuestionnaireSection::previousSection($section->id))
+            && ! session()->exists("session.questionnaire.{$previous->id}")) {
+            return redirect()->route('sessions.register.questionnaire', $previous);
         }
 
         return Inertia::render('sessions/register/questionnaire', [
@@ -113,28 +114,11 @@ class RegisterController extends Controller
      */
     public function storeQuestionnaire(Request $request, QuestionnaireSection $section)
     {
-        $validators = [];
-        $data = $request->all();
-
-        foreach ($section->questions as $question) {
-            if ($this->isRequiredAnswers($question, $data)) {
-                $values = array_keys($question->values);
-
-                $validators[$question->name] = [
-                    'required',
-                    $question->isMultiSelect() ? 'array' : Rule::in($values)
-                ];
-
-                if ($question->isMultiSelect()) {
-                    $validators["{$question->name}.*"] = [Rule::in($values)];
-                }
-            }
-        }
-
-        $validated = $request->validate($validators);
+        $rules = $this->questionnaireRules($section, $request->all());
+        $validated = $request->validate($rules);
         $request->session()->put("session.questionnaire.{$section->id}", $validated);
 
-        return ($nextSection = QuestionnaireSection::where('id', $section->id + 1)->first())
+        return ($nextSection = QuestionnaireSection::nextSection($section->id))
             ? redirect()->route('sessions.register.questionnaire', $nextSection)
             : redirect()->route('sessions.register.questionnaire.summary');
     }
@@ -379,13 +363,9 @@ class RegisterController extends Controller
             foreach ($preconditions as $rule => $precondition) {
                 $precondition = (array) $precondition;
                 if (isset($data[$attribute]) && is_array($data[$attribute])) {
-                    foreach ($precondition as $item) {
-                        if (in_array($item, $data[$attribute])) {
-                            return true;
-                        }
-                    }
+                    $interection = array_uintersect($data[$attribute], $precondition, "strcasecmp");
 
-                    return false;
+                    return count($interection) > 0;
                 }
 
                 $validator = Validator::make($data, [
@@ -406,36 +386,71 @@ class RegisterController extends Controller
      */
     protected function getTestCases()
     {
-        if (session('session.sut.type') == Session::TYPE_COMPLIANCE) {
-            $answers = [];
-            foreach (session("session.questionnaire") as $sectionAnswers) {
-                $answers = array_merge($answers, $sectionAnswers);
-            }
+        if (Session::isCompliance(session('session.sut.type'))) {
+            $answers = Arr::collapse(session("session.questionnaire"));
 
             $testCases = [];
-            QuestionnaireTestCase::query()->each(function (QuestionnaireTestCase $questionnaireTestCase) use ($answers, &$testCases) {
-                $include = true;
-                foreach ($questionnaireTestCase->matches as $attribute => $match) {
-                    $includeMatch = false;
-                    foreach ((array) $answers[$attribute] as $answer) {
-                        $validator = Validator::make([$attribute => $answer], [$attribute => $match]);
-
-                        if (!$validator->fails()) {
-                            $includeMatch = true;
-                        }
+            QuestionnaireTestCase::query()
+                ->each(function (QuestionnaireTestCase $questionnaireTestCase) use ($answers, &$testCases) {
+                    if ($this->includeTestCase($questionnaireTestCase, $answers)) {
+                        $testCases[] = $questionnaireTestCase->test_case_slug;
                     }
-
-                    if (!$includeMatch) {
-                        $include = false;
-                    }
-                }
-
-                if ($include) {
-                    $testCases[] = $questionnaireTestCase->test_case_slug;
-                }
-            });
+                });
         }
 
         return $testCases ?? null;
+    }
+
+    /**
+     * @param QuestionnaireTestCase $questionnaireTestCase
+     * @param array $answers
+     *
+     * @return bool
+     */
+    protected function includeTestCase(QuestionnaireTestCase $questionnaireTestCase, $answers): bool
+    {
+        foreach ($questionnaireTestCase->matches as $attribute => $match) {
+            $hasAnswer = false;
+            foreach ((array) $answers[$attribute] as $answer) {
+                $validator = Validator::make([$attribute => $answer], [$attribute => $match]);
+
+                if (!$validator->fails()) {
+                    $hasAnswer = true;
+                }
+            }
+
+            if (!$hasAnswer) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param QuestionnaireSection $section
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function questionnaireRules(QuestionnaireSection $section, $data): array
+    {
+        $rules = [];
+        foreach ($section->questions as $question) {
+            if ($this->isRequiredAnswers($question, $data)) {
+                $values = array_keys($question->values);
+
+                $rules[$question->name] = [
+                    'required',
+                    $question->isMultiSelect() ? 'array' : Rule::in($values)
+                ];
+
+                if ($question->isMultiSelect()) {
+                    $rules["{$question->name}.*"] = [Rule::in($values)];
+                }
+            }
+        }
+
+        return $rules;
     }
 }
