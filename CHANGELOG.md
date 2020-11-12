@@ -1,3 +1,9 @@
+## v1.1
+
+-   Task: Email Invitations [@jc_skushnir]
+-   Task: Implicit Group Admins [@jc_skushnir]
+-   Task: Block Registration Without Invitation Code [@jc_skushnir]
+    
 ## v1.0
 
 -   Task: Create Participant flow

@@ -56,7 +56,7 @@
                         </div>
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
-                                style="max-height: 320px;"
+                                style="max-height: 320px"
                                 :useCases="useCases"
                                 v-model="form.test_cases"
                             />

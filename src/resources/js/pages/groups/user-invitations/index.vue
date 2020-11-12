@@ -7,12 +7,14 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('groups.users.create', group.id)"
+                        :href="
+                            route('groups.user-invitations.create', group.id)
+                        "
                         v-if="group.can.admin"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        New Member
+                        Invite Member
                     </inertia-link>
                 </div>
             </div>
@@ -22,54 +24,31 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-nowrap w-auto">Name</th>
                             <th class="text-nowrap w-auto">Email</th>
-                            <th class="text-nowrap w-auto">Company</th>
-                            <th class="text-nowrap w-auto">Admin</th>
+                            <th class="text-nowrap w-auto">Invitation Code</th>
+                            <th class="text-nowrap w-auto">Status</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users.data">
+                        <tr
+                            v-for="(userInvitation, i) in userInvitations.data"
+                            :key="i"
+                        >
                             <td class="text-break">
-                                {{ user.name }}
-                            </td>
-                            <td class="text-break">
-                                <a :href="`mailto:${user.email}`">
-                                    {{ user.email }}
+                                <a :href="`mailto:${userInvitation.email}`">
+                                    {{ userInvitation.email }}
                                 </a>
                             </td>
                             <td class="text-break">
-                                {{ user.company }}
+                                {{ userInvitation.invitation_code }}
                             </td>
                             <td class="text-break">
-                                <label class="form-check form-switch">
-                                    <input
-                                        v-if="user.can.toggleAdmin"
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        :checked="user.admin"
-                                        @change.prevent="
-                                            $inertia.put(
-                                                route(
-                                                    'groups.users.toggle-admin',
-                                                    [group.id, user.id]
-                                                )
-                                            )
-                                        "
-                                    />
-                                    <input
-                                        v-else
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        disabled
-                                        :checked="user.admin"
-                                    />
-                                </label>
+                                {{ userInvitation.status }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="user.can.delete"
+                                    v-if="group.can.admin"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -79,18 +58,40 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li v-if="user.can.delete">
+                                    <li>
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="
-                                                route('groups.users.destroy', [
-                                                    group.id,
-                                                    user.id,
-                                                ])
+                                                route(
+                                                    'groups.user-invitations.update',
+                                                    [
+                                                        group.id,
+                                                        userInvitation.id,
+                                                    ]
+                                                )
+                                            "
+                                            method="put"
+                                            :confirm-title="'Confirm re-send invitation'"
+                                            :confirm-text="`Re-send invitation to ${userInvitation.email}?`"
+                                        >
+                                            Re-send
+                                        </confirm-link>
+                                    </li>
+                                    <li>
+                                        <confirm-link
+                                            class="dropdown-item"
+                                            :href="
+                                                route(
+                                                    'groups.user-invitations.destroy',
+                                                    [
+                                                        group.id,
+                                                        userInvitation.id,
+                                                    ]
+                                                )
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${user.name}?`"
+                                            :confirm-text="`Are you sure you want to delete invitation for ${userInvitation.email}?`"
                                         >
                                             Delete
                                         </confirm-link>
@@ -98,15 +99,15 @@
                                 </b-dropdown>
                             </td>
                         </tr>
-                        <tr v-if="!users.data.length">
+                        <tr v-if="!userInvitations.data.length">
                             <td class="text-center" colspan="5">No Results</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <pagination
-                :meta="users.meta"
-                :links="users.links"
+                :meta="userInvitations.meta"
+                :links="userInvitations.links"
                 class="card-footer"
             />
         </div>
@@ -125,7 +126,7 @@ export default {
             type: Object,
             required: true,
         },
-        users: {
+        userInvitations: {
             type: Object,
             required: true,
         },
@@ -143,9 +144,12 @@ export default {
     },
     methods: {
         search() {
-            this.$inertia.replace(route('groups.users.index', this.group.id), {
-                data: this.form,
-            });
+            this.$inertia.replace(
+                route('groups.user-invitations.index', this.group.id),
+                {
+                    data: this.form,
+                }
+            );
         },
     },
 };
