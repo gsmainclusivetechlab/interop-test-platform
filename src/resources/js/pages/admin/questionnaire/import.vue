@@ -38,7 +38,7 @@
                             >
                                 Cancel
                             </inertia-link>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" :disabled="!form.file">
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
