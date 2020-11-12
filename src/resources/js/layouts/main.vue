@@ -293,7 +293,7 @@
                     </b-navbar-nav>
 
                     <inertia-link
-                        :href="route('sessions.register.sut')"
+                        :href="route('sessions.register.type')"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />

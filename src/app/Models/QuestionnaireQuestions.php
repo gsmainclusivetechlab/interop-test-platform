@@ -20,7 +20,13 @@ use Illuminate\Database\Eloquent\Model;
 class QuestionnaireQuestions extends Model
 {
     /** @var string[] */
-    protected $fillable = ['name', 'question', 'preconditions', 'type', 'values'];
+    protected $fillable = [
+        'name',
+        'question',
+        'preconditions',
+        'type',
+        'values',
+    ];
 
     /** @var bool */
     public $timestamps = false;

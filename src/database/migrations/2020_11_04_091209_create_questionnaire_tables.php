@@ -28,7 +28,8 @@ class CreateQuestionnaireTables extends Migration
             $table->string('type');
             $table->json('values');
 
-            $table->foreign('section_id')
+            $table
+                ->foreign('section_id')
                 ->references('id')
                 ->on('questionnaire_sections')
                 ->onDelete('cascade');
