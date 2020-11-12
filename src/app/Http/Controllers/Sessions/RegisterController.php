@@ -411,7 +411,7 @@ class RegisterController extends Controller
     {
         foreach ($questionnaireTestCase->matches as $attribute => $match) {
             $hasAnswer = false;
-            foreach ((array) $answers[$attribute] as $answer) {
+            foreach ((array) Arr::get($answers, $attribute, []) as $answer) {
                 $validator = Validator::make([$attribute => $answer], [$attribute => $match]);
 
                 if (!$validator->fails()) {
