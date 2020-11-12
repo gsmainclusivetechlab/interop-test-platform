@@ -1,8 +1,8 @@
 ## v1.1
 
--   Task: Email Invitations [@jc_skushnir]
--   Task: Implicit Group Admins [@jc_skushnir]
--   Task: Block Registration Without Invitation Code [@jc_skushnir]
+-   Task: Email Invitations [@jc-skushnir,@Kassaila]
+-   Task: Implicit Group Admins [@jc-skushnir]
+-   Task: Block Registration Without Invitation Code [@jc-skushnir]
     
 ## v1.0
 
