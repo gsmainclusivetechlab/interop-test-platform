@@ -1,4 +1,5 @@
 name: Rejected Quote by Payee FSP
+slug: rejected-quote-by-payee-fsp
 use_case: Merchant-Initiated Merchant Payment
 behavior: negative
 description: |

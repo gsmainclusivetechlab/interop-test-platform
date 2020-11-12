@@ -1,4 +1,5 @@
 name: P2P Accepted with Account Lookup - Send / Disclosing
+slug: P2P0800
 use_case: P2P
 test_case: P2P0800
 behavior: positive

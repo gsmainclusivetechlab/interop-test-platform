@@ -27,6 +27,23 @@
                         </span>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label" for="types">Type</label>
+                        <selectize
+                            v-model="type"
+                            :class="{ 'is-invalid': $page.errors.type }"
+                            :options="types"
+                            :createItem="false"
+                            class="form-select"
+                            placeholder="Select Type..."
+                        />
+                        <span
+                            v-if="$page.errors.type"
+                            class="invalid-feedback"
+                        >
+                            {{ $page.errors.type }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">URL</label>
                         <input
                             v-model="form.base_url"
@@ -76,6 +93,10 @@ export default {
             type: Object,
             required: true,
         },
+        types: {
+            type: Array,
+            required: true,
+        },
     },
     data() {
         return {
@@ -86,12 +107,19 @@ export default {
                           .where('id', this.session.sut.component_id)
                           .first()
                     : collect(this.suts.data).first(),
+            type:
+                this.session && this.session.sut
+                    ? collect(this.types)
+                        .where('id', this.session.sut.type)
+                        .first()
+                    : null,
             form: {
                 base_url:
                     this.session && this.session.sut
                         ? this.session.sut.base_url
                         : null,
                 component_id: null,
+                type: null,
             },
         };
     },
@@ -102,6 +130,12 @@ export default {
                 this.form.component_id = value ? value.id : null;
             },
         },
+        type: {
+            immediate: true,
+            handler: function (value) {
+                this.form.type = value ? value.id : null;
+            },
+        }
     },
     methods: {
         submit() {
