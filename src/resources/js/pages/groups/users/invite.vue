@@ -44,9 +44,16 @@
                                 matches {{ group.domain }}
                             </p>
                             <p class="text-muted small">
-                                User is not registered? Invite them to the "{{ group.name }}"
+                                User is not registered? Invite them to the "{{
+                                    group.name
+                                }}"
                                 <a
-                                    :href="route('groups.user-invitations.create', group.id)"
+                                    :href="
+                                        route(
+                                            'groups.user-invitations.create',
+                                            group.id
+                                        )
+                                    "
                                     >here</a
                                 >
                             </p>

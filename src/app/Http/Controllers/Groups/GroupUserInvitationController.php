@@ -37,7 +37,8 @@ class GroupUserInvitationController extends Controller
         return Inertia::render('groups/user-invitations/index', [
             'group' => (new GroupResource($group))->resolve(),
             'userInvitations' => GroupUserInvitationResource::collection(
-                $group->userInvitations()
+                $group
+                    ->userInvitations()
                     ->when(request('q'), function (Builder $query, $q) {
                         $query->where('email', 'like', "%{$q}%");
                     })
@@ -78,22 +79,32 @@ class GroupUserInvitationController extends Controller
                 'user_email' => [
                     'required',
                     'email',
-                    Rule::unique('group_user_invitations', 'email')->where(function ($query) use ($group) {
-                        return $query->where('group_id', $group->id);
-                    }),
-                    $group->email_regex
+                    Rule::unique('group_user_invitations', 'email')->where(
+                        function ($query) use ($group) {
+                            return $query->where('group_id', $group->id);
+                        }
+                    ),
+                    $group->email_regex,
                 ],
             ],
-            ['user_email.unique' => __('Invitation for this email already exist.')]
+            [
+                'user_email.unique' => __(
+                    'Invitation for this email already exist.'
+                ),
+            ]
         );
         $request->validate(
             ['user_email' => 'unique:users,email'],
-            ['user_email.unique' => __('User with this email already registered.')]
+            [
+                'user_email.unique' => __(
+                    'User with this email already registered.'
+                ),
+            ]
         );
 
         $userInvitation = $group->userInvitations()->create([
             'email' => $request->user_email,
-            'expired_at' => env('INVITATION_EXPIRE', 432000)
+            'expired_at' => env('INVITATION_EXPIRE', 432000),
         ]);
         $userInvitation->sendEmailInvitationNotification();
 
@@ -117,7 +128,7 @@ class GroupUserInvitationController extends Controller
         $this->authorize('admin', $group);
 
         $userInvitation->update([
-            'expired_at' => env('INVITATION_EXPIRE', 432000)
+            'expired_at' => env('INVITATION_EXPIRE', 432000),
         ]);
         $userInvitation->sendEmailInvitationNotification();
 

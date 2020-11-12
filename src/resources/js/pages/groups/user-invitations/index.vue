@@ -7,7 +7,9 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('groups.user-invitations.create', group.id)"
+                        :href="
+                            route('groups.user-invitations.create', group.id)
+                        "
                         v-if="group.can.admin"
                         class="btn btn-primary"
                     >
@@ -29,7 +31,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(userInvitation, i) in userInvitations.data" :key="i">
+                        <tr
+                            v-for="(userInvitation, i) in userInvitations.data"
+                            :key="i"
+                        >
                             <td class="text-break">
                                 <a :href="`mailto:${userInvitation.email}`">
                                     {{ userInvitation.email }}
@@ -59,7 +64,10 @@
                                             :href="
                                                 route(
                                                     'groups.user-invitations.update',
-                                                    [group.id, userInvitation.id]
+                                                    [
+                                                        group.id,
+                                                        userInvitation.id,
+                                                    ]
                                                 )
                                             "
                                             method="put"
@@ -75,7 +83,10 @@
                                             :href="
                                                 route(
                                                     'groups.user-invitations.destroy',
-                                                    [group.id, userInvitation.id]
+                                                    [
+                                                        group.id,
+                                                        userInvitation.id,
+                                                    ]
                                                 )
                                             "
                                             method="delete"
@@ -89,9 +100,7 @@
                             </td>
                         </tr>
                         <tr v-if="!userInvitations.data.length">
-                            <td class="text-center" colspan="5">
-                                No Results
-                            </td>
+                            <td class="text-center" colspan="5">No Results</td>
                         </tr>
                     </tbody>
                 </table>

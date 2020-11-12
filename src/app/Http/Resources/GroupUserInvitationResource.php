@@ -16,7 +16,7 @@ class GroupUserInvitationResource extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'invitation_code' => $this->invitation_code,
-            'status' => $this->status
+            'status' => $this->status,
         ];
     }
 }

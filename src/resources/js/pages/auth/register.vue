@@ -75,7 +75,10 @@
                         placeholder="e.g., gdI2EWG3hjHDG6d"
                         name="invitation_code"
                     />
-                    <span v-if="$page.errors.invitation_code" class="invalid-feedback">
+                    <span
+                        v-if="$page.errors.invitation_code"
+                        class="invalid-feedback"
+                    >
                         {{ $page.errors.invitation_code }}
                     </span>
                 </div>

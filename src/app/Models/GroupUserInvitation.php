@@ -37,7 +37,7 @@ class GroupUserInvitation extends Model
     {
         parent::boot();
 
-        self::saving(function($model){
+        self::saving(function ($model) {
             $model->attributes['invitation_code'] = Str::random(15);
         });
     }
@@ -66,7 +66,9 @@ class GroupUserInvitation extends Model
      */
     public function setExpiredAtAttribute($ttl)
     {
-        $this->attributes['expired_at'] = now()->addSeconds($ttl)->toDateTimeString();
+        $this->attributes['expired_at'] = now()
+            ->addSeconds($ttl)
+            ->toDateTimeString();
     }
 
     /**

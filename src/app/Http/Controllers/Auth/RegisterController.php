@@ -46,8 +46,8 @@ class RegisterController extends Controller
         return Inertia::render('auth/register', [
             'invitation' => [
                 'code' => $request->input('invitationCode'),
-                'email' => $request->input('email')
-            ]
+                'email' => $request->input('email'),
+            ],
         ]);
     }
 
@@ -104,15 +104,24 @@ class RegisterController extends Controller
                 'invitation_code' => [
                     'nullable',
                     Rule::requiredIf(env('INVITATION_ON_REGISTER', false)),
-                    Rule::exists('group_user_invitations', 'invitation_code')->where(function ($query) use ($data) {
+                    Rule::exists(
+                        'group_user_invitations',
+                        'invitation_code'
+                    )->where(function ($query) use ($data) {
                         return $query
                             ->where('email', Arr::get($data, 'email'))
-                            ->where('expired_at', '>', now()->toDateTimeString());
+                            ->where(
+                                'expired_at',
+                                '>',
+                                now()->toDateTimeString()
+                            );
                     }),
                 ],
             ],
             [
-                'invitation_code.exists' => __('Email address and Invitation code are mismatched.')
+                'invitation_code.exists' => __(
+                    'Email address and Invitation code are mismatched.'
+                ),
             ]
         );
     }

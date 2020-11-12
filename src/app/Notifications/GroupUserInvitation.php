@@ -29,33 +29,44 @@ class GroupUserInvitation extends Notification
     {
         $registrationUrl = $this->registrationUrl($notifiable);
 
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject(__('Group Invitation'))
-            ->line(__(
-                'You have been invited to **:groupName** group.',
-                ['groupName' => $notifiable->group->name]
-            ))
-            ->line(__(
-                'In order to join the group by passing a short registration, please click on the button below.'
-            ))
+            ->line(
+                __('You have been invited to **:groupName** group.', [
+                    'groupName' => $notifiable->group->name,
+                ])
+            )
+            ->line(
+                __(
+                    'In order to join the group by passing a short registration, please click on the button below.'
+                )
+            )
             ->action(__('Join'), $registrationUrl)
-            ->line(__(
-                '
+            ->line(
+                __(
+                    '
                     Using this Invitation code **:code** with your email **:email** is mandatory to join
                     **:groupName** group on **[:itpLink](:itpLink)**.
                 ',
-                [
-                    'code' => $notifiable->invitation_code,
-                    'email' => $notifiable->email,
-                    'groupName' => $notifiable->group->name,
-                    'itpLink' => route('home'),
-                ]
-            ))
-            ->line(__(
-                'Please note that the invitation will expire on **:expire**.',
-                ['expire' => $notifiable->expired_at]
-            ))
-            ->line(__('If you did not create an account, no further action is required.'));
+                    [
+                        'code' => $notifiable->invitation_code,
+                        'email' => $notifiable->email,
+                        'groupName' => $notifiable->group->name,
+                        'itpLink' => route('home'),
+                    ]
+                )
+            )
+            ->line(
+                __(
+                    'Please note that the invitation will expire on **:expire**.',
+                    ['expire' => $notifiable->expired_at]
+                )
+            )
+            ->line(
+                __(
+                    'If you did not create an account, no further action is required.'
+                )
+            );
     }
 
     /**
@@ -70,7 +81,7 @@ class GroupUserInvitation extends Notification
             [RegisterController::class, 'register'],
             [
                 'email' => $notifiable->email,
-                'invitationCode' => $notifiable->invitation_code
+                'invitationCode' => $notifiable->invitation_code,
             ]
         );
     }

@@ -33,9 +33,7 @@
                         </div>
                     </template>
                     <div class="mb-3">
-                        <label class="form-label">
-                            Environments
-                        </label>
+                        <label class="form-label"> Environments </label>
                         <selectize
                             v-model="groupEnvironment"
                             class="form-select mb-3"

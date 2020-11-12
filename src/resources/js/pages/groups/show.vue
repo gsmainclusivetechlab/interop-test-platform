@@ -14,12 +14,8 @@
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
                             <th class="text-nowrap w-auto">Owner</th>
-                            <th class="text-nowrap w-auto">
-                                Use Cases
-                            </th>
-                            <th class="text-nowrap w-auto">
-                                Test Cases
-                            </th>
+                            <th class="text-nowrap w-auto">Use Cases</th>
+                            <th class="text-nowrap w-auto">Test Cases</th>
                             <th class="text-nowrap w-25">Status</th>
                             <th class="text-nowrap w-auto">Last Run</th>
                             <th class="text-nowrap w-1"></th>
@@ -97,9 +93,7 @@
                             </td>
                         </tr>
                         <tr v-if="!sessions.data.length">
-                            <td class="text-center" colspan="7">
-                                No Results
-                            </td>
+                            <td class="text-center" colspan="7">No Results</td>
                         </tr>
                     </tbody>
                 </table>

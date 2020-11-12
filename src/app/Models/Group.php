@@ -99,11 +99,7 @@ class Group extends Model
         $matchTo = str_replace(
             '.',
             '[.]',
-            str_replace(
-                ', ',
-                '|',
-                $this->domain
-            )
+            str_replace(', ', '|', $this->domain)
         );
         $matchTo = $matchTo ?? '*';
 
