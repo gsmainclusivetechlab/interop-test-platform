@@ -185,7 +185,9 @@ class RegisterController extends Controller
         QuestionnaireSection $section
     ) {
         $rules = $this->questionnaireRules($section, $request->all());
-        $validated = $request->validate($rules);
+        $validated = $request->validate($rules, [
+            'required' => __('This question is required.'),
+        ]);
         $request
             ->session()
             ->put("session.questionnaire.{$section->id}", $validated);
@@ -274,7 +276,7 @@ class RegisterController extends Controller
                             });
                     },
                 ])
-                    ->whereHas('testCases', function ($query) {
+                    ->whereHas('testCases', function ($query) use ($testCases) {
                         $query
                             ->whereHas('components', function ($query) {
                                 $query->whereKey(
@@ -290,7 +292,12 @@ class RegisterController extends Controller
                                 function ($query) {
                                     $query->where('public', true);
                                 }
-                            );
+                            )
+                            ->when($testCases !== null, function (
+                                Builder $query
+                            ) use ($testCases) {
+                                $query->whereIn('slug', $testCases ?: ['']);
+                            });
                     })
                     ->get()
             ),
