@@ -114,7 +114,7 @@ export default {
         };
     },
     mounted() {
-        this.formAutofill();
+        this.updateAnswers();
     },
     methods: {
         submit() {
@@ -129,7 +129,7 @@ export default {
                 )
                 .then(() => (this.sending = false));
         },
-        formAutofill() {
+        updateAnswers() {
             if (
                 this.session &&
                 this.session.questionnaire &&
@@ -243,7 +243,7 @@ export default {
                     .where('id', parseInt(route().params.section))
                     .first().description;
 
-                this.formAutofill();
+                if(this.$page.errors?.length === 0) this.updateAnswers();
             },
         },
     },
