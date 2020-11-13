@@ -79,13 +79,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="
-                        route(
-                            isCompliance
-                                ? 'sessions.register.questionnaire.summary'
-                                : 'sessions.register.sut'
-                        )
-                    "
+                    :href="route('sessions.register.sut')"
                     class="btn btn-outline-primary"
                 >
                     Back

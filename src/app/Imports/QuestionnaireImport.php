@@ -20,7 +20,7 @@ class QuestionnaireImport
             QuestionnaireSection::query()->delete();
             QuestionnaireTestCase::query()->delete();
 
-            foreach (Arr::get($rows, 'questions', []) as $sectionRow) {
+            foreach ($rows['questions'] as $sectionRow) {
                 /** @var QuestionnaireSection $section */
                 $section = QuestionnaireSection::query()->create(
                     Arr::only(
@@ -29,7 +29,7 @@ class QuestionnaireImport
                     )
                 );
 
-                foreach (Arr::get($sectionRow, 'questions', []) as $question) {
+                foreach ($sectionRow['questions'] as $question) {
                     $section->questions()->create([
                         'name' => Arr::get($question, 'property'),
                         'question' => Arr::get($question, 'question'),
@@ -40,10 +40,7 @@ class QuestionnaireImport
                 }
             }
 
-            foreach (
-                Arr::get($rows, 'test_cases', [])
-                as $testCaseName => $matches
-            ) {
+            foreach ($rows['test_cases'] as $testCaseName => $matches) {
                 TestCase::query()
                     ->where(['slug' => $testCaseName])
                     ->existsOr(function () use ($testCaseName) {
