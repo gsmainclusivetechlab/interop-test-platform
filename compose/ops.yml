@@ -19,7 +19,7 @@ services:
 
   migrate:
     <<: *ops-service
-    command: sh -c "/wait && php artisan migrate"
+    command: sh -c "/wait && php artisan migrate --force"
 
   test:
     <<: *ops-service

@@ -9,7 +9,7 @@
                     {{ useCase.name }}
                 </b>
                 <button
-                    v-show="!isCompiance"
+                    v-show="!isCompliance"
                     type="button"
                     class="btn btn-link py-0 font-weight-normal text-decoration-none"
                     @click.prevent="toggleCheckboxes"
@@ -36,7 +36,7 @@
                                 Happy flow
                             </span>
                             <button
-                                v-show="!isCompiance"
+                                v-show="!isCompliance"
                                 type="button"
                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
                                 @click.prevent="toggleCheckboxes"
@@ -61,7 +61,7 @@
                                     <label class="form-check mb-0">
                                         <input
                                             :value="testCase.id"
-                                            :disabled="isCompiance"
+                                            :disabled="isCompliance"
                                             v-model="testCases"
                                             type="checkbox"
                                             class="form-check-input"
@@ -98,7 +98,7 @@
                                 Unhappy flow
                             </span>
                             <button
-                                v-show="!isCompiance"
+                                v-show="!isCompliance"
                                 type="button"
                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
                                 @click.prevent="toggleCheckboxes"
@@ -123,7 +123,7 @@
                                     <label class="form-check mb-0">
                                         <input
                                             :value="testCase.id"
-                                            :disabled="isCompiance"
+                                            :disabled="isCompliance"
                                             v-model="testCases"
                                             type="checkbox"
                                             class="form-check-input"
@@ -157,10 +157,10 @@ export default {
             type: Object,
             required: true,
         },
-        isCompiance: {
+        isCompliance: {
             type: Boolean,
             required: true,
-        }
+        },
     },
     data() {
         return {

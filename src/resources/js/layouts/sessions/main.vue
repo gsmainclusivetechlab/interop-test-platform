@@ -3,9 +3,7 @@
         <div class="col-3 mt-3 pr-0">
             <div class="card mb-0">
                 <div class="card-header px-3">
-                    <h3 class="card-title">
-                        Select use cases
-                    </h3>
+                    <h3 class="card-title">Select use cases</h3>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-unstyled">

@@ -172,19 +172,19 @@ class Session extends Model
     public function environments()
     {
         return array_merge($this->environments, [
-            'SP_BASE_URI'               => $this->getBaseUriOfComponent(
+            'SP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Service Provider')->firstOrFail()
             ),
-            'MMO1_BASE_URI'             => $this->getBaseUriOfComponent(
+            'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 1'
                 )->firstOrFail()
             ),
-            'MOJALOOP_BASE_URI'         => $this->getBaseUriOfComponent(
+            'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Mojaloop')->firstOrFail()
             ),
-            'MMO2_BASE_URI'             => $this->getBaseUriOfComponent(
+            'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 2'
@@ -226,10 +226,10 @@ class Session extends Model
     /**
      * @return array
      */
-    public static function types()
+    public static function getTypeNames()
     {
         return [
-            static::TYPE_TEST       => __('Test'),
+            static::TYPE_TEST => __('Test'),
             static::TYPE_COMPLIANCE => __('Compliance'),
         ];
     }
@@ -237,14 +237,26 @@ class Session extends Model
     /**
      * @return \Illuminate\Support\Collection
      */
-    public static function typesList()
+    public static function getTypesList()
     {
-        return collect(static::types())->map(function ($label, $key) {
-            return [
-                'id' => $key,
-                'label' => $label,
-            ];
-        })->values();
+        return collect(static::getTypeNames())
+            ->map(function ($label, $key) {
+                return [
+                    'id' => $key,
+                    'label' => $label,
+                ];
+            })
+            ->values();
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function isCompliance($type): bool
+    {
+        return $type == static::TYPE_COMPLIANCE;
     }
 
     /**
@@ -252,7 +264,7 @@ class Session extends Model
      */
     public function isCompliance(): bool
     {
-        return $this->type == static::TYPE_COMPLIANCE;
+        return static::isCompliance($this->type);
     }
 
     /**

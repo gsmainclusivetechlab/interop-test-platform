@@ -1,5 +1,5 @@
 <template>
-    <layout :sut="session.sut" :components="components">
+    <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-12">
             <div class="card">
                 <div class="row">
@@ -52,13 +52,19 @@
                     </div>
                     <div class="col-6">
                         <div class="card-header pl-0 border-0">
-                            <h3 class="card-title">{{ isCompiance ? 'Selected cases' : 'Select use cases' }}</h3>
+                            <h3 class="card-title">
+                                {{
+                                    isCompliance
+                                        ? 'Selected cases'
+                                        : 'Select use cases'
+                                }}
+                            </h3>
                         </div>
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
-                                style="max-height: 320px;"
+                                style="max-height: 320px"
                                 :useCases="useCases"
-                                :isCompiance="isCompiance"
+                                :isCompliance="isCompliance"
                                 v-model="form.test_cases"
                             />
                             <div
@@ -73,7 +79,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="route(isCompiance ? 'sessions.register.questionnaire.summary' : 'sessions.register.sut')"
+                    :href="route('sessions.register.sut')"
                     class="btn btn-outline-primary"
                 >
                     Back
@@ -116,7 +122,7 @@ export default {
     data() {
         return {
             sending: false,
-            isCompiance: this.session.sut.type === 'compliance',
+            isCompliance: this.session.type === 'compliance',
             form: {
                 name: this.session.info ? this.session.info.name : null,
                 description: this.session.info
@@ -131,7 +137,7 @@ export default {
     created() {
         let form = this.form;
 
-        if (this.isCompiance && !this.session.info) {
+        if (this.isCompliance && !this.session.info) {
             this.useCases.data.forEach(function (useCase) {
                 useCase.testCases.forEach(function (testCase) {
                     form.test_cases.push(testCase.id);

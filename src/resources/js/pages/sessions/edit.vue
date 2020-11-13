@@ -3,9 +3,7 @@
         <div class="col-10 m-auto mt-3">
             <form class="card" @submit.prevent="submit">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        Update session info
-                    </h3>
+                    <h3 class="card-title">Update session info</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -18,7 +16,7 @@
                                     type="text"
                                     v-model="form.name"
                                     class="form-control"
-                                    :readonly="isCompiance"
+                                    :readonly="isCompliance"
                                     :class="{
                                         'is-invalid': $page.errors.name,
                                     }"
@@ -38,7 +36,7 @@
                                     class="form-control"
                                     rows="5"
                                     v-model="form.description"
-                                    :readonly="isCompiance"
+                                    :readonly="isCompliance"
                                     :class="{
                                         'is-invalid': $page.errors.description,
                                     }"
@@ -116,9 +114,9 @@
                                     <b>Test Cases</b>
                                 </label>
                                 <test-case-checkboxes
-                                    style="max-height: 485px;"
+                                    style="max-height: 485px"
                                     :useCases="useCases"
-                                    :isCompiance="isCompiance"
+                                    :isCompiance="isCompliance"
                                     v-model="form.test_cases"
                                 />
                                 <div
@@ -185,7 +183,7 @@ export default {
     data() {
         return {
             sending: false,
-            isCompiance: this.session.type === 'compliance',
+            isCompliance: this.session.type === 'compliance',
             groupEnvironment: this.session.groupEnvironment
                 ? this.session.groupEnvironment.data
                 : null,

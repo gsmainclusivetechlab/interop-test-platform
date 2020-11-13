@@ -1,5 +1,5 @@
 <template>
-    <layout :sut="session.sut" :components="components">
+    <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card">
                 <div class="card-header border-0">
@@ -33,9 +33,7 @@
                         </div>
                     </template>
                     <div class="mb-3">
-                        <label class="form-label">
-                            Environments
-                        </label>
+                        <label class="form-label"> Environments </label>
                         <selectize
                             v-model="groupEnvironment"
                             class="form-select mb-3"

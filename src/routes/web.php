@@ -46,6 +46,10 @@ Route::namespace('Groups')->group(function () {
         'groups.environments',
         'GroupEnvironmentController'
     )->except(['show']);
+    Route::resource(
+        'groups.user-invitations',
+        'GroupUserInvitationController'
+    )->except(['show', 'edit']);
 });
 
 /**
@@ -96,21 +100,30 @@ Route::name('sessions.')
         Route::name('register.')
             ->prefix('register')
             ->group(function () {
+                Route::get('type', 'RegisterController@showTypeForm')->name(
+                    'type'
+                );
+                Route::post('type', 'RegisterController@storeType')->name(
+                    'type.store'
+                );
                 Route::get('sut', 'RegisterController@showSutForm')->name(
                     'sut'
                 );
                 Route::post('sut', 'RegisterController@storeSut')->name(
                     'sut.store'
                 );
-                Route::get('questionnaire/summary', 'RegisterController@questionnaireSummary')->name(
-                    'questionnaire.summary'
-                );
-                Route::get('questionnaire/{section}', 'RegisterController@showQuestionnaireForm')->name(
-                    'questionnaire'
-                );
-                Route::post('questionaire/{section}', 'RegisterController@storeQuestionnaire')->name(
-                    'questionnaire.store'
-                );
+                Route::get(
+                    'questionnaire/summary',
+                    'RegisterController@questionnaireSummary'
+                )->name('questionnaire.summary');
+                Route::get(
+                    'questionnaire/{section}',
+                    'RegisterController@showQuestionnaireForm'
+                )->name('questionnaire');
+                Route::post(
+                    'questionaire/{section}',
+                    'RegisterController@storeQuestionnaire'
+                )->name('questionnaire.store');
                 Route::get('info', 'RegisterController@showInfoForm')->name(
                     'info'
                 );
@@ -259,9 +272,10 @@ Route::name('admin.')
         Route::name('questionnaire.')
             ->prefix('questionnaire')
             ->group(function () {
-                Route::get('import', 'QuestionnaireController@showImportForm')->name(
-                    'import'
-                );
+                Route::get(
+                    'import',
+                    'QuestionnaireController@showImportForm'
+                )->name('import');
                 Route::post('import', 'QuestionnaireController@import')->name(
                     'import.confirm'
                 );
