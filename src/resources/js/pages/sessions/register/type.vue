@@ -21,7 +21,7 @@
                                         })
                                     "
                                     method="post"
-                                    class="btn btn-outline-primary"
+                                    class="btn btn-outline-primary mr-1"
                                 >
                                     Test
                                 </inertia-link>
@@ -33,7 +33,7 @@
                                         })
                                     "
                                     method="post"
-                                    class="btn btn-outline-primary"
+                                    class="btn btn-outline-primary mr-1"
                                 >
                                     Test + questionnaire
                                 </inertia-link>
@@ -44,7 +44,7 @@
                                         })
                                     "
                                     method="post"
-                                    class="btn btn-outline-primary"
+                                    class="btn btn-outline-primary mr-1"
                                 >
                                     Complience
                                 </inertia-link>
