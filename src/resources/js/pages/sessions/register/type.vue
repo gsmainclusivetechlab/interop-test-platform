@@ -35,7 +35,7 @@
                                     method="post"
                                     class="btn btn-outline-primary"
                                 >
-                                    Test with questionnaire
+                                    Test + questionnaire
                                 </inertia-link>
                                 <inertia-link
                                     :href="
@@ -53,9 +53,20 @@
                                 <p>
                                     <icon name="chevron-right" /><b>Test</b>
                                     is a common session where you can select any
-                                    number of test cases, execute them any
-                                    times, and change the chosen set of test
-                                    cases any time.
+                                    number of test cases, execute them as many
+                                    times as you like, and change the chosen set
+                                    of test cases anytime.
+                                </p>
+                                <p>
+                                    <icon name="chevron-right" /><b
+                                        >Test + questionnaire</b
+                                    >
+                                    is a session where you pass the
+                                    questionnaire to receive the list of
+                                    suggested test cases. The main difference
+                                    from <b>Complience</b> session is you can
+                                    change the chosen set of test cases anytime
+                                    and execute them as many times as you like.
                                 </p>
                                 <p>
                                     <icon name="chevron-right" /><b
@@ -63,13 +74,14 @@
                                     >
                                     is a specific type of session that is being
                                     validated by the platfrom admins. In
-                                    contrast to a Test session you wan't be able
-                                    to choose test cases manually and they will
-                                    be assigned to you automatically after
-                                    passing a questionnaire. Then you'll have a
-                                    limited number of {{ testRunAttempts }}
-                                    attempts to execute any test case before
-                                    sending our session for admin's review.
+                                    contrast to a <b>Test</b> session you wan't
+                                    be able to choose test cases manually and
+                                    they will be assigned to you automatically
+                                    after passing the questionnaire. Then you'll
+                                    have a limited number of
+                                    <b>{{ testRunAttempts }}</b> attempts to
+                                    execute any test case before sending our
+                                    session for admin's review.
                                 </p>
                             </div>
                         </div>
