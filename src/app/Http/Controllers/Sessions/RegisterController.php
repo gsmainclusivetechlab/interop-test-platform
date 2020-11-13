@@ -41,30 +41,35 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $keys = QuestionnaireSection::query()->pluck('id');
-        $questionnaireKeys = implode(
-            ',',
-            $keys
-                ->map(function ($section) {
-                    return "session.questionnaire.{$section}";
-                })
-                ->all()
-        );
+        $questionnaireKeys = '';
+        if (Session::isCompliance(session('session.type'))) {
+            $keys = QuestionnaireSection::query()->pluck('id');
+            $questionnaireKeys =
+                ',' .
+                implode(
+                    ',',
+                    $keys
+                        ->map(function ($section) {
+                            return "session.questionnaire.{$section}";
+                        })
+                        ->all()
+                );
+        }
 
         $this->middleware(['auth', 'verified']);
         $this->middleware(
             EnsureSessionIsPresent::class . ':session.type'
-        )->only('sut');
+        )->only('showSutForm');
         $this->middleware(EnsureSessionIsPresent::class . ':session.sut')->only(
-            'questionnaire'
+            'showQuestionnaireForm'
         );
         $this->middleware(
-            EnsureSessionIsPresent::class . ":session.sut,{$questionnaireKeys}"
-        )->only('info');
+            EnsureSessionIsPresent::class . ":session.sut{$questionnaireKeys}"
+        )->only('showInfoForm');
         $this->middleware(
             EnsureSessionIsPresent::class .
-                ":session.sut,session.info,{$questionnaireKeys}"
-        )->only('config');
+                ":session.sut,session.info{$questionnaireKeys}"
+        )->only('showConfigForm');
     }
 
     /**

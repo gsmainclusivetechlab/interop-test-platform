@@ -243,7 +243,7 @@ export default {
                     .where('id', parseInt(route().params.section))
                     .first().description;
 
-                if(this.$page.errors?.length === 0) this.updateAnswers();
+                if (this.$page.errors?.length === 0) this.updateAnswers();
             },
         },
     },
