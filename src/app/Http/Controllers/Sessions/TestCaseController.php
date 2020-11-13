@@ -105,7 +105,7 @@ class TestCaseController extends Controller
             ->where('test_case_id', $testCase->id)
             ->count();
 
-        return !$session->isCompliance() || ($session->isAvailableToUpdate()
+        return !$session->isComplianceSession() || ($session->isAvailableToUpdate()
                 && $testRunsCount < config('test_cases.compliance_session_execution_limit'));
     }
 }

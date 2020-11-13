@@ -19,7 +19,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -187,7 +186,7 @@ class SessionController extends Controller
                                     );
                             })
                             ->when(
-                                $session->isCompliance(),
+                                $session->isComplianceSession(),
                                 function ($query) use ($session) {
                                     $query->whereIn('id', $session->testCases()->pluck('id'));
                                 }
@@ -253,7 +252,7 @@ class SessionController extends Controller
         try {
             $session = DB::transaction(function () use ($session, $request) {
                 $data = $request->input();
-                $session->update($session->isCompliance()
+                $session->update($session->isComplianceSession()
                     ? Arr::only($data, ['group_environment_id', 'environments'])
                     : $data
                 );
@@ -264,7 +263,7 @@ class SessionController extends Controller
                         'base_url' => $request->input('component_base_url'),
                     ]);
 
-                if (!$session->isCompliance()) {
+                if (!$session->isComplianceSession()) {
                     $session
                         ->testCasesWithSoftDeletes()
                         ->whereKey($request->input('test_cases'))

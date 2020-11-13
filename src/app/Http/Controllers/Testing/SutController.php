@@ -91,7 +91,7 @@ class SutController extends Controller
             );
         }
 
-        if ($session->isCompliance()) {
+        if ($session->isComplianceSession()) {
             $testRunsCount = $session
                 ->testRuns()
                 ->where('test_case_id', $testStep->test_case_id)

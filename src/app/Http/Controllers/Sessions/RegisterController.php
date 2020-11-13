@@ -218,6 +218,8 @@ class RegisterController extends Controller
      */
     public function showInfoForm()
     {
+        $testCases = $this->getTestCases();
+        
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
             'components' => ComponentResource::collection(
@@ -346,14 +348,14 @@ class RegisterController extends Controller
                             ->all()
                     );
 
-                if ($session->isCompliance()) {
+                if ($session->isComplianceSession()) {
                     $session->updateStatus(Session::STATUS_READY);
                 }
 
                 $session
                     ->testCases()
                     ->attach(
-                        $session->isCompliance()
+                        $session->isComplianceSession()
                             ? $this->getTestCasesQuery(TestCase::query())->pluck('id')
                             : $request->session()->get('session.info.test_cases')
                     );

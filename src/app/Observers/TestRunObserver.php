@@ -16,7 +16,7 @@ class TestRunObserver
     {
         $session = $testRun->session;
 
-        if ($session->isCompliance() && $session->isStatusReady()) {
+        if ($session->isComplianceSession() && $session->isStatusReady()) {
             $session->updateStatus(Session::STATUS_IN_EXECUTION);
         }
 

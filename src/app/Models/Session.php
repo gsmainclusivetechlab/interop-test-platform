@@ -262,7 +262,7 @@ class Session extends Model
     /**
      * @return bool
      */
-    public function isCompliance(): bool
+    public function isComplianceSession(): bool
     {
         return static::isCompliance($this->type);
     }
@@ -310,7 +310,7 @@ class Session extends Model
      */
     public function getCompletableAttribute(): bool
     {
-        if (!$this->isCompliance() || !$this->isStatusInExecution()) {
+        if (!$this->isComplianceSession() || !$this->isStatusInExecution()) {
             return false;
         }
 
