@@ -42,7 +42,10 @@ class RegisterController extends Controller
     public function __construct()
     {
         $questionnaireKeys = '';
-        if (Session::isCompliance(session('session.type'))) {
+        if (
+            Session::isCompliance(session('session.type')) ||
+            session('session.withQuestions')
+        ) {
             $keys = QuestionnaireSection::query()->pluck('id');
             $questionnaireKeys =
                 ',' .
@@ -69,7 +72,7 @@ class RegisterController extends Controller
         )->only('showInfoForm');
         $this->middleware(
             EnsureSessionIsPresent::class .
-                ":session.type,session.sut,session.info{$questionnaireKeys}"
+                ":session.type,session.sut,session.info.name{$questionnaireKeys}"
         )->only('showConfigForm');
     }
 
@@ -80,26 +83,41 @@ class RegisterController extends Controller
     {
         return Inertia::render('sessions/register/type', [
             'session' => session('session'),
-            'types' => Session::getTypesList(),
+            'testRunAttempts' => config(
+                'test_cases.compliance_session_execution_limit',
+                5
+            ),
         ]);
     }
 
     /**
      * @param Request $request
+     * @param string $type
      *
      * @return RedirectResponse
      */
-    public function storeType(Request $request)
+    public function storeType(Request $request, $type)
     {
-        $request->validate([
-            'type' => [
-                'required',
-                Rule::in(array_keys(Session::getTypeNames())),
-            ],
-        ]);
-        $request->session()->put('session.type', $type = $request->get('type'));
+        $withQuestions = (bool) $request->get('withQuestions');
 
-        return Session::isCompliance($type)
+        Validator::validate(
+            [
+                'type' => $type,
+            ],
+            [
+                'type' => [
+                    'required',
+                    Rule::in(array_keys(Session::getTypeNames())),
+                ],
+            ]
+        );
+
+        session()->put([
+            'session.type' => $type,
+            'session.withQuestions' => $withQuestions,
+        ]);
+
+        return Session::isCompliance($type) || $withQuestions
             ? redirect()->route(
                 'sessions.register.questionnaire',
                 QuestionnaireSection::query()->first()
@@ -219,6 +237,19 @@ class RegisterController extends Controller
     public function showInfoForm()
     {
         $testCases = $this->getTestCases();
+
+        if (
+            session('session.withQuestions') &&
+            !session()->has('session.info')
+        ) {
+            session()->put(
+                'session.info.test_cases',
+                TestCase::whereIn(
+                    'slug',
+                    $this->getTestCases(true) ?: ['']
+                )->pluck('id')
+            );
+        }
 
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
@@ -479,11 +510,13 @@ class RegisterController extends Controller
     }
 
     /**
+     * @param bool $withQuestions
+     *
      * @return array|null
      */
-    protected function getTestCases()
+    protected function getTestCases($withQuestions = false)
     {
-        if (Session::isCompliance(session('session.type'))) {
+        if (Session::isCompliance(session('session.type')) || $withQuestions) {
             $answers = Arr::collapse(session('session.questionnaire'));
 
             $testCases = [];

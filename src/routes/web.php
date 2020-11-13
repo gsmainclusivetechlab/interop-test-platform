@@ -101,9 +101,10 @@ Route::name('sessions.')
                 Route::get('type', 'RegisterController@showTypeForm')->name(
                     'type'
                 );
-                Route::post('type', 'RegisterController@storeType')->name(
-                    'type.store'
-                );
+                Route::post(
+                    'type/{type}',
+                    'RegisterController@storeType'
+                )->name('type.store');
                 Route::get('sut', 'RegisterController@showSutForm')->name(
                     'sut'
                 );

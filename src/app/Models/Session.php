@@ -223,21 +223,6 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Support\Collection
-     */
-    public static function getTypesList()
-    {
-        return collect(static::getTypeNames())
-            ->map(function ($label, $key) {
-                return [
-                    'id' => $key,
-                    'label' => $label,
-                ];
-            })
-            ->values();
-    }
-
-    /**
      * @param string $type
      *
      * @return bool
