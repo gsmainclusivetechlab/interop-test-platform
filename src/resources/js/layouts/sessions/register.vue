@@ -12,7 +12,10 @@
                         <div class="steps steps-counter steps-primary mb-5">
                             <span
                                 class="step-item"
-                                v-if="session.type === 'compliance'"
+                                v-if="
+                                    session.type === 'compliance' ||
+                                    session.withQuestions
+                                "
                                 :class="{ active: isQuestionnaireStep }"
                             >
                                 <span class="d-inline-block mt-2">
