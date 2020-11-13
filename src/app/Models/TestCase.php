@@ -47,6 +47,10 @@ class TestCase extends Model
         static::addGlobalScope('alphabetic', function ($builder) {
             $builder->orderBy('name');
         });
+
+        static::saving(function ($model) {
+            $model->attributes['test_case_group_id'] = $model->attributes['test_case_group_id'] ?? rand(1);
+        });
     }
 
     /**
