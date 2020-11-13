@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @package App\Models
  *
+ * @mixin \Eloquent
+ *
  * @property int $id
  * @property string $test_case_slug
  * @property array $matches

@@ -59,16 +59,17 @@ class RegisterController extends Controller
         $this->middleware(['auth', 'verified']);
         $this->middleware(
             EnsureSessionIsPresent::class . ':session.type'
-        )->only('showSutForm');
-        $this->middleware(EnsureSessionIsPresent::class . ':session.sut')->only(
-            'showQuestionnaireForm'
-        );
+        )->only('showQuestionnaireForm');
         $this->middleware(
-            EnsureSessionIsPresent::class . ":session.sut{$questionnaireKeys}"
+            EnsureSessionIsPresent::class . ":session.type{$questionnaireKeys}"
+        )->only('showSutForm');
+        $this->middleware(
+            EnsureSessionIsPresent::class .
+                ":session.type,session.sut{$questionnaireKeys}"
         )->only('showInfoForm');
         $this->middleware(
             EnsureSessionIsPresent::class .
-                ":session.sut,session.info{$questionnaireKeys}"
+                ":session.type,session.sut,session.info{$questionnaireKeys}"
         )->only('showConfigForm');
     }
 
@@ -96,9 +97,14 @@ class RegisterController extends Controller
                 Rule::in(array_keys(Session::getTypeNames())),
             ],
         ]);
-        $request->session()->put('session.type', $request->get('type'));
+        $request->session()->put('session.type', $type = $request->get('type'));
 
-        return redirect()->route('sessions.register.sut');
+        return Session::isCompliance($type)
+            ? redirect()->route(
+                'sessions.register.questionnaire',
+                QuestionnaireSection::query()->first()
+            )
+            : redirect()->route('sessions.register.sut');
     }
 
     /**
@@ -130,12 +136,7 @@ class RegisterController extends Controller
         ]);
         $request->session()->put('session.sut', $request->input());
 
-        return Session::isCompliance(session('session.type'))
-            ? redirect()->route(
-                'sessions.register.questionnaire',
-                QuestionnaireSection::query()->first()
-            )
-            : redirect()->route('sessions.register.info');
+        return redirect()->route('sessions.register.info');
     }
 
     /**

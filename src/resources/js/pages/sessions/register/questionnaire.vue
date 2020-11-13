@@ -47,7 +47,7 @@
                                   'sessions.register.questionnaire',
                                   previousSection
                               )
-                            : route('sessions.register.sut')
+                            : route('sessions.register.type')
                     "
                     class="btn btn-outline-primary"
                 >

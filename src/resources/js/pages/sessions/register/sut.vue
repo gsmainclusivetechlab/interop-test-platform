@@ -45,7 +45,13 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="route('sessions.register.type')"
+                    :href="
+                        route(
+                            isCompliance
+                                ? 'sessions.register.questionnaire.summary'
+                                : 'sessions.register.type'
+                        )
+                    "
                     class="btn btn-outline-primary"
                 >
                     Back
@@ -86,6 +92,7 @@ export default {
     data() {
         return {
             sending: false,
+            isCompliance: this.session.type === 'compliance',
             component:
                 this.session && this.session.sut
                     ? collect(this.suts.data)

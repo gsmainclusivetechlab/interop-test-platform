@@ -12,6 +12,15 @@
                         <div class="steps steps-counter steps-primary mb-5">
                             <span
                                 class="step-item"
+                                v-if="session.type === 'compliance'"
+                                :class="{ active: isQuestionnaireStep }"
+                            >
+                                <span class="d-inline-block mt-2">
+                                    Questionnaire
+                                </span>
+                            </span>
+                            <span
+                                class="step-item"
                                 :class="{
                                     active: route().current(
                                         'sessions.register.sut'
@@ -20,23 +29,6 @@
                             >
                                 <span class="d-inline-block mt-2">
                                     Select Sut
-                                </span>
-                            </span>
-                            <span
-                                class="step-item"
-                                v-if="session.type === 'compliance'"
-                                :class="{
-                                    active:
-                                        route().current(
-                                            'sessions.register.questionnaire'
-                                        ) ||
-                                        route().current(
-                                            'sessions.register.questionnaire.summary'
-                                        ),
-                                }"
-                            >
-                                <span class="d-inline-block mt-2">
-                                    Questionnaire
                                 </span>
                             </span>
                             <span
@@ -66,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-5">
+                <div class="row mb-5" v-show="!isQuestionnaireStep">
                     <div class="col">
                         <diagram>
                             graph LR;
@@ -119,6 +111,13 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    data() {
+        return {
+            isQuestionnaireStep:
+                route().current('sessions.register.questionnaire') ||
+                route().current('sessions.register.questionnaire.summary'),
+        };
     },
 };
 </script>

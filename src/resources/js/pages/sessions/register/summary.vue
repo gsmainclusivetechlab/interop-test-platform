@@ -27,7 +27,7 @@
                     Back
                 </inertia-link>
                 <inertia-link
-                    :href="route('sessions.register.info')"
+                    :href="route('sessions.register.sut')"
                     class="btn btn-outline-primary"
                 >
                     Confirm
