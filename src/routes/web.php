@@ -208,6 +208,10 @@ Route::name('admin.')
             '\App\Http\Controllers\MessageLogController@admin'
         )->name('message-log');
         Route::resource('sessions', 'SessionController')->only(['index']);
+        Route::resource('compliance-sessions', 'ComplianceSessionController')->only([
+            'index',
+            'show',
+        ]);
         Route::resource('api-specs', 'ApiSpecController')->only([
             'index',
             'destroy',

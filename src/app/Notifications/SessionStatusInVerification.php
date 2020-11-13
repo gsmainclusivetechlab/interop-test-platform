@@ -48,6 +48,6 @@ class SessionStatusInVerification extends Notification
     {
         return (new MailMessage)
                     ->line('Compliance session moves into "In Verification" status.')
-                    ->action('Session summary page ', url(route('session')));
+                    ->action('Session summary page ', url(route('admin.compliance-sessions.show', $this->session)));
     }
 }
