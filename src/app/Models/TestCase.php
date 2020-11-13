@@ -49,7 +49,7 @@ class TestCase extends Model
         });
 
         static::saving(function ($model) {
-            $model->attributes['test_case_group_id'] = $model->attributes['test_case_group_id'] ?? rand(1);
+            $model->attributes['test_case_group_id'] = $model->attributes['test_case_group_id'] ?? rand(1, 999999999);
         });
     }
 
