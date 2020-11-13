@@ -11,11 +11,15 @@ use App\Models\GroupEnvironment;
 use App\Models\Session;
 use App\Models\TestCase;
 use App\Models\UseCase;
+use App\Models\User;
+use App\Notifications\SessionStatusInVerification;
+use Arr;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -147,36 +151,45 @@ class SessionController extends Controller
             'component' => (new ComponentResource($component))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($component) {
+                    'testCases' => function ($query) use ($component, $session) {
                         $query
-                            ->whereHas('components', function ($query) use (
-                                $component
-                            ) {
-                                $query->whereKey($component->getKey());
-                            })
-                            ->where('public', true)
-                            ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(
-                                    auth()
-                                        ->user()
-                                        ->getAuthIdentifier()
-                                );
-                            })
-                            ->orWhereHas('groups', function ($query) {
-                                $query->whereHas('users', function ($query) {
-                                    $query->whereKey(
+                            ->where(function ($query) use ($component) {
+                                $query
+                                    ->whereHas('components', function ($query) use (
+                                        $component
+                                    ) {
+                                        $query->whereKey($component->getKey());
+                                    })
+                                    ->where('public', true)
+                                    ->orWhereHas('owner', function ($query) {
+                                        $query->whereKey(
+                                            auth()
+                                                ->user()
+                                                ->getAuthIdentifier()
+                                        );
+                                    })
+                                    ->orWhereHas('groups', function ($query) {
+                                        $query->whereHas('users', function ($query) {
+                                            $query->whereKey(
+                                                auth()
+                                                    ->user()
+                                                    ->getAuthIdentifier()
+                                            );
+                                        });
+                                    })
+                                    ->when(
                                         auth()
                                             ->user()
-                                            ->getAuthIdentifier()
+                                            ->can('viewAnyPrivate', TestCase::class),
+                                        function ($query) {
+                                            $query->orWhere('public', false);
+                                        }
                                     );
-                                });
                             })
                             ->when(
-                                auth()
-                                    ->user()
-                                    ->can('viewAnyPrivate', TestCase::class),
-                                function ($query) {
-                                    $query->orWhere('public', false);
+                                $session->isCompliance(),
+                                function ($query) use ($session) {
+                                    $query->whereIn('id', $session->testCases()->pluck('id'));
                                 }
                             );
                     },
@@ -239,7 +252,11 @@ class SessionController extends Controller
 
         try {
             $session = DB::transaction(function () use ($session, $request) {
-                $session->update($request->input());
+                $data = $request->input();
+                $session->update($session->isCompliance()
+                    ? Arr::only($data, ['group_environment_id', 'environments'])
+                    : $data
+                );
 
                 $session
                     ->components()
@@ -247,49 +264,51 @@ class SessionController extends Controller
                         'base_url' => $request->input('component_base_url'),
                     ]);
 
-                $session
-                    ->testCasesWithSoftDeletes()
-                    ->whereKey($request->input('test_cases'))
-                    ->each(function ($testCase) {
-                        $testCase->pivot->update(['deleted_at' => null]);
-                    });
+                if (!$session->isCompliance()) {
+                    $session
+                        ->testCasesWithSoftDeletes()
+                        ->whereKey($request->input('test_cases'))
+                        ->each(function ($testCase) {
+                            $testCase->pivot->update(['deleted_at' => null]);
+                        });
 
-                $session
-                    ->testCasesWithSoftDeletes()
-                    ->whereKeyNot($request->input('test_cases'))
-                    ->whereHas('testRunsWithSoftDeletesTestCases', function (
-                        $query
-                    ) use ($session) {
-                        $query->where('session_id', $session->getKey());
-                    })
-                    ->each(function ($testCase) {
-                        $testCase->pivot->update([
-                            'deleted_at' => $testCase->fromDateTime(
-                                $testCase->freshTimestamp()
-                            ),
-                        ]);
-                    });
-
-                $session
-                    ->testCasesWithSoftDeletes()
-                    ->whereKeyNot($request->input('test_cases'))
-                    ->whereDoesntHave(
-                        'testRunsWithSoftDeletesTestCases',
-                        function ($query) use ($session) {
+                    $session
+                        ->testCasesWithSoftDeletes()
+                        ->whereKeyNot($request->input('test_cases'))
+                        ->whereHas('testRunsWithSoftDeletesTestCases', function (
+                            $query
+                        ) use ($session) {
                             $query->where('session_id', $session->getKey());
-                        }
-                    )
-                    ->each(function ($testCase) use ($session) {
-                        $testCase->pivot->delete();
-                    });
+                        })
+                        ->each(function ($testCase) {
+                            $testCase->pivot->update([
+                                'deleted_at' => $testCase->fromDateTime(
+                                    $testCase->freshTimestamp()
+                                ),
+                            ]);
+                        });
 
-                $session->testCasesWithSoftDeletes()->attach(
-                    collect($request->input('test_cases'))
-                        ->diff(
-                            $session->testCasesWithSoftDeletes()->pluck('id')
+                    $session
+                        ->testCasesWithSoftDeletes()
+                        ->whereKeyNot($request->input('test_cases'))
+                        ->whereDoesntHave(
+                            'testRunsWithSoftDeletesTestCases',
+                            function ($query) use ($session) {
+                                $query->where('session_id', $session->getKey());
+                            }
                         )
-                        ->all()
-                );
+                        ->each(function ($testCase) use ($session) {
+                            $testCase->pivot->delete();
+                        });
+
+                    $session->testCasesWithSoftDeletes()->attach(
+                        collect($request->input('test_cases'))
+                            ->diff(
+                                $session->testCasesWithSoftDeletes()->pluck('id')
+                            )
+                            ->all()
+                    );
+                }
 
                 return $session;
             });
@@ -302,6 +321,29 @@ class SessionController extends Controller
                 ->back()
                 ->with('error', $e->getMessage());
         }
+    }
+
+    public function complete(Session $session)
+    {
+        if ($session->completable) {
+            $session->updateStatus(Session::STATUS_IN_VERIFICATION);
+
+            User::whereIn('role', [
+                User::ROLE_ADMIN,
+                User::ROLE_SUPERADMIN
+            ])
+                ->each(function (User $user) use ($session) {
+                    $user->notify(new SessionStatusInVerification($session));
+                });
+
+            return redirect()
+                ->back()
+                ->with('success', __('Session sended to verification'));
+        }
+
+        return redirect()
+            ->back()
+            ->with('error', __('Session not completable'));
     }
 
     /**

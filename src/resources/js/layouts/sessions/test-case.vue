@@ -155,12 +155,24 @@
                                             testCase.id,
                                         ])
                                     "
+                                    v-if="isAvailableRun"
                                     class="btn btn-primary"
                                     method="post"
                                 >
                                     <icon name="bike"></icon>
                                     Run Test Case
                                 </inertia-link>
+                                <button
+                                    class="btn btn-gray"
+                                    v-else
+                                    v-b-tooltip.hover
+                                    :title="session.status !== 'in_execution'
+                                        ? 'Session not available to update'
+                                        : 'Test case execution limit'"
+                                >
+                                    <icon name="bike"></icon>
+                                    Run Test Case
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -189,6 +201,10 @@ export default {
         },
         testStepFirstSource: {
             type: Object,
+            required: true,
+        },
+        isAvailableRun: {
+            type: Boolean,
             required: true,
         },
     },

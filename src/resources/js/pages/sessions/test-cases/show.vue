@@ -3,6 +3,7 @@
         :session="session"
         :test-case="testCase"
         :testStepFirstSource="testStepFirstSource"
+        :isAvailableRun="isAvailableRun"
     >
         <div class="card">
             <div class="empty h-auto" v-if="!testRuns.data.length">
@@ -141,6 +142,10 @@ export default {
         },
         testStepFirstSource: {
             type: Object,
+            required: true,
+        },
+        isAvailableRun: {
+            type: Boolean,
             required: true,
         },
     },

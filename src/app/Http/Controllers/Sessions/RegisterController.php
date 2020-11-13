@@ -155,8 +155,6 @@ class RegisterController extends Controller
      */
     public function showInfoForm()
     {
-        $testCases = $this->getTestCases();
-
         return Inertia::render('sessions/register/info', [
             'session'    => session('session'),
             'components' => ComponentResource::collection(
@@ -164,54 +162,8 @@ class RegisterController extends Controller
             ),
             'useCases'   => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($testCases) {
-                        $query
-                            ->whereHas('components', function ($query) {
-                                $query->whereKey(
-                                    request()
-                                        ->session()
-                                        ->get('session.sut.component_id')
-                                );
-                            })
-                            ->where(function ($query) {
-                                $query
-                                    ->where('public', true)
-                                    ->orWhereHas('owner', function ($query) {
-                                        $query->whereKey(
-                                            auth()
-                                                ->user()
-                                                ->getAuthIdentifier()
-                                        );
-                                    })
-                                    ->orWhereHas('groups', function ($query) {
-                                        $query->whereHas('users', function (
-                                            $query
-                                        ) {
-                                            $query->whereKey(
-                                                auth()
-                                                    ->user()
-                                                    ->getAuthIdentifier()
-                                            );
-                                        });
-                                    })
-                                    ->when(
-                                        auth()
-                                            ->user()
-                                            ->can(
-                                                'viewAnyPrivate',
-                                                TestCase::class
-                                            ),
-                                        function ($query) {
-                                            $query->orWhere('public', false);
-                                        }
-                                    );
-                            })
-                            ->when(
-                                $testCases !== null,
-                                function (Builder $query) use ($testCases) {
-                                    $query->whereIn('slug', $testCases ?: ['']);
-                                }
-                            );
+                    'testCases' => function ($query) {
+                        $this->getTestCasesQuery($query);
                     },
                 ])
                     ->whereHas('testCases', function ($query) {
@@ -321,11 +273,19 @@ class RegisterController extends Controller
                             ->merge(Arr::only($sut, 'type'))
                             ->all()
                     );
+
+                if ($session->isCompliance()) {
+                    $session->updateStatus(Session::STATUS_READY);
+                }
+
                 $session
                     ->testCases()
                     ->attach(
-                        $request->session()->get('session.info.test_cases')
+                        $session->isCompliance()
+                            ? $this->getTestCasesQuery(TestCase::query())->pluck('id')
+                            : $request->session()->get('session.info.test_cases')
                     );
+
                 $session
                     ->components()
                     ->attach([Arr::except($sut, 'type')]);
@@ -437,5 +397,63 @@ class RegisterController extends Controller
         }
 
         return $testCases ?? null;
+    }
+
+    /**
+     * @param Builder $query
+     *
+     * @return \Illuminate\Database\Concerns\BuildsQueries|Builder|mixed
+     */
+    public function getTestCasesQuery($query)
+    {
+        $testCases = $this->getTestCases();
+
+        return $query
+            ->whereHas('components', function ($query) {
+                $query->whereKey(
+                    request()
+                        ->session()
+                        ->get('session.sut.component_id')
+                );
+            })
+            ->where(function ($query) {
+                $query
+                    ->where('public', true)
+                    ->orWhereHas('owner', function ($query) {
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
+                    })
+                    ->orWhereHas('groups', function ($query) {
+                        $query->whereHas('users', function (
+                            $query
+                        ) {
+                            $query->whereKey(
+                                auth()
+                                    ->user()
+                                    ->getAuthIdentifier()
+                            );
+                        });
+                    })
+                    ->when(
+                        auth()
+                            ->user()
+                            ->can(
+                                'viewAnyPrivate',
+                                TestCase::class
+                            ),
+                        function ($query) {
+                            $query->orWhere('public', false);
+                        }
+                    );
+            })
+            ->when(
+                $testCases !== null,
+                function (Builder $query) use ($testCases) {
+                    $query->whereIn('slug', $testCases ?: ['']);
+                }
+            );
     }
 }

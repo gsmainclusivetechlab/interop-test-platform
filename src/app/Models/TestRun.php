@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property Session $session
  */
 class TestRun extends Model
 {

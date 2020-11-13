@@ -58,6 +58,8 @@ Route::name('sessions.')
         Route::get('/', 'SessionController@index')->name('index');
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
+        Route::post('{session}/complete', 'SessionController@complete')->name('complete');
+        Route::get('{session}/verification', 'SessionController@verification')->name('verification');
         Route::put('{session}/update', 'SessionController@update')->name(
             'update'
         );

@@ -16,6 +16,8 @@ class SessionResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'type' => $this->type,
+            'completable' => $this->completable,
             'description' => $this->description,
             'environments' => $this->environments,
             'owner' => new UserResource($this->whenLoaded('owner')),

@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property TestRun $lastTestRun
  */
 class TestCase extends Model
 {

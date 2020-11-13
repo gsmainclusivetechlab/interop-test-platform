@@ -44,6 +44,8 @@ class SimulatorController extends Controller
         )->firstOrFail();
         $session = $testRun->session;
 
+        abort_unless($session->isAvailableToUpdate(), 403, __('Session not available to update'));
+
         $testStep = $testRun
             ->testSteps()
             ->where('method', $request->getMethod())

@@ -8,6 +8,11 @@ use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property string $type
+ * @property string|null $status
+ *
+ * @property-read bool $completable
  */
 class Session extends Model
 {
@@ -15,6 +20,12 @@ class Session extends Model
 
     const TYPE_TEST = 'test';
     const TYPE_COMPLIANCE = 'compliance';
+
+    const STATUS_READY = 'ready';
+    const STATUS_IN_EXECUTION = 'in_execution';
+    const STATUS_IN_VERIFICATION = 'in_verification';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_DECLINED = 'declined';
 
     /**
      * @var string
@@ -28,6 +39,7 @@ class Session extends Model
         'uuid',
         'name',
         'type',
+        'status',
         'description',
         'group_environment_id',
         'environments',
@@ -230,8 +242,77 @@ class Session extends Model
         return collect(static::types())->map(function ($label, $key) {
             return [
                 'id' => $key,
-                'label' => $label
+                'label' => $label,
             ];
         })->values();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompliance(): bool
+    {
+        return $this->type == static::TYPE_COMPLIANCE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusReady(): bool
+    {
+        return $this->status == static::STATUS_READY;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusInExecution(): bool
+    {
+        return $this->status == static::STATUS_IN_EXECUTION;
+    }
+
+    /**
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function updateStatus($status): bool
+    {
+        return $this->update(['status' => $status]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableToUpdate(): bool
+    {
+        return !in_array($this->status, [
+            static::STATUS_IN_VERIFICATION,
+            static::STATUS_APPROVED,
+            static::STATUS_DECLINED,
+        ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCompletableAttribute(): bool
+    {
+        if (!$this->isCompliance() || !$this->isStatusInExecution()) {
+            return false;
+        }
+
+        $testCases = $this->testCases()
+            ->with('lastTestRun')
+            ->get();
+
+        /** @var TestCase $testCase */
+        foreach ($testCases as $testCase) {
+            if (!$testCase->lastTestRun || !$testCase->lastTestRun->successful) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
