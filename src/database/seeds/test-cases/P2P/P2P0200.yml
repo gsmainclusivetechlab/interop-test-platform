@@ -1,4 +1,5 @@
 name: P2P Accepted - Send / Non-Disclosing
+slug: P2P0200
 use_case: P2P
 test_case: P2P0200
 behavior: positive

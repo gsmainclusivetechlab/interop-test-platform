@@ -103,7 +103,7 @@ class RegisterController extends Controller
                 'terms' => ['required'],
                 'invitation_code' => [
                     'nullable',
-                    Rule::requiredIf(env('INVITATION_ON_REGISTER', false)),
+                    Rule::requiredIf(env('INVITATION_REQUIRED', false)),
                     Rule::exists(
                         'group_user_invitations',
                         'invitation_code'

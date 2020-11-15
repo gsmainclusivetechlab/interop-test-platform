@@ -68,7 +68,7 @@ export default {
                         width: 185,
                         height: 60,
                     },
-                    theme: null,
+                    theme: 'default',
                 },
             },
             editorUrl:

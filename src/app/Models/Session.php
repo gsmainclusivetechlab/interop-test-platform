@@ -13,6 +13,9 @@ class Session extends Model
 {
     use HasUuid;
 
+    const TYPE_TEST = 'test';
+    const TYPE_COMPLIANCE = 'compliance';
+
     /**
      * @var string
      */
@@ -24,6 +27,7 @@ class Session extends Model
     protected $fillable = [
         'uuid',
         'name',
+        'type',
         'description',
         'group_environment_id',
         'environments',
@@ -181,6 +185,7 @@ class Session extends Model
 
     /**
      * @param Component $component
+     *
      * @return bool
      */
     public function hasComponent(Component $component)
@@ -192,6 +197,7 @@ class Session extends Model
 
     /**
      * @param Component $component
+     *
      * @return string
      */
     public function getBaseUriOfComponent(Component $component)
@@ -203,5 +209,26 @@ class Session extends Model
             'pivot.base_url',
             $component->base_url
         );
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTypeNames()
+    {
+        return [
+            static::TYPE_TEST => __('Test'),
+            static::TYPE_COMPLIANCE => __('Compliance'),
+        ];
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    public static function isCompliance($type): bool
+    {
+        return $type == static::TYPE_COMPLIANCE;
     }
 }

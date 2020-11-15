@@ -104,7 +104,7 @@ class GroupUserInvitationController extends Controller
 
         $userInvitation = $group->userInvitations()->create([
             'email' => $request->user_email,
-            'expired_at' => env('INVITATION_EXPIRE', 432000),
+            'expired_at' => env('INVITATION_LIFETIME', 432000),
         ]);
         $userInvitation->sendEmailInvitationNotification();
 
@@ -128,7 +128,7 @@ class GroupUserInvitationController extends Controller
         $this->authorize('admin', $group);
 
         $userInvitation->update([
-            'expired_at' => env('INVITATION_EXPIRE', 432000),
+            'expired_at' => env('INVITATION_LIFETIME', 432000),
         ]);
         $userInvitation->sendEmailInvitationNotification();
 

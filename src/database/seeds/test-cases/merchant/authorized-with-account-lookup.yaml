@@ -1,4 +1,5 @@
 name: Authorized Transaction by Payer FSP w/ Account Lookup
+slug: authorized-with-account-lookup
 use_case: Merchant-Initiated Merchant Payment
 behavior: positive
 description: |
