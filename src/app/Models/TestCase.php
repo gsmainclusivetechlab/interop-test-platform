@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -12,6 +13,7 @@ use Illuminate\Support\Arr;
 class TestCase extends Model
 {
     use HasUuid;
+    use HasPosition;
 
     const BEHAVIOR_NEGATIVE = 'negative';
     const BEHAVIOR_POSITIVE = 'positive';
@@ -164,5 +166,21 @@ class TestCase extends Model
             $this->behavior,
             $this->behavior
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getPositionGroupColumn()
+    {
+        return ['test_case_group_id'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionColumn()
+    {
+        return 'version';
     }
 }

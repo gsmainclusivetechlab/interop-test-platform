@@ -16,13 +16,19 @@ class AddVersionColumnsToTestCasesTable extends Migration
         Schema::table('test_cases', function (Blueprint $table) {
             $table->unsignedInteger('test_case_group_id')->after('uuid');
             $table->unsignedInteger('version')->default(1)->after('test_case_group_id');
-            $table->unique(['test_case_group_id', 'version']);
         });
 
-        $testCases = \Illuminate\Support\Facades\DB::table('test_cases')->select();
-        foreach ($testCases as $testCase) {
-            $testCase->update(['test_case_group_id' => rand()]);
-        }
+        DB::table('test_cases')->chunkById(100, function ($testCases) {
+            foreach ($testCases as $testCase) {
+                DB::table('test_cases')
+                    ->where('id', $testCase->id)
+                    ->update(['test_case_group_id' => rand(1, 999999999)]);
+            }
+        });
+
+        Schema::table('test_cases', function (Blueprint $table) {
+            $table->unique(['test_case_group_id', 'version']);
+        });
     }
 
     /**
