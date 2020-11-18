@@ -73,22 +73,7 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            <button
-                                                v-if="
-                                                    testCase.lastAvailableVersion &&
-                                                    checkLastVersion(testCase)
-                                                "
-                                                @click.prevent="updateVersion(testCase)"
-                                                type="button"
-                                                class="btn btn-sm btn-outline-primary text-uppercase"
-                                                v-b-tooltip.hover
-                                                title="
-                                                    A newer version of this test case is available.
-                                                    Click to update your session with it.
-                                                "
-                                            >
-                                                update
-                                            </button>
+                                            <test-case-update :test-case="testCase" :session-id="session.id" />
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -152,21 +137,7 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            <button
-                                                v-if="
-                                                    testCase.lastAvailableVersion &&
-                                                    checkLastVersion(testCase)
-                                                "
-                                                type="button"
-                                                class="btn btn-sm btn-outline-primary text-uppercase"
-                                                v-b-tooltip.hover
-                                                title="
-                                                    A newer version of this test case is available.
-                                                    Click to update your session with it.
-                                                "
-                                            >
-                                                update
-                                            </button>
+                                            <test-case-update :test-case="testCase" :session-id="session.id" />
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -184,7 +155,12 @@
     </ul>
 </template>
 <script>
+import TestCaseUpdate from '@/components/sessions/test-case-update';
+
 export default {
+    components: {
+        TestCaseUpdate
+    },
     props: {
         value: {
             type: Array,
@@ -232,23 +208,6 @@ export default {
                 checkbox.checked = !isChecked;
                 checkbox.dispatchEvent(new Event('change'));
             });
-        },
-        checkLastVersion(testCase) {
-            return testCase.lastAvailableVersion?.version !== testCase?.version;
-        },
-        updateVersion(testCase) {
-            console.log(testCase);
-            this.$inertia
-                .put(
-                    route('sessions.update-test-case', [
-                        this.session.id,
-                        testCase.id,
-                        testCase.lastAvailableVersion.id,
-                    ])
-                )
-                .then(() => {
-                    // console.log(this.currentCases);
-                });
         },
     },
 };
