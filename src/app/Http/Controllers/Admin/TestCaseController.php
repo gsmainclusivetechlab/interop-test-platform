@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -41,6 +42,7 @@ class TestCaseController extends Controller
                 TestCase::when(request('q'), function (Builder $query, $q) {
                     $query->where('test_cases.name', 'like', "%{$q}%");
                 })
+                    ->lastPerGroup()
                     ->with(['owner', 'groups', 'useCase', 'testSteps'])
                     ->when(
                         !auth()
@@ -89,6 +91,19 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @param TestCase $testCase
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function showImportVersionForm(TestCase $testCase)
+    {
+        $this->authorize('create', TestCase::class);
+        return Inertia::render('admin/test-cases/import-version', [
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+        ]);
+    }
+
+    /**
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -100,11 +115,16 @@ class TestCaseController extends Controller
         ]);
 
         try {
-            $rows = Yaml::parse(
-                request()
-                    ->file('file')
-                    ->get()
+            $rows = Arr::add(
+                Yaml::parse(
+                    request()
+                        ->file('file')
+                        ->get()
+                ),
+                'test_case_group_id',
+                request()->input('testCaseGroupId')
             );
+
             $testCase = (new TestCaseImport())->import($rows);
             $testCase
                 ->owner()
@@ -114,9 +134,16 @@ class TestCaseController extends Controller
                 ->route('admin.test-cases.index')
                 ->with('success', __('Test case imported successfully'));
         } catch (\Throwable $e) {
+            $errorMessage = implode(
+                '<br>',
+                array_merge(
+                    [$e->getMessage()],
+                    !empty($e->validator) ? $e->validator->errors()->all() : []
+                )
+            );
             return redirect()
                 ->back()
-                ->with('error', $e->getMessage());
+                ->with('error', $errorMessage);
         }
     }
 

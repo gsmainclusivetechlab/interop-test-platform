@@ -68,6 +68,22 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
+                                            <b>v.{{ testCase.version }}</b>
+                                            <b>v.{{ testCase.lastAvailableVersion.version }}</b>
+                                            <button
+                                                v-if="
+                                                    testCase.lastAvailableVersion
+                                                        && testCase.lastAvailableVersion.version !== testCase.version
+                                                "
+                                                class="btn btn-sm btn-outline-primary text-uppercase"
+                                                v-b-tooltip.hover
+                                                title="
+                                                    A newer version of this test case is available.
+                                                    Click to update your session with it.
+                                                "
+                                            >
+                                                update
+                                            </button>
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -130,6 +146,22 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
+                                            <b>v.{{ testCase.version }}</b>
+                                            <b>v.{{ testCase.version }}</b>
+                                            <button
+                                                v-if="
+                                                    testCase.lastAvailableVersion
+                                                        && testCase.lastAvailableVersion.version !== testCase.version
+                                                "
+                                                class="btn btn-sm btn-outline-primary text-uppercase"
+                                                v-b-tooltip.hover
+                                                title="
+                                                    A newer version of this test case is available.
+                                                    Click to update your session with it.
+                                                "
+                                            >
+                                                update
+                                            </button>
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -192,5 +224,8 @@ export default {
             });
         },
     },
+  mounted () {
+      console.log(this.useCases)
+  }
 };
 </script>

@@ -304,7 +304,8 @@ class RegisterController extends Controller
                                 Builder $query
                             ) use ($testCases) {
                                 $query->whereIn('slug', $testCases ?: ['']);
-                            });
+                            })
+                            ->lastPerGroup();
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($testCases) {

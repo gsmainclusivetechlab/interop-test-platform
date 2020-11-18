@@ -16,6 +16,7 @@ class AddVersionColumnsToTestCasesTable extends Migration
         Schema::table('test_cases', function (Blueprint $table) {
             $table->unsignedInteger('test_case_group_id')->after('uuid');
             $table->unsignedInteger('version')->default(1)->after('test_case_group_id');
+            $table->dropUnique(['slug']);
         });
 
         DB::table('test_cases')->chunkById(100, function ($testCases) {

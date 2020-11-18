@@ -134,20 +134,22 @@ class SessionController extends Controller
     {
         $this->authorize('update', $session);
         $component = $session->components()->firstOrFail();
-
-        return Inertia::render('sessions/edit', [
+        $session->load([
+            'testCases' => function ($query) {
+                return $query->with(['useCase', 'lastTestRun']);
+            },
+            'groupEnvironment',
+        ]);
+        $sessionTestCasesIds = $session->testCases->pluck('id');
+        $sessionTestCasesGroupIds = $session->testCases->pluck('test_case_group_id');
+        $data = [
             'session' => (new SessionResource(
-                $session->load([
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
-                    },
-                    'groupEnvironment',
-                ])
+                $session
             ))->resolve(),
             'component' => (new ComponentResource($component))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($component) {
+                    'testCases' => function ($query) use ($component, $sessionTestCasesIds, $sessionTestCasesGroupIds) {
                         $query
                             ->whereHas('components', function ($query) use (
                                 $component
@@ -178,7 +180,8 @@ class SessionController extends Controller
                                 function ($query) {
                                     $query->orWhere('public', false);
                                 }
-                            );
+                            )
+                            ->lastPerGroup($sessionTestCasesIds, $sessionTestCasesGroupIds);
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($component) {
@@ -211,7 +214,10 @@ class SessionController extends Controller
                     });
                 }
             )->exists(),
-        ]);
+        ];
+//        dd($data['session']['testCases']->resolve());
+
+        return Inertia::render('sessions/edit', $data);
     }
 
     /**

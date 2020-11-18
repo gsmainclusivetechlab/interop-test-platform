@@ -252,6 +252,9 @@ Route::name('admin.')
                 Route::get('import', 'TestCaseController@showImportForm')->name(
                     'import'
                 );
+                Route::get('{testCase}/import', 'TestCaseController@showImportVersionForm')->name(
+                    'import-version'
+                );
                 Route::post('import', 'TestCaseController@import')->name(
                     'import.confirm'
                 );
