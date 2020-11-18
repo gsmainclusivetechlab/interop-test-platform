@@ -2,15 +2,15 @@
     <ul class="list-group overflow-auto">
         <li
             class="list-group-item"
-            v-for="(useCase, i) in useCases.data"
+            v-for="(currentCase, i) in currentCases.data"
             :key="i"
         >
             <div class="d-flex align-items-center">
                 <b
                     class="dropdown-toggle"
-                    v-b-toggle="`use-case-${useCase.id}`"
+                    v-b-toggle="`use-case-${currentCase.id}`"
                 >
-                    {{ useCase.name }}
+                    {{ currentCase.name }}
                 </b>
                 <button
                     v-show="!isCompliance"
@@ -22,11 +22,11 @@
                 </button>
             </div>
 
-            <b-collapse :id="`use-case-${useCase.id}`" visible>
+            <b-collapse :id="`use-case-${currentCase.id}`" visible>
                 <ul
                     class="list-group"
                     v-if="
-                        collect(useCase.testCases)
+                        collect(currentCase.testCases)
                             .where('behavior', 'positive')
                             .count()
                     "
@@ -35,7 +35,7 @@
                         <div class="d-flex align-items-center">
                             <span
                                 class="d-inline-block dropdown-toggle py-2 font-weight-medium"
-                                v-b-toggle="`positive-test-cases-${useCase.id}`"
+                                v-b-toggle="`positive-test-cases-${currentCase.id}`"
                             >
                                 Happy flow
                             </span>
@@ -50,14 +50,14 @@
                         </div>
 
                         <b-collapse
-                            :id="`positive-test-cases-${useCase.id}`"
+                            :id="`positive-test-cases-${currentCase.id}`"
                             visible
                         >
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
                                     v-for="(testCase, i) in collect(
-                                        useCase.testCases
+                                        currentCase.testCases
                                     )
                                         .where('behavior', 'positive')
                                         .all()"
@@ -74,14 +74,12 @@
                                         <span class="form-check-label">
                                             {{ testCase.name }}
                                             <button
-                                                v-if="testCase.lastAvailableVersion && checkLastVersion(testCase)"
-                                                :href="
-                                                    route('sessions.update-test-case', [
-                                                        session.id,
-                                                        testCase.id,
-                                                        testCase.lastAvailableVersion.id,
-                                                    ])
+                                                v-if="
+                                                    testCase.lastAvailableVersion &&
+                                                    checkLastVersion(testCase)
                                                 "
+                                                @click.prevent="updateVersion(testCase)"
+                                                type="button"
                                                 class="btn btn-sm btn-outline-primary text-uppercase"
                                                 v-b-tooltip.hover
                                                 title="
@@ -107,7 +105,7 @@
                 <ul
                     class="list-group"
                     v-if="
-                        collect(useCase.testCases)
+                        collect(currentCase.testCases)
                             .where('behavior', 'negative')
                             .count()
                     "
@@ -116,7 +114,7 @@
                         <div class="d-flex align-items-center">
                             <span
                                 class="d-inline-block dropdown-toggle py-2 font-weight-medium"
-                                v-b-toggle="`negative-test-cases-${useCase.id}`"
+                                v-b-toggle="`negative-test-cases-${currentCase.id}`"
                             >
                                 Unhappy flow
                             </span>
@@ -131,14 +129,14 @@
                         </div>
 
                         <b-collapse
-                            :id="`negative-test-cases-${useCase.id}`"
+                            :id="`negative-test-cases-${currentCase.id}`"
                             visible
                         >
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
                                     v-for="(testCase, i) in collect(
-                                        useCase.testCases
+                                        currentCase.testCases
                                     )
                                         .where('behavior', 'negative')
                                         .all()"
@@ -155,7 +153,11 @@
                                         <span class="form-check-label">
                                             {{ testCase.name }}
                                             <button
-                                                v-if="testCase.lastAvailableVersion && checkLastVersion(testCase)"
+                                                v-if="
+                                                    testCase.lastAvailableVersion &&
+                                                    checkLastVersion(testCase)
+                                                "
+                                                type="button"
                                                 class="btn btn-sm btn-outline-primary text-uppercase"
                                                 v-b-tooltip.hover
                                                 title="
@@ -204,6 +206,7 @@ export default {
     data() {
         return {
             testCases: this.value,
+            currentCases: this.useCases,
         };
     },
     watch: {
@@ -232,6 +235,20 @@ export default {
         },
         checkLastVersion(testCase) {
             return testCase.lastAvailableVersion?.version !== testCase?.version;
+        },
+        updateVersion(testCase) {
+            console.log(testCase);
+            this.$inertia
+                .put(
+                    route('sessions.update-test-case', [
+                        this.session.id,
+                        testCase.id,
+                        testCase.lastAvailableVersion.id,
+                    ])
+                )
+                .then(() => {
+                    // console.log(this.currentCases);
+                });
         },
     },
 };

@@ -233,7 +233,7 @@ class SessionController extends Controller
         TestCase $testCaseToAdd
     )
     {
-        dd([$session->id, $testCaseToRemove->id, $testCaseToAdd->id]);
+        // dd([$session->id, $testCaseToRemove->id, $testCaseToAdd->id]);
         $this->authorize('update', $session);
 
         try {
