@@ -1,6 +1,10 @@
 <template>
     <ul class="list-group overflow-auto">
-        <li class="list-group-item" v-for="useCase in useCases.data">
+        <li
+            class="list-group-item"
+            v-for="(useCase, i) in useCases.data"
+            :key="i"
+        >
             <div class="d-flex align-items-center">
                 <b
                     class="dropdown-toggle"
@@ -52,11 +56,12 @@
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
-                                    v-for="testCase in collect(
+                                    v-for="(testCase, i) in collect(
                                         useCase.testCases
                                     )
                                         .where('behavior', 'positive')
                                         .all()"
+                                    :key="i"
                                 >
                                     <label class="form-check mb-0">
                                         <input
@@ -69,11 +74,17 @@
                                         <span class="form-check-label">
                                             {{ testCase.name }}
                                             <b>v.{{ testCase.version }}</b>
-                                            <b>v.{{ testCase.lastAvailableVersion.version }}</b>
+                                            <b
+                                                >v.
+                                                {{
+                                                    testCase.lastAvailableVersion ? testCase
+                                                        .lastAvailableVersion
+                                                        .version : ''
+                                                }}</b
+                                            >
                                             <button
                                                 v-if="
-                                                    testCase.lastAvailableVersion
-                                                        && testCase.lastAvailableVersion.version !== testCase.version
+                                                    testCase.lastAvailableVersion && checkLastVersion(testCase)
                                                 "
                                                 class="btn btn-sm btn-outline-primary text-uppercase"
                                                 v-b-tooltip.hover
@@ -130,11 +141,12 @@
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
-                                    v-for="testCase in collect(
+                                    v-for="(testCase, i) in collect(
                                         useCase.testCases
                                     )
                                         .where('behavior', 'negative')
                                         .all()"
+                                    :key="i"
                                 >
                                     <label class="form-check mb-0">
                                         <input
@@ -150,8 +162,7 @@
                                             <b>v.{{ testCase.version }}</b>
                                             <button
                                                 v-if="
-                                                    testCase.lastAvailableVersion
-                                                        && testCase.lastAvailableVersion.version !== testCase.version
+                                                    testCase.lastAvailableVersion && checkLastVersion(testCase)
                                                 "
                                                 class="btn btn-sm btn-outline-primary text-uppercase"
                                                 v-b-tooltip.hover
@@ -223,9 +234,9 @@ export default {
                 checkbox.dispatchEvent(new Event('change'));
             });
         },
+        checkLastVersion(testCase) {
+            return testCase.lastAvailableVersion?.version !== testCase?.version;
+        },
     },
-  mounted () {
-      console.log(this.useCases)
-  }
 };
 </script>
