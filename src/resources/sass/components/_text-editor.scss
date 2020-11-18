@@ -1,0 +1,11 @@
+.text-editor {
+  .ProseMirror {
+    outline: none;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    p {
+      margin-bottom: 0.25em;
+    }
+  }
+}
