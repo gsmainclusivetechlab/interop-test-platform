@@ -73,18 +73,14 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            <b>v.{{ testCase.version }}</b>
-                                            <b
-                                                >v.
-                                                {{
-                                                    testCase.lastAvailableVersion ? testCase
-                                                        .lastAvailableVersion
-                                                        .version : ''
-                                                }}</b
-                                            >
                                             <button
-                                                v-if="
-                                                    testCase.lastAvailableVersion && checkLastVersion(testCase)
+                                                v-if="testCase.lastAvailableVersion && checkLastVersion(testCase)"
+                                                :href="
+                                                    route('sessions.update-test-case', [
+                                                        session.id,
+                                                        testCase.id,
+                                                        testCase.lastAvailableVersion.id,
+                                                    ])
                                                 "
                                                 class="btn btn-sm btn-outline-primary text-uppercase"
                                                 v-b-tooltip.hover
@@ -158,12 +154,8 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            <b>v.{{ testCase.version }}</b>
-                                            <b>v.{{ testCase.version }}</b>
                                             <button
-                                                v-if="
-                                                    testCase.lastAvailableVersion && checkLastVersion(testCase)
-                                                "
+                                                v-if="testCase.lastAvailableVersion && checkLastVersion(testCase)"
                                                 class="btn btn-sm btn-outline-primary text-uppercase"
                                                 v-b-tooltip.hover
                                                 title="
@@ -195,6 +187,10 @@ export default {
         value: {
             type: Array,
             required: false,
+        },
+        session: {
+            type: Object,
+            required: true,
         },
         useCases: {
             type: Object,

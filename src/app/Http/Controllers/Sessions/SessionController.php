@@ -222,6 +222,89 @@ class SessionController extends Controller
 
     /**
      * @param Session $session
+     * @param TestCase $testCaseToRemove
+     * @param TestCase $testCaseToAdd
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function updateTestCase(
+        Session $session,
+        TestCase $testCaseToRemove,
+        TestCase $testCaseToAdd
+    )
+    {
+        dd([$session->id, $testCaseToRemove->id, $testCaseToAdd->id]);
+        $this->authorize('update', $session);
+
+        try {
+//            $session = DB::transaction(function () use ($session, $request) {
+//                $session->update($request->input());
+//
+//                $session
+//                    ->components()
+//                    ->updateExistingPivot($request->input('component_id'), [
+//                        'base_url' => $request->input('component_base_url'),
+//                    ]);
+//
+//                $session
+//                    ->testCasesWithSoftDeletes()
+//                    ->whereKey($request->input('test_cases'))
+//                    ->each(function ($testCase) {
+//                        $testCase->pivot->update(['deleted_at' => null]);
+//                    });
+//
+//                $session
+//                    ->testCasesWithSoftDeletes()
+//                    ->whereKeyNot($request->input('test_cases'))
+//                    ->whereHas('testRunsWithSoftDeletesTestCases', function (
+//                        $query
+//                    ) use ($session) {
+//                        $query->where('session_id', $session->getKey());
+//                    })
+//                    ->each(function ($testCase) {
+//                        $testCase->pivot->update([
+//                            'deleted_at' => $testCase->fromDateTime(
+//                                $testCase->freshTimestamp()
+//                            ),
+//                        ]);
+//                    });
+//
+//                $session
+//                    ->testCasesWithSoftDeletes()
+//                    ->whereKeyNot($request->input('test_cases'))
+//                    ->whereDoesntHave(
+//                        'testRunsWithSoftDeletesTestCases',
+//                        function ($query) use ($session) {
+//                            $query->where('session_id', $session->getKey());
+//                        }
+//                    )
+//                    ->each(function ($testCase) use ($session) {
+//                        $testCase->pivot->delete();
+//                    });
+//
+//                $session->testCasesWithSoftDeletes()->attach(
+//                    collect($request->input('test_cases'))
+//                        ->diff(
+//                            $session->testCasesWithSoftDeletes()->pluck('id')
+//                        )
+//                        ->all()
+//                );
+//
+//                return $session;
+//            });
+
+            return redirect()
+                ->route('sessions.edit', $session)
+                ->with('success', __('Session updated successfully'));
+        } catch (Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * @param Session $session
      * @param Request $request
      * @return RedirectResponse
      * @throws AuthorizationException
