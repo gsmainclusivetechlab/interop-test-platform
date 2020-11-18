@@ -85,7 +85,7 @@ export default {
             this.sending = true;
             let data = new FormData();
             data.append('file', this.form.file);
-            data.append('testCaseGroupId', this.testCase.test_case_group_id);
+            data.append('testCaseId', this.testCase.id);
             this.$inertia
                 .post(route('admin.test-cases.import.confirm'), data)
                 .then(() => (this.sending = false));

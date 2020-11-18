@@ -142,7 +142,8 @@ class SessionController extends Controller
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
         $sessionTestCasesGroupIds = $session->testCases->pluck('test_case_group_id');
-        $data = [
+
+        return Inertia::render('sessions/edit', [
             'session' => (new SessionResource(
                 $session
             ))->resolve(),
@@ -214,10 +215,7 @@ class SessionController extends Controller
                     });
                 }
             )->exists(),
-        ];
-//        dd($data['session']['testCases']->resolve());
-
-        return Inertia::render('sessions/edit', $data);
+        ]);
     }
 
     /**
@@ -233,69 +231,35 @@ class SessionController extends Controller
         TestCase $testCaseToAdd
     )
     {
-        // dd([$session->id, $testCaseToRemove->id, $testCaseToAdd->id]);
         $this->authorize('update', $session);
 
         try {
-//            $session = DB::transaction(function () use ($session, $request) {
-//                $session->update($request->input());
-//
-//                $session
-//                    ->components()
-//                    ->updateExistingPivot($request->input('component_id'), [
-//                        'base_url' => $request->input('component_base_url'),
-//                    ]);
-//
-//                $session
-//                    ->testCasesWithSoftDeletes()
-//                    ->whereKey($request->input('test_cases'))
-//                    ->each(function ($testCase) {
-//                        $testCase->pivot->update(['deleted_at' => null]);
-//                    });
-//
-//                $session
-//                    ->testCasesWithSoftDeletes()
-//                    ->whereKeyNot($request->input('test_cases'))
-//                    ->whereHas('testRunsWithSoftDeletesTestCases', function (
-//                        $query
-//                    ) use ($session) {
-//                        $query->where('session_id', $session->getKey());
-//                    })
-//                    ->each(function ($testCase) {
-//                        $testCase->pivot->update([
-//                            'deleted_at' => $testCase->fromDateTime(
-//                                $testCase->freshTimestamp()
-//                            ),
-//                        ]);
-//                    });
-//
-//                $session
-//                    ->testCasesWithSoftDeletes()
-//                    ->whereKeyNot($request->input('test_cases'))
-//                    ->whereDoesntHave(
-//                        'testRunsWithSoftDeletesTestCases',
-//                        function ($query) use ($session) {
-//                            $query->where('session_id', $session->getKey());
-//                        }
-//                    )
-//                    ->each(function ($testCase) use ($session) {
-//                        $testCase->pivot->delete();
-//                    });
-//
-//                $session->testCasesWithSoftDeletes()->attach(
-//                    collect($request->input('test_cases'))
-//                        ->diff(
-//                            $session->testCasesWithSoftDeletes()->pluck('id')
-//                        )
-//                        ->all()
-//                );
-//
-//                return $session;
-//            });
+            $session = DB::transaction(function () use ($session, $testCaseToRemove, $testCaseToAdd) {
+                $session
+                    ->testCasesWithSoftDeletes()
+                    ->whereKey($testCaseToRemove)
+                    ->whereHas('testRunsWithSoftDeletesTestCases', function (
+                        $query
+                    ) use ($session) {
+                        $query->where('session_id', $session->getKey());
+                    })
+                    ->each(function ($testCase) {
+                        $testCase->pivot->update([
+                            'deleted_at' => $testCase->fromDateTime(
+                                $testCase->freshTimestamp()
+                            ),
+                        ]);
+                    });
+
+                $session->testCasesWithSoftDeletes()
+                    ->attach($testCaseToAdd);
+
+                return $session;
+            });
 
             return redirect()
                 ->route('sessions.edit', $session)
-                ->with('success', __('Session updated successfully'));
+                ->with('success', __('Test Case updated successfully'));
         } catch (Throwable $e) {
             return redirect()
                 ->back()

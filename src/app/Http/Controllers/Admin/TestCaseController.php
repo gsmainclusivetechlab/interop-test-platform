@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -115,17 +114,29 @@ class TestCaseController extends Controller
         ]);
 
         try {
-            $rows = Arr::add(
-                Yaml::parse(
-                    request()
-                        ->file('file')
-                        ->get()
-                ),
-                'test_case_group_id',
-                request()->input('testCaseGroupId')
+            $rows = Yaml::parse(
+                request()
+                    ->file('file')
+                    ->get()
             );
 
+            $baseTestCaseId = request()->input('testCaseId');
+            if (
+                $baseTestCaseId
+                && $baseTestCase = TestCase::findOrFail($baseTestCaseId)
+            ) {
+                $rows = array_merge($rows, [
+                    'test_case_group_id' => $baseTestCase->test_case_group_id,
+                    'public' => $baseTestCase->public,
+                ]);
+            }
+
             $testCase = (new TestCaseImport())->import($rows);
+            if (!empty($baseTestCase)
+                && $baseGroups = $baseTestCase->groups()->pluck('id')
+            ) {
+                $testCase->groups()->sync($baseGroups);
+            }
             $testCase
                 ->owner()
                 ->associate(auth()->user())
