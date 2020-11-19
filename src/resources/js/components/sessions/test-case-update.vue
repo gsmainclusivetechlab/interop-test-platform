@@ -55,10 +55,12 @@ export default {
     },
     methods: {
         updateVersion() {
-            this.currentCase.version = this.currentCase.lastAvailableVersion.version;
-
             this.hideModal();
 
+            // TODO - delete this
+            this.currentCase.version = this.currentCase.lastAvailableVersion.version;
+
+            // TODO - uncomment this
             // this.$inertia
             //     .put(
             //         route('sessions.update-test-case', [

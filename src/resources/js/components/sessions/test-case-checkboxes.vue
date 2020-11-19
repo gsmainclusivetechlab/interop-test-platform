@@ -2,15 +2,15 @@
     <ul class="list-group overflow-auto">
         <li
             class="list-group-item"
-            v-for="(currentCase, i) in currentCases.data"
+            v-for="(useCase, i) in useCases.data"
             :key="i"
         >
             <div class="d-flex align-items-center">
                 <b
                     class="dropdown-toggle"
-                    v-b-toggle="`use-case-${currentCase.id}`"
+                    v-b-toggle="`use-case-${useCase.id}`"
                 >
-                    {{ currentCase.name }}
+                    {{ useCase.name }}
                 </b>
                 <button
                     v-show="!isCompliance"
@@ -22,11 +22,11 @@
                 </button>
             </div>
 
-            <b-collapse :id="`use-case-${currentCase.id}`" visible>
+            <b-collapse :id="`use-case-${useCase.id}`" visible>
                 <ul
                     class="list-group"
                     v-if="
-                        collect(currentCase.testCases)
+                        collect(useCase.testCases)
                             .where('behavior', 'positive')
                             .count()
                     "
@@ -35,7 +35,7 @@
                         <div class="d-flex align-items-center">
                             <span
                                 class="d-inline-block dropdown-toggle py-2 font-weight-medium"
-                                v-b-toggle="`positive-test-cases-${currentCase.id}`"
+                                v-b-toggle="`positive-test-cases-${useCase.id}`"
                             >
                                 Happy flow
                             </span>
@@ -50,14 +50,14 @@
                         </div>
 
                         <b-collapse
-                            :id="`positive-test-cases-${currentCase.id}`"
+                            :id="`positive-test-cases-${useCase.id}`"
                             visible
                         >
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
                                     v-for="(testCase, i) in collect(
-                                        currentCase.testCases
+                                        useCase.testCases
                                     )
                                         .where('behavior', 'positive')
                                         .all()"
@@ -90,7 +90,7 @@
                 <ul
                     class="list-group"
                     v-if="
-                        collect(currentCase.testCases)
+                        collect(useCase.testCases)
                             .where('behavior', 'negative')
                             .count()
                     "
@@ -99,7 +99,7 @@
                         <div class="d-flex align-items-center">
                             <span
                                 class="d-inline-block dropdown-toggle py-2 font-weight-medium"
-                                v-b-toggle="`negative-test-cases-${currentCase.id}`"
+                                v-b-toggle="`negative-test-cases-${useCase.id}`"
                             >
                                 Unhappy flow
                             </span>
@@ -114,14 +114,14 @@
                         </div>
 
                         <b-collapse
-                            :id="`negative-test-cases-${currentCase.id}`"
+                            :id="`negative-test-cases-${useCase.id}`"
                             visible
                         >
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
                                     v-for="(testCase, i) in collect(
-                                        currentCase.testCases
+                                        useCase.testCases
                                     )
                                         .where('behavior', 'negative')
                                         .all()"
@@ -182,7 +182,6 @@ export default {
     data() {
         return {
             testCases: this.value,
-            currentCases: this.useCases,
         };
     },
     watch: {
