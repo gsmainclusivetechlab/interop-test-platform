@@ -73,7 +73,10 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            <test-case-update :test-case="testCase" :session-id="session.id" />
+                                            <test-case-update
+                                                :test-case="testCase"
+                                                :session-id="session.id"
+                                            />
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -137,7 +140,10 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            <test-case-update :test-case="testCase" :session-id="session.id" />
+                                            <test-case-update
+                                                :test-case="testCase"
+                                                :session-id="session.id"
+                                            />
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -159,7 +165,7 @@ import TestCaseUpdate from '@/components/sessions/test-case-update';
 
 export default {
     components: {
-        TestCaseUpdate
+        TestCaseUpdate,
     },
     props: {
         value: {

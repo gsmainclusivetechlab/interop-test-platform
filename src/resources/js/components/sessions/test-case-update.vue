@@ -1,16 +1,16 @@
 <template>
-<span>
-    <button
-        v-if="currentCase.lastAvailableVersion && checkLastVersion"
-        @click.prevent="showModal"
-        type="button"
-        class="btn btn-sm btn-outline-primary text-uppercase"
-        v-b-tooltip.hover
-        title="A newer version of this test case is available. Click to update your session with it."
-    >
-        update
-    </button>
-    <b-modal
+    <span>
+        <button
+            v-if="currentCase.lastAvailableVersion && checkLastVersion"
+            @click.prevent="showModal"
+            type="button"
+            class="btn btn-sm btn-outline-primary text-uppercase"
+            v-b-tooltip.hover
+            title="A newer version of this test case is available. Click to update your session with it."
+        >
+            update
+        </button>
+        <b-modal
             :id="`update-test-case-${this.currentCase.id}`"
             size="lg"
             centered
@@ -35,7 +35,7 @@
                 </button>
             </div>
         </b-modal>
-</span>
+    </span>
 </template>
 
 <script>
@@ -46,7 +46,7 @@ export default {
         },
         sessionId: {
             type: Number,
-        }
+        },
     },
     data() {
         return {
@@ -57,21 +57,17 @@ export default {
         updateVersion() {
             this.hideModal();
 
-            // TODO - delete this
-            this.currentCase.version = this.currentCase.lastAvailableVersion.version;
-
-            // TODO - uncomment this
-            // this.$inertia
-            //     .put(
-            //         route('sessions.update-test-case', [
-            //             this.sessionId,
-            //             this.currentCase.id,
-            //             this.currentCase.lastAvailableVersion.id,
-            //         ])
-            //     )
-            //     .then(() => {
-            //          this.currentCase.version = this.currentCase.lastAvailableVersion.version;
-            //     });
+            this.$inertia
+                .put(
+                    route('sessions.update-test-case', [
+                        this.sessionId,
+                        this.currentCase.id,
+                        this.currentCase.lastAvailableVersion.id,
+                    ])
+                )
+                .then(() => {
+                    this.currentCase.version = this.currentCase.lastAvailableVersion.version;
+                });
         },
         showModal() {
             this.$bvModal.show(`update-test-case-${this.currentCase.id}`);
@@ -82,8 +78,11 @@ export default {
     },
     computed: {
         checkLastVersion() {
-            return this.currentCase.lastAvailableVersion?.version !== this.currentCase?.version;
+            return (
+                this.currentCase.lastAvailableVersion?.version !==
+                this.currentCase?.version
+            );
         },
-    }
+    },
 };
 </script>
