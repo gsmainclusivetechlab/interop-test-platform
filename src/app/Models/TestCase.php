@@ -6,6 +6,7 @@ use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * @mixin \Eloquent
@@ -53,7 +54,7 @@ class TestCase extends Model
         });
 
         static::saving(function ($model) {
-            $model->attributes['test_case_group_id'] = $model->attributes['test_case_group_id'] ?? rand(1, 999999999);
+            $model->attributes['test_case_group_id'] = $model->attributes['test_case_group_id'] ?? Str::random();
         });
     }
 
