@@ -75,6 +75,7 @@
                                             {{ testCase.name }}
                                             v{{ testCase.version }}
                                             <test-case-update
+                                                @update="updateVersion"
                                                 :test-case="testCase"
                                                 :session-id="session.id"
                                                 :is-compliance="isCompliance"
@@ -143,6 +144,7 @@
                                         <span class="form-check-label">
                                             {{ testCase.name }}
                                             <test-case-update
+                                                @update="updateVersion"
                                                 :test-case="testCase"
                                                 :session-id="session.id"
                                                 :is-compliance="isCompliance"
@@ -216,6 +218,15 @@ export default {
                 checkbox.checked = !isChecked;
                 checkbox.dispatchEvent(new Event('change'));
             });
+        },
+        updateVersion(versions) {
+            if (this.testCases.includes(versions.current.id)) {
+                this.testCases.splice(
+                    [this.testCases.indexOf(versions.current.id)],
+                    1,
+                    versions.last.id
+                );
+            }
         },
     },
 };
