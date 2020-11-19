@@ -1,23 +1,30 @@
 <template>
     <span>
         <button
-            v-if="currentCase.lastAvailableVersion && checkLastVersion && !isCompliance"
+            v-if="
+                !isCompliance &&
+                testCase.lastAvailableVersion &&
+                checkLastVersion
+            "
             @click.prevent="showModal"
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
             v-b-tooltip.hover
-            title="A newer version of this test case is available. Click to update your session with it."
+            title="A laster version of this test case is available. Click to update your session with it."
         >
             update
         </button>
         <b-modal
-            :id="`update-test-case-${this.currentCase.id}`"
+            :id="`update-test-case-${versions.current.id}`"
             size="lg"
             centered
             hide-footer
             title="Are you sure?"
         >
-            <p>After update, version can't revert and Test Runs of current version won't be available.</p>
+            <p>
+                After update, version can't revert and Test Runs of current
+                version won't be available.
+            </p>
             <div class="text-right">
                 <button
                     type="button"
@@ -28,7 +35,7 @@
                 </button>
                 <button
                     type="button"
-                    @click.prevent="updateVersion"
+                    @click.prevent="submit"
                     class="btn btn-primary"
                 >
                     Ok
@@ -43,9 +50,11 @@ export default {
     props: {
         testCase: {
             type: Object,
+            required: true,
         },
         sessionId: {
             type: Number,
+            required: true,
         },
         isCompliance: {
             type: Boolean,
@@ -54,37 +63,46 @@ export default {
     },
     data() {
         return {
-            currentCase: this.testCase,
+            versions: {
+                current: {
+                    version: this.testCase?.version,
+                    id: this.testCase?.id,
+                },
+                last: {
+                    version: this.testCase.lastAvailableVersion?.version,
+                    id: this.testCase.lastAvailableVersion?.id,
+                },
+            },
         };
     },
     methods: {
-        updateVersion() {
+        submit() {
             this.hideModal();
 
             this.$inertia
                 .put(
                     route('sessions.update-test-case', [
                         this.sessionId,
-                        this.currentCase.id,
-                        this.currentCase.lastAvailableVersion.id,
+                        this.versions.current.id,
+                        this.versions.last.id,
                     ])
                 )
                 .then(() => {
-                    this.currentCase.version = this.currentCase.lastAvailableVersion.version;
+                    this.$emit('update', this.versions);
                 });
         },
         showModal() {
-            this.$bvModal.show(`update-test-case-${this.currentCase.id}`);
+            this.$bvModal.show(`update-test-case-${this.versions.current.id}`);
         },
         hideModal() {
-            this.$bvModal.hide(`update-test-case-${this.currentCase.id}`);
+            this.$bvModal.hide(`update-test-case-${this.versions.current.id}`);
         },
     },
     computed: {
         checkLastVersion() {
             return (
-                this.currentCase.lastAvailableVersion?.version !==
-                this.currentCase?.version
+                this.testCase.lastAvailableVersion?.version !==
+                this.testCase?.version
             );
         },
     },
