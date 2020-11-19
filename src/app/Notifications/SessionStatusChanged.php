@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Session;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,14 +12,19 @@ class SessionStatusChanged extends Notification
 {
     use Queueable;
 
+    /** @var Session */
+    protected $session;
+
     /**
      * Create a new notification instance.
      *
+     * @param Session $session
+     *
      * @return void
      */
-    public function __construct()
+    public function __construct(Session $session)
     {
-        //
+        $this->session = $session;
     }
 
     /**
@@ -40,22 +46,20 @@ class SessionStatusChanged extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage())
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
-    }
+        $reason = $this->session->reason;
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
-    {
-        return [
-                //
-            ];
+        return (new MailMessage())
+            ->subject(
+                $message = __(
+                    'Compliance session moves into ":status" status',
+                    ['status' => Session::getStatusName($this->session->status)]
+                )
+            )
+            ->line($message)
+            ->line($reason ? __('Reason') . ": {$reason}" : null)
+            ->action(
+                __('Go to session'),
+                url(route('sessions.show', $this->session))
+            );
     }
 }

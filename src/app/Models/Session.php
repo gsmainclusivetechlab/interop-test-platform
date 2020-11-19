@@ -11,8 +11,11 @@ use Illuminate\Support\Arr;
  *
  * @property string $type
  * @property string|null $status
+ * @property string|null $reason
  *
  * @property-read bool $completable
+ *
+ * @property User $owner
  */
 class Session extends Model
 {
@@ -299,6 +302,14 @@ class Session extends Model
     public function isStatusInExecution(): bool
     {
         return $this->status == static::STATUS_IN_EXECUTION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusInVerification(): bool
+    {
+        return $this->status == static::STATUS_IN_VERIFICATION;
     }
 
     /**

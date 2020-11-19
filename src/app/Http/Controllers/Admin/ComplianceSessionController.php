@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Models\Session;
+use App\Notifications\SessionStatusChanged;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -52,8 +53,18 @@ class ComplianceSessionController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param Session $session
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, Session $session)
     {
+        if (!$session->isStatusInVerification()) {
+            return redirect()->route('sessions.show', $session);
+        }
+
         $data = $request->validate([
             'reason' => ['required', 'string', 'max:255'],
             'status' => [
@@ -64,15 +75,15 @@ class ComplianceSessionController extends Controller
 
         $session->update($data);
 
+        $session->owner->notify(new SessionStatusChanged($session));
+
         return redirect()
             ->route('sessions.show', $session)
             ->with(
                 'success',
-                __(
-                    $session->isStatusApproved()
-                        ? 'Session approved successfully'
-                        : 'Session declined successfully'
-                )
+                __('Session :status successfully', [
+                    'status' => Session::getStatusName($session->status),
+                ])
             );
     }
 }

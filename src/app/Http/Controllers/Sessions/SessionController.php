@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\SessionStatusChanged;
 use App\Http\Resources\{
     ComponentResource,
     SectionResource,
@@ -18,7 +19,6 @@ use App\Models\{
     UseCase,
     User
 };
-use App\Notifications\SessionStatusInVerification;
 use Arr;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -383,7 +383,7 @@ class SessionController extends Controller
                 User::ROLE_ADMIN,
                 User::ROLE_SUPERADMIN,
             ])->each(function (User $user) use ($session) {
-                $user->notify(new SessionStatusInVerification($session));
+                $user->notify(new SessionStatusChanged($session));
             });
 
             return redirect()
