@@ -29,55 +29,19 @@
                     <tbody>
                     <tr
                         v-for="message in logItems.data"
-                        v-bind:key="message.type + message.id"
                     >
-                        <td>
-                            <div class="d-flex align-items-center">
-                                {{ message.request.method }}
-                                {{
-                                message.type === 'MISMATCH'
-                                ? processMismatchPath(
-                                message.request.path
-                                ).truncated
-                                : message.request.path
-                                }}
-                            </div>
-                        </td>
-
-                        <td v-if="message.type === 'RESULT'">
-                            <inertia-link
-                                :href="
-                                        route(
-                                            'sessions.test-cases.test-runs.show',
-                                            [
-                                                message.session.id,
-                                                message.test_case.id,
-                                                message.test_run.id,
-                                                message.test_step.position,
-                                            ]
-                                        )
-                                    "
-                            >
-                                {{ message.test_case.name }}, Step
-                                {{ message.test_step.position }}
-                            </inertia-link>
-                        </td>
-                        <td v-else>-</td>
-
-                        <td>
-                            {{ message.created_at }}
-                        </td>
-                        <td>
-                            <mismatch-modal
-                                :message="message"
-                                :path="
-                                        processMismatchPath(
-                                            message.request.path
-                                        )
-                                    "
-                            ></mismatch-modal>
-                        </td>
-                    </tr>
+                    <td>
+                        {{ message.actor }}
+                    </td>
+                    <td>
+                        {{ message.action }}
+                    </td>
+                    <td>
+                        {{ message.subject }}
+                    </td>
+                    <td>
+                        {{ message.meta }}
+                    </td>
                     <tr v-if="!logItems.data.length">
                         <td class="text-center" colspan="5">No Results</td>
                     </tr>
@@ -96,38 +60,15 @@
 
 <script>
     import Layout from '@/layouts/main';
-    import MismatchModal from '@/components/mismatch-modal';
 
     export default {
         components: {
             Layout,
-            'mismatch-modal': MismatchModal,
         },
         props: {
             logItems: {
                 type: Object,
                 required: true,
-            },
-        },
-        methods: {
-            processMismatchPath: function (path) {
-                const match = path.match(
-                    /\/testing\/([^\/]+)\/([^\/]+)\/([^\/]+)\/sut(.+)/
-                );
-                const session = match && match[1];
-                const source = match && match[2];
-                const target = match && match[3];
-                const destPath = match && match[4];
-                return {
-                    original: path,
-                    session,
-                    source,
-                    target,
-                    path: destPath,
-                    truncated:
-                        destPath ||
-                        (path.length > 30 ? `...${path.substr(-30)}` : path),
-                };
             },
         },
     };

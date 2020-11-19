@@ -27,6 +27,7 @@ use App\Models\{
     UseCase
 };
 use Arr;
+use App\Utils\AuditLogUtil;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -522,6 +523,17 @@ class RegisterController extends Controller
                             ])
                         );
                 });
+
+                // log session creation
+                new AuditLogUtil(
+                    $request,
+                    'created new session',
+                    $request
+                        ->session()
+                        ->get('session.info.uuid')
+                        ->toString(),
+                    ''
+                );
 
                 return $session;
             });

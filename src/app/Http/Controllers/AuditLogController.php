@@ -31,8 +31,7 @@ class AuditLogController extends Controller
         $this->authorize('viewAny', AuditLog::class);
         return Inertia::render('admin/audit-log/index', [
             'logItems' => AuditLogResource::collection(
-                AuditLog::with(['actor', 'action', 'subject', 'meta'])
-                    ->latest()
+                AuditLog::with(['actor'])
                     ->paginate()
             ),
         ]);

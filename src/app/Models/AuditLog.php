@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\RequestCast;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,7 +26,7 @@ class AuditLog extends Model
      */
     public function actor()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'actor');
     }
 
 }

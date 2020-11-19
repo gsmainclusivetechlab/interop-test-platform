@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Utils\AuditLogUtil;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +44,8 @@ class PasswordController extends Controller
         $user->password = Hash::make($request->input('password'));
         $user->setRememberToken(Str::random(60));
         $user->save();
+
+        new AuditLogUtil($request, 'reset password', '', '[{}]');
 
         return redirect()
             ->back()

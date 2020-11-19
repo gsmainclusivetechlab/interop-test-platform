@@ -13,14 +13,12 @@ class CreateAuditLogTable extends Migration
     public function up()
     {
         Schema::create('audit_log', function (Blueprint $table) {
-            $table
-                ->foreignId('actor')
-                ->nullable()
-                ->constrained()
-                ->onDelete('cascade');
+            $table->id();
+            $table->unsignedBigInteger('actor');
             $table->text('action');
-            $table->text('subject');
-            $table->json('meta');
+            $table->text('subject')->nullable();
+            $table->json('meta')->nullable();
+            $table->timestamps();
         });
     }
 
