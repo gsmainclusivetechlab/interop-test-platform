@@ -10,7 +10,7 @@ RUN npm run prod
 
 
 # Download PHP dependencies
-FROM composer:1.10.8 AS composer
+FROM composer:2.0.7 AS composer
 COPY composer* ./
 RUN composer install \
     --ignore-platform-reqs \
