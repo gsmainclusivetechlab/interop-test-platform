@@ -13,12 +13,12 @@
             <form ref="form" @submit.prevent="handleSubmit" class="m-auto">
                 <div class="mb-3">
                     <label class="form-label">Reason</label>
-                    <input
+                    <textarea
                         v-model="form.reason"
                         :class="{ 'is-invalid': $page.errors.reason }"
                         class="form-control"
                         name="reason"
-                    />
+                    ></textarea>
                     <span v-if="$page.errors.reason" class="invalid-feedback">
                         {{ $page.errors.reason }}
                     </span>

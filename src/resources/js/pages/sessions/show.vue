@@ -172,7 +172,11 @@
                                         </span>
                                     </td>
                                     <td>
-                                        {{ testCase.lastTestRun ? `${testCase.lastTestRun.duration} ms` : '' }}
+                                        {{
+                                            testCase.lastTestRun
+                                                ? `${testCase.lastTestRun.duration} ms`
+                                                : ''
+                                        }}
                                     </td>
                                     <td>
                                         {{ testCase.attemptsCount }}

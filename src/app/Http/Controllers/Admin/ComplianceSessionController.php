@@ -66,7 +66,7 @@ class ComplianceSessionController extends Controller
         }
 
         $data = $request->validate([
-            'reason' => ['required', 'string', 'max:255'],
+            'reason' => ['required', 'string'],
             'status' => [
                 'required',
                 Rule::in([Session::STATUS_APPROVED, Session::STATUS_DECLINED]),
@@ -78,7 +78,7 @@ class ComplianceSessionController extends Controller
         $session->owner->notify(new SessionStatusChanged($session));
 
         return redirect()
-            ->route('sessions.show', $session)
+            ->back()
             ->with(
                 'success',
                 __('Session :status successfully', [

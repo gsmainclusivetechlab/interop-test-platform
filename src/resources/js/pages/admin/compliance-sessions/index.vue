@@ -159,9 +159,14 @@ export default {
     },
     methods: {
         search() {
-            this.$inertia.replace(route('admin.compliance-sessions.index', {status: this.status}), {
-                data: this.form,
-            });
+            this.$inertia.replace(
+                route('admin.compliance-sessions.index', {
+                    status: this.status,
+                }),
+                {
+                    data: this.form,
+                }
+            );
         },
     },
 };

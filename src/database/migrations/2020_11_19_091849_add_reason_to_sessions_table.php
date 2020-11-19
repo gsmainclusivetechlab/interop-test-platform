@@ -15,7 +15,7 @@ class AddReasonToSessionsTable extends Migration
     {
         Schema::table('sessions', function (Blueprint $table) {
             $table
-                ->string('reason')
+                ->text('reason')
                 ->after('status')
                 ->nullable();
         });
