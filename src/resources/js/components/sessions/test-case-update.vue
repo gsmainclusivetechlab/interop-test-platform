@@ -1,7 +1,7 @@
 <template>
     <span>
         <button
-            v-if="currentCase.lastAvailableVersion && checkLastVersion"
+            v-if="currentCase.lastAvailableVersion && checkLastVersion && !isCompliance"
             @click.prevent="showModal"
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
@@ -17,7 +17,7 @@
             hide-footer
             title="Are you sure?"
         >
-            <p>After update version cann't revert.</p>
+            <p>After update, version can't revert and Test Runs of current version won't be available.</p>
             <div class="text-right">
                 <button
                     type="button"
@@ -46,6 +46,10 @@ export default {
         },
         sessionId: {
             type: Number,
+        },
+        isCompliance: {
+            type: Boolean,
+            required: true,
         },
     },
     data() {

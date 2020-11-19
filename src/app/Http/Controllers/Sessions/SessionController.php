@@ -251,6 +251,19 @@ class SessionController extends Controller
                         ]);
                     });
 
+                $session
+                    ->testCasesWithSoftDeletes()
+                    ->whereKey($testCaseToRemove)
+                    ->whereDoesntHave(
+                        'testRunsWithSoftDeletesTestCases',
+                        function ($query) use ($session) {
+                            $query->where('session_id', $session->getKey());
+                        }
+                    )
+                    ->each(function ($testCase) use ($session) {
+                        $testCase->pivot->delete();
+                    });
+
                 $session->testCasesWithSoftDeletes()
                     ->attach($testCaseToAdd);
 

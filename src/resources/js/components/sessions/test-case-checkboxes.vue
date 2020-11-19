@@ -73,9 +73,11 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
+                                            v{{ testCase.version }}
                                             <test-case-update
                                                 :test-case="testCase"
                                                 :session-id="session.id"
+                                                :is-compliance="isCompliance"
                                             />
                                             <icon
                                                 name="lock"
@@ -143,6 +145,7 @@
                                             <test-case-update
                                                 :test-case="testCase"
                                                 :session-id="session.id"
+                                                :is-compliance="isCompliance"
                                             />
                                             <icon
                                                 name="lock"
