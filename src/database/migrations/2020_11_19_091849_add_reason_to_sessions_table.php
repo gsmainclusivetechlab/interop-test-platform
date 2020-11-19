@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddStatusToSessionsTable extends Migration
+class AddReasonToSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,8 @@ class AddStatusToSessionsTable extends Migration
     {
         Schema::table('sessions', function (Blueprint $table) {
             $table
-                ->string('status', 20)
-                ->after('type')
+                ->string('reason')
+                ->after('status')
                 ->nullable();
         });
     }
@@ -29,7 +29,7 @@ class AddStatusToSessionsTable extends Migration
     public function down()
     {
         Schema::table('sessions', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->dropColumn('reason');
         });
     }
 }

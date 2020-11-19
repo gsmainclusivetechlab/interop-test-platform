@@ -365,6 +365,7 @@ class RegisterController extends Controller
             $session = DB::transaction(function () use ($request) {
                 $sut = $request->session()->get('session.sut');
 
+                /** @var Session $session */
                 $session = auth()
                     ->user()
                     ->sessions()
@@ -381,14 +382,40 @@ class RegisterController extends Controller
 
                 if ($session->isComplianceSession()) {
                     $session->updateStatus(Session::STATUS_READY);
+
+                    $answers = Arr::collapse(session('session.questionnaire'));
+
+                    QuestionnaireQuestions::whereIn(
+                        'name',
+                        array_keys($answers)
+                    )
+                        ->pluck('id', 'name')
+                        ->each(function ($questionId, $questionName) use (
+                            $answers,
+                            $session
+                        ) {
+                            foreach (
+                                (array) $answers[$questionName]
+                                as $answer
+                            ) {
+                                $session->questionnaireAnswers()->create([
+                                    'question_id' => $questionId,
+                                    'answer' => $answer,
+                                ]);
+                            }
+                        });
                 }
 
                 $session
                     ->testCases()
                     ->attach(
                         $session->isComplianceSession()
-                            ? $this->getTestCasesQuery(TestCase::query())->pluck('id')
-                            : $request->session()->get('session.info.test_cases')
+                            ? $this->getTestCasesQuery(
+                                TestCase::query()
+                            )->pluck('id')
+                            : $request
+                                ->session()
+                                ->get('session.info.test_cases')
                     );
                 $session->components()->attach([$sut]);
 
@@ -554,7 +581,6 @@ class RegisterController extends Controller
         return $rules;
     }
 
-
     /**
      * @param Builder $query
      *
@@ -583,9 +609,7 @@ class RegisterController extends Controller
                         );
                     })
                     ->orWhereHas('groups', function ($query) {
-                        $query->whereHas('users', function (
-                            $query
-                        ) {
+                        $query->whereHas('users', function ($query) {
                             $query->whereKey(
                                 auth()
                                     ->user()
@@ -596,20 +620,16 @@ class RegisterController extends Controller
                     ->when(
                         auth()
                             ->user()
-                            ->can(
-                                'viewAnyPrivate',
-                                TestCase::class
-                            ),
+                            ->can('viewAnyPrivate', TestCase::class),
                         function ($query) {
                             $query->orWhere('public', false);
                         }
                     );
             })
-            ->when(
-                $testCases !== null,
-                function (Builder $query) use ($testCases) {
-                    $query->whereIn('slug', $testCases ?: ['']);
-                }
-            );
+            ->when($testCases !== null, function (Builder $query) use (
+                $testCases
+            ) {
+                $query->whereIn('slug', $testCases ?: ['']);
+            });
     }
 }

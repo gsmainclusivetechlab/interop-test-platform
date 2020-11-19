@@ -14,9 +14,11 @@
                                 class="step-item"
                                 v-for="section in sections.data"
                                 :class="{
-                                    active: route().current(
-                                        'sessions.register.questionnaire'
-                                    ) && route().params.section == section.id,
+                                    active:
+                                        route().current(
+                                            'sessions.register.questionnaire'
+                                        ) &&
+                                        route().params.section == section.id,
                                 }"
                             >
                                 <span class="d-inline-block mt-2">

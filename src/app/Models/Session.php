@@ -40,6 +40,7 @@ class Session extends Model
         'name',
         'type',
         'status',
+        'reason',
         'description',
         'group_environment_id',
         'environments',
@@ -167,6 +168,14 @@ class Session extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function questionnaireAnswers()
+    {
+        return $this->hasMany(QuestionnaireAnswer::class);
+    }
+
+    /**
      * @return array
      */
     public function environments()
@@ -235,6 +244,30 @@ class Session extends Model
     }
 
     /**
+     * @return array
+     */
+    public static function getStatusNames()
+    {
+        return [
+            static::STATUS_READY => __('Ready'),
+            static::STATUS_IN_EXECUTION => __('In Execution'),
+            static::STATUS_IN_VERIFICATION => __('In Verification'),
+            static::STATUS_APPROVED => __('Approved'),
+            static::STATUS_DECLINED => __('Declined'),
+        ];
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return array|\ArrayAccess|mixed
+     */
+    public static function getStatusName($type)
+    {
+        return Arr::get(static::getStatusNames(), $type);
+    }
+
+    /**
      * @param string $type
      *
      * @return bool
@@ -266,6 +299,14 @@ class Session extends Model
     public function isStatusInExecution(): bool
     {
         return $this->status == static::STATUS_IN_EXECUTION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusApproved(): bool
+    {
+        return $this->status == static::STATUS_APPROVED;
     }
 
     /**
@@ -305,7 +346,10 @@ class Session extends Model
 
         /** @var TestCase $testCase */
         foreach ($testCases as $testCase) {
-            if (!$testCase->lastTestRun || !$testCase->lastTestRun->successful) {
+            if (
+                !$testCase->lastTestRun ||
+                !$testCase->lastTestRun->successful
+            ) {
                 return false;
             }
         }

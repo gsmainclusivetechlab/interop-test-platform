@@ -46,6 +46,7 @@ class SessionController extends Controller
                         },
                         'lastTestRun',
                     ])
+                    ->where('type', Session::TYPE_TEST)
                     ->latest()
                     ->paginate()
             ),

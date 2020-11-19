@@ -56,7 +56,10 @@ class TestCaseController extends Controller
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource
             ))->resolve(),
-            'isAvailableRun' => $this->isAvailableTestCaseRun($session, $testCase),
+            'isAvailableRun' => $this->isAvailableTestCaseRun(
+                $session,
+                $testCase
+            ),
             'testRuns' => TestRunResource::collection(
                 $session
                     ->testRuns()
@@ -98,14 +101,18 @@ class TestCaseController extends Controller
      *
      * @return bool
      */
-    protected function isAvailableTestCaseRun(Session $session, TestCase $testCase): bool
-    {
+    protected function isAvailableTestCaseRun(
+        Session $session,
+        TestCase $testCase
+    ): bool {
         $testRunsCount = $session
             ->testRuns()
             ->where('test_case_id', $testCase->id)
             ->count();
 
-        return !$session->isComplianceSession() || ($session->isAvailableToUpdate()
-                && $testRunsCount < config('test_cases.compliance_session_execution_limit'));
+        return !$session->isComplianceSession() ||
+            ($session->isAvailableToUpdate() &&
+                $testRunsCount <
+                    config('test_cases.compliance_session_execution_limit'));
     }
 }

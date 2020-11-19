@@ -1,7 +1,10 @@
 <template>
     <layout :session="session" :useCases="useCases">
         <div class="card">
-            <div class="empty h-auto" v-if="!testRuns.data.length">
+            <div
+                class="empty h-auto"
+                v-if="!testRuns.data.length && isComplianceAdminPage"
+            >
                 <div class="row">
                     <div class="col-10 mx-auto">
                         <p class="empty-title h3 mb-3">
@@ -27,108 +30,247 @@
             </div>
 
             <template v-else>
-                <div class="card-header">
-                    <h2 class="card-title">
-                        <b>Latest test runs</b>
-                    </h2>
+                <div v-if="!isComplianceAdminPage">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <b>Questionnaire answers</b>
+                        </h2>
+                    </div>
+
+                    <div class="card" v-for="section in questionnaire.data">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">{{ section.name }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <dl v-for="question in section.questions">
+                                <dt>{{ question.question }}</dt>
+                                <dd v-for="answer in question.answersNames">
+                                    {{ answer }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <b>Test runs</b>
+                        </h2>
+                    </div>
+
+                    <div class="table-responsive mb-0">
+                        <table
+                            class="table table-striped table-hover card-table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="text-nowrap w-auto">
+                                        Test Case
+                                    </th>
+                                    <th class="text-nowrap w-auto">Status</th>
+                                    <th class="text-nowrap w-auto">Attempt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="testCase in session.testCases.data">
+                                    <td>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.test-cases.show',
+                                                    [session.id, testCase.id]
+                                                )
+                                            "
+                                        >
+                                            {{ testCase.name }}
+                                        </inertia-link>
+                                    </td>
+                                    <td>
+                                        <span
+                                            v-if="
+                                                testCase.lastTestRun &&
+                                                testCase.lastTestRun
+                                                    .completed_at &&
+                                                testCase.lastTestRun.successful
+                                            "
+                                            class="d-flex align-items-center"
+                                        >
+                                            <span
+                                                class="badge bg-success mr-2"
+                                            ></span>
+                                            <inertia-link
+                                                :href="
+                                                    route(
+                                                        'sessions.test-cases.test-runs.show',
+                                                        [
+                                                            session.id,
+                                                            testCase.id,
+                                                            testCase.lastTestRun
+                                                                .id,
+                                                        ]
+                                                    )
+                                                "
+                                            >
+                                                Pass
+                                            </inertia-link>
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                testCase.lastTestRun &&
+                                                testCase.lastTestRun
+                                                    .completed_at &&
+                                                !testCase.lastTestRun.successful
+                                            "
+                                            class="d-flex align-items-center"
+                                        >
+                                            <span
+                                                class="badge bg-danger mr-2"
+                                            ></span>
+                                            <inertia-link
+                                                :href="
+                                                    route(
+                                                        'sessions.test-cases.test-runs.show',
+                                                        [
+                                                            session.id,
+                                                            testCase.id,
+                                                            testCase.lastTestRun
+                                                                .id,
+                                                        ]
+                                                    )
+                                                "
+                                            >
+                                                Fail
+                                            </inertia-link>
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="d-flex align-items-center"
+                                        >
+                                            <span
+                                                class="badge bg-secondary mr-2"
+                                            ></span>
+                                            Incomplete
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ testCase.attemptsCount }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="pt-4 border-bottom">
-                    <session-chart :session="session" />
-                </div>
+                <div v-else>
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <b>Latest test runs</b>
+                        </h2>
+                    </div>
 
-                <div class="table-responsive mb-0">
-                    <table class="table table-striped table-hover card-table">
-                        <thead>
-                            <tr>
-                                <th class="text-nowrap w-auto">ID</th>
-                                <th class="text-nowrap w-auto">Test Case</th>
-                                <th class="text-nowrap w-auto">Status</th>
-                                <th class="text-nowrap w-auto">Duration</th>
-                                <th class="text-nowrap w-auto">Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="testRun in testRuns.data">
-                                <td>
-                                    <inertia-link
-                                        :href="
-                                            route(
-                                                'sessions.test-cases.test-runs.show',
-                                                [
-                                                    testRun.session.id,
-                                                    testRun.testCase.id,
-                                                    testRun.id,
-                                                ]
-                                            )
-                                        "
-                                    >
-                                        #{{ testRun.id }}
-                                    </inertia-link>
-                                </td>
-                                <td>
-                                    <inertia-link
-                                        :href="
-                                            route('sessions.test-cases.show', [
-                                                testRun.session.id,
-                                                testRun.testCase.id,
-                                            ])
-                                        "
-                                    >
-                                        {{ testRun.testCase.name }}
-                                    </inertia-link>
-                                </td>
-                                <td>
-                                    <span
-                                        v-if="
-                                            testRun.completed_at &&
-                                            testRun.successful
-                                        "
-                                        class="d-flex align-items-center"
-                                    >
-                                        <span
-                                            class="badge bg-success mr-2"
-                                        ></span>
-                                        Pass
-                                    </span>
-                                    <span
-                                        v-else-if="
-                                            testRun.completed_at &&
-                                            !testRun.successful
-                                        "
-                                        class="d-flex align-items-center"
-                                    >
-                                        <span
-                                            class="badge bg-danger mr-2"
-                                        ></span>
-                                        Fail
-                                    </span>
-                                    <span
-                                        v-else
-                                        class="d-flex align-items-center"
-                                    >
-                                        <span
-                                            class="badge bg-secondary mr-2"
-                                        ></span>
-                                        Incomplete
-                                    </span>
-                                </td>
-                                <td>
-                                    {{ `${testRun.duration} ms` }}
-                                </td>
-                                <td>
-                                    {{ testRun.created_at }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="pt-4 border-bottom">
+                        <session-chart :session="session" />
+                    </div>
 
-                <pagination
-                    :meta="testRuns.meta"
-                    :links="testRuns.links"
-                    class="card-footer"
-                />
+                    <div class="table-responsive mb-0">
+                        <table
+                            class="table table-striped table-hover card-table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="text-nowrap w-auto">ID</th>
+                                    <th class="text-nowrap w-auto">
+                                        Test Case
+                                    </th>
+                                    <th class="text-nowrap w-auto">Status</th>
+                                    <th class="text-nowrap w-auto">Duration</th>
+                                    <th class="text-nowrap w-auto">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="testRun in testRuns.data">
+                                    <td>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.test-cases.test-runs.show',
+                                                    [
+                                                        testRun.session.id,
+                                                        testRun.testCase.id,
+                                                        testRun.id,
+                                                    ]
+                                                )
+                                            "
+                                        >
+                                            #{{ testRun.id }}
+                                        </inertia-link>
+                                    </td>
+                                    <td>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.test-cases.show',
+                                                    [
+                                                        testRun.session.id,
+                                                        testRun.testCase.id,
+                                                    ]
+                                                )
+                                            "
+                                        >
+                                            {{ testRun.testCase.name }}
+                                        </inertia-link>
+                                    </td>
+                                    <td>
+                                        <span
+                                            v-if="
+                                                testRun.completed_at &&
+                                                testRun.successful
+                                            "
+                                            class="d-flex align-items-center"
+                                        >
+                                            <span
+                                                class="badge bg-success mr-2"
+                                            ></span>
+                                            Pass
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                testRun.completed_at &&
+                                                !testRun.successful
+                                            "
+                                            class="d-flex align-items-center"
+                                        >
+                                            <span
+                                                class="badge bg-danger mr-2"
+                                            ></span>
+                                            Fail
+                                        </span>
+                                        <span
+                                            v-else
+                                            class="d-flex align-items-center"
+                                        >
+                                            <span
+                                                class="badge bg-secondary mr-2"
+                                            ></span>
+                                            Incomplete
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ `${testRun.duration} ms` }}
+                                    </td>
+                                    <td>
+                                        {{ testRun.created_at }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <pagination
+                            :meta="testRuns.meta"
+                            :links="testRuns.links"
+                            class="card-footer"
+                        />
+                    </div>
+                </div>
             </template>
         </div>
     </layout>
@@ -148,6 +290,10 @@ export default {
             type: Object,
             required: true,
         },
+        questionnaire: {
+            type: Object,
+            required: true,
+        },
         useCases: {
             type: Object,
             required: true,
@@ -156,6 +302,12 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    data() {
+        return {
+            isComplianceAdminPage:
+                !this.$page.auth.user.is_admin || this.session.type === 'test',
+        };
     },
 };
 </script>

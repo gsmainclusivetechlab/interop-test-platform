@@ -40,6 +40,14 @@ class TestCaseResource extends JsonResource
                     );
                 })
             ),
+            'attemptsCount' => $this->whenPivotLoaded(
+                'session_test_cases',
+                function () {
+                    return $this->testRuns()
+                        ->where('session_id', $this->pivot->session_id)
+                        ->count();
+                }
+            ),
             'can' => [
                 'update' => auth()
                     ->user()

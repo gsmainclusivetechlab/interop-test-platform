@@ -62,7 +62,9 @@ Route::name('sessions.')
         Route::get('/', 'SessionController@index')->name('index');
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
-        Route::post('{session}/complete', 'SessionController@complete')->name('complete');
+        Route::post('{session}/complete', 'SessionController@complete')->name(
+            'complete'
+        );
         Route::put('{session}/update', 'SessionController@update')->name(
             'update'
         );
@@ -221,10 +223,18 @@ Route::name('admin.')
             '\App\Http\Controllers\MessageLogController@admin'
         )->name('message-log');
         Route::resource('sessions', 'SessionController')->only(['index']);
-        Route::resource('compliance-sessions', 'ComplianceSessionController')->only([
-            'index',
-            'show',
-        ]);
+        Route::name('compliance-sessions.')
+            ->prefix('compliance-sessions')
+            ->group(function () {
+                Route::get(
+                    '{status?}',
+                    'ComplianceSessionController@index'
+                )->name('index');
+                Route::put(
+                    '{session}',
+                    'ComplianceSessionController@update'
+                )->name('update');
+            });
         Route::resource('api-specs', 'ApiSpecController')->only([
             'index',
             'destroy',

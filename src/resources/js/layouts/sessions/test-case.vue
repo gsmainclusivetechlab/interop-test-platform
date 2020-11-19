@@ -166,9 +166,11 @@
                                     class="btn btn-gray"
                                     v-else
                                     v-b-tooltip.hover
-                                    :title="session.status !== 'in_execution'
-                                        ? 'Session not available to update'
-                                        : 'Test case execution limit'"
+                                    :title="
+                                        session.status !== 'in_execution'
+                                            ? 'Session not available to update'
+                                            : 'Test case execution limit'
+                                    "
                                 >
                                     <icon name="bike"></icon>
                                     Run Test Case

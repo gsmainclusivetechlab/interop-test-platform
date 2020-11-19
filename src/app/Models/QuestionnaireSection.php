@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -23,6 +24,8 @@ use Illuminate\Database\Query\Builder;
  */
 class QuestionnaireSection extends Model
 {
+    use SoftDeletes;
+
     /** @var string[] */
     protected $fillable = ['name', 'description'];
 
@@ -34,7 +37,10 @@ class QuestionnaireSection extends Model
      */
     public function questions()
     {
-        return $this->hasMany(QuestionnaireQuestions::class, 'section_id');
+        return $this->hasMany(
+            QuestionnaireQuestions::class,
+            'section_id'
+        )->withTrashed();
     }
 
     /**

@@ -83,7 +83,7 @@ class SutController extends Controller
             })
             ->first();
 
-        if (! $testStep) {
+        if (!$testStep) {
             throw new MessageMismatchException(
                 $session,
                 404,
@@ -102,8 +102,9 @@ class SutController extends Controller
                 : 'Test case execution limit.';
 
             abort_if(
-                !$session->isAvailableToUpdate()
-                || $testRunsCount >= config('test_cases.compliance_session_execution_limit'),
+                !$session->isAvailableToUpdate() ||
+                    $testRunsCount >=
+                        config('test_cases.compliance_session_execution_limit'),
                 403,
                 __($message)
             );
@@ -121,13 +122,13 @@ class SutController extends Controller
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $request = $request
-            ->withHeader(TraceparentHeader::NAME, (string)$traceparent)
+            ->withHeader(TraceparentHeader::NAME, (string) $traceparent)
             ->withoutHeader(TracestateHeader::NAME)
             ->withUri(
                 UriResolver::resolve(
                     new Uri($session->getBaseUriOfComponent($connection)),
                     new Uri($path)
-                )->withQuery((string)request()->getQueryString())
+                )->withQuery((string) request()->getQueryString())
             );
 
         return (new ProcessPendingRequest($request, $testResult))();

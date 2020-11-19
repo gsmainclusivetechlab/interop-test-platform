@@ -116,7 +116,7 @@
                                 <test-case-checkboxes
                                     style="max-height: 485px"
                                     :useCases="useCases"
-                                    :isCompiance="isCompliance"
+                                    :isCompliance="isCompliance"
                                     v-model="form.test_cases"
                                 />
                                 <div

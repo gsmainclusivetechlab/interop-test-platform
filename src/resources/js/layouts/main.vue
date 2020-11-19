@@ -89,6 +89,16 @@
                                     Sessions
                                 </inertia-link>
                             </li>
+                            <li v-if="$page.auth.user.can.sessions.viewAny">
+                                <inertia-link
+                                    :href="
+                                        route('admin.compliance-sessions.index')
+                                    "
+                                    class="text-reset dropdown-item"
+                                >
+                                    Compliance Sessions
+                                </inertia-link>
+                            </li>
                             <li v-if="$page.auth.user.can.api_specs.viewAny">
                                 <inertia-link
                                     :href="route('admin.api-specs.index')"

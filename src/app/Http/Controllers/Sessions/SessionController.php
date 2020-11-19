@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
-use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestRunResource;
-use App\Http\Resources\UseCaseResource;
-use App\Models\GroupEnvironment;
-use App\Models\Session;
-use App\Models\TestCase;
-use App\Models\UseCase;
-use App\Models\User;
+use App\Http\Resources\{
+    ComponentResource,
+    SectionResource,
+    SessionResource,
+    TestRunResource,
+    UseCaseResource
+};
+use App\Models\{
+    GroupEnvironment,
+    QuestionnaireSection,
+    Session,
+    TestCase,
+    UseCase,
+    User
+};
 use App\Notifications\SessionStatusInVerification;
 use Arr;
 use Exception;
@@ -115,6 +121,35 @@ class SessionController extends Controller
                     },
                 ])
             ))->resolve(),
+            'questionnaire' => SectionResource::collection(
+                QuestionnaireSection::withTrashed()
+                    ->whereHas('questions.answers', function ($query) use (
+                        $session
+                    ) {
+                        $query->where([
+                            'session_id' => $session->id,
+                        ]);
+                    })
+                    ->with([
+                        'questions' => function ($query) use ($session) {
+                            $query->whereHas('answers', function ($query) use (
+                                $session
+                            ) {
+                                $query->where([
+                                    'session_id' => $session->id,
+                                ]);
+                            });
+                        },
+                        'questions.answers' => function ($query) use (
+                            $session
+                        ) {
+                            $query->where([
+                                'session_id' => $session->id,
+                            ]);
+                        },
+                    ])
+                    ->get()
+            ),
             'useCases' => UseCaseResource::collection(
                 UseCase::withTestCasesOfSession($session)->get()
             ),
@@ -150,13 +185,16 @@ class SessionController extends Controller
             'component' => (new ComponentResource($component))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($component, $session) {
+                    'testCases' => function ($query) use (
+                        $component,
+                        $session
+                    ) {
                         $query
                             ->where(function ($query) use ($component) {
                                 $query
-                                    ->whereHas('components', function ($query) use (
-                                        $component
-                                    ) {
+                                    ->whereHas('components', function (
+                                        $query
+                                    ) use ($component) {
                                         $query->whereKey($component->getKey());
                                     })
                                     ->where('public', true)
@@ -168,7 +206,9 @@ class SessionController extends Controller
                                         );
                                     })
                                     ->orWhereHas('groups', function ($query) {
-                                        $query->whereHas('users', function ($query) {
+                                        $query->whereHas('users', function (
+                                            $query
+                                        ) {
                                             $query->whereKey(
                                                 auth()
                                                     ->user()
@@ -179,18 +219,23 @@ class SessionController extends Controller
                                     ->when(
                                         auth()
                                             ->user()
-                                            ->can('viewAnyPrivate', TestCase::class),
+                                            ->can(
+                                                'viewAnyPrivate',
+                                                TestCase::class
+                                            ),
                                         function ($query) {
                                             $query->orWhere('public', false);
                                         }
                                     );
                             })
-                            ->when(
-                                $session->isComplianceSession(),
-                                function ($query) use ($session) {
-                                    $query->whereIn('id', $session->testCases()->pluck('id'));
-                                }
-                            );
+                            ->when($session->isComplianceSession(), function (
+                                $query
+                            ) use ($session) {
+                                $query->whereIn(
+                                    'id',
+                                    $session->testCases()->pluck('id')
+                                );
+                            });
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($component) {
@@ -252,9 +297,13 @@ class SessionController extends Controller
         try {
             $session = DB::transaction(function () use ($session, $request) {
                 $data = $request->input();
-                $session->update($session->isComplianceSession()
-                    ? Arr::only($data, ['group_environment_id', 'environments'])
-                    : $data
+                $session->update(
+                    $session->isComplianceSession()
+                        ? Arr::only($data, [
+                            'group_environment_id',
+                            'environments',
+                        ])
+                        : $data
                 );
 
                 $session
@@ -274,11 +323,12 @@ class SessionController extends Controller
                     $session
                         ->testCasesWithSoftDeletes()
                         ->whereKeyNot($request->input('test_cases'))
-                        ->whereHas('testRunsWithSoftDeletesTestCases', function (
-                            $query
-                        ) use ($session) {
-                            $query->where('session_id', $session->getKey());
-                        })
+                        ->whereHas(
+                            'testRunsWithSoftDeletesTestCases',
+                            function ($query) use ($session) {
+                                $query->where('session_id', $session->getKey());
+                            }
+                        )
                         ->each(function ($testCase) {
                             $testCase->pivot->update([
                                 'deleted_at' => $testCase->fromDateTime(
@@ -303,7 +353,9 @@ class SessionController extends Controller
                     $session->testCasesWithSoftDeletes()->attach(
                         collect($request->input('test_cases'))
                             ->diff(
-                                $session->testCasesWithSoftDeletes()->pluck('id')
+                                $session
+                                    ->testCasesWithSoftDeletes()
+                                    ->pluck('id')
                             )
                             ->all()
                     );
@@ -329,11 +381,10 @@ class SessionController extends Controller
 
             User::whereIn('role', [
                 User::ROLE_ADMIN,
-                User::ROLE_SUPERADMIN
-            ])
-                ->each(function (User $user) use ($session) {
-                    $user->notify(new SessionStatusInVerification($session));
-                });
+                User::ROLE_SUPERADMIN,
+            ])->each(function (User $user) use ($session) {
+                $user->notify(new SessionStatusInVerification($session));
+            });
 
             return redirect()
                 ->back()
