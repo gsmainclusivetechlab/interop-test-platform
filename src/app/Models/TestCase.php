@@ -26,6 +26,7 @@ class TestCase extends Model
      */
     protected $fillable = [
         'name',
+        'slug',
         'public',
         'behavior',
         'description',

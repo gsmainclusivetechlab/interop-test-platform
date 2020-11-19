@@ -1,4 +1,5 @@
 name: Customer Initiated Cash-Out - Accepted - Receive - V6
+slug: COCI0001
 use_case: Cash-Out
 test_case: COCI0010
 behavior: positive

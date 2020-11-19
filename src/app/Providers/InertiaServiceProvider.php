@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Component;
 use App\Models\Group;
+use App\Models\QuestionnaireSection;
 use App\Models\Session;
 use App\Models\ApiSpec;
 use App\Models\TestCase;
@@ -113,6 +114,14 @@ class InertiaServiceProvider extends ServiceProvider
                                     'viewAny' => auth()
                                         ->user()
                                         ->can('viewAny', MessageLog::class),
+                                ],
+                                'questionnaire' => [
+                                    'create' => auth()
+                                        ->user()
+                                        ->can(
+                                            'create',
+                                            QuestionnaireSection::class
+                                        ),
                                 ],
                             ],
                         ]

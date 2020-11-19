@@ -9,6 +9,7 @@
                     {{ useCase.name }}
                 </b>
                 <button
+                    v-show="!isCompliance"
                     type="button"
                     class="btn btn-link py-0 font-weight-normal text-decoration-none"
                     @click.prevent="toggleCheckboxes"
@@ -35,6 +36,7 @@
                                 Happy flow
                             </span>
                             <button
+                                v-show="!isCompliance"
                                 type="button"
                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
                                 @click.prevent="toggleCheckboxes"
@@ -59,6 +61,7 @@
                                     <label class="form-check mb-0">
                                         <input
                                             :value="testCase.id"
+                                            :disabled="isCompliance"
                                             v-model="testCases"
                                             type="checkbox"
                                             class="form-check-input"
@@ -95,6 +98,7 @@
                                 Unhappy flow
                             </span>
                             <button
+                                v-show="!isCompliance"
                                 type="button"
                                 class="btn btn-link py-0 font-weight-normal text-decoration-none"
                                 @click.prevent="toggleCheckboxes"
@@ -119,6 +123,7 @@
                                     <label class="form-check mb-0">
                                         <input
                                             :value="testCase.id"
+                                            :disabled="isCompliance"
                                             v-model="testCases"
                                             type="checkbox"
                                             class="form-check-input"
@@ -150,6 +155,10 @@ export default {
         },
         useCases: {
             type: Object,
+            required: true,
+        },
+        isCompliance: {
+            type: Boolean,
             required: true,
         },
     },

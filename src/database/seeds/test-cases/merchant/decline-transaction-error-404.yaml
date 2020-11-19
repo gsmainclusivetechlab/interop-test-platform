@@ -1,4 +1,5 @@
 name: Decline Transaction with Error 404 by Payee FSP
+slug: decline-transaction-error-404
 use_case: Merchant-Initiated Merchant Payment
 behavior: negative
 description: |

@@ -83,9 +83,7 @@
                             </td>
                         </tr>
                         <tr v-if="!environments.data.length">
-                            <td class="text-center" colspan="5">
-                                No Results
-                            </td>
+                            <td class="text-center" colspan="5">No Results</td>
                         </tr>
                     </tbody>
                 </table>

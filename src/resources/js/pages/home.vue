@@ -24,7 +24,7 @@
                                 </p>
                                 <div class="empty-action">
                                     <inertia-link
-                                        :href="route('sessions.register.sut')"
+                                        :href="route('sessions.register.type')"
                                         class="btn btn-primary"
                                     >
                                         <icon name="plus" />

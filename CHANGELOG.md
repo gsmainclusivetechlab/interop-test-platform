@@ -1,3 +1,11 @@
+## v1.2
+
+-   Task: Email Invitations [@jc-skushnir,@Kassaila]
+-   Task: Implicit Group Admins [@jc-skushnir]
+-   Task: Block Registration Without Invitation Code [@jc-skushnir]
+-   Task: Questionnaire Definition Parser [@jc-nsiryk]
+-   Task: Test Case Selection Wizard [@jc-nsiryk,@Kassaila]
+
 ## v1.0
 
 -   Task: Create Participant flow

@@ -3,9 +3,7 @@
         <div class="col-10 m-auto mt-3">
             <form class="card" @submit.prevent="submit">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        Update session info
-                    </h3>
+                    <h3 class="card-title">Update session info</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -114,8 +112,11 @@
                                     <b>Test Cases</b>
                                 </label>
                                 <test-case-checkboxes
-                                    style="max-height: 485px;"
+                                    style="max-height: 485px"
                                     :useCases="useCases"
+                                    :isCompliance="
+                                        session.type === 'compliance'
+                                    "
                                     v-model="form.test_cases"
                                 />
                                 <div

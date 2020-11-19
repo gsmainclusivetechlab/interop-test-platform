@@ -1,5 +1,5 @@
 <template>
-    <layout :components="components">
+    <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card">
                 <div class="card-header border-0">
@@ -44,6 +44,18 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between">
+                <inertia-link
+                    :href="
+                        route(
+                            isCompliance
+                                ? 'sessions.register.questionnaire.summary'
+                                : 'sessions.register.type'
+                        )
+                    "
+                    class="btn btn-outline-primary"
+                >
+                    Back
+                </inertia-link>
                 <button type="submit" class="btn btn-primary ml-auto">
                     <span
                         v-if="sending"
@@ -80,6 +92,7 @@ export default {
     data() {
         return {
             sending: false,
+            isCompliance: this.session.type === 'compliance',
             component:
                 this.session && this.session.sut
                     ? collect(this.suts.data)
