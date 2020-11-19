@@ -18,6 +18,8 @@ class SessionResource extends JsonResource
             'name' => $this->name,
             'type' => $this->type,
             'status' => $this->status,
+            'reason' => $this->reason,
+            'statusName' => $this->status_name,
             'completable' => $this->completable,
             'description' => $this->description,
             'environments' => $this->environments,

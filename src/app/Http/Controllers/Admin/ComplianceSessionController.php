@@ -49,7 +49,7 @@ class ComplianceSessionController extends Controller
             'filter' => [
                 'q' => request('q'),
             ],
-            'statusName' => $status ? Session::getStatusName($status) : null,
+            'statusName' => Session::getStatusName($status),
         ]);
     }
 
@@ -82,7 +82,7 @@ class ComplianceSessionController extends Controller
             ->with(
                 'success',
                 __('Session :status successfully', [
-                    'status' => Session::getStatusName($session->status),
+                    'status' => $session->status_name,
                 ])
             );
     }

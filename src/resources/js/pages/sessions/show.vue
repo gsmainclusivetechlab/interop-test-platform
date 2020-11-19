@@ -1,9 +1,28 @@
 <template>
     <layout :session="session" :useCases="useCases">
+        <div class="card" v-if="isCompliance">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <b>Session info</b>
+                </h2>
+            </div>
+
+            <div class="card-body">
+                <dl>
+                    <dt>Status</dt>
+                    <dd>{{ session.statusName }}</dd>
+                </dl>
+                <dl v-if="session.reason">
+                    <dt>Reason</dt>
+                    <dd>{{ session.reason }}</dd>
+                </dl>
+            </div>
+        </div>
+
         <div class="card">
             <div
                 class="empty h-auto"
-                v-if="!testRuns.data.length && isComplianceAdminPage"
+                v-if="!testRuns.data.length && !isCompliance"
             >
                 <div class="row">
                     <div class="col-10 mx-auto">
@@ -30,7 +49,7 @@
             </div>
 
             <template v-else>
-                <div v-if="!isComplianceAdminPage">
+                <div v-if="isCompliance">
                     <div class="card-header">
                         <h2 class="card-title">
                             <b>Questionnaire answers</b>
@@ -67,6 +86,7 @@
                                         Test Case
                                     </th>
                                     <th class="text-nowrap w-auto">Status</th>
+                                    <th class="text-nowrap w-auto">Duration</th>
                                     <th class="text-nowrap w-auto">Attempt</th>
                                 </tr>
                             </thead>
@@ -150,6 +170,9 @@
                                             ></span>
                                             Incomplete
                                         </span>
+                                    </td>
+                                    <td>
+                                        {{ testCase.lastTestRun ? `${testCase.lastTestRun.duration} ms` : '' }}
                                     </td>
                                     <td>
                                         {{ testCase.attemptsCount }}
@@ -305,8 +328,7 @@ export default {
     },
     data() {
         return {
-            isComplianceAdminPage:
-                !this.$page.auth.user.is_admin || this.session.type === 'test',
+            isCompliance: this.session.type === 'compliance',
         };
     },
 };

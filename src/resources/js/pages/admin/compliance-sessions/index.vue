@@ -159,7 +159,7 @@ export default {
     },
     methods: {
         search() {
-            this.$inertia.replace(route('admin.compliance-sessions.index'), {
+            this.$inertia.replace(route('admin.compliance-sessions.index', {status: this.status}), {
                 data: this.form,
             });
         },

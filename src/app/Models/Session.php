@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
  * @property string|null $reason
  *
  * @property-read bool $completable
+ * @property-read string|null $status_name
  *
  * @property User $owner
  */
@@ -263,11 +264,19 @@ class Session extends Model
     /**
      * @param string $type
      *
-     * @return array|\ArrayAccess|mixed
+     * @return string
      */
     public static function getStatusName($type)
     {
-        return Arr::get(static::getStatusNames(), $type);
+        return $type ? Arr::get(static::getStatusNames(), $type) : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        return static::getStatusName($this->status);
     }
 
     /**

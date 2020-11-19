@@ -52,7 +52,7 @@ class SessionStatusChanged extends Notification
             ->subject(
                 $message = __(
                     'Compliance session moves into ":status" status',
-                    ['status' => Session::getStatusName($this->session->status)]
+                    ['status' => $this->session->status_name]
                 )
             )
             ->line($message)
