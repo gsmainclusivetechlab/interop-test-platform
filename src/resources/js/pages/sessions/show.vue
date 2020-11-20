@@ -300,6 +300,15 @@
                 </div>
             </template>
         </div>
+
+        <div class="d-flex justify-content-between">
+            <a
+                :href="route('sessions.export', session.id)"
+                class="btn btn-outline-primary ml-auto"
+            >
+                Export to docx
+            </a>
+        </div>
     </layout>
 </template>
 

@@ -62,6 +62,9 @@ Route::name('sessions.')
         Route::get('/', 'SessionController@index')->name('index');
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
+        Route::get('{session}/export', 'SessionController@export')->name(
+            'export'
+        );
         Route::post('{session}/complete', 'SessionController@complete')->name(
             'complete'
         );
