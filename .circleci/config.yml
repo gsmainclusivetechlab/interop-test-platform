@@ -124,16 +124,16 @@ jobs:
           command: |
             npm run test
             docker-compose down -v
-      - coverage-reporter/send_report:
-          coverage-reports: ./results/coverage-report-clover/clover.xml
-          project-token: $CODACY_PROJECT_TOKEN
-      - run:
-          name: Copy codacy json report to artifact
-          command: sudo cp /var/tmp/codacy-coverage-*.json ./results/
-      - store_test_results:
-          path: ./results
-      - store_artifacts:
-          path: ./results
+      # - coverage-reporter/send_report:
+      #     coverage-reports: ./results/coverage-report-clover/clover.xml
+      #     project-token: $CODACY_PROJECT_TOKEN
+      # - run:
+      #     name: Copy codacy json report to artifact
+      #     command: sudo cp /var/tmp/codacy-coverage-*.json ./results/
+      # - store_test_results:
+      #     path: ./results
+      # - store_artifacts:
+      #     path: ./results
       - run:
           name: Publish Docker image
           command: docker-compose push app

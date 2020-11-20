@@ -55,7 +55,7 @@
                             <h3 class="card-title">
                                 {{
                                     isCompliance
-                                        ? 'Selected cases'
+                                        ? 'Selected use cases'
                                         : 'Select use cases'
                                 }}
                             </h3>
