@@ -22,62 +22,59 @@
                                 >
                                     <icon name="pencil"></icon>
                                 </inertia-link>
-                                <confirm-link
-                                    method="post"
-                                    class="btn btn-outline-primary ml-5"
-                                    v-if="
-                                        session.can.update &&
-                                        session.completable
-                                    "
-                                    :href="
-                                        route('sessions.complete', session.id)
-                                    "
-                                    :confirm-title="'Confirm compliting'"
-                                    :confirm-text="`This is a non-reversible action, and you will need to create a new
-                                        session if you wish to execute any more test cases.`"
-                                >
-                                    <icon name="checks"></icon>
-                                    Completed
-                                </confirm-link>
-                                <change-status
-                                    class="btn btn-outline-primary ml-5"
-                                    v-if="canApprove"
-                                    :href="
-                                        route(
-                                            'admin.compliance-sessions.update',
-                                            session.id
-                                        )
-                                    "
-                                    :confirm-title="'Approve session'"
-                                    :status="'approved'"
-                                >
-                                    <icon name="check"></icon>
-                                    Approve
-                                </change-status>
-                                <change-status
-                                    class="btn btn-outline-primary ml-2"
-                                    v-if="canApprove"
-                                    :href="
-                                        route(
-                                            'admin.compliance-sessions.update',
-                                            session.id
-                                        )
-                                    "
-                                    :status="'declined'"
-                                    :confirm-title="'Decline session'"
-                                >
-                                    <icon name="x"></icon>
-                                    Decline
-                                </change-status>
                             </div>
                         </h1>
                     </div>
-                    <div class="ml-auto col-1 d-flex justify-content-end">
+                    <div
+                        class="col-4 d-flex align-items-center justify-content-end"
+                    >
+                        <confirm-link
+                            method="post"
+                            class="btn btn-outline-primary"
+                            v-if="session.can.update && session.completable"
+                            :href="route('sessions.complete', session.id)"
+                            :confirm-title="'Confirm compliting'"
+                            :confirm-text="`This is a non-reversible action, and you will need to create a new
+                                        session if you wish to execute any more test cases.`"
+                        >
+                            <icon name="checks"></icon>
+                            Completed
+                        </confirm-link>
+                        <change-status
+                            class="ml-1"
+                            v-if="canApprove"
+                            :href="
+                                route(
+                                    'admin.compliance-sessions.update',
+                                    session.id
+                                )
+                            "
+                            :confirm-title="'Approve session'"
+                            :status="'approved'"
+                        >
+                            <icon name="check"></icon>
+                            Approve
+                        </change-status>
+                        <change-status
+                            class="ml-1"
+                            v-if="canApprove"
+                            :href="
+                                route(
+                                    'admin.compliance-sessions.update',
+                                    session.id
+                                )
+                            "
+                            :status="'declined'"
+                            :confirm-title="'Decline session'"
+                        >
+                            <icon name="x"></icon>
+                            Decline
+                        </change-status>
                         <inertia-link
                             :href="
                                 route('sessions.message-log.index', session.id)
                             "
-                            class="btn btn-secondary mr-2"
+                            class="btn btn-secondary ml-1"
                         >
                             <icon name="list"></icon>
                             Log

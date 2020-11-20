@@ -2,9 +2,7 @@
     <layout :session="session" :useCases="useCases">
         <div class="card" v-if="isCompliance">
             <div class="card-header">
-                <h2 class="card-title">
-                    <b>Session info</b>
-                </h2>
+                <h2 class="card-title">Session info</h2>
             </div>
 
             <div class="card-body">
@@ -18,62 +16,72 @@
                 </dl>
             </div>
         </div>
-
-        <div class="card">
-            <div
-                class="empty h-auto"
-                v-if="!testRuns.data.length && !isCompliance"
-            >
-                <div class="row">
-                    <div class="col-10 mx-auto">
-                        <p class="empty-title h3 mb-3">
-                            You have no test runs for this session
-                        </p>
-                        <p class="empty-subtitle text-muted mb-0">
-                            Select any test case in the left menu to get more
-                            information about it and make your first test run or
-                            click the button below to learn more from our
-                            enhanced Tutorial.
-                        </p>
-                        <div class="empty-action">
-                            <inertia-link
-                                :href="route('tutorials')"
-                                class="btn btn-primary"
-                            >
-                                <icon name="help" />
-                                Visit Tutorial
-                            </inertia-link>
-                        </div>
+        <div class="empty h-auto" v-if="!testRuns.data.length && !isCompliance">
+            <div class="row">
+                <div class="col-10 mx-auto">
+                    <p class="empty-title h3 mb-3">
+                        You have no test runs for this session
+                    </p>
+                    <p class="empty-subtitle text-muted mb-0">
+                        Select any test case in the left menu to get more
+                        information about it and make your first test run or
+                        click the button below to learn more from our enhanced
+                        Tutorial.
+                    </p>
+                    <div class="empty-action">
+                        <inertia-link
+                            :href="route('tutorials')"
+                            class="btn btn-primary"
+                        >
+                            <icon name="help" />
+                            Visit Tutorial
+                        </inertia-link>
                     </div>
                 </div>
             </div>
-
-            <template v-else>
-                <div v-if="isCompliance">
+        </div>
+        <template v-else>
+            <div v-if="isCompliance">
+                <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">
-                            <b>Questionnaire answers</b>
-                        </h2>
+                        <h2 class="card-title">Questionnaire</h2>
                     </div>
 
-                    <div class="card" v-for="section in questionnaire.data">
-                        <div class="card-header border-0">
-                            <h3 class="card-title">{{ section.name }}</h3>
-                        </div>
-                        <div class="card-body">
-                            <dl v-for="question in section.questions">
-                                <dt>{{ question.question }}</dt>
-                                <dd v-for="answer in question.answersNames">
-                                    {{ answer }}
-                                </dd>
+                    <div
+                        class="card-body"
+                        v-for="(section, i) in questionnaire.data"
+                        :key="i"
+                    >
+                        <h4
+                            class="dropdown-toggle btn-link mb-0"
+                            v-b-toggle="`test-case-section-${section.id}`"
+                        >
+                            <b>{{ section.name }}</b>
+                        </h4>
+                        <b-collapse :id="`test-case-section-${section.id}`">
+                            <dl class="list-group list-group-flush q-a-list">
+                                <div
+                                    class="list-group-item"
+                                    v-for="(question, i) in section.questions"
+                                    :key="i"
+                                >
+                                    <dt>{{ question.question }}</dt>
+                                    <dd
+                                        v-for="(answer,
+                                        i) in question.answersNames"
+                                        :key="i"
+                                    >
+                                        {{ answer }}
+                                    </dd>
+                                </div>
                             </dl>
-                        </div>
+                        </b-collapse>
                     </div>
+                </div>
 
+                <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">
-                            <b>Test runs</b>
-                        </h2>
+                        <h2 class="card-title">Test runs</h2>
                     </div>
 
                     <div class="table-responsive mb-0">
@@ -91,7 +99,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="testCase in session.testCases.data">
+                                <tr
+                                    v-for="(testCase, i) in session.testCases
+                                        .data"
+                                    :key="i"
+                                >
                                     <td>
                                         <inertia-link
                                             :href="
@@ -186,8 +198,10 @@
                         </table>
                     </div>
                 </div>
+            </div>
 
-                <div v-else>
+            <div v-else>
+                <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
                             <b>Latest test runs</b>
@@ -214,7 +228,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="testRun in testRuns.data">
+                                <tr
+                                    v-for="(testRun, i) in testRuns.data"
+                                    :key="i"
+                                >
                                     <td>
                                         <inertia-link
                                             :href="
@@ -298,8 +315,8 @@
                         />
                     </div>
                 </div>
-            </template>
-        </div>
+            </div>
+        </template>
     </layout>
 </template>
 
