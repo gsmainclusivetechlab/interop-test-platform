@@ -54,7 +54,7 @@ export default {
         },
         sessionId: {
             type: Number,
-            required: true,
+            required: false,
         },
         isCompliance: {
             type: Boolean,
