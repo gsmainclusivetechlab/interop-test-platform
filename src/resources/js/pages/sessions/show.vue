@@ -301,7 +301,7 @@
             </template>
         </div>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between" v-if="isCompliance">
             <a
                 :href="route('sessions.export', session.id)"
                 class="btn btn-outline-primary ml-auto"
