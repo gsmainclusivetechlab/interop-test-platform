@@ -73,7 +73,6 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
-                                            v{{ testCase.version }}
                                             <test-case-update
                                                 @update="updateVersion"
                                                 :test-case="testCase"
