@@ -1,4 +1,4 @@
-## v1.1
+## v1.2
 
 -   Task: Email Invitations [@jc-skushnir,@Kassaila]
 -   Task: Implicit Group Admins [@jc-skushnir]
