@@ -181,7 +181,7 @@ jobs:
       - run:
           name: Download previously built image
           command:
-            docker image prune && docker pull
+            docker image prune -af --filter="until=24h" && docker pull
             <<parameters.repo>>:<<parameters.tag>>
       - run:
           name: Re-tag pre-built image
@@ -252,8 +252,6 @@ workflows:
       - approve_sta_deploy:
           <<: *develop_filter
           type: approval
-          requires:
-            - build
       - deploy:
           <<: *develop_filter
           context:

@@ -46,7 +46,7 @@
                                     method="post"
                                     class="btn btn-outline-primary mr-1"
                                 >
-                                    Complience
+                                    Certification
                                 </inertia-link>
                             </div>
                             <div class="mb-3">
@@ -64,13 +64,13 @@
                                     is a session where you pass the
                                     questionnaire to receive the list of
                                     suggested test cases. The main difference
-                                    from <b>Complience</b> session is you can
+                                    from <b>Certification</b> session is you can
                                     change the chosen set of test cases anytime
                                     and execute them as many times as you like.
                                 </p>
                                 <p>
                                     <icon name="chevron-right" /><b
-                                        >Complience</b
+                                        >Certification</b
                                     >
                                     is a specific type of session that is being
                                     validated by the platfrom admins. In
