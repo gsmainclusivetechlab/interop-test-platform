@@ -317,6 +317,15 @@
                 </div>
             </div>
         </template>
+
+        <div class="d-flex justify-content-end" v-if="isCompliance">
+            <a
+                :href="route('sessions.export', session.id)"
+                class="btn btn-outline-primary"
+            >
+                Export to docx
+            </a>
+        </div>
     </layout>
 </template>
 

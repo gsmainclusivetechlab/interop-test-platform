@@ -23,11 +23,15 @@ use Arr;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 use Throwable;
 
 class SessionController extends Controller
@@ -374,8 +378,16 @@ class SessionController extends Controller
         }
     }
 
+    /**
+     * @param Session $session
+     *
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
     public function complete(Session $session)
     {
+        $this->authorize('update', $session);
+
         if ($session->completable) {
             $session->updateStatus(Session::STATUS_IN_VERIFICATION);
 
@@ -394,6 +406,37 @@ class SessionController extends Controller
         return redirect()
             ->back()
             ->with('error', __('Session not completable'));
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @throws AuthorizationException
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
+    public function export(Session $session)
+    {
+        $this->authorize('view', $session);
+
+        $session->load([
+            'testCases.testRuns' => function (HasMany $query) use ($session) {
+                $query->where('session_id', $session->id);
+            },
+        ]);
+
+        $wordFile = new PhpWord();
+        $section = $wordFile->addSection();
+        $section->addText(__('Test runs'), ['size' => 16, 'bold' => true]);
+
+        $this->generateTable($section, $session);
+
+        $fileName = "Session-{$session->id}-{$session->name}";
+
+        header('Content-Type: application/octet-stream');
+        header("Content-Disposition: attachment;filename=\"{$fileName}.docx\"");
+
+        $objWriter = IOFactory::createWriter($wordFile);
+        $objWriter->save('php://output');
     }
 
     /**
@@ -459,5 +502,43 @@ class SessionController extends Controller
         }
 
         return $data;
+    }
+
+    /**
+     * @param Section $section
+     * @param Session $session
+     */
+    protected function generateTable(Section $section, Session $session)
+    {
+        $table = $section->addTable([
+            'borderSize' => 6,
+            'cellMargin' => 80,
+            'cellSpacing' => 50,
+        ]);
+
+        $style = ['bold' => true];
+        $table->addRow();
+        $table->addCell(6000)->addText(__('Test case'), $style);
+        $table->addCell(1500)->addText(__('Status'), $style);
+        $table->addCell(1500)->addText(__('Duration'), $style);
+        $table->addCell(1500)->addText(__('Attempts'), $style);
+
+        foreach ($session->testCases as $testCase) {
+            $status = __('Incompleted');
+            if (
+                ($lastTestRun = $testCase->lastTestRun) &&
+                $lastTestRun->completed_at
+            ) {
+                $status = __($lastTestRun->successful ? 'Pass' : 'Fail');
+            }
+
+            $table->addRow();
+            $table->addCell()->addText($testCase->name);
+            $table->addCell()->addText($status);
+            $table
+                ->addCell()
+                ->addText($lastTestRun ? "{$lastTestRun->duration} ms" : null);
+            $table->addCell()->addText((string) $testCase->testRuns->count());
+        }
     }
 }

@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
  *
+ * @property int $id
+ * @property string $name
  * @property string $type
  * @property string|null $status
  * @property string|null $reason
@@ -17,6 +20,7 @@ use Illuminate\Support\Arr;
  * @property-read string|null $status_name
  *
  * @property User $owner
+ * @property TestCase[]|Collection $testCases
  */
 class Session extends Model
 {

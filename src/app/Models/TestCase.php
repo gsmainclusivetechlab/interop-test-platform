@@ -5,11 +5,13 @@ namespace App\Models;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
  *
  * @property TestRun $lastTestRun
+ * @property TestRun[]|Collection $testRuns
  */
 class TestCase extends Model
 {
