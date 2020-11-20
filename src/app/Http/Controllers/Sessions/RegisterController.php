@@ -247,7 +247,9 @@ class RegisterController extends Controller
                 TestCase::whereIn(
                     'slug',
                     $this->getTestCases(true) ?: ['']
-                )->pluck('id')
+                )
+                    ->lastPerGroup()
+                    ->pluck('id')
             );
         }
 
