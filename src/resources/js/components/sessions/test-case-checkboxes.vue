@@ -1,6 +1,10 @@
 <template>
     <ul class="list-group overflow-auto">
-        <li class="list-group-item" v-for="useCase in useCases.data">
+        <li
+            class="list-group-item"
+            v-for="(useCase, i) in useCases.data"
+            :key="i"
+        >
             <div class="d-flex align-items-center">
                 <b
                     class="dropdown-toggle"
@@ -52,11 +56,12 @@
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
-                                    v-for="testCase in collect(
+                                    v-for="(testCase, i) in collect(
                                         useCase.testCases
                                     )
                                         .where('behavior', 'positive')
                                         .all()"
+                                    :key="i"
                                 >
                                     <label class="form-check mb-0">
                                         <input
@@ -68,6 +73,12 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
+                                            <test-case-update
+                                                @update="updateVersion"
+                                                :test-case="testCase"
+                                                :session-id="session.id"
+                                                :is-compliance="isCompliance"
+                                            />
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -114,11 +125,12 @@
                             <ul class="list-group">
                                 <li
                                     class="list-group-item"
-                                    v-for="testCase in collect(
+                                    v-for="(testCase, i) in collect(
                                         useCase.testCases
                                     )
                                         .where('behavior', 'negative')
                                         .all()"
+                                    :key="i"
                                 >
                                     <label class="form-check mb-0">
                                         <input
@@ -130,6 +142,12 @@
                                         />
                                         <span class="form-check-label">
                                             {{ testCase.name }}
+                                            <test-case-update
+                                                @update="updateVersion"
+                                                :test-case="testCase"
+                                                :session-id="session.id"
+                                                :is-compliance="isCompliance"
+                                            />
                                             <icon
                                                 name="lock"
                                                 v-if="!testCase.public"
@@ -147,11 +165,20 @@
     </ul>
 </template>
 <script>
+import TestCaseUpdate from '@/components/sessions/test-case-update';
+
 export default {
+    components: {
+        TestCaseUpdate,
+    },
     props: {
         value: {
             type: Array,
             required: false,
+        },
+        session: {
+            type: Object,
+            required: true,
         },
         useCases: {
             type: Object,
@@ -190,6 +217,15 @@ export default {
                 checkbox.checked = !isChecked;
                 checkbox.dispatchEvent(new Event('change'));
             });
+        },
+        updateVersion(versions) {
+            if (this.testCases.includes(versions.current.id)) {
+                this.testCases.splice(
+                    [this.testCases.indexOf(versions.current.id)],
+                    1,
+                    versions.last.id
+                );
+            }
         },
     },
 };

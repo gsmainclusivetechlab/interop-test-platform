@@ -113,6 +113,7 @@
                                 </label>
                                 <test-case-checkboxes
                                     style="max-height: 485px"
+                                    :session="session"
                                     :useCases="useCases"
                                     :isCompliance="
                                         session.type === 'compliance'

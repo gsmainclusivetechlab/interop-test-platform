@@ -32,22 +32,22 @@ class GroupUserInvitation extends Notification
         return (new MailMessage())
             ->subject(__('Group Invitation'))
             ->line(
-                __('You have been invited to **:groupName** group.', [
+                __("You have been invited to the '**:groupName**' group.", [
                     'groupName' => $notifiable->group->name,
                 ])
             )
             ->line(
                 __(
-                    'In order to join the group by passing a short registration, please click on the button below.'
+                    'In order to accept the invitation, you must register an account. To do so, please click on the button below.'
                 )
             )
             ->action(__('Join'), $registrationUrl)
             ->line(
                 __(
-                    '
-                    Using this Invitation code **:code** with your email **:email** is mandatory to join
-                    **:groupName** group on **[:itpLink](:itpLink)**.
-                ',
+                    "
+                    You must use this Invitation code '**:code**' with your email '**:email**' to join
+                    '**:groupName**': **[:itpLink](:itpLink)**.
+                    ",
                     [
                         'code' => $notifiable->invitation_code,
                         'email' => $notifiable->email,
@@ -64,7 +64,7 @@ class GroupUserInvitation extends Notification
             )
             ->line(
                 __(
-                    'If you did not create an account, no further action is required.'
+                    'If you do not wish to create an account, no further action is required.'
                 )
             );
     }

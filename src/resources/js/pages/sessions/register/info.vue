@@ -55,7 +55,7 @@
                             <h3 class="card-title">
                                 {{
                                     isCompliance
-                                        ? 'Selected cases'
+                                        ? 'Selected use cases'
                                         : 'Select use cases'
                                 }}
                             </h3>
@@ -63,6 +63,7 @@
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
                                 style="max-height: 320px"
+                                :session="session"
                                 :useCases="useCases"
                                 :isCompliance="isCompliance"
                                 v-model="form.test_cases"
