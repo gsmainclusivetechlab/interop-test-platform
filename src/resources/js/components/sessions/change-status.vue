@@ -1,6 +1,10 @@
 <template>
     <span>
-        <inertia-link class="btn btn-outline-primary" :href="href" @click.prevent="openModal">
+        <inertia-link
+            class="btn btn-outline-primary"
+            :href="href"
+            @click.prevent="openModal"
+        >
             <slot />
         </inertia-link>
 

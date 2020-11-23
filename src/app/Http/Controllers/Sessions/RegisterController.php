@@ -244,10 +244,7 @@ class RegisterController extends Controller
         ) {
             session()->put(
                 'session.info.test_cases',
-                TestCase::whereIn(
-                    'slug',
-                    $this->getTestCases(true) ?: ['']
-                )
+                TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
                     ->available()
                     ->lastPerGroup()
                     ->pluck('id')
@@ -604,9 +601,9 @@ class RegisterController extends Controller
             ->where(function ($query) {
                 $query->available();
             })
-            ->when($testCases !== null, function (
-                Builder $query
-            ) use ($testCases) {
+            ->when($testCases !== null, function (Builder $query) use (
+                $testCases
+            ) {
                 $query->whereIn('slug', $testCases ?: ['']);
             })
             ->lastPerGroup();

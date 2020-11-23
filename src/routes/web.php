@@ -74,9 +74,7 @@ Route::name('sessions.')
         Route::put(
             '{session}/update-test-case/{testCaseToRemove}/{testCaseToAdd}',
             'SessionController@updateTestCase'
-        )->name(
-            'update-test-case'
-        );
+        )->name('update-test-case');
         Route::delete('{session}/destroy', 'SessionController@destroy')->name(
             'destroy'
         );
@@ -276,9 +274,10 @@ Route::name('admin.')
                 Route::get('import', 'TestCaseController@showImportForm')->name(
                     'import'
                 );
-                Route::get('{testCase}/import', 'TestCaseController@showImportVersionForm')->name(
-                    'import-version'
-                );
+                Route::get(
+                    '{testCase}/import',
+                    'TestCaseController@showImportVersionForm'
+                )->name('import-version');
                 Route::post('import', 'TestCaseController@import')->name(
                     'import.confirm'
                 );

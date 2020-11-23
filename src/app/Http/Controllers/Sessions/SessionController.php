@@ -183,12 +183,12 @@ class SessionController extends Controller
             'groupEnvironment',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
-        $sessionTestCasesGroupIds = $session->testCases->pluck('test_case_group_id');
+        $sessionTestCasesGroupIds = $session->testCases->pluck(
+            'test_case_group_id'
+        );
 
         return Inertia::render('sessions/edit', [
-            'session' => (new SessionResource(
-                $session
-            ))->resolve(),
+            'session' => (new SessionResource($session))->resolve(),
             'component' => (new ComponentResource($component))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
@@ -199,10 +199,17 @@ class SessionController extends Controller
                         $sessionTestCasesGroupIds
                     ) {
                         $query
-                            ->where(function ($query) use ($component, $sessionTestCasesIds, $sessionTestCasesGroupIds) {
+                            ->where(function ($query) use (
+                                $component,
+                                $sessionTestCasesIds,
+                                $sessionTestCasesGroupIds
+                            ) {
                                 $query
                                     ->available()
-                                    ->lastPerGroup($sessionTestCasesIds, $sessionTestCasesGroupIds);
+                                    ->lastPerGroup(
+                                        $sessionTestCasesIds,
+                                        $sessionTestCasesGroupIds
+                                    );
                             })
                             ->when($session->isComplianceSession(), function (
                                 $query
@@ -258,12 +265,15 @@ class SessionController extends Controller
         Session $session,
         TestCase $testCaseToRemove,
         TestCase $testCaseToAdd
-    )
-    {
+    ) {
         $this->authorize('update', $session);
 
         try {
-            $session = DB::transaction(function () use ($session, $testCaseToRemove, $testCaseToAdd) {
+            $session = DB::transaction(function () use (
+                $session,
+                $testCaseToRemove,
+                $testCaseToAdd
+            ) {
                 $session
                     ->testCasesWithSoftDeletes()
                     ->whereKey($testCaseToRemove)
@@ -293,8 +303,7 @@ class SessionController extends Controller
                         $testCase->pivot->delete();
                     });
 
-                $session->testCasesWithSoftDeletes()
-                    ->attach($testCaseToAdd);
+                $session->testCasesWithSoftDeletes()->attach($testCaseToAdd);
 
                 return $session;
             });

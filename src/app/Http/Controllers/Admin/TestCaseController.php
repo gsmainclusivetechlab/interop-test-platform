@@ -122,8 +122,8 @@ class TestCaseController extends Controller
 
             $baseTestCaseId = request()->input('testCaseId');
             if (
-                $baseTestCaseId
-                && $baseTestCase = TestCase::findOrFail($baseTestCaseId)
+                $baseTestCaseId &&
+                ($baseTestCase = TestCase::findOrFail($baseTestCaseId))
             ) {
                 $rows = array_merge($rows, [
                     'test_case_group_id' => $baseTestCase->test_case_group_id,
@@ -132,8 +132,9 @@ class TestCaseController extends Controller
             }
 
             $testCase = (new TestCaseImport())->import($rows);
-            if (!empty($baseTestCase)
-                && $baseGroups = $baseTestCase->groups()->pluck('id')
+            if (
+                !empty($baseTestCase) &&
+                ($baseGroups = $baseTestCase->groups()->pluck('id'))
             ) {
                 $testCase->groups()->sync($baseGroups);
             }
