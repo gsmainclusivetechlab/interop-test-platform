@@ -47,7 +47,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="testRun in testRuns.data">
+                            <tr v-for="(testRun, i) in testRuns.data" :key="i">
                                 <td>
                                     <inertia-link
                                         :href="
@@ -146,7 +146,7 @@ export default {
         },
         isAvailableRun: {
             type: Boolean,
-            required: true,
+            required: false,
         },
     },
 };
