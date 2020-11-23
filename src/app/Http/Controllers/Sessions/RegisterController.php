@@ -244,10 +244,7 @@ class RegisterController extends Controller
         ) {
             session()->put(
                 'session.info.test_cases',
-                TestCase::whereIn(
-                    'slug',
-                    $this->getTestCases(true) ?: ['']
-                )
+                TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
                     ->available()
                     ->lastPerGroup()
                     ->pluck('id')
@@ -261,24 +258,8 @@ class RegisterController extends Controller
             ),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($testCases) {
-                        $query
-                            ->whereHas('components', function ($query) {
-                                $query->whereKey(
-                                    request()
-                                        ->session()
-                                        ->get('session.sut.component_id')
-                                );
-                            })
-                            ->where(function ($query) {
-                                $query->available();
-                            })
-                            ->when($testCases !== null, function (
-                                Builder $query
-                            ) use ($testCases) {
-                                $query->whereIn('slug', $testCases ?: ['']);
-                            })
-                            ->lastPerGroup();
+                    'testCases' => function ($query) {
+                        $this->getTestCasesQuery($query);
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($testCases) {
@@ -384,6 +365,7 @@ class RegisterController extends Controller
             $session = DB::transaction(function () use ($request) {
                 $sut = $request->session()->get('session.sut');
 
+                /** @var Session $session */
                 $session = auth()
                     ->user()
                     ->sessions()
@@ -397,10 +379,43 @@ class RegisterController extends Controller
                             ])
                             ->all()
                     );
+
+                if ($session->isComplianceSession()) {
+                    $session->updateStatus(Session::STATUS_READY);
+
+                    $answers = Arr::collapse(session('session.questionnaire'));
+
+                    QuestionnaireQuestions::whereIn(
+                        'name',
+                        array_keys($answers)
+                    )
+                        ->pluck('id', 'name')
+                        ->each(function ($questionId, $questionName) use (
+                            $answers,
+                            $session
+                        ) {
+                            foreach (
+                                (array) $answers[$questionName]
+                                as $answer
+                            ) {
+                                $session->questionnaireAnswers()->create([
+                                    'question_id' => $questionId,
+                                    'answer' => $answer,
+                                ]);
+                            }
+                        });
+                }
+
                 $session
                     ->testCases()
                     ->attach(
-                        $request->session()->get('session.info.test_cases')
+                        $session->isComplianceSession()
+                            ? $this->getTestCasesQuery(
+                                TestCase::query()
+                            )->pluck('id')
+                            : $request
+                                ->session()
+                                ->get('session.info.test_cases')
                     );
                 $session->components()->attach([$sut]);
 
@@ -564,5 +579,33 @@ class RegisterController extends Controller
         }
 
         return $rules;
+    }
+
+    /**
+     * @param Builder $query
+     *
+     * @return \Illuminate\Database\Concerns\BuildsQueries|Builder|mixed
+     */
+    public function getTestCasesQuery($query)
+    {
+        $testCases = $this->getTestCases();
+
+        return $query
+            ->whereHas('components', function ($query) {
+                $query->whereKey(
+                    request()
+                        ->session()
+                        ->get('session.sut.component_id')
+                );
+            })
+            ->where(function ($query) {
+                $query->available();
+            })
+            ->when($testCases !== null, function (Builder $query) use (
+                $testCases
+            ) {
+                $query->whereIn('slug', $testCases ?: ['']);
+            })
+            ->lastPerGroup();
     }
 }

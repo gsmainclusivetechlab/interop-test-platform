@@ -62,15 +62,19 @@ Route::name('sessions.')
         Route::get('/', 'SessionController@index')->name('index');
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
+        Route::get('{session}/export', 'SessionController@export')->name(
+            'export'
+        );
+        Route::post('{session}/complete', 'SessionController@complete')->name(
+            'complete'
+        );
         Route::put('{session}/update', 'SessionController@update')->name(
             'update'
         );
         Route::put(
             '{session}/update-test-case/{testCaseToRemove}/{testCaseToAdd}',
             'SessionController@updateTestCase'
-        )->name(
-            'update-test-case'
-        );
+        )->name('update-test-case');
         Route::delete('{session}/destroy', 'SessionController@destroy')->name(
             'destroy'
         );
@@ -226,6 +230,18 @@ Route::name('admin.')
             '\App\Http\Controllers\MessageLogController@admin'
         )->name('message-log');
         Route::resource('sessions', 'SessionController')->only(['index']);
+        Route::name('compliance-sessions.')
+            ->prefix('compliance-sessions')
+            ->group(function () {
+                Route::get(
+                    '{status?}',
+                    'ComplianceSessionController@index'
+                )->name('index');
+                Route::put(
+                    '{session}',
+                    'ComplianceSessionController@update'
+                )->name('update');
+            });
         Route::resource('api-specs', 'ApiSpecController')->only([
             'index',
             'destroy',
@@ -258,9 +274,10 @@ Route::name('admin.')
                 Route::get('import', 'TestCaseController@showImportForm')->name(
                     'import'
                 );
-                Route::get('{testCase}/import', 'TestCaseController@showImportVersionForm')->name(
-                    'import-version'
-                );
+                Route::get(
+                    '{testCase}/import',
+                    'TestCaseController@showImportVersionForm'
+                )->name('import-version');
                 Route::post('import', 'TestCaseController@import')->name(
                     'import.confirm'
                 );

@@ -9,7 +9,6 @@ use App\Models\Component;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use Illuminate\Support\Facades\DB;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
@@ -20,6 +19,7 @@ class SutController extends Controller
      * @param string $connectionId
      * @param string $path
      * @param ServerRequestInterface $request
+     *
      * @return mixed
      */
     public function __invoke(
@@ -91,6 +91,25 @@ class SutController extends Controller
             );
         }
 
+        if ($session->isComplianceSession()) {
+            $testRunsCount = $session
+                ->testRuns()
+                ->where('test_case_id', $testStep->test_case_id)
+                ->count();
+
+            $message = !$session->isAvailableToUpdate()
+                ? 'Session not available to update'
+                : 'Test case execution limit.';
+
+            abort_if(
+                !$session->isAvailableToUpdate() ||
+                    $testRunsCount >=
+                        config('test_cases.compliance_session_execution_limit'),
+                403,
+                __($message)
+            );
+        }
+
         $testRun = $session
             ->testRuns()
             ->incompleted()
@@ -118,6 +137,7 @@ class SutController extends Controller
     /**
      * @param string $componentId
      * @param Session $session
+     *
      * @return Component
      */
     protected function getComponent(string $componentId, Session $session)

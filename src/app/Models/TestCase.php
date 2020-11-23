@@ -7,9 +7,13 @@ use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property TestRun $lastTestRun
+ * @property TestRun[]|Collection $testRuns
  */
 class TestCase extends Model
 {
@@ -54,7 +58,8 @@ class TestCase extends Model
         });
 
         static::saving(function ($model) {
-            $model->attributes['test_case_group_id'] = $model->attributes['test_case_group_id'] ?? Str::random();
+            $model->attributes['test_case_group_id'] =
+                $model->attributes['test_case_group_id'] ?? Str::random();
         });
     }
 
@@ -194,22 +199,36 @@ class TestCase extends Model
      * @param null $testCasesGroupsIds
      * @return
      */
-    public function scopeLastPerGroup($query, $testCasesIds = null, $testCasesGroupsIds = null)
-    {
+    public function scopeLastPerGroup(
+        $query,
+        $testCasesIds = null,
+        $testCasesGroupsIds = null
+    ) {
         return $query
-            ->when($testCasesIds, function ($query) use ($testCasesIds, $testCasesGroupsIds) {
+            ->when($testCasesIds, function ($query) use (
+                $testCasesIds,
+                $testCasesGroupsIds
+            ) {
                 $query
-                    ->whereIn('id', function ($query) use ($testCasesIds, $testCasesGroupsIds) {
-                        $query->from(static::getTable())
+                    ->whereIn('id', function ($query) use (
+                        $testCasesIds,
+                        $testCasesGroupsIds
+                    ) {
+                        $query
+                            ->from(static::getTable())
                             ->selectRaw('MAX(`id`)')
-                            ->whereNotIn('test_case_group_id', $testCasesGroupsIds)
+                            ->whereNotIn(
+                                'test_case_group_id',
+                                $testCasesGroupsIds
+                            )
                             ->groupBy(static::getPositionGroupColumn());
                     })
                     ->orWhereIn('id', $testCasesIds);
             })
             ->when(!$testCasesIds, function ($query) {
                 $query->whereIn('id', function ($query) {
-                    $query->from(static::getTable())
+                    $query
+                        ->from(static::getTable())
                         ->selectRaw('MAX(`id`)')
                         ->groupBy(static::getPositionGroupColumn());
                 });
@@ -232,9 +251,7 @@ class TestCase extends Model
                 );
             })
             ->orWhereHas('groups', function ($query) {
-                $query->whereHas('users', function (
-                    $query
-                ) {
+                $query->whereHas('users', function ($query) {
                     $query->whereKey(
                         auth()
                             ->user()
@@ -245,10 +262,7 @@ class TestCase extends Model
             ->when(
                 auth()
                     ->user()
-                    ->can(
-                        'viewAnyPrivate',
-                        self::class
-                    ),
+                    ->can('viewAnyPrivate', self::class),
                 function ($query) {
                     $query->orWhere('public', false);
                 }

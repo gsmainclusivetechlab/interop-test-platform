@@ -9,7 +9,9 @@
             <div class="container">
                 <div class="col-8 m-auto">
                     <div class="page-header">
-                        <h1 class="page-title text-center">{{ testCase.name }}</h1>
+                        <h1 class="page-title text-center">
+                            {{ testCase.name }}
+                        </h1>
                     </div>
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">

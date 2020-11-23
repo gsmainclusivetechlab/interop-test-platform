@@ -10,10 +10,8 @@
                                 :items="breadcrumbs"
                             ></breadcrumb>
                         </div>
-                        <h1
-                            class="page-title mw-100 mr-2 text-break d-flex align-items-center"
-                        >
-                            <b>{{ session.name }}</b>
+                        <h1 class="page-title d-flex align-items-center">
+                            <b class="mw-100 text-break">{{ session.name }}</b>
                             <div class="btn-group ml-1">
                                 <inertia-link
                                     :href="route('sessions.edit', session.id)"
@@ -25,18 +23,62 @@
                             </div>
                         </h1>
                     </div>
-                    <div class="ml-auto col-1 d-flex justify-content-end">
+                    <div
+                        class="col-4 d-flex align-items-center justify-content-end"
+                    >
+                        <confirm-link
+                            method="post"
+                            class="btn btn-outline-primary"
+                            v-if="session.can.update && session.completable"
+                            :href="route('sessions.complete', session.id)"
+                            :confirm-title="'Confirm compliting'"
+                            :confirm-text="`This is a non-reversible action, and you will need to create a new
+                                        session if you wish to execute any more test cases.`"
+                        >
+                            <icon name="checks"></icon>
+                            Completed
+                        </confirm-link>
+                        <change-status
+                            class="ml-1"
+                            v-if="canApprove"
+                            :href="
+                                route(
+                                    'admin.compliance-sessions.update',
+                                    session.id
+                                )
+                            "
+                            :confirm-title="'Approve session'"
+                            :status="'approved'"
+                        >
+                            <icon name="check"></icon>
+                            Approve
+                        </change-status>
+                        <change-status
+                            class="ml-1"
+                            v-if="canApprove"
+                            :href="
+                                route(
+                                    'admin.compliance-sessions.update',
+                                    session.id
+                                )
+                            "
+                            :status="'declined'"
+                            :confirm-title="'Decline session'"
+                        >
+                            <icon name="x"></icon>
+                            Decline
+                        </change-status>
                         <inertia-link
                             :href="
                                 route('sessions.message-log.index', session.id)
                             "
-                            class="btn btn-secondary mr-2"
+                            class="btn btn-secondary ml-3"
                         >
                             <icon name="list"></icon>
                             Log
                         </inertia-link>
                     </div>
-                    <div class="col-2 d-flex justify-content-end">
+                    <div class="col-2 d-flex align-items-center">
                         <div class="w-100">
                             <div>
                                 Execution:
@@ -87,11 +129,13 @@
 <script>
 import Layout from '@/layouts/main';
 import SessionProgress from '@/components/sessions/progress';
+import ChangeStatus from '@/components/sessions/change-status';
 
 export default {
     components: {
         Layout,
         SessionProgress,
+        ChangeStatus,
     },
     metaInfo() {
         return {
@@ -112,6 +156,14 @@ export default {
                     { name: this.session.name },
                 ];
             },
+        },
+    },
+    computed: {
+        canApprove() {
+            return (
+                this.$page.auth.user.is_admin &&
+                this.session.status === 'in_verification'
+            );
         },
     },
 };

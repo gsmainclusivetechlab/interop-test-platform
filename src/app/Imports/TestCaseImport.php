@@ -36,18 +36,19 @@ class TestCaseImport implements Importable
                         Rule::unique('test_cases')->ignore(
                             Arr::get($rows, 'test_case_group_id'),
                             'test_case_group_id'
-                        )
-                    ]
+                        ),
+                    ],
                 ],
-                ['slug.unique' => 'Slug should be unique for different test cases groups.']
+                [
+                    'slug.unique' =>
+                        'Slug should be unique for different test cases groups.',
+                ]
             );
 
             /**
              * @var TestCase $testCase
              */
-            $testCase = $useCase
-                ->testCases()
-                ->make($testCaseData);
+            $testCase = $useCase->testCases()->make($testCaseData);
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {

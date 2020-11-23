@@ -59,6 +59,9 @@ class InertiaServiceProvider extends ServiceProvider
                             'first_name' => auth()->user()->first_name,
                             'last_name' => auth()->user()->last_name,
                             'company' => auth()->user()->company,
+                            'is_admin' => auth()
+                                ->user()
+                                ->isAdmin(),
                             'can' => [
                                 'users' => [
                                     'viewAny' => auth()

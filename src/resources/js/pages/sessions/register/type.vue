@@ -101,7 +101,7 @@ export default {
     },
     props: {
         testRunAttempts: {
-            type: Number,
+            type: Number | String,
             required: true,
         },
     },

@@ -3,22 +3,35 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
-use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestRunResource;
-use App\Http\Resources\UseCaseResource;
-use App\Models\GroupEnvironment;
-use App\Models\Session;
-use App\Models\TestCase;
-use App\Models\UseCase;
+use App\Notifications\SessionStatusChanged;
+use App\Http\Resources\{
+    ComponentResource,
+    SectionResource,
+    SessionResource,
+    TestRunResource,
+    UseCaseResource
+};
+use App\Models\{
+    GroupEnvironment,
+    QuestionnaireSection,
+    Session,
+    TestCase,
+    UseCase,
+    User
+};
+use Arr;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 use Throwable;
 
 class SessionController extends Controller
@@ -112,6 +125,35 @@ class SessionController extends Controller
                     },
                 ])
             ))->resolve(),
+            'questionnaire' => SectionResource::collection(
+                QuestionnaireSection::withTrashed()
+                    ->whereHas('questions.answers', function ($query) use (
+                        $session
+                    ) {
+                        $query->where([
+                            'session_id' => $session->id,
+                        ]);
+                    })
+                    ->with([
+                        'questions' => function ($query) use ($session) {
+                            $query->whereHas('answers', function ($query) use (
+                                $session
+                            ) {
+                                $query->where([
+                                    'session_id' => $session->id,
+                                ]);
+                            });
+                        },
+                        'questions.answers' => function ($query) use (
+                            $session
+                        ) {
+                            $query->where([
+                                'session_id' => $session->id,
+                            ]);
+                        },
+                    ])
+                    ->get()
+            ),
             'useCases' => UseCaseResource::collection(
                 UseCase::withTestCasesOfSession($session)->get()
             ),
@@ -141,19 +183,42 @@ class SessionController extends Controller
             'groupEnvironment',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
-        $sessionTestCasesGroupIds = $session->testCases->pluck('test_case_group_id');
+        $sessionTestCasesGroupIds = $session->testCases->pluck(
+            'test_case_group_id'
+        );
 
         return Inertia::render('sessions/edit', [
-            'session' => (new SessionResource(
-                $session
-            ))->resolve(),
+            'session' => (new SessionResource($session))->resolve(),
             'component' => (new ComponentResource($component))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($component, $sessionTestCasesIds, $sessionTestCasesGroupIds) {
+                    'testCases' => function ($query) use (
+                        $component,
+                        $session,
+                        $sessionTestCasesIds,
+                        $sessionTestCasesGroupIds
+                    ) {
                         $query
-                            ->available()
-                            ->lastPerGroup($sessionTestCasesIds, $sessionTestCasesGroupIds);
+                            ->where(function ($query) use (
+                                $component,
+                                $sessionTestCasesIds,
+                                $sessionTestCasesGroupIds
+                            ) {
+                                $query
+                                    ->available()
+                                    ->lastPerGroup(
+                                        $sessionTestCasesIds,
+                                        $sessionTestCasesGroupIds
+                                    );
+                            })
+                            ->when($session->isComplianceSession(), function (
+                                $query
+                            ) use ($session) {
+                                $query->whereIn(
+                                    'id',
+                                    $session->testCases()->pluck('id')
+                                );
+                            });
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($component) {
@@ -200,12 +265,15 @@ class SessionController extends Controller
         Session $session,
         TestCase $testCaseToRemove,
         TestCase $testCaseToAdd
-    )
-    {
+    ) {
         $this->authorize('update', $session);
 
         try {
-            $session = DB::transaction(function () use ($session, $testCaseToRemove, $testCaseToAdd) {
+            $session = DB::transaction(function () use (
+                $session,
+                $testCaseToRemove,
+                $testCaseToAdd
+            ) {
                 $session
                     ->testCasesWithSoftDeletes()
                     ->whereKey($testCaseToRemove)
@@ -235,8 +303,7 @@ class SessionController extends Controller
                         $testCase->pivot->delete();
                     });
 
-                $session->testCasesWithSoftDeletes()
-                    ->attach($testCaseToAdd);
+                $session->testCasesWithSoftDeletes()->attach($testCaseToAdd);
 
                 return $session;
             });
@@ -276,7 +343,15 @@ class SessionController extends Controller
 
         try {
             $session = DB::transaction(function () use ($session, $request) {
-                $session->update($request->input());
+                $data = $request->input();
+                $session->update(
+                    $session->isComplianceSession()
+                        ? Arr::only($data, [
+                            'group_environment_id',
+                            'environments',
+                        ])
+                        : $data
+                );
 
                 $session
                     ->components()
@@ -284,49 +359,54 @@ class SessionController extends Controller
                         'base_url' => $request->input('component_base_url'),
                     ]);
 
-                $session
-                    ->testCasesWithSoftDeletes()
-                    ->whereKey($request->input('test_cases'))
-                    ->each(function ($testCase) {
-                        $testCase->pivot->update(['deleted_at' => null]);
-                    });
+                if (!$session->isComplianceSession()) {
+                    $session
+                        ->testCasesWithSoftDeletes()
+                        ->whereKey($request->input('test_cases'))
+                        ->each(function ($testCase) {
+                            $testCase->pivot->update(['deleted_at' => null]);
+                        });
 
-                $session
-                    ->testCasesWithSoftDeletes()
-                    ->whereKeyNot($request->input('test_cases'))
-                    ->whereHas('testRunsWithSoftDeletesTestCases', function (
-                        $query
-                    ) use ($session) {
-                        $query->where('session_id', $session->getKey());
-                    })
-                    ->each(function ($testCase) {
-                        $testCase->pivot->update([
-                            'deleted_at' => $testCase->fromDateTime(
-                                $testCase->freshTimestamp()
-                            ),
-                        ]);
-                    });
-
-                $session
-                    ->testCasesWithSoftDeletes()
-                    ->whereKeyNot($request->input('test_cases'))
-                    ->whereDoesntHave(
-                        'testRunsWithSoftDeletesTestCases',
-                        function ($query) use ($session) {
-                            $query->where('session_id', $session->getKey());
-                        }
-                    )
-                    ->each(function ($testCase) use ($session) {
-                        $testCase->pivot->delete();
-                    });
-
-                $session->testCasesWithSoftDeletes()->attach(
-                    collect($request->input('test_cases'))
-                        ->diff(
-                            $session->testCasesWithSoftDeletes()->pluck('id')
+                    $session
+                        ->testCasesWithSoftDeletes()
+                        ->whereKeyNot($request->input('test_cases'))
+                        ->whereHas(
+                            'testRunsWithSoftDeletesTestCases',
+                            function ($query) use ($session) {
+                                $query->where('session_id', $session->getKey());
+                            }
                         )
-                        ->all()
-                );
+                        ->each(function ($testCase) {
+                            $testCase->pivot->update([
+                                'deleted_at' => $testCase->fromDateTime(
+                                    $testCase->freshTimestamp()
+                                ),
+                            ]);
+                        });
+
+                    $session
+                        ->testCasesWithSoftDeletes()
+                        ->whereKeyNot($request->input('test_cases'))
+                        ->whereDoesntHave(
+                            'testRunsWithSoftDeletesTestCases',
+                            function ($query) use ($session) {
+                                $query->where('session_id', $session->getKey());
+                            }
+                        )
+                        ->each(function ($testCase) use ($session) {
+                            $testCase->pivot->delete();
+                        });
+
+                    $session->testCasesWithSoftDeletes()->attach(
+                        collect($request->input('test_cases'))
+                            ->diff(
+                                $session
+                                    ->testCasesWithSoftDeletes()
+                                    ->pluck('id')
+                            )
+                            ->all()
+                    );
+                }
 
                 return $session;
             });
@@ -339,6 +419,67 @@ class SessionController extends Controller
                 ->back()
                 ->with('error', $e->getMessage());
         }
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function complete(Session $session)
+    {
+        $this->authorize('update', $session);
+
+        if ($session->completable) {
+            $session->updateStatus(Session::STATUS_IN_VERIFICATION);
+
+            User::whereIn('role', [
+                User::ROLE_ADMIN,
+                User::ROLE_SUPERADMIN,
+            ])->each(function (User $user) use ($session) {
+                $user->notify(new SessionStatusChanged($session));
+            });
+
+            return redirect()
+                ->back()
+                ->with('success', __('Session sended to verification'));
+        }
+
+        return redirect()
+            ->back()
+            ->with('error', __('Session not completable'));
+    }
+
+    /**
+     * @param Session $session
+     *
+     * @throws AuthorizationException
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
+    public function export(Session $session)
+    {
+        $this->authorize('view', $session);
+
+        $session->load([
+            'testCases.testRuns' => function (HasMany $query) use ($session) {
+                $query->where('session_id', $session->id);
+            },
+        ]);
+
+        $wordFile = new PhpWord();
+        $section = $wordFile->addSection();
+        $section->addText(__('Test runs'), ['size' => 16, 'bold' => true]);
+
+        $this->generateTable($section, $session);
+
+        $fileName = "Session-{$session->id}-{$session->name}";
+
+        header('Content-Type: application/octet-stream');
+        header("Content-Disposition: attachment;filename=\"{$fileName}.docx\"");
+
+        $objWriter = IOFactory::createWriter($wordFile);
+        $objWriter->save('php://output');
     }
 
     /**
@@ -404,5 +545,43 @@ class SessionController extends Controller
         }
 
         return $data;
+    }
+
+    /**
+     * @param Section $section
+     * @param Session $session
+     */
+    protected function generateTable(Section $section, Session $session)
+    {
+        $table = $section->addTable([
+            'borderSize' => 6,
+            'cellMargin' => 80,
+            'cellSpacing' => 50,
+        ]);
+
+        $style = ['bold' => true];
+        $table->addRow();
+        $table->addCell(6000)->addText(__('Test case'), $style);
+        $table->addCell(1500)->addText(__('Status'), $style);
+        $table->addCell(1500)->addText(__('Duration'), $style);
+        $table->addCell(1500)->addText(__('Attempts'), $style);
+
+        foreach ($session->testCases as $testCase) {
+            $status = __('Incompleted');
+            if (
+                ($lastTestRun = $testCase->lastTestRun) &&
+                $lastTestRun->completed_at
+            ) {
+                $status = __($lastTestRun->successful ? 'Pass' : 'Fail');
+            }
+
+            $table->addRow();
+            $table->addCell()->addText($testCase->name);
+            $table->addCell()->addText($status);
+            $table
+                ->addCell()
+                ->addText($lastTestRun ? "{$lastTestRun->duration} ms" : null);
+            $table->addCell()->addText((string) $testCase->testRuns->count());
+        }
     }
 }

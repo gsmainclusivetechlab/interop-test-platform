@@ -116,14 +116,29 @@
                                     <li v-if="testCase.can.update">
                                         <inertia-link
                                             class="dropdown-item"
-                                            :href="route('admin.test-cases.edit', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.edit',
+                                                    testCase.id
+                                                )
+                                            "
                                         >
                                             Edit
                                         </inertia-link>
                                     </li>
-                                    <li v-if="$page.auth.user.can.test_cases.create">
+                                    <li
+                                        v-if="
+                                            $page.auth.user.can.test_cases
+                                                .create
+                                        "
+                                    >
                                         <inertia-link
-                                            :href="route('admin.test-cases.import-version', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.import-version',
+                                                    testCase.id
+                                                )
+                                            "
                                             class="dropdown-item"
                                         >
                                             Import New Version
@@ -132,7 +147,12 @@
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.test-cases.destroy', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.destroy',
+                                                    testCase.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="`Are you sure you want to delete ${testCase.name}?`"

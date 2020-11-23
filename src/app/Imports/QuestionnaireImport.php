@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\QuestionnaireQuestions;
 use App\Models\QuestionnaireSection;
 use App\Models\QuestionnaireTestCase;
 use App\Models\TestCase;
@@ -18,6 +19,7 @@ class QuestionnaireImport
     {
         DB::transaction(function () use ($rows) {
             QuestionnaireSection::query()->delete();
+            QuestionnaireQuestions::query()->delete();
             QuestionnaireTestCase::query()->delete();
 
             foreach ($rows['questions'] as $sectionRow) {
