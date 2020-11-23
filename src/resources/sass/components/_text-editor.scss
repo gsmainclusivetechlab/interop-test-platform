@@ -1,11 +1,23 @@
 .text-editor {
+  &_focused {
+    .form-control {
+      border-color: $red;
+    }
+  }
   .ProseMirror {
+    overflow: auto;
+    min-height: 100px;
+    max-height: 50vh;
     outline: none;
     &:last-child {
       margin-bottom: 0;
     }
     p {
       margin-bottom: 0.25em;
+    }
+    code {
+      color: inherit;
+      font-size: inherit;
     }
   }
 }

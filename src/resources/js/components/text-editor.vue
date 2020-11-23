@@ -1,46 +1,7 @@
 <template>
-    <div class="text-editor">
+    <div class="text-editor" :class="{ 'text-editor_focused': focused }">
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
             <div>
-                <button
-                    v-if="menuItems.includes('block_quote')"
-                    type="button"
-                    class="btn btn-sm"
-                    :class="
-                        !isActive.block_quote()
-                            ? 'btn-outline-primary'
-                            : 'btn-primary'
-                    "
-                    @click="commands.block_quote"
-                >
-                    block quote
-                </button>
-                <button
-                    v-if="menuItems.includes('block_quote')"
-                    type="button"
-                    class="btn btn-sm"
-                    :class="
-                        !isActive.code_block()
-                            ? 'btn-outline-primary'
-                            : 'btn-primary'
-                    "
-                    @click="commands.code_block"
-                >
-                    code block
-                </button>
-                <button
-                    v-if="menuItems.includes('hard_break')"
-                    type="button"
-                    class="btn btn-sm"
-                    :class="
-                        !isActive.hard_break()
-                            ? 'btn-outline-primary'
-                            : 'btn-primary'
-                    "
-                    @click="commands.hard_break"
-                >
-                    hard break
-                </button>
                 <button
                     v-if="menuItems.includes('ordered_list')"
                     type="button"
@@ -51,6 +12,7 @@
                             : 'btn-primary'
                     "
                     @click="commands.ordered_list"
+                    title="ordered list"
                 >
                     ordered list
                 </button>
@@ -64,6 +26,7 @@
                             : 'btn-primary'
                     "
                     @click="commands.bullet_list"
+                    title="bullet list"
                 >
                     bullet list
                 </button>
@@ -77,8 +40,18 @@
                             : 'btn-primary'
                     "
                     @click="commands.todo_list"
+                    title="todo list"
                 >
                     todo list
+                </button>
+                <button
+                    v-if="menuItems.includes('hard_break')"
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    @click="commands.hard_break"
+                    title="hard break"
+                >
+                    <icon name="page-break" class="m-0"></icon>
                 </button>
                 <button
                     v-if="menuItems.includes('bold')"
@@ -88,8 +61,9 @@
                         !isActive.bold() ? 'btn-outline-primary' : 'btn-primary'
                     "
                     @click="commands.bold"
+                    title="bold"
                 >
-                    bold
+                    <icon name="bold" class="m-0"></icon>
                 </button>
                 <button
                     v-if="menuItems.includes('italic')"
@@ -101,8 +75,9 @@
                             : 'btn-primary'
                     "
                     @click="commands.italic"
+                    title="italic"
                 >
-                    italic
+                    <icon name="italic" class="m-0"></icon>
                 </button>
                 <button
                     v-if="menuItems.includes('underline')"
@@ -114,8 +89,9 @@
                             : 'btn-primary'
                     "
                     @click="commands.underline"
+                    title="underline"
                 >
-                    underline
+                    <icon name="underline" class="m-0"></icon>
                 </button>
                 <button
                     v-if="menuItems.includes('strike')"
@@ -127,8 +103,9 @@
                             : 'btn-primary'
                     "
                     @click="commands.strike"
+                    title="strike"
                 >
-                    strike
+                    <icon name="strikethrough" class="m-0"></icon>
                 </button>
                 <button
                     v-if="menuItems.includes('code')"
@@ -138,8 +115,9 @@
                         !isActive.code() ? 'btn-outline-primary' : 'btn-primary'
                     "
                     @click="commands.code"
+                    title="code"
                 >
-                    code
+                    <icon name="code" class="m-0"></icon>
                 </button>
             </div>
         </editor-menu-bar>
@@ -183,6 +161,7 @@ export default {
     },
     data() {
         return {
+            focused: false,
             editor: null,
             json: {},
             html: '',
@@ -216,6 +195,20 @@ export default {
                 }
                 if (this.outputFormat.includes('json')) {
                     this.json = getJSON();
+                }
+            },
+            onFocus: () => {
+                this.focused = true;
+            },
+            onBlur: () => {
+                this.focused = false;
+
+                if (this.outputFormat.includes('html')) {
+                    this.$emit('output-html', this.html);
+                }
+
+                if (this.outputFormat.includes('json')) {
+                    this.$emit('output-json', this.json);
                 }
             },
         });

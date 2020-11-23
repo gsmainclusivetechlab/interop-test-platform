@@ -26,7 +26,7 @@
         "selectize": "^0.12.6",
         "string": "^3.3.3",
         "tabler": "^1.0.0-alpha.6",
-        "tabler-icons": "^1.10.0",
+        "tabler-icons": "^1.35.0",
         "vue": "^2.6.11",
         "vue-apexcharts": "^1.5.3",
         "vue-json-pretty": "^1.6.3",
