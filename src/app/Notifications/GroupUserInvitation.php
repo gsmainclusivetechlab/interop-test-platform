@@ -32,7 +32,7 @@ class GroupUserInvitation extends Notification
         return (new MailMessage())
             ->subject(__('Group Invitation'))
             ->line(
-                __('You have been invited to the **:groupName** group.', [
+                __("You have been invited to the '**:groupName**' group.", [
                     'groupName' => $notifiable->group->name,
                 ])
             )
@@ -44,10 +44,10 @@ class GroupUserInvitation extends Notification
             ->action(__('Join'), $registrationUrl)
             ->line(
                 __(
-                    '
-                    You must use this Invitation code **:code** with your email **:email** to join
-                    **:groupName**: **[:itpLink](:itpLink)**.
-                ',
+                    "
+                    You must use this Invitation code '**:code**' with your email '**:email**' to join
+                    '**:groupName**': **[:itpLink](:itpLink)**.
+                ",
                     [
                         'code' => $notifiable->invitation_code,
                         'email' => $notifiable->email,
