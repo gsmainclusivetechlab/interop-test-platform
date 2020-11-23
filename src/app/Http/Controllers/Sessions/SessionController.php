@@ -134,51 +134,26 @@ class SessionController extends Controller
     {
         $this->authorize('update', $session);
         $component = $session->components()->firstOrFail();
+        $session->load([
+            'testCases' => function ($query) {
+                return $query->with(['useCase', 'lastTestRun']);
+            },
+            'groupEnvironment',
+        ]);
+        $sessionTestCasesIds = $session->testCases->pluck('id');
+        $sessionTestCasesGroupIds = $session->testCases->pluck('test_case_group_id');
 
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource(
-                $session->load([
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
-                    },
-                    'groupEnvironment',
-                ])
+                $session
             ))->resolve(),
             'component' => (new ComponentResource($component))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
-                    'testCases' => function ($query) use ($component) {
+                    'testCases' => function ($query) use ($component, $sessionTestCasesIds, $sessionTestCasesGroupIds) {
                         $query
-                            ->whereHas('components', function ($query) use (
-                                $component
-                            ) {
-                                $query->whereKey($component->getKey());
-                            })
-                            ->where('public', true)
-                            ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(
-                                    auth()
-                                        ->user()
-                                        ->getAuthIdentifier()
-                                );
-                            })
-                            ->orWhereHas('groups', function ($query) {
-                                $query->whereHas('users', function ($query) {
-                                    $query->whereKey(
-                                        auth()
-                                            ->user()
-                                            ->getAuthIdentifier()
-                                    );
-                                });
-                            })
-                            ->when(
-                                auth()
-                                    ->user()
-                                    ->can('viewAnyPrivate', TestCase::class),
-                                function ($query) {
-                                    $query->orWhere('public', false);
-                                }
-                            );
+                            ->available()
+                            ->lastPerGroup($sessionTestCasesIds, $sessionTestCasesGroupIds);
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($component) {
@@ -212,6 +187,68 @@ class SessionController extends Controller
                 }
             )->exists(),
         ]);
+    }
+
+    /**
+     * @param Session $session
+     * @param TestCase $testCaseToRemove
+     * @param TestCase $testCaseToAdd
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function updateTestCase(
+        Session $session,
+        TestCase $testCaseToRemove,
+        TestCase $testCaseToAdd
+    )
+    {
+        $this->authorize('update', $session);
+
+        try {
+            $session = DB::transaction(function () use ($session, $testCaseToRemove, $testCaseToAdd) {
+                $session
+                    ->testCasesWithSoftDeletes()
+                    ->whereKey($testCaseToRemove)
+                    ->whereHas('testRunsWithSoftDeletesTestCases', function (
+                        $query
+                    ) use ($session) {
+                        $query->where('session_id', $session->getKey());
+                    })
+                    ->each(function ($testCase) {
+                        $testCase->pivot->update([
+                            'deleted_at' => $testCase->fromDateTime(
+                                $testCase->freshTimestamp()
+                            ),
+                        ]);
+                    });
+
+                $session
+                    ->testCasesWithSoftDeletes()
+                    ->whereKey($testCaseToRemove)
+                    ->whereDoesntHave(
+                        'testRunsWithSoftDeletesTestCases',
+                        function ($query) use ($session) {
+                            $query->where('session_id', $session->getKey());
+                        }
+                    )
+                    ->each(function ($testCase) use ($session) {
+                        $testCase->pivot->delete();
+                    });
+
+                $session->testCasesWithSoftDeletes()
+                    ->attach($testCaseToAdd);
+
+                return $session;
+            });
+
+            return redirect()
+                ->route('sessions.edit', $session)
+                ->with('success', __('Test Case updated successfully'));
+        } catch (Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
