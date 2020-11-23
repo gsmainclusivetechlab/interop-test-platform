@@ -247,7 +247,10 @@ class RegisterController extends Controller
                 TestCase::whereIn(
                     'slug',
                     $this->getTestCases(true) ?: ['']
-                )->pluck('id')
+                )
+                    ->available()
+                    ->lastPerGroup()
+                    ->pluck('id')
             );
         }
 
@@ -599,37 +602,13 @@ class RegisterController extends Controller
                 );
             })
             ->where(function ($query) {
-                $query
-                    ->where('public', true)
-                    ->orWhereHas('owner', function ($query) {
-                        $query->whereKey(
-                            auth()
-                                ->user()
-                                ->getAuthIdentifier()
-                        );
-                    })
-                    ->orWhereHas('groups', function ($query) {
-                        $query->whereHas('users', function ($query) {
-                            $query->whereKey(
-                                auth()
-                                    ->user()
-                                    ->getAuthIdentifier()
-                            );
-                        });
-                    })
-                    ->when(
-                        auth()
-                            ->user()
-                            ->can('viewAnyPrivate', TestCase::class),
-                        function ($query) {
-                            $query->orWhere('public', false);
-                        }
-                    );
+                $query->available();
             })
-            ->when($testCases !== null, function (Builder $query) use (
-                $testCases
-            ) {
+            ->when($testCases !== null, function (
+                Builder $query
+            ) use ($testCases) {
                 $query->whereIn('slug', $testCases ?: ['']);
-            });
+            })
+            ->lastPerGroup();
     }
 }

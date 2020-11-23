@@ -47,7 +47,7 @@ class GroupUserInvitation extends Notification
                     "
                     You must use this Invitation code '**:code**' with your email '**:email**' to join
                     '**:groupName**': **[:itpLink](:itpLink)**.
-                ",
+                    ",
                     [
                         'code' => $notifiable->invitation_code,
                         'email' => $notifiable->email,

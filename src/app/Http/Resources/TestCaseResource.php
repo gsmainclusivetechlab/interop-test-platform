@@ -16,6 +16,8 @@ class TestCaseResource extends JsonResource
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
+            'test_case_group_id' => $this->test_case_group_id,
+            'version' => $this->version,
             'name' => $this->name,
             'public' => $this->public,
             'behavior' => $this->behavior,
@@ -48,6 +50,7 @@ class TestCaseResource extends JsonResource
                         ->count();
                 }
             ),
+            'lastAvailableVersion' => $this->last_available_version_id,
             'can' => [
                 'update' => auth()
                     ->user()

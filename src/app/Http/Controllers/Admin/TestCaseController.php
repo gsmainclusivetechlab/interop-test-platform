@@ -41,6 +41,7 @@ class TestCaseController extends Controller
                 TestCase::when(request('q'), function (Builder $query, $q) {
                     $query->where('test_cases.name', 'like', "%{$q}%");
                 })
+                    ->lastPerGroup()
                     ->with(['owner', 'groups', 'useCase', 'testSteps'])
                     ->when(
                         !auth()
@@ -89,6 +90,19 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @param TestCase $testCase
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function showImportVersionForm(TestCase $testCase)
+    {
+        $this->authorize('create', TestCase::class);
+        return Inertia::render('admin/test-cases/import-version', [
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+        ]);
+    }
+
+    /**
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -105,7 +119,24 @@ class TestCaseController extends Controller
                     ->file('file')
                     ->get()
             );
+
+            $baseTestCaseId = request()->input('testCaseId');
+            if (
+                $baseTestCaseId
+                && $baseTestCase = TestCase::findOrFail($baseTestCaseId)
+            ) {
+                $rows = array_merge($rows, [
+                    'test_case_group_id' => $baseTestCase->test_case_group_id,
+                    'public' => $baseTestCase->public,
+                ]);
+            }
+
             $testCase = (new TestCaseImport())->import($rows);
+            if (!empty($baseTestCase)
+                && $baseGroups = $baseTestCase->groups()->pluck('id')
+            ) {
+                $testCase->groups()->sync($baseGroups);
+            }
             $testCase
                 ->owner()
                 ->associate(auth()->user())
@@ -114,9 +145,16 @@ class TestCaseController extends Controller
                 ->route('admin.test-cases.index')
                 ->with('success', __('Test case imported successfully'));
         } catch (\Throwable $e) {
+            $errorMessage = implode(
+                '<br>',
+                array_merge(
+                    [$e->getMessage()],
+                    !empty($e->validator) ? $e->validator->errors()->all() : []
+                )
+            );
             return redirect()
                 ->back()
-                ->with('error', $e->getMessage());
+                ->with('error', $errorMessage);
         }
     }
 

@@ -115,6 +115,7 @@
                                 </label>
                                 <test-case-checkboxes
                                     style="max-height: 485px"
+                                    :session="session"
                                     :useCases="useCases"
                                     :isCompliance="isCompliance"
                                     v-model="form.test_cases"

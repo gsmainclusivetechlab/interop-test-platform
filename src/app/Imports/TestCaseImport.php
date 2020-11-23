@@ -12,6 +12,8 @@ use App\Models\UseCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class TestCaseImport implements Importable
 {
@@ -26,12 +28,26 @@ class TestCaseImport implements Importable
             $useCase = UseCase::firstOrCreate([
                 'name' => Arr::get($rows, 'use_case'),
             ]);
+            $testCaseData = Arr::only($rows, TestCase::make()->getFillable());
+            Validator::validate(
+                $testCaseData,
+                [
+                    'slug' => [
+                        Rule::unique('test_cases')->ignore(
+                            Arr::get($rows, 'test_case_group_id'),
+                            'test_case_group_id'
+                        )
+                    ]
+                ],
+                ['slug.unique' => 'Slug should be unique for different test cases groups.']
+            );
+
             /**
              * @var TestCase $testCase
              */
             $testCase = $useCase
                 ->testCases()
-                ->make(Arr::only($rows, TestCase::make()->getFillable()));
+                ->make($testCaseData);
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {

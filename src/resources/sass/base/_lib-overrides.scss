@@ -117,6 +117,9 @@ a {
 .form-selectgroup-input:checked + .form-selectgroup-label {
   border-color: currentColor;
 }
+.form-check {
+  cursor: pointer;
+}
 
 .nav-tabs {
   .nav-link {
