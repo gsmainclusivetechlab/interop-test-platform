@@ -25,9 +25,9 @@ services:
     <<: *ops-service
     # Mount the src directory as `src` so coverage is mapped correctly
     command:
-      sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit
-      --coverage-html ../results/coverage-report-html --coverage-clover
-      ../results/coverage-report-clover/clover.xml"
+      sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit"
+      # --coverage-html ../results/coverage-report-html --coverage-clover
+      # ../results/coverage-report-clover/clover.xml"
 
   has-db:
     <<: *ops-service
