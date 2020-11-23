@@ -9,8 +9,9 @@
             :ref="modalName"
             :title="confirmTitle"
             @ok="handleOk"
+            centered
         >
-            <form ref="form" @submit.prevent="handleSubmit" class="m-auto">
+            <form ref="form" @submit.prevent="handleSubmit">
                 <div class="mb-3">
                     <label class="form-label">Reason</label>
                     <textarea

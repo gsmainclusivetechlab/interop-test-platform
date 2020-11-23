@@ -11,9 +11,9 @@
                             ></breadcrumb>
                         </div>
                         <h1
-                            class="page-title mw-100 mr-2 text-break d-flex align-items-center"
+                            class="page-title d-flex align-items-center"
                         >
-                            <b>{{ session.name }}</b>
+                            <b class="mw-100 text-break">{{ session.name }}</b>
                             <div class="btn-group ml-1">
                                 <inertia-link
                                     :href="route('sessions.edit', session.id)"
@@ -74,13 +74,13 @@
                             :href="
                                 route('sessions.message-log.index', session.id)
                             "
-                            class="btn btn-secondary ml-1"
+                            class="btn btn-secondary ml-3"
                         >
                             <icon name="list"></icon>
                             Log
                         </inertia-link>
                     </div>
-                    <div class="col-2 d-flex justify-content-end">
+                    <div class="col-2 d-flex align-items-center">
                         <div class="w-100">
                             <div>
                                 Execution:
@@ -160,12 +160,13 @@ export default {
             },
         },
     },
-    data() {
-        return {
-            canApprove:
+    computed: {
+        canApprove() {
+            return (
                 this.$page.auth.user.is_admin &&
-                this.session.status === 'in_verification',
-        };
+                this.session.status === 'in_verification'
+            );
+        },
     },
 };
 </script>
