@@ -19,14 +19,14 @@ class AuditLog extends Model
     /**
      * @var array
      */
-    protected $fillable = ['action', 'subject','meta'];
+    protected $fillable = ['action', 'subject', 'type', 'meta'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function actor()
+    public function fullname()
     {
-        return $this->belongsTo(User::class, 'actor');
+        return $this->belongsTo(User::class, 'fullname');
     }
 
 }

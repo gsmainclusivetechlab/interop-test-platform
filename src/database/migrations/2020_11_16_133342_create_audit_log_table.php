@@ -14,9 +14,10 @@ class CreateAuditLogTable extends Migration
     {
         Schema::create('audit_log', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('actor');
+            $table->text('fullname');
             $table->text('action');
             $table->text('subject')->nullable();
+            $table->unsignedBigInteger('type');
             $table->json('meta')->nullable();
             $table->timestamps();
         });

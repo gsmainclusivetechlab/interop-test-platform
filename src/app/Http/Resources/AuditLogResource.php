@@ -13,10 +13,12 @@ class AuditLogResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'actor' => $this->actor,
+            'fullname' => $this->fullname,
             'action' => $this->action,
             'subject' => $this->subject,
+            'type' => $this->type,
             'meta' => $this->meta,
+            'created_at' => $this->created_at->diffForHumans(),
         ];
     }
 }

@@ -20,10 +20,11 @@
                 <table class="table table-striped table-hover card-table">
                     <thead>
                     <tr>
-                        <th class="text-nowrap w-20">Actor</th>
+                        <th class="text-nowrap w-20">User</th>
                         <th class="text-nowrap w-auto">Action</th>
                         <th class="text-nowrap w-15">Subject</th>
                         <th class="text-nowrap w-15">Meta</th>
+                        <th class="text-nowrap w-15">Action Performed</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -31,7 +32,7 @@
                         v-for="message in logItems.data"
                     >
                     <td>
-                        {{ message.actor }}
+                        {{ message.fullname }}
                     </td>
                     <td>
                         {{ message.action }}
@@ -41,6 +42,9 @@
                     </td>
                     <td>
                         {{ message.meta }}
+                    </td>
+                    <td>
+                        {{ message.created_at }}
                     </td>
                     <tr v-if="!logItems.data.length">
                         <td class="text-center" colspan="5">No Results</td>
