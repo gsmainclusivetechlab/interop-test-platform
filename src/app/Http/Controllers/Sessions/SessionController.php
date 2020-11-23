@@ -152,36 +152,7 @@ class SessionController extends Controller
                 UseCase::with([
                     'testCases' => function ($query) use ($component, $sessionTestCasesIds, $sessionTestCasesGroupIds) {
                         $query
-                            ->whereHas('components', function ($query) use (
-                                $component
-                            ) {
-                                $query->whereKey($component->getKey());
-                            })
-                            ->where('public', true)
-                            ->orWhereHas('owner', function ($query) {
-                                $query->whereKey(
-                                    auth()
-                                        ->user()
-                                        ->getAuthIdentifier()
-                                );
-                            })
-                            ->orWhereHas('groups', function ($query) {
-                                $query->whereHas('users', function ($query) {
-                                    $query->whereKey(
-                                        auth()
-                                            ->user()
-                                            ->getAuthIdentifier()
-                                    );
-                                });
-                            })
-                            ->when(
-                                auth()
-                                    ->user()
-                                    ->can('viewAnyPrivate', TestCase::class),
-                                function ($query) {
-                                    $query->orWhere('public', false);
-                                }
-                            )
+                            ->available()
                             ->lastPerGroup($sessionTestCasesIds, $sessionTestCasesGroupIds);
                     },
                 ])

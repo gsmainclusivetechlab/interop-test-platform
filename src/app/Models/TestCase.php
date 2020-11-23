@@ -217,42 +217,50 @@ class TestCase extends Model
     }
 
     /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeAvailable($query)
+    {
+        return $query
+            ->where('public', true)
+            ->orWhereHas('owner', function ($query) {
+                $query->whereKey(
+                    auth()
+                        ->user()
+                        ->getAuthIdentifier()
+                );
+            })
+            ->orWhereHas('groups', function ($query) {
+                $query->whereHas('users', function (
+                    $query
+                ) {
+                    $query->whereKey(
+                        auth()
+                            ->user()
+                            ->getAuthIdentifier()
+                    );
+                });
+            })
+            ->when(
+                auth()
+                    ->user()
+                    ->can(
+                        'viewAnyPrivate',
+                        self::class
+                    ),
+                function ($query) {
+                    $query->orWhere('public', false);
+                }
+            );
+    }
+
+    /**
+     * @return mixed
      */
     public function getLastAvailableVersionIdAttribute()
     {
-        return static::where(function ($query) {
-                $query
-                    ->where('public', true)
-                    ->orWhereHas('owner', function ($query) {
-                        $query->whereKey(
-                            auth()
-                                ->user()
-                                ->getAuthIdentifier()
-                        );
-                    })
-                    ->orWhereHas('groups', function ($query) {
-                        $query->whereHas('users', function (
-                            $query
-                        ) {
-                            $query->whereKey(
-                                auth()
-                                    ->user()
-                                    ->getAuthIdentifier()
-                            );
-                        });
-                    })
-                    ->when(
-                        auth()
-                            ->user()
-                            ->can(
-                                'viewAnyPrivate',
-                                self::class
-                            ),
-                        function ($query) {
-                            $query->orWhere('public', false);
-                        }
-                    );
-            })
+        return static::available()
             ->lastPerGroup()
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
