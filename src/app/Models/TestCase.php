@@ -200,10 +200,10 @@ class TestCase extends Model
             ->when($testCasesIds, function ($query) use ($testCasesIds, $testCasesGroupsIds) {
                 $query
                     ->whereIn('id', function ($query) use ($testCasesIds, $testCasesGroupsIds) {
-                    $query->from(static::getTable())
-                        ->selectRaw('MAX(`id`)')
-                        ->whereNotIn('test_case_group_id', $testCasesGroupsIds)
-                        ->groupBy(static::getPositionGroupColumn());
+                        $query->from(static::getTable())
+                            ->selectRaw('MAX(`id`)')
+                            ->whereNotIn('test_case_group_id', $testCasesGroupsIds)
+                            ->groupBy(static::getPositionGroupColumn());
                     })
                     ->orWhereIn('id', $testCasesIds);
             })

@@ -23,7 +23,7 @@ class AddVersionColumnsToTestCasesTable extends Migration
             foreach ($testCases as $testCase) {
                 DB::table('test_cases')
                     ->where('id', $testCase->id)
-                ->update(['test_case_group_id' => \Illuminate\Support\Str::random()]);
+                    ->update(['test_case_group_id' => \Illuminate\Support\Str::random()]);
             }
         });
 
@@ -41,8 +41,7 @@ class AddVersionColumnsToTestCasesTable extends Migration
     {
         Schema::table('test_cases', function (Blueprint $table) {
             $table->dropUnique(['test_case_group_id', 'version']);
-            $table->dropColumn(['test_case_group_id']);
-            $table->dropColumn(['version']);
+            $table->dropColumn(['test_case_group_id', 'version']);
         });
     }
 }
