@@ -14,6 +14,9 @@ import {
     TabsPlugin,
 } from 'bootstrap-vue';
 
+import JsonEditor from 'vue-json-edit';
+Vue.use(JsonEditor);
+
 window.string = require('string');
 window.collect = require('collect.js');
 window.axios = require('axios');
@@ -81,6 +84,9 @@ Vue.component('clipboard-json-to-curl', () =>
     import(
         /* webpackChunkName: "clipboard-json-to-curl" */ '@/components/clipboard-json-to-curl.vue'
     )
+);
+Vue.component('text-editor', () =>
+    import(/* webpackChunkName: "text-editor" */ '@/components/text-editor.vue')
 );
 
 let app = document.getElementById('app');

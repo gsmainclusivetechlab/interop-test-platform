@@ -116,12 +116,7 @@
                                     <li v-if="testCase.can.update">
                                         <inertia-link
                                             class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.edit',
-                                                    testCase.id
-                                                )
-                                            "
+                                            :href="route('admin.test-cases.edit', testCase.id)"
                                         >
                                             Edit
                                         </inertia-link>
@@ -183,12 +178,7 @@
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.destroy',
-                                                    testCase.id
-                                                )
-                                            "
+                                            :href="route('admin.test-cases.destroy', testCase.id)"
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="`Are you sure you want to delete ${testCase.name}?`"
