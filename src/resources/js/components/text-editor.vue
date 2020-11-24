@@ -152,9 +152,13 @@ export default {
         EditorContent,
     },
     props: {
+        content: {
+            type: Object,
+            required: false,
+        },
         menuItems: {
             type: Array,
-            requuired: true,
+            required: true,
         },
         outputFormat: {
             type: Array,
@@ -165,8 +169,8 @@ export default {
         return {
             focused: false,
             editor: null,
-            json: {},
-            html: '',
+            json: this.content?.json,
+            html: this.content?.html,
         };
     },
     mounted() {
@@ -190,7 +194,7 @@ export default {
                 new Underline(),
                 new History(),
             ],
-            content: '',
+            content: this.html,
             onUpdate: ({ getJSON, getHTML }) => {
                 if (this.outputFormat.includes('html')) {
                     this.html = getHTML();

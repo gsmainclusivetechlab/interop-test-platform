@@ -30,30 +30,96 @@
                                     </strong>
                                 </span>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Behavior</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        :value="
+                                            collect(
+                                                $page.enums.test_case_behaviors
+                                            ).get(testCase.behavior)
+                                        "
+                                        readonly
+                                    />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label"> Use Case </label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        :value="testCase.useCase.data.name"
+                                        readonly
+                                    />
+                                </div>
+                            </div>
                             <div class="mb-3">
-                                <label class="form-label"> Behavior </label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :value="
-                                        collect(
-                                            $page.enums.test_case_behaviors
-                                        ).get(testCase.behavior)
+                                <label class="form-label">Description</label>
+                                <text-editor
+                                    :class="{
+                                        'is-invalid': $page.errors.description,
+                                    }"
+                                    :menu-items="[
+                                        'bold',
+                                        'italic',
+                                        'strike',
+                                        'underline',
+                                        'ordered_list',
+                                        'bullet_list',
+                                        'code',
+                                        'hard_break',
+                                    ]"
+                                    :output-format="['html']"
+                                    :content="{ html: form.description }"
+                                    @output-html="
+                                        (content) =>
+                                            (form.description = content)
                                     "
-                                    readonly
                                 />
+                                <span
+                                    v-if="$page.errors.description"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.description }}
+                                    </strong>
+                                </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Use Case </label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    :value="testCase.useCase.data.name"
-                                    readonly
+                                <label class="form-label">Precondition</label>
+                                <text-editor
+                                    :class="{
+                                        'is-invalid': $page.errors.description,
+                                    }"
+                                    :menu-items="[
+                                        'bold',
+                                        'italic',
+                                        'strike',
+                                        'underline',
+                                        'ordered_list',
+                                        'bullet_list',
+                                        'code',
+                                        'hard_break',
+                                    ]"
+                                    :output-format="['html']"
+                                    :content="{ html: form.precondition }"
+                                    @output-html="
+                                        (content) =>
+                                            (form.precondition = content)
+                                    "
                                 />
+                                <span
+                                    v-if="$page.errors.description"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.description }}
+                                    </strong>
+                                </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Groups </label>
+                                <label class="form-label">Groups</label>
                                 <selectize
                                     v-model="groups"
                                     multiple
@@ -88,26 +154,6 @@
                                                 $page.errors.groups_id
                                             ).implode(' ')
                                         }}
-                                    </strong>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label"> Description </label>
-                                <textarea
-                                    name="description"
-                                    class="form-control"
-                                    rows="5"
-                                    v-model="form.description"
-                                    :class="{
-                                        'is-invalid': $page.errors.description,
-                                    }"
-                                ></textarea>
-                                <span
-                                    v-if="$page.errors.description"
-                                    class="invalid-feedback"
-                                >
-                                    <strong>
-                                        {{ $page.errors.description }}
                                     </strong>
                                 </span>
                             </div>
@@ -158,6 +204,7 @@ export default {
             form: {
                 name: this.testCase.name,
                 description: this.testCase.description,
+                precondition: this.testCase.precondition,
                 groups_id: null,
             },
         };
