@@ -36,7 +36,6 @@ export default {
     },
     watch: {
         jsonData: {
-            // immediate: true,
             deep: true,
             handler() {
                 this.$emit('output-json', this.jsonData);
