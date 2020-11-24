@@ -121,7 +121,7 @@
                 </button>
             </div>
         </editor-menu-bar>
-        <editor-content class="form-control mt-1" :editor="editor" />
+        <editor-content class="form-control mt-2" :editor="editor" />
     </div>
 </template>
 <script >
@@ -154,9 +154,11 @@ export default {
     props: {
         menuItems: {
             type: Array,
+            requuired: true,
         },
         outputFormat: {
             type: Array,
+            required: true,
         },
     },
     data() {
