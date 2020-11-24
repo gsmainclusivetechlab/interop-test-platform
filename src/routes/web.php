@@ -281,6 +281,12 @@ Route::name('admin.')
                 Route::post('import', 'TestCaseController@import')->name(
                     'import.confirm'
                 );
+                Route::get('{testCase}/export', 'TestCaseController@export')->name(
+                    'export'
+                );
+                Route::get('{testCase}/complete', 'TestCaseController@complete')->name(
+                    'complete'
+                );
                 Route::put(
                     '{testCase}/toggle-public',
                     'TestCaseController@togglePublic'

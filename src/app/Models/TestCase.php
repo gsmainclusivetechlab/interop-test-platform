@@ -35,6 +35,7 @@ class TestCase extends Model
         'name',
         'slug',
         'public',
+        'draft',
         'behavior',
         'description',
         'precondition',
@@ -46,6 +47,7 @@ class TestCase extends Model
      */
     protected $attributes = [
         'public' => false,
+        'draft' => true,
     ];
 
     /**
@@ -241,32 +243,35 @@ class TestCase extends Model
      */
     public function scopeAvailable($query)
     {
-        return $query
-            ->where('public', true)
-            ->orWhereHas('owner', function ($query) {
-                $query->whereKey(
-                    auth()
-                        ->user()
-                        ->getAuthIdentifier()
-                );
-            })
-            ->orWhereHas('groups', function ($query) {
-                $query->whereHas('users', function ($query) {
-                    $query->whereKey(
+        return $query->where(function ($query) {
+            $query->
+                where('public', true)
+                    ->orWhereHas('owner', function ($query) {
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
+                    })
+                    ->orWhereHas('groups', function ($query) {
+                        $query->whereHas('users', function ($query) {
+                            $query->whereKey(
+                                auth()
+                                    ->user()
+                                    ->getAuthIdentifier()
+                            );
+                        });
+                    })
+                    ->when(
                         auth()
                             ->user()
-                            ->getAuthIdentifier()
+                            ->can('viewAnyPrivate', self::class),
+                        function ($query) {
+                            $query->orWhere('public', false);
+                        }
                     );
-                });
             })
-            ->when(
-                auth()
-                    ->user()
-                    ->can('viewAnyPrivate', self::class),
-                function ($query) {
-                    $query->orWhere('public', false);
-                }
-            );
+            ->where('draft', 0);
     }
 
     /**

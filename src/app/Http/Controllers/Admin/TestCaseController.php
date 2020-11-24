@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\TestCaseExport;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\TestCaseResource;
 use App\Imports\TestCaseImport;
@@ -16,6 +17,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
 use Inertia\Response;
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 use Symfony\Component\Yaml\Yaml;
 
 class TestCaseController extends Controller
@@ -165,10 +169,53 @@ class TestCaseController extends Controller
      */
     public function edit(TestCase $testCase)
     {
+        $testCaseResource = (new TestCaseResource(
+            $testCase->load(['groups', 'useCase'])
+        ))->resolve();
+
+        if (!$testCase->draft) {
+            try {
+                $rows = array_merge(Yaml::parse((new TestCaseExport())->export($testCase)), [
+                    'test_case_group_id' => $testCase->test_case_group_id,
+                    'public' => $testCase->public,
+                ]);
+                $draftTestCase = (new TestCaseImport())->import($rows);
+                $draftTestCase->groups()->sync($testCase->groups()->pluck('id'));
+//                $draftTestCase = $testCase->replicate(['uuid']);
+//                $draftTestCase->draft = 1;
+//                $draftTestCase->push();
+//                $draftTestCase->groups()->sync($testCase->groups()->pluck('id'));
+//                $draftTestCase->components()->sync($testCase->components()->pluck('id'));
+//                foreach ($testCase->testSteps()->get() as $testStep) {
+//                    /** @var TestStep $testStep */
+//                    $draftTestStep = $draftTestCase->testSteps()->make($testStep->getAttributes());
+//                    $draftTestStep->saveOrFail();
+//                }
+//                $draftTestCase->components()->sync($testCase->components()->pluck('id'));
+
+                $draftTestCase
+                    ->owner()
+                    ->associate(auth()->user())
+                    ->save();
+                $testCaseResource = (new TestCaseResource(
+                    $draftTestCase->load(['groups', 'useCase'])
+                ))->resolve();
+            } catch (\Throwable $e) {
+                $errorMessage = implode(
+                    '<br>',
+                    array_merge(
+                        [$e->getMessage()],
+                        !empty($e->validator) ? $e->validator->errors()->all() : []
+                    )
+                );
+                return redirect()
+                    ->back()
+                    ->with('error', $errorMessage);
+            }
+        }
+
         return Inertia::render('admin/test-cases/edit', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load(['groups', 'useCase'])
-            ))->resolve(),
+            'testCase' => $testCaseResource,
         ]);
     }
 
@@ -190,6 +237,44 @@ class TestCaseController extends Controller
         return redirect()
             ->route('admin.test-cases.index')
             ->with('success', __('Test case updated successfully'));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @throws \Throwable
+     */
+    public function export(TestCase $testCase)
+    {
+        $data = (new TestCaseExport())->export($testCase);
+
+        $yamlFile = new PhpWord();
+        $section = $yamlFile->addSection();
+        $section->addText($data);
+
+        $fileName = "TestCase-{$testCase->id}";
+
+        header('Content-Type: text/*');
+        header("Content-Disposition: attachment;filename=\"{$fileName}.yaml\"");
+
+        $objWriter = IOFactory::createWriter($yamlFile, 'HTML');
+        $objWriter->save('php://output');
+////        $objWriter->save("{$fileName}.yaml");
+
+//        $txt = fopen('php://output', 'w') or die('Unable to open file!');
+//        fwrite($txt, $data);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return RedirectResponse
+     * @throws \Throwable
+     */
+    public function complete(TestCase $testCase)
+    {
+        $this->authorize('create', $testCase);
+        $testCase->update(['draft' => 0]);
+
+        return redirect()->back();
     }
 
     /**

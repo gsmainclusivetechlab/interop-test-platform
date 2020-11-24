@@ -144,6 +144,42 @@
                                             Import New Version
                                         </inertia-link>
                                     </li>
+                                    <li
+                                        v-if="
+                                            $page.auth.user.can.test_cases.create
+                                            && testCase.draft
+                                        "
+                                    >
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.complete',
+                                                    testCase.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Complete
+                                        </inertia-link>
+                                    </li>
+                                    <li
+                                        v-if="
+                                            $page.auth.user.can.test_cases
+                                                .create
+                                        "
+                                    >
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.export',
+                                                    testCase.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Export
+                                        </inertia-link>
+                                    </li>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
