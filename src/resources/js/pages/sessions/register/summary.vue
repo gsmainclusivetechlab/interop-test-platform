@@ -77,10 +77,15 @@ export default {
         getAnswers: function (section, question) {
             let answersTexts = [];
             let answers = this.session.questionnaire[section][question.name];
+
             answers = Array.isArray(answers) ? answers : [answers];
 
             Object.values(answers).forEach((answer) => {
-                answersTexts.push(question.values[answer]);
+                Object.values(question.values).forEach((value) => {
+                    if (value.id === answer) {
+                        answersTexts.push(value.label);
+                    }
+                });
             });
 
             return answersTexts;

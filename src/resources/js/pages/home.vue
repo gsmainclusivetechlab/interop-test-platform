@@ -104,6 +104,14 @@
                                 />
                                 {{ session.owner.name }}
                             </li>
+                            <li>
+                                <icon
+                                    name="chart-candle"
+                                    v-b-tooltip.hover
+                                    title="Type"
+                                />
+                                {{ session.typeName }}
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -284,6 +285,14 @@ class Session extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getTypeNameAttribute()
+    {
+        return Arr::get(static::getTypeNames(), $this->type);
+    }
+
+    /**
      * @param string $type
      *
      * @return bool
@@ -364,20 +373,10 @@ class Session extends Model
             return false;
         }
 
-        $testCases = $this->testCases()
-            ->with('lastTestRun')
-            ->get();
-
-        /** @var TestCase $testCase */
-        foreach ($testCases as $testCase) {
-            if (
-                !$testCase->lastTestRun ||
-                !$testCase->lastTestRun->successful
-            ) {
-                return false;
-            }
-        }
-
-        return true;
+        return !$this->testCases()
+            ->whereDoesntHave('lastTestRun', function (Builder $query) {
+                $query->where('session_id', $this->id);
+            })
+            ->exists();
     }
 }

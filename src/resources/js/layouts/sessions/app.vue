@@ -31,7 +31,7 @@
                             class="btn btn-outline-primary"
                             v-if="session.can.update && session.completable"
                             :href="route('sessions.complete', session.id)"
-                            :confirm-title="'Confirm compliting'"
+                            :confirm-title="'Confirm completion'"
                             :confirm-text="`This is a non-reversible action, and you will need to create a new
                                         session if you wish to execute any more test cases.`"
                         >

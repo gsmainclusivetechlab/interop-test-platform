@@ -43,6 +43,7 @@
                         <thead>
                             <tr>
                                 <th class="text-nowrap w-25">Name</th>
+                                <th class="text-nowrap w-auto">Type</th>
                                 <th class="text-nowrap w-auto">Owner</th>
                                 <th class="text-nowrap w-auto">Use Cases</th>
                                 <th class="text-nowrap w-auto">Test Cases</th>
@@ -61,6 +62,9 @@
                                     >
                                         {{ session.name }}
                                     </inertia-link>
+                                </td>
+                                <td>
+                                    {{ session.typeName }}
                                 </td>
                                 <td class="text-break">
                                     {{ session.owner.name }}

@@ -443,7 +443,7 @@ class SessionController extends Controller
 
             return redirect()
                 ->back()
-                ->with('success', __('Session sended to verification'));
+                ->with('success', __('Session has been sent for verification'));
         }
 
         return redirect()

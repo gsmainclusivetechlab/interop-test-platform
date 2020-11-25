@@ -26,8 +26,9 @@
                             <th class="text-nowrap w-auto">Owner</th>
                             <th class="text-nowrap w-auto">Use Cases</th>
                             <th class="text-nowrap w-auto">Test Cases</th>
-                            <th class="text-nowrap w-25">Status</th>
+                            <th class="text-nowrap w-25">TC statuses</th>
                             <th class="text-nowrap w-auto">Last Run</th>
+                            <th class="text-nowrap w-auto">Session status</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
@@ -73,6 +74,9 @@
                                         ? session.lastTestRun.created_at
                                         : ''
                                 }}
+                            </td>
+                            <td>
+                                {{ session.statusName }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

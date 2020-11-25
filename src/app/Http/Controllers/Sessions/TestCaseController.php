@@ -60,6 +60,9 @@ class TestCaseController extends Controller
                 $session,
                 $testCase
             ),
+            'testRunAttempts' => config(
+                'test_cases.compliance_session_execution_limit'
+            ),
             'testRuns' => TestRunResource::collection(
                 $session
                     ->testRuns()
