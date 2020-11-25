@@ -21,7 +21,12 @@ class TestCaseExport implements Exportable
     {
         $data = $this->mapTestCase($testCase);
 
-        return Yaml::dump($data);
+        return Yaml::dump(
+            $this->arrayFilter($data),
+            2,
+            2,
+            Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+        );
     }
 
     /**
@@ -46,15 +51,15 @@ class TestCaseExport implements Exportable
 
     /**
      * @param Collection|TestStep[] $testSteps
-     * @return array
+     * @return array|null
      */
-    protected function mapTestSteps($testSteps): array
+    protected function mapTestSteps($testSteps)
     {
         $result = [];
         foreach ($testSteps as $testStep) {
             $testScripts = $testStep->testScripts()->get();
             $testSetups = $testStep->testSetups()->get();
-            $result[] = [
+            $result[] = $this->arrayFilter([
                 'path' => $testStep->path,
                 'pattern' => $testStep->pattern,
                 'method' => $testStep->method,
@@ -86,53 +91,75 @@ class TestCaseExport implements Exportable
                     $testScripts,
                     TestScript::TYPE_RESPONSE
                 ),
-                'request' => array_filter(optional($testStep->request)->toArray()),
-                'response' => array_filter(optional($testStep->response)->toArray()),
-            ];
+                'request' => json_decode(
+                    $testStep->getRawOriginal('request'),
+                    true
+                ),
+                'response' => json_decode(
+                    $testStep->getRawOriginal('response'),
+                    true
+                ),
+            ]);
         }
 
-        return $result;
+        return $this->arrayFilter($result);
     }
 
     /**
      * @param Collection|TestSetup[] $testSetups
      * @param $type
-     * @return array
+     * @return array|null
      */
-    protected function mapTestSetups($testSetups, $type): array
+    protected function mapTestSetups($testSetups, $type)
     {
         $result = [];
         foreach ($testSetups as $testSetup) {
             if ($type !== $testSetup->type) {
                 continue;
             }
-            $result[] = [
+            $result[] = $this->arrayFilter([
                 'name' => $testSetup->name,
                 'values' => $testSetup->values,
-            ];
+            ]);
         }
 
-        return $result;
+        return $this->arrayFilter($result);
     }
 
     /**
      * @param Collection|TestScript[] $testScripts
      * @param $type
-     * @return array
+     * @return array|null
      */
-    protected function mapTestScripts($testScripts, $type): array
+    protected function mapTestScripts($testScripts, $type)
     {
         $result = [];
         foreach ($testScripts as $testScript) {
             if ($type !== $testScript->type) {
                 continue;
             }
-            $result[] = [
+            $result[] = $this->arrayFilter([
                 'name' => $testScript->name,
                 'rules' => $testScript->rules,
-            ];
+            ]);
         }
 
-        return $result;
+        return $this->arrayFilter($result);
+    }
+
+    /**
+     * @param $array
+     * @return array|null
+     */
+    protected function arrayFilter($array)
+    {
+        return empty($array)
+            ? null
+            : array_filter(
+                $array,
+                function ($value) {
+                    return !is_null($value) && $value !== '';
+                }
+            );
     }
 }
