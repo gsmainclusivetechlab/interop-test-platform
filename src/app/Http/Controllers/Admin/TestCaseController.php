@@ -95,6 +95,9 @@ class TestCaseController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
+            'precondition' => ['required', 'string', 'nullable'],
+            'behavior' => ['required', 'string', 'max:255'],
+            'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
             'components_id.*' => ['integer', 'exists:components,id'],
         ]);
