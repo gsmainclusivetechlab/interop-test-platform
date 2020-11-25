@@ -163,17 +163,12 @@
                                                 .create
                                         "
                                     >
-                                        <inertia-link
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.export',
-                                                    testCase.id
-                                                )
-                                            "
+                                        <a
+                                            :href="route('admin.test-cases.export', testCase.id)"
                                             class="dropdown-item"
                                         >
-                                            Export
-                                        </inertia-link>
+                                            Export to yaml
+                                        </a>
                                     </li>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link

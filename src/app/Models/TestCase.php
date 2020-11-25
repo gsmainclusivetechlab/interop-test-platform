@@ -47,7 +47,7 @@ class TestCase extends Model
      */
     protected $attributes = [
         'public' => false,
-        'draft' => true,
+        'draft' => false,
     ];
 
     /**
@@ -271,7 +271,7 @@ class TestCase extends Model
                         }
                     );
             })
-            ->where('draft', 0);
+            ->where('draft', false);
     }
 
     /**

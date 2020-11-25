@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\TestCaseExport;
+use App\Http\Resources\ComponentResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\UseCaseResource;
 use App\Imports\TestCaseImport;
+use App\Models\Component;
 use App\Models\Group;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
+use App\Models\UseCase;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,9 +21,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Inertia\Inertia;
 use Inertia\Response;
-use PhpOffice\PhpWord\Element\Section;
-use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\PhpWord;
 use Symfony\Component\Yaml\Yaml;
 
 class TestCaseController extends Controller
@@ -132,6 +133,7 @@ class TestCaseController extends Controller
                 $rows = array_merge($rows, [
                     'test_case_group_id' => $baseTestCase->test_case_group_id,
                     'public' => $baseTestCase->public,
+                    'draft' => true,
                 ]);
             }
 
@@ -183,6 +185,7 @@ class TestCaseController extends Controller
                 $rows = array_merge(Yaml::parse((new TestCaseExport())->export($testCase)), [
                     'test_case_group_id' => $testCase->test_case_group_id,
                     'public' => $testCase->public,
+                    'draft' => true,
                 ]);
                 $draftTestCase = (new TestCaseImport())->import($rows);
                 $draftTestCase->groups()->sync($testCase->groups()->pluck('id'));
@@ -215,7 +218,11 @@ class TestCaseController extends Controller
                     '<br>',
                     array_merge(
                         [$e->getMessage()],
-                        !empty($e->validator) ? $e->validator->errors()->all() : []
+                        !empty($e->validator)
+                            ? $e->validator
+                                ->errors()
+                                ->all()
+                            : []
                     )
                 );
                 return redirect()
@@ -226,6 +233,12 @@ class TestCaseController extends Controller
 
         return Inertia::render('admin/test-cases/edit', [
             'testCase' => $testCaseResource,
+            'components' => ComponentResource::collection(
+                Component::get()
+            )->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::get()
+            )->resolve(),
         ]);
     }
 
@@ -258,22 +271,14 @@ class TestCaseController extends Controller
     public function export(TestCase $testCase)
     {
         $data = (new TestCaseExport())->export($testCase);
+        $fileName = "TestCase-{$testCase->uuid}";
 
-        $yamlFile = new PhpWord();
-        $section = $yamlFile->addSection();
-        $section->addText($data);
+        header('Content-Type: application/yaml');
+        header("Content-Disposition: attachment; filename={$fileName}.yaml");
+        header('Content-Length: ' . strlen($data));
 
-        $fileName = "TestCase-{$testCase->id}";
-
-        header('Content-Type: text/*');
-        header("Content-Disposition: attachment;filename=\"{$fileName}.yaml\"");
-
-        $objWriter = IOFactory::createWriter($yamlFile, 'HTML');
-        $objWriter->save('php://output');
-////        $objWriter->save("{$fileName}.yaml");
-
-//        $txt = fopen('php://output', 'w') or die('Unable to open file!');
-//        fwrite($txt, $data);
+        $file = fopen('php://output', 'w') or die('Unable to open file!');
+        fwrite($file, $data);
     }
 
     /**
