@@ -1,7 +1,8 @@
 .text-editor {
   &_focused {
     .form-control {
-      border-color: $red;
+      border-color: $blue;
+      box-shadow: 0 0 0 0.2rem rgba($blue, 0.25);
     }
   }
   .ProseMirror {

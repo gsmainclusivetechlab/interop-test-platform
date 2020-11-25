@@ -17,9 +17,16 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
+                        :href="route('admin.test-cases.create')"
+                        class="btn btn-primary"
+                    >
+                        <icon name="plus" />
+                        Create Test Case
+                    </inertia-link>
+                    <inertia-link
                         :href="route('admin.test-cases.import')"
                         v-if="$page.auth.user.can.test_cases.create"
-                        class="btn btn-primary"
+                        class="btn btn-primary ml-2"
                     >
                         <icon name="upload" />
                         Import Test Case
@@ -44,7 +51,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="testCase in testCases.data">
+                        <tr v-for="(testCase, i) in testCases.data" :key="i">
                             <td class="text-break">
                                 {{ testCase.name }}
                             </td>
@@ -116,7 +123,12 @@
                                     <li v-if="testCase.can.update">
                                         <inertia-link
                                             class="dropdown-item"
-                                            :href="route('admin.test-cases.edit', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.edit',
+                                                    testCase.id
+                                                )
+                                            "
                                         >
                                             Edit
                                         </inertia-link>
@@ -141,8 +153,8 @@
                                     </li>
                                     <li
                                         v-if="
-                                            $page.auth.user.can.test_cases.create
-                                            && testCase.draft
+                                            $page.auth.user.can.test_cases
+                                                .create && testCase.draft
                                         "
                                     >
                                         <inertia-link
@@ -164,7 +176,12 @@
                                         "
                                     >
                                         <a
-                                            :href="route('admin.test-cases.export', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.export',
+                                                    testCase.id
+                                                )
+                                            "
                                             class="dropdown-item"
                                         >
                                             Export to yaml
@@ -173,7 +190,12 @@
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
-                                            :href="route('admin.test-cases.destroy', testCase.id)"
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.destroy',
+                                                    testCase.id
+                                                )
+                                            "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="`Are you sure you want to delete ${testCase.name}?`"
