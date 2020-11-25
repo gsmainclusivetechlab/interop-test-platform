@@ -262,12 +262,7 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
-        Route::resource('test-cases', 'TestCaseController')->only([
-            'index',
-            'edit',
-            'update',
-            'destroy',
-        ]);
+        Route::resource('test-cases', 'TestCaseController');
         Route::name('test-cases.')
             ->prefix('test-cases')
             ->group(function () {

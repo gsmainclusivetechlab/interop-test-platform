@@ -72,6 +72,68 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @return Response
+     */
+    public function create()
+    {
+        return Inertia::render('admin/test-cases/create', [
+            'components' => ComponentResource::collection(
+                Component::get()
+            )->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::get()
+            )->resolve(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['string', 'nullable'],
+            'groups_id.*' => ['integer', 'exists:groups,id'],
+            'components_id.*' => ['integer', 'exists:components,id'],
+        ]);
+        $testCase = TestCase::create(array_merge($request->input(), [
+            'draft' => true,
+        ]));
+        $testCase->components()->sync($request->input('components_id'));
+        $testCase->groups()->sync($request->input('groups_id'));
+
+        return redirect()
+            ->route('admin.test-cases.edit', $testCase->id)
+            ->with('success', __('Test Case created successfully'));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function show(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'groups',
+                    'useCase',
+                    'testSteps',
+                    'components'
+                ])
+            ))->resolve(),
+            'components' => ComponentResource::collection(
+                Component::get()
+            )->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::get()
+            )->resolve(),
+        ]);
+    }
+
+    /**
      * @param TestCase $testCase
      * @return RedirectResponse
      * @throws Exception
@@ -252,6 +314,9 @@ class TestCaseController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
+            'precondition' => ['required', 'string', 'nullable'],
+            'behavior' => ['required', 'string', 'max:255'],
+            'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
             'components_id.*' => ['integer', 'exists:components,id'],
         ]);
