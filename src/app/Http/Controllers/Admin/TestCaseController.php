@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -96,16 +98,31 @@ class TestCaseController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
             'precondition' => ['required', 'string', 'nullable'],
-            'behavior' => ['required', 'string', 'max:255'],
+            'behavior' => [
+                'required',
+                'string',
+                Rule::in([
+                    TestCase::BEHAVIOR_POSITIVE,
+                    TestCase::BEHAVIOR_NEGATIVE
+                ])
+            ],
+            'slug' => [
+                Rule::unique('test_cases'),
+            ],
             'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
             'components_id.*' => ['integer', 'exists:components,id'],
         ]);
+
         $testCase = TestCase::create(array_merge($request->input(), [
             'draft' => true,
         ]));
         $testCase->components()->sync($request->input('components_id'));
         $testCase->groups()->sync($request->input('groups_id'));
+        $testCase
+            ->owner()
+            ->associate(auth()->user())
+            ->save();
 
         return redirect()
             ->route('admin.test-cases.edit', $testCase->id)
