@@ -170,7 +170,12 @@ class TestCaseController extends Controller
     public function edit(TestCase $testCase)
     {
         $testCaseResource = (new TestCaseResource(
-            $testCase->load(['groups', 'useCase'])
+            $testCase->load([
+                'groups',
+                'useCase',
+                'testSteps',
+                'components'
+            ])
         ))->resolve();
 
         if (!$testCase->draft) {
@@ -198,7 +203,12 @@ class TestCaseController extends Controller
                     ->associate(auth()->user())
                     ->save();
                 $testCaseResource = (new TestCaseResource(
-                    $draftTestCase->load(['groups', 'useCase'])
+                    $draftTestCase->load([
+                        'groups',
+                        'useCase',
+                        'testSteps',
+                        'components'
+                    ])
                 ))->resolve();
             } catch (\Throwable $e) {
                 $errorMessage = implode(
@@ -230,8 +240,10 @@ class TestCaseController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
+            'components_id.*' => ['integer', 'exists:components,id'],
         ]);
         $testCase->update($request->input());
+        $testCase->components()->sync($request->input('components_id'));
         $testCase->groups()->sync($request->input('groups_id'));
 
         return redirect()

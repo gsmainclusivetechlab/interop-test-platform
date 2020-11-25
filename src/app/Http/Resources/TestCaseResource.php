@@ -30,6 +30,9 @@ class TestCaseResource extends JsonResource
             'testSteps' => TestStepResource::collection(
                 $this->whenLoaded('testSteps')
             ),
+            'components' => ComponentResource::collection(
+                $this->whenLoaded('components')
+            ),
             'lastTestRun' => new TestRunResource(
                 $this->whenLoaded('lastTestRun', function () {
                     return $this->whenPivotLoaded(
