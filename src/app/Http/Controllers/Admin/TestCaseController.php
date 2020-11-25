@@ -32,7 +32,7 @@ class TestCaseController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(TestCase::class, 'test_case', [
-            'only' => ['index', 'edit', 'update', 'destroy'],
+            'except' => ['show'],
         ]);
     }
 
@@ -113,23 +113,66 @@ class TestCaseController extends Controller
      * @param TestCase $testCase
      * @return Response
      */
-    public function show(TestCase $testCase)
+    public function showInfo(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'useCase',
+                    'components'
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showGroups(TestCase $testCase)
     {
         return Inertia::render('admin/test-cases/show', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
                     'groups',
-                    'useCase',
-                    'testSteps',
-                    'components'
                 ])
             ))->resolve(),
-            'components' => ComponentResource::collection(
-                Component::get()
-            )->resolve(),
-            'useCases' => UseCaseResource::collection(
-                UseCase::get()
-            )->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showTestSteps(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'testSteps',
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showVersions(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'testSteps',
+                ])
+            ))->resolve(),
+            'testCases' => (new TestCaseResource(
+                TestCase::where(
+                    'test_case_group_id',
+                    $testCase->test_case_group_id
+                )->get()
+            ))->resolve(),
         ]);
     }
 
@@ -336,10 +379,10 @@ class TestCaseController extends Controller
     public function export(TestCase $testCase)
     {
         $data = (new TestCaseExport())->export($testCase);
-        $fileName = "TestCase-{$testCase->uuid}";
+        $fileName = "TestCase-{$testCase->name}";
 
         header('Content-Type: application/yaml');
-        header("Content-Disposition: attachment; filename={$fileName}.yaml");
+        header("Content-Disposition: attachment; filename=\"{$fileName}\".yaml");
         header('Content-Length: ' . strlen($data));
 
         $file = fopen('php://output', 'w') or die('Unable to open file!');

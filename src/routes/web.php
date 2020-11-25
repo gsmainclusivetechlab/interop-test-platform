@@ -262,7 +262,7 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
-        Route::resource('test-cases', 'TestCaseController');
+        Route::resource('test-cases', 'TestCaseController')->except(['show']);
         Route::name('test-cases.')
             ->prefix('test-cases')
             ->group(function () {
@@ -290,6 +290,18 @@ Route::name('admin.')
                     'group-candidates',
                     'TestCaseController@groupCandidates'
                 )->name('group-candidates');
+                Route::get('info', 'TestCaseController@showInfo')->name(
+                    'info'
+                );
+                Route::get('groups', 'TestCaseController@showGroups')->name(
+                    'groups'
+                );
+                Route::get('test-steps', 'TestCaseController@showTestSteps')->name(
+                    'test-steps'
+                );
+                Route::get('versions', 'TestCaseController@showVersions')->name(
+                    'versions'
+                );
             });
         Route::name('questionnaire.')
             ->prefix('questionnaire')
