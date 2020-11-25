@@ -31,7 +31,9 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestCase::class, 'test_case');
+        $this->authorizeResource(TestCase::class, 'test_case', [
+            'except' => ['show'],
+        ]);
     }
 
     /**
@@ -111,23 +113,66 @@ class TestCaseController extends Controller
      * @param TestCase $testCase
      * @return Response
      */
-    public function show(TestCase $testCase)
+    public function showInfo(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'useCase',
+                    'components'
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showGroups(TestCase $testCase)
     {
         return Inertia::render('admin/test-cases/show', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
                     'groups',
-                    'useCase',
-                    'testSteps',
-                    'components'
                 ])
             ))->resolve(),
-            'components' => ComponentResource::collection(
-                Component::get()
-            )->resolve(),
-            'useCases' => UseCaseResource::collection(
-                UseCase::get()
-            )->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showTestSteps(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'testSteps',
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showVersions(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'testSteps',
+                ])
+            ))->resolve(),
+            'testCases' => (new TestCaseResource(
+                TestCase::where(
+                    'test_case_group_id',
+                    $testCase->test_case_group_id
+                )->get()
+            ))->resolve(),
         ]);
     }
 
