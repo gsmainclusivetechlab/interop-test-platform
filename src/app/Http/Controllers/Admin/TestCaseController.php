@@ -31,9 +31,7 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->authorizeResource(TestCase::class, 'test_case', [
-            'only' => ['index', 'edit', 'update', 'destroy'],
-        ]);
+        $this->authorizeResource(TestCase::class, 'test_case');
     }
 
     /**
@@ -336,10 +334,10 @@ class TestCaseController extends Controller
     public function export(TestCase $testCase)
     {
         $data = (new TestCaseExport())->export($testCase);
-        $fileName = "TestCase-{$testCase->uuid}";
+        $fileName = "TestCase-{$testCase->name}";
 
         header('Content-Type: application/yaml');
-        header("Content-Disposition: attachment; filename={$fileName}.yaml");
+        header("Content-Disposition: attachment; filename=\"{$fileName}\".yaml");
         header('Content-Length: ' . strlen($data));
 
         $file = fopen('php://output', 'w') or die('Unable to open file!');
