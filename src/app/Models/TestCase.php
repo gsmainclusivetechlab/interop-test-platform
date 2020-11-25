@@ -39,6 +39,7 @@ class TestCase extends Model
         'behavior',
         'description',
         'precondition',
+        'use_case_id',
         'test_case_group_id',
     ];
 
