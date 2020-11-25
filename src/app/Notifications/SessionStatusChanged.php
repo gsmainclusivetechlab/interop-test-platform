@@ -88,11 +88,11 @@ class SessionStatusChanged extends Notification implements ShouldQueue
     {
         return [
             Session::STATUS_IN_VERIFICATION =>
-                ':userName sent his session :sessionName for verification.',
+                ':userName sent his session ":sessionName" for verification.',
             Session::STATUS_APPROVED =>
-                'Your session :sessionName was approved by the admin by the next reason:',
+                'Your session ":sessionName" was approved by the admin by the next reason:',
             Session::STATUS_DECLINED =>
-                'Your session :sessionName was declined by the admin by the next reason:',
+                'Your session ":sessionName" was declined by the admin by the next reason:',
         ];
     }
 }
