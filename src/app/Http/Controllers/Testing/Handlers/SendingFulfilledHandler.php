@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
+use App\Jobs\ExecuteTestStepJob;
+use App\Models\Session;
 use App\Models\TestResult;
 use App\Testing\TestExecutionListener;
 use App\Testing\TestScriptLoader;
@@ -19,11 +21,18 @@ class SendingFulfilledHandler
     protected $testResult;
 
     /**
-     * @param TestResult $testResult
+     * @var Session
      */
-    public function __construct(TestResult $testResult)
+    protected $session;
+
+    /**
+     * @param TestResult $testResult
+     * @param Session $session
+     */
+    public function __construct(TestResult $testResult, Session $session)
     {
         $this->testResult = $testResult;
+        $this->session = $session;
     }
 
     /**
@@ -48,6 +57,10 @@ class SendingFulfilledHandler
 
         if ($testSuiteResult->wasSuccessful()) {
             $this->testResult->pass();
+
+            if (($nextTestStep = $this->testResult->testStep->getNext()) && !$this->session->getBaseUriOfComponent($nextTestStep->source)) {
+                ExecuteTestStepJob::dispatch($this->session, $nextTestStep, $this->testResult->testRun);
+            }
         } else {
             $this->testResult->fail();
         }

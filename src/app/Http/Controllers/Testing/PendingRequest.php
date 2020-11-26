@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Testing;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 
 class PendingRequest
@@ -20,6 +22,21 @@ class PendingRequest
      * @var callable[]
      */
     protected $mapResponseCallbacks = [];
+
+    /**
+     * @var Response|null
+     */
+    protected $response;
+
+    /**
+     * PendingRequest constructor.
+     *
+     * @param Response|null $response
+     */
+    public function __construct(Response $response = null)
+    {
+        $this->response = $response;
+    }
 
     /**
      * @param callable $callback
@@ -66,7 +83,12 @@ class PendingRequest
     protected function buildHandlerStack()
     {
         $stack = new HandlerStack();
-        $stack->setHandler(new CurlHandler());
+
+        if ($this->response) {
+            $stack->setHandler(new MockHandler([$this->response]));
+        } else {
+            $stack->setHandler(new CurlHandler());
+        }
 
         foreach ($this->mapRequestCallbacks as $mapRequestCallback) {
             $stack->push(Middleware::mapRequest($mapRequestCallback));

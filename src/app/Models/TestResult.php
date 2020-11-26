@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property TestStep $testStep
  */
 class TestResult extends Model
 {

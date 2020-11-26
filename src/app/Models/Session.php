@@ -236,8 +236,7 @@ class Session extends Model
             $this->components()
                 ->whereKey($component->getKey())
                 ->first(),
-            'pivot.base_url',
-            $component->base_url
+            'pivot.base_url'
         );
     }
 
