@@ -262,7 +262,11 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
-        Route::resource('test-cases', 'TestCaseController')->except(['show']);
+        Route::resource('test-cases', 'TestCaseController')->except([
+            'show',
+            'edit',
+            'update',
+            ]);
         Route::name('test-cases.')
             ->prefix('test-cases')
             ->group(function () {
@@ -290,18 +294,46 @@ Route::name('admin.')
                     'group-candidates',
                     'TestCaseController@groupCandidates'
                 )->name('group-candidates');
-                Route::get('{testCase}/info', 'TestCaseController@showInfo')->name(
-                    'info'
-                );
-                Route::get('{testCase}/groups', 'TestCaseController@showGroups')->name(
-                    'groups'
-                );
-                Route::get('{testCase}/test-steps', 'TestCaseController@showTestSteps')->name(
-                    'test-steps'
-                );
-                Route::get('{testCase}/versions', 'TestCaseController@showVersions')->name(
-                    'versions'
-                );
+                Route::name('info.')
+                    ->prefix('info')
+                    ->group(function () {
+                        Route::get('{testCase}/show', 'TestCaseController@showInfo')->name(
+                            'show'
+                        );
+                        Route::get('{testCase}/create', 'TestCaseController@editInfo')->name(
+                            'edit'
+                        );
+                        Route::put('{testCase}/update', 'TestCaseController@updateInfo')->name(
+                            'update'
+                        );
+                    });
+                Route::name('groups.')
+                    ->prefix('groups')
+                    ->group(function () {
+                        Route::get('{testCase}/show', 'TestCaseController@showGroups')->name(
+                            'show'
+                        );
+                        Route::get('{testCase}/create', 'TestCaseController@editGroups')->name(
+                            'edit'
+                        );
+                        Route::put('{testCase}/update', 'TestCaseController@updateGroups')->name(
+                            'update'
+                        );
+                    });
+                Route::name('test-steps.')
+                    ->prefix('test-steps')
+                    ->group(function () {
+                        Route::get('{testCase}/index', 'TestCaseController@indexTestSteps')->name(
+                            'index'
+                        );
+                    });
+                Route::name('versions.')
+                    ->prefix('versions')
+                    ->group(function () {
+                        Route::get('{testCase}/index', 'TestCaseController@indexVersions')->name(
+                            'index'
+                        );
+                    });
             });
         Route::name('questionnaire.')
             ->prefix('questionnaire')
