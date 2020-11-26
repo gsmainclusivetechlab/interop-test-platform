@@ -128,7 +128,7 @@ class TestCaseController extends Controller
             ->save();
 
         return redirect()
-            ->route('admin.test-cases.edit', $testCase->id)
+            ->route('admin.test-cases.info.show', $testCase->id)
             ->with('success', __('Test Case created successfully'));
     }
 
