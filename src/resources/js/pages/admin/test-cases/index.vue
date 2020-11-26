@@ -54,7 +54,7 @@
                         <tr v-for="(testCase, i) in testCases.data" :key="i">
                             <td class="text-break">
                                 <inertia-link
-                                    :href="route('admin.test-cases.info', testCase.id)"
+                                    :href="route('admin.test-cases.info.show', testCase.id)"
                                 >
                                     {{ testCase.name }}
                                 </inertia-link>

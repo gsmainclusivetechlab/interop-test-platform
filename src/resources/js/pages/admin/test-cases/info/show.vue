@@ -1,5 +1,55 @@
 <template>
     <layout>
+        <!-- TODO - put out in common layout test case navigation -->
+        <div class="d-flex align-items-baseline border-bottom mb-4">
+            <ul class="nav nav-tabs mx-0 border-0">
+                <li class="nav-item">
+                    <inertia-link
+                        :href="`route('groups.show', group.id)`"
+                        class="nav-link rounded-0"
+                        v-bind:class="{
+                            active: `route().current('info.show')`,
+                        }"
+                    >
+                        Info
+                    </inertia-link>
+                </li>
+                <li class="nav-item">
+                    <inertia-link
+                        :href="`route('groups.show', group.id)`"
+                        class="nav-link rounded-0"
+                        v-bind:class="{
+                            active: `route().current('test-steps.index')`,
+                        }"
+                    >
+                        Test steps
+                    </inertia-link>
+                </li>
+                <li class="nav-item">
+                    <inertia-link
+                        :href="`route('groups.show', group.id)`"
+                        class="nav-link rounded-0"
+                        v-bind:class="{
+                            active: `route().current('groups.show')`,
+                        }"
+                    >
+                        Groups
+                    </inertia-link>
+                </li>
+                <li class="nav-item">
+                    <inertia-link
+                        :href="`route('groups.show', group.id)`"
+                        class="nav-link rounded-0"
+                        v-bind:class="{
+                            active: `route().current('versions.index')`,
+                        }"
+                    >
+                        Versions
+                    </inertia-link>
+                </li>
+            </ul>
+        </div>
+        <!-- end TODO -->
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
@@ -193,7 +243,12 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.test-cases.edit')"
+                                :href="
+                                    route(
+                                        'admin.test-cases.info.edit',
+                                        testCase.id
+                                    )
+                                "
                                 class="btn btn-primary"
                             >
                                 Edit
