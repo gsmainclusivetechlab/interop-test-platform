@@ -20,6 +20,7 @@ class TestCaseResource extends JsonResource
             'version' => $this->version,
             'name' => $this->name,
             'public' => $this->public,
+            'slug' => $this->slug,
             'draft' => $this->draft,
             'behavior' => $this->behavior,
             'description' => Markdown::parse($this->description)->toHtml(),
