@@ -250,7 +250,7 @@ export default {
             this.sending = true;
             this.$inertia
                 .put(
-                    route('admin.test-cases.update', this.testCase.id),
+                    route('admin.test-cases.info.update', this.testCase.id),
                     this.form
                 )
                 .then(() => (this.sending = false));
