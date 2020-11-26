@@ -129,7 +129,7 @@
                                             class="dropdown-item"
                                             :href="
                                                 route(
-                                                    'admin.test-cases.edit',
+                                                    'admin.test-cases.info.edit',
                                                     testCase.id
                                                 )
                                             "
