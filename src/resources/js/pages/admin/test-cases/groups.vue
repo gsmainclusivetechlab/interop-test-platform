@@ -72,7 +72,7 @@ import Layout from '@/layouts/main';
 
 export default {
     metaInfo: {
-        title: 'Update test case',
+        title: 'Groups test case',
     },
     components: {
         Layout,

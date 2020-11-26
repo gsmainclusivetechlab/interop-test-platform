@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Update test case</b>
+                    <b>Test case</b>
                 </h1>
             </div>
             <div class="container">
@@ -36,10 +36,10 @@
                                     name="slug"
                                     type="text"
                                     class="form-control"
+                                    v-model="slug"
                                     :class="{
                                         'is-invalid': $page.errors.slug,
                                     }"
-                                    v-model="slug"
                                 />
                                 <span
                                     v-if="$page.errors.slug"
@@ -193,18 +193,11 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.test-cases.index')"
-                                class="btn btn-link"
+                                :href="route('admin.test-cases.edit')"
+                                class="btn btn-primary"
                             >
-                                Cancel
+                                Edit
                             </inertia-link>
-                            <button type="submit" class="btn btn-primary">
-                                <span
-                                    v-if="sending"
-                                    class="spinner-border spinner-border-sm mr-2"
-                                ></span>
-                                Update
-                            </button>
                         </div>
                     </div>
                 </form>
@@ -218,7 +211,7 @@ import Layout from '@/layouts/main';
 
 export default {
     metaInfo: {
-        title: 'Update test case',
+        title: 'Test case',
     },
     components: {
         Layout,
@@ -244,34 +237,6 @@ export default {
             precondition: this.testCase.precondition,
             components: this.testCase.components.data,
         };
-    },
-    methods: {
-        submit() {
-            this.sending = true;
-            this.$inertia
-                .put(
-                    route('admin.test-cases.update', this.testCase.id),
-                    this.form
-                )
-                .then(() => (this.sending = false));
-        },
-    },
-    computed: {
-        form() {
-            const form = {
-                name: this.name,
-                slug: this.slug,
-                behavior: collect(this.$page.enums.test_case_behaviors)
-                    .flip()
-                    .all()[this.behavior],
-                use_case_id: this.useCase?.id,
-                components_id: this.components?.map((el) => el.id),
-                description: this.description,
-                precondition: this.precondition,
-            };
-
-            return form;
-        },
     },
 };
 </script>

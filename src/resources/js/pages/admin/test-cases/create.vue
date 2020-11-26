@@ -36,10 +36,10 @@
                                     name="slug"
                                     type="text"
                                     class="form-control"
-                                    v-model="form.slug"
                                     :class="{
                                         'is-invalid': $page.errors.slug,
                                     }"
+                                    v-model="slug"
                                 />
                                 <span
                                     v-if="$page.errors.slug"
