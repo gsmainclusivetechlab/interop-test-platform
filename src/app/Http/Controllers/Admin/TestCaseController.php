@@ -281,14 +281,10 @@ class TestCaseController extends Controller
                     ->owner()
                     ->associate(auth()->user())
                     ->save();
-                $testCaseResource = (new TestCaseResource(
-                    $draftTestCase->load([
-                        'groups',
-                        'useCase',
-                        'testSteps',
-                        'components'
-                    ])
-                ))->resolve();
+
+                return redirect()
+                    ->route('admin.test-cases.info.edit', $draftTestCase->id)
+                    ->with('success', __('New draft test case created successfully'));
             } catch (\Throwable $e) {
                 $errorMessage = implode(
                     '<br>',
