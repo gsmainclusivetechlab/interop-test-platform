@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -34,7 +33,11 @@ class TestCaseController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(TestCase::class, 'test_case', [
-            'except' => ['show'],
+            'except' => [
+                'show',
+                'edit',
+                'update'
+            ],
         ]);
     }
 
@@ -127,73 +130,6 @@ class TestCaseController extends Controller
         return redirect()
             ->route('admin.test-cases.edit', $testCase->id)
             ->with('success', __('Test Case created successfully'));
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return Response
-     */
-    public function showInfo(TestCase $testCase)
-    {
-        return Inertia::render('admin/test-cases/show-info', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'useCase',
-                    'components'
-                ])
-            ))->resolve(),
-        ]);
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return Response
-     */
-    public function showGroups(TestCase $testCase)
-    {
-        return Inertia::render('admin/test-cases/show-groups', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'groups',
-                ])
-            ))->resolve(),
-        ]);
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return Response
-     */
-    public function showTestSteps(TestCase $testCase)
-    {
-        return Inertia::render('admin/test-cases/show-test-steps', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'testSteps',
-                ])
-            ))->resolve(),
-        ]);
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return Response
-     */
-    public function showVersions(TestCase $testCase)
-    {
-        return Inertia::render('admin/test-cases/show-versions', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'testSteps',
-                ])
-            ))->resolve(),
-            'testCases' => (new TestCaseResource(
-                TestCase::where(
-                    'test_case_group_id',
-                    $testCase->test_case_group_id
-                )->get()
-            ))->resolve(),
-        ]);
     }
 
     /**
@@ -294,7 +230,22 @@ class TestCaseController extends Controller
      * @param TestCase $testCase
      * @return Response
      */
-    public function edit(TestCase $testCase)
+    public function showInfo(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/info/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'useCase',
+                    'components'
+                ])
+            ))->resolve(),
+        ]);
+    }
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function editInfo(TestCase $testCase)
     {
         $testCaseResource = (new TestCaseResource(
             $testCase->load([
@@ -345,8 +296,8 @@ class TestCaseController extends Controller
                         [$e->getMessage()],
                         !empty($e->validator)
                             ? $e->validator
-                                ->errors()
-                                ->all()
+                            ->errors()
+                            ->all()
                             : []
                     )
                 );
@@ -356,7 +307,7 @@ class TestCaseController extends Controller
             }
         }
 
-        return Inertia::render('admin/test-cases/edit', [
+        return Inertia::render('admin/test-cases/info/edit', [
             'testCase' => $testCaseResource,
             'components' => ComponentResource::collection(
                 Component::get()
@@ -372,7 +323,7 @@ class TestCaseController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(TestCase $testCase, Request $request)
+    public function updateInfo(TestCase $testCase, Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -396,6 +347,88 @@ class TestCaseController extends Controller
         return redirect()
             ->route('admin.test-cases.index')
             ->with('success', __('Test case updated successfully'));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function showGroups(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/groups/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'groups',
+                ])
+            ))->resolve(),
+        ]);
+    }
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function editGroups(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/groups/edit', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'groups',
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateGroups(TestCase $testCase, Request $request)
+    {
+        $request->validate([
+            'groups_id.*' => ['integer', 'exists:groups,id'],
+        ]);
+        $testCase->groups()->sync($request->input('groups_id'));
+
+        return redirect()
+            ->route('admin.test-cases.index')
+            ->with('success', __('Test case groups updated successfully'));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function indexTestSteps(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/test-steps/index', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'testSteps',
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function indexVersions(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/versions/index', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load([
+                    'testSteps',
+                ])
+            ))->resolve(),
+            'testCases' => (new TestCaseResource(
+                TestCase::where(
+                    'test_case_group_id',
+                    $testCase->test_case_group_id
+                )->get()
+            ))->resolve(),
+        ]);
     }
 
     /**
