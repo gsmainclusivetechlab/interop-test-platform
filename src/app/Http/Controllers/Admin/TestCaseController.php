@@ -135,7 +135,7 @@ class TestCaseController extends Controller
      */
     public function showInfo(TestCase $testCase)
     {
-        return Inertia::render('admin/test-cases/show', [
+        return Inertia::render('admin/test-cases/show-info', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
                     'useCase',
@@ -151,7 +151,7 @@ class TestCaseController extends Controller
      */
     public function showGroups(TestCase $testCase)
     {
-        return Inertia::render('admin/test-cases/show', [
+        return Inertia::render('admin/test-cases/show-groups', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
                     'groups',
@@ -166,7 +166,7 @@ class TestCaseController extends Controller
      */
     public function showTestSteps(TestCase $testCase)
     {
-        return Inertia::render('admin/test-cases/show', [
+        return Inertia::render('admin/test-cases/show-test-steps', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
                     'testSteps',
@@ -181,7 +181,7 @@ class TestCaseController extends Controller
      */
     public function showVersions(TestCase $testCase)
     {
-        return Inertia::render('admin/test-cases/show', [
+        return Inertia::render('admin/test-cases/show-versions', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
                     'testSteps',
@@ -376,6 +376,12 @@ class TestCaseController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'slug' => [
+                Rule::unique('test_cases')->ignore(
+                    $testCase->test_case_group_id,
+                    'test_case_group_id'
+                ),
+            ],
             'description' => ['string', 'nullable'],
             'precondition' => ['required', 'string', 'nullable'],
             'behavior' => ['required', 'string', 'max:255'],
