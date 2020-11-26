@@ -16,10 +16,10 @@
                                     name="name"
                                     type="text"
                                     class="form-control"
-                                    v-model="form.name"
                                     :class="{
                                         'is-invalid': $page.errors.name,
                                     }"
+                                    v-model="name"
                                 />
                                 <span
                                     v-if="$page.errors.name"
@@ -57,7 +57,7 @@
                                     :class="{
                                         'is-invalid': $page.errors.behavior,
                                     }"
-                                    v-model="form.behavior"
+                                    v-model="behavior"
                                     placeholder="Select behavior"
                                     :options="
                                         collect(
@@ -80,6 +80,9 @@
                                 <label class="form-label">Use Case</label>
                                 <selectize
                                     class="form-select"
+                                    :class="{
+                                        'is-invalid': $page.errors.use_case_id,
+                                    }"
                                     v-model="useCase"
                                     label="name"
                                     placeholder="Select use case"
@@ -87,6 +90,14 @@
                                     :disableSearch="false"
                                     :createItem="false"
                                 />
+                                <span
+                                    v-if="$page.errors.use_case_id"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.use_case_id }}
+                                    </strong>
+                                </span>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Description</label>
@@ -105,10 +116,9 @@
                                         'hard_break',
                                     ]"
                                     :output-format="['html']"
-                                    :content="{ html: form.description }"
+                                    :content="{ html: description }"
                                     @output-html="
-                                        (content) =>
-                                            (form.description = content)
+                                        (content) => (description = content)
                                     "
                                 />
                                 <span
@@ -137,10 +147,9 @@
                                         'hard_break',
                                     ]"
                                     :output-format="['html']"
-                                    :content="{ html: form.precondition }"
+                                    :content="{ html: precondition }"
                                     @output-html="
-                                        (content) =>
-                                            (form.precondition = content)
+                                        (content) => (precondition = content)
                                     "
                                 />
                                 <span
@@ -217,34 +226,14 @@ export default {
     data() {
         return {
             sending: false,
-            useCase: null,
-            components: null,
-            form: {
-                name: null,
-                slug: null,
-                behavior: null,
-                use_case_id: null,
-                components_id: null,
-                description: null,
-                precondition: null,
-            },
+            name: '',
+            slug: '',
+            behavior: '',
+            useCase: {},
+            description: '',
+            precondition: '',
+            components: [],
         };
-    },
-    watch: {
-        useCase: {
-            immediate: true,
-            deep: true,
-            handler() {
-                this.form.use_case_id = this.useCase?.id;
-            },
-        },
-        components: {
-            immediate: true,
-            deep: true,
-            handler() {
-                this.form.components_id = this.components?.map((el) => el.id);
-            },
-        },
     },
     methods: {
         submit() {
@@ -252,6 +241,23 @@ export default {
             this.$inertia
                 .post(route('admin.test-cases.store'), this.form)
                 .then(() => (this.sending = false));
+        },
+    },
+    computed: {
+        form() {
+            const form = {
+                name: this.name,
+                slug: this.slug,
+                behavior: collect(this.$page.enums.test_case_behaviors)
+                    .flip()
+                    .all()[this.behavior],
+                use_case_id: this.useCase?.id,
+                components_id: this.components?.map((el) => el.id),
+                description: this.description,
+                precondition: this.precondition,
+            };
+
+            return form;
         },
     },
 };
