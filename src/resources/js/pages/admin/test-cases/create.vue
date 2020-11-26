@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Update test case</b>
+                    <b>Create test case</b>
                 </h1>
             </div>
             <div class="container">
@@ -164,14 +164,14 @@
                             <div class="col-12 mb-3">
                                 <label class="form-label">Components</label>
                                 <selectize
+                                    v-model="components"
+                                    multiple
                                     class="form-select"
+                                    placeholder="Select components"
                                     :class="{
                                         'is-invalid':
                                             $page.errors.components_id,
                                     }"
-                                    v-model="components"
-                                    multiple
-                                    placeholder="Select components"
                                     label="name"
                                     :options="$page.components"
                                     :createItem="false"
@@ -191,21 +191,21 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="card-footer text-right">
-                            <inertia-link
-                                :href="route('admin.test-cases.index')"
-                                class="btn btn-link"
-                            >
-                                Cancel
-                            </inertia-link>
-                            <button type="submit" class="btn btn-primary">
-                                <span
-                                    v-if="sending"
-                                    class="spinner-border spinner-border-sm mr-2"
-                                ></span>
-                                Update
-                            </button>
-                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <inertia-link
+                            :href="route('admin.test-cases.index')"
+                            class="btn btn-link"
+                        >
+                            Cancel
+                        </inertia-link>
+                        <button type="submit" class="btn btn-primary">
+                            <span
+                                v-if="sending"
+                                class="spinner-border spinner-border-sm mr-2"
+                            ></span>
+                            Create
+                        </button>
                     </div>
                 </form>
             </div>
@@ -218,41 +218,28 @@ import Layout from '@/layouts/main';
 
 export default {
     metaInfo: {
-        title: 'Update test case',
+        title: 'Create test case',
     },
     components: {
         Layout,
     },
-    props: {
-        testCase: {
-            type: Object,
-            required: true,
-        },
-    },
     data() {
         return {
             sending: false,
-            name: this.testCase.name,
-            slug: this.testCase.slug,
-            behavior: collect(this.$page.enums.test_case_behaviors).get(
-                this.testCase.behavior
-            ),
-            useCase: this.$page.useCases.filter(
-                (el) => el.name === this.testCase.useCase.data.name
-            )[0],
-            description: this.testCase.description,
-            precondition: this.testCase.precondition,
-            components: this.testCase.components.data,
+            name: '',
+            slug: '',
+            behavior: '',
+            useCase: {},
+            description: '',
+            precondition: '',
+            components: [],
         };
     },
     methods: {
         submit() {
             this.sending = true;
             this.$inertia
-                .put(
-                    route('admin.test-cases.update', this.testCase.id),
-                    this.form
-                )
+                .post(route('admin.test-cases.store'), this.form)
                 .then(() => (this.sending = false));
         },
     },

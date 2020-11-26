@@ -1,0 +1,92 @@
+.json-editor-block {
+  .add-form {
+    font-size: 1em !important;
+  }
+  .add-key {
+    color: $red;
+    font-size: 1.2em;
+  }
+  .del-btn {
+    color: $red;
+  }
+  .dragbar {
+    color: $red;
+    cursor: move;
+  }
+  .block_content {
+    .key-input {
+      width: 20%;
+      max-width: 150px;
+    }
+    .val-input {
+      color: inherit;
+      width: 60%;
+    }
+    [type='number'],
+    select {
+      &.val-input {
+        width: auto;
+      }
+    }
+    .val-input,
+    .key-input {
+      border: 1px solid transparent;
+      border-radius: 3px;
+      transition: border-color 0.2s ease;
+      &:focus {
+        background-color: transparent;
+        border: 1px solid $red;
+      }
+    }
+  }
+  button.pure-button.f-confirm,
+  button.pure-button {
+    color: $red;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4666666667;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid $red;
+    border-radius: 3px;
+    padding: 0.375rem 1rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    &:hover {
+      background-image: none;
+    }
+  }
+  button.pure-button {
+    &.f-confirm {
+      color: #fff;
+      background-color: $red;
+      &:hover {
+        background-color: #b80024;
+        border-color: #ab0021;
+      }
+    }
+    &:not(.f-confirm) {
+      &:hover {
+        color: #fff;
+        background-color: $red;
+      }
+    }
+  }
+  .pure-form {
+    input[type],
+    textarea {
+      box-shadow: none;
+    }
+    select {
+      box-shadow: none;
+    }
+  }
+  .tools-types {
+    border: 1px solid rgba(110, 117, 130, 0.2);
+    border-radius: 3px;
+    padding: 1px;
+  }
+  select {
+    cursor: pointer;
+  }
+}

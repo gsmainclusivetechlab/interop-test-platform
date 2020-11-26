@@ -26,9 +26,12 @@
         "selectize": "^0.12.6",
         "string": "^3.3.3",
         "tabler": "^1.0.0-alpha.6",
-        "tabler-icons": "^1.10.0",
+        "tabler-icons": "^1.35.0",
+        "tiptap": "^1.30.0",
+        "tiptap-extensions": "^1.33.2",
         "vue": "^2.6.11",
         "vue-apexcharts": "^1.5.3",
+        "vue-json-edit": "^1.4.3",
         "vue-json-pretty": "^1.6.3",
         "vue-meta": "^2.3.1",
         "vue-template-compiler": "^2.6.11"
