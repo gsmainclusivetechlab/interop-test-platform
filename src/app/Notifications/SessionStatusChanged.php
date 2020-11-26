@@ -60,7 +60,7 @@ class SessionStatusChanged extends Notification implements ShouldQueue
                     'sessionName' => $session->name,
                 ])
             )
-            ->line($reason ? __('Reason') . ": {$reason}" : null)
+            ->line($reason ? "\"{$reason}\"" : null)
             ->line(__('Please click the button below to review it.'))
             ->action(
                 __('Go to session'),

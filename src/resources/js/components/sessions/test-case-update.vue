@@ -10,7 +10,7 @@
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
             v-b-tooltip.hover
-            title="A laster version of this test case is available. Click to update your session with it."
+            title="A newer version of this test case is available. Click to update your session with it."
         >
             update
         </button>

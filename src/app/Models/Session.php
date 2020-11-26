@@ -189,7 +189,7 @@ class Session extends Model
      */
     public function environments()
     {
-        return array_merge($this->environments, [
+        return array_merge($this->environments ?? [], [
             'SP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Service Provider')->firstOrFail()
             ),

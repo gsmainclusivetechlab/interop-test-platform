@@ -112,6 +112,14 @@
                                 />
                                 {{ session.typeName }}
                             </li>
+                            <li v-if="session.status">
+                                <icon
+                                    name="list-check"
+                                    v-b-tooltip.hover
+                                    title="Status"
+                                />
+                                {{ session.statusName }}
+                            </li>
                         </ul>
                     </div>
                 </div>
