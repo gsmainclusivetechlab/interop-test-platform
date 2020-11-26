@@ -6,6 +6,7 @@ use App\Exports\TestCaseExport;
 use App\Http\Resources\ComponentResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\TestCaseResource;
+use App\Http\Resources\TestStepResource;
 use App\Http\Resources\UseCaseResource;
 use App\Imports\TestCaseImport;
 use App\Models\Component;
@@ -110,6 +111,7 @@ class TestCaseController extends Controller
                 ])
             ],
             'slug' => [
+                'nullable',
                 Rule::unique('test_cases'),
             ],
             'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
@@ -241,6 +243,7 @@ class TestCaseController extends Controller
             ))->resolve(),
         ]);
     }
+
     /**
      * @param TestCase $testCase
      * @return Response
@@ -324,6 +327,7 @@ class TestCaseController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
+                'nullable',
                 Rule::unique('test_cases')->ignore(
                     $testCase->test_case_group_id,
                     'test_case_group_id'
@@ -341,7 +345,7 @@ class TestCaseController extends Controller
         $testCase->groups()->sync($request->input('groups_id'));
 
         return redirect()
-            ->route('admin.test-cases.index')
+            ->route('admin.test-cases.info.show', $testCase->id)
             ->with('success', __('Test case updated successfully'));
     }
 
@@ -349,14 +353,15 @@ class TestCaseController extends Controller
      * @param TestCase $testCase
      * @return Response
      */
-    public function showGroups(TestCase $testCase)
+    public function indexGroups(TestCase $testCase)
     {
-        return Inertia::render('admin/test-cases/groups/show', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'groups',
-                ])
-            ))->resolve(),
+        return Inertia::render('admin/test-cases/groups/index', [
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+            'groups' => GroupResource::collection(
+                $testCase
+                    ->groups()
+                    ->paginate()
+            )
         ]);
     }
     /**
@@ -367,9 +372,7 @@ class TestCaseController extends Controller
     {
         return Inertia::render('admin/test-cases/groups/edit', [
             'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'groups',
-                ])
+                $testCase->load(['groups'])
             ))->resolve(),
         ]);
     }
@@ -387,7 +390,7 @@ class TestCaseController extends Controller
         $testCase->groups()->sync($request->input('groups_id'));
 
         return redirect()
-            ->route('admin.test-cases.index')
+            ->route('admin.test-cases.groups.index', $testCase->id)
             ->with('success', __('Test case groups updated successfully'));
     }
 
@@ -399,10 +402,14 @@ class TestCaseController extends Controller
     {
         return Inertia::render('admin/test-cases/test-steps/index', [
             'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'testSteps',
-                ])
+                $testCase->load(['testSteps'])
             ))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase
+                    ->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
         ]);
     }
 
@@ -413,17 +420,16 @@ class TestCaseController extends Controller
     public function indexVersions(TestCase $testCase)
     {
         return Inertia::render('admin/test-cases/versions/index', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'testSteps',
-                ])
-            ))->resolve(),
-            'testCases' => (new TestCaseResource(
+            'currentTestCase' => (new TestCaseResource($testCase))->resolve(),
+            'testCases' => TestCaseResource::collection(
                 TestCase::where(
                     'test_case_group_id',
                     $testCase->test_case_group_id
-                )->get()
-            ))->resolve(),
+                )
+                    ->with('useCase')
+                    ->orderByDesc('version')
+                    ->paginate()
+            )
         ]);
     }
 

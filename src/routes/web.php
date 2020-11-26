@@ -310,8 +310,8 @@ Route::name('admin.')
                 Route::name('groups.')
                     ->prefix('groups')
                     ->group(function () {
-                        Route::get('{testCase}/show', 'TestCaseController@showGroups')->name(
-                            'show'
+                        Route::get('{testCase}/index', 'TestCaseController@indexGroups')->name(
+                            'index'
                         );
                         Route::get('{testCase}/edit', 'TestCaseController@editGroups')->name(
                             'edit'

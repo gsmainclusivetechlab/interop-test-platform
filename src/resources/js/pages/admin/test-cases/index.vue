@@ -98,19 +98,21 @@
                                 {{ testCase.useCase.name }}
                             </td>
                             <td>
-                                {{
-                                    testCase.testSteps
-                                        ? testCase.testSteps.length
-                                        : 0
-                                }}
+                                <inertia-link
+                                    :href="route('admin.test-cases.test-steps.index', testCase.id)"
+                                >
+                                    {{ testCase.testSteps ? testCase.testSteps.length : 0 }}
+                                </inertia-link>
                             </td>
                             <td class="text-break">
                                 {{ testCase.owner ? testCase.owner.name : '' }}
                             </td>
                             <td class="text-break">
-                                {{
-                                    testCase.groups ? testCase.groups.length : 0
-                                }}
+                                <inertia-link
+                                    :href="route('admin.test-cases.groups.index', testCase.id)"
+                                >
+                                    {{ testCase.groups ? testCase.groups.length : 0 }}
+                                </inertia-link>
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

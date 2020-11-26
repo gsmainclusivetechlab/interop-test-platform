@@ -55,7 +55,7 @@ class TestCaseResource extends JsonResource
                         ->count();
                 }
             ),
-            'lastAvailableVersion' => $this->last_available_version_id,
+            'lastAvailableVersion' => $this->last_available_version,
             'can' => [
                 'update' => auth()
                     ->user()

@@ -1,5 +1,11 @@
 <template>
     <layout>
+        <div class="page-pretitle font-weight-normal">
+            <breadcrumb
+                class="breadcrumb-bullets"
+                :items="breadcrumbs"
+            ></breadcrumb>
+        </div>
         <div class="row">
             <div class="col-12">
                 <div class="page-header">
@@ -43,6 +49,16 @@ export default {
             type: Object,
             required: true,
         },
+        breadcrumbs: {
+            type: Array,
+            required: false,
+            default: function () {
+                return [
+                    { name: 'Test Cases', url: route('admin.test-cases.index') },
+                    { name: this.testCase.name },
+                ];
+            },
+        },
     },
     data() {
         return {
@@ -63,8 +79,8 @@ export default {
                 },
                 {
                     title: 'Groups',
-                    route: 'admin.test-cases.groups.edit',
-                    condition: route().current('admin.test-cases.groups.edit'),
+                    route: 'admin.test-cases.groups.index',
+                    condition: route().current('admin.test-cases.groups.index'),
                 },
                 {
                     title: 'Versions',

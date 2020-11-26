@@ -278,7 +278,7 @@ class TestCase extends Model
     /**
      * @return mixed
      */
-    public function getLastAvailableVersionIdAttribute()
+    public function getLastAvailableVersionAttribute()
     {
         return static::available()
             ->lastPerGroup()
