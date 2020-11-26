@@ -300,7 +300,7 @@ Route::name('admin.')
                         Route::get('{testCase}/show', 'TestCaseController@showInfo')->name(
                             'show'
                         );
-                        Route::get('{testCase}/create', 'TestCaseController@editInfo')->name(
+                        Route::get('{testCase}/edit', 'TestCaseController@editInfo')->name(
                             'edit'
                         );
                         Route::put('{testCase}/update', 'TestCaseController@updateInfo')->name(
@@ -313,7 +313,7 @@ Route::name('admin.')
                         Route::get('{testCase}/show', 'TestCaseController@showGroups')->name(
                             'show'
                         );
-                        Route::get('{testCase}/create', 'TestCaseController@editGroups')->name(
+                        Route::get('{testCase}/edit', 'TestCaseController@editGroups')->name(
                             'edit'
                         );
                         Route::put('{testCase}/update', 'TestCaseController@updateGroups')->name(
