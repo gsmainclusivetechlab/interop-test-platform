@@ -290,16 +290,16 @@ Route::name('admin.')
                     'group-candidates',
                     'TestCaseController@groupCandidates'
                 )->name('group-candidates');
-                Route::get('info', 'TestCaseController@showInfo')->name(
+                Route::get('{testCase}/info', 'TestCaseController@showInfo')->name(
                     'info'
                 );
-                Route::get('groups', 'TestCaseController@showGroups')->name(
+                Route::get('{testCase}/groups', 'TestCaseController@showGroups')->name(
                     'groups'
                 );
-                Route::get('test-steps', 'TestCaseController@showTestSteps')->name(
+                Route::get('{testCase}/test-steps', 'TestCaseController@showTestSteps')->name(
                     'test-steps'
                 );
-                Route::get('versions', 'TestCaseController@showVersions')->name(
+                Route::get('{testCase}/versions', 'TestCaseController@showVersions')->name(
                     'versions'
                 );
             });
