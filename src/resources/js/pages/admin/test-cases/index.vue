@@ -53,7 +53,11 @@
                     <tbody>
                         <tr v-for="(testCase, i) in testCases.data" :key="i">
                             <td class="text-break">
-                                {{ testCase.name }}
+                                <inertia-link
+                                    :href="route('admin.test-cases.info', testCase.id)"
+                                >
+                                    {{ testCase.name }}
+                                </inertia-link>
                             </td>
                             <td class="text-break">
                                 {{ testCase.version }}
