@@ -1,78 +1,68 @@
 <template>
-    <layout>
-        <div class="flex-fill d-flex flex-column justify-content-center">
-            <div class="page-header">
-                <h1 class="page-title text-center">
-                    <b>Groups</b>
-                </h1>
+    <layout :test-case="testCase">
+        <form class="card" @submit.prevent="submit">
+            <div class="card-header">
+                <h2 class="card-title">Edit</h2>
             </div>
-            <div class="container">
-                <form class="card" @submit.prevent="submit">
-                    <div class="card-body">
-                        <div>
-                            <label class="form-label">Groups</label>
-                            <selectize
-                                v-model="groups"
-                                multiple
-                                class="form-select"
-                                placeholder="Select groups..."
-                                :class="{
-                                    'is-invalid': $page.errors.groups_id,
-                                }"
-                                label="name"
-                                :keys="['name']"
-                                :options="groupsList"
-                                :createItem="false"
-                                :searchFn="searchGroups"
-                            >
-                                <template slot="option" slot-scope="{ option }">
-                                    <div>{{ option.name }}</div>
-                                    <div class="text-muted small">
-                                        {{ option.domain }}
-                                    </div>
-                                </template>
-                            </selectize>
-                            <span
-                                v-if="$page.errors.groups_id"
-                                class="invalid-feedback"
-                            >
-                                <strong>
-                                    {{
-                                        collect($page.errors.groups_id).implode(
-                                            ' '
-                                        )
-                                    }}
-                                </strong>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card-footer text-right">
-                        <inertia-link
-                            :href="route('admin.test-cases.index')"
-                            class="btn btn-link"
-                        >
-                            Cancel
-                        </inertia-link>
-                        <button type="submit" class="btn btn-primary">
-                            <span
-                                v-if="sending"
-                                class="spinner-border spinner-border-sm mr-2"
-                            ></span>
-                            Update
-                        </button>
-                    </div>
-                </form>
+            <div class="card-body">
+                <div>
+                    <label class="form-label">Groups</label>
+                    <selectize
+                        v-model="groups"
+                        multiple
+                        class="form-select"
+                        :class="{
+                            'is-invalid': $page.errors.groups_id,
+                        }"
+                        placeholder="Select groups..."
+                        label="name"
+                        :keys="['name']"
+                        :options="groupsList"
+                        :createItem="false"
+                        :searchFn="searchGroups"
+                    >
+                        <template slot="option" slot-scope="{ option }">
+                            <div>{{ option.name }}</div>
+                            <div class="text-muted small">
+                                {{ option.domain }}
+                            </div>
+                        </template>
+                    </selectize>
+                    <span
+                        v-if="$page.errors.groups_id"
+                        class="invalid-feedback"
+                    >
+                        <strong>
+                            {{ collect($page.errors.groups_id).implode(' ') }}
+                        </strong>
+                    </span>
+                </div>
             </div>
-        </div>
+            <div class="card-footer text-right">
+                <inertia-link
+                    :href="route('admin.test-cases.index')"
+                    class="btn btn-link"
+                >
+                    Cancel
+                </inertia-link>
+                <button type="submit" class="btn btn-primary">
+                    <span
+                        v-if="sending"
+                        class="spinner-border spinner-border-sm mr-2"
+                    ></span>
+                    Update
+                </button>
+            </div>
+        </form>
     </layout>
 </template>
 
 <script>
-import Layout from '@/layouts/main';
+import Layout from '@/layouts/test-cases/main';
 
 export default {
     metaInfo: {
-        title: 'Groups test case',
+        title: 'Test Case Groups',
     },
     components: {
         Layout,
@@ -113,7 +103,7 @@ export default {
             this.sending = true;
             this.$inertia
                 .put(
-                    route('admin.test-cases.update', this.testCase.id),
+                    route('admin.test-cases.groups.update', this.testCase.id),
                     this.form
                 )
                 .then(() => (this.sending = false));

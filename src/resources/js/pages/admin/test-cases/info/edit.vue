@@ -90,35 +90,6 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Description</label>
-                        <text-editor
-                            :class="{
-                                'is-invalid': $page.errors.description,
-                            }"
-                            :menu-items="[
-                                'bold',
-                                'italic',
-                                'strike',
-                                'underline',
-                                'ordered_list',
-                                'bullet_list',
-                                'code',
-                                'hard_break',
-                            ]"
-                            :output-format="['html']"
-                            :content="{ html: description }"
-                            @output-html="(content) => (description = content)"
-                        />
-                        <span
-                            v-if="$page.errors.description"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.description }}
-                            </strong>
-                        </span>
-                    </div>
-                    <div class="col-6 mb-3">
                         <label class="form-label">Precondition</label>
                         <text-editor
                             :class="{
@@ -144,6 +115,35 @@
                         >
                             <strong>
                                 {{ $page.errors.precondition }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Description</label>
+                        <text-editor
+                            :class="{
+                                'is-invalid': $page.errors.description,
+                            }"
+                            :menu-items="[
+                                'bold',
+                                'italic',
+                                'strike',
+                                'underline',
+                                'ordered_list',
+                                'bullet_list',
+                                'code',
+                                'hard_break',
+                            ]"
+                            :output-format="['html']"
+                            :content="{ html: description }"
+                            @output-html="(content) => (description = content)"
+                        />
+                        <span
+                            v-if="$page.errors.description"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.description }}
                             </strong>
                         </span>
                     </div>
