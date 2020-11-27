@@ -456,7 +456,7 @@ class TestCaseController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function destroyGroup(TestCase $testCase, Group $group)
+    public function destroyGroups(TestCase $testCase, Group $group)
     {
         $this->authorize('update', $testCase);
         $group = $testCase
