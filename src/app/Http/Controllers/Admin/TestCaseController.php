@@ -384,7 +384,7 @@ class TestCaseController extends Controller
     {
         $this->authorize('update', $testCase);
         $request->validate([
-            'group_id' => [
+            'groups_id.*' => [
                 'required',
                 'exists:group,id',
                 Rule::unique('group_test_cases', 'group_id')->where(function (
@@ -394,11 +394,11 @@ class TestCaseController extends Controller
                 }),
             ],
         ]);
-        $testCase->groups()->attach($request->input('group_id'));
+        $testCase->groups()->attach($request->input('groups_id'));
 
         return redirect()
             ->route('admin.test-cases.groups.index', $testCase->id)
-            ->with('success', __('Group added successfully to test case'));
+            ->with('success', __('Groups added successfully to test case'));
     }
 
     /**
