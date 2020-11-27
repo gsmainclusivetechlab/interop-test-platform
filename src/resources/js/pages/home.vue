@@ -37,7 +37,11 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-4" v-for="session in sessions.data">
+            <div
+                class="col-xl-3 col-md-4"
+                v-for="(session, i) in sessions.data"
+                :key="i"
+            >
                 <div class="card">
                     <div
                         class="card-header flex-column align-items-start h-100 border-bottom py-4"
@@ -61,64 +65,75 @@
                         <ul class="list-unstyled">
                             <li>
                                 <icon
+                                    class="icon_dashboard-session mr-1"
                                     name="briefcase"
                                     v-b-tooltip.hover
                                     title="Use Case"
                                 />
-                                {{
-                                    session.testCases
-                                        ? collect(session.testCases)
-                                              .map(function (value) {
-                                                  return value.useCase.id;
-                                              })
-                                              .unique()
-                                              .count()
-                                        : 0
-                                }}
+                                <span>
+                                    {{
+                                        session.testCases
+                                            ? collect(session.testCases)
+                                                  .map(
+                                                      (value) =>
+                                                          value.useCase.id
+                                                  )
+                                                  .unique()
+                                                  .count()
+                                            : 0
+                                    }}
+                                </span>
                             </li>
                             <li>
                                 <icon
+                                    class="icon_dashboard-session mr-1"
                                     name="file-text"
                                     v-b-tooltip.hover
                                     title="Test Case"
                                 />
-                                {{
+                                <span>{{
                                     session.testCases
                                         ? session.testCases.length
                                         : 0
-                                }}
+                                }}</span>
                             </li>
                             <li v-if="session.lastTestRun">
                                 <icon
+                                    class="icon_dashboard-session mr-1"
                                     name="clock"
                                     v-b-tooltip.hover
                                     title="Last Run"
                                 />
-                                {{ session.lastTestRun.created_at }}
+                                <span>{{
+                                    session.lastTestRun.created_at
+                                }}</span>
                             </li>
                             <li>
                                 <icon
+                                    class="icon_dashboard-session mr-1"
                                     name="user"
                                     v-b-tooltip.hover
                                     title="Owner"
                                 />
-                                {{ session.owner.name }}
+                                <span>{{ session.owner.name }}</span>
                             </li>
                             <li>
                                 <icon
+                                    class="icon_dashboard-session mr-1"
                                     name="chart-candle"
                                     v-b-tooltip.hover
                                     title="Type"
                                 />
-                                {{ session.typeName }}
+                                <span>{{ session.typeName }}</span>
                             </li>
                             <li v-if="session.status">
                                 <icon
+                                    class="icon_dashboard-session mr-1"
                                     name="list-check"
                                     v-b-tooltip.hover
                                     title="Status"
                                 />
-                                {{ session.statusName }}
+                                <span>{{ session.statusName }}</span>
                             </li>
                         </ul>
                     </div>
