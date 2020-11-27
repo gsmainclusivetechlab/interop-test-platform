@@ -54,7 +54,10 @@ export default {
             required: false,
             default: function () {
                 return [
-                    { name: 'Test Cases', url: route('admin.test-cases.index') },
+                    {
+                        name: 'Test Cases',
+                        url: route('admin.test-cases.index'),
+                    },
                     { name: this.testCase.name },
                 ];
             },
@@ -80,7 +83,9 @@ export default {
                 {
                     title: 'Groups',
                     route: 'admin.test-cases.groups.index',
-                    condition: route().current('admin.test-cases.groups.index'),
+                    condition:
+                        route().current('admin.test-cases.groups.index') ||
+                        route().current('admin.test-cases.groups.edit'),
                 },
                 {
                     title: 'Versions',
