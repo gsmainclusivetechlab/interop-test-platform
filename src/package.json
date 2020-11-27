@@ -14,7 +14,7 @@
         "axios": "^0.19",
         "bootstrap-vue": "^2.3.0",
         "clipboard": "^2.0.6",
-        "collect.js": "^4.22.0",
+        "collect.js": "^4.28.6",
         "cross-env": "^7.0",
         "js-base64": "^2.5.2",
         "laravel-mix": "^5.0.1",
