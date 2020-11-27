@@ -256,7 +256,7 @@ class TestCaseController extends Controller
      */
     public function editInfo(TestCase $testCase)
     {
-        $this->authorize('update', TestCase::class);
+        $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
             $testCase->load([
                 'groups',
@@ -332,7 +332,7 @@ class TestCaseController extends Controller
      */
     public function updateInfo(TestCase $testCase, Request $request)
     {
-        $this->authorize('update', TestCase::class);
+        $this->authorize('update', $testCase);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
@@ -381,7 +381,7 @@ class TestCaseController extends Controller
      */
     public function editGroups(TestCase $testCase)
     {
-        $this->authorize('update', TestCase::class);
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/groups/edit', [
             'testCase' => (new TestCaseResource(
                 $testCase->load(['groups'])
@@ -397,7 +397,7 @@ class TestCaseController extends Controller
      */
     public function updateGroups(TestCase $testCase, Request $request)
     {
-        $this->authorize('update', TestCase::class);
+        $this->authorize('update', $testCase);
         $request->validate([
             'groups_id.*' => ['integer', 'exists:groups,id'],
         ]);
@@ -406,6 +406,68 @@ class TestCaseController extends Controller
         return redirect()
             ->route('admin.test-cases.groups.index', $testCase->id)
             ->with('success', __('Test case groups updated successfully'));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function createGroups(TestCase $testCase)
+    {
+        $this->authorize('update', $testCase);
+        return Inertia::render('admin/test-cases/groups/create', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load(['groups'])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function storeGroup(TestCase $testCase, Request $request)
+    {
+        $this->authorize('update', $testCase);
+        $request->validate([
+            'group_id' => [
+                'required',
+                'exists:group,id',
+                Rule::unique('group_test_cases', 'group_id')->where(function (
+                    $query
+                ) use ($testCase) {
+                    return $query->where('test_case_id', $testCase->id);
+                }),
+            ],
+        ]);
+        $testCase->groups()->attach($request->input('group_id'));
+
+        return redirect()
+            ->route('admin.test-cases.groups.index', $testCase->id)
+            ->with('success', __('Group added successfully to test case'));
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Group $group
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function destroyGroup(TestCase $testCase, Group $group)
+    {
+        $this->authorize('update', $testCase);
+        $group = $testCase
+            ->groups()
+            ->whereKey($group->getKey())
+            ->firstOrFail();
+        $testCase->groups()->detach($group);
+
+        return redirect()
+            ->back()
+            ->with('success', __('Group deleted successfully from test case'));
     }
 
     /**

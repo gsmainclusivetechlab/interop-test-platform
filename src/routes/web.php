@@ -319,12 +319,24 @@ Route::name('admin.')
                         Route::put('{testCase}/update', 'TestCaseController@updateGroups')->name(
                             'update'
                         );
+                        Route::get('{testCase}/create', 'TestCaseController@createGroups')->name(
+                            'create'
+                        );
+                        Route::post('{testCase}/store', 'TestCaseController@storeGroups')->name(
+                            'store'
+                        );
+                        Route::delete('{testCase}/destroy/{group}', 'TestCaseController@destroyGroups')->name(
+                            'destroy'
+                        );
                     });
                 Route::name('test-steps.')
                     ->prefix('test-steps')
                     ->group(function () {
                         Route::get('{testCase}/index', 'TestCaseController@indexTestSteps')->name(
                             'index'
+                        );
+                        Route::get('{testCase}/store', 'TestCaseController@storeTestSteps')->name(
+                            'store'
                         );
                     });
                 Route::name('versions.')
