@@ -492,6 +492,21 @@ class TestCaseController extends Controller
     /**
      * @param TestCase $testCase
      * @return Response
+     * @throws AuthorizationException
+     */
+    public function createTestSteps(TestCase $testCase)
+    {
+        $this->authorize('update', $testCase);
+        return Inertia::render('admin/test-cases/test-steps/create', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load(['testSteps'])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
      */
     public function indexVersions(TestCase $testCase)
     {

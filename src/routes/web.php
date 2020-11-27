@@ -335,8 +335,8 @@ Route::name('admin.')
                         Route::get('{testCase}/index', 'TestCaseController@indexTestSteps')->name(
                             'index'
                         );
-                        Route::get('{testCase}/store', 'TestCaseController@storeTestSteps')->name(
-                            'store'
+                        Route::get('{testCase}/create', 'TestCaseController@createTestSteps')->name(
+                            'create'
                         );
                     });
                 Route::name('versions.')
