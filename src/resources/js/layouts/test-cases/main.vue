@@ -1,13 +1,13 @@
 <template>
     <layout>
-        <div class="page-pretitle font-weight-normal">
-            <breadcrumb
-                class="breadcrumb-bullets"
-                :items="breadcrumbs"
-            ></breadcrumb>
-        </div>
         <div class="row">
             <div class="col-12">
+                <div class="page-pretitle font-weight-normal">
+                    <breadcrumb
+                        class="breadcrumb-bullets"
+                        :items="breadcrumbs"
+                    ></breadcrumb>
+                </div>
                 <div class="page-header">
                     <h1 class="page-title">
                         <b>{{ testCase.name }}</b>

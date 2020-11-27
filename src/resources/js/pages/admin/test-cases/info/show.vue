@@ -38,10 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div
-                v-if="testCase.can.update"
-                class="card-footer text-right"
-            >
+            <div v-if="testCase.can.update" class="card-footer text-right">
                 <div v-if="testCase.draft">
                     <inertia-link
                         :href="route('admin.test-cases.info.edit', testCase.id)"
@@ -53,6 +50,7 @@
                 <div v-else>
                     <confirm-link
                         :href="route('admin.test-cases.info.edit', testCase.id)"
+                        :confirm-text="'This test case is out draft. A new version will be created'"
                         class="btn btn-primary"
                     >
                         Edit

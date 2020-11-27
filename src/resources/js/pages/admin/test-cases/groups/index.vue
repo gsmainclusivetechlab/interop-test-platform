@@ -7,19 +7,27 @@
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
                     <thead>
-                    <tr>
-                        <th class="text-nowrap">Name</th>
-                    </tr>
+                        <tr>
+                            <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Email filter</th>
+                            <th class="text-nowrap">Description</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="group in groups.data">
-                        <td class="text-break">
-                            {{ group.name }}
-                        </td>
-                    </tr>
-                    <tr v-if="!groups.data.length">
-                        <td class="text-center" colspan="6">No Results</td>
-                    </tr>
+                        <tr v-for="(group, i) in groups.data" :key="i">
+                            <td class="text-break">
+                                {{ group.name }}
+                            </td>
+                            <td class="text-break">
+                                {{ group.domain }}
+                            </td>
+                            <td class="text-break">
+                                {{ group.description }}
+                            </td>
+                        </tr>
+                        <tr v-if="groups.data.length === 0">
+                            <td class="text-center" colspan="6">No Results</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
