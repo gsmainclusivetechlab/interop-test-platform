@@ -20,12 +20,17 @@
                     <label class="form-label">Reason</label>
                     <textarea
                         v-model="form.reason"
-                        :class="{ 'is-invalid': $page.errors.reason }"
+                        :class="{
+                            'is-invalid': $page.errors.reason || formError,
+                        }"
                         class="form-control"
                         name="reason"
                     ></textarea>
-                    <span v-if="$page.errors.reason" class="invalid-feedback">
-                        {{ $page.errors.reason }}
+                    <span
+                        v-if="$page.errors.reason || formError"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.errors.reason || 'Reason field is required' }}
                     </span>
                 </div>
             </form>
@@ -52,6 +57,7 @@ export default {
     data() {
         return {
             modalName: 'model-' + this.status,
+            formError: false,
             form: {
                 reason: '',
                 status: this.status,
@@ -66,7 +72,12 @@ export default {
             // Prevent modal from closing
             bvModalEvt.preventDefault();
             // Trigger submit handler
-            this.handleSubmit();
+            if (this.form.reason !== '') {
+                this.formError = false;
+                this.handleSubmit();
+            } else {
+                this.formError = true;
+            }
         },
         handleSubmit() {
             this.$inertia.put(this.href, this.form).then(() => {
