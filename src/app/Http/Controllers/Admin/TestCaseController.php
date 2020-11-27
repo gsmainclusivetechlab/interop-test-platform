@@ -386,7 +386,7 @@ class TestCaseController extends Controller
         $request->validate([
             'groups_id.*' => [
                 'required',
-                'exists:group,id',
+                'exists:groups,id',
                 Rule::unique('group_test_cases', 'group_id')->where(function (
                     $query
                 ) use ($testCase) {
