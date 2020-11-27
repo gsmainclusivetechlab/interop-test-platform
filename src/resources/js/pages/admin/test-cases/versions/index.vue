@@ -17,23 +17,13 @@
                             <th class="text-nowrap">Owner</th>
                             <th class="text-nowrap">Groups</th>
                             <th class="text-nowrap">Draft</th>
-                            <th class="text-nowrap"></th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(testCase, i) in testCases.data" :key="i">
                             <td class="text-break">
-                                <inertia-link
-                                    :href="
-                                        route(
-                                            'admin.test-cases.info.show',
-                                            testCase.id
-                                        )
-                                    "
-                                >
-                                    {{ testCase.name }}
-                                </inertia-link>
+                                {{ testCase.name }}
                             </td>
                             <td class="text-break">
                                 {{ testCase.version }}
@@ -68,13 +58,6 @@
                             </td>
                             <td class="text-break">
                                 {{ testCase.draft ? 'Yes' : 'No' }}
-                            </td>
-                            <td class="text-break">
-                                {{
-                                    testCase.id === currentTestCase.id
-                                        ? '<= You are here'
-                                        : ''
-                                }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

@@ -60,7 +60,11 @@
                                 </inertia-link>
                             </td>
                             <td class="text-break">
-                                {{ testCase.version }}
+                                <inertia-link
+                                    :href="route('admin.test-cases.versions.index', testCase.id)"
+                                >
+                                    {{ testCase.version }}
+                                </inertia-link>
                             </td>
                             <td class="text-break">
                                 {{
@@ -126,19 +130,6 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li v-if="testCase.can.update">
-                                        <inertia-link
-                                            class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.info.edit',
-                                                    testCase.id
-                                                )
-                                            "
-                                        >
-                                            Edit
-                                        </inertia-link>
-                                    </li>
                                     <li
                                         v-if="
                                             $page.auth.user.can.test_cases

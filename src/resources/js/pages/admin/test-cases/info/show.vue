@@ -38,13 +38,26 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-right">
-                <inertia-link
-                    :href="route('admin.test-cases.info.edit', testCase.id)"
-                    class="btn btn-primary"
-                >
-                    Edit
-                </inertia-link>
+            <div
+                v-if="testCase.can.update"
+                class="card-footer text-right"
+            >
+                <div v-if="testCase.draft">
+                    <inertia-link
+                        :href="route('admin.test-cases.info.edit', testCase.id)"
+                        class="btn btn-primary"
+                    >
+                        Edit
+                    </inertia-link>
+                </div>
+                <div v-else>
+                    <confirm-link
+                        :href="route('admin.test-cases.info.edit', testCase.id)"
+                        class="btn btn-primary"
+                    >
+                        Edit
+                    </confirm-link>
+                </div>
             </div>
         </div>
     </layout>
