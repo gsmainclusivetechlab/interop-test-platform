@@ -9,15 +9,15 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Version</th>
-                            <th class="text-nowrap">Behavior</th>
-                            <th class="text-nowrap">Public</th>
+                            <th class="text-nowrap text-center">Version</th>
+                            <th class="text-nowrap text-center">Behavior</th>
+                            <th class="text-nowrap text-center">Public</th>
                             <th class="text-nowrap">Use Case</th>
-                            <th class="text-nowrap">Test Steps</th>
-                            <th class="text-nowrap">Owner</th>
-                            <th class="text-nowrap">Groups</th>
-                            <th class="text-nowrap">Draft</th>
-                            <th class="text-nowrap w-1"></th>
+                            <th class="text-nowrap text-center">Test Steps</th>
+                            <th class="text-nowrap text-center">Owner</th>
+                            <th class="text-nowrap text-center">Groups</th>
+                            <th class="text-nowrap text-center">Draft</th>
+                            <th class="w-1 text-nowrap text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,23 +25,23 @@
                             <td class="text-break">
                                 {{ testCase.name }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center">
                                 {{ testCase.version }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center">
                                 {{
                                     collect(
                                         $page.enums.test_case_behaviors
                                     ).get(testCase.behavior)
                                 }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center">
                                 {{ testCase.public ? 'Yes' : 'No' }}
                             </td>
                             <td class="text-break">
                                 {{ testCase.useCase.name }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{
                                     testCase.testSteps
                                         ? testCase.testSteps.length
@@ -51,15 +51,15 @@
                             <td class="text-break">
                                 {{ testCase.owner ? testCase.owner.name : '' }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center">
                                 {{
                                     testCase.groups ? testCase.groups.length : 0
                                 }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center">
                                 {{ testCase.draft ? 'Yes' : 'No' }}
                             </td>
-                            <td class="text-center text-break">
+                            <td class="text-center">
                                 <b-dropdown
                                     v-if="testCase.can.delete"
                                     no-caret

@@ -40,7 +40,7 @@
             </div>
             <div class="card-footer text-right">
                 <inertia-link
-                    :href="route('admin.test-cases.index')"
+                    :href="route('admin.test-cases.groups.index', testCase.id)"
                     class="btn btn-link"
                 >
                     Cancel
