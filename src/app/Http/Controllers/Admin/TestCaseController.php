@@ -376,60 +376,11 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
-     * @throws AuthorizationException
-     */
-    public function editGroups(TestCase $testCase)
-    {
-        $this->authorize('update', $testCase);
-        return Inertia::render('admin/test-cases/groups/edit', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load(['groups'])
-            ))->resolve(),
-        ]);
-    }
-
-    /**
-     * @param TestCase $testCase
      * @param Request $request
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function updateGroups(TestCase $testCase, Request $request)
-    {
-        $this->authorize('update', $testCase);
-        $request->validate([
-            'groups_id.*' => ['integer', 'exists:groups,id'],
-        ]);
-        $testCase->groups()->sync($request->input('groups_id'));
-
-        return redirect()
-            ->route('admin.test-cases.groups.index', $testCase->id)
-            ->with('success', __('Test case groups updated successfully'));
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return Response
-     * @throws AuthorizationException
-     */
-    public function createGroups(TestCase $testCase)
-    {
-        $this->authorize('update', $testCase);
-        return Inertia::render('admin/test-cases/groups/create', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load(['groups'])
-            ))->resolve(),
-        ]);
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @param Request $request
-     * @return RedirectResponse
-     * @throws AuthorizationException
-     */
-    public function storeGroup(TestCase $testCase, Request $request)
+    public function storeGroups(TestCase $testCase, Request $request)
     {
         $this->authorize('update', $testCase);
         $request->validate([

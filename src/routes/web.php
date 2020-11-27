@@ -313,15 +313,6 @@ Route::name('admin.')
                         Route::get('{testCase}/index', 'TestCaseController@indexGroups')->name(
                             'index'
                         );
-                        Route::get('{testCase}/edit', 'TestCaseController@editGroups')->name(
-                            'edit'
-                        );
-                        Route::put('{testCase}/update', 'TestCaseController@updateGroups')->name(
-                            'update'
-                        );
-                        Route::get('{testCase}/create', 'TestCaseController@createGroups')->name(
-                            'create'
-                        );
                         Route::post('{testCase}/store', 'TestCaseController@storeGroups')->name(
                             'store'
                         );
