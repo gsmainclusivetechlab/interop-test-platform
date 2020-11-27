@@ -47,6 +47,7 @@ class TestCaseController extends Controller
      */
     public function index()
     {
+//        dd(\Route::currentRouteName());
         return Inertia::render('admin/test-cases/index', [
             'testCases' => TestCaseResource::collection(
                 TestCase::when(request('q'), function (Builder $query, $q) {
@@ -79,9 +80,11 @@ class TestCaseController extends Controller
 
     /**
      * @return Response
+     * @throws AuthorizationException
      */
     public function create()
     {
+        $this->authorize('create', TestCase::class);
         return Inertia::render('admin/test-cases/create', [
             'components' => ComponentResource::collection(
                 Component::get()
@@ -95,9 +98,11 @@ class TestCaseController extends Controller
     /**
      * @param Request $request
      * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function store(Request $request)
     {
+        $this->authorize('create', TestCase::class);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
@@ -247,9 +252,11 @@ class TestCaseController extends Controller
     /**
      * @param TestCase $testCase
      * @return Response
+     * @throws AuthorizationException
      */
     public function editInfo(TestCase $testCase)
     {
+        $this->authorize('update', TestCase::class);
         $testCaseResource = (new TestCaseResource(
             $testCase->load([
                 'groups',
@@ -321,9 +328,11 @@ class TestCaseController extends Controller
      * @param TestCase $testCase
      * @param Request $request
      * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function updateInfo(TestCase $testCase, Request $request)
     {
+        $this->authorize('update', TestCase::class);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
@@ -364,12 +373,15 @@ class TestCaseController extends Controller
             )
         ]);
     }
+
     /**
      * @param TestCase $testCase
      * @return Response
+     * @throws AuthorizationException
      */
     public function editGroups(TestCase $testCase)
     {
+        $this->authorize('update', TestCase::class);
         return Inertia::render('admin/test-cases/groups/edit', [
             'testCase' => (new TestCaseResource(
                 $testCase->load(['groups'])
@@ -381,9 +393,11 @@ class TestCaseController extends Controller
      * @param TestCase $testCase
      * @param Request $request
      * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function updateGroups(TestCase $testCase, Request $request)
     {
+        $this->authorize('update', TestCase::class);
         $request->validate([
             'groups_id.*' => ['integer', 'exists:groups,id'],
         ]);
@@ -457,7 +471,7 @@ class TestCaseController extends Controller
      */
     public function complete(TestCase $testCase)
     {
-        $this->authorize('create', $testCase);
+        $this->authorize('update', $testCase);
         $testCase->update(['draft' => 0]);
 
         return redirect()->back();
