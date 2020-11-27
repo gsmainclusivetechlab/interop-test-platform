@@ -158,7 +158,7 @@
                             multiple
                             placeholder="Select components"
                             label="name"
-                            :options="$page.components"
+                            :options="$page.components.map((el) => el.name)"
                             :createItem="false"
                             :disableSearch="true"
                         />
@@ -225,22 +225,11 @@ export default {
             )[0],
             description: this.testCase.description,
             precondition: this.testCase.precondition,
-            components: this.testCase.components.data,
+            components: this.testCase.components.data?.map((el) => el.name),
         };
     },
     methods: {
         submit() {
-            this.sending = true;
-            this.$inertia
-                .put(
-                    route('admin.test-cases.info.update', this.testCase.id),
-                    this.form
-                )
-                .then(() => (this.sending = false));
-        },
-    },
-    computed: {
-        form() {
             const form = {
                 name: this.name,
                 slug: this.slug,
@@ -248,12 +237,22 @@ export default {
                     .flip()
                     .all()[this.behavior],
                 use_case_id: this.useCase?.id,
-                components_id: this.components?.map((el) => el.id),
                 description: this.description,
                 precondition: this.precondition,
+                components_id: this.components.map((name) => {
+                    return this.$page.components.filter((obj) => {
+                        return collect(obj).flip().has(name);
+                    })[0].id;
+                }),
             };
 
-            return form;
+            this.sending = true;
+            this.$inertia
+                .put(
+                    route('admin.test-cases.info.update', this.testCase.id),
+                    form
+                )
+                .then(() => (this.sending = false));
         },
     },
 };

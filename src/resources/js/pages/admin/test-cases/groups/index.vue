@@ -145,8 +145,8 @@ export default {
             this.sending = true;
 
             this.$inertia
-                .put(
-                    route('admin.test-cases.groups.update', this.testCase.id),
+                .post(
+                    route('admin.test-cases.groups.store', this.testCase.id),
                     this.form
                 )
                 .then(() => {
@@ -187,10 +187,7 @@ export default {
         },
         form() {
             return {
-                groups_id: [
-                    ...this.currentList,
-                    ...this.newList.map((el) => el.id),
-                ],
+                groups_id: this.newList.map((el) => el.id),
             };
         },
     },
