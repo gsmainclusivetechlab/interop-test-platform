@@ -21,7 +21,7 @@ class TestRunObserver
         }
 
         $testRun->increment('total', $testRun->testSteps()->count());
-        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(23430));
+        CompleteTestRunJob::dispatch($testRun)->delay(now()->addSeconds(30));
     }
 
     /**
