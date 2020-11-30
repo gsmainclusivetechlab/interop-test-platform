@@ -11,7 +11,7 @@
                     <span>Create Test Step</span>
                 </inertia-link>
             </div>
-            <div class="card-body table-responsive p-0">
+            <div class="card-body table-responsive p-0 mb-0">
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
