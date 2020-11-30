@@ -76,9 +76,9 @@ export default {
                 {
                     title: 'Test steps',
                     route: 'admin.test-cases.test-steps.index',
-                    condition: route().current(
-                        'admin.test-cases.test-steps.index'
-                    ),
+                    condition:
+                        route().current('admin.test-cases.test-steps.index') ||
+                        route().current('admin.test-cases.test-steps.create'),
                 },
                 {
                     title: 'Groups',

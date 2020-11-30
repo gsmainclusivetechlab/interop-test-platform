@@ -130,7 +130,7 @@ import Layout from '@/layouts/test-cases/main';
 
 export default {
     metaInfo: {
-        title: 'Test Case Steps',
+        title: 'Test Case Versions',
     },
     components: {
         Layout,
