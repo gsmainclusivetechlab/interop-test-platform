@@ -47,7 +47,6 @@ class TestCaseController extends Controller
      */
     public function index()
     {
-//        dd(\Route::currentRouteName());
         return Inertia::render('admin/test-cases/index', [
             'testCases' => TestCaseResource::collection(
                 TestCase::when(request('q'), function (Builder $query, $q) {
@@ -146,6 +145,7 @@ class TestCaseController extends Controller
      */
     public function destroy(TestCase $testCase)
     {
+        $this->authorize('delete', $testCase);
         $testCase->delete();
 
         return redirect()
@@ -155,6 +155,7 @@ class TestCaseController extends Controller
 
     /**
      * @return Response
+     * @throws AuthorizationException
      */
     public function showImportForm()
     {
@@ -169,7 +170,7 @@ class TestCaseController extends Controller
      */
     public function showImportVersionForm(TestCase $testCase)
     {
-        $this->authorize('create', TestCase::class);
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/import-version', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),
         ]);
@@ -235,10 +236,15 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
      */
     public function showInfo(TestCase $testCase)
     {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/info/show', [
             'testCase' => (new TestCaseResource(
                 $testCase->load([
@@ -251,11 +257,14 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
     public function editInfo(TestCase $testCase)
     {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
         $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
             $testCase->load([
@@ -360,10 +369,15 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
      */
     public function indexGroups(TestCase $testCase)
     {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/groups/index', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'groups' => GroupResource::collection(
@@ -423,10 +437,15 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
      */
     public function indexTestSteps(TestCase $testCase)
     {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/index', [
             'testCase' => (new TestCaseResource(
                 $testCase->load(['testSteps'])
@@ -442,11 +461,14 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
     public function createTestSteps(TestCase $testCase)
     {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/create', [
             'testCase' => (new TestCaseResource(
@@ -457,10 +479,15 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
      */
     public function indexVersions(TestCase $testCase)
     {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/versions/index', [
             'currentTestCase' => (new TestCaseResource($testCase))->resolve(),
             'testCases' => TestCaseResource::collection(
@@ -547,5 +574,14 @@ class TestCaseController extends Controller
                 ->latest()
                 ->paginate()
         );
+    }
+
+    /**
+     * @param string|array $params
+     * @return RedirectResponse
+     */
+    protected function redirectToLast($params)
+    {
+        return redirect()->route(\Route::currentRouteName(), $params);
     }
 }

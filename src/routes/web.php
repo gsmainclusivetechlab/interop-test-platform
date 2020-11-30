@@ -338,6 +338,30 @@ Route::name('admin.')
                         );
                     });
             });
+//        Route::name('test-cases.')
+//            ->prefix('test-cases')
+//            ->namespace('TestCases')
+//            ->group(function () {
+//                Route::resource('info', 'TestCaseInfoController')->only([
+//                    'show',
+//                    'edit',
+//                    'update',
+//                ]);
+//                Route::resource('groups', 'TestCaseGroupController')->only([
+//                    'index',
+//                    'store',
+//                    'destroy',
+//                ]);
+//                Route::resource('test-steps', 'TestCaseTestStepController')->only([
+//                    'index',
+//                    'create',
+//                    'store',
+//                    'destroy',
+//                ]);
+//                Route::resource('versions', 'TestCaseVersionController')->only([
+//                    'index',
+//                ]);
+//            });
         Route::name('questionnaire.')
             ->prefix('questionnaire')
             ->group(function () {
