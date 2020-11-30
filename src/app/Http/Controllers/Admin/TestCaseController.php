@@ -544,6 +544,7 @@ class TestCaseController extends Controller
      * @param TestStep $testStep
      * @return RedirectResponse|Response
      * @throws AuthorizationException
+     * @throws Exception
      */
     public function destroyTestSteps(TestCase $testCase, TestStep $testStep)
     {
@@ -552,7 +553,7 @@ class TestCaseController extends Controller
             ->testSteps()
             ->whereKey($testStep->getKey())
             ->firstOrFail();
-        $testCase->testSteps()->detach($testStep);
+        $testStep->delete();
 
         return redirect()
             ->back()
