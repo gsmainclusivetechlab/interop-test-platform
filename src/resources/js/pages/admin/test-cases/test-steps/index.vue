@@ -1,8 +1,15 @@
 <template>
     <layout :test-case="testCase">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header justify-content-between">
                 <h2 class="card-title">Test steps</h2>
+                <inertia-link
+                    :href="route('admin.test-cases.test-steps.create', testCase.id)"
+                    class="btn btn-primary"
+                >
+                    <icon name="plus" />
+                    <span>Create Test Step</span>
+                </inertia-link>
             </div>
             <div class="card-body table-responsive p-0">
                 <table class="table table-striped card-table">
@@ -91,7 +98,7 @@
                 </table>
             </div>
         </div>
-        <template v-for="(testStep, i) in testSteps.data">
+        <template v-for="testStep in testSteps.data">
             <b-modal
                 :id="`modal-request-${testStep.id}`"
                 size="lg"

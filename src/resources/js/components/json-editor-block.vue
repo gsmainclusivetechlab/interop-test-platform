@@ -23,6 +23,7 @@
 
 <script>
 export default {
+    name: 'JsonEditorBlock',
     props: {
         inputJson: {
             type: Object,
