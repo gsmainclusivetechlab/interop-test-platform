@@ -117,7 +117,7 @@
                                 'is-invalid': $page.errors.api_spec,
                             }"
                             v-model="api_spec"
-                            placeholder="Select api_spec"
+                            placeholder="Select API specification"
                             :options="[]"
                             :disableSearch="false"
                             :createItem="false"
@@ -162,6 +162,8 @@
                                 <button
                                     type="button"
                                     class="btn btn-link p-0"
+                                    v-b-tooltip.hover
+                                    title="Delete"
                                     @click="
                                         deleteFormItem(
                                             testRequestScripts.list,
@@ -223,6 +225,8 @@
                                 <button
                                     type="button"
                                     class="btn btn-link p-0"
+                                    v-b-tooltip.hover
+                                    title="Delete"
                                     @click="
                                         deleteFormItem(
                                             testResponseScripts.list,
@@ -268,6 +272,243 @@
                             </button>
                         </div>
                     </div>
+                    <div class="col-12 mb-3">
+                        <h3 class="card-title">Test Request Setups</h3>
+                        <template
+                            v-for="(request, i) in testRequestSetups.list"
+                        >
+                            <div
+                                class="card-header justify-content-between"
+                                :key="`test-request-script-head-${i}`"
+                            >
+                                <div class="text-muted">
+                                    <span>{{ i + 1 }}.</span>
+                                    <span>{{ request.name }}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="request.override"
+                                            v-b-tooltip.hover
+                                            title="Override all"
+                                        />
+                                    </label>
+                                    <button
+                                        type="button"
+                                        class="btn btn-link p-0 ml-2"
+                                        v-b-tooltip.hover
+                                        title="Delete"
+                                        @click="
+                                            deleteFormItem(
+                                                testRequestSetups.list,
+                                                i
+                                            )
+                                        "
+                                    >
+                                        <icon name="trash" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                class="card-body"
+                                :key="`test-request-script-form-${i}`"
+                            >
+                                <label class="form-label">Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control mb-2"
+                                    v-model="request.name"
+                                />
+                                <label class="form-label mb-3">Rules</label>
+                                <json-editor-block
+                                    :input-json="request.rules"
+                                    @output-json="
+                                        (data) => (request.rules = data)
+                                    "
+                                />
+                                <div class="text-right"></div>
+                            </div>
+                        </template>
+                        <div class="text-right">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                @click="
+                                    addFormItem(testRequestSetups.list, {
+                                        ...testRequestSetups.pattern,
+                                    })
+                                "
+                            >
+                                <icon name="plus" />
+                                <span>Add New Request Setup</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <h3 class="card-title">Test Response Setups</h3>
+                        <template
+                            v-for="(response, i) in testResponseSetups.list"
+                        >
+                            <div
+                                class="card-header justify-content-between"
+                                :key="`test-response-script-head-${i}`"
+                            >
+                                <div class="text-muted">
+                                    <span>{{ i + 1 }}.</span>
+                                    <span>{{ response.name }}</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="response.override"
+                                            v-b-tooltip.hover
+                                            title="Override all"
+                                        />
+                                    </label>
+                                    <button
+                                        type="button"
+                                        class="btn btn-link p-0 ml-2"
+                                        v-b-tooltip.hover
+                                        title="Delete"
+                                        @click="
+                                            deleteFormItem(
+                                                testResponseSetups.list,
+                                                i
+                                            )
+                                        "
+                                    >
+                                        <icon name="trash" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                class="card-body"
+                                :key="`test-response-script-form-${i}`"
+                            >
+                                <label class="form-label">Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control mb-2"
+                                    v-model="response.name"
+                                />
+                                <label class="form-label mb-3">Rules</label>
+                                <json-editor-block
+                                    :input-json="response.rules"
+                                    @output-json="
+                                        (data) => (response.rules = data)
+                                    "
+                                />
+                                <div class="text-right"></div>
+                            </div>
+                        </template>
+                        <div class="text-right">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                @click="
+                                    addFormItem(testResponseSetups.list, {
+                                        ...testResponseSetups.pattern,
+                                    })
+                                "
+                            >
+                                <icon name="plus" />
+                                <span>Add New Response Setup</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label"
+                            >Request Header Examples</label
+                        >
+                        <json-editor-block
+                            :input-json="requestHeaderExamples"
+                            @output-json="() => {}"
+                        />
+                        <span
+                            v-if="$page.errors.requestHeaderExamples"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.requestHeaderExamples }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Request Body Examples</label>
+                        <json-editor-block
+                            :input-json="requestBodyExamples"
+                            @output-json="() => {}"
+                        />
+                        <span
+                            v-if="$page.errors.requestBodyExamples"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.requestBodyExamples }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label"
+                            >Response Status Example</label
+                        >
+                        <selectize
+                            class="form-select"
+                            :class="{
+                                'is-invalid':
+                                    $page.errors.responseStatusExample,
+                            }"
+                            v-model="responseStatusExample"
+                            placeholder="Select status"
+                            :options="[]"
+                            :disableSearch="false"
+                            :createItem="false"
+                        />
+                        <span
+                            v-if="$page.errors.responseStatusExample"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.responseStatusExample }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label"
+                            >Response Header Examples</label
+                        >
+                        <json-editor-block
+                            :input-json="responseHeaderExamples"
+                            @output-json="() => {}"
+                        />
+                        <span
+                            v-if="$page.errors.responseHeaderExamples"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.responseHeaderExamples }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Response Body Examples</label>
+                        <json-editor-block
+                            :input-json="responseBodyExamples"
+                            @output-json="() => {}"
+                        />
+                        <span
+                            v-if="$page.errors.responseBodyExamples"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.responseBodyExamples }}
+                            </strong>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="card-footer text-right">
@@ -310,7 +551,7 @@ export default {
     data() {
         return {
             sending: false,
-            method: '',
+            method: [],
             path: '',
             pattern: '',
             source: [],
@@ -331,14 +572,35 @@ export default {
                     rules: {},
                 },
             },
+            testRequestSetups: {
+                list: [],
+                pattern: {
+                    override: false,
+                    name: '',
+                    rules: {},
+                },
+            },
+            testResponseSetups: {
+                list: [],
+                pattern: {
+                    override: false,
+                    name: '',
+                    rules: {},
+                },
+            },
+            requestHeaderExamples: {},
+            requestBodyExamples: {},
+            responseStatusExample: [],
+            responseHeaderExamples: {},
+            responseBodyExamples: {},
         };
     },
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.test-cases.store'), this.form)
-                .then(() => (this.sending = false));
+            // this.$inertia
+            //     .post(route('admin.test-cases.store'), this.form)
+            //     .then(() => (this.sending = false));
         },
         addFormItem(formsList, formPattern) {
             formsList.push(formPattern);
@@ -347,28 +609,18 @@ export default {
             formList.splice(i, 1);
         },
     },
-    computed: {
-        form() {
-            // const form = {
-            //     name: this.name,
-            //     slug: this.slug,
-            //     behavior: collect(this.$page.enums.test_case_behaviors)
-            //         .flip()
-            //         .all()[this.behavior],
-            //     use_case_id: this.useCase?.id,
-            //     components_id: this.components?.map((el) => el.id),
-            //     description: this.description,
-            //     precondition: this.precondition,
-            // };
-            // return form;
-        },
-    },
     mounted() {
         this.addFormItem(this.testRequestScripts.list, {
             ...this.testRequestScripts.pattern,
         });
         this.addFormItem(this.testResponseScripts.list, {
             ...this.testResponseScripts.pattern,
+        });
+        this.addFormItem(this.testRequestSetups.list, {
+            ...this.testRequestSetups.pattern,
+        });
+        this.addFormItem(this.testResponseSetups.list, {
+            ...this.testResponseSetups.pattern,
         });
     },
 };
