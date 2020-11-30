@@ -1,0 +1,293 @@
+<template>
+    <layout :test-case="testCase">
+        <form class="card" @submit.prevent="submit">
+            <div class="card-header">
+                <h2 class="card-title">Create</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Method</label>
+                        <selectize
+                            class="form-select"
+                            :class="{
+                                'is-invalid': $page.errors.method,
+                            }"
+                            v-model="method"
+                            placeholder="Select method"
+                            :options="[]"
+                            :disableSearch="false"
+                            :createItem="false"
+                        />
+                        <span
+                            v-if="$page.errors.method"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.method }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Path</label>
+                        <input
+                            name="path"
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.errors.path,
+                            }"
+                            v-model="path"
+                        />
+                        <span v-if="$page.errors.path" class="invalid-feedback">
+                            <strong>
+                                {{ $page.errors.path }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Pattern</label>
+                        <input
+                            name="pattern"
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.errors.pattern,
+                            }"
+                            v-model="pattern"
+                        />
+                        <span
+                            v-if="$page.errors.pattern"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.pattern }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Source</label>
+                        <selectize
+                            class="form-select"
+                            :class="{
+                                'is-invalid': $page.errors.source,
+                            }"
+                            v-model="source"
+                            placeholder="Select source"
+                            :options="[]"
+                            :disableSearch="false"
+                            :createItem="false"
+                        />
+                        <span
+                            v-if="$page.errors.source"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.source }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Target</label>
+                        <selectize
+                            class="form-select"
+                            :class="{
+                                'is-invalid': $page.errors.target,
+                            }"
+                            v-model="target"
+                            placeholder="Select target"
+                            :options="[]"
+                            :disableSearch="false"
+                            :createItem="false"
+                        />
+                        <span
+                            v-if="$page.errors.target"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.target }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">API specification</label>
+                        <selectize
+                            class="form-select"
+                            :class="{
+                                'is-invalid': $page.errors.api_spec,
+                            }"
+                            v-model="api_spec"
+                            placeholder="Select api_spec"
+                            :options="[]"
+                            :disableSearch="false"
+                            :createItem="false"
+                        />
+                        <span
+                            v-if="$page.errors.api_spec"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.api_spec }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Trigger</label>
+                        <json-editor-block
+                            :input-json="trigger"
+                            @output-json="() => {}"
+                        />
+                        <span
+                            v-if="$page.errors.trigger"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.errors.trigger }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <h3 class="card-title">Test Request Scripts</h3>
+                        <div
+                            v-for="(request, i) in testRequestScripts.list"
+                            :key="`test-request-script-${i}`"
+                            class="card-body"
+                        >
+                            <label class="form-label">Name</label>
+                            <input
+                                type="text"
+                                class="form-control mb-2"
+                                v-model="request.name"
+                            />
+                            <label class="form-label mb-3">Rules</label>
+                            <json-editor-block
+                                :input-json="request.rules"
+                                @output-json="(data) => (request.rules = data)"
+                            />
+                            <div class="text-right">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="
+                                        deleteFormItem(
+                                            testRequestScripts.list,
+                                            i
+                                        )
+                                    "
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                @click="
+                                    addFormItem(testRequestScripts.list, {
+                                        ...testRequestScripts.pattern,
+                                    })
+                                "
+                            >
+                                <icon name="plus" />
+                                <span>Add New Request Script</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <inertia-link
+                    :href="route('admin.test-cases.index')"
+                    class="btn btn-link"
+                >
+                    Cancel
+                </inertia-link>
+                <button type="submit" class="btn btn-primary">
+                    <span
+                        v-if="sending"
+                        class="spinner-border spinner-border-sm mr-2"
+                    ></span>
+                    Create
+                </button>
+            </div>
+        </form>
+    </layout>
+</template>
+
+<script>
+import Layout from '@/layouts/test-cases/main';
+import JsonEditorBlock from '@/components/json-editor-block';
+
+export default {
+    metaInfo: {
+        title: 'Test Step Create',
+    },
+    components: {
+        Layout,
+        JsonEditorBlock,
+    },
+    props: {
+        testCase: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            sending: false,
+            method: '',
+            path: '',
+            pattern: '',
+            source: [],
+            target: [],
+            api_spec: [],
+            trigger: {},
+            testRequestScripts: {
+                list: [],
+                pattern: {
+                    name: '',
+                    rules: {},
+                },
+            },
+            testResponseScripts: {
+                list: [],
+                pattern: {
+                    name: '',
+                    rules: {},
+                },
+            },
+        };
+    },
+    methods: {
+        submit() {
+            this.sending = true;
+            this.$inertia
+                .post(route('admin.test-cases.store'), this.form)
+                .then(() => (this.sending = false));
+        },
+        addFormItem(formsList, formPattern) {
+            formsList.push(formPattern);
+        },
+        deleteFormItem(formList, i) {
+            formList.splice(i, 1);
+        },
+    },
+    computed: {
+        form() {
+            // const form = {
+            //     name: this.name,
+            //     slug: this.slug,
+            //     behavior: collect(this.$page.enums.test_case_behaviors)
+            //         .flip()
+            //         .all()[this.behavior],
+            //     use_case_id: this.useCase?.id,
+            //     components_id: this.components?.map((el) => el.id),
+            //     description: this.description,
+            //     precondition: this.precondition,
+            // };
+            // return form;
+        },
+    },
+};
+</script>
