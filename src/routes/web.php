@@ -329,6 +329,18 @@ Route::name('admin.')
                         Route::get('{testCase}/create', 'TestCaseController@createTestSteps')->name(
                             'create'
                         );
+                        Route::post('{testCase}/store', 'TestCaseController@storeTestSteps')->name(
+                            'store'
+                        );
+                        Route::get('{testCase}/edit/{testStep}', 'TestCaseController@editTestSteps')->name(
+                            'edit'
+                        );
+                        Route::put('{testCase}/update/{testStep}', 'TestCaseController@updateTestSteps')->name(
+                            'update'
+                        );
+                        Route::delete('{testCase}/destroy/{testStep}', 'TestCaseController@destroyTestSteps')->name(
+                            'destroy'
+                        );
                     });
                 Route::name('versions.')
                     ->prefix('versions')
@@ -338,30 +350,6 @@ Route::name('admin.')
                         );
                     });
             });
-//        Route::name('test-cases.')
-//            ->prefix('test-cases')
-//            ->namespace('TestCases')
-//            ->group(function () {
-//                Route::resource('info', 'TestCaseInfoController')->only([
-//                    'show',
-//                    'edit',
-//                    'update',
-//                ]);
-//                Route::resource('groups', 'TestCaseGroupController')->only([
-//                    'index',
-//                    'store',
-//                    'destroy',
-//                ]);
-//                Route::resource('test-steps', 'TestCaseTestStepController')->only([
-//                    'index',
-//                    'create',
-//                    'store',
-//                    'destroy',
-//                ]);
-//                Route::resource('versions', 'TestCaseVersionController')->only([
-//                    'index',
-//                ]);
-//            });
         Route::name('questionnaire.')
             ->prefix('questionnaire')
             ->group(function () {
