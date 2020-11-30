@@ -148,26 +148,20 @@
                     </div>
                     <div class="col-12 mb-3">
                         <h3 class="card-title">Test Request Scripts</h3>
-                        <div
+                        <template
                             v-for="(request, i) in testRequestScripts.list"
-                            :key="`test-request-script-${i}`"
-                            class="card-body"
                         >
-                            <label class="form-label">Name</label>
-                            <input
-                                type="text"
-                                class="form-control mb-2"
-                                v-model="request.name"
-                            />
-                            <label class="form-label mb-3">Rules</label>
-                            <json-editor-block
-                                :input-json="request.rules"
-                                @output-json="(data) => (request.rules = data)"
-                            />
-                            <div class="text-right">
+                            <div
+                                class="card-header justify-content-between"
+                                :key="`test-request-script-head-${i}`"
+                            >
+                                <div class="text-muted">
+                                    <span>{{ i + 1 }}.</span>
+                                    <span>{{ request.name }}</span>
+                                </div>
                                 <button
                                     type="button"
-                                    class="btn btn-primary"
+                                    class="btn btn-link p-0"
                                     @click="
                                         deleteFormItem(
                                             testRequestScripts.list,
@@ -175,10 +169,29 @@
                                         )
                                     "
                                 >
-                                    Delete
+                                    <icon name="trash" />
                                 </button>
                             </div>
-                        </div>
+                            <div
+                                class="card-body"
+                                :key="`test-request-script-form-${i}`"
+                            >
+                                <label class="form-label">Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control mb-2"
+                                    v-model="request.name"
+                                />
+                                <label class="form-label mb-3">Rules</label>
+                                <json-editor-block
+                                    :input-json="request.rules"
+                                    @output-json="
+                                        (data) => (request.rules = data)
+                                    "
+                                />
+                                <div class="text-right"></div>
+                            </div>
+                        </template>
                         <div class="text-right">
                             <button
                                 type="button"
@@ -191,6 +204,67 @@
                             >
                                 <icon name="plus" />
                                 <span>Add New Request Script</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <h3 class="card-title">Test Response Scripts</h3>
+                        <template
+                            v-for="(response, i) in testResponseScripts.list"
+                        >
+                            <div
+                                class="card-header justify-content-between"
+                                :key="`test-response-script-head-${i}`"
+                            >
+                                <div class="text-muted">
+                                    <span>{{ i + 1 }}.</span>
+                                    <span>{{ response.name }}</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    class="btn btn-link p-0"
+                                    @click="
+                                        deleteFormItem(
+                                            testResponseScripts.list,
+                                            i
+                                        )
+                                    "
+                                >
+                                    <icon name="trash" />
+                                </button>
+                            </div>
+                            <div
+                                class="card-body"
+                                :key="`test-response-script-form-${i}`"
+                            >
+                                <label class="form-label">Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control mb-2"
+                                    v-model="response.name"
+                                />
+                                <label class="form-label mb-3">Rules</label>
+                                <json-editor-block
+                                    :input-json="response.rules"
+                                    @output-json="
+                                        (data) => (response.rules = data)
+                                    "
+                                />
+                                <div class="text-right"></div>
+                            </div>
+                        </template>
+                        <div class="text-right">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                @click="
+                                    addFormItem(testResponseScripts.list, {
+                                        ...testResponseScripts.pattern,
+                                    })
+                                "
+                            >
+                                <icon name="plus" />
+                                <span>Add New Response Script</span>
                             </button>
                         </div>
                     </div>
@@ -288,6 +362,14 @@ export default {
             // };
             // return form;
         },
+    },
+    mounted() {
+        this.addFormItem(this.testRequestScripts.list, {
+            ...this.testRequestScripts.pattern,
+        });
+        this.addFormItem(this.testResponseScripts.list, {
+            ...this.testResponseScripts.pattern,
+        });
     },
 };
 </script>
