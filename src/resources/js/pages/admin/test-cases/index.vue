@@ -40,14 +40,14 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Version</th>
-                            <th class="text-nowrap">Behavior</th>
-                            <th class="text-nowrap">Public</th>
-                            <th class="text-nowrap">Use Case</th>
-                            <th class="text-nowrap">Test Steps</th>
-                            <th class="text-nowrap">Owner</th>
-                            <th class="text-nowrap">Groups</th>
-                            <th class="text-nowrap w-1"></th>
+                            <th class="text-nowrap text-center">Version</th>
+                            <th class="text-nowrap text-center">Behavior</th>
+                            <th class="text-nowrap text-center">Public</th>
+                            <th class="text-nowrap text-center">Use Case</th>
+                            <th class="text-nowrap text-center">Test Steps</th>
+                            <th class="text-nowrap text-center">Owner</th>
+                            <th class="text-nowrap text-center">Groups</th>
+                            <th class="text-nowrap text-center w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,12 @@
                             <td class="text-break">
                                 <div v-if="testCase.can.update">
                                     <inertia-link
-                                        :href="route('admin.test-cases.info.show', testCase.id)"
+                                        :href="
+                                            route(
+                                                'admin.test-cases.info.show',
+                                                testCase.id
+                                            )
+                                        "
                                     >
                                         {{ testCase.name }}
                                     </inertia-link>
@@ -64,10 +69,15 @@
                                     {{ testCase.name }}
                                 </div>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 <div v-if="testCase.can.update">
                                     <inertia-link
-                                        :href="route('admin.test-cases.versions.index', testCase.id)"
+                                        :href="
+                                            route(
+                                                'admin.test-cases.versions.index',
+                                                testCase.id
+                                            )
+                                        "
                                     >
                                         {{ testCase.version }}
                                     </inertia-link>
@@ -76,14 +86,14 @@
                                     {{ testCase.version }}
                                 </div>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 {{
                                     collect(
                                         $page.enums.test_case_behaviors
                                     ).get(testCase.behavior)
                                 }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 <label class="form-check form-switch">
                                     <input
                                         v-if="testCase.can.togglePublic"
@@ -108,34 +118,60 @@
                                     />
                                 </label>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 {{ testCase.useCase.name }}
                             </td>
-                            <td>
-                                <div v-if="testCase.can.update">
-                                    <inertia-link
-                                        :href="route('admin.test-cases.test-steps.index', testCase.id)"
-                                    >
-                                        {{ testCase.testSteps ? testCase.testSteps.length : 0 }}
-                                    </inertia-link>
-                                </div>
-                                <div v-else>
-                                    {{ testCase.testSteps ? testCase.testSteps.length : 0 }}
-                                </div>
+                            <td class="text-center">
+                                <inertia-link
+                                    v-if="testCase.can.update"
+                                    :href="
+                                        route(
+                                            'admin.test-cases.test-steps.index',
+                                            testCase.id
+                                        )
+                                    "
+                                >
+                                    {{
+                                        testCase.testSteps
+                                            ? testCase.testSteps.length
+                                            : 0
+                                    }}
+                                </inertia-link>
+
+                                <span v-else>
+                                    {{
+                                        testCase.testSteps
+                                            ? testCase.testSteps.length
+                                            : 0
+                                    }}
+                                </span>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 {{ testCase.owner ? testCase.owner.name : '' }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 <div v-if="testCase.can.update">
                                     <inertia-link
-                                        :href="route('admin.test-cases.groups.index', testCase.id)"
+                                        :href="
+                                            route(
+                                                'admin.test-cases.groups.index',
+                                                testCase.id
+                                            )
+                                        "
                                     >
-                                        {{ testCase.groups ? testCase.groups.length : 0 }}
+                                        {{
+                                            testCase.groups
+                                                ? testCase.groups.length
+                                                : 0
+                                        }}
                                     </inertia-link>
                                 </div>
                                 <div v-else>
-                                    {{ testCase.groups ? testCase.groups.length : 0 }}
+                                    {{
+                                        testCase.groups
+                                            ? testCase.groups.length
+                                            : 0
+                                    }}
                                 </div>
                             </td>
                             <td class="text-center text-break">
@@ -150,11 +186,7 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li
-                                        v-if="
-                                            testCase.can.update
-                                        "
-                                    >
+                                    <li v-if="testCase.can.update">
                                         <inertia-link
                                             :href="
                                                 route(
@@ -169,7 +201,8 @@
                                     </li>
                                     <li
                                         v-if="
-                                            testCase.can.update && testCase.draft
+                                            testCase.can.update &&
+                                            testCase.draft
                                         "
                                     >
                                         <inertia-link
