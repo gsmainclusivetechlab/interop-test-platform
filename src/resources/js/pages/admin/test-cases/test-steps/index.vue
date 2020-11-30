@@ -3,13 +3,30 @@
         <div class="card">
             <div class="card-header justify-content-between">
                 <h2 class="card-title">Test steps</h2>
-                <inertia-link
-                    :href="route('admin.test-cases.test-steps.create', testCase.id)"
-                    class="btn btn-primary"
-                >
-                    <icon name="plus" />
-                    <span>Create Test Step</span>
-                </inertia-link>
+                <div class="d-flex align-items-center">
+                    <inertia-link
+                        v-if="testCase.draft"
+                        :href="
+                            route(
+                                'admin.test-cases.test-steps.create',
+                                testCase.id
+                            )
+                        "
+                        class="btn btn-primary"
+                    >
+                        <icon name="plus" />
+                        <span>Create Test Step</span>
+                    </inertia-link>
+                    <confirm-link
+                        v-else
+                        :href="route('admin.test-cases.info.edit', testCase.id)"
+                        :confirm-text="'This test case is out draft. A new version will be created'"
+                        class="btn btn-primary"
+                    >
+                        <icon name="refresh" />
+                        <span>Make Test Case Draft</span>
+                    </confirm-link>
+                </div>
             </div>
             <div class="card-body table-responsive p-0 mb-0">
                 <table class="table table-striped card-table">
@@ -50,6 +67,7 @@
                             <td class="align-middle text-center">
                                 <div class="btn-group">
                                     <button
+                                        type="button"
                                         class="btn btn-secondary"
                                         v-if="testStep.request"
                                         v-b-modal="
@@ -59,6 +77,7 @@
                                         Request
                                     </button>
                                     <button
+                                        type="button"
                                         class="btn btn-secondary"
                                         v-if="testStep.response"
                                         v-b-modal="
@@ -71,6 +90,7 @@
                             </td>
                             <td class="text-center">
                                 <b-dropdown
+                                    v-if="testCase.draft"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -81,12 +101,42 @@
                                         <icon name="dots-vertical"></icon>
                                     </template>
                                     <li>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.test-steps.edit',
+                                                    [testCase.id, testStep.id]
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Edit
+                                        </inertia-link>
+                                    </li>
+                                    <li>
                                         <button
                                             class="dropdown-item"
                                             type="button"
+                                            @click="deleteTestStep(testStep.id)"
                                         >
                                             Delete
                                         </button>
+                                    </li>
+                                    <li>
+                                        <confirm-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.test-steps.destroy',
+                                                    [testCase.id, testStep.id]
+                                                )
+                                            "
+                                            methos="delete"
+                                            :confirm-title="'Confirm delete'"
+                                            :confirm-text="'Are you sure, you want to delete this test step?'"
+                                            class="dropdown-item"
+                                        >
+                                            Delete (as link with modal)
+                                        </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
@@ -270,6 +320,18 @@ export default {
         testSteps: {
             type: Object,
             required: true,
+        },
+    },
+    methods: {
+        deleteTestStep(testStepId) {
+            this.$inertia
+                .delete(
+                    route('admin.test-cases.test-steps.destroy', [
+                        this.testCase.id,
+                        testStepId,
+                    ])
+                )
+                .then(() => {});
         },
     },
 };
