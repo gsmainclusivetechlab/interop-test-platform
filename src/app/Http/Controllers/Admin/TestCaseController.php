@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\TestCaseExport;
+use App\Http\Resources\ApiSpecResource;
 use App\Http\Resources\ComponentResource;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestStepResource;
 use App\Http\Resources\UseCaseResource;
 use App\Imports\TestCaseImport;
+use App\Models\ApiSpec;
 use App\Models\Component;
 use App\Models\Group;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
+use App\Models\TestStep;
 use App\Models\UseCase;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -474,7 +477,86 @@ class TestCaseController extends Controller
             'testCase' => (new TestCaseResource(
                 $testCase->load(['testSteps'])
             ))->resolve(),
+            'components' => ComponentResource::collection(
+                Component::get()
+            )->resolve(),
+            'apiSpecs' => ApiSpecResource::collection(
+                ApiSpec::get()
+            )->resolve(),
+            'methods' => TestStep::getMethodList(),
+            'statuses' => TestStep::getStatusList(),
         ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
+     */
+    public function storeTestSteps(TestCase $testCase, Request $request)
+    {
+        $this->authorize('update', $testCase);
+        return redirect()->back();
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param TestStep $testStep
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
+     */
+    public function editTestSteps(TestCase $testCase, TestStep $testStep)
+    {
+        if (!$testCase->isLast()) {
+            return $this->redirectToLast($testCase->last_version->id);
+        }
+        $this->authorize('update', $testCase);
+        return Inertia::render('admin/test-cases/test-steps/edit', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load(['testSteps'])
+            ))->resolve(),
+            'components' => ComponentResource::collection(
+                Component::get()
+            )->resolve(),
+            'apiSpecs' => ApiSpecResource::collection(
+                ApiSpec::get()
+            )->resolve(),
+            'methods' => TestStep::getMethodList(),
+            'statuses' => TestStep::getStatusList(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
+     */
+    public function updateTestSteps(TestCase $testCase, Request $request)
+    {
+        $this->authorize('update', $testCase);
+        return redirect()->back();
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param TestStep $testStep
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
+     */
+    public function destroyTestSteps(TestCase $testCase, TestStep $testStep)
+    {
+        $this->authorize('update', $testCase);
+        $testStep = $testCase
+            ->groups()
+            ->whereKey($testStep->getKey())
+            ->firstOrFail();
+        $testCase->testSteps()->detach($testStep);
+
+        return redirect()
+            ->back()
+            ->with('success', __('Test step deleted successfully from test case'));
     }
 
     /**
