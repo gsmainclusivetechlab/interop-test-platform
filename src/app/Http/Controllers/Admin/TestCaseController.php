@@ -549,7 +549,7 @@ class TestCaseController extends Controller
     {
         $this->authorize('update', $testCase);
         $testStep = $testCase
-            ->groups()
+            ->testSteps()
             ->whereKey($testStep->getKey())
             ->firstOrFail();
         $testCase->testSteps()->detach($testStep);
