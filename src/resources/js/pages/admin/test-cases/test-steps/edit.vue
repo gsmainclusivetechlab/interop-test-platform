@@ -2,7 +2,7 @@
     <layout :test-case="testCase">
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Create</h2>
+                <h2 class="card-title">Edit</h2>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -523,7 +523,7 @@
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Create
+                    Update
                 </button>
             </div>
         </form>
@@ -536,7 +536,7 @@ import JsonEditorBlock from '@/components/json-editor-block';
 
 export default {
     metaInfo: {
-        title: 'Test Step Create',
+        title: 'Test Step Edit',
     },
     components: {
         Layout,
@@ -599,7 +599,7 @@ export default {
         submit() {
             this.sending = true;
             // this.$inertia
-            //     .put(route('admin.test-cases.store'), this.form)
+            //     .post(route('admin.test-cases.store'), this.form)
             //     .then(() => (this.sending = false));
         },
         addFormItem(formsList, formPattern) {
