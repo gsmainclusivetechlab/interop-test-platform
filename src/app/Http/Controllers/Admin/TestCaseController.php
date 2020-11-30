@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -497,6 +498,28 @@ class TestCaseController extends Controller
     public function storeTestSteps(TestCase $testCase, Request $request)
     {
         $this->authorize('update', $testCase);
+        $request->validate([
+            'test_case_id' => [
+                'required|exists:test_cases,id',
+                Rule::in([$testCase->id])
+            ],
+            'source_id' => 'required|exists:components,id',
+            'target_id' => 'required|exists:components,id',
+            'api_spec_id' => 'nullable|exists:api_specs,id',
+            'path' => 'required|string|max:255',
+            'method' => 'required|string|max:255',
+            'pattern' => 'required|string|max:255',
+            'trigger' => 'string|nullable',
+            'request' => 'string|nullable',
+            'response' => 'string|nullable',
+        ]);
+        TestStep::create(
+            Arr::only(
+                $request->input(),
+                TestStep::make()->getFillable()
+            )
+        );
+
         return redirect()->back();
     }
 
@@ -516,6 +539,15 @@ class TestCaseController extends Controller
             'testCase' => (new TestCaseResource(
                 $testCase->load(['testSteps'])
             ))->resolve(),
+            'testStep' => (new TestStepResource(
+                $testStep->load([
+                    'source',
+                    'target',
+                    'apiSpec',
+                    'testSetups',
+                    'testScripts',
+                ])
+            ))->resolve(),
             'components' => ComponentResource::collection(
                 Component::get()
             )->resolve(),
@@ -533,9 +565,35 @@ class TestCaseController extends Controller
      * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
-    public function updateTestSteps(TestCase $testCase, Request $request)
+    public function updateTestSteps(
+        TestCase $testCase,
+        TestStep $testStep,
+        Request $request
+    )
     {
         $this->authorize('update', $testCase);
+        $request->validate([
+            'test_case_id' => [
+                'required|exists:test_cases,id',
+                Rule::in([$testCase->id])
+            ],
+            'source_id' => 'required|exists:components,id',
+            'target_id' => 'required|exists:components,id',
+            'api_spec_id' => 'nullable|exists:api_specs,id',
+            'path' => 'required|string|max:255',
+            'method' => 'required|string|max:255',
+            'pattern' => 'required|string|max:255',
+            'trigger' => 'string|nullable',
+            'request' => 'string|nullable',
+            'response' => 'string|nullable',
+        ]);
+        $testStep->update(
+            Arr::only(
+                $request->input(),
+                TestStep::make()->getFillable()
+            )
+        );
+
         return redirect()->back();
     }
 
