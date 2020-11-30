@@ -4,8 +4,8 @@
             <div class="card-header">
                 <h2 class="card-title">Versions</h2>
             </div>
-            <div class="table-responsive mb-0">
-                <table class="table table-striped table-hover card-table">
+            <div class="card-body table-responsive p-0">
+                <table class="table table-striped card-table">
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
