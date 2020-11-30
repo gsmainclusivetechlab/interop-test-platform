@@ -52,12 +52,13 @@ class TestRunController extends Controller
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([
-                    'components',
+                    'components.connections',
                     'testCases' => function ($query) {
                         return $query->with(['useCase', 'lastTestRun']);
                     },
                 ])
             ))->resolve(),
+            'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'components' => ComponentResource::collection(
                 Component::with([
                     'connections' => function ($query) use ($testCase) {

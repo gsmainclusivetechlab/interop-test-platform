@@ -189,24 +189,30 @@ class Session extends Model
      */
     public function environments()
     {
+        $defaultUrl = config('app.url');
+
         return array_merge($this->environments ?? [], [
             'SP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Service Provider')->firstOrFail()
+                Component::where('name', 'Service Provider')->firstOrFail(),
+                $defaultUrl
             ),
             'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 1'
-                )->firstOrFail()
+                )->firstOrFail(),
+                $defaultUrl
             ),
             'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Mojaloop')->firstOrFail()
+                Component::where('name', 'Mojaloop')->firstOrFail(),
+                $defaultUrl
             ),
             'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 2'
-                )->firstOrFail()
+                )->firstOrFail(),
+                $defaultUrl
             ),
             'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
             'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),
@@ -227,16 +233,18 @@ class Session extends Model
 
     /**
      * @param Component $component
+     * @param string|null $default
      *
      * @return string
      */
-    public function getBaseUriOfComponent(Component $component)
+    public function getBaseUriOfComponent(Component $component, $default = null)
     {
         return Arr::get(
             $this->components()
                 ->whereKey($component->getKey())
                 ->first(),
-            'pivot.base_url'
+            'pivot.base_url',
+            $default
         );
     }
 
@@ -377,5 +385,23 @@ class Session extends Model
                 $query->where('session_id', $this->id);
             })
             ->exists();
+    }
+
+    /**
+     * @param TestCase $testCase
+     *
+     * @return bool
+     */
+    public function isAvailableTestCaseRun(TestCase $testCase): bool
+    {
+        $testRunsCount = $this
+            ->testRuns()
+            ->where('test_case_id', $testCase->id)
+            ->count();
+
+        return !$this->isComplianceSession() ||
+            ($this->isAvailableToUpdate() &&
+                $testRunsCount <
+                config('test_cases.compliance_session_execution_limit'));
     }
 }
