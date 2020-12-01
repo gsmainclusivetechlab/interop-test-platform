@@ -62,8 +62,8 @@
                                     session.id
                                 )
                             "
-                            :status="'declined'"
                             :confirm-title="'Decline session'"
+                            :status="'declined'"
                         >
                             <icon name="x"></icon>
                             Decline
