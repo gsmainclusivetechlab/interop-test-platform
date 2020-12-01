@@ -262,92 +262,66 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
-        Route::resource('test-cases', 'TestCaseController')->except([
-            'show',
-            'edit',
-            'update',
-            ]);
-        Route::name('test-cases.')
-            ->prefix('test-cases')
+        Route::namespace('TestCases')
             ->group(function () {
-                Route::get('import', 'TestCaseController@showImportForm')->name(
-                    'import'
-                );
-                Route::get(
-                    '{testCase}/import',
-                    'TestCaseController@showImportVersionForm'
-                )->name('import-version');
-                Route::post('import', 'TestCaseController@import')->name(
-                    'import.confirm'
-                );
-                Route::get('{testCase}/export', 'TestCaseController@export')->name(
-                    'export'
-                );
-                Route::get('{testCase}/complete', 'TestCaseController@complete')->name(
-                    'complete'
-                );
-                Route::put(
-                    '{testCase}/toggle-public',
-                    'TestCaseController@togglePublic'
-                )->name('toggle-public');
-                Route::get(
-                    'group-candidates',
-                    'TestCaseController@groupCandidates'
-                )->name('group-candidates');
-                Route::name('info.')
-                    ->prefix('info')
+                Route::resource('test-cases', 'TestCaseController')->except([
+                    'show',
+                    'edit',
+                    'update',
+                ]);
+                Route::name('test-cases.')
+                    ->prefix('test-cases')
                     ->group(function () {
-                        Route::get('{testCase}/show', 'TestCaseController@showInfo')->name(
-                            'show'
+                        Route::get('import', 'TestCaseController@showImportForm')->name(
+                            'import'
                         );
-                        Route::get('{testCase}/edit', 'TestCaseController@editInfo')->name(
-                            'edit'
+                        Route::post('import', 'TestCaseController@import')->name(
+                            'import.confirm'
                         );
-                        Route::put('{testCase}/update', 'TestCaseController@updateInfo')->name(
-                            'update'
-                        );
-                    });
-                Route::name('groups.')
-                    ->prefix('groups')
-                    ->group(function () {
-                        Route::get('{testCase}/index', 'TestCaseController@indexGroups')->name(
-                            'index'
-                        );
-                        Route::post('{testCase}/store', 'TestCaseController@storeGroups')->name(
-                            'store'
-                        );
-                        Route::delete('{testCase}/destroy/{group}', 'TestCaseController@destroyGroups')->name(
-                            'destroy'
-                        );
-                    });
-                Route::name('test-steps.')
-                    ->prefix('test-steps')
-                    ->group(function () {
-                        Route::get('{testCase}/index', 'TestCaseController@indexTestSteps')->name(
-                            'index'
-                        );
-                        Route::get('{testCase}/create', 'TestCaseController@createTestSteps')->name(
-                            'create'
-                        );
-                        Route::post('{testCase}/store', 'TestCaseController@storeTestSteps')->name(
-                            'store'
-                        );
-                        Route::get('{testCase}/edit/{testStep}', 'TestCaseController@editTestSteps')->name(
-                            'edit'
-                        );
-                        Route::put('{testCase}/update/{testStep}', 'TestCaseController@updateTestSteps')->name(
-                            'update'
-                        );
-                        Route::delete('{testCase}/destroy/{testStep}', 'TestCaseController@destroyTestSteps')->name(
-                            'destroy'
-                        );
-                    });
-                Route::name('versions.')
-                    ->prefix('versions')
-                    ->group(function () {
-                        Route::get('{testCase}/index', 'TestCaseController@indexVersions')->name(
-                            'index'
-                        );
+                        Route::get(
+                            'group-candidates',
+                            'TestCaseController@groupCandidates'
+                        )->name('group-candidates');
+                        Route::prefix('{testCase}')
+                            ->group(function () {
+                                Route::get('import', 'TestCaseController@showImportVersionForm')->name(
+                                    'import-version'
+                                );
+                                Route::get('export', 'TestCaseController@export')->name(
+                                    'export'
+                                );
+                                Route::get('complete', 'TestCaseController@complete')->name(
+                                    'complete'
+                                );
+                                Route::put(
+                                    'toggle-public',
+                                    'TestCaseController@togglePublic'
+                                )->name('toggle-public');
+                                Route::name('info.')
+                                    ->prefix('info')
+                                    ->group(function () {
+                                        Route::get('show', 'TestCaseInfoController@show')->name(
+                                            'show'
+                                        );
+                                        Route::get('edit', 'TestCaseInfoController@edit')->name(
+                                            'edit'
+                                        );
+                                        Route::put('update', 'TestCaseInfoController@update')->name(
+                                            'update'
+                                        );
+                                    });
+                                Route::resource('groups', 'TestCaseGroupController')->only(
+                                    'index',
+                                    'store',
+                                    'destroy'
+                                );
+                                Route::resource('test-steps', 'TestCaseTestStepController')->except(
+                                    'show'
+                                );
+                                Route::resource('versions', 'TestCaseVersionController')->only(
+                                    'index'
+                                );
+                            });
                     });
             });
         Route::name('questionnaire.')
