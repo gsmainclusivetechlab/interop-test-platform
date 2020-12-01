@@ -114,15 +114,6 @@
                                         </inertia-link>
                                     </li>
                                     <li>
-                                        <button
-                                            class="dropdown-item"
-                                            type="button"
-                                            @click="deleteTestStep(testStep.id)"
-                                        >
-                                            Delete
-                                        </button>
-                                    </li>
-                                    <li>
                                         <confirm-link
                                             :href="
                                                 route(
@@ -130,12 +121,12 @@
                                                     [testCase.id, testStep.id]
                                                 )
                                             "
-                                            methos="delete"
+                                            method="delete"
                                             :confirm-title="'Confirm delete'"
                                             :confirm-text="'Are you sure, you want to delete this test step?'"
                                             class="dropdown-item"
                                         >
-                                            Delete (as link with modal)
+                                            Delete
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
@@ -320,18 +311,6 @@ export default {
         testSteps: {
             type: Object,
             required: true,
-        },
-    },
-    methods: {
-        deleteTestStep(testStepId) {
-            this.$inertia
-                .delete(
-                    route('admin.test-cases.test-steps.destroy', [
-                        this.testCase.id,
-                        testStepId,
-                    ])
-                )
-                .then(() => {});
         },
     },
 };
