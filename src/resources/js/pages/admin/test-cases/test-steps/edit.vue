@@ -13,9 +13,9 @@
                             :class="{
                                 'is-invalid': $page.errors.method,
                             }"
-                            v-model="method"
+                            v-model="method.selected"
                             placeholder="Select method"
-                            :options="[]"
+                            :options="method.list"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -72,9 +72,9 @@
                             :class="{
                                 'is-invalid': $page.errors.source,
                             }"
-                            v-model="source"
+                            v-model="source.selected"
                             placeholder="Select source"
-                            :options="[]"
+                            :options="source.list"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -94,9 +94,9 @@
                             :class="{
                                 'is-invalid': $page.errors.target,
                             }"
-                            v-model="target"
+                            v-model="target.selected"
                             placeholder="Select target"
-                            :options="[]"
+                            :options="target.list"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -116,9 +116,9 @@
                             :class="{
                                 'is-invalid': $page.errors.api_spec,
                             }"
-                            v-model="api_spec"
+                            v-model="apiSpec.selected"
                             placeholder="Select API specification"
-                            :options="[]"
+                            :options="apiSpec.list"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -149,7 +149,7 @@
                     <div class="col-12 mb-3">
                         <h3 class="card-title">Test Request Scripts</h3>
                         <template
-                            v-for="(request, i) in testRequestScripts.list"
+                            v-for="(request, i) in test.request.scripts.list"
                         >
                             <div
                                 class="card-header justify-content-between"
@@ -166,7 +166,7 @@
                                     title="Delete"
                                     @click="
                                         deleteFormItem(
-                                            testRequestScripts.list,
+                                            test.request.scripts.list,
                                             i
                                         )
                                     "
@@ -199,8 +199,8 @@
                                 type="button"
                                 class="btn btn-primary"
                                 @click="
-                                    addFormItem(testRequestScripts.list, {
-                                        ...testRequestScripts.pattern,
+                                    addFormItem(test.request.scripts.list, {
+                                        ...test.request.scripts.pattern,
                                     })
                                 "
                             >
@@ -212,7 +212,7 @@
                     <div class="col-12 mb-3">
                         <h3 class="card-title">Test Response Scripts</h3>
                         <template
-                            v-for="(response, i) in testResponseScripts.list"
+                            v-for="(response, i) in test.response.scripts.list"
                         >
                             <div
                                 class="card-header justify-content-between"
@@ -229,7 +229,7 @@
                                     title="Delete"
                                     @click="
                                         deleteFormItem(
-                                            testResponseScripts.list,
+                                            test.response.scripts.list,
                                             i
                                         )
                                     "
@@ -262,8 +262,8 @@
                                 type="button"
                                 class="btn btn-primary"
                                 @click="
-                                    addFormItem(testResponseScripts.list, {
-                                        ...testResponseScripts.pattern,
+                                    addFormItem(test.response.scripts.list, {
+                                        ...test.response.scripts.pattern,
                                     })
                                 "
                             >
@@ -275,7 +275,7 @@
                     <div class="col-12 mb-3">
                         <h3 class="card-title">Test Request Setups</h3>
                         <template
-                            v-for="(request, i) in testRequestSetups.list"
+                            v-for="(request, i) in test.request.setups.list"
                         >
                             <div
                                 class="card-header justify-content-between"
@@ -302,7 +302,7 @@
                                         title="Delete"
                                         @click="
                                             deleteFormItem(
-                                                testRequestSetups.list,
+                                                test.request.setups.list,
                                                 i
                                             )
                                         "
@@ -336,8 +336,8 @@
                                 type="button"
                                 class="btn btn-primary"
                                 @click="
-                                    addFormItem(testRequestSetups.list, {
-                                        ...testRequestSetups.pattern,
+                                    addFormItem(test.request.setups.list, {
+                                        ...test.request.setups.pattern,
                                     })
                                 "
                             >
@@ -349,7 +349,7 @@
                     <div class="col-12 mb-3">
                         <h3 class="card-title">Test Response Setups</h3>
                         <template
-                            v-for="(response, i) in testResponseSetups.list"
+                            v-for="(response, i) in test.response.setups.list"
                         >
                             <div
                                 class="card-header justify-content-between"
@@ -376,7 +376,7 @@
                                         title="Delete"
                                         @click="
                                             deleteFormItem(
-                                                testResponseSetups.list,
+                                                test.response.setups.list,
                                                 i
                                             )
                                         "
@@ -410,8 +410,8 @@
                                 type="button"
                                 class="btn btn-primary"
                                 @click="
-                                    addFormItem(testResponseSetups.list, {
-                                        ...testResponseSetups.pattern,
+                                    addFormItem(test.response.setups.list, {
+                                        ...test.response.setups.pattern,
                                     })
                                 "
                             >
@@ -425,7 +425,7 @@
                             >Request Header Examples</label
                         >
                         <json-editor-block
-                            :input-json="requestHeaderExamples"
+                            :input-json="example.request.header"
                             @output-json="() => {}"
                         />
                         <span
@@ -440,7 +440,7 @@
                     <div class="col-12 mb-3">
                         <label class="form-label">Request Body Examples</label>
                         <json-editor-block
-                            :input-json="requestBodyExamples"
+                            :input-json="example.request.body"
                             @output-json="() => {}"
                         />
                         <span
@@ -462,7 +462,7 @@
                                 'is-invalid':
                                     $page.errors.responseStatusExample,
                             }"
-                            v-model="responseStatusExample"
+                            v-model="example.response.status"
                             placeholder="Select status"
                             :options="[]"
                             :disableSearch="false"
@@ -482,7 +482,7 @@
                             >Response Header Examples</label
                         >
                         <json-editor-block
-                            :input-json="responseHeaderExamples"
+                            :input-json="example.response.header"
                             @output-json="() => {}"
                         />
                         <span
@@ -497,7 +497,7 @@
                     <div class="col-12 mb-3">
                         <label class="form-label">Response Body Examples</label>
                         <json-editor-block
-                            :input-json="responseBodyExamples"
+                            :input-json="example.response.body"
                             @output-json="() => {}"
                         />
                         <span
@@ -551,48 +551,72 @@ export default {
     data() {
         return {
             sending: false,
-            method: [],
+            method: {
+                selected: '',
+                list: collect(this.$page.methods).toArray(),
+            },
             path: '',
             pattern: '',
-            source: [],
-            target: [],
-            api_spec: [],
+            source: {
+                selected: '',
+                list: this.$page.components.map((el) => el.name),
+            },
+            target: {
+                selected: '',
+                list: this.$page.components.map((el) => el.name),
+            },
+            apiSpec: {
+                selected: '',
+                list: ['None', ...this.$page.apiSpecs.map((el) => el.name)],
+            },
             trigger: {},
-            testRequestScripts: {
-                list: [],
-                pattern: {
-                    name: '',
-                    rules: {},
+            test: {
+                request: {
+                    setups: {
+                        list: [],
+                        pattern: {
+                            override: false,
+                            name: '',
+                            rules: {},
+                        },
+                    },
+                    scripts: {
+                        list: [],
+                        pattern: {
+                            name: '',
+                            rules: {},
+                        },
+                    },
+                },
+                response: {
+                    setups: {
+                        list: [],
+                        pattern: {
+                            override: false,
+                            name: '',
+                            rules: {},
+                        },
+                    },
+                    scripts: {
+                        list: [],
+                        pattern: {
+                            name: '',
+                            rules: {},
+                        },
+                    },
                 },
             },
-            testResponseScripts: {
-                list: [],
-                pattern: {
-                    name: '',
-                    rules: {},
+            example: {
+                request: {
+                    header: {},
+                    body: {},
+                },
+                response: {
+                    status: '',
+                    header: {},
+                    body: {},
                 },
             },
-            testRequestSetups: {
-                list: [],
-                pattern: {
-                    override: false,
-                    name: '',
-                    rules: {},
-                },
-            },
-            testResponseSetups: {
-                list: [],
-                pattern: {
-                    override: false,
-                    name: '',
-                    rules: {},
-                },
-            },
-            requestHeaderExamples: {},
-            requestBodyExamples: {},
-            responseStatusExample: [],
-            responseHeaderExamples: {},
-            responseBodyExamples: {},
         };
     },
     methods: {
@@ -610,17 +634,17 @@ export default {
         },
     },
     mounted() {
-        this.addFormItem(this.testRequestScripts.list, {
-            ...this.testRequestScripts.pattern,
+        this.addFormItem(this.test.request.scripts.list, {
+            ...this.test.request.scripts.pattern,
         });
-        this.addFormItem(this.testResponseScripts.list, {
-            ...this.testResponseScripts.pattern,
+        this.addFormItem(this.test.response.scripts.list, {
+            ...this.test.response.scripts.pattern,
         });
-        this.addFormItem(this.testRequestSetups.list, {
-            ...this.testRequestSetups.pattern,
+        this.addFormItem(this.test.request.setups.list, {
+            ...this.test.request.setups.pattern,
         });
-        this.addFormItem(this.testResponseSetups.list, {
-            ...this.testResponseSetups.pattern,
+        this.addFormItem(this.test.response.setups.list, {
+            ...this.test.response.setups.pattern,
         });
     },
 };
