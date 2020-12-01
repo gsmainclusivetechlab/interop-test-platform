@@ -72,9 +72,9 @@
                             :class="{
                                 'is-invalid': $page.errors.source,
                             }"
-                            v-model="source.selected"
+                            v-model="source"
                             placeholder="Select source"
-                            :options="source.list"
+                            :options="sourceList"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -94,9 +94,9 @@
                             :class="{
                                 'is-invalid': $page.errors.target,
                             }"
-                            v-model="target.selected"
+                            v-model="target"
                             placeholder="Select target"
-                            :options="target.list"
+                            :options="targetList"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -147,162 +147,34 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <h3 class="card-title">Test Request Scripts</h3>
-                        <template
-                            v-for="(request, i) in test.request.scripts.list"
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle"
+                            v-b-toggle="'test-request-scripts'"
                         >
-                            <div
-                                class="card-header justify-content-between"
-                                :key="`test-request-script-head-${i}`"
+                            Test Request Scripts
+                        </button>
+                        <b-collapse id="test-request-scripts" visible>
+                            <template
+                                v-for="(request, i) in test.scripts.request
+                                    .list"
                             >
-                                <div class="text-muted">
-                                    <span>{{ i + 1 }}.</span>
-                                    <span>{{ request.name }}</span>
-                                </div>
-                                <button
-                                    type="button"
-                                    class="btn btn-link p-0"
-                                    v-b-tooltip.hover
-                                    title="Delete"
-                                    @click="
-                                        deleteFormItem(
-                                            test.request.scripts.list,
-                                            i
-                                        )
-                                    "
+                                <div
+                                    class="card-header justify-content-between"
+                                    :key="`test-request-script-head-${i}`"
                                 >
-                                    <icon name="trash" />
-                                </button>
-                            </div>
-                            <div
-                                class="card-body"
-                                :key="`test-request-script-form-${i}`"
-                            >
-                                <label class="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    class="form-control mb-2"
-                                    v-model="request.name"
-                                />
-                                <label class="form-label mb-3">Rules</label>
-                                <json-editor-block
-                                    :input-json="request.rules"
-                                    @output-json="
-                                        (data) => (request.rules = data)
-                                    "
-                                />
-                                <div class="text-right"></div>
-                            </div>
-                        </template>
-                        <div class="text-right">
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                @click="
-                                    addFormItem(test.request.scripts.list, {
-                                        ...test.request.scripts.pattern,
-                                    })
-                                "
-                            >
-                                <icon name="plus" />
-                                <span>Add New Request Script</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <h3 class="card-title">Test Response Scripts</h3>
-                        <template
-                            v-for="(response, i) in test.response.scripts.list"
-                        >
-                            <div
-                                class="card-header justify-content-between"
-                                :key="`test-response-script-head-${i}`"
-                            >
-                                <div class="text-muted">
-                                    <span>{{ i + 1 }}.</span>
-                                    <span>{{ response.name }}</span>
-                                </div>
-                                <button
-                                    type="button"
-                                    class="btn btn-link p-0"
-                                    v-b-tooltip.hover
-                                    title="Delete"
-                                    @click="
-                                        deleteFormItem(
-                                            test.response.scripts.list,
-                                            i
-                                        )
-                                    "
-                                >
-                                    <icon name="trash" />
-                                </button>
-                            </div>
-                            <div
-                                class="card-body"
-                                :key="`test-response-script-form-${i}`"
-                            >
-                                <label class="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    class="form-control mb-2"
-                                    v-model="response.name"
-                                />
-                                <label class="form-label mb-3">Rules</label>
-                                <json-editor-block
-                                    :input-json="response.rules"
-                                    @output-json="
-                                        (data) => (response.rules = data)
-                                    "
-                                />
-                                <div class="text-right"></div>
-                            </div>
-                        </template>
-                        <div class="text-right">
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                @click="
-                                    addFormItem(test.response.scripts.list, {
-                                        ...test.response.scripts.pattern,
-                                    })
-                                "
-                            >
-                                <icon name="plus" />
-                                <span>Add New Response Script</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <h3 class="card-title">Test Request Setups</h3>
-                        <template
-                            v-for="(request, i) in test.request.setups.list"
-                        >
-                            <div
-                                class="card-header justify-content-between"
-                                :key="`test-request-script-head-${i}`"
-                            >
-                                <div class="text-muted">
-                                    <span>{{ i + 1 }}.</span>
-                                    <span>{{ request.name }}</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <label class="form-check form-switch">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            v-model="request.override"
-                                            v-b-tooltip.hover
-                                            title="Override all"
-                                        />
-                                    </label>
+                                    <div class="text-muted">
+                                        <span>{{ i + 1 }}.</span>
+                                        <span>{{ request.name }}</span>
+                                    </div>
                                     <button
                                         type="button"
-                                        class="btn btn-link p-0 ml-2"
+                                        class="btn btn-link p-0"
                                         v-b-tooltip.hover
                                         title="Delete"
                                         @click="
                                             deleteFormItem(
-                                                test.request.setups.list,
+                                                test.scripts.request.list,
                                                 i
                                             )
                                         "
@@ -310,73 +182,71 @@
                                         <icon name="trash" />
                                     </button>
                                 </div>
-                            </div>
-                            <div
-                                class="card-body"
-                                :key="`test-request-script-form-${i}`"
-                            >
-                                <label class="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    class="form-control mb-2"
-                                    v-model="request.name"
-                                />
-                                <label class="form-label mb-3">Rules</label>
-                                <json-editor-block
-                                    :input-json="request.rules"
-                                    @output-json="
-                                        (data) => (request.rules = data)
+                                <div
+                                    class="card-body"
+                                    :key="`test-request-script-form-${i}`"
+                                >
+                                    <label class="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        class="form-control mb-2"
+                                        v-model="request.name"
+                                    />
+                                    <label class="form-label mb-3">Rules</label>
+                                    <json-editor-block
+                                        :input-json="request.rules"
+                                        @output-json="
+                                            (data) => (request.rules = data)
+                                        "
+                                    />
+                                    <div class="text-right"></div>
+                                </div>
+                            </template>
+                            <div class="text-right">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="
+                                        addFormItem(test.scripts.request.list, {
+                                            ...test.scripts.request.pattern,
+                                        })
                                     "
-                                />
-                                <div class="text-right"></div>
+                                >
+                                    <icon name="plus" />
+                                    <span>Add New Request Script</span>
+                                </button>
                             </div>
-                        </template>
-                        <div class="text-right">
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                @click="
-                                    addFormItem(test.request.setups.list, {
-                                        ...test.request.setups.pattern,
-                                    })
-                                "
-                            >
-                                <icon name="plus" />
-                                <span>Add New Request Setup</span>
-                            </button>
-                        </div>
+                        </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
-                        <h3 class="card-title">Test Response Setups</h3>
-                        <template
-                            v-for="(response, i) in test.response.setups.list"
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle"
+                            v-b-toggle="'test-response-scripts'"
                         >
-                            <div
-                                class="card-header justify-content-between"
-                                :key="`test-response-script-head-${i}`"
+                            Test Response Scripts
+                        </button>
+                        <b-collapse id="test-response-scripts" visible>
+                            <template
+                                v-for="(response, i) in test.scripts.response
+                                    .list"
                             >
-                                <div class="text-muted">
-                                    <span>{{ i + 1 }}.</span>
-                                    <span>{{ response.name }}</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <label class="form-check form-switch">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            v-model="response.override"
-                                            v-b-tooltip.hover
-                                            title="Override all"
-                                        />
-                                    </label>
+                                <div
+                                    class="card-header justify-content-between"
+                                    :key="`test-response-script-head-${i}`"
+                                >
+                                    <div class="text-muted">
+                                        <span>{{ i + 1 }}.</span>
+                                        <span>{{ response.name }}</span>
+                                    </div>
                                     <button
                                         type="button"
-                                        class="btn btn-link p-0 ml-2"
+                                        class="btn btn-link p-0"
                                         v-b-tooltip.hover
                                         title="Delete"
                                         @click="
                                             deleteFormItem(
-                                                test.response.setups.list,
+                                                test.scripts.response.list,
                                                 i
                                             )
                                         "
@@ -384,56 +254,229 @@
                                         <icon name="trash" />
                                     </button>
                                 </div>
-                            </div>
-                            <div
-                                class="card-body"
-                                :key="`test-response-script-form-${i}`"
-                            >
-                                <label class="form-label">Name</label>
-                                <input
-                                    type="text"
-                                    class="form-control mb-2"
-                                    v-model="response.name"
-                                />
-                                <label class="form-label mb-3">Rules</label>
-                                <json-editor-block
-                                    :input-json="response.rules"
-                                    @output-json="
-                                        (data) => (response.rules = data)
+                                <div
+                                    class="card-body"
+                                    :key="`test-response-script-form-${i}`"
+                                >
+                                    <label class="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        class="form-control mb-2"
+                                        v-model="response.name"
+                                    />
+                                    <label class="form-label mb-3">Rules</label>
+                                    <json-editor-block
+                                        :input-json="response.rules"
+                                        @output-json="
+                                            (data) => (response.rules = data)
+                                        "
+                                    />
+                                    <div class="text-right"></div>
+                                </div>
+                            </template>
+                            <div class="text-right">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="
+                                        addFormItem(
+                                            test.scripts.response.list,
+                                            {
+                                                ...test.scripts.response
+                                                    .pattern,
+                                            }
+                                        )
                                     "
-                                />
-                                <div class="text-right"></div>
+                                >
+                                    <icon name="plus" />
+                                    <span>Add New Response Script</span>
+                                </button>
                             </div>
-                        </template>
-                        <div class="text-right">
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                @click="
-                                    addFormItem(test.response.setups.list, {
-                                        ...test.response.setups.pattern,
-                                    })
-                                "
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle"
+                            v-b-toggle="'test-request-setups'"
+                        >
+                            Test Request Setups
+                        </button>
+                        <b-collapse id="test-request-setups" visible>
+                            <template
+                                v-for="(request, i) in test.setups.request.list"
                             >
-                                <icon name="plus" />
-                                <span>Add New Response Setup</span>
-                            </button>
-                        </div>
+                                <div
+                                    class="card-header justify-content-between"
+                                    :key="`test-request-script-head-${i}`"
+                                >
+                                    <div class="text-muted">
+                                        <span>{{ i + 1 }}.</span>
+                                        <span>{{ request.name }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <label class="form-check form-switch">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="request.override"
+                                                v-b-tooltip.hover
+                                                title="Override all"
+                                            />
+                                        </label>
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0 ml-2"
+                                            v-b-tooltip.hover
+                                            title="Delete"
+                                            @click="
+                                                deleteFormItem(
+                                                    test.setups.request.list,
+                                                    i
+                                                )
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="card-body"
+                                    :key="`test-request-script-form-${i}`"
+                                >
+                                    <label class="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        class="form-control mb-2"
+                                        v-model="request.name"
+                                    />
+                                    <label class="form-label mb-3"
+                                        >Values</label
+                                    >
+                                    <json-editor-block
+                                        :input-json="request.values"
+                                        @output-json="
+                                            (data) => (request.values = data)
+                                        "
+                                    />
+                                    <div class="text-right"></div>
+                                </div>
+                            </template>
+                            <div class="text-right">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="
+                                        addFormItem(test.setups.request.list, {
+                                            ...test.setups.request.pattern,
+                                        })
+                                    "
+                                >
+                                    <icon name="plus" />
+                                    <span>Add New Request Setup</span>
+                                </button>
+                            </div>
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle"
+                            v-b-toggle="'test-response-setups'"
+                        >
+                            Test Response Setups
+                        </button>
+                        <b-collapse id="test-response-setups" visible>
+                            <template
+                                v-for="(response, i) in test.setups.response
+                                    .list"
+                            >
+                                <div
+                                    class="card-header justify-content-between"
+                                    :key="`test-response-script-head-${i}`"
+                                >
+                                    <div class="text-muted">
+                                        <span>{{ i + 1 }}.</span>
+                                        <span>{{ response.name }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <label class="form-check form-switch">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                v-model="response.override"
+                                                v-b-tooltip.hover
+                                                title="Override all"
+                                            />
+                                        </label>
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0 ml-2"
+                                            v-b-tooltip.hover
+                                            title="Delete"
+                                            @click="
+                                                deleteFormItem(
+                                                    test.setups.response.list,
+                                                    i
+                                                )
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="card-body"
+                                    :key="`test-response-script-form-${i}`"
+                                >
+                                    <label class="form-label">Name</label>
+                                    <input
+                                        type="text"
+                                        class="form-control mb-2"
+                                        v-model="response.name"
+                                    />
+                                    <label class="form-label mb-3"
+                                        >Values</label
+                                    >
+                                    <json-editor-block
+                                        :input-json="response.values"
+                                        @output-json="
+                                            (data) => (response.values = data)
+                                        "
+                                    />
+                                    <div class="text-right"></div>
+                                </div>
+                            </template>
+                            <div class="text-right">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="
+                                        addFormItem(test.setups.response.list, {
+                                            ...test.setups.response.pattern,
+                                        })
+                                    "
+                                >
+                                    <icon name="plus" />
+                                    <span>Add New Response Setup</span>
+                                </button>
+                            </div>
+                        </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label"
-                            >Request Header Examples</label
+                            >Request Headers Examples</label
                         >
                         <json-editor-block
-                            :input-json="example.request.header"
+                            :input-json="example.request.headers"
                             @output-json="() => {}"
                         />
                         <span
-                            v-if="$page.errors.requestHeaderExamples"
+                            v-if="$page.errors.requestHeadersExamples"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.requestHeaderExamples }}
+                                {{ $page.errors.requestHeadersExamples }}
                             </strong>
                         </span>
                     </div>
@@ -462,9 +505,9 @@
                                 'is-invalid':
                                     $page.errors.responseStatusExample,
                             }"
-                            v-model="example.response.status"
+                            v-model="example.response.status.selected"
                             placeholder="Select status"
-                            :options="[]"
+                            :options="example.response.status.list"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -479,18 +522,18 @@
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label"
-                            >Response Header Examples</label
+                            >Response Headers Examples</label
                         >
                         <json-editor-block
-                            :input-json="example.response.header"
+                            :input-json="example.response.headers"
                             @output-json="() => {}"
                         />
                         <span
-                            v-if="$page.errors.responseHeaderExamples"
+                            v-if="$page.errors.responseHeadersExamples"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.responseHeaderExamples }}
+                                {{ $page.errors.responseHeadersExamples }}
                             </strong>
                         </span>
                     </div>
@@ -547,84 +590,142 @@ export default {
             type: Object,
             required: true,
         },
+        testStep: {
+            type: Object,
+            required: true,
+        },
     },
     data() {
         return {
             sending: false,
+            component: {
+                list: this.$page.components.map((el) => el.name),
+            },
             method: {
-                selected: '',
+                selected: this.testStep.method,
                 list: collect(this.$page.methods).toArray(),
             },
-            path: '',
-            pattern: '',
-            source: {
-                selected: '',
-                list: this.$page.components.map((el) => el.name),
-            },
-            target: {
-                selected: '',
-                list: this.$page.components.map((el) => el.name),
-            },
+            path: this.testStep?.path,
+            pattern: this.testStep?.pattern,
+            source: this.testStep.source?.data?.name,
+            target: this.testStep.target?.data?.name,
             apiSpec: {
-                selected: '',
+                selected: this.testStep.apiSpec?.data?.name,
                 list: ['None', ...this.$page.apiSpecs.map((el) => el.name)],
             },
-            trigger: {},
+            trigger: this.testStep?.trigger ?? {},
             test: {
-                request: {
-                    setups: {
-                        list: [],
+                scripts: {
+                    request: {
+                        list: this.testStep.testScripts?.data?.filter(
+                            (el) => el.type === 'request'
+                        ),
                         pattern: {
-                            override: false,
                             name: '',
                             rules: {},
                         },
                     },
-                    scripts: {
-                        list: [],
+                    response: {
+                        list: this.testStep.testScripts?.data?.filter(
+                            (el) => el.type === 'response'
+                        ),
                         pattern: {
                             name: '',
                             rules: {},
                         },
                     },
                 },
-                response: {
-                    setups: {
-                        list: [],
+                setups: {
+                    request: {
+                        list: this.testStep.testSetups?.data?.filter(
+                            (el) => el.type === 'request'
+                        ),
                         pattern: {
                             override: false,
                             name: '',
-                            rules: {},
+                            values: {},
                         },
                     },
-                    scripts: {
-                        list: [],
+                    response: {
+                        list: this.testStep.testSetups?.data?.filter(
+                            (el) => el.type === 'response'
+                        ),
                         pattern: {
+                            override: false,
                             name: '',
-                            rules: {},
+                            values: {},
                         },
                     },
                 },
             },
             example: {
                 request: {
-                    header: {},
-                    body: {},
+                    headers: this.testStep.request.headers,
+                    body: this.testStep.request.body,
                 },
                 response: {
-                    status: '',
-                    header: {},
-                    body: {},
+                    status: {
+                        selected: this.$page.statuses[
+                            this.testStep.response.status
+                        ],
+                        list: collect(this.$page.statuses).toArray(),
+                    },
+                    headers: this.testStep.response.headers,
+                    body: this.testStep.response.body,
                 },
             },
         };
     },
     methods: {
         submit() {
+            const form = {
+                api_spec_id:
+                    this.$page.apiSpecs.filter(
+                        (el) => el.name === this.apiSpec.selected
+                    )?.[0]?.id ?? null,
+                method: collect(this.$page.methods)
+                    .flip()
+                    .get(this.method.selected),
+                path: this.path,
+                pattern: this.pattern ?? null,
+                source_id: this.$page.components.filter(
+                    (el) => el.name === this.source
+                )?.[0]?.id,
+                target_id: this.$page.components.filter(
+                    (el) => el.name === this.target
+                )?.[0]?.id,
+                trigger:
+                    Object.keys(this.trigger).length > 0 ? this.trigger : null,
+                request: this.example.request,
+                response: {
+                    status: collect(this.$page.statuses)
+                        .flip()
+                        .get(this.example.response.status.selected),
+                    headers: this.example.response.headers,
+                    body: this.example.response.body,
+                },
+                test: {
+                    sripts: {
+                        request: this.test.scripts.request.list,
+                        response: this.test.scripts.response.list,
+                    },
+                    setups: {
+                        request: this.test.setups.request.list,
+                        response: this.test.setups.response.list,
+                    },
+                },
+            };
+
             this.sending = true;
-            // this.$inertia
-            //     .post(route('admin.test-cases.store'), this.form)
-            //     .then(() => (this.sending = false));
+            this.$inertia
+                .put(
+                    route('admin.test-cases.test-steps.update', [
+                        this.testCase.id,
+                        this.testStep.id,
+                    ]),
+                    form
+                )
+                .then(() => (this.sending = false));
         },
         addFormItem(formsList, formPattern) {
             formsList.push(formPattern);
@@ -633,19 +734,21 @@ export default {
             formList.splice(i, 1);
         },
     },
-    mounted() {
-        this.addFormItem(this.test.request.scripts.list, {
-            ...this.test.request.scripts.pattern,
-        });
-        this.addFormItem(this.test.response.scripts.list, {
-            ...this.test.response.scripts.pattern,
-        });
-        this.addFormItem(this.test.request.setups.list, {
-            ...this.test.request.setups.pattern,
-        });
-        this.addFormItem(this.test.response.setups.list, {
-            ...this.test.response.setups.pattern,
-        });
+    computed: {
+        sourceList() {
+            const list = [...this.component.list];
+
+            list.splice(this.component.list.indexOf(this.target.selected), 1);
+
+            return list;
+        },
+        targetList() {
+            const list = [...this.component.list];
+
+            list.splice(this.component.list.indexOf(this.source.selected), 1);
+
+            return list;
+        },
     },
 };
 </script>
