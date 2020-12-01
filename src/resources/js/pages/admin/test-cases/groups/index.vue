@@ -79,13 +79,18 @@
                                         <icon name="dots-vertical"></icon>
                                     </template>
                                     <li>
-                                        <button
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.groups.destroy',
+                                                    [testCase.id, group.id]
+                                                )
+                                            "
+                                            method="delete"
                                             class="dropdown-item"
-                                            type="button"
-                                            @click="deleteGroup(group.id)"
                                         >
                                             Delete
-                                        </button>
+                                        </inertia-link>
                                     </li>
                                 </b-dropdown>
                             </td>
@@ -153,16 +158,6 @@ export default {
                     this.sending = false;
                     this.newList = [];
                 });
-        },
-        deleteGroup(groupId) {
-            this.$inertia
-                .delete(
-                    route('admin.test-cases.groups.destroy', [
-                        this.testCase.id,
-                        groupId,
-                    ])
-                )
-                .then(() => {});
         },
         loadSearchList(query = '') {
             axios
