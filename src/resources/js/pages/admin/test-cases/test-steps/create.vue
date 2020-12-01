@@ -704,8 +704,8 @@ export default {
 
             this.sending = true;
             this.$inertia
-                .put(
-                    post('admin.test-cases.test-steps.store', this.testCase.id),
+                .post(
+                    route('admin.test-cases.test-steps.store', this.testCase.id),
                     form
                 )
                 .then(() => (this.sending = false));

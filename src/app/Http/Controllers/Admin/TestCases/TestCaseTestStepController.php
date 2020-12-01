@@ -15,6 +15,7 @@ use App\Models\{
     TestStep,
 };
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTestStep;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -91,36 +92,25 @@ class TestCaseTestStepController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @param Request $request
+     * @param StoreTestStep $storeTestStepRequest
      * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
-    public function store(TestCase $testCase, Request $request)
+    public function store(TestCase $testCase, StoreTestStep $storeTestStepRequest)
     {
         $this->authorize('update', $testCase);
-        $request->validate([
-            'test_case_id' => [
-                'required|exists:test_cases,id',
-                Rule::in([$testCase->id])
-            ],
-            'source_id' => 'required|exists:components,id',
-            'target_id' => 'required|exists:components,id',
-            'api_spec_id' => 'nullable|exists:api_specs,id',
-            'path' => 'required|string|max:255',
-            'method' => 'required|string|max:255',
-            'pattern' => 'required|string|max:255',
-            'trigger' => 'string|nullable',
-            'request' => 'string|nullable',
-            'response' => 'string|nullable',
-        ]);
-        TestStep::create(
-            Arr::only(
-                $request->input(),
-                TestStep::make()->getFillable()
-            )
-        );
 
-        return redirect()->back();
+        try {
+            $storeTestStepRequest->createTestStep($testCase);
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+
+        return redirect()
+            ->route('admin.test-cases.test-steps.index', $testCase->id)
+            ->with('success', __('Test Step created successfully'));
     }
 
     /**
