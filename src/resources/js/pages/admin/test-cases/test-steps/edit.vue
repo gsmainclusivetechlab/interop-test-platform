@@ -737,15 +737,21 @@ export default {
     computed: {
         sourceList() {
             const list = [...this.component.list];
+            const i = this.component.list.indexOf(this.source);
 
-            list.splice(this.component.list.indexOf(this.target.selected), 1);
+            if (i < 0) return list;
+
+            list.splice(this.component.list.indexOf(this.target), 1);
 
             return list;
         },
         targetList() {
             const list = [...this.component.list];
+            const i = this.component.list.indexOf(this.source);
 
-            list.splice(this.component.list.indexOf(this.source.selected), 1);
+            if (i < 0) return list;
+
+            list.splice(this.component.list.indexOf(this.source), 1);
 
             return list;
         },
