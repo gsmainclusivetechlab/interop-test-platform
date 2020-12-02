@@ -14,6 +14,8 @@ use App\Models\{
     TestCase,
     TestStep,
 };
+use App\Enums\HttpMethod;
+use App\Enums\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTestStep;
 use Exception;
@@ -85,8 +87,8 @@ class TestCaseTestStepController extends Controller
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
             )->resolve(),
-            'methods' => TestStep::getMethodList(),
-            'statuses' => TestStep::getStatusList(),
+            'methods' => HttpMethod::list(),
+            'statuses' => HttpStatus::list(),
         ]);
     }
 
@@ -144,8 +146,8 @@ class TestCaseTestStepController extends Controller
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
             )->resolve(),
-            'methods' => TestStep::getMethodList(),
-            'statuses' => TestStep::getStatusList(),
+            'methods' => HttpMethod::list(),
+            'statuses' => HttpStatus::list(),
         ]);
     }
 

@@ -30,30 +30,43 @@ class StoreTestStep extends FormRequest
     public function rules()
     {
         return [
-            'source_id' => 'required|exists:components,id',
-            'target_id' => 'required|exists:components,id',
-            'api_spec_id' => 'nullable|exists:api_specs,id',
-            'path' => 'required|string|max:255',
-            'method' => 'required|string|max:255',
-            'pattern' => 'required|string|max:255',
-            'trigger' => 'nullable|array',
-            'request' => 'nullable|array',
-            'response' => 'array',
-            'response.status' => 'required',
+            'source_id' => ['required', 'exists:components,id'],
+            'target_id' => ['required', 'exists:components,id'],
+            'api_spec_id' => ['nullable', 'exists:api_specs,id'],
+            'path' => ['required', 'string', 'max:255'],
+            'method' => ['required', 'string', 'max:255'],
+            'pattern' => ['required', 'string', 'max:255'],
+            'trigger' => ['nullable', 'array'],
+            'request' => ['nullable', 'array'],
+            'response' => ['required', 'array'],
+            'response.status' => ['required'],
             // test scripts
-            'test.scripts.request' => 'nullable|array',
-            'test.scripts.request.*.name' => 'required|string',
-            'test.scripts.request.*.rules' => 'required|array',
-            'test.scripts.response' => 'nullable|array',
-            'test.scripts.response.*.name' => 'required|string',
-            'test.scripts.response.*.rules' => 'required|array',
+            'test.scripts.request' => ['nullable', 'array'],
+            'test.scripts.request.*.name' => ['required', 'string', 'max:255'],
+            'test.scripts.request.*.rules' => ['required', 'array'],
+            'test.scripts.response' => ['nullable', 'array'],
+            'test.scripts.response.*.name' => ['required', 'string', 'max:255'],
+            'test.scripts.response.*.rules' => ['required', 'array'],
             //test setups
-            'test.setups.request' => 'nullable|array',
-            'test.setups.request.*.name' => 'required|string',
-            'test.setups.request.*.values' => 'required|array',
-            'test.setups.response' => 'nullable|array',
-            'test.setups.response.*.name' => 'required|string',
-            'test.setups.response.*.values' => 'required|array',
+            'test.setups.request' => ['nullable', 'array'],
+            'test.setups.request.*.name' => ['required', 'string', 'max:255'],
+            'test.setups.request.*.values' => ['required', 'array'],
+            'test.setups.response' => ['nullable', 'array'],
+            'test.setups.response.*.name' => ['required', 'string', 'max:255'],
+            'test.setups.response.*.values' => ['required', 'array'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            '*.required' => __('Field is required.'),
+            'response.status.required' => __('Field is required.'),
+            'test.*.*.*.*.required' => __('Field is required.'),
+            'test.*.*.*.name.max' => __('The name may not be greater than 255 characters.'),
         ];
     }
 
