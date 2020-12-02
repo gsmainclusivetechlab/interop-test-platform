@@ -16,7 +16,6 @@
                             v-model="method.selected"
                             placeholder="Select method"
                             :options="method.list"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -75,7 +74,6 @@
                             v-model="source"
                             placeholder="Select source"
                             :options="sourceList"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -97,7 +95,6 @@
                             v-model="target"
                             placeholder="Select target"
                             :options="targetList"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -119,7 +116,6 @@
                             v-model="apiSpec.selected"
                             placeholder="Select API specification"
                             :options="apiSpec.list"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                     </div>
@@ -475,7 +471,6 @@
                             v-model="example.response.status.selected"
                             placeholder="Select status"
                             :options="example.response.status.list"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
