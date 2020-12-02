@@ -16,6 +16,8 @@ class TestStepResource extends JsonResource
             'id' => $this->id,
             'path' => $this->path,
             'method' => $this->method,
+            'pattern' => $this->pattern,
+            'trigger' => $this->trigger,
             'request' => optional($this->request)->toArray(),
             'response' => optional($this->response)->toArray(),
             'position' => $this->position,
