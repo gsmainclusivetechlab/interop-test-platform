@@ -691,7 +691,7 @@ export default {
                     body: this.example.response.body,
                 },
                 test: {
-                    sripts: {
+                    scripts: {
                         request: this.test.scripts.request.list,
                         response: this.test.scripts.response.list,
                     },

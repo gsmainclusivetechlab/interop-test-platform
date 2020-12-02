@@ -660,8 +660,16 @@ export default {
             },
             example: {
                 request: {
-                    headers: this.testStep.request.headers,
-                    body: this.testStep.request.body,
+                    headers:
+                        !Array.isArray(this.testStep.request.headers) &&
+                        typeof this.testStep.request.headers === 'object'
+                            ? this.testStep.request.headers
+                            : {},
+                    body:
+                        !Array.isArray(this.testStep.request.body) &&
+                        typeof this.testStep.request.body === 'object'
+                            ? this.testStep.request.body
+                            : {},
                 },
                 response: {
                     status: {
@@ -670,8 +678,16 @@ export default {
                         ],
                         list: collect(this.$page.statuses).toArray(),
                     },
-                    headers: this.testStep.response.headers,
-                    body: this.testStep.response.body,
+                    headers:
+                        !Array.isArray(this.testStep.response.headers) &&
+                        typeof this.testStep.response.headers === 'object'
+                            ? this.testStep.response.headers
+                            : {},
+                    body:
+                        !Array.isArray(this.testStep.response.body) &&
+                        typeof this.testStep.response.body === 'object'
+                            ? this.testStep.response.body
+                            : {},
                 },
             },
         };
@@ -705,7 +721,7 @@ export default {
                     body: this.example.response.body,
                 },
                 test: {
-                    sripts: {
+                    scripts: {
                         request: this.test.scripts.request.list,
                         response: this.test.scripts.response.list,
                     },
