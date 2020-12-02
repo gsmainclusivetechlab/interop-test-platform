@@ -158,11 +158,14 @@ class UpdateTestStep extends FormRequest
             ->testSetups()
             ->where('type', $type)
             ->pluck('id');
-        $remove = 0;
+        $keepIds = [];
         foreach ($rows as $row) {
             /**
              * @var TestSetup $testSetup
              */
+            if (!isset($row['id'])) {
+                $keepIds[] = $row['id'];
+            }
             $testSetup = $testStep
                 ->testSetups()
                 ->make(Arr::only($row, TestSetup::make()->getFillable()));
