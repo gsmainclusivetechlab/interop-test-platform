@@ -123,7 +123,11 @@
                         <label class="form-label">Trigger</label>
                         <json-editor-block
                             :input-json="trigger"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    trigger = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-12 mb-3">
