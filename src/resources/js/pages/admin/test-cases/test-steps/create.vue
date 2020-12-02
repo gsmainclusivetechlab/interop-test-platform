@@ -70,7 +70,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.source,
+                                'is-invalid': $page.errors.source_id,
                             }"
                             v-model="source"
                             placeholder="Select source"
@@ -79,11 +79,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.source"
+                            v-if="$page.errors.source_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.source }}
+                                {{ $page.errors.source_id }}
                             </strong>
                         </span>
                     </div>
@@ -92,7 +92,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.target,
+                                'is-invalid': $page.errors.target_id,
                             }"
                             v-model="target"
                             placeholder="Select target"
@@ -101,11 +101,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.target"
+                            v-if="$page.errors.target_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.target }}
+                                {{ $page.errors.target_id }}
                             </strong>
                         </span>
                     </div>
@@ -122,14 +122,6 @@
                             :disableSearch="false"
                             :createItem="false"
                         />
-                        <span
-                            v-if="$page.errors.api_spec"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.api_spec }}
-                            </strong>
-                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Trigger</label>
@@ -137,14 +129,6 @@
                             :input-json="trigger"
                             @output-json="() => {}"
                         />
-                        <span
-                            v-if="$page.errors.trigger"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.trigger }}
-                            </strong>
-                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <button
@@ -471,14 +455,6 @@
                             :input-json="example.request.headers"
                             @output-json="() => {}"
                         />
-                        <span
-                            v-if="$page.errors.requestHeadersExamples"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.requestHeadersExamples }}
-                            </strong>
-                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Request Body Examples</label>
@@ -486,14 +462,6 @@
                             :input-json="example.request.body"
                             @output-json="() => {}"
                         />
-                        <span
-                            v-if="$page.errors.requestBodyExamples"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.requestBodyExamples }}
-                            </strong>
-                        </span>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label"
@@ -502,8 +470,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid':
-                                    $page.errors.responseStatusExample,
+                                'is-invalid': $page.errors['response.status'],
                             }"
                             v-model="example.response.status.selected"
                             placeholder="Select status"
@@ -512,11 +479,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.responseStatusExample"
+                            v-if="$page.errors['response.status']"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.responseStatusExample }}
+                                {{ $page.errors['response.status'] }}
                             </strong>
                         </span>
                     </div>
@@ -528,14 +495,6 @@
                             :input-json="example.response.headers"
                             @output-json="() => {}"
                         />
-                        <span
-                            v-if="$page.errors.responseHeadersExamples"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.responseHeadersExamples }}
-                            </strong>
-                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Response Body Examples</label>
@@ -543,14 +502,6 @@
                             :input-json="example.response.body"
                             @output-json="() => {}"
                         />
-                        <span
-                            v-if="$page.errors.responseBodyExamples"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.errors.responseBodyExamples }}
-                            </strong>
-                        </span>
                     </div>
                 </div>
             </div>
@@ -705,7 +656,10 @@ export default {
             this.sending = true;
             this.$inertia
                 .post(
-                    route('admin.test-cases.test-steps.store', this.testCase.id),
+                    route(
+                        'admin.test-cases.test-steps.store',
+                        this.testCase.id
+                    ),
                     form
                 )
                 .then(() => (this.sending = false));
