@@ -118,36 +118,4 @@ class TestStep extends Model
     {
         return ['test_case_id'];
     }
-
-    /**
-     * @return array
-     */
-    public static function getMethodList()
-    {
-        return [
-            'GET' => 'GET',
-            'POST' => 'POST',
-            'PUT' => 'PUT',
-            'PATCH' => 'PATCH',
-            'DELETE' => 'DELETE'
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public static function getStatusList()
-    {
-        return [
-            200 => '200 (OK)',
-            202 => '202 (Accepted)',
-            204 => '204 (No Content)',
-            400 => '400 (Bad Request)',
-            401 => '401 (Unauthorized)',
-            403 => '403 (Forbidden)',
-            404 => '404 (Not Found)',
-            500 => '500 (Internal Server Error)',
-            503 => '503 (Service Unavailable)',
-        ];
-    }
 }
