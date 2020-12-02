@@ -449,14 +449,22 @@
                         >
                         <json-editor-block
                             :input-json="example.request.headers"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.request.headers = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Request Body Examples</label>
                         <json-editor-block
                             :input-json="example.request.body"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.request.body = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-6 mb-3">
@@ -489,14 +497,22 @@
                         >
                         <json-editor-block
                             :input-json="example.response.headers"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.response.headers = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Response Body Examples</label>
                         <json-editor-block
                             :input-json="example.response.body"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.response.body = data;
+                                }
+                            "
                         />
                     </div>
                 </div>
@@ -658,7 +674,9 @@ export default {
                     (el) => el.name === this.target
                 )?.[0]?.id,
                 trigger:
-                    Object.keys(this.trigger).length > 0 ? this.trigger : null,
+                    Object.keys(this.trigger).length !== 0
+                        ? this.trigger
+                        : null,
                 request: this.example.request,
                 response: {
                     status: collect(this.$page.statuses)
