@@ -16,7 +16,6 @@
                             v-model="method.selected"
                             placeholder="Select method"
                             :options="method.list"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -75,7 +74,6 @@
                             v-model="source"
                             placeholder="Select source"
                             :options="sourceList"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -97,7 +95,6 @@
                             v-model="target"
                             placeholder="Select target"
                             :options="targetList"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -119,7 +116,6 @@
                             v-model="apiSpec.selected"
                             placeholder="Select API specification"
                             :options="apiSpec.list"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                     </div>
@@ -453,14 +449,22 @@
                         >
                         <json-editor-block
                             :input-json="example.request.headers"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.request.headers = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Request Body Examples</label>
                         <json-editor-block
                             :input-json="example.request.body"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.request.body = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-6 mb-3">
@@ -476,7 +480,6 @@
                             v-model="example.response.status.selected"
                             placeholder="Select status"
                             :options="example.response.status.list"
-                            :disableSearch="false"
                             :createItem="false"
                         />
                         <span
@@ -494,14 +497,22 @@
                         >
                         <json-editor-block
                             :input-json="example.response.headers"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.response.headers = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">Response Body Examples</label>
                         <json-editor-block
                             :input-json="example.response.body"
-                            @output-json="() => {}"
+                            @output-json="
+                                (data) => {
+                                    example.response.body = data;
+                                }
+                            "
                         />
                     </div>
                 </div>
@@ -663,7 +674,9 @@ export default {
                     (el) => el.name === this.target
                 )?.[0]?.id,
                 trigger:
-                    Object.keys(this.trigger).length > 0 ? this.trigger : null,
+                    Object.keys(this.trigger).length !== 0
+                        ? this.trigger
+                        : null,
                 request: this.example.request,
                 response: {
                     status: collect(this.$page.statuses)
