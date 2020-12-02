@@ -18,6 +18,7 @@ use App\Enums\HttpMethod;
 use App\Enums\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTestStep;
+use App\Http\Requests\UpdateTestStep;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -154,40 +155,29 @@ class TestCaseTestStepController extends Controller
     /**
      * @param TestCase $testCase
      * @param TestStep $testStep
-     * @param Request $request
+     * @param UpdateTestStep $updateTestStepRequest
      * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
     public function update(
         TestCase $testCase,
         TestStep $testStep,
-        Request $request
+        UpdateTestStep $updateTestStepRequest
     )
     {
         $this->authorize('update', $testCase);
-        $request->validate([
-            'test_case_id' => [
-                'required|exists:test_cases,id',
-                Rule::in([$testCase->id])
-            ],
-            'source_id' => 'required|exists:components,id',
-            'target_id' => 'required|exists:components,id',
-            'api_spec_id' => 'nullable|exists:api_specs,id',
-            'path' => 'required|string|max:255',
-            'method' => 'required|string|max:255',
-            'pattern' => 'required|string|max:255',
-            'trigger' => 'string|nullable',
-            'request' => 'string|nullable',
-            'response' => 'string|nullable',
-        ]);
-        $testStep->update(
-            Arr::only(
-                $request->input(),
-                TestStep::make()->getFillable()
-            )
-        );
 
-        return redirect()->back();
+        try {
+            $updateTestStepRequest->updateTestStep($testStep);
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+
+        return redirect()
+            ->route('admin.test-cases.test-steps.index', $testCase->id)
+            ->with('success', __('Test Step updated successfully'));
     }
 
     /**

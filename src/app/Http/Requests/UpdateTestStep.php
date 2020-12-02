@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
-class StoreTestStep extends FormRequest
+class UpdateTestStep extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -71,21 +71,19 @@ class StoreTestStep extends FormRequest
     }
 
     /**
-     * @param TestCase $testCase
+     * @param TestStep $testStep
      * @return mixed
      * @throws \Throwable
      */
-    public function createTestStep(TestCase $testCase)
+    public function updateTestStep(TestStep $testStep)
     {
-        return DB::transaction(function () use ($testCase) {
-            $testStep = $testCase
-                ->testSteps()
-                ->make(
+        return DB::transaction(function () use ($testStep) {
+            $testStep->setRawAttributes(
                     Arr::only(
                         $this->input(),
                         TestStep::make()->getFillable()
                     )
-                );
+                );dd($testStep);
             $testStep->setAttribute(
                 'request',
                 $this->mapTestStepRequest()
@@ -108,23 +106,23 @@ class StoreTestStep extends FormRequest
             );
             $testStep->saveOrFail();
 
-            $this->createTestSetups(
+            $this->updateTestSetups(
                 $testStep,
                 TestSetup::TYPE_REQUEST,
                 Arr::get($this->input('test.setups'), 'request', [])
             );
-            $this->createTestSetups(
+            $this->updateTestSetups(
                 $testStep,
                 TestSetup::TYPE_RESPONSE,
                 Arr::get($this->input('test.setups'), 'response', [])
             );
 
-            $this->createTestScripts(
+            $this->updateTestScripts(
                 $testStep,
                 TestScript::TYPE_REQUEST,
                 Arr::get($this->input('test.scripts'), 'request', [])
             );
-            $this->createTestScripts(
+            $this->updateTestScripts(
                 $testStep,
                 TestScript::TYPE_RESPONSE,
                 Arr::get($this->input('test.scripts'), 'response', [])
@@ -154,8 +152,13 @@ class StoreTestStep extends FormRequest
      * @param array $rows
      * @throws \Throwable
      */
-    protected function createTestSetups(TestStep $testStep, $type, array $rows)
+    protected function updateTestSetups(TestStep $testStep, $type, array $rows)
     {
+        $testSetups = $testStep
+            ->testSetups()
+            ->where('type', $type)
+            ->pluck('id');
+        $remove = 0;
         foreach ($rows as $row) {
             /**
              * @var TestSetup $testSetup
@@ -174,7 +177,7 @@ class StoreTestStep extends FormRequest
      * @param array $rows
      * @throws \Throwable
      */
-    protected function createTestScripts(TestStep $testStep, $type, array $rows)
+    protected function updateTestScripts(TestStep $testStep, $type, array $rows)
     {
         foreach ($rows as $row) {
             /**
