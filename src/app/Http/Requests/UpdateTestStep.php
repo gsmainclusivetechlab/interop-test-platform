@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\TestCase;
 use App\Models\TestScript;
 use App\Models\TestSetup;
 use App\Models\TestStep;
@@ -78,20 +77,6 @@ class UpdateTestStep extends FormRequest
     public function updateTestStep(TestStep $testStep)
     {
         return DB::transaction(function () use ($testStep) {
-            $testStep->setRawAttributes(
-                    Arr::only(
-                        $this->input(),
-                        TestStep::make()->getFillable()
-                    )
-                );dd($testStep);
-            $testStep->setAttribute(
-                'request',
-                $this->mapTestStepRequest()
-            );
-            $testStep->setAttribute(
-                'response',
-                $this->mapTestStepResponse()
-            );
             $testStep->setAttribute(
                 'source_id',
                 $this->input('source_id')
@@ -104,7 +89,18 @@ class UpdateTestStep extends FormRequest
                 'api_spec_id',
                 $this->input('api_spec_id')
             );
-            $testStep->saveOrFail();
+            $testStep->update(
+                array_merge(
+                    Arr::only(
+                        $this->input(),
+                        TestStep::make()->getFillable()
+                    ),
+                    [
+                        'request' => $this->mapTestStepRequest(),
+                        'response' => $this->mapTestStepResponse(),
+                    ]
+                )
+            );
 
             $this->updateTestSetups(
                 $testStep,
@@ -132,7 +128,7 @@ class UpdateTestStep extends FormRequest
 
     protected function mapTestStepRequest()
     {
-        $request = $this->input('request');dd($request);
+        $request = $this->input('request');
         $request['method'] = $this->input('method');
         $request['uri'] = $this->input('path');
 
@@ -154,24 +150,39 @@ class UpdateTestStep extends FormRequest
      */
     protected function updateTestSetups(TestStep $testStep, $type, array $rows)
     {
-        $testSetups = $testStep
-            ->testSetups()
-            ->where('type', $type)
-            ->pluck('id');
         $keepIds = [];
         foreach ($rows as $row) {
-            /**
-             * @var TestSetup $testSetup
-             */
-            if (!isset($row['id'])) {
+            if (!empty($row['id'])) {
                 $keepIds[] = $row['id'];
+
+                $testStep
+                    ->testSetups()
+                    ->whereKey($row['id'])
+                    ->firstOrFail()
+                    ->update(Arr::only(
+                        $row,
+                        TestSetup::make()->getFillable()
+                    ));
+            } else {
+                /**
+                 * @var TestSetup $testSetup
+                 */
+                $testSetup = $testStep
+                    ->testSetups()
+                    ->make(Arr::only($row, TestSetup::make()->getFillable()));
+                $testSetup->type = $type;
+                $testSetup->saveOrFail();
+                $keepIds[] = $testSetup->id;
             }
-            $testSetup = $testStep
-                ->testSetups()
-                ->make(Arr::only($row, TestSetup::make()->getFillable()));
-            $testSetup->type = $type;
-            $testSetup->saveOrFail();
         }
+
+        $testStep
+            ->testSetups()
+            ->whereKeyNot($keepIds)
+            ->where('type', $type)
+            ->each(function ($testSetup) {
+                $testSetup->delete();
+            });
     }
 
     /**
@@ -182,15 +193,38 @@ class UpdateTestStep extends FormRequest
      */
     protected function updateTestScripts(TestStep $testStep, $type, array $rows)
     {
+        $keepIds = [];
         foreach ($rows as $row) {
-            /**
-             * @var TestScript $testScript
-             */
-            $testScript = $testStep
-                ->testScripts()
-                ->make(Arr::only($row, TestScript::make()->getFillable()));
-            $testScript->type = $type;
-            $testScript->saveOrFail();
+            if (!empty($row['id'])) {
+                $keepIds[] = $row['id'];
+
+                $testStep
+                    ->testScripts()
+                    ->whereKey($row['id'])
+                    ->firstOrFail()
+                    ->update(Arr::only(
+                        $row,
+                        TestScript::make()->getFillable()
+                    ));
+            } else {
+                /**
+                 * @var TestScript $testScript
+                 */
+                $testScript = $testStep
+                    ->testScripts()
+                    ->make(Arr::only($row, TestScript::make()->getFillable()));
+                $testScript->type = $type;
+                $testScript->saveOrFail();
+                $keepIds[] = $testScript->id;
+            }
         }
+
+        $testStep
+            ->testScripts()
+            ->whereKeyNot($keepIds)
+            ->where('type', $type)
+            ->each(function ($testSetup) {
+                $testSetup->delete();
+            });
     }
 }

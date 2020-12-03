@@ -134,7 +134,7 @@ class StoreTestStep extends FormRequest
 
     protected function mapTestStepRequest()
     {
-        $request = $this->input('request');dd($request);
+        $request = $this->input('request');
         $request['method'] = $this->input('method');
         $request['uri'] = $this->input('path');
 
