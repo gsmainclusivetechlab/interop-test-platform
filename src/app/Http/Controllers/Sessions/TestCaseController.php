@@ -56,6 +56,13 @@ class TestCaseController extends Controller
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource
             ))->resolve(),
+            'isAvailableRun' => $this->isAvailableTestCaseRun(
+                $session,
+                $testCase
+            ),
+            'testRunAttempts' => config(
+                'test_cases.compliance_session_execution_limit'
+            ),
             'testRuns' => TestRunResource::collection(
                 $session
                     ->testRuns()
@@ -77,10 +84,38 @@ class TestCaseController extends Controller
     public function run(Session $session, TestCase $testCase)
     {
         $this->authorize('view', $session);
+
+        abort_unless(
+            $this->isAvailableTestCaseRun($session, $testCase),
+            403,
+            __('Test case execution limit.')
+        );
+
         ExecuteTestRunJob::dispatch($session, $testCase)->afterResponse();
 
         return redirect()
             ->back()
             ->with('success', __('Run started successfully'));
+    }
+
+    /**
+     * @param Session $session
+     * @param TestCase $testCase
+     *
+     * @return bool
+     */
+    protected function isAvailableTestCaseRun(
+        Session $session,
+        TestCase $testCase
+    ): bool {
+        $testRunsCount = $session
+            ->testRuns()
+            ->where('test_case_id', $testCase->id)
+            ->count();
+
+        return !$session->isComplianceSession() ||
+            ($session->isAvailableToUpdate() &&
+                $testRunsCount <
+                    config('test_cases.compliance_session_execution_limit'));
     }
 }

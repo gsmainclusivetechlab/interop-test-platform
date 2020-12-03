@@ -1,0 +1,27 @@
+.q-a-list {
+  padding-left: 10px;
+  dt,
+  dd {
+    position: relative;
+    &:before {
+      position: absolute;
+      left: -20px;
+      color: $red;
+      font-weight: 400;
+    }
+  }
+  dt {
+    margin-bottom: 0.5em;
+    &:before {
+      content: 'Q:';
+    }
+    & ~ dd {
+      margin-bottom: 0;
+    }
+  }
+  dd {
+    &:before {
+      content: 'A:';
+    }
+  }
+}

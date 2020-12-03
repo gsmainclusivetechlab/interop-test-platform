@@ -3,6 +3,8 @@
         :session="session"
         :test-case="testCase"
         :testStepFirstSource="testStepFirstSource"
+        :isAvailableRun="isAvailableRun"
+        :testRunAttempts="testRunAttempts"
     >
         <div class="card">
             <div class="empty h-auto" v-if="!testRuns.data.length">
@@ -46,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="testRun in testRuns.data">
+                            <tr v-for="(testRun, i) in testRuns.data" :key="i">
                                 <td>
                                     <inertia-link
                                         :href="
@@ -142,6 +144,14 @@ export default {
         testStepFirstSource: {
             type: Object,
             required: true,
+        },
+        isAvailableRun: {
+            type: Boolean,
+            required: false,
+        },
+        testRunAttempts: {
+            type: Number | String,
+            required: false,
         },
     },
 };

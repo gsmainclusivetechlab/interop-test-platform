@@ -52,7 +52,8 @@ class SessionPolicy
      */
     public function update(User $user, Session $model)
     {
-        return $user->isAdmin() || $model->owner->is($user);
+        return ($user->isAdmin() || $model->owner->is($user)) &&
+            $model->isAvailableToUpdate();
     }
 
     /**

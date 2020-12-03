@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Str;
 
 class QuestionResource extends JsonResource
 {
@@ -22,6 +21,10 @@ class QuestionResource extends JsonResource
             'question' => $this->question,
             'preconditions' => $this->preconditions ?? [],
             'type' => $this->type,
+            'answersNames' => $this->whenLoaded(
+                'answers',
+                $this->answers_names
+            ),
             'values' => collect($this->values)
                 ->map(function ($value, $key) {
                     return [

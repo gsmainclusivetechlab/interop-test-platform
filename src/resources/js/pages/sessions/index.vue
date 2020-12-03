@@ -43,11 +43,13 @@
                         <thead>
                             <tr>
                                 <th class="text-nowrap w-25">Name</th>
+                                <th class="text-nowrap w-auto">Type</th>
                                 <th class="text-nowrap w-auto">Owner</th>
                                 <th class="text-nowrap w-auto">Use Cases</th>
                                 <th class="text-nowrap w-auto">Test Cases</th>
-                                <th class="text-nowrap w-25">Status</th>
+                                <th class="text-nowrap w-25">TC Statuses</th>
                                 <th class="text-nowrap w-auto">Last Run</th>
+                                <th class="text-nowrap w-auto">Status</th>
                                 <th class="text-nowrap w-1"></th>
                             </tr>
                         </thead>
@@ -61,6 +63,9 @@
                                     >
                                         {{ session.name }}
                                     </inertia-link>
+                                </td>
+                                <td>
+                                    {{ session.typeName }}
                                 </td>
                                 <td class="text-break">
                                     {{ session.owner.name }}
@@ -95,6 +100,9 @@
                                             ? session.lastTestRun.created_at
                                             : ''
                                     }}
+                                </td>
+                                <td>
+                                    {{ session.statusName }}
                                 </td>
                                 <td class="text-center text-break">
                                     <b-dropdown

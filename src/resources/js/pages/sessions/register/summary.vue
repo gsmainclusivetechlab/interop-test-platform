@@ -1,17 +1,24 @@
 <template>
     <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
-            <div class="card" v-for="section in sections.data">
+            <div class="card" v-for="(section, i) in sections.data" :key="i">
                 <div class="card-header border-0">
                     <h3 class="card-title">{{ section.name }}</h3>
                 </div>
                 <div class="card-body">
                     <dl
-                        v-for="question in section.questions"
+                        v-for="(question, i) in section.questions"
+                        :key="i"
                         :hidden="isHidden(section.id, question)"
                     >
                         <dt>{{ question.question }}</dt>
-                        <dd v-for="answer in getAnswers(section.id, question)">
+                        <dd
+                            v-for="(answer, i) in getAnswers(
+                                section.id,
+                                question
+                            )"
+                            :key="i"
+                        >
                             {{ answer }}
                         </dd>
                     </dl>
@@ -70,10 +77,15 @@ export default {
         getAnswers: function (section, question) {
             let answersTexts = [];
             let answers = this.session.questionnaire[section][question.name];
+
             answers = Array.isArray(answers) ? answers : [answers];
 
             Object.values(answers).forEach((answer) => {
-                answersTexts.push(question.values[answer]);
+                Object.values(question.values).forEach((value) => {
+                    if (value.id === answer) {
+                        answersTexts.push(value.label);
+                    }
+                });
             });
 
             return answersTexts;

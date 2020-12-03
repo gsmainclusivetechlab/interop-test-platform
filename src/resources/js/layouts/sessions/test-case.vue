@@ -29,10 +29,16 @@
                             <p>
                                 <strong>Configuration</strong>
                             </p>
-                            <div v-for="component in session.components.data">
+                            <div
+                                v-for="(component, i) in session.components
+                                    .data"
+                                :key="i"
+                            >
                                 <div
                                     class="mb-3"
-                                    v-for="connection in component.connections"
+                                    v-for="(connection,
+                                    i) in component.connections"
+                                    :key="i"
                                 >
                                     <label>
                                         {{ connection.name }}
@@ -155,12 +161,26 @@
                                             testCase.id,
                                         ])
                                     "
+                                    v-if="isAvailableRun"
                                     class="btn btn-primary"
                                     method="post"
                                 >
                                     <icon name="bike"></icon>
                                     Run Test Case
                                 </inertia-link>
+                                <button
+                                    class="btn btn-secondary"
+                                    v-else
+                                    v-b-tooltip.hover.left
+                                    :title="
+                                        session.status !== 'in_execution'
+                                            ? 'Session not available to update'
+                                            : `You have reached the limit of ${testRunAttempts} allowed test runs per test case.`
+                                    "
+                                >
+                                    <icon name="bike"></icon>
+                                    Run Test Case
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -190,6 +210,14 @@ export default {
         testStepFirstSource: {
             type: Object,
             required: true,
+        },
+        isAvailableRun: {
+            type: Boolean,
+            required: false,
+        },
+        testRunAttempts: {
+            type: Number | String,
+            required: false,
         },
     },
 };

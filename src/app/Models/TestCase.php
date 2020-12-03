@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property TestRun $lastTestRun
+ * @property TestRun[]|Collection $testRuns
  */
 class TestCase extends Model
 {
     use HasUuid;
+    use HasPosition;
 
     const BEHAVIOR_NEGATIVE = 'negative';
     const BEHAVIOR_POSITIVE = 'positive';
@@ -31,6 +38,7 @@ class TestCase extends Model
         'behavior',
         'description',
         'precondition',
+        'test_case_group_id',
     ];
 
     /**
@@ -47,6 +55,11 @@ class TestCase extends Model
     {
         static::addGlobalScope('alphabetic', function ($builder) {
             $builder->orderBy('name');
+        });
+
+        static::saving(function ($model) {
+            $model->attributes['test_case_group_id'] =
+                $model->attributes['test_case_group_id'] ?? Str::random();
         });
     }
 
@@ -160,5 +173,110 @@ class TestCase extends Model
             $this->behavior,
             $this->behavior
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getPositionGroupColumn()
+    {
+        return ['test_case_group_id'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionColumn()
+    {
+        return 'version';
+    }
+
+    /**
+     * Get the latest version for each group.
+     *
+     * @param $query
+     * @param null $testCasesIds
+     * @param null $testCasesGroupsIds
+     * @return
+     */
+    public function scopeLastPerGroup(
+        $query,
+        $testCasesIds = null,
+        $testCasesGroupsIds = null
+    ) {
+        return $query
+            ->when($testCasesIds, function ($query) use (
+                $testCasesIds,
+                $testCasesGroupsIds
+            ) {
+                $query
+                    ->whereIn('id', function ($query) use (
+                        $testCasesIds,
+                        $testCasesGroupsIds
+                    ) {
+                        $query
+                            ->from(static::getTable())
+                            ->selectRaw('MAX(`id`)')
+                            ->whereNotIn(
+                                'test_case_group_id',
+                                $testCasesGroupsIds
+                            )
+                            ->groupBy(static::getPositionGroupColumn());
+                    })
+                    ->orWhereIn('id', $testCasesIds);
+            })
+            ->when(!$testCasesIds, function ($query) {
+                $query->whereIn('id', function ($query) {
+                    $query
+                        ->from(static::getTable())
+                        ->selectRaw('MAX(`id`)')
+                        ->groupBy(static::getPositionGroupColumn());
+                });
+            });
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeAvailable($query)
+    {
+        return $query
+            ->where('public', true)
+            ->orWhereHas('owner', function ($query) {
+                $query->whereKey(
+                    auth()
+                        ->user()
+                        ->getAuthIdentifier()
+                );
+            })
+            ->orWhereHas('groups', function ($query) {
+                $query->whereHas('users', function ($query) {
+                    $query->whereKey(
+                        auth()
+                            ->user()
+                            ->getAuthIdentifier()
+                    );
+                });
+            })
+            ->when(
+                auth()
+                    ->user()
+                    ->can('viewAnyPrivate', self::class),
+                function ($query) {
+                    $query->orWhere('public', false);
+                }
+            );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastAvailableVersionIdAttribute()
+    {
+        return static::available()
+            ->lastPerGroup()
+            ->where('test_case_group_id', $this->test_case_group_id)
+            ->first();
     }
 }

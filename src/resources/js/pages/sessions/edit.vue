@@ -16,6 +16,7 @@
                                     type="text"
                                     v-model="form.name"
                                     class="form-control"
+                                    :readonly="isCompliance"
                                     :class="{
                                         'is-invalid': $page.errors.name,
                                     }"
@@ -35,6 +36,7 @@
                                     class="form-control"
                                     rows="5"
                                     v-model="form.description"
+                                    :readonly="isCompliance"
                                     :class="{
                                         'is-invalid': $page.errors.description,
                                     }"
@@ -113,10 +115,9 @@
                                 </label>
                                 <test-case-checkboxes
                                     style="max-height: 485px"
+                                    :session="session"
                                     :useCases="useCases"
-                                    :isCompliance="
-                                        session.type === 'compliance'
-                                    "
+                                    :isCompliance="isCompliance"
                                     v-model="form.test_cases"
                                 />
                                 <div
@@ -183,6 +184,7 @@ export default {
     data() {
         return {
             sending: false,
+            isCompliance: this.session.type === 'compliance',
             groupEnvironment: this.session.groupEnvironment
                 ? this.session.groupEnvironment.data
                 : null,

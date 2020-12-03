@@ -33,6 +33,7 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Version</th>
                             <th class="text-nowrap">Behavior</th>
                             <th class="text-nowrap">Public</th>
                             <th class="text-nowrap">Use Case</th>
@@ -46,6 +47,9 @@
                         <tr v-for="testCase in testCases.data">
                             <td class="text-break">
                                 {{ testCase.name }}
+                            </td>
+                            <td class="text-break">
+                                {{ testCase.version }}
                             </td>
                             <td class="text-break">
                                 {{
@@ -120,6 +124,24 @@
                                             "
                                         >
                                             Edit
+                                        </inertia-link>
+                                    </li>
+                                    <li
+                                        v-if="
+                                            $page.auth.user.can.test_cases
+                                                .create
+                                        "
+                                    >
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.import-version',
+                                                    testCase.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Import New Version
                                         </inertia-link>
                                     </li>
                                     <li v-if="testCase.can.delete">

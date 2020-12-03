@@ -3,12 +3,20 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property int $duration
+ * @property Carbon $completed_at
+ *
+ * @property Session $session
+ *
+ * @property-read bool $successful
  */
 class TestRun extends Model
 {

@@ -3,11 +3,25 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $type
+ * @property string|null $status
+ * @property string|null $reason
+ *
+ * @property-read bool $completable
+ * @property-read string|null $status_name
+ *
+ * @property User $owner
+ * @property TestCase[]|Collection $testCases
  */
 class Session extends Model
 {
@@ -15,6 +29,12 @@ class Session extends Model
 
     const TYPE_TEST = 'test';
     const TYPE_COMPLIANCE = 'compliance';
+
+    const STATUS_READY = 'ready';
+    const STATUS_IN_EXECUTION = 'in_execution';
+    const STATUS_IN_VERIFICATION = 'in_verification';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_DECLINED = 'declined';
 
     /**
      * @var string
@@ -28,6 +48,8 @@ class Session extends Model
         'uuid',
         'name',
         'type',
+        'status',
+        'reason',
         'description',
         'group_environment_id',
         'environments',
@@ -155,11 +177,19 @@ class Session extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function questionnaireAnswers()
+    {
+        return $this->hasMany(QuestionnaireAnswer::class);
+    }
+
+    /**
      * @return array
      */
     public function environments()
     {
-        return array_merge($this->environments, [
+        return array_merge($this->environments ?? [], [
             'SP_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where('name', 'Service Provider')->firstOrFail()
             ),
@@ -223,6 +253,46 @@ class Session extends Model
     }
 
     /**
+     * @return array
+     */
+    public static function getStatusNames()
+    {
+        return [
+            static::STATUS_READY => __('Ready'),
+            static::STATUS_IN_EXECUTION => __('In Execution'),
+            static::STATUS_IN_VERIFICATION => __('In Verification'),
+            static::STATUS_APPROVED => __('Approved'),
+            static::STATUS_DECLINED => __('Declined'),
+        ];
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
+    public static function getStatusName($type)
+    {
+        return $type ? Arr::get(static::getStatusNames(), $type) : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusNameAttribute()
+    {
+        return static::getStatusName($this->status);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypeNameAttribute()
+    {
+        return Arr::get(static::getTypeNames(), $this->type);
+    }
+
+    /**
      * @param string $type
      *
      * @return bool
@@ -230,5 +300,83 @@ class Session extends Model
     public static function isCompliance($type): bool
     {
         return $type == static::TYPE_COMPLIANCE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isComplianceSession(): bool
+    {
+        return static::isCompliance($this->type);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusReady(): bool
+    {
+        return $this->status == static::STATUS_READY;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusInExecution(): bool
+    {
+        return $this->status == static::STATUS_IN_EXECUTION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusInVerification(): bool
+    {
+        return $this->status == static::STATUS_IN_VERIFICATION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatusApproved(): bool
+    {
+        return $this->status == static::STATUS_APPROVED;
+    }
+
+    /**
+     * @param string $status
+     *
+     * @return bool
+     */
+    public function updateStatus($status): bool
+    {
+        return $this->update(['status' => $status]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailableToUpdate(): bool
+    {
+        return !in_array($this->status, [
+            static::STATUS_IN_VERIFICATION,
+            static::STATUS_APPROVED,
+            static::STATUS_DECLINED,
+        ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCompletableAttribute(): bool
+    {
+        if (!$this->isComplianceSession() || !$this->isStatusInExecution()) {
+            return false;
+        }
+
+        return !$this->testCases()
+            ->whereDoesntHave('lastTestRun', function (Builder $query) {
+                $query->where('session_id', $this->id);
+            })
+            ->exists();
     }
 }
