@@ -114,6 +114,7 @@ test_steps:
       method: POST
       uri: /transactionRequests
       headers:
+        accept: 'application/json'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
@@ -171,6 +172,7 @@ test_steps:
       method: POST
       uri: /transactionRequests
       headers:
+        accept: 'application/json'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
@@ -308,6 +310,7 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/json'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
@@ -377,6 +380,7 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
+        accept: 'application/json'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
