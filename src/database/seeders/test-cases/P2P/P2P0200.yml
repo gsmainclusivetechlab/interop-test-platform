@@ -459,11 +459,14 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
-        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transfers+json'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
+        completedTimestamp: '2000-01-01T00:00:00.000Z'
+        transferState: 'COMMITTED'
+        fulfilment: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         payeeFsp: 'mmo2fsp'
         payerFsp: 'mmo1fsp'
@@ -508,11 +511,14 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
-        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transfers+json'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
+        completedTimestamp: '2000-01-01T00:00:00.000Z'
+        transferState: 'COMMITTED'
+        fulfilment: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         payeeFsp: 'mmo2fsp'
         payerFsp: 'mmo1fsp'
