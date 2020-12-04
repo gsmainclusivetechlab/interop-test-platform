@@ -22,6 +22,7 @@ use Illuminate\Support\Collection;
  *
  * @property User $owner
  * @property TestCase[]|Collection $testCases
+ * @property Component[]|Collection $components
  */
 class Session extends Model
 {

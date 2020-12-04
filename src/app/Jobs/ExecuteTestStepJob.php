@@ -56,6 +56,8 @@ class ExecuteTestStepJob implements ShouldQueue
      */
     public function handle()
     {
+        define('JOB_START', microtime(true));
+
         $testStep = $this->testStep;
         $testResult = $this->testRun
             ->testResults()

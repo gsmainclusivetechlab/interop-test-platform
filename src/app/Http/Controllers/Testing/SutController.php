@@ -10,6 +10,7 @@ use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\ServerRequestInterface;
+use Str;
 
 class SutController extends Controller
 {
@@ -127,7 +128,7 @@ class SutController extends Controller
             ->withUri(
                 UriResolver::resolve(
                     new Uri($uri = $session->getBaseUriOfComponent($connection)),
-                    new Uri("/$path")
+                    new Uri(Str::startsWith($path, ['http://', 'https://']) ? $path : "/$path")
                 )->withQuery((string) request()->getQueryString())
             );
 

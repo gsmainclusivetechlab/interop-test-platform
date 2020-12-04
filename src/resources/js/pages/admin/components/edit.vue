@@ -110,6 +110,20 @@
                                     </strong>
                                 </span>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" v-model="form.sutable">
+                                    <span class="form-check-label">Can be SUT</span>
+                                </label>
+                                <span
+                                    v-if="$page.errors.sutable"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.sutable }}
+                                    </strong>
+                                </span>
+                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -160,6 +174,7 @@ export default {
                 name: this.component.name,
                 base_url: this.component.base_url,
                 description: this.component.description,
+                sutable: this.component.sutable,
                 connections_id: null,
             },
         };
