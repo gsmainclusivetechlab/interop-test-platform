@@ -228,7 +228,7 @@ class TestCaseController extends Controller
                 ->associate(auth()->user())
                 ->save();
             return redirect()
-                ->route('admin.test-cases.index')
+                ->route('admin.test-cases.versions.index', $testCase->id)
                 ->with('success', __('Test case imported successfully'));
         } catch (\Throwable $e) {
             $errorMessage = implode(

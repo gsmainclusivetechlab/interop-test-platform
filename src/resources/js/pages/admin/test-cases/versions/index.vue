@@ -62,7 +62,7 @@
                                         : 0
                                 }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-break text-center">
                                 {{ testCase.owner ? testCase.owner.name : '' }}
                             </td>
                             <td class="text-center">
