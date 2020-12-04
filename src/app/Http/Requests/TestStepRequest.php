@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\TestCase;
 use App\Models\TestScript;
 use App\Models\TestSetup;
 use App\Models\TestStep;
@@ -9,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
-class UpdateTestStep extends FormRequest
+class TestStepRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -70,6 +71,47 @@ class UpdateTestStep extends FormRequest
     }
 
     /**
+     * @param TestCase $testCase
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function createTestStep(TestCase $testCase)
+    {
+        return DB::transaction(function () use ($testCase) {
+            /**
+             * @var TestStep $testStep
+             */
+            $testStep = $testCase
+                ->testSteps()
+                ->make($this->getFillableData());
+            $testStep = $this->setAttributes($testStep);
+            $testStep->saveOrFail();
+
+            $this->createTestSetups(
+                $testStep,
+                TestSetup::TYPE_REQUEST,
+                Arr::get($this->input('test.setups'), 'request', [])
+            );
+            $this->createTestSetups(
+                $testStep,
+                TestSetup::TYPE_RESPONSE,
+                Arr::get($this->input('test.setups'), 'response', [])
+            );
+
+            $this->createTestScripts(
+                $testStep,
+                TestScript::TYPE_REQUEST,
+                Arr::get($this->input('test.scripts'), 'request', [])
+            );
+            $this->createTestScripts(
+                $testStep,
+                TestScript::TYPE_RESPONSE,
+                Arr::get($this->input('test.scripts'), 'response', [])
+            );
+        });
+    }
+
+    /**
      * @param TestStep $testStep
      * @return mixed
      * @throws \Throwable
@@ -77,30 +119,8 @@ class UpdateTestStep extends FormRequest
     public function updateTestStep(TestStep $testStep)
     {
         return DB::transaction(function () use ($testStep) {
-            $testStep->setAttribute(
-                'source_id',
-                $this->input('source_id')
-            );
-            $testStep->setAttribute(
-                'target_id',
-                $this->input('target_id')
-            );
-            $testStep->setAttribute(
-                'api_spec_id',
-                $this->input('api_spec_id')
-            );
-            $testStep->update(
-                array_merge(
-                    Arr::only(
-                        $this->input(),
-                        TestStep::make()->getFillable()
-                    ),
-                    [
-                        'request' => $this->mapTestStepRequest(),
-                        'response' => $this->mapTestStepResponse(),
-                    ]
-                )
-            );
+            $testStep = $this->setAttributes($testStep);
+            $testStep->update($this->getFillableData());
 
             $this->updateTestSetups(
                 $testStep,
@@ -126,6 +146,48 @@ class UpdateTestStep extends FormRequest
         });
     }
 
+    /**
+     * @param TestStep $testStep
+     * @return TestStep
+     */
+    protected function setAttributes(TestStep $testStep)
+    {
+        $testStep->setAttribute(
+            'source_id',
+            $this->input('source_id')
+        );
+        $testStep->setAttribute(
+            'target_id',
+            $this->input('target_id')
+        );
+        $testStep->setAttribute(
+            'api_spec_id',
+            $this->input('api_spec_id')
+        );
+
+        return $testStep;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    protected function getFillableData()
+    {
+        return array_merge(
+            Arr::only(
+                $this->input(),
+                TestStep::make()->getFillable()
+            ),
+            [
+                'request' => $this->mapTestStepRequest(),
+                'response' => $this->mapTestStepResponse(),
+            ]
+        );
+    }
+
+    /**
+     * @return array|mixed
+     */
     protected function mapTestStepRequest()
     {
         $request = $this->input('request');
@@ -135,11 +197,54 @@ class UpdateTestStep extends FormRequest
         return array_filter($request);
     }
 
+    /**
+     * @return array|mixed
+     */
     protected function mapTestStepResponse()
     {
         $request = $this->input('response');
 
         return array_filter($request);
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param string $type
+     * @param array $rows
+     * @throws \Throwable
+     */
+    protected function createTestSetups(TestStep $testStep, $type, array $rows)
+    {
+        foreach ($rows as $row) {
+            /**
+             * @var TestSetup $testSetup
+             */
+            $testSetup = $testStep
+                ->testSetups()
+                ->make(Arr::only($row, TestSetup::make()->getFillable()));
+            $testSetup->type = $type;
+            $testSetup->saveOrFail();
+        }
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param string $type
+     * @param array $rows
+     * @throws \Throwable
+     */
+    protected function createTestScripts(TestStep $testStep, $type, array $rows)
+    {
+        foreach ($rows as $row) {
+            /**
+             * @var TestScript $testScript
+             */
+            $testScript = $testStep
+                ->testScripts()
+                ->make(Arr::only($row, TestScript::make()->getFillable()));
+            $testScript->type = $type;
+            $testScript->saveOrFail();
+        }
     }
 
     /**

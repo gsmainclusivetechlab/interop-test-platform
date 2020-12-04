@@ -305,4 +305,23 @@ class TestCase extends Model
             ? true
             : false;
     }
+
+    /**
+     * @return void
+     */
+    protected static function bootHasPosition()
+    {
+        static::addGlobalScope('position', function ($builder) {
+            $builder->orderBy($builder->getModel()->getPositionColumn());
+        });
+        static::creating(function ($model) {
+            $model->generatePositionOnCreate();
+        });
+        static::updating(function ($model) {
+            $model->generatePositionOnUpdate();
+        });
+        static::deleted(function ($model) {
+            $model->generatePositionOnDelete();
+        });
+    }
 }

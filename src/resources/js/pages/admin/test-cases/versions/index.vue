@@ -8,7 +8,7 @@
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Version</th>
+                            <th class="text-nowrap text-center">Version</th>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap text-center">Behavior</th>
                             <th class="text-nowrap text-center">Public</th>
