@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $name
+ * @property string $base_url
  */
 class Component extends Model
 {

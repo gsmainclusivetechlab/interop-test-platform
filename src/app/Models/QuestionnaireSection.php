@@ -79,4 +79,40 @@ class QuestionnaireSection extends Model
             ->orderBy('id', $orderDirection)
             ->first();
     }
+
+    /**
+     * @param Session $session
+     *
+     * @return static[]|Collection
+     */
+    public static function getSessionQuestionnaire(Session $session): Collection
+    {
+        return QuestionnaireSection::withTrashed()
+            ->whereHas('questions.answers', function ($query) use (
+                $session
+            ) {
+                $query->where([
+                    'session_id' => $session->id,
+                ]);
+            })
+            ->with([
+                'questions' => function ($query) use ($session) {
+                    $query->whereHas('answers', function ($query) use (
+                        $session
+                    ) {
+                        $query->where([
+                            'session_id' => $session->id,
+                        ]);
+                    });
+                },
+                'questions.answers' => function ($query) use (
+                    $session
+                ) {
+                    $query->where([
+                        'session_id' => $session->id,
+                    ]);
+                },
+            ])
+            ->get();
+    }
 }

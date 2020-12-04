@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -13,9 +14,15 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property string $name
+ * @property string $description
  * @property string $type
  * @property string|null $status
  * @property string|null $reason
+ * @property array $environments
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $completed_at
+ * @property Carbon $closed_at
  *
  * @property-read bool $completable
  * @property-read string|null $status_name
@@ -54,6 +61,8 @@ class Session extends Model
         'description',
         'group_environment_id',
         'environments',
+        'completed_at',
+        'closed_at',
     ];
 
     /**
@@ -61,6 +70,10 @@ class Session extends Model
      */
     protected $casts = [
         'environments' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     /**
@@ -256,7 +269,7 @@ class Session extends Model
     {
         return [
             static::TYPE_TEST => __('Test'),
-            static::TYPE_COMPLIANCE => __('Compliance'),
+            static::TYPE_COMPLIANCE => __('Certification'),
         ];
     }
 
@@ -352,12 +365,15 @@ class Session extends Model
 
     /**
      * @param string $status
+     * @param string|null $timestampField
      *
      * @return bool
      */
-    public function updateStatus($status): bool
+    public function updateStatus($status, $timestampField = null): bool
     {
-        return $this->update(['status' => $status]);
+        $timestamp = $timestampField ? [$timestampField => Carbon::now()] : [];
+
+        return $this->update(['status' => $status] + $timestamp);
     }
 
     /**

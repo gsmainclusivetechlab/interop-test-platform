@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Compliance session questionnaire</b>
+                    <b>Certification session questionnaire</b>
                 </h1>
             </div>
             <div class="container">
@@ -53,7 +53,7 @@ import Layout from '@/layouts/main';
 
 export default {
     metaInfo: {
-        title: 'Compliance session questionnaire',
+        title: 'Certification session questionnaire',
     },
     components: {
         Layout,

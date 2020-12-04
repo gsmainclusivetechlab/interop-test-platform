@@ -136,10 +136,7 @@ class RegisterController extends Controller
         return Inertia::render('sessions/register/sut', [
             'session' => session('session'),
             'suts' => ComponentResource::collection(
-                Component::when(!$isCompliance, function ($query) {
-                        $query->whereHas('testCases');
-                    })
-                    ->when($isCompliance, function ($query) {
+                Component::when($isCompliance, function ($query) {
                         $query->whereHas('testCases', function ($query) {
                             $testCases = $this->getTestCases();
 

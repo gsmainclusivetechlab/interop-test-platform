@@ -19,6 +19,7 @@
                             :multiple="true"
                             class="form-select"
                             placeholder="Select SUT..."
+                            :disabled="selectedSut"
                         />
                         <span
                             v-if="$page.errors.component_ids"
@@ -90,15 +91,19 @@ export default {
         },
     },
     data() {
+        const isCompliance = this.session.type === 'compliance';
+        const selectedSut = isCompliance && this.suts.data.length === 1;
+
         return {
             sending: false,
-            isCompliance: this.session.type === 'compliance',
+            isCompliance,
+            selectedSut,
             selectedComponents:
                 this.session && this.session.sut && this.session.sut.component_ids
                     ? collect(this.suts.data)
                           .whereIn('id', this.session.sut.component_ids)
                           .all()
-                    : [],
+                    : selectedSut ? [collect(this.suts.data).first()] : [],
             form: {
                 base_urls:
                     this.session && this.session.sut && this.session.sut.base_urls

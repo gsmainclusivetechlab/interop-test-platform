@@ -96,7 +96,7 @@
                                     "
                                     class="text-reset dropdown-item"
                                 >
-                                    Compliance Sessions
+                                    Certification Sessions
                                 </inertia-link>
                             </li>
                             <li v-if="$page.auth.user.can.api_specs.viewAny">

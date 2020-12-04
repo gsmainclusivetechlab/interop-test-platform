@@ -118,33 +118,7 @@ class SessionController extends Controller
                 ])
             ))->resolve(),
             'questionnaire' => SectionResource::collection(
-                QuestionnaireSection::withTrashed()
-                    ->whereHas('questions.answers', function ($query) use (
-                        $session
-                    ) {
-                        $query->where([
-                            'session_id' => $session->id,
-                        ]);
-                    })
-                    ->with([
-                        'questions' => function ($query) use ($session) {
-                            $query->whereHas('answers', function ($query) use (
-                                $session
-                            ) {
-                                $query->where([
-                                    'session_id' => $session->id,
-                                ]);
-                            });
-                        },
-                        'questions.answers' => function ($query) use (
-                            $session
-                        ) {
-                            $query->where([
-                                'session_id' => $session->id,
-                            ]);
-                        },
-                    ])
-                    ->get()
+                QuestionnaireSection::getSessionQuestionnaire($session)
             ),
             'useCases' => UseCaseResource::collection(
                 UseCase::withTestCasesOfSession($session)->get()
@@ -429,7 +403,7 @@ class SessionController extends Controller
         $this->authorize('update', $session);
 
         if ($session->completable) {
-            $session->updateStatus(Session::STATUS_IN_VERIFICATION);
+            $session->updateStatus(Session::STATUS_IN_VERIFICATION, 'completed_at');
 
             User::whereIn('role', [
                 User::ROLE_ADMIN,
@@ -464,12 +438,13 @@ class SessionController extends Controller
             },
         ]);
 
+        $wordFile = app(ComplianceSessionExport::class)->export($session);
+
         $fileName = "Session-{$session->id}-{$session->name}";
 
         header('Content-Type: application/octet-stream');
         header("Content-Disposition: attachment;filename=\"{$fileName}.docx\"");
 
-        $wordFile = app(ComplianceSessionExport::class)->export($session);
         $objWriter = IOFactory::createWriter($wordFile);
         $objWriter->save('php://output');
     }
