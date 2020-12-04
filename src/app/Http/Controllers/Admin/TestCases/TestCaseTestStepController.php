@@ -81,15 +81,6 @@ class TestCaseTestStepController extends Controller
             'components' => ComponentResource::collection(
                 Component::with('connections')->get()
             )->resolve(),
-            'componentConnections' => ComponentResource::collection(
-                Component::with([
-                    'connections' => function ($query) {
-                        $query->select('id');
-                    },
-                ])
-                    ->get()
-                    ->toArray()
-            )->pluck('connections', 'id'),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
             )->resolve(),
@@ -150,15 +141,6 @@ class TestCaseTestStepController extends Controller
             'components' => ComponentResource::collection(
                 Component::with('connections')->get()
             )->resolve(),
-            'componentConnections' => ComponentResource::collection(
-                Component::with([
-                    'connections' => function ($query) {
-                        $query->select('id');
-                    },
-                ])
-                    ->get()
-                    ->toArray()
-            )->pluck('connections', 'id'),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
             )->resolve(),
