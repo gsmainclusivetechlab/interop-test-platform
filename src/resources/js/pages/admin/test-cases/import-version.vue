@@ -38,12 +38,29 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.test-cases.index')"
+                                :href="
+                                    route(
+                                        'admin.test-cases.versions.index',
+                                        testCase.id
+                                    )
+                                "
                                 class="btn btn-link"
                             >
                                 Cancel
                             </inertia-link>
-                            <button type="submit" class="btn btn-primary">
+                            <button
+                                v-if="testCase.draft"
+                                type="button"
+                                class="btn btn-primary"
+                                v-b-modal="'import-version-modal'"
+                            >
+                                Import
+                            </button>
+                            <button
+                                v-else
+                                type="submit"
+                                class="btn btn-primary"
+                            >
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
@@ -53,6 +70,17 @@
                         </div>
                     </form>
                 </div>
+                <b-modal
+                    id="import-version-modal"
+                    :title="'Are you sure?'"
+                    centered
+                    @ok="submit"
+                >
+                    <p>
+                        This draft version will be deleted and imported new
+                        draft version
+                    </p>
+                </b-modal>
             </div>
         </div>
     </layout>
