@@ -1,8 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "lint": "prettier . --write",
-        "lint-staged": "precise-commits",
+        "format-all": "npx prettier --write .",
+        "precise-commits": "precise-commits",
         "precommit": "npm run precise-commits",
         "build": "npm run dev:all -- build",
         "docker-base": "docker-compose -f docker-compose.yml",
@@ -26,7 +26,7 @@
     },
     "devDependencies": {
         "@prettier/plugin-php": "^0.14.2",
-        "husky": "^4.2.5",
+        "husky": "^4.3.0",
         "precise-commits": "^1.0.2",
         "prettier": "^2.0.5"
     }
