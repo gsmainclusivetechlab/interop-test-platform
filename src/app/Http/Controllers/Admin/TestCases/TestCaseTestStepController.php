@@ -17,8 +17,7 @@ use App\Models\{
 use App\Enums\HttpMethod;
 use App\Enums\HttpStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTestStep;
-use App\Http\Requests\UpdateTestStep;
+use App\Http\Requests\TestStepRequest;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -80,8 +79,17 @@ class TestCaseTestStepController extends Controller
                 $testCase->load(['testSteps'])
             ))->resolve(),
             'components' => ComponentResource::collection(
-                Component::get()
+                Component::with('connections')->get()
             )->resolve(),
+            'componentConnections' => ComponentResource::collection(
+                Component::with([
+                    'connections' => function ($query) {
+                        $query->select('id');
+                    },
+                ])
+                    ->get()
+                    ->toArray()
+            )->pluck('connections', 'id'),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
             )->resolve(),
@@ -92,16 +100,16 @@ class TestCaseTestStepController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @param StoreTestStep $storeTestStepRequest
+     * @param TestStepRequest $testStepRequest
      * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
-    public function store(TestCase $testCase, StoreTestStep $storeTestStepRequest)
+    public function store(TestCase $testCase, TestStepRequest $testStepRequest)
     {
         $this->authorize('update', $testCase);
 
         try {
-            $storeTestStepRequest->createTestStep($testCase);
+            $testStepRequest->createTestStep($testCase);
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
@@ -140,8 +148,17 @@ class TestCaseTestStepController extends Controller
                 ])
             ))->resolve(),
             'components' => ComponentResource::collection(
-                Component::get()
+                Component::with('connections')->get()
             )->resolve(),
+            'componentConnections' => ComponentResource::collection(
+                Component::with([
+                    'connections' => function ($query) {
+                        $query->select('id');
+                    },
+                ])
+                    ->get()
+                    ->toArray()
+            )->pluck('connections', 'id'),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
             )->resolve(),
@@ -153,20 +170,20 @@ class TestCaseTestStepController extends Controller
     /**
      * @param TestCase $testCase
      * @param TestStep $testStep
-     * @param UpdateTestStep $updateTestStepRequest
+     * @param TestStepRequest $testStepRequest
      * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
     public function update(
         TestCase $testCase,
         TestStep $testStep,
-        UpdateTestStep $updateTestStepRequest
+        TestStepRequest $testStepRequest
     )
     {
         $this->authorize('update', $testCase);
 
         try {
-            $updateTestStepRequest->updateTestStep($testStep);
+            $testStepRequest->updateTestStep($testStep);
         } catch (\Throwable $e) {
             return redirect()
                 ->back()
