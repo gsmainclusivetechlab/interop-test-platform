@@ -171,6 +171,19 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @param TestCase $testCase
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function showImportVersionForm(TestCase $testCase)
+    {
+        $this->authorize('update', $testCase);
+        return Inertia::render('admin/test-cases/import-version', [
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+        ]);
+    }
+
+    /**
      * @return RedirectResponse
      * @throws AuthorizationException
      */
