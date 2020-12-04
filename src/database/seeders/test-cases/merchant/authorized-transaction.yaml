@@ -5,7 +5,6 @@ behavior: positive
 description: |
   The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction simulating an approved transaction.
 precondition: |
-  - 111111111111111111 1111111111
   - Service Provider has GSMA Mobile Money API Implemented.
   - Service Provider is capable of handled async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
