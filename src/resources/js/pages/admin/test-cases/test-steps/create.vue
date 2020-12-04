@@ -172,16 +172,59 @@
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.name`
+                                                ],
+                                        }"
                                         v-model="request.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.request.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3">Rules</label>
                                     <json-editor-block
                                         :input-json="request.rules"
                                         @output-json="
                                             (data) => (request.rules = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.rules`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.request.${i}.rules`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.rules`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
                                 <b-modal
                                     :id="`test-request-scripts-modal-${i}`"
@@ -259,16 +302,59 @@
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.name`
+                                                ],
+                                        }"
                                         v-model="response.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.response.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3">Rules</label>
                                     <json-editor-block
                                         :input-json="response.rules"
                                         @output-json="
                                             (data) => (response.rules = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.rules`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.response.${i}.rules`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.rules`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
                                 <b-modal
                                     :id="`test-response-scripts-modal-${i}`"
@@ -358,8 +444,30 @@
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.setups.request.${i}.name`
+                                                ],
+                                        }"
                                         v-model="request.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.request.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.request.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3"
                                         >Values</label
                                     >
@@ -368,8 +476,29 @@
                                         @output-json="
                                             (data) => (request.values = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.setups.request.${i}.values`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.request.${i}.values`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.request.${i}.values`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
                                 <b-modal
                                     :id="`test-request-setups-modal-${i}`"
@@ -456,8 +585,30 @@
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.setups.response.${i}.name`
+                                                ],
+                                        }"
                                         v-model="response.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.response.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.response.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3"
                                         >Values</label
                                     >
@@ -466,8 +617,29 @@
                                         @output-json="
                                             (data) => (response.values = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.setups.response.${i}.values`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.response.${i}.values`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.response.${i}.values`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
                                 <b-modal
                                     :id="`test-response-setups-modal-${i}`"
