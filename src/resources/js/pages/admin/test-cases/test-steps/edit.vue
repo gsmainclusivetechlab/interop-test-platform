@@ -534,8 +534,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid':
-                                    $page.errors.responseStatusExample,
+                                'is-invalid': $page.errors['response.status'],
                             }"
                             v-model="example.response.status.selected"
                             placeholder="Select status"
@@ -625,6 +624,14 @@ export default {
             sending: false,
             component: {
                 list: this.$page.components.map((el) => el.name),
+                connections: new Map(
+                    this.$page.components.map((el) => [
+                        el.name,
+                        el.connections.data.map(
+                            (connection) => connection.name
+                        ),
+                    ])
+                ),
             },
             method: {
                 selected: this.testStep.method,
@@ -779,24 +786,18 @@ export default {
     },
     computed: {
         sourceList() {
-            const list = [...this.component.list];
-            const i = this.component.list.indexOf(this.source);
+            const list = this.component.connections.get(this.target);
 
-            if (i < 0) return list;
+            if (list) return list;
 
-            list.splice(this.component.list.indexOf(this.target), 1);
-
-            return list;
+            return this.component.list;
         },
         targetList() {
-            const list = [...this.component.list];
-            const i = this.component.list.indexOf(this.source);
+            const list = this.component.connections.get(this.source);
 
-            if (i < 0) return list;
+            if (list) return list;
 
-            list.splice(this.component.list.indexOf(this.source), 1);
-
-            return list;
+            return this.component.list;
         },
     },
 };
