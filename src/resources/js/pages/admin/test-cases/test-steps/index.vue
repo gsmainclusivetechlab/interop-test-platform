@@ -1,9 +1,9 @@
 <template>
     <layout :test-case="testCase">
         <div class="card">
-            <div class="card-header justify-content-between">
+            <div class="card-header">
                 <h2 class="card-title">Test steps</h2>
-                <div class="d-flex align-items-center">
+                <div class="card-options">
                     <inertia-link
                         v-if="testCase.draft"
                         :href="

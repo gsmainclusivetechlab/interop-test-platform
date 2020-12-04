@@ -144,31 +144,29 @@
                                     .list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-request-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-request-scripts-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ request.name }}</span>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-link p-0"
-                                        v-b-tooltip.hover
-                                        title="Delete"
-                                        @click="
-                                            deleteFormItem(
-                                                test.scripts.request.list,
-                                                i
-                                            )
-                                        "
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ request.name }}</span
                                     >
-                                        <icon name="trash" />
-                                    </button>
+                                    <div class="card-options">
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0"
+                                            v-b-tooltip.hover
+                                            title="Delete"
+                                            v-b-modal="
+                                                `test-request-scripts-modal-${i}`
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-request-script-form-${i}`"
+                                    :key="`test-request-scripts-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
@@ -185,6 +183,23 @@
                                     />
                                     <div class="text-right"></div>
                                 </div>
+                                <b-modal
+                                    :id="`test-request-scripts-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.scripts.request.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-request-scripts-modal-${i}`"
+                                >
+                                    <p>
+                                        This test request scripts will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -216,31 +231,29 @@
                                     .list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-response-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-response-scripts-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ response.name }}</span>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-link p-0"
-                                        v-b-tooltip.hover
-                                        title="Delete"
-                                        @click="
-                                            deleteFormItem(
-                                                test.scripts.response.list,
-                                                i
-                                            )
-                                        "
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ response.name }}</span
                                     >
-                                        <icon name="trash" />
-                                    </button>
+                                    <div class="card-options">
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0"
+                                            v-b-tooltip.hover
+                                            title="Delete"
+                                            v-b-modal="
+                                                `test-response-scripts-modal-${i}`
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-response-script-form-${i}`"
+                                    :key="`test-response-scripts-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
@@ -257,6 +270,23 @@
                                     />
                                     <div class="text-right"></div>
                                 </div>
+                                <b-modal
+                                    :id="`test-response-scripts-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.scripts.response.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-response-scripts-modal-${i}`"
+                                >
+                                    <p>
+                                        This test response scripts will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -291,14 +321,13 @@
                                 v-for="(request, i) in test.setups.request.list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-request-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-request-setups-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ request.name }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ request.name }}</span
+                                    >
+                                    <div class="card-options">
                                         <label class="form-check form-switch">
                                             <input
                                                 class="form-check-input"
@@ -313,11 +342,8 @@
                                             class="btn btn-link p-0 ml-2"
                                             v-b-tooltip.hover
                                             title="Delete"
-                                            @click="
-                                                deleteFormItem(
-                                                    test.setups.request.list,
-                                                    i
-                                                )
+                                            v-b-modal="
+                                                `test-request-setups-modal-${i}`
                                             "
                                         >
                                             <icon name="trash" />
@@ -326,7 +352,7 @@
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-request-script-form-${i}`"
+                                    :key="`test-request-setups-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
@@ -345,6 +371,23 @@
                                     />
                                     <div class="text-right"></div>
                                 </div>
+                                <b-modal
+                                    :id="`test-request-setups-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.setups.request.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-request-setups-modal-${i}`"
+                                >
+                                    <p>
+                                        This test request setups will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -376,14 +419,13 @@
                                     .list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-response-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-response-setups-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ response.name }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ response.name }}</span
+                                    >
+                                    <div class="card-options">
                                         <label class="form-check form-switch">
                                             <input
                                                 class="form-check-input"
@@ -395,14 +437,11 @@
                                         </label>
                                         <button
                                             type="button"
-                                            class="btn btn-link p-0 ml-2"
+                                            class="btn btn-link p-0"
                                             v-b-tooltip.hover
                                             title="Delete"
-                                            @click="
-                                                deleteFormItem(
-                                                    test.setups.response.list,
-                                                    i
-                                                )
+                                            v-b-modal="
+                                                `test-response-setups-modal-${i}`
                                             "
                                         >
                                             <icon name="trash" />
@@ -411,7 +450,7 @@
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-response-script-form-${i}`"
+                                    :key="`test-response-setups-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
@@ -430,6 +469,23 @@
                                     />
                                     <div class="text-right"></div>
                                 </div>
+                                <b-modal
+                                    :id="`test-response-setups-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.setups.response.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-response-setups-modal-${i}`"
+                                >
+                                    <p>
+                                        This test response setups will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -523,7 +579,9 @@
             </div>
             <div class="card-footer text-right">
                 <inertia-link
-                    :href="route('admin.test-cases.test-steps.index', testCase.id)"
+                    :href="
+                        route('admin.test-cases.test-steps.index', testCase.id)
+                    "
                     class="btn btn-link"
                 >
                     Cancel

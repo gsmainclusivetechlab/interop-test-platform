@@ -3,12 +3,26 @@
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">Versions</h2>
+                <div class="card-options">
+                    <inertia-link
+                        :href="
+                            route(
+                                'admin.test-cases.import-version',
+                                currentTestCase.id
+                            )
+                        "
+                        class="btn btn-primary ml-2"
+                    >
+                        <icon name="upload" />
+                        Import New Version
+                    </inertia-link>
+                </div>
             </div>
             <div class="card-body table-responsive p-0 mb-0">
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Version</th>
+                            <th class="text-nowrap text-center">Version</th>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap text-center">Behavior</th>
                             <th class="text-nowrap text-center">Public</th>
@@ -95,18 +109,20 @@
                                                 .create && testCase.draft
                                         "
                                     >
-                                        <inertia-link
+                                        <confirm-link
+                                            method="delete"
                                             :href="
                                                 route(
                                                     'admin.test-cases.versions.discard',
                                                     testCase.id
                                                 )
                                             "
-                                            method="delete"
                                             class="dropdown-item"
+                                            :confirm-title="'Are you sure?'"
+                                            :confirm-text="'This test step version will be discarded'"
                                         >
                                             Discard
-                                        </inertia-link>
+                                        </confirm-link>
                                     </li>
                                     <li
                                         v-if="

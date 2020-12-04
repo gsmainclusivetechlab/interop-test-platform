@@ -188,11 +188,13 @@ a {
 }
 
 .table {
-  .text-break {
-    word-break: break-word;
+  &-cell_min-w {
+    min-width: 150px;
   }
 }
-
+.text-break {
+  word-break: break-word;
+}
 .outline {
   &-light {
     outline: 1px solid $gray-100;
