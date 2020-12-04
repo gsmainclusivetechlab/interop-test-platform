@@ -10,7 +10,9 @@
                         <label class="form-label">SUTs</label>
                         <selectize
                             v-model="selectedComponents"
-                            :class="{ 'is-invalid': $page.errors.component_ids }"
+                            :class="{
+                                'is-invalid': $page.errors.component_ids,
+                            }"
                             :options="suts.data"
                             keyBy="id"
                             :keys="['name']"
@@ -28,11 +30,18 @@
                             {{ $page.errors.component_ids }}
                         </span>
                     </div>
-                    <div class="mb-3" v-for="sut in suts.data" v-if="form.component_ids.includes(sut.id)">
+                    <div
+                        class="mb-3"
+                        v-for="sut in suts.data"
+                        v-if="form.component_ids.includes(sut.id)"
+                    >
                         <label class="form-label">{{ sut.name }} URL</label>
                         <input
                             v-model="form.base_urls[sut.id]"
-                            :class="{ 'is-invalid': $page.errors[`base_urls.${sut.id}`] }"
+                            :class="{
+                                'is-invalid':
+                                    $page.errors[`base_urls.${sut.id}`],
+                            }"
                             class="form-control"
                         />
                         <span
@@ -99,14 +108,20 @@ export default {
             isCompliance,
             selectedSut,
             selectedComponents:
-                this.session && this.session.sut && this.session.sut.component_ids
+                this.session &&
+                this.session.sut &&
+                this.session.sut.component_ids
                     ? collect(this.suts.data)
                           .whereIn('id', this.session.sut.component_ids)
                           .all()
-                    : selectedSut ? [collect(this.suts.data).first()] : [],
+                    : selectedSut
+                    ? [collect(this.suts.data).first()]
+                    : [],
             form: {
                 base_urls:
-                    this.session && this.session.sut && this.session.sut.base_urls
+                    this.session &&
+                    this.session.sut &&
+                    this.session.sut.base_urls
                         ? this.session.sut.base_urls
                         : [],
                 component_ids: [],
@@ -119,11 +134,9 @@ export default {
             handler: function (values) {
                 this.form.component_ids = [];
 
-                Object.values(values ? values : []).forEach(
-                    (value) => {
-                        this.form.component_ids.push(value.id);
-                    }
-                );
+                Object.values(values ? values : []).forEach((value) => {
+                    this.form.component_ids.push(value.id);
+                });
             },
         },
     },

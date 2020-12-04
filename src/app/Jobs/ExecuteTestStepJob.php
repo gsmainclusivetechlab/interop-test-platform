@@ -44,8 +44,11 @@ class ExecuteTestStepJob implements ShouldQueue
      * @param TestStep $testStep
      * @param TestRun $testRun
      */
-    public function __construct(Session $session, TestStep $testStep, TestRun $testRun)
-    {
+    public function __construct(
+        Session $session,
+        TestStep $testStep,
+        TestRun $testRun
+    ) {
         $this->session = $session;
         $this->testStep = $testStep;
         $this->testRun = $testRun;
@@ -73,12 +76,19 @@ class ExecuteTestStepJob implements ShouldQueue
             ->withUri(
                 UriResolver::resolve(
                     new Uri(
-                        $uri = $this->session->getBaseUriOfComponent($testStep->target)
+                        ($uri = $this->session->getBaseUriOfComponent(
+                            $testStep->target
+                        ))
                     ),
                     new Uri($requestTemplate->path())
                 )
             );
 
-        (new ProcessPendingRequest($request, $testResult, $this->session, empty($uri)))();
+        (new ProcessPendingRequest(
+            $request,
+            $testResult,
+            $this->session,
+            empty($uri)
+        ))();
     }
 }

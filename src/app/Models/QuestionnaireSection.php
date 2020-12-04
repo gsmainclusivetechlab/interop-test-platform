@@ -88,9 +88,7 @@ class QuestionnaireSection extends Model
     public static function getSessionQuestionnaire(Session $session): Collection
     {
         return QuestionnaireSection::withTrashed()
-            ->whereHas('questions.answers', function ($query) use (
-                $session
-            ) {
+            ->whereHas('questions.answers', function ($query) use ($session) {
                 $query->where([
                     'session_id' => $session->id,
                 ]);
@@ -105,9 +103,7 @@ class QuestionnaireSection extends Model
                         ]);
                     });
                 },
-                'questions.answers' => function ($query) use (
-                    $session
-                ) {
+                'questions.answers' => function ($query) use ($session) {
                     $query->where([
                         'session_id' => $session->id,
                     ]);

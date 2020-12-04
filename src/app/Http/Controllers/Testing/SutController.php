@@ -127,12 +127,23 @@ class SutController extends Controller
             ->withoutHeader(TracestateHeader::NAME)
             ->withUri(
                 UriResolver::resolve(
-                    new Uri($uri = $session->getBaseUriOfComponent($connection)),
-                    new Uri(Str::startsWith($path, ['http://', 'https://']) ? $path : "/$path")
+                    new Uri(
+                        ($uri = $session->getBaseUriOfComponent($connection))
+                    ),
+                    new Uri(
+                        Str::startsWith($path, ['http://', 'https://'])
+                            ? $path
+                            : "/$path"
+                    )
                 )->withQuery((string) request()->getQueryString())
             );
 
-        return (new ProcessPendingRequest($request, $testResult, $session, empty($uri)))();
+        return (new ProcessPendingRequest(
+            $request,
+            $testResult,
+            $session,
+            empty($uri)
+        ))();
     }
 
     /**

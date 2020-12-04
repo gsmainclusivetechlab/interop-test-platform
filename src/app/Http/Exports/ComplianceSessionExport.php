@@ -19,13 +19,21 @@ class ComplianceSessionExport
         $this->title($section, 'Info');
         $this->line($section, 'Session name', $session->name);
         $this->line($section, 'Session description', $session->description);
-        $this->line($section, 'Group name', $session->owner->groups()->first()->name ?? null);
+        $this->line(
+            $section,
+            'Group name',
+            $session->owner->groups()->first()->name ?? null
+        );
 
         $section->addText("\n");
 
         foreach ($session->components as $component) {
             $this->line($section, 'SUT', $component->name);
-            $this->line($section, "{$component->name} URL", $session->getBaseUriOfComponent($component));
+            $this->line(
+                $section,
+                "{$component->name} URL",
+                $session->getBaseUriOfComponent($component)
+            );
 
             $section->addText("\n");
         }
@@ -48,12 +56,19 @@ class ComplianceSessionExport
         $section->addText("\n");
 
         $this->title($section, 'Questionnaire');
-        foreach (QuestionnaireSection::getSessionQuestionnaire($session) as $questionnaireSection) {
+        foreach (
+            QuestionnaireSection::getSessionQuestionnaire($session)
+            as $questionnaireSection
+        ) {
             $this->title($section, $questionnaireSection->name, 14);
 
             foreach ($questionnaireSection->questions as $key => $question) {
                 $this->line($section, "Q{$key}", $question->question);
-                $this->line($section, "A{$key}", implode(', ', $question->answers_names));
+                $this->line(
+                    $section,
+                    "A{$key}",
+                    implode(', ', $question->answers_names)
+                );
 
                 $section->addText("\n");
             }
@@ -77,7 +92,10 @@ class ComplianceSessionExport
             $status = __('Incompleted');
 
             /** @var TestRun $lastTestRun */
-            $lastTestRun = $testCase->lastTestRun()->where('session_id', $session->id)->first();
+            $lastTestRun = $testCase
+                ->lastTestRun()
+                ->where('session_id', $session->id)
+                ->first();
             if ($lastTestRun && $lastTestRun->completed_at) {
                 $status = __($lastTestRun->successful ? 'Pass' : 'Fail');
             }
@@ -88,21 +106,35 @@ class ComplianceSessionExport
             $table
                 ->addCell()
                 ->addText($lastTestRun ? "{$lastTestRun->duration} ms" : null);
-            $table->addCell()->addText((string) $testCase->testRuns->where('session_id', $session->id)->count());
+            $table
+                ->addCell()
+                ->addText(
+                    (string) $testCase->testRuns
+                        ->where('session_id', $session->id)
+                        ->count()
+                );
         }
 
         return $wordFile;
     }
 
-    protected function title(Section $section, string $text, int $textSize = 16): void
-    {
+    protected function title(
+        Section $section,
+        string $text,
+        int $textSize = 16
+    ): void {
         $section->addText(__($text), ['size' => $textSize, 'bold' => true]);
     }
 
-    protected function line(Section $section, string $title, ?string $text): void
-    {
+    protected function line(
+        Section $section,
+        string $title,
+        ?string $text
+    ): void {
         if ($text) {
-            $section->addText(sprintf('%s: %s', __($title), $text), ['size' => 12]);
+            $section->addText(sprintf('%s: %s', __($title), $text), [
+                'size' => 12,
+            ]);
         }
     }
 }

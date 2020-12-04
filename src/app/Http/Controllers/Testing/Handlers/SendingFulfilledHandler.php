@@ -61,8 +61,15 @@ class SendingFulfilledHandler
             $this->testResult->fail();
         }
 
-        if (($nextTestStep = $this->testResult->testStep->getNext()) && !$this->session->getBaseUriOfComponent($nextTestStep->source)) {
-            ExecuteTestStepJob::dispatch($this->session, $nextTestStep, $this->testResult->testRun);
+        if (
+            ($nextTestStep = $this->testResult->testStep->getNext()) &&
+            !$this->session->getBaseUriOfComponent($nextTestStep->source)
+        ) {
+            ExecuteTestStepJob::dispatch(
+                $this->session,
+                $nextTestStep,
+                $this->testResult->testRun
+            );
         }
 
         if ($this->testResult->testStep->isLastPosition()) {

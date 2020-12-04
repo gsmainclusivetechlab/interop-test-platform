@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         </template>
-                        <hr>
+                        <hr />
                     </div>
                     <div class="mb-3">
                         <label class="form-label"> Environments </label>

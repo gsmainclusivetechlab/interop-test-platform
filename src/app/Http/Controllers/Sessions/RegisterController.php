@@ -137,12 +137,12 @@ class RegisterController extends Controller
             'session' => session('session'),
             'suts' => ComponentResource::collection(
                 Component::when($isCompliance, function ($query) {
-                        $query->whereHas('testCases', function ($query) {
-                            $testCases = $this->getTestCases();
+                    $query->whereHas('testCases', function ($query) {
+                        $testCases = $this->getTestCases();
 
-                            $query->whereIn('slug', $testCases ?: ['']);
-                        });
-                    })
+                        $query->whereIn('slug', $testCases ?: ['']);
+                    });
+                })
                     ->where('sutable', true)
                     ->get()
             ),
@@ -268,7 +268,8 @@ class RegisterController extends Controller
                     ->whereHas('testCases', function ($query) use ($testCases) {
                         $query
                             ->whereHas('components', function (Builder $query) {
-                                $query->when(session('session.sut.component_ids'),
+                                $query->when(
+                                    session('session.sut.component_ids'),
                                     function (Builder $query, $ids) {
                                         $query->whereIn('id', $ids);
                                     }
@@ -323,7 +324,10 @@ class RegisterController extends Controller
         return Inertia::render('sessions/register/config', [
             'session' => session('session'),
             'suts' => ComponentResource::collection(
-                Component::whereIn('id', session('session.sut.component_ids', [0]))
+                Component::whereIn(
+                    'id',
+                    session('session.sut.component_ids', [0])
+                )
                     ->with('connections')
                     ->get()
             ),
@@ -411,9 +415,11 @@ class RegisterController extends Controller
                                 ->get('session.info.test_cases')
                     );
 
-                collect(session('session.sut.component_ids'))->each(function ($id) use ($session) {
+                collect(session('session.sut.component_ids'))->each(function (
+                    $id
+                ) use ($session) {
                     $session->components()->attach($id, [
-                        'base_url' => session("session.sut.base_urls.{$id}")
+                        'base_url' => session("session.sut.base_urls.{$id}"),
                     ]);
                 });
 
@@ -590,11 +596,12 @@ class RegisterController extends Controller
 
         return $query
             ->whereHas('components', function ($query) {
-                $query->when(session('session.sut.component_ids'),
-                    function (Builder $query, $ids) {
-                        $query->whereIn('id', $ids);
-                    }
-                );
+                $query->when(session('session.sut.component_ids'), function (
+                    Builder $query,
+                    $ids
+                ) {
+                    $query->whereIn('id', $ids);
+                });
             })
             ->where(function ($query) {
                 $query->available();
@@ -614,20 +621,28 @@ class RegisterController extends Controller
 
         $componentsQuery = function ($query) use ($testCases) {
             $testCasesQuery = function ($query) use ($testCases) {
-                $query->whereHas('testCase', function ($query) use ($testCases) {
+                $query->whereHas('testCase', function ($query) use (
+                    $testCases
+                ) {
                     $query->whereIn('slug', $testCases ?: ['']);
                 });
             };
 
-            $query->whereHas('sourceTestSteps', $testCasesQuery)
+            $query
+                ->whereHas('sourceTestSteps', $testCasesQuery)
                 ->orWhereHas('targetTestSteps', $testCasesQuery);
         };
 
         return ComponentResource::collection(
             Component::when($isCompliance, $componentsQuery)
-                ->with(['connections' => function ($query) use ($isCompliance, $componentsQuery) {
-                    $query->when($isCompliance, $componentsQuery);
-                }])
+                ->with([
+                    'connections' => function ($query) use (
+                        $isCompliance,
+                        $componentsQuery
+                    ) {
+                        $query->when($isCompliance, $componentsQuery);
+                    },
+                ])
                 ->get()
         );
     }

@@ -12,7 +12,15 @@ use App\Http\Resources\{
     TestRunResource,
     UseCaseResource
 };
-use App\Models\{Component, GroupEnvironment, QuestionnaireSection, Session, TestCase, UseCase, User};
+use App\Models\{
+    Component,
+    GroupEnvironment,
+    QuestionnaireSection,
+    Session,
+    TestCase,
+    UseCase,
+    User
+};
 use Arr;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -186,11 +194,16 @@ class SessionController extends Controller
                 ])
                     ->whereHas('testCases', function ($query) use ($session) {
                         $query
-                            ->when($session->components->count(), function ($query) use ($session) {
-                                $query->whereHas('components', function ($query) use (
-                                    $session
-                                ) {
-                                    $query->whereIn('id', $session->components->pluck('id'));
+                            ->when($session->components->count(), function (
+                                $query
+                            ) use ($session) {
+                                $query->whereHas('components', function (
+                                    $query
+                                ) use ($session) {
+                                    $query->whereIn(
+                                        'id',
+                                        $session->components->pluck('id')
+                                    );
                                 });
                             })
                             ->when(
@@ -294,21 +307,37 @@ class SessionController extends Controller
     {
         $this->authorize('update', $session);
 
-        $urlRules = $session->components->mapWithKeys(function (Component $component) {
-            return ["component_base_urls.{$component->id}" => ['required', 'url', 'max:255']];
-        })->all();
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['string', 'nullable'],
-            'group_environment_id' => [
-                'nullable',
-                'exists:group_environments,id',
-            ],
-            'environments' => ['nullable', 'array'],
-            'test_cases' => ['required', 'array', 'exists:test_cases,id'],
-        ] + $urlRules, [], $session->components->mapWithKeys(function (Component $component) {
-            return ["component_base_urls.{$component->id}" => "{$component->name} URL"];
-        })->all());
+        $urlRules = $session->components
+            ->mapWithKeys(function (Component $component) {
+                return [
+                    "component_base_urls.{$component->id}" => [
+                        'required',
+                        'url',
+                        'max:255',
+                    ],
+                ];
+            })
+            ->all();
+        $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'description' => ['string', 'nullable'],
+                'group_environment_id' => [
+                    'nullable',
+                    'exists:group_environments,id',
+                ],
+                'environments' => ['nullable', 'array'],
+                'test_cases' => ['required', 'array', 'exists:test_cases,id'],
+            ] + $urlRules,
+            [],
+            $session->components
+                ->mapWithKeys(function (Component $component) {
+                    return [
+                        "component_base_urls.{$component->id}" => "{$component->name} URL",
+                    ];
+                })
+                ->all()
+        );
 
         try {
             $session = DB::transaction(function () use ($session, $request) {
@@ -322,11 +351,16 @@ class SessionController extends Controller
                         : $data
                 );
 
-                $session->components->each(function (Component $component) use ($request, $session) {
+                $session->components->each(function (Component $component) use (
+                    $request,
+                    $session
+                ) {
                     $session
                         ->components()
                         ->updateExistingPivot($id = $component->id, [
-                            'base_url' => $request->input("component_base_urls.{$id}"),
+                            'base_url' => $request->input(
+                                "component_base_urls.{$id}"
+                            ),
                         ]);
                 });
 
@@ -403,7 +437,10 @@ class SessionController extends Controller
         $this->authorize('update', $session);
 
         if ($session->completable) {
-            $session->updateStatus(Session::STATUS_IN_VERIFICATION, 'completed_at');
+            $session->updateStatus(
+                Session::STATUS_IN_VERIFICATION,
+                'completed_at'
+            );
 
             User::whereIn('role', [
                 User::ROLE_ADMIN,

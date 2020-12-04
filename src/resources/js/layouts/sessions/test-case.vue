@@ -64,7 +64,7 @@
                                         ></clipboard-copy-btn>
                                     </div>
                                 </div>
-                                <hr>
+                                <hr />
                             </div>
                         </li>
                         <li v-if="testCase.description">

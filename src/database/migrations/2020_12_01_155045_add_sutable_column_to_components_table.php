@@ -14,7 +14,8 @@ class AddSutableColumnToComponentsTable extends Migration
     public function up()
     {
         Schema::table('components', function (Blueprint $table) {
-            $table->boolean('sutable')
+            $table
+                ->boolean('sutable')
                 ->default(true)
                 ->after('position');
         });

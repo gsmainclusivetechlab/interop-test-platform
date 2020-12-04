@@ -63,25 +63,42 @@
                                     disabled
                                 />
                             </div>
-                            <div class="mb-3" v-for="component in components.data">
+                            <div
+                                class="mb-3"
+                                v-for="component in components.data"
+                            >
                                 <div>
                                     <label>
                                         <b>{{ component.name }} URL</b>
                                     </label>
                                     <input
                                         type="text"
-                                        v-model="form.component_base_urls[component.id]"
+                                        v-model="
+                                            form.component_base_urls[
+                                                component.id
+                                            ]
+                                        "
                                         class="form-control"
                                         :class="{
                                             'is-invalid':
-                                                $page.errors[`component_base_urls.${component.id}`],
+                                                $page.errors[
+                                                    `component_base_urls.${component.id}`
+                                                ],
                                         }"
                                     />
                                     <span
-                                        v-if="$page.errors[`component_base_urls.${component.id}`]"
+                                        v-if="
+                                            $page.errors[
+                                                `component_base_urls.${component.id}`
+                                            ]
+                                        "
                                         class="invalid-feedback"
                                     >
-                                        {{ $page.errors[`component_base_urls.${component.id}`] }}
+                                        {{
+                                            $page.errors[
+                                                `component_base_urls.${component.id}`
+                                            ]
+                                        }}
                                     </span>
                                 </div>
                             </div>
@@ -203,7 +220,10 @@ export default {
                     : null,
                 environments: this.session.environments,
                 component_base_urls: collect(this.components.data)
-                    .mapWithKeys(collection => [collection.id, collection.base_url])
+                    .mapWithKeys((collection) => [
+                        collection.id,
+                        collection.base_url,
+                    ])
                     .all(),
                 test_cases: collect(this.session.testCases.data)
                     .pluck('id')

@@ -411,14 +411,13 @@ class Session extends Model
      */
     public function isAvailableTestCaseRun(TestCase $testCase): bool
     {
-        $testRunsCount = $this
-            ->testRuns()
+        $testRunsCount = $this->testRuns()
             ->where('test_case_id', $testCase->id)
             ->count();
 
         return !$this->isComplianceSession() ||
             ($this->isAvailableToUpdate() &&
                 $testRunsCount <
-                config('test_cases.compliance_session_execution_limit'));
+                    config('test_cases.compliance_session_execution_limit'));
     }
 }

@@ -62,14 +62,20 @@ class ProcessPendingRequest
                 $this->session->environments()
             );
 
-            $response = new Response($response->status(), $response->headers(), $response->body());
+            $response = new Response(
+                $response->status(),
+                $response->headers(),
+                $response->body()
+            );
         }
 
         return (new PendingRequest($response))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
             ->transfer($this->request)
-            ->then(new SendingFulfilledHandler($this->testResult, $this->session))
+            ->then(
+                new SendingFulfilledHandler($this->testResult, $this->session)
+            )
             ->otherwise(new SendingRejectedHandler($this->testResult))
             ->wait();
     }

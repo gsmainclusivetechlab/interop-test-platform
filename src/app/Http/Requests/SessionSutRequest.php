@@ -13,23 +13,34 @@ class SessionSutRequest extends FormRequest
     {
         $isCompliance = Session::isCompliance(session('session.type'));
 
-        return $this->components()->mapWithKeys(function ($id) {
-            return ["base_urls.{$id}" => ['required', 'url', 'max:255']];
-        })->merge([
-            'component_ids' => [$isCompliance ? 'required' : 'nullable', 'array', 'min:' . (int)$isCompliance],
-            'component_ids.*' => ['required', Rule::exists('components', 'id')
-                ->where('sutable', true)
-            ],
-        ])->all();
+        return $this->components()
+            ->mapWithKeys(function ($id) {
+                return ["base_urls.{$id}" => ['required', 'url', 'max:255']];
+            })
+            ->merge([
+                'component_ids' => [
+                    $isCompliance ? 'required' : 'nullable',
+                    'array',
+                    'min:' . (int) $isCompliance,
+                ],
+                'component_ids.*' => [
+                    'required',
+                    Rule::exists('components', 'id')->where('sutable', true),
+                ],
+            ])
+            ->all();
     }
 
     public function attributes(): array
     {
-        return $this->components()->mapWithKeys(function ($id) {
-            return ["base_urls.{$id}" => __('URL')];
-        })->merge([
-            'component_ids' => __('SUTs'),
-        ])->all();
+        return $this->components()
+            ->mapWithKeys(function ($id) {
+                return ["base_urls.{$id}" => __('URL')];
+            })
+            ->merge([
+                'component_ids' => __('SUTs'),
+            ])
+            ->all();
     }
 
     protected function components(): Collection
