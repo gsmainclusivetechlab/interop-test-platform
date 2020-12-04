@@ -19,6 +19,9 @@ class TestResult extends Model
     const STATUS_PASS = 'pass';
     const STATUS_FAIL = 'fail';
 
+    /** @var float */
+    public $jobStart;
+
     /**
      * @var string
      */
@@ -133,7 +136,7 @@ class TestResult extends Model
 
     protected function getDuration(): int
     {
-        $startTime = defined('JOB_START') ? JOB_START : LARAVEL_START;
+        $startTime = $this->jobStart ?? LARAVEL_START;
 
         return (int) floor((microtime(true) - $startTime) * 1000);
     }

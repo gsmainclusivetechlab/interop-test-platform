@@ -56,12 +56,11 @@ class ExecuteTestStepJob implements ShouldQueue
      */
     public function handle()
     {
-        define('JOB_START', microtime(true));
-
         $testStep = $this->testStep;
         $testResult = $this->testRun
             ->testResults()
             ->create(['test_step_id' => $testStep->id]);
+        $testResult->jobStart = microtime(true);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($this->testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
