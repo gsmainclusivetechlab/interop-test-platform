@@ -2,16 +2,21 @@
     <layout>
         <div class="row">
             <div class="col-12">
-                <div class="page-pretitle font-weight-normal">
-                    <breadcrumb
-                        class="breadcrumb-bullets"
-                        :items="breadcrumbs"
-                    ></breadcrumb>
-                </div>
                 <div class="page-header">
-                    <h1 class="page-title">
-                        <b>{{ testCase.name }}</b>
-                    </h1>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="page-pretitle">Administration</div>
+                            <div class="page-pretitle font-weight-normal">
+                                <breadcrumb
+                                    class="breadcrumb-bullets"
+                                    :items="breadcrumbs"
+                                ></breadcrumb>
+                            </div>
+                            <h2 class="page-title">
+                                <b>{{ testCase.name }}</b>
+                            </h2>
+                        </div>
+                    </div>
                 </div>
                 <div class="d-flex align-items-baseline border-bottom mb-4">
                     <ul class="nav nav-tabs mx-0 border-0">

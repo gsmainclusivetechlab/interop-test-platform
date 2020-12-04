@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\TestCases;
 use App\Http\Resources\TestCaseResource;
 use App\Models\TestCase;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -33,7 +34,7 @@ class TestCaseVersionController extends Controller
     public function index(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/versions/index', [
@@ -43,7 +44,7 @@ class TestCaseVersionController extends Controller
                     'test_case_group_id',
                     $testCase->test_case_group_id
                 )
-                    ->with('useCase')
+                    ->with('useCase', 'owner')
                     ->orderByDesc('version')
                     ->paginate()
             )
@@ -51,11 +52,35 @@ class TestCaseVersionController extends Controller
     }
 
     /**
-     * @param string|array $params
+     * @param TestCase $testCase
      * @return RedirectResponse
+     * @throws \Throwable
      */
-    protected function redirectToLast($params)
+    public function publish(TestCase $testCase)
     {
-        return redirect()->route(\Route::currentRouteName(), $params);
+        $this->authorize('update', $testCase);
+        $testCase->update(['draft' => 0]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function discard(TestCase $testCase)
+    {
+        $this->authorize('delete', $testCase);
+        $testCase->delete();
+
+        if (1 === $testCase->version) {
+            return redirect()
+                ->route('admin.test-cases.index')
+                ->with('success', __('Test case deleted successfully'));
+        }
+        return redirect()
+            ->route('admin.test-cases.versions.index', $testCase->last_version->id)
+            ->with('success', __('Test case deleted successfully'));
     }
 }

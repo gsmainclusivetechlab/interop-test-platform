@@ -2,10 +2,12 @@
 
 namespace App\Exports;
 
-use App\Models\TestCase;
-use App\Models\TestScript;
-use App\Models\TestSetup;
-use App\Models\TestStep;
+use App\Models\{
+    TestCase,
+    TestScript,
+    TestSetup,
+    TestStep,
+};
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Yaml\Yaml;
@@ -19,7 +21,7 @@ class TestCaseExport implements Exportable
      */
     public function export($testCase): string
     {
-        $data = $this->mapTestCase($testCase);
+        $data = $this->getArray($testCase);
 
         return Yaml::dump(
             $this->arrayFilter($data),
@@ -27,6 +29,16 @@ class TestCaseExport implements Exportable
             2,
             Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
         );
+    }
+
+    /**
+     * @param Model $testCase
+     * @return array
+     * @throws \Throwable
+     */
+    public function getArray($testCase): array
+    {
+        return $this->mapTestCase($testCase);
     }
 
     /**

@@ -199,41 +199,24 @@
                                             Import New Version
                                         </inertia-link>
                                     </li>
-                                    <li
-                                        v-if="
-                                            testCase.can.update &&
-                                            testCase.draft
-                                        "
-                                    >
-                                        <inertia-link
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.complete',
-                                                    testCase.id
-                                                )
-                                            "
-                                            class="dropdown-item"
-                                        >
-                                            Complete
-                                        </inertia-link>
-                                    </li>
-                                    <li
-                                        v-if="
-                                            $page.auth.user.can.test_cases
-                                                .create
-                                        "
-                                    >
-                                        <a
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.export',
-                                                    testCase.id
-                                                )
-                                            "
-                                            class="dropdown-item"
-                                        >
-                                            Export to yaml
-                                        </a>
+                                    <li v-if="testCase.can.update">
+                                        <div v-if="testCase.draft">
+                                            <inertia-link
+                                                :href="route('admin.test-cases.info.edit', testCase.id)"
+                                                class="dropdown-item"
+                                            >
+                                                Edit
+                                            </inertia-link>
+                                        </div>
+                                        <div v-else>
+                                            <confirm-link
+                                                :href="route('admin.test-cases.info.edit', testCase.id)"
+                                                :confirm-text="'This test case is out draft. A new version will be created'"
+                                                class="dropdown-item"
+                                            >
+                                                Edit
+                                            </confirm-link>
+                                        </div>
                                     </li>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
@@ -246,7 +229,9 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${testCase.name}?`"
+                                            :confirm-text="
+                                                `Are you sure you want to delete all versions of ${testCase.name}?`
+                                            "
                                         >
                                             Delete
                                         </confirm-link>

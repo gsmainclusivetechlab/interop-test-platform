@@ -41,7 +41,7 @@ class TestCaseInfoController extends Controller
     public function show(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/info/show', [
@@ -62,7 +62,7 @@ class TestCaseInfoController extends Controller
     public function edit(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
@@ -76,25 +76,13 @@ class TestCaseInfoController extends Controller
 
         if (!$testCase->draft) {
             try {
-                $rows = array_merge(Yaml::parse((new TestCaseExport())->export($testCase)), [
+                $rows = array_merge((new TestCaseExport())->getArray($testCase), [
                     'test_case_group_id' => $testCase->test_case_group_id,
                     'public' => $testCase->public,
                     'draft' => true,
                 ]);
                 $draftTestCase = (new TestCaseImport())->import($rows);
                 $draftTestCase->groups()->sync($testCase->groups()->pluck('id'));
-//                $draftTestCase = $testCase->replicate(['uuid']);
-//                $draftTestCase->draft = 1;
-//                $draftTestCase->push();
-//                $draftTestCase->groups()->sync($testCase->groups()->pluck('id'));
-//                $draftTestCase->components()->sync($testCase->components()->pluck('id'));
-//                foreach ($testCase->testSteps()->get() as $testStep) {
-//                    /** @var TestStep $testStep */
-//                    $draftTestStep = $draftTestCase->testSteps()->make($testStep->getAttributes());
-//                    $draftTestStep->saveOrFail();
-//                }
-//                $draftTestCase->components()->sync($testCase->components()->pluck('id'));
-
                 $draftTestCase
                     ->owner()
                     ->associate(auth()->user())
@@ -164,14 +152,5 @@ class TestCaseInfoController extends Controller
         return redirect()
             ->route('admin.test-cases.info.show', $testCase->id)
             ->with('success', __('Test case updated successfully'));
-    }
-
-    /**
-     * @param string|array $params
-     * @return RedirectResponse
-     */
-    protected function redirectToLast($params)
-    {
-        return redirect()->route(\Route::currentRouteName(), $params);
     }
 }

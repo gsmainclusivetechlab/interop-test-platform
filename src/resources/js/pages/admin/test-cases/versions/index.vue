@@ -8,25 +8,25 @@
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
+                            <th class="text-nowrap">Version</th>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap text-center">Version</th>
                             <th class="text-nowrap text-center">Behavior</th>
                             <th class="text-nowrap text-center">Public</th>
                             <th class="text-nowrap">Use Case</th>
                             <th class="text-nowrap text-center">Test Steps</th>
                             <th class="text-nowrap text-center">Owner</th>
                             <th class="text-nowrap text-center">Groups</th>
-                            <th class="text-nowrap text-center">Draft</th>
+                            <th class="text-nowrap text-center">Status</th>
                             <th class="w-1 text-nowrap text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(testCase, i) in testCases.data" :key="i">
-                            <td class="text-break">
-                                {{ testCase.name }}
-                            </td>
                             <td class="text-center">
                                 {{ testCase.version }}
+                            </td>
+                            <td class="text-break">
+                                {{ testCase.name }}
                             </td>
                             <td class="text-center">
                                 {{
@@ -57,7 +57,7 @@
                                 }}
                             </td>
                             <td class="text-center">
-                                {{ testCase.draft ? 'Yes' : 'No' }}
+                                {{ testCase.draft ? 'Draft' : 'Publish' }}
                             </td>
                             <td class="text-center">
                                 <b-dropdown
@@ -80,13 +80,32 @@
                                         <inertia-link
                                             :href="
                                                 route(
-                                                    'admin.test-cases.complete',
+                                                    'admin.test-cases.versions.publish',
                                                     testCase.id
                                                 )
                                             "
                                             class="dropdown-item"
                                         >
-                                            Complete
+                                            Publish
+                                        </inertia-link>
+                                    </li>
+                                    <li
+                                        v-if="
+                                            $page.auth.user.can.test_cases
+                                                .create && testCase.draft
+                                        "
+                                    >
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'admin.test-cases.versions.discard',
+                                                    testCase.id
+                                                )
+                                            "
+                                            method="delete"
+                                            class="dropdown-item"
+                                        >
+                                            Discard
                                         </inertia-link>
                                     </li>
                                     <li

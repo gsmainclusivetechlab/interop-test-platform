@@ -39,7 +39,7 @@ class TestCaseGroupController extends Controller
     public function index(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/groups/index', [
@@ -97,14 +97,5 @@ class TestCaseGroupController extends Controller
         return redirect()
             ->back()
             ->with('success', __('Group deleted successfully from test case'));
-    }
-
-    /**
-     * @param string|array $params
-     * @return RedirectResponse
-     */
-    protected function redirectToLast($params)
-    {
-        return redirect()->route(\Route::currentRouteName(), $params);
     }
 }

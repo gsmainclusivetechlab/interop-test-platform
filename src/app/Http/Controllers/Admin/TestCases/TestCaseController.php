@@ -149,7 +149,11 @@ class TestCaseController extends Controller
     public function destroy(TestCase $testCase)
     {
         $this->authorize('delete', $testCase);
-        $testCase->delete();
+
+        TestCase::where('test_case_group_id', $testCase->test_case_group_id)
+            ->each(function ($testCase) {
+                $testCase->delete();
+            });
 
         return redirect()
             ->back()
@@ -164,19 +168,6 @@ class TestCaseController extends Controller
     {
         $this->authorize('create', TestCase::class);
         return Inertia::render('admin/test-cases/import');
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return Response
-     * @throws AuthorizationException
-     */
-    public function showImportVersionForm(TestCase $testCase)
-    {
-        $this->authorize('update', $testCase);
-        return Inertia::render('admin/test-cases/import-version', [
-            'testCase' => (new TestCaseResource($testCase))->resolve(),
-        ]);
     }
 
     /**
@@ -215,6 +206,9 @@ class TestCaseController extends Controller
                 ($baseGroups = $baseTestCase->groups()->pluck('id'))
             ) {
                 $testCase->groups()->sync($baseGroups);
+                if ($baseTestCase->draft) {
+                    $baseTestCase->delete();
+                }
             }
             $testCase
                 ->owner()
@@ -252,19 +246,6 @@ class TestCaseController extends Controller
 
         $file = fopen('php://output', 'w') or die('Unable to open file!');
         fwrite($file, $data);
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return RedirectResponse
-     * @throws \Throwable
-     */
-    public function complete(TestCase $testCase)
-    {
-        $this->authorize('update', $testCase);
-        $testCase->update(['draft' => 0]);
-
-        return redirect()->back();
     }
 
     /**
@@ -309,14 +290,5 @@ class TestCaseController extends Controller
                 ->latest()
                 ->paginate()
         );
-    }
-
-    /**
-     * @param string|array $params
-     * @return RedirectResponse
-     */
-    protected function redirectToLast($params)
-    {
-        return redirect()->route(\Route::currentRouteName(), $params);
     }
 }

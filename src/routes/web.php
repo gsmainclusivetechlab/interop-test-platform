@@ -290,9 +290,6 @@ Route::name('admin.')
                                 Route::get('export', 'TestCaseController@export')->name(
                                     'export'
                                 );
-                                Route::get('complete', 'TestCaseController@complete')->name(
-                                    'complete'
-                                );
                                 Route::put(
                                     'toggle-public',
                                     'TestCaseController@togglePublic'
@@ -320,6 +317,12 @@ Route::name('admin.')
                                 );
                                 Route::resource('versions', 'TestCaseVersionController')->only(
                                     'index'
+                                );
+                                Route::get('versions/publish', 'TestCaseVersionController@publish')->name(
+                                    'versions.publish'
+                                );
+                                Route::delete('versions/discard', 'TestCaseVersionController@discard')->name(
+                                    'versions.discard'
                                 );
                             });
                     });

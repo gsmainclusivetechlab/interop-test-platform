@@ -22,9 +22,6 @@ use App\Http\Requests\UpdateTestStep;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,7 +48,7 @@ class TestCaseTestStepController extends Controller
     public function index(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/index', [
@@ -75,7 +72,7 @@ class TestCaseTestStepController extends Controller
     public function create(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/create', [
@@ -125,9 +122,10 @@ class TestCaseTestStepController extends Controller
     public function edit(TestCase $testCase, TestStep $testStep)
     {
         if (!$testCase->isLast()) {
-            return $this->redirectToLast($testCase->last_version->id);
+            return redirect()->route('admin.test-cases.test-steps.index', $testCase->last_version->id);
         }
         $this->authorize('update', $testCase);
+
         return Inertia::render('admin/test-cases/test-steps/edit', [
             'testCase' => (new TestCaseResource(
                 $testCase->load(['testSteps'])
@@ -199,14 +197,5 @@ class TestCaseTestStepController extends Controller
         return redirect()
             ->back()
             ->with('success', __('Test step deleted successfully from test case'));
-    }
-
-    /**
-     * @param string|array $params
-     * @return RedirectResponse
-     */
-    protected function redirectToLast($params)
-    {
-        return redirect()->route(\Route::currentRouteName(), $params);
     }
 }
