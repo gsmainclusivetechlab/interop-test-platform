@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sessions;
 
+use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
@@ -78,16 +79,37 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return Response
+     * @return RedirectResponse|Response
      */
     public function showTypeForm()
     {
+        $filteredAvailableModes = collect($availableModes = config('service_session.available_modes'))
+            ->filter()
+            ->all();
+
+        if (count($filteredAvailableModes) == 1) {
+            switch ($key = array_key_first($filteredAvailableModes)) {
+                case 'test':
+                case 'test_questionnaire':
+                    $type = Session::TYPE_TEST;
+                    break;
+                case 'compliance':
+                    $type = Session::TYPE_COMPLIANCE;
+                    break;
+                default:
+                    throw new MessageMismatchException(null, 400, 'The available mode does not match any session type');
+            }
+
+            return $this->resolveSessionType($type, $key == 'test_questionnaire');
+        }
+
         return Inertia::render('sessions/register/type', [
             'session' => session('session'),
             'testRunAttempts' => config(
-                'test_cases.compliance_session_execution_limit',
+                'service_session.compliance_session_execution_limit',
                 5
             ),
+            'availableModes' => $availableModes
         ]);
     }
 
@@ -113,6 +135,11 @@ class RegisterController extends Controller
             ]
         );
 
+        return $this->resolveSessionType($type, $withQuestions);
+    }
+
+    protected function resolveSessionType(string $type, bool $withQuestions): RedirectResponse
+    {
         session()->put([
             'session.type' => $type,
             'session.withQuestions' => $withQuestions,

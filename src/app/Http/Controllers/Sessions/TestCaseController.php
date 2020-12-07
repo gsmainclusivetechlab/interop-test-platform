@@ -58,7 +58,7 @@ class TestCaseController extends Controller
             ))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testRunAttempts' => config(
-                'test_cases.compliance_session_execution_limit'
+                'service_session.compliance_session_execution_limit'
             ),
             'testRuns' => TestRunResource::collection(
                 $session
