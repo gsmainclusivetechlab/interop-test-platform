@@ -1,6 +1,10 @@
 <template>
     <layout>
-        <div class="alert alert-danger text-center" role="alert" v-if="!$page.app.has_available_session_modes">
+        <div
+            class="alert alert-danger text-center"
+            role="alert"
+            v-if="!$page.app.has_available_session_modes"
+        >
             No test modes are enabled in the environment
         </div>
         <div class="page-header">
@@ -17,7 +21,10 @@
                 <div class="row">
                     <div class="col-10 mx-auto">
                         <p class="empty-title h3 mb-3">You have no sessions</p>
-                        <p class="empty-subtitle text-muted mb-0" v-if="$page.app.has_available_session_modes">
+                        <p
+                            class="empty-subtitle text-muted mb-0"
+                            v-if="$page.app.has_available_session_modes"
+                        >
                             Click the button below to create your first session.
                         </p>
                         <div class="empty-action">

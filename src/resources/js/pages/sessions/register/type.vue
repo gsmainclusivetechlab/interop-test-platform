@@ -66,10 +66,14 @@
                                     >
                                     is a session where you pass the
                                     questionnaire to receive the list of
-                                    suggested test cases. <span v-if="availableModes.compliance">The main difference
-                                    from <b>Certification</b> session is you can
-                                    change the chosen set of test cases anytime
-                                    and execute them as many times as you like.</span>
+                                    suggested test cases.
+                                    <span v-if="availableModes.compliance"
+                                        >The main difference from
+                                        <b>Certification</b> session is you can
+                                        change the chosen set of test cases
+                                        anytime and execute them as many times
+                                        as you like.</span
+                                    >
                                 </p>
                                 <p v-if="availableModes.compliance">
                                     <icon name="chevron-right" /><b

@@ -419,6 +419,8 @@ class Session extends Model
         return !$this->isComplianceSession() ||
             ($this->isAvailableToUpdate() &&
                 $testRunsCount <
-                    config('service_session.compliance_session_execution_limit'));
+                    config(
+                        'service_session.compliance_session_execution_limit'
+                    ));
     }
 }

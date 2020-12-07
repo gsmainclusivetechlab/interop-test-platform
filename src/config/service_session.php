@@ -6,7 +6,10 @@ return [
 
     'available_modes' => [
         'test' => env('SESSION_TEST_AVAILABLE', true),
-        'test_questionnaire' => env('SESSION_TEST_QUESTIONNAIRE_AVAILABLE', true),
-        'compliance' => env('SESSION_COMPLIANCE_AVAILABLE', true)
-    ]
+        'test_questionnaire' => env(
+            'SESSION_TEST_QUESTIONNAIRE_AVAILABLE',
+            true
+        ),
+        'compliance' => env('SESSION_COMPLIANCE_AVAILABLE', true),
+    ],
 ];

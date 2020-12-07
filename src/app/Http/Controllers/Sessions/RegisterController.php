@@ -83,7 +83,9 @@ class RegisterController extends Controller
      */
     public function showTypeForm()
     {
-        $filteredAvailableModes = collect($availableModes = config('service_session.available_modes'))
+        $filteredAvailableModes = collect(
+            $availableModes = config('service_session.available_modes')
+        )
             ->filter()
             ->all();
 
@@ -97,10 +99,17 @@ class RegisterController extends Controller
                     $type = Session::TYPE_COMPLIANCE;
                     break;
                 default:
-                    throw new MessageMismatchException(null, 400, 'The available mode does not match any session type');
+                    throw new MessageMismatchException(
+                        null,
+                        400,
+                        'The available mode does not match any session type'
+                    );
             }
 
-            return $this->resolveSessionType($type, $key == 'test_questionnaire');
+            return $this->resolveSessionType(
+                $type,
+                $key == 'test_questionnaire'
+            );
         }
 
         return Inertia::render('sessions/register/type', [
@@ -109,7 +118,7 @@ class RegisterController extends Controller
                 'service_session.compliance_session_execution_limit',
                 5
             ),
-            'availableModes' => $availableModes
+            'availableModes' => $availableModes,
         ]);
     }
 
@@ -138,8 +147,10 @@ class RegisterController extends Controller
         return $this->resolveSessionType($type, $withQuestions);
     }
 
-    protected function resolveSessionType(string $type, bool $withQuestions): RedirectResponse
-    {
+    protected function resolveSessionType(
+        string $type,
+        bool $withQuestions
+    ): RedirectResponse {
         session()->put([
             'session.type' => $type,
             'session.withQuestions' => $withQuestions,
