@@ -131,7 +131,7 @@ export default {
             },
             emailPatterns: this.group.domain.replace(/@/g, '').split(', '),
             emailValid: true,
-            formSending: false,
+            sending: false,
         };
     },
     methods: {
