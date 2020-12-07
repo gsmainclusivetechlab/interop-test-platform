@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <div class="alert alert-danger" role="alert" v-if="!$page.app.has_available_session_modes">
+        <div class="alert alert-danger text-center" role="alert" v-if="!$page.app.has_available_session_modes">
             No test modes are enabled in the environment
         </div>
         <div class="page-header">
