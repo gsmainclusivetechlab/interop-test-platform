@@ -10,6 +10,8 @@ use Illuminate\Support\Arr;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property string $name
  */
 class User extends Authenticatable implements MustVerifyEmail
 {

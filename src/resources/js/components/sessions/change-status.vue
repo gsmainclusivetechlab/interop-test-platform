@@ -1,33 +1,34 @@
 <template>
     <span>
-        <inertia-link
+        <button
+            type="button"
             class="btn btn-outline-primary"
-            :href="href"
-            @click.prevent="openModal"
+            v-b-modal="`modal-status-${status}`"
         >
             <slot />
-        </inertia-link>
+        </button>
 
         <b-modal
-            id="modal-prevent-closing"
-            :ref="modalName"
+            :id="`modal-status-${status}`"
             :title="confirmTitle"
-            @ok="handleOk"
             centered
+            @ok="submit"
         >
-            <form ref="form" @submit.prevent="handleSubmit">
-                <div class="mb-3">
-                    <label class="form-label">Reason</label>
-                    <textarea
-                        v-model="form.reason"
-                        :class="{ 'is-invalid': $page.errors.reason }"
-                        class="form-control"
-                        name="reason"
-                    ></textarea>
-                    <span v-if="$page.errors.reason" class="invalid-feedback">
-                        {{ $page.errors.reason }}
-                    </span>
-                </div>
+            <form class="mb-3">
+                <label class="form-label">Reason</label>
+                <textarea
+                    v-model="form.reason"
+                    :class="{
+                        'is-invalid': $page.errors.reason || formError,
+                    }"
+                    class="form-control"
+                ></textarea>
+                <span
+                    v-if="$page.errors.reason || formError"
+                    class="invalid-feedback"
+                >
+                    {{ $page.errors.reason || 'Reason field is required' }}
+                </span>
             </form>
         </b-modal>
     </span>
@@ -51,7 +52,7 @@ export default {
     },
     data() {
         return {
-            modalName: 'model-' + this.status,
+            formError: false,
             form: {
                 reason: '',
                 status: this.status,
@@ -59,18 +60,16 @@ export default {
         };
     },
     methods: {
-        openModal() {
-            this.$refs[this.modalName].show();
-        },
-        handleOk(bvModalEvt) {
-            // Prevent modal from closing
-            bvModalEvt.preventDefault();
-            // Trigger submit handler
-            this.handleSubmit();
-        },
-        handleSubmit() {
+        submit() {
+            if (this.form.reason !== '') {
+                this.formError = false;
+            } else {
+                this.formError = true;
+                return;
+            }
+
             this.$inertia.put(this.href, this.form).then(() => {
-                this.$bvModal.hide('modal-prevent-closing');
+                this.$bvModal.hide(`modal-status-${this.status}`);
             });
         },
     },

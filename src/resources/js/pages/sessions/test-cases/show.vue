@@ -4,6 +4,7 @@
         :test-case="testCase"
         :testStepFirstSource="testStepFirstSource"
         :isAvailableRun="isAvailableRun"
+        :testRunAttempts="testRunAttempts"
     >
         <div class="card">
             <div class="empty h-auto" v-if="!testRuns.data.length">
@@ -146,6 +147,10 @@ export default {
         },
         isAvailableRun: {
             type: Boolean,
+            required: false,
+        },
+        testRunAttempts: {
+            type: Number | String,
             required: false,
         },
     },

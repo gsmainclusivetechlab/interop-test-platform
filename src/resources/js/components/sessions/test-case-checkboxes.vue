@@ -1,5 +1,5 @@
 <template>
-    <ul class="list-group overflow-auto">
+    <ul class="list-group overflow-auto" v-if="useCases.data.length">
         <li
             class="list-group-item"
             v-for="(useCase, i) in useCases.data"
@@ -163,6 +163,21 @@
             </b-collapse>
         </li>
     </ul>
+    <div class="alert alert-danger" role="alert" v-else>
+        <icon name="alert-circle" class="mr-1" />
+        Based on the results of questionnaire, no test cases can be suggested.
+        Please revise
+        <inertia-link
+            :href="route('sessions.register.questionnaire.summary')"
+            class="alert-link"
+            >your questionnaire answers</inertia-link
+        >
+        or
+        <inertia-link :href="route('sessions.register.type')" class="alert-link"
+            >create a Test session</inertia-link
+        >
+        to select test cases by yourself.
+    </div>
 </template>
 <script>
 import TestCaseUpdate from '@/components/sessions/test-case-update';

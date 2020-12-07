@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\Session;
+use Arr;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SessionStatusChanged extends Notification
+class SessionStatusChanged extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -42,24 +43,56 @@ class SessionStatusChanged extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
-        $reason = $this->session->reason;
+        $session = $this->session;
+        $reason = $session->reason;
+        $subject = Arr::get($this->getSubjects(), $session->status);
+        $message = Arr::get($this->getMessages(), $session->status);
 
         return (new MailMessage())
-            ->subject(
-                $message = __(
-                    'Compliance session moves into ":status" status',
-                    ['status' => $this->session->status_name]
-                )
+            ->subject(__($subject))
+            ->line(
+                __($message, [
+                    'userName' => $session->owner->name,
+                    'sessionName' => $session->name,
+                ])
             )
-            ->line($message)
-            ->line($reason ? __('Reason') . ": {$reason}" : null)
+            ->line($reason ? "\"{$reason}\"" : null)
+            ->line(__('Please click the button below to review it.'))
             ->action(
                 __('Go to session'),
-                url(route('sessions.show', $this->session))
+                url(route('sessions.show', $session))
             );
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getSubjects(): array
+    {
+        return [
+            Session::STATUS_IN_VERIFICATION =>
+                'Compliance session: verification request',
+            Session::STATUS_APPROVED => 'Compliance session: approved',
+            Session::STATUS_DECLINED => 'Compliance session: declined',
+        ];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    protected function getMessages(): array
+    {
+        return [
+            Session::STATUS_IN_VERIFICATION =>
+                ':userName sent his session ":sessionName" for verification.',
+            Session::STATUS_APPROVED =>
+                'Your session ":sessionName" was approved by the admin by the next reason:',
+            Session::STATUS_DECLINED =>
+                'Your session ":sessionName" was declined by the admin by the next reason:',
+        ];
     }
 }

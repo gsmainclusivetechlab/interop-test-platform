@@ -6,11 +6,11 @@
                 testCase.lastAvailableVersion &&
                 checkLastVersion
             "
-            @click.prevent="showModal"
+            v-b-modal="`update-test-case-${versions.current.id}`"
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
             v-b-tooltip.hover
-            title="A laster version of this test case is available. Click to update your session with it."
+            title="A newer version of this test case is available. Click to update your session with it."
         >
             update
         </button>
@@ -18,29 +18,13 @@
             :id="`update-test-case-${versions.current.id}`"
             size="lg"
             centered
-            hide-footer
             title="Are you sure?"
+            @ok="submit"
         >
             <p>
                 After update, version can't revert and Test Runs of current
                 version won't be available.
             </p>
-            <div class="text-right">
-                <button
-                    type="button"
-                    @click.prevent="hideModal"
-                    class="btn btn-link mr-1"
-                >
-                    Cancel
-                </button>
-                <button
-                    type="button"
-                    @click.prevent="submit"
-                    class="btn btn-primary"
-                >
-                    Ok
-                </button>
-            </div>
         </b-modal>
     </span>
 </template>
@@ -77,8 +61,6 @@ export default {
     },
     methods: {
         submit() {
-            this.hideModal();
-
             this.$inertia
                 .put(
                     route('sessions.update-test-case', [
@@ -90,12 +72,6 @@ export default {
                 .then(() => {
                     this.$emit('update', this.versions);
                 });
-        },
-        showModal() {
-            this.$bvModal.show(`update-test-case-${this.versions.current.id}`);
-        },
-        hideModal() {
-            this.$bvModal.hide(`update-test-case-${this.versions.current.id}`);
         },
     },
     computed: {

@@ -99,14 +99,14 @@ class SutController extends Controller
 
             $message = !$session->isAvailableToUpdate()
                 ? 'Session not available to update'
-                : 'Test case execution limit.';
+                : 'You have reached the limit of :limit allowed test runs per test case.';
+
+            $limit = config('test_cases.compliance_session_execution_limit');
 
             abort_if(
-                !$session->isAvailableToUpdate() ||
-                    $testRunsCount >=
-                        config('test_cases.compliance_session_execution_limit'),
+                !$session->isAvailableToUpdate() || $testRunsCount >= $limit,
                 403,
-                __($message)
+                __($message, ['limit' => $limit])
             );
         }
 

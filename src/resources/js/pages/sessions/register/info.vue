@@ -85,7 +85,11 @@
                 >
                     Back
                 </inertia-link>
-                <button type="submit" class="btn btn-primary">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    v-if="useCases.data.length"
+                >
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"

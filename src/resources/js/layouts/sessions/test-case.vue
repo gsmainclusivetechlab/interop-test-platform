@@ -169,13 +169,13 @@
                                     Run Test Case
                                 </inertia-link>
                                 <button
-                                    class="btn btn-gray"
+                                    class="btn btn-secondary"
                                     v-else
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.left
                                     :title="
                                         session.status !== 'in_execution'
                                             ? 'Session not available to update'
-                                            : 'Test case execution limit'
+                                            : `You have reached the limit of ${testRunAttempts} allowed test runs per test case.`
                                     "
                                 >
                                     <icon name="bike"></icon>
@@ -213,6 +213,10 @@ export default {
         },
         isAvailableRun: {
             type: Boolean,
+            required: false,
+        },
+        testRunAttempts: {
+            type: Number | String,
             required: false,
         },
     },

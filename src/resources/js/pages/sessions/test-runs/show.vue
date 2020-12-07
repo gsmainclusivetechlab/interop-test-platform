@@ -124,6 +124,9 @@
                                                 </b>
                                                 <div
                                                     class="d-flex align-items-baseline text-truncate"
+                                                    v-if="
+                                                        testResultStep.request
+                                                    "
                                                 >
                                                     <span
                                                         class="font-weight-bold"
@@ -232,7 +235,10 @@
                                         </small>
                                     </div>
                                 </div>
-                                <div class="text-truncate">
+                                <div
+                                    class="text-truncate"
+                                    v-if="testResult.request"
+                                >
                                     <u class="mr-2"
                                         >{{ testResult.request.method }}
                                         {{ testResult.request.path }}</u

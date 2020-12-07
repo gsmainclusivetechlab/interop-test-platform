@@ -1,3 +1,12 @@
+## v1.3
+
+-   Task: Editable Testcases [@jc-skushnir,@Kassaila]
+-   Task: Email Notifications for Session Status Changes [@jc-nsiryk]
+-   Task: Certification Sessions [@jc-nsiryk,@Kassaila]
+-   Task: Compliance Session Results Page [@jc-nsiryk,@Kassaila]
+-   Task: Move invitation parameters to service.env [@jc-skushnir]
+-   Task: Old Session does not accept incoming messages [@jc-nsiryk]
+
 ## v1.2
 
 -   Task: Email Invitations [@jc-skushnir,@Kassaila]
