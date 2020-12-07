@@ -123,7 +123,11 @@
                         <label class="form-label">Trigger</label>
                         <json-editor-block
                             :input-json="trigger"
-                            @output-json="(data) => (trigger = data)"
+                            @output-json="
+                                (data) => {
+                                    trigger = data;
+                                }
+                            "
                         />
                     </div>
                     <div class="col-12 mb-3">
@@ -140,47 +144,105 @@
                                     .list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-request-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-request-scripts-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ request.name }}</span>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-link p-0"
-                                        v-b-tooltip.hover
-                                        title="Delete"
-                                        @click="
-                                            deleteFormItem(
-                                                test.scripts.request.list,
-                                                i
-                                            )
-                                        "
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ request.name }}</span
                                     >
-                                        <icon name="trash" />
-                                    </button>
+                                    <div class="card-options">
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0"
+                                            v-b-tooltip.hover
+                                            title="Delete"
+                                            v-b-modal="
+                                                `test-request-scripts-modal-${i}`
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-request-script-form-${i}`"
+                                    :key="`test-request-scripts-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.name`
+                                                ],
+                                        }"
                                         v-model="request.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.request.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3">Rules</label>
                                     <json-editor-block
                                         :input-json="request.rules"
                                         @output-json="
                                             (data) => (request.rules = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.rules`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.request.${i}.rules`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.request.${i}.rules`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
+                                <b-modal
+                                    :id="`test-request-scripts-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.scripts.request.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-request-scripts-modal-${i}`"
+                                >
+                                    <p>
+                                        This test request scripts will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -212,47 +274,105 @@
                                     .list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-response-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-response-scripts-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ response.name }}</span>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-link p-0"
-                                        v-b-tooltip.hover
-                                        title="Delete"
-                                        @click="
-                                            deleteFormItem(
-                                                test.scripts.response.list,
-                                                i
-                                            )
-                                        "
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ response.name }}</span
                                     >
-                                        <icon name="trash" />
-                                    </button>
+                                    <div class="card-options">
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0"
+                                            v-b-tooltip.hover
+                                            title="Delete"
+                                            v-b-modal="
+                                                `test-response-scripts-modal-${i}`
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-response-script-form-${i}`"
+                                    :key="`test-response-scripts-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.name`
+                                                ],
+                                        }"
                                         v-model="response.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.response.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3">Rules</label>
                                     <json-editor-block
                                         :input-json="response.rules"
                                         @output-json="
                                             (data) => (response.rules = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.rules`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.scripts.response.${i}.rules`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.scripts.response.${i}.rules`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
+                                <b-modal
+                                    :id="`test-response-scripts-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.scripts.response.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-response-scripts-modal-${i}`"
+                                >
+                                    <p>
+                                        This test response scripts will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -287,14 +407,13 @@
                                 v-for="(request, i) in test.setups.request.list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-request-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-request-setups-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ request.name }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ request.name }}</span
+                                    >
+                                    <div class="card-options">
                                         <label class="form-check form-switch">
                                             <input
                                                 class="form-check-input"
@@ -309,11 +428,8 @@
                                             class="btn btn-link p-0 ml-2"
                                             v-b-tooltip.hover
                                             title="Delete"
-                                            @click="
-                                                deleteFormItem(
-                                                    test.setups.request.list,
-                                                    i
-                                                )
+                                            v-b-modal="
+                                                `test-request-setups-modal-${i}`
                                             "
                                         >
                                             <icon name="trash" />
@@ -322,14 +438,36 @@
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-request-script-form-${i}`"
+                                    :key="`test-request-setups-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.setups.request.${i}.name`
+                                                ],
+                                        }"
                                         v-model="request.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.request.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.request.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3"
                                         >Values</label
                                     >
@@ -338,9 +476,47 @@
                                         @output-json="
                                             (data) => (request.values = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.setups.request.${i}.values`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.request.${i}.values`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.request.${i}.values`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
+                                <b-modal
+                                    :id="`test-request-setups-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.setups.request.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-request-setups-modal-${i}`"
+                                >
+                                    <p>
+                                        This test request setups will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -372,14 +548,13 @@
                                     .list"
                             >
                                 <div
-                                    class="card-header justify-content-between"
-                                    :key="`test-response-script-head-${i}`"
+                                    class="card-header"
+                                    :key="`test-response-setups-head-${i}`"
                                 >
-                                    <div class="text-muted">
-                                        <span>{{ i + 1 }}.</span>
-                                        <span>{{ response.name }}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center">
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ response.name }}</span
+                                    >
+                                    <div class="card-options">
                                         <label class="form-check form-switch">
                                             <input
                                                 class="form-check-input"
@@ -391,14 +566,11 @@
                                         </label>
                                         <button
                                             type="button"
-                                            class="btn btn-link p-0 ml-2"
+                                            class="btn btn-link p-0"
                                             v-b-tooltip.hover
                                             title="Delete"
-                                            @click="
-                                                deleteFormItem(
-                                                    test.setups.response.list,
-                                                    i
-                                                )
+                                            v-b-modal="
+                                                `test-response-setups-modal-${i}`
                                             "
                                         >
                                             <icon name="trash" />
@@ -407,14 +579,36 @@
                                 </div>
                                 <div
                                     class="card-body"
-                                    :key="`test-response-script-form-${i}`"
+                                    :key="`test-response-setups-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[
+                                                    `test.setups.response.${i}.name`
+                                                ],
+                                        }"
                                         v-model="response.name"
                                     />
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.response.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.response.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                     <label class="form-label mb-3"
                                         >Values</label
                                     >
@@ -423,9 +617,47 @@
                                         @output-json="
                                             (data) => (response.values = data)
                                         "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.errors[
+                                                    `test.setups.response.${i}.values`
+                                                ],
+                                        }"
                                     />
-                                    <div class="text-right"></div>
+                                    <span
+                                        v-if="
+                                            $page.errors[
+                                                `test.setups.response.${i}.values`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.errors[
+                                                    `test.setups.response.${i}.values`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
                                 </div>
+                                <b-modal
+                                    :id="`test-response-setups-modal-${i}`"
+                                    :title="'Are you sure?'"
+                                    @ok="
+                                        deleteFormItem(
+                                            test.setups.response.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`test-response-setups-modal-${i}`"
+                                >
+                                    <p>
+                                        This test response setups will be
+                                        deleted.
+                                    </p>
+                                </b-modal>
                             </template>
                             <div class="text-right">
                                 <button
@@ -518,7 +750,9 @@
             </div>
             <div class="card-footer text-right">
                 <inertia-link
-                    :href="route('admin.test-cases.test-steps.index', testCase.id)"
+                    :href="
+                        route('admin.test-cases.test-steps.index', testCase.id)
+                    "
                     class="btn btn-link"
                 >
                     Cancel
@@ -558,6 +792,14 @@ export default {
             sending: false,
             component: {
                 list: this.$page.components.map((el) => el.name),
+                connections: new Map(
+                    this.$page.components.map((el) => [
+                        el.name,
+                        el.connections.data.map(
+                            (connection) => connection.name
+                        ),
+                    ])
+                ),
             },
             method: {
                 selected: '',
@@ -686,24 +928,18 @@ export default {
     },
     computed: {
         sourceList() {
-            const list = [...this.component.list];
-            const i = this.component.list.indexOf(this.source);
+            const list = this.component.connections.get(this.target);
 
-            if (i < 0) return list;
+            if (list) return list;
 
-            list.splice(this.component.list.indexOf(this.target), 1);
-
-            return list;
+            return this.component.list;
         },
         targetList() {
-            const list = [...this.component.list];
-            const i = this.component.list.indexOf(this.source);
+            const list = this.component.connections.get(this.source);
 
-            if (i < 0) return list;
+            if (list) return list;
 
-            list.splice(this.component.list.indexOf(this.source), 1);
-
-            return list;
+            return this.component.list;
         },
     },
 };
