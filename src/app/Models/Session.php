@@ -372,7 +372,7 @@ class Session extends Model
      */
     public function updateStatus($status, $timestampField = null): bool
     {
-        $timestamp = $timestampField ? [$timestampField => Carbon::now()] : [];
+        $timestamp = $timestampField ? [$timestampField => now()] : [];
 
         return $this->update(['status' => $status] + $timestamp);
     }

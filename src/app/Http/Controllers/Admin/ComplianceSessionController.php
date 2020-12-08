@@ -74,7 +74,7 @@ class ComplianceSessionController extends Controller
             ],
         ]);
 
-        $session->update($data + ['closed_at' => Carbon::now()]);
+        $session->update($data + ['closed_at' => now()]);
 
         $session->owner->notify(new SessionStatusChanged($session));
 
