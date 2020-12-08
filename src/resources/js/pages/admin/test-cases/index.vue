@@ -202,7 +202,12 @@
                                     <li v-if="testCase.can.update">
                                         <div v-if="testCase.draft">
                                             <inertia-link
-                                                :href="route('admin.test-cases.info.edit', testCase.id)"
+                                                :href="
+                                                    route(
+                                                        'admin.test-cases.info.edit',
+                                                        testCase.id
+                                                    )
+                                                "
                                                 class="dropdown-item"
                                             >
                                                 Edit
@@ -210,7 +215,12 @@
                                         </div>
                                         <div v-else>
                                             <confirm-link
-                                                :href="route('admin.test-cases.info.edit', testCase.id)"
+                                                :href="
+                                                    route(
+                                                        'admin.test-cases.info.edit',
+                                                        testCase.id
+                                                    )
+                                                "
                                                 :confirm-text="'This test case is out draft. A new version will be created'"
                                                 class="dropdown-item"
                                             >
@@ -229,9 +239,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="
-                                                `Are you sure you want to delete all versions of ${testCase.name}?`
-                                            "
+                                            :confirm-text="`Are you sure you want to delete all versions of ${testCase.name}?`"
                                         >
                                             Delete
                                         </confirm-link>

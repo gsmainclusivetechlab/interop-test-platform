@@ -14,7 +14,8 @@ class AddDraftColumnToTestCasesTable extends Migration
     public function up()
     {
         Schema::table('test_cases', function (Blueprint $table) {
-            $table->boolean('draft')
+            $table
+                ->boolean('draft')
                 ->default(0)
                 ->after('public');
         });

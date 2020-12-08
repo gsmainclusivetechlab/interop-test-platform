@@ -2,12 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\{
-    TestCase,
-    TestScript,
-    TestSetup,
-    TestStep,
-};
+use App\Models\{TestCase, TestScript, TestSetup, TestStep};
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Yaml\Yaml;
@@ -54,7 +49,8 @@ class TestCaseExport implements Exportable
             'behavior' => $testCase->behavior,
             'description' => $testCase->description,
             'precondition' => $testCase->precondition,
-            'components' => $testCase->components()
+            'components' => $testCase
+                ->components()
                 ->pluck('name')
                 ->toArray(),
             'test_steps' => $this->mapTestSteps($testCase->testSteps()->get()),
@@ -75,16 +71,10 @@ class TestCaseExport implements Exportable
                 'path' => $testStep->path,
                 'pattern' => $testStep->pattern,
                 'method' => $testStep->method,
-                'source' => $testStep->source()
-                    ->first()
-                    ->name,
-                'target' => $testStep->target()
-                    ->first()
-                    ->name,
+                'source' => $testStep->source()->first()->name,
+                'target' => $testStep->target()->first()->name,
                 'api_spec' => $testStep->apiSpec()->exists()
-                    ? $testStep->apiSpec()
-                        ->first()
-                        ->name
+                    ? $testStep->apiSpec()->first()->name
                     : null,
                 'trigger' => $testStep->trigger,
                 'test_request_setups' => $this->mapTestSetups(
@@ -167,11 +157,8 @@ class TestCaseExport implements Exportable
     {
         return empty($array)
             ? null
-            : array_filter(
-                $array,
-                function ($value) {
-                    return !is_null($value) && $value !== '';
-                }
-            );
+            : array_filter($array, function ($value) {
+                return !is_null($value) && $value !== '';
+            });
     }
 }

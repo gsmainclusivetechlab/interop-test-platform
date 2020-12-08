@@ -262,71 +262,77 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
-        Route::namespace('TestCases')
-            ->group(function () {
-                Route::resource('test-cases', 'TestCaseController')->except([
-                    'show',
-                    'edit',
-                    'update',
-                ]);
-                Route::name('test-cases.')
-                    ->prefix('test-cases')
-                    ->group(function () {
-                        Route::get('import', 'TestCaseController@showImportForm')->name(
-                            'import'
-                        );
-                        Route::post('import', 'TestCaseController@import')->name(
-                            'import.confirm'
-                        );
+        Route::namespace('TestCases')->group(function () {
+            Route::resource('test-cases', 'TestCaseController')->except([
+                'show',
+                'edit',
+                'update',
+            ]);
+            Route::name('test-cases.')
+                ->prefix('test-cases')
+                ->group(function () {
+                    Route::get(
+                        'import',
+                        'TestCaseController@showImportForm'
+                    )->name('import');
+                    Route::post('import', 'TestCaseController@import')->name(
+                        'import.confirm'
+                    );
+                    Route::get(
+                        'group-candidates',
+                        'TestCaseController@groupCandidates'
+                    )->name('group-candidates');
+                    Route::prefix('{testCase}')->group(function () {
                         Route::get(
-                            'group-candidates',
-                            'TestCaseController@groupCandidates'
-                        )->name('group-candidates');
-                        Route::prefix('{testCase}')
+                            'import',
+                            'TestCaseController@showImportVersionForm'
+                        )->name('import-version');
+                        Route::get('export', 'TestCaseController@export')->name(
+                            'export'
+                        );
+                        Route::put(
+                            'toggle-public',
+                            'TestCaseController@togglePublic'
+                        )->name('toggle-public');
+                        Route::name('info.')
+                            ->prefix('info')
                             ->group(function () {
-                                Route::get('import', 'TestCaseController@showImportVersionForm')->name(
-                                    'import-version'
-                                );
-                                Route::get('export', 'TestCaseController@export')->name(
-                                    'export'
-                                );
+                                Route::get(
+                                    'show',
+                                    'TestCaseInfoController@show'
+                                )->name('show');
+                                Route::get(
+                                    'edit',
+                                    'TestCaseInfoController@edit'
+                                )->name('edit');
                                 Route::put(
-                                    'toggle-public',
-                                    'TestCaseController@togglePublic'
-                                )->name('toggle-public');
-                                Route::name('info.')
-                                    ->prefix('info')
-                                    ->group(function () {
-                                        Route::get('show', 'TestCaseInfoController@show')->name(
-                                            'show'
-                                        );
-                                        Route::get('edit', 'TestCaseInfoController@edit')->name(
-                                            'edit'
-                                        );
-                                        Route::put('update', 'TestCaseInfoController@update')->name(
-                                            'update'
-                                        );
-                                    });
-                                Route::resource('groups', 'TestCaseGroupController')->only(
-                                    'index',
-                                    'store',
-                                    'destroy'
-                                );
-                                Route::resource('test-steps', 'TestCaseTestStepController')->except(
-                                    'show'
-                                );
-                                Route::resource('versions', 'TestCaseVersionController')->only(
-                                    'index'
-                                );
-                                Route::get('versions/publish', 'TestCaseVersionController@publish')->name(
-                                    'versions.publish'
-                                );
-                                Route::delete('versions/discard', 'TestCaseVersionController@discard')->name(
-                                    'versions.discard'
-                                );
+                                    'update',
+                                    'TestCaseInfoController@update'
+                                )->name('update');
                             });
+                        Route::resource(
+                            'groups',
+                            'TestCaseGroupController'
+                        )->only('index', 'store', 'destroy');
+                        Route::resource(
+                            'test-steps',
+                            'TestCaseTestStepController'
+                        )->except('show');
+                        Route::resource(
+                            'versions',
+                            'TestCaseVersionController'
+                        )->only('index');
+                        Route::get(
+                            'versions/publish',
+                            'TestCaseVersionController@publish'
+                        )->name('versions.publish');
+                        Route::delete(
+                            'versions/discard',
+                            'TestCaseVersionController@discard'
+                        )->name('versions.discard');
                     });
-            });
+                });
+        });
         Route::name('questionnaire.')
             ->prefix('questionnaire')
             ->group(function () {

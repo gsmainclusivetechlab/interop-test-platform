@@ -3,17 +3,9 @@
 namespace App\Http\Controllers\Admin\TestCases;
 
 use App\Exports\TestCaseExport;
-use App\Http\Resources\{
-    ComponentResource,
-    TestCaseResource,
-    UseCaseResource,
-};
+use App\Http\Resources\{ComponentResource, TestCaseResource, UseCaseResource};
 use App\Imports\TestCaseImport;
-use App\Models\{
-    Component,
-    TestCase,
-    UseCase
-};
+use App\Models\{Component, TestCase, UseCase};
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -41,15 +33,15 @@ class TestCaseInfoController extends Controller
     public function show(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
+            return redirect()->route(
+                \Route::currentRouteName(),
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/info/show', [
             'testCase' => (new TestCaseResource(
-                $testCase->load([
-                    'useCase',
-                    'components'
-                ])
+                $testCase->load(['useCase', 'components'])
             ))->resolve(),
         ]);
     }
@@ -62,27 +54,30 @@ class TestCaseInfoController extends Controller
     public function edit(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
+            return redirect()->route(
+                \Route::currentRouteName(),
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
-            $testCase->load([
-                'groups',
-                'useCase',
-                'testSteps',
-                'components'
-            ])
+            $testCase->load(['groups', 'useCase', 'testSteps', 'components'])
         ))->resolve();
 
         if (!$testCase->draft) {
             try {
-                $rows = array_merge((new TestCaseExport())->getArray($testCase), [
-                    'test_case_group_id' => $testCase->test_case_group_id,
-                    'public' => $testCase->public,
-                    'draft' => true,
-                ]);
+                $rows = array_merge(
+                    (new TestCaseExport())->getArray($testCase),
+                    [
+                        'test_case_group_id' => $testCase->test_case_group_id,
+                        'public' => $testCase->public,
+                        'draft' => true,
+                    ]
+                );
                 $draftTestCase = (new TestCaseImport())->import($rows);
-                $draftTestCase->groups()->sync($testCase->groups()->pluck('id'));
+                $draftTestCase
+                    ->groups()
+                    ->sync($testCase->groups()->pluck('id'));
                 $draftTestCase
                     ->owner()
                     ->associate(auth()->user())
@@ -90,16 +85,17 @@ class TestCaseInfoController extends Controller
 
                 return redirect()
                     ->route('admin.test-cases.info.edit', $draftTestCase->id)
-                    ->with('success', __('New draft test case created successfully'));
+                    ->with(
+                        'success',
+                        __('New draft test case created successfully')
+                    );
             } catch (\Throwable $e) {
                 $errorMessage = implode(
                     '<br>',
                     array_merge(
                         [$e->getMessage()],
                         !empty($e->validator)
-                            ? $e->validator
-                            ->errors()
-                            ->all()
+                            ? $e->validator->errors()->all()
                             : []
                     )
                 );

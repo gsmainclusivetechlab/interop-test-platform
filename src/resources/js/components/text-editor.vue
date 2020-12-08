@@ -124,7 +124,7 @@
         <editor-content class="form-control mt-2" :editor="editor" />
     </div>
 </template>
-<script >
+<script>
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import {
     Blockquote,
