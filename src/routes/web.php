@@ -186,12 +186,12 @@ Route::name('testing.')
         )
             ->name('sut')
             ->where('path', '.*');
-        Route::any(
-            '{component:uuid}/{connection:uuid}/simulator/{path?}',
-            'SimulatorController'
-        )
-            ->name('simulator')
-            ->where('path', '.*');
+        //        Route::any(
+        //            '{component:uuid}/{connection:uuid}/simulator/{path?}',
+        //            'SimulatorController'
+        //        )
+        //            ->name('simulator')
+        //            ->where('path', '.*');
     });
 
 /**

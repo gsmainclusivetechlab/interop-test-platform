@@ -1,10 +1,10 @@
-name: P2P Accepted - Send / Disclosing
-slug: P2P0400
+name: P2P Accepted - Receive / Non-Disclosing
+slug: P2P0100
 use_case: P2P
-test_case: P2P0400
+test_case: P2P0100
 behavior: positive
 description: |
-  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Send and Disclosing Fees.
+  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
 precondition: |
   - Mobile Money Operator is capable to handle async calls.
   - Payee and Payer MMOs exist in Mojaloop as Participants.
@@ -15,11 +15,12 @@ precondition: |
   - Configuration for MMO2 as SUT:
     - fspiop-source: 'mmo2fsp'.
     - fspiop-destination: 'mmo1fsp'.
-  - Payeer request a transfer of 400.
+  - Payeer request a transfer of 100.
+  - PayeeFsp gives 1 as Comission.
+  - PayerFsp receives 1 as Comission.
   - PayerFsp Fee should be the value 1.
-  - PayeeFsp Fee should be the value 1.
   - Required Parameters for Execution:
-    - Transfer Amount: 399.
+    - Transfer Amount: 100.
 components:
   - Mobile Money Operator 1
   - Mobile Money Operator 2
@@ -34,7 +35,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '100'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -48,7 +49,7 @@ test_steps:
           body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'required|in:SEND'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
@@ -57,10 +58,8 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:399'
+          body.amount.amount: 'required|in:100'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.fees.amount: 'required|in:1'
-          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -93,13 +92,10 @@ test_steps:
               middleName: 'Jane'
               lastName: 'Doe'
             dateOfBirth: '2000-01-01'
-        amountType: 'SEND'
+        amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '399'
-        fees:
-          currency: 'USD'
-          amount: '1'
+          amount: '100'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -117,7 +113,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '100'
 
     test_request_scripts:
       - name: Mandatory IDs is present
@@ -131,7 +127,7 @@ test_steps:
           body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
         rules:
-          body.amountType: 'required|in:SEND'
+          body.amountType: 'required|in:RECEIVE'
       - name: Payer and Payee parties are present and valid in the network
         rules:
           body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
@@ -140,10 +136,8 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:399'
+          body.amount.amount: 'required|in:100'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.fees.amount: 'required|in:1'
-          body.fees.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -176,13 +170,10 @@ test_steps:
               middleName: 'Jane'
               lastName: 'Doe'
             dateOfBirth: '2000-01-01'
-        amountType: 'SEND'
+        amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '399'
-        fees:
-          currency: 'USD'
-          amount: '1'
+          amount: '100'
         transactionType:
           scenario: 'TRANSFER'
           initiator: 'PAYER'
@@ -200,27 +191,27 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '399'
+        amount: '99'
 
     test_request_setups:
       - name: Override request
         values:
+          body.transferAmount.amount: '99'
           body.transferAmount.currency: 'USD'
-          body.transferAmount.amount: '399'
+          body.payeeReceiveAmount.amount: '100'
           body.payeeReceiveAmount.currency: 'USD'
-          body.payeeReceiveAmount.amount: '398'
-          body.payeeFspFee.currency: 'USD'
-          body.payeeFspFee.amount: '1'
+          body.payeeFspCommission.amount: '1'
+          body.payeeFspCommission.currency: 'USD'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:399'
+          body.transferAmount.amount: 'required|in:99'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:398'
+          body.payeeReceiveAmount.amount: 'required|in:100'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspFee.amount: 'required|in:1'
-          body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.payeeFspCommission.amount: 'required|in:1'
+          body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -234,16 +225,16 @@ test_steps:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
-          amount: '399'
+          amount: '99'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '398'
-        payeeFspFee:
+          amount: '100'
+        payeeFspCommission:
           currency: 'USD'
           amount: '1'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -262,17 +253,17 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '399'
+        amount: '99'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:399'
+          body.transferAmount.amount: 'required|in:99'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:398'
+          body.payeeReceiveAmount.amount: 'required|in:100'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspFee.amount: 'required|in:1'
-          body.payeeFspFee.currency: 'required|regex:/^[A-Z]{3}/'
+          body.payeeFspCommission.amount: 'required|in:1'
+          body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
       - name: Transaction was successfully accepted
@@ -286,16 +277,16 @@ test_steps:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
-          amount: '399'
+          amount: '99'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '398'
-        payeeFspFee:
+          amount: '100'
+        payeeFspCommission:
           currency: 'USD'
           amount: '1'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -314,7 +305,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '99'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -328,7 +319,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:399'
+          body.amount.amount: 'required|in:99'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -354,15 +345,15 @@ test_steps:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo1fsp'
-        fspiop-destination: 'mmo2fsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         payeeFsp: 'mmo2fsp'
         payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
-          amount: '399'
+          amount: '99'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -379,7 +370,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '399'
+        amount: '99'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -393,7 +384,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:399'
+          body.amount.amount: 'required|in:99'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -419,15 +410,15 @@ test_steps:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo1fsp'
-        fspiop-destination: 'mmo2fsp'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
       body:
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         payeeFsp: 'mmo2fsp'
         payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
-          amount: '399'
+          amount: '99'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2000-01-01T00:00:00.000Z'
@@ -469,11 +460,14 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
-        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transfers+json'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
+        completedTimestamp: '2000-01-01T00:00:00.000Z'
+        transferState: 'COMMITTED'
+        fulfilment: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         payeeFsp: 'mmo2fsp'
         payerFsp: 'mmo1fsp'
@@ -518,11 +512,14 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
-        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transfers+json'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
       body:
+        completedTimestamp: '2000-01-01T00:00:00.000Z'
+        transferState: 'COMMITTED'
+        fulfilment: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         payeeFsp: 'mmo2fsp'
         payerFsp: 'mmo1fsp'

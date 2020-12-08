@@ -67,6 +67,7 @@ class ComponentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'base_url' => ['required', 'url', 'max:255'],
             'description' => ['string', 'nullable'],
+            'sutable' => ['required', 'boolean'],
             'connections_id.*' => [
                 'integer',
                 'exists:component_connections,target_id',
@@ -107,6 +108,7 @@ class ComponentController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'base_url' => ['required', 'url', 'max:255'],
             'description' => ['string', 'nullable'],
+            'sutable' => ['required', 'boolean'],
             'connections_id.*' => [
                 'integer',
                 'exists:component_connections,target_id',

@@ -50,6 +50,7 @@ class TestStepController extends Controller
                     },
                 ])
             ))->resolve(),
+            'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource
@@ -87,6 +88,7 @@ class TestStepController extends Controller
                     },
                 ])
             ))->resolve(),
+            'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'testStepFirstSource' => (new ComponentResource(
                 $testStepFirstSource

@@ -39,6 +39,7 @@
 
                             <td v-if="message.type === 'RESULT'">
                                 <inertia-link
+                                    v-if="message.test_run"
                                     :href="
                                         route(
                                             'sessions.test-cases.test-runs.show',
@@ -54,6 +55,10 @@
                                     {{ message.test_case.name }}, Step
                                     {{ message.test_step.position }}
                                 </inertia-link>
+                                <span v-else>
+                                    {{ message.test_case.name }}, Step
+                                    {{ message.test_step.position }}
+                                </span>
                             </td>
                             <td v-else>-</td>
 

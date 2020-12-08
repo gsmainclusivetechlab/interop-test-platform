@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use App\Models\ApiSpec;
 use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
@@ -29,14 +31,14 @@ class ApiSpecsTableSeeder extends Seeder
                 'name' => 'MM v1.1.2',
                 'description' => '',
                 'openapi' => Reader::readFromYamlFile(
-                    database_path('seeds/openapis/mm.yaml')
+                    database_path('seeders/openapis/mm.yaml')
                 ),
             ],
             [
                 'name' => 'Mojaloop v1.0',
                 'description' => '',
                 'openapi' => Reader::readFromYamlFile(
-                    database_path('seeds/openapis/mojaloop.yaml')
+                    database_path('seeders/openapis/mojaloop.yaml')
                 ),
             ],
         ];

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property TestStep $testStep
  */
 class TestResult extends Model
 {
@@ -16,6 +18,9 @@ class TestResult extends Model
     const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_PASS = 'pass';
     const STATUS_FAIL = 'fail';
+
+    /** @var float */
+    public $jobStart;
 
     /**
      * @var string
@@ -101,7 +106,7 @@ class TestResult extends Model
     public function pass()
     {
         $this->status = static::STATUS_PASS;
-        $this->duration = (int) floor((microtime(true) - LARAVEL_START) * 1000);
+        $this->duration = $this->getDuration();
 
         if (!$this->save()) {
             return false;
@@ -119,7 +124,7 @@ class TestResult extends Model
     {
         $this->status = static::STATUS_FAIL;
         $this->exception = $exception;
-        $this->duration = (int) floor((microtime(true) - LARAVEL_START) * 1000);
+        $this->duration = $this->getDuration();
 
         if (!$this->save()) {
             return false;
@@ -127,5 +132,12 @@ class TestResult extends Model
 
         $this->fireModelEvent('fail');
         return $this;
+    }
+
+    protected function getDuration(): int
+    {
+        $startTime = $this->jobStart ?? LARAVEL_START;
+
+        return (int) floor((microtime(true) - $startTime) * 1000);
     }
 }

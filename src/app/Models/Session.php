@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -13,15 +14,22 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property string $name
+ * @property string $description
  * @property string $type
  * @property string|null $status
  * @property string|null $reason
+ * @property array $environments
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $completed_at
+ * @property Carbon $closed_at
  *
  * @property-read bool $completable
  * @property-read string|null $status_name
  *
  * @property User $owner
  * @property TestCase[]|Collection $testCases
+ * @property Component[]|Collection $components
  */
 class Session extends Model
 {
@@ -53,6 +61,8 @@ class Session extends Model
         'description',
         'group_environment_id',
         'environments',
+        'completed_at',
+        'closed_at',
     ];
 
     /**
@@ -60,6 +70,10 @@ class Session extends Model
      */
     protected $casts = [
         'environments' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'closed_at' => 'datetime',
     ];
 
     /**
@@ -189,27 +203,34 @@ class Session extends Model
      */
     public function environments()
     {
+        $defaultUrl = config('app.url');
+
         return array_merge($this->environments ?? [], [
             'SP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Service Provider')->firstOrFail()
+                Component::where('name', 'Service Provider')->firstOrFail(),
+                $defaultUrl
             ),
             'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 1'
-                )->firstOrFail()
+                )->firstOrFail(),
+                $defaultUrl
             ),
             'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Mojaloop')->firstOrFail()
+                Component::where('name', 'Mojaloop')->firstOrFail(),
+                $defaultUrl
             ),
             'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
                 Component::where(
                     'name',
                     'Mobile Money Operator 2'
-                )->firstOrFail()
+                )->firstOrFail(),
+                $defaultUrl
             ),
             'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
             'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),
+            'CURRENT_TIMESTAMP_RFC7231' => now()->toRfc7231String(),
         ]);
     }
 
@@ -227,17 +248,18 @@ class Session extends Model
 
     /**
      * @param Component $component
+     * @param string|null $default
      *
      * @return string
      */
-    public function getBaseUriOfComponent(Component $component)
+    public function getBaseUriOfComponent(Component $component, $default = null)
     {
         return Arr::get(
             $this->components()
                 ->whereKey($component->getKey())
                 ->first(),
             'pivot.base_url',
-            $component->base_url
+            $default
         );
     }
 
@@ -248,7 +270,7 @@ class Session extends Model
     {
         return [
             static::TYPE_TEST => __('Test'),
-            static::TYPE_COMPLIANCE => __('Compliance'),
+            static::TYPE_COMPLIANCE => __('Certification'),
         ];
     }
 
@@ -344,12 +366,15 @@ class Session extends Model
 
     /**
      * @param string $status
+     * @param string|null $timestampField
      *
      * @return bool
      */
-    public function updateStatus($status): bool
+    public function updateStatus($status, $timestampField = null): bool
     {
-        return $this->update(['status' => $status]);
+        $timestamp = $timestampField ? [$timestampField => now()] : [];
+
+        return $this->update(['status' => $status] + $timestamp);
     }
 
     /**
@@ -378,5 +403,24 @@ class Session extends Model
                 $query->where('session_id', $this->id);
             })
             ->exists();
+    }
+
+    /**
+     * @param TestCase $testCase
+     *
+     * @return bool
+     */
+    public function isAvailableTestCaseRun(TestCase $testCase): bool
+    {
+        $testRunsCount = $this->testRuns()
+            ->where('test_case_id', $testCase->id)
+            ->count();
+
+        return !$this->isComplianceSession() ||
+            ($this->isAvailableToUpdate() &&
+                $testRunsCount <
+                    config(
+                        'service_session.compliance_session_execution_limit'
+                    ));
     }
 }

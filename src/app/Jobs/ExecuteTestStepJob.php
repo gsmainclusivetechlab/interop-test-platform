@@ -5,7 +5,8 @@ namespace App\Jobs;
 use App\Http\Controllers\Testing\ProcessPendingRequest;
 use App\Http\Headers\TraceparentHeader;
 use App\Models\Session;
-use App\Models\TestCase;
+use App\Models\TestRun;
+use App\Models\TestStep;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Bus\Queueable;
@@ -14,7 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ExecuteTestRunJob implements ShouldQueue
+class ExecuteTestStepJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,18 +30,28 @@ class ExecuteTestRunJob implements ShouldQueue
     protected $session;
 
     /**
-     * @var TestCase
+     * @var TestStep
      */
-    protected $testCase;
+    protected $testStep;
+
+    /**
+     * @var TestRun
+     */
+    protected $testRun;
 
     /**
      * @param Session $session
-     * @param TestCase $testCase
+     * @param TestStep $testStep
+     * @param TestRun $testRun
      */
-    public function __construct(Session $session, TestCase $testCase)
-    {
+    public function __construct(
+        Session $session,
+        TestStep $testStep,
+        TestRun $testRun
+    ) {
         $this->session = $session;
-        $this->testCase = $testCase;
+        $this->testStep = $testStep;
+        $this->testRun = $testRun;
     }
 
     /**
@@ -48,19 +59,16 @@ class ExecuteTestRunJob implements ShouldQueue
      */
     public function handle()
     {
-        $testStep = $this->testCase->testSteps()->firstOrFail();
-        $testRun = $this->session
-            ->testRuns()
-            ->create(['test_case_id' => $testStep->test_case_id]);
-        $testResult = $testRun
+        $testStep = $this->testStep;
+        $testResult = $this->testRun
             ->testResults()
             ->create(['test_step_id' => $testStep->id]);
-
+        $testResult->jobStart = microtime(true);
         $traceparent = (new TraceparentHeader())
-            ->withTraceId($testRun->trace_id)
+            ->withTraceId($this->testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $requestTemplate = $testStep->request->withSubstitutions(
-            $this->session->environments()
+            $tokens = $this->session->environments()
         );
         $request = $requestTemplate
             ->toPsrRequest()
