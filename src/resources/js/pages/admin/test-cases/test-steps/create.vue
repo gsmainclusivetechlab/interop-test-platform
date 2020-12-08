@@ -120,7 +120,7 @@
                         />
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Trigger</label>
+                        <h2 class="card-title">Trigger</h2>
                         <json-editor-block
                             :input-json="trigger"
                             @output-json="
@@ -676,9 +676,7 @@
                         </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label"
-                            >Request Headers Examples</label
-                        >
+                        <h2 class="card-title">Request Headers Examples</h2>
                         <json-editor-block
                             :input-json="example.request.headers"
                             @output-json="
@@ -689,7 +687,7 @@
                         />
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Request Body Examples</label>
+                        <h2 class="card-title">Request Body Examples</h2>
                         <json-editor-block
                             :input-json="example.request.body"
                             @output-json="
@@ -700,9 +698,7 @@
                         />
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label"
-                            >Response Status Example</label
-                        >
+                        <h2 class="card-title">Response Status Example</h2>
                         <selectize
                             class="form-select"
                             :class="{
@@ -723,9 +719,7 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label"
-                            >Response Headers Examples</label
-                        >
+                        <h2 class="card-title">Response Headers Examples</h2>
                         <json-editor-block
                             :input-json="example.response.headers"
                             @output-json="
@@ -736,7 +730,7 @@
                         />
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Response Body Examples</label>
+                        <h2 class="card-title">Response Body Examples</h2>
                         <json-editor-block
                             :input-json="example.response.body"
                             @output-json="
