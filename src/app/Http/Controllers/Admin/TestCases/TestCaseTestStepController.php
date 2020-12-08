@@ -6,14 +6,9 @@ use App\Http\Resources\{
     ApiSpecResource,
     ComponentResource,
     TestCaseResource,
-    TestStepResource,
+    TestStepResource
 };
-use App\Models\{
-    ApiSpec,
-    Component,
-    TestCase,
-    TestStep,
-};
+use App\Models\{ApiSpec, Component, TestCase, TestStep};
 use App\Enums\HttpMethod;
 use App\Enums\HttpStatus;
 use App\Http\Controllers\Controller;
@@ -33,9 +28,7 @@ class TestCaseTestStepController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(TestStep::class, 'test_step', [
-            'except' => [
-                'show',
-            ],
+            'except' => ['show'],
         ]);
     }
 
@@ -47,7 +40,10 @@ class TestCaseTestStepController extends Controller
     public function index(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
+            return redirect()->route(
+                \Route::currentRouteName(),
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/index', [
@@ -71,7 +67,10 @@ class TestCaseTestStepController extends Controller
     public function create(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
+            return redirect()->route(
+                \Route::currentRouteName(),
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/create', [
@@ -121,7 +120,10 @@ class TestCaseTestStepController extends Controller
     public function edit(TestCase $testCase, TestStep $testStep)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route('admin.test-cases.test-steps.index', $testCase->last_version->id);
+            return redirect()->route(
+                'admin.test-cases.test-steps.index',
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
 
@@ -160,8 +162,7 @@ class TestCaseTestStepController extends Controller
         TestCase $testCase,
         TestStep $testStep,
         TestStepRequest $testStepRequest
-    )
-    {
+    ) {
         $this->authorize('update', $testCase);
 
         try {
@@ -195,6 +196,9 @@ class TestCaseTestStepController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', __('Test step deleted successfully from test case'));
+            ->with(
+                'success',
+                __('Test step deleted successfully from test case')
+            );
     }
 }

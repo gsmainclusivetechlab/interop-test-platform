@@ -20,9 +20,7 @@ class TestCaseVersionController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(TestCase::class, 'test_case', [
-            'only' => [
-                'index',
-            ],
+            'only' => ['index'],
         ]);
     }
 
@@ -34,7 +32,10 @@ class TestCaseVersionController extends Controller
     public function index(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
+            return redirect()->route(
+                \Route::currentRouteName(),
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/versions/index', [
@@ -47,7 +48,7 @@ class TestCaseVersionController extends Controller
                     ->with('useCase', 'owner')
                     ->orderByDesc('version')
                     ->paginate()
-            )
+            ),
         ]);
     }
 
@@ -80,7 +81,10 @@ class TestCaseVersionController extends Controller
                 ->with('success', __('Test case deleted successfully'));
         }
         return redirect()
-            ->route('admin.test-cases.versions.index', $testCase->last_version->id)
+            ->route(
+                'admin.test-cases.versions.index',
+                $testCase->last_version->id
+            )
             ->with('success', __('Test case deleted successfully'));
     }
 }

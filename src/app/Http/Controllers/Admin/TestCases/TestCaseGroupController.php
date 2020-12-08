@@ -23,11 +23,7 @@ class TestCaseGroupController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(Group::class, 'group', [
-            'only' => [
-                'index',
-                'store',
-                'destroy'
-            ],
+            'only' => ['index', 'store', 'destroy'],
         ]);
     }
 
@@ -39,16 +35,17 @@ class TestCaseGroupController extends Controller
     public function index(TestCase $testCase)
     {
         if (!$testCase->isLast()) {
-            return redirect()->route(\Route::currentRouteName(), $testCase->last_version->id);
+            return redirect()->route(
+                \Route::currentRouteName(),
+                $testCase->last_version->id
+            );
         }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/groups/index', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'groups' => GroupResource::collection(
-                $testCase
-                    ->groups()
-                    ->paginate()
-            )
+                $testCase->groups()->paginate()
+            ),
         ]);
     }
 

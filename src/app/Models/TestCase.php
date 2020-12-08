@@ -244,9 +244,10 @@ class TestCase extends Model
      */
     public function scopeAvailable($query)
     {
-        return $query->where(function ($query) {
-            $query->
-                where('public', true)
+        return $query
+            ->where(function ($query) {
+                $query
+                    ->where('public', true)
                     ->orWhereHas('owner', function ($query) {
                         $query->whereKey(
                             auth()
@@ -301,9 +302,7 @@ class TestCase extends Model
      */
     public function isLast()
     {
-        return $this->version === $this->last_version->version
-            ? true
-            : false;
+        return $this->version === $this->last_version->version ? true : false;
     }
 
     /**

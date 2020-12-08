@@ -66,7 +66,9 @@ class TestStepRequest extends FormRequest
             '*.required' => __('Field is required.'),
             'response.status.required' => __('Field is required.'),
             'test.*.*.*.*.required' => __('Field is required.'),
-            'test.*.*.*.name.max' => __('The name may not be greater than 255 characters.'),
+            'test.*.*.*.name.max' => __(
+                'The name may not be greater than 255 characters.'
+            ),
         ];
     }
 
@@ -81,9 +83,7 @@ class TestStepRequest extends FormRequest
             /**
              * @var TestStep $testStep
              */
-            $testStep = $testCase
-                ->testSteps()
-                ->make($this->getFillableData());
+            $testStep = $testCase->testSteps()->make($this->getFillableData());
             $testStep = $this->setAttributes($testStep);
             $testStep->saveOrFail();
 
@@ -152,18 +152,9 @@ class TestStepRequest extends FormRequest
      */
     protected function setAttributes(TestStep $testStep)
     {
-        $testStep->setAttribute(
-            'source_id',
-            $this->input('source_id')
-        );
-        $testStep->setAttribute(
-            'target_id',
-            $this->input('target_id')
-        );
-        $testStep->setAttribute(
-            'api_spec_id',
-            $this->input('api_spec_id')
-        );
+        $testStep->setAttribute('source_id', $this->input('source_id'));
+        $testStep->setAttribute('target_id', $this->input('target_id'));
+        $testStep->setAttribute('api_spec_id', $this->input('api_spec_id'));
 
         return $testStep;
     }
@@ -174,10 +165,7 @@ class TestStepRequest extends FormRequest
     protected function getFillableData()
     {
         return array_merge(
-            Arr::only(
-                $this->input(),
-                TestStep::make()->getFillable()
-            ),
+            Arr::only($this->input(), TestStep::make()->getFillable()),
             [
                 'request' => $this->mapTestStepRequest(),
                 'response' => $this->mapTestStepResponse(),
@@ -264,10 +252,7 @@ class TestStepRequest extends FormRequest
                     ->testSetups()
                     ->whereKey($row['id'])
                     ->firstOrFail()
-                    ->update(Arr::only(
-                        $row,
-                        TestSetup::make()->getFillable()
-                    ));
+                    ->update(Arr::only($row, TestSetup::make()->getFillable()));
             } else {
                 /**
                  * @var TestSetup $testSetup
@@ -307,10 +292,9 @@ class TestStepRequest extends FormRequest
                     ->testScripts()
                     ->whereKey($row['id'])
                     ->firstOrFail()
-                    ->update(Arr::only(
-                        $row,
-                        TestScript::make()->getFillable()
-                    ));
+                    ->update(
+                        Arr::only($row, TestScript::make()->getFillable())
+                    );
             } else {
                 /**
                  * @var TestScript $testScript

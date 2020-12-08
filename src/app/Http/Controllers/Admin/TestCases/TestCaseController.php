@@ -7,15 +7,10 @@ use App\Http\Resources\{
     ComponentResource,
     GroupResource,
     TestCaseResource,
-    UseCaseResource,
+    UseCaseResource
 };
 use App\Imports\TestCaseImport;
-use App\Models\{
-    Component,
-    Group,
-    TestCase,
-    UseCase
-};
+use App\Models\{Component, Group, TestCase, UseCase};
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -37,11 +32,7 @@ class TestCaseController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->authorizeResource(TestCase::class, 'test_case', [
-            'except' => [
-                'show',
-                'edit',
-                'update'
-            ],
+            'except' => ['show', 'edit', 'update'],
         ]);
     }
 
@@ -114,21 +105,20 @@ class TestCaseController extends Controller
                 'string',
                 Rule::in([
                     TestCase::BEHAVIOR_POSITIVE,
-                    TestCase::BEHAVIOR_NEGATIVE
-                ])
+                    TestCase::BEHAVIOR_NEGATIVE,
+                ]),
             ],
-            'slug' => [
-                'nullable',
-                Rule::unique('test_cases'),
-            ],
+            'slug' => ['required', Rule::unique('test_cases')],
             'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
             'components_id.*' => ['integer', 'exists:components,id'],
         ]);
 
-        $testCase = TestCase::create(array_merge($request->input(), [
-            'draft' => true,
-        ]));
+        $testCase = TestCase::create(
+            array_merge($request->input(), [
+                'draft' => true,
+            ])
+        );
         $testCase->components()->sync($request->input('components_id'));
         $testCase->groups()->sync($request->input('groups_id'));
         $testCase
@@ -150,10 +140,12 @@ class TestCaseController extends Controller
     {
         $this->authorize('delete', $testCase);
 
-        TestCase::where('test_case_group_id', $testCase->test_case_group_id)
-            ->each(function ($testCase) {
-                $testCase->delete();
-            });
+        TestCase::where(
+            'test_case_group_id',
+            $testCase->test_case_group_id
+        )->each(function ($testCase) {
+            $testCase->delete();
+        });
 
         return redirect()
             ->back()
@@ -254,10 +246,12 @@ class TestCaseController extends Controller
         $fileName = "TestCase-{$testCase->name}";
 
         header('Content-Type: application/yaml');
-        header("Content-Disposition: attachment; filename=\"{$fileName}\".yaml");
+        header(
+            "Content-Disposition: attachment; filename=\"{$fileName}\".yaml"
+        );
         header('Content-Length: ' . strlen($data));
 
-        $file = fopen('php://output', 'w') or die('Unable to open file!');
+        ($file = fopen('php://output', 'w')) or die('Unable to open file!');
         fwrite($file, $data);
     }
 
