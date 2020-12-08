@@ -132,7 +132,7 @@ class TestCaseInfoController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => [
-                'nullable',
+                'required',
                 Rule::unique('test_cases')->ignore(
                     $testCase->test_case_group_id,
                     'test_case_group_id'

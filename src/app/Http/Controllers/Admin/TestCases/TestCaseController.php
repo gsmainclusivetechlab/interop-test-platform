@@ -118,7 +118,7 @@ class TestCaseController extends Controller
                 ])
             ],
             'slug' => [
-                'nullable',
+                'required',
                 Rule::unique('test_cases'),
             ],
             'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
