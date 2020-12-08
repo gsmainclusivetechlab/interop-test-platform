@@ -27,6 +27,10 @@ class TestCaseTestStepController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('test-case.latest')->only([
+            'index',
+            'create',
+        ]);
         $this->authorizeResource(TestStep::class, 'test_step', [
             'except' => ['show'],
         ]);
@@ -39,12 +43,6 @@ class TestCaseTestStepController extends Controller
      */
     public function index(TestCase $testCase)
     {
-        if (!$testCase->isLast()) {
-            return redirect()->route(
-                \Route::currentRouteName(),
-                $testCase->last_version->id
-            );
-        }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/index', [
             'testCase' => (new TestCaseResource(
@@ -66,12 +64,6 @@ class TestCaseTestStepController extends Controller
      */
     public function create(TestCase $testCase)
     {
-        if (!$testCase->isLast()) {
-            return redirect()->route(
-                \Route::currentRouteName(),
-                $testCase->last_version->id
-            );
-        }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/test-steps/create', [
             'testCase' => (new TestCaseResource(
@@ -126,6 +118,10 @@ class TestCaseTestStepController extends Controller
             );
         }
         $this->authorize('update', $testCase);
+        $testStep = $testCase
+            ->testSteps()
+            ->whereKey($testStep->getKey())
+            ->firstOrFail();
 
         return Inertia::render('admin/test-cases/test-steps/edit', [
             'testCase' => (new TestCaseResource(
@@ -164,6 +160,10 @@ class TestCaseTestStepController extends Controller
         TestStepRequest $testStepRequest
     ) {
         $this->authorize('update', $testCase);
+        $testStep = $testCase
+            ->testSteps()
+            ->whereKey($testStep->getKey())
+            ->firstOrFail();
 
         try {
             $testStepRequest->updateTestStep($testStep);

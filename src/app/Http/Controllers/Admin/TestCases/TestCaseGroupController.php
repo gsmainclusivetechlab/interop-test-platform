@@ -22,6 +22,7 @@ class TestCaseGroupController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('test-case.latest')->only(['index']);
         $this->authorizeResource(Group::class, 'group', [
             'only' => ['index', 'store', 'destroy'],
         ]);
@@ -34,12 +35,6 @@ class TestCaseGroupController extends Controller
      */
     public function index(TestCase $testCase)
     {
-        if (!$testCase->isLast()) {
-            return redirect()->route(
-                \Route::currentRouteName(),
-                $testCase->last_version->id
-            );
-        }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/groups/index', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),

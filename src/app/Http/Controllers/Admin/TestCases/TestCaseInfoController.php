@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\Yaml\Yaml;
 
 class TestCaseInfoController extends Controller
 {
@@ -23,6 +22,10 @@ class TestCaseInfoController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('test-case.latest')->only([
+            'show',
+            'edit',
+        ]);
     }
 
     /**
@@ -32,12 +35,6 @@ class TestCaseInfoController extends Controller
      */
     public function show(TestCase $testCase)
     {
-        if (!$testCase->isLast()) {
-            return redirect()->route(
-                \Route::currentRouteName(),
-                $testCase->last_version->id
-            );
-        }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/info/show', [
             'testCase' => (new TestCaseResource(
@@ -53,12 +50,6 @@ class TestCaseInfoController extends Controller
      */
     public function edit(TestCase $testCase)
     {
-        if (!$testCase->isLast()) {
-            return redirect()->route(
-                \Route::currentRouteName(),
-                $testCase->last_version->id
-            );
-        }
         $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
             $testCase->load(['groups', 'useCase', 'testSteps', 'components'])

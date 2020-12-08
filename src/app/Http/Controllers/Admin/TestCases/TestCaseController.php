@@ -31,6 +31,7 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('test-case.latest')->only(['showImportVersionForm']);
         $this->authorizeResource(TestCase::class, 'test_case', [
             'except' => ['show', 'edit', 'update'],
         ]);

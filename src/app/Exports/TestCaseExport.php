@@ -53,7 +53,7 @@ class TestCaseExport implements Exportable
                 ->components()
                 ->pluck('name')
                 ->toArray(),
-            'test_steps' => $this->mapTestSteps($testCase->testSteps()->get()),
+            'test_steps' => $this->mapTestSteps($testCase->testSteps),
         ];
     }
 
@@ -65,16 +65,16 @@ class TestCaseExport implements Exportable
     {
         $result = [];
         foreach ($testSteps as $testStep) {
-            $testScripts = $testStep->testScripts()->get();
-            $testSetups = $testStep->testSetups()->get();
+            $testScripts = $testStep->testScripts;
+            $testSetups = $testStep->testSetups;
             $result[] = $this->arrayFilter([
                 'path' => $testStep->path,
                 'pattern' => $testStep->pattern,
                 'method' => $testStep->method,
-                'source' => $testStep->source()->first()->name,
-                'target' => $testStep->target()->first()->name,
+                'source' => $testStep->source->name,
+                'target' => $testStep->target->name,
                 'api_spec' => $testStep->apiSpec()->exists()
-                    ? $testStep->apiSpec()->first()->name
+                    ? $testStep->apiSpec->name
                     : null,
                 'trigger' => $testStep->trigger,
                 'test_request_setups' => $this->mapTestSetups(

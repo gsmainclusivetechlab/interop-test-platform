@@ -19,6 +19,7 @@ class TestCaseVersionController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('test-case.latest')->only(['index']);
         $this->authorizeResource(TestCase::class, 'test_case', [
             'only' => ['index'],
         ]);
@@ -31,12 +32,6 @@ class TestCaseVersionController extends Controller
      */
     public function index(TestCase $testCase)
     {
-        if (!$testCase->isLast()) {
-            return redirect()->route(
-                \Route::currentRouteName(),
-                $testCase->last_version->id
-            );
-        }
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/versions/index', [
             'currentTestCase' => (new TestCaseResource($testCase))->resolve(),
