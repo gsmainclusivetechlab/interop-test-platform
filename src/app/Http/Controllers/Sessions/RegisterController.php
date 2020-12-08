@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Sessions;
 
+use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
+use App\Http\Requests\SessionSutRequest;
 use App\Http\Resources\{
     ComponentResource,
     GroupEnvironmentResource,
@@ -77,16 +79,46 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return Response
+     * @return RedirectResponse|Response
      */
     public function showTypeForm()
     {
+        $filteredAvailableModes = collect(
+            $availableModes = config('service_session.available_modes')
+        )
+            ->filter()
+            ->all();
+
+        if (count($filteredAvailableModes) == 1) {
+            switch ($key = array_key_first($filteredAvailableModes)) {
+                case 'test':
+                case 'test_questionnaire':
+                    $type = Session::TYPE_TEST;
+                    break;
+                case 'compliance':
+                    $type = Session::TYPE_COMPLIANCE;
+                    break;
+                default:
+                    throw new MessageMismatchException(
+                        null,
+                        400,
+                        'The available mode does not match any session type'
+                    );
+            }
+
+            return $this->resolveSessionType(
+                $type,
+                $key == 'test_questionnaire'
+            );
+        }
+
         return Inertia::render('sessions/register/type', [
             'session' => session('session'),
             'testRunAttempts' => config(
-                'test_cases.compliance_session_execution_limit',
+                'service_session.compliance_session_execution_limit',
                 5
             ),
+            'availableModes' => $availableModes,
         ]);
     }
 
@@ -112,6 +144,13 @@ class RegisterController extends Controller
             ]
         );
 
+        return $this->resolveSessionType($type, $withQuestions);
+    }
+
+    protected function resolveSessionType(
+        string $type,
+        bool $withQuestions
+    ): RedirectResponse {
         session()->put([
             'session.type' => $type,
             'session.withQuestions' => $withQuestions,
@@ -130,29 +169,33 @@ class RegisterController extends Controller
      */
     public function showSutForm()
     {
+        $isCompliance = Session::isCompliance(session('session.type'));
+
         return Inertia::render('sessions/register/sut', [
             'session' => session('session'),
             'suts' => ComponentResource::collection(
-                Component::whereHas('testCases')->get()
+                Component::when($isCompliance, function ($query) {
+                    $query->whereHas('testCases', function ($query) {
+                        $testCases = $this->getTestCases();
+
+                        $query->whereIn('slug', $testCases ?: ['']);
+                    });
+                })
+                    ->where('sutable', true)
+                    ->get()
             ),
-            'components' => ComponentResource::collection(
-                Component::with(['connections'])->get()
-            ),
+            'components' => $this->getComponents(),
         ]);
     }
 
     /**
-     * @param Request $request
+     * @param SessionSutRequest $request
      *
      * @return RedirectResponse
      */
-    public function storeSut(Request $request)
+    public function storeSut(SessionSutRequest $request)
     {
-        $request->validate([
-            'base_url' => ['required', 'url', 'max:255'],
-            'component_id' => ['required', 'exists:components,id'],
-        ]);
-        $request->session()->put('session.sut', $request->input());
+        $request->session()->put('session.sut', $request->validated());
 
         return redirect()->route('sessions.register.info');
     }
@@ -253,9 +296,7 @@ class RegisterController extends Controller
 
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
-            'components' => ComponentResource::collection(
-                Component::with(['connections'])->get()
-            ),
+            'components' => $this->getComponents(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) {
@@ -264,11 +305,12 @@ class RegisterController extends Controller
                 ])
                     ->whereHas('testCases', function ($query) use ($testCases) {
                         $query
-                            ->whereHas('components', function ($query) {
-                                $query->whereKey(
-                                    request()
-                                        ->session()
-                                        ->get('session.sut.component_id')
+                            ->whereHas('components', function (Builder $query) {
+                                $query->when(
+                                    session('session.sut.component_ids'),
+                                    function (Builder $query, $ids) {
+                                        $query->whereIn('id', $ids);
+                                    }
                                 );
                             })
                             ->when(
@@ -319,18 +361,15 @@ class RegisterController extends Controller
     {
         return Inertia::render('sessions/register/config', [
             'session' => session('session'),
-            'sut' => (new ComponentResource(
-                Component::whereKey(
-                    request()
-                        ->session()
-                        ->get('session.sut.component_id')
+            'suts' => ComponentResource::collection(
+                Component::whereIn(
+                    'id',
+                    session('session.sut.component_ids', [0])
                 )
-                    ->firstOrFail()
-                    ->load('connections')
-            ))->resolve(),
-            'components' => ComponentResource::collection(
-                Component::with(['connections'])->get()
+                    ->with('connections')
+                    ->get()
             ),
+            'components' => $this->getComponents(),
             'hasGroupEnvironments' => GroupEnvironment::whereHas(
                 'group',
                 function (Builder $query) {
@@ -363,19 +402,15 @@ class RegisterController extends Controller
 
         try {
             $session = DB::transaction(function () use ($request) {
-                $sut = $request->session()->get('session.sut');
-
                 /** @var Session $session */
                 $session = auth()
                     ->user()
                     ->sessions()
                     ->create(
-                        collect($request->session()->get('session.info'))
+                        collect(session('session.info'))
                             ->merge($request->input())
                             ->merge([
-                                'type' => $request
-                                    ->session()
-                                    ->get('session.type'),
+                                'type' => session('session.type'),
                             ])
                             ->all()
                     );
@@ -417,7 +452,14 @@ class RegisterController extends Controller
                                 ->session()
                                 ->get('session.info.test_cases')
                     );
-                $session->components()->attach([$sut]);
+
+                collect(session('session.sut.component_ids'))->each(function (
+                    $id
+                ) use ($session) {
+                    $session->components()->attach($id, [
+                        'base_url' => session("session.sut.base_urls.{$id}"),
+                    ]);
+                });
 
                 return $session;
             });
@@ -592,11 +634,12 @@ class RegisterController extends Controller
 
         return $query
             ->whereHas('components', function ($query) {
-                $query->whereKey(
-                    request()
-                        ->session()
-                        ->get('session.sut.component_id')
-                );
+                $query->when(session('session.sut.component_ids'), function (
+                    Builder $query,
+                    $ids
+                ) {
+                    $query->whereIn('id', $ids);
+                });
             })
             ->where(function ($query) {
                 $query->available();
@@ -607,5 +650,38 @@ class RegisterController extends Controller
                 $query->whereIn('slug', $testCases ?: ['']);
             })
             ->lastPerGroup();
+    }
+
+    protected function getComponents()
+    {
+        $testCases = $this->getTestCases();
+        $isCompliance = Session::isCompliance(session('session.type'));
+
+        $componentsQuery = function ($query) use ($testCases) {
+            $testCasesQuery = function ($query) use ($testCases) {
+                $query->whereHas('testCase', function ($query) use (
+                    $testCases
+                ) {
+                    $query->whereIn('slug', $testCases ?: ['']);
+                });
+            };
+
+            $query
+                ->whereHas('sourceTestSteps', $testCasesQuery)
+                ->orWhereHas('targetTestSteps', $testCasesQuery);
+        };
+
+        return ComponentResource::collection(
+            Component::when($isCompliance, $componentsQuery)
+                ->with([
+                    'connections' => function ($query) use (
+                        $isCompliance,
+                        $componentsQuery
+                    ) {
+                        $query->when($isCompliance, $componentsQuery);
+                    },
+                ])
+                ->get()
+        );
     }
 }

@@ -7,38 +7,48 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">SUT</label>
+                        <label class="form-label">SUTs</label>
                         <selectize
-                            v-model="component"
-                            :class="{ 'is-invalid': $page.errors.component_id }"
+                            v-model="selectedComponents"
+                            :class="{
+                                'is-invalid': $page.errors.component_ids,
+                            }"
                             :options="suts.data"
                             keyBy="id"
                             :keys="['name']"
                             label="name"
                             :createItem="false"
+                            :multiple="true"
                             class="form-select"
                             placeholder="Select SUT..."
+                            :disabled="selectedSut"
                         />
                         <span
-                            v-if="$page.errors.component_id"
+                            v-if="$page.errors.component_ids"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors.component_id }}
+                            {{ $page.errors.component_ids }}
                         </span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">URL</label>
+                    <div
+                        class="mb-3"
+                        v-for="sut in suts.data"
+                        v-if="form.component_ids.includes(sut.id)"
+                    >
+                        <label class="form-label">{{ sut.name }} URL</label>
                         <input
-                            v-model="form.base_url"
-                            :class="{ 'is-invalid': $page.errors.base_url }"
+                            v-model="form.base_urls[sut.id]"
+                            :class="{
+                                'is-invalid':
+                                    $page.errors[`base_urls.${sut.id}`],
+                            }"
                             class="form-control"
-                            name="base_url"
                         />
                         <span
-                            v-if="$page.errors.base_url"
+                            v-if="$page.errors[`base_urls.${sut.id}`]"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors.base_url }}
+                            {{ $page.errors[`base_urls.${sut.id}`] }}
                         </span>
                     </div>
                 </div>
@@ -90,29 +100,43 @@ export default {
         },
     },
     data() {
+        const isCompliance = this.session.type === 'compliance';
+        const selectedSut = isCompliance && this.suts.data.length === 1;
+
         return {
             sending: false,
-            isCompliance: this.session.type === 'compliance',
-            component:
-                this.session && this.session.sut
+            isCompliance,
+            selectedSut,
+            selectedComponents:
+                this.session &&
+                this.session.sut &&
+                this.session.sut.component_ids
                     ? collect(this.suts.data)
-                          .where('id', this.session.sut.component_id)
-                          .first()
-                    : collect(this.suts.data).first(),
+                          .whereIn('id', this.session.sut.component_ids)
+                          .all()
+                    : selectedSut
+                    ? [collect(this.suts.data).first()]
+                    : [],
             form: {
-                base_url:
-                    this.session && this.session.sut
-                        ? this.session.sut.base_url
-                        : null,
-                component_id: null,
+                base_urls:
+                    this.session &&
+                    this.session.sut &&
+                    this.session.sut.base_urls
+                        ? this.session.sut.base_urls
+                        : [],
+                component_ids: [],
             },
         };
     },
     watch: {
-        component: {
+        selectedComponents: {
             immediate: true,
-            handler: function (value) {
-                this.form.component_id = value ? value.id : null;
+            handler: function (values) {
+                this.form.component_ids = [];
+
+                Object.values(values ? values : []).forEach((value) => {
+                    this.form.component_ids.push(value.id);
+                });
             },
         },
     },

@@ -5,7 +5,7 @@
                 <div class="col-auto">
                     <div class="page-pretitle">Administration</div>
                     <h2 class="page-title">
-                        <b>Compliance Sessions</b>
+                        <b>Certification Sessions</b>
                     </h2>
                 </div>
             </div>

@@ -2,6 +2,8 @@
 
 namespace App\Models\Concerns;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait HasPosition
 {
     /**
@@ -194,6 +196,19 @@ trait HasPosition
     {
         return $this->getAttribute($this->getPositionColumn()) >=
             $this->getPositionGroupCount();
+    }
+
+    /**
+     * @return Model
+     */
+    public function getNext()
+    {
+        $positionColumn = $this->getPositionColumn();
+
+        return $this->query()
+            ->where($this->createPositionGroupCondition())
+            ->where($positionColumn, '>', $this->getAttribute($positionColumn))
+            ->first();
     }
 
     /**

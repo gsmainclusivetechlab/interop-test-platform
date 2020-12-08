@@ -10,6 +10,7 @@ use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\ServerRequestInterface;
+use Str;
 
 class SutController extends Controller
 {
@@ -101,7 +102,9 @@ class SutController extends Controller
                 ? 'Session not available to update'
                 : 'You have reached the limit of :limit allowed test runs per test case.';
 
-            $limit = config('test_cases.compliance_session_execution_limit');
+            $limit = config(
+                'service_session.compliance_session_execution_limit'
+            );
 
             abort_if(
                 !$session->isAvailableToUpdate() || $testRunsCount >= $limit,
@@ -126,12 +129,23 @@ class SutController extends Controller
             ->withoutHeader(TracestateHeader::NAME)
             ->withUri(
                 UriResolver::resolve(
-                    new Uri($session->getBaseUriOfComponent($connection)),
-                    new Uri($path)
+                    new Uri(
+                        ($uri = $session->getBaseUriOfComponent($connection))
+                    ),
+                    new Uri(
+                        Str::startsWith($path, ['http://', 'https://'])
+                            ? $path
+                            : "/$path"
+                    )
                 )->withQuery((string) request()->getQueryString())
             );
 
-        return (new ProcessPendingRequest($request, $testResult))();
+        return (new ProcessPendingRequest(
+            $request,
+            $testResult,
+            $session,
+            empty($uri)
+        ))();
     }
 
     /**

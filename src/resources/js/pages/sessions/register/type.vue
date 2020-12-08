@@ -21,6 +21,7 @@
                                         })
                                     "
                                     method="post"
+                                    v-if="availableModes.test"
                                     class="btn btn-outline-primary mr-1"
                                 >
                                     Test
@@ -33,6 +34,7 @@
                                         })
                                     "
                                     method="post"
+                                    v-if="availableModes.test_questionnaire"
                                     class="btn btn-outline-primary mr-1"
                                 >
                                     Test + questionnaire
@@ -44,31 +46,36 @@
                                         })
                                     "
                                     method="post"
+                                    v-if="availableModes.compliance"
                                     class="btn btn-outline-primary mr-1"
                                 >
                                     Certification
                                 </inertia-link>
                             </div>
                             <div class="mb-3">
-                                <p>
+                                <p v-if="availableModes.test">
                                     <icon name="chevron-right" /><b>Test</b>
                                     is a common session where you can select any
                                     number of test cases, execute them as many
                                     times as you like, and change the chosen set
                                     of test cases anytime.
                                 </p>
-                                <p>
+                                <p v-if="availableModes.test_questionnaire">
                                     <icon name="chevron-right" /><b
                                         >Test + questionnaire</b
                                     >
                                     is a session where you pass the
                                     questionnaire to receive the list of
-                                    suggested test cases. The main difference
-                                    from <b>Certification</b> session is you can
-                                    change the chosen set of test cases anytime
-                                    and execute them as many times as you like.
+                                    suggested test cases.
+                                    <span v-if="availableModes.compliance"
+                                        >The main difference from
+                                        <b>Certification</b> session is you can
+                                        change the chosen set of test cases
+                                        anytime and execute them as many times
+                                        as you like.</span
+                                    >
                                 </p>
-                                <p>
+                                <p v-if="availableModes.compliance">
                                     <icon name="chevron-right" /><b
                                         >Certification</b
                                     >
@@ -102,6 +109,10 @@ export default {
     props: {
         testRunAttempts: {
             type: Number | String,
+            required: true,
+        },
+        availableModes: {
+            type: Object,
             required: true,
         },
     },

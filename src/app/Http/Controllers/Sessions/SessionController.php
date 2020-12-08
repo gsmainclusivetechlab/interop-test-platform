@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Exports\ComplianceSessionExport;
 use App\Notifications\SessionStatusChanged;
 use App\Http\Resources\{
     ComponentResource,
@@ -12,6 +13,7 @@ use App\Http\Resources\{
     UseCaseResource
 };
 use App\Models\{
+    Component,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
@@ -29,9 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
-use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\IOFactory;
-use PhpOffice\PhpWord\PhpWord;
 use Throwable;
 
 class SessionController extends Controller
@@ -126,33 +126,7 @@ class SessionController extends Controller
                 ])
             ))->resolve(),
             'questionnaire' => SectionResource::collection(
-                QuestionnaireSection::withTrashed()
-                    ->whereHas('questions.answers', function ($query) use (
-                        $session
-                    ) {
-                        $query->where([
-                            'session_id' => $session->id,
-                        ]);
-                    })
-                    ->with([
-                        'questions' => function ($query) use ($session) {
-                            $query->whereHas('answers', function ($query) use (
-                                $session
-                            ) {
-                                $query->where([
-                                    'session_id' => $session->id,
-                                ]);
-                            });
-                        },
-                        'questions.answers' => function ($query) use (
-                            $session
-                        ) {
-                            $query->where([
-                                'session_id' => $session->id,
-                            ]);
-                        },
-                    ])
-                    ->get()
+                QuestionnaireSection::getSessionQuestionnaire($session)
             ),
             'useCases' => UseCaseResource::collection(
                 UseCase::withTestCasesOfSession($session)->get()
@@ -175,7 +149,6 @@ class SessionController extends Controller
     public function edit(Session $session)
     {
         $this->authorize('update', $session);
-        $component = $session->components()->firstOrFail();
         $session->load([
             'testCases' => function ($query) {
                 return $query->with(['useCase', 'lastTestRun']);
@@ -189,18 +162,16 @@ class SessionController extends Controller
 
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource($session))->resolve(),
-            'component' => (new ComponentResource($component))->resolve(),
+            'components' => ComponentResource::collection($session->components),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) use (
-                        $component,
                         $session,
                         $sessionTestCasesIds,
                         $sessionTestCasesGroupIds
                     ) {
                         $query
                             ->where(function ($query) use (
-                                $component,
                                 $sessionTestCasesIds,
                                 $sessionTestCasesGroupIds
                             ) {
@@ -221,12 +192,19 @@ class SessionController extends Controller
                             });
                     },
                 ])
-                    ->whereHas('testCases', function ($query) use ($component) {
+                    ->whereHas('testCases', function ($query) use ($session) {
                         $query
-                            ->whereHas('components', function ($query) use (
-                                $component
-                            ) {
-                                $query->whereKey($component->getKey());
+                            ->when($session->components->count(), function (
+                                $query
+                            ) use ($session) {
+                                $query->whereHas('components', function (
+                                    $query
+                                ) use ($session) {
+                                    $query->whereIn(
+                                        'id',
+                                        $session->components->pluck('id')
+                                    );
+                                });
                             })
                             ->when(
                                 !auth()
@@ -328,18 +306,38 @@ class SessionController extends Controller
     public function update(Session $session, Request $request)
     {
         $this->authorize('update', $session);
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['string', 'nullable'],
-            'group_environment_id' => [
-                'nullable',
-                'exists:group_environments,id',
-            ],
-            'environments' => ['nullable', 'array'],
-            'component_id' => ['required', 'exists:components,id'],
-            'component_base_url' => ['required', 'url', 'max:255'],
-            'test_cases' => ['required', 'array', 'exists:test_cases,id'],
-        ]);
+
+        $urlRules = $session->components
+            ->mapWithKeys(function (Component $component) {
+                return [
+                    "component_base_urls.{$component->id}" => [
+                        'required',
+                        'url',
+                        'max:255',
+                    ],
+                ];
+            })
+            ->all();
+        $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'description' => ['string', 'nullable'],
+                'group_environment_id' => [
+                    'nullable',
+                    'exists:group_environments,id',
+                ],
+                'environments' => ['nullable', 'array'],
+                'test_cases' => ['required', 'array', 'exists:test_cases,id'],
+            ] + $urlRules,
+            [],
+            $session->components
+                ->mapWithKeys(function (Component $component) {
+                    return [
+                        "component_base_urls.{$component->id}" => "{$component->name} URL",
+                    ];
+                })
+                ->all()
+        );
 
         try {
             $session = DB::transaction(function () use ($session, $request) {
@@ -353,11 +351,18 @@ class SessionController extends Controller
                         : $data
                 );
 
-                $session
-                    ->components()
-                    ->updateExistingPivot($request->input('component_id'), [
-                        'base_url' => $request->input('component_base_url'),
-                    ]);
+                $session->components->each(function (Component $component) use (
+                    $request,
+                    $session
+                ) {
+                    $session
+                        ->components()
+                        ->updateExistingPivot($id = $component->id, [
+                            'base_url' => $request->input(
+                                "component_base_urls.{$id}"
+                            ),
+                        ]);
+                });
 
                 if (!$session->isComplianceSession()) {
                     $session
@@ -432,7 +437,10 @@ class SessionController extends Controller
         $this->authorize('update', $session);
 
         if ($session->completable) {
-            $session->updateStatus(Session::STATUS_IN_VERIFICATION);
+            $session->updateStatus(
+                Session::STATUS_IN_VERIFICATION,
+                'completed_at'
+            );
 
             User::whereIn('role', [
                 User::ROLE_ADMIN,
@@ -467,11 +475,7 @@ class SessionController extends Controller
             },
         ]);
 
-        $wordFile = new PhpWord();
-        $section = $wordFile->addSection();
-        $section->addText(__('Test runs'), ['size' => 16, 'bold' => true]);
-
-        $this->generateTable($section, $session);
+        $wordFile = app(ComplianceSessionExport::class)->export($session);
 
         $fileName = "Session-{$session->id}-{$session->name}";
 
@@ -545,43 +549,5 @@ class SessionController extends Controller
         }
 
         return $data;
-    }
-
-    /**
-     * @param Section $section
-     * @param Session $session
-     */
-    protected function generateTable(Section $section, Session $session)
-    {
-        $table = $section->addTable([
-            'borderSize' => 6,
-            'cellMargin' => 80,
-            'cellSpacing' => 50,
-        ]);
-
-        $style = ['bold' => true];
-        $table->addRow();
-        $table->addCell(6000)->addText(__('Test case'), $style);
-        $table->addCell(1500)->addText(__('Status'), $style);
-        $table->addCell(1500)->addText(__('Duration'), $style);
-        $table->addCell(1500)->addText(__('Attempts'), $style);
-
-        foreach ($session->testCases as $testCase) {
-            $status = __('Incompleted');
-            if (
-                ($lastTestRun = $testCase->lastTestRun) &&
-                $lastTestRun->completed_at
-            ) {
-                $status = __($lastTestRun->successful ? 'Pass' : 'Fail');
-            }
-
-            $table->addRow();
-            $table->addCell()->addText($testCase->name);
-            $table->addCell()->addText($status);
-            $table
-                ->addCell()
-                ->addText($lastTestRun ? "{$lastTestRun->duration} ms" : null);
-            $table->addCell()->addText((string) $testCase->testRuns->count());
-        }
     }
 }

@@ -34,6 +34,7 @@
                                     .data"
                                 :key="i"
                             >
+                                <h3>{{ component.name }}</h3>
                                 <div
                                     class="mb-3"
                                     v-for="(connection,
@@ -45,7 +46,7 @@
                                     </label>
                                     <div class="input-group">
                                         <input
-                                            :id="`testing-${connection.id}`"
+                                            :id="`testing-${component.id}-${connection.id}`"
                                             type="text"
                                             :value="
                                                 route('testing.sut', [
@@ -58,11 +59,12 @@
                                             readonly
                                         />
                                         <clipboard-copy-btn
-                                            :target="`#testing-${connection.id}`"
+                                            :target="`#testing-${component.id}-${connection.id}`"
                                             title="Copy"
                                         ></clipboard-copy-btn>
                                     </div>
                                 </div>
+                                <hr />
                             </div>
                         </li>
                         <li v-if="testCase.description">

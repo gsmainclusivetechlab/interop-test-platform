@@ -6,32 +6,37 @@
                     <h3 class="card-title">Configure components</h3>
                 </div>
                 <div class="card-body">
-                    <template v-for="connection in sut.connections.data">
-                        <div class="mb-3">
-                            <label class="form-label">
-                                {{ connection.name }}
-                            </label>
-                            <div class="input-group">
-                                <input
-                                    :id="`testing-${connection.id}`"
-                                    type="text"
-                                    :value="
-                                        route('testing.sut', [
-                                            session.info.uuid,
-                                            sut.uuid,
-                                            connection.uuid,
-                                        ])
-                                    "
-                                    class="form-control"
-                                    readonly
-                                />
-                                <clipboard-copy-btn
-                                    :target="`#testing-${connection.id}`"
-                                    title="Copy"
-                                ></clipboard-copy-btn>
+                    <div class="mb-3" v-for="sut in suts.data">
+                        <h3>{{ sut.name }}</h3>
+
+                        <template v-for="connection in sut.connections">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    {{ connection.name }}
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        :id="`testing-${connection.id}`"
+                                        type="text"
+                                        :value="
+                                            route('testing.sut', [
+                                                session.info.uuid,
+                                                sut.uuid,
+                                                connection.uuid,
+                                            ])
+                                        "
+                                        class="form-control"
+                                        readonly
+                                    />
+                                    <clipboard-copy-btn
+                                        :target="`#testing-${connection.id}`"
+                                        title="Copy"
+                                    ></clipboard-copy-btn>
+                                </div>
                             </div>
-                        </div>
-                    </template>
+                        </template>
+                        <hr />
+                    </div>
                     <div class="mb-3">
                         <label class="form-label"> Environments </label>
                         <selectize
@@ -91,7 +96,7 @@ export default {
             type: Object,
             required: true,
         },
-        sut: {
+        suts: {
             type: Object,
             required: true,
         },

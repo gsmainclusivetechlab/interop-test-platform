@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -12,6 +13,8 @@ use Illuminate\Support\Arr;
  * @mixin \Eloquent
  *
  * @property string $name
+ *
+ * @property Group[]|Collection $groups
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
