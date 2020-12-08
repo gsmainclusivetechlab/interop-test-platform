@@ -1,12 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\TestCases;
 
-use App\Http\Resources\GroupResource;
-use App\Http\Resources\TestCaseResource;
+use App\Exports\TestCaseExport;
+use App\Http\Resources\{
+    ComponentResource,
+    GroupResource,
+    TestCaseResource,
+    UseCaseResource
+};
 use App\Imports\TestCaseImport;
-use App\Models\Group;
-use App\Models\TestCase;
+use App\Models\{Component, Group, TestCase, UseCase};
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -14,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -26,8 +31,9 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+        $this->middleware('test-case.latest')->only(['showImportVersionForm']);
         $this->authorizeResource(TestCase::class, 'test_case', [
-            'only' => ['index', 'edit', 'update', 'destroy'],
+            'except' => ['show', 'edit', 'update'],
         ]);
     }
 
@@ -67,13 +73,80 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function create()
+    {
+        $this->authorize('create', TestCase::class);
+        return Inertia::render('admin/test-cases/create', [
+            'components' => ComponentResource::collection(
+                Component::get()
+            )->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::get()
+            )->resolve(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function store(Request $request)
+    {
+        $this->authorize('create', TestCase::class);
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['string', 'nullable'],
+            'precondition' => ['string', 'nullable'],
+            'behavior' => [
+                'required',
+                'string',
+                Rule::in([
+                    TestCase::BEHAVIOR_POSITIVE,
+                    TestCase::BEHAVIOR_NEGATIVE,
+                ]),
+            ],
+            'slug' => ['required', Rule::unique('test_cases')],
+            'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
+            'groups_id.*' => ['integer', 'exists:groups,id'],
+            'components_id.*' => ['integer', 'exists:components,id'],
+        ]);
+
+        $testCase = TestCase::create(
+            array_merge($request->input(), [
+                'draft' => true,
+            ])
+        );
+        $testCase->components()->sync($request->input('components_id'));
+        $testCase->groups()->sync($request->input('groups_id'));
+        $testCase
+            ->owner()
+            ->associate(auth()->user())
+            ->save();
+
+        return redirect()
+            ->route('admin.test-cases.info.show', $testCase->id)
+            ->with('success', __('Test Case created successfully'));
+    }
+
+    /**
      * @param TestCase $testCase
      * @return RedirectResponse
      * @throws Exception
      */
     public function destroy(TestCase $testCase)
     {
-        $testCase->delete();
+        $this->authorize('delete', $testCase);
+
+        TestCase::where(
+            'test_case_group_id',
+            $testCase->test_case_group_id
+        )->each(function ($testCase) {
+            $testCase->delete();
+        });
 
         return redirect()
             ->back()
@@ -82,6 +155,7 @@ class TestCaseController extends Controller
 
     /**
      * @return Response
+     * @throws AuthorizationException
      */
     public function showImportForm()
     {
@@ -96,7 +170,7 @@ class TestCaseController extends Controller
      */
     public function showImportVersionForm(TestCase $testCase)
     {
-        $this->authorize('create', TestCase::class);
+        $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/import-version', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),
         ]);
@@ -128,6 +202,7 @@ class TestCaseController extends Controller
                 $rows = array_merge($rows, [
                     'test_case_group_id' => $baseTestCase->test_case_group_id,
                     'public' => $baseTestCase->public,
+                    'draft' => true,
                 ]);
             }
 
@@ -137,13 +212,16 @@ class TestCaseController extends Controller
                 ($baseGroups = $baseTestCase->groups()->pluck('id'))
             ) {
                 $testCase->groups()->sync($baseGroups);
+                if ($baseTestCase->draft) {
+                    $baseTestCase->delete();
+                }
             }
             $testCase
                 ->owner()
                 ->associate(auth()->user())
                 ->save();
             return redirect()
-                ->route('admin.test-cases.index')
+                ->route('admin.test-cases.versions.index', $testCase->id)
                 ->with('success', __('Test case imported successfully'));
         } catch (\Throwable $e) {
             $errorMessage = implode(
@@ -161,35 +239,21 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @return Response
+     * @throws \Throwable
      */
-    public function edit(TestCase $testCase)
+    public function export(TestCase $testCase)
     {
-        return Inertia::render('admin/test-cases/edit', [
-            'testCase' => (new TestCaseResource(
-                $testCase->load(['groups', 'useCase'])
-            ))->resolve(),
-        ]);
-    }
+        $data = (new TestCaseExport())->export($testCase);
+        $fileName = "TestCase-{$testCase->name}";
 
-    /**
-     * @param TestCase $testCase
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function update(TestCase $testCase, Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['string', 'nullable'],
-            'groups_id.*' => ['integer', 'exists:groups,id'],
-        ]);
-        $testCase->update($request->input());
-        $testCase->groups()->sync($request->input('groups_id'));
+        header('Content-Type: application/yaml');
+        header(
+            "Content-Disposition: attachment; filename=\"{$fileName}\".yaml"
+        );
+        header('Content-Length: ' . strlen($data));
 
-        return redirect()
-            ->route('admin.test-cases.index')
-            ->with('success', __('Test case updated successfully'));
+        ($file = fopen('php://output', 'w')) or die('Unable to open file!');
+        fwrite($file, $data);
     }
 
     /**

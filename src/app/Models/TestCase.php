@@ -35,9 +35,11 @@ class TestCase extends Model
         'name',
         'slug',
         'public',
+        'draft',
         'behavior',
         'description',
         'precondition',
+        'use_case_id',
         'test_case_group_id',
     ];
 
@@ -46,6 +48,7 @@ class TestCase extends Model
      */
     protected $attributes = [
         'public' => false,
+        'draft' => false,
     ];
 
     /**
@@ -242,41 +245,82 @@ class TestCase extends Model
     public function scopeAvailable($query)
     {
         return $query
-            ->where('public', true)
-            ->orWhereHas('owner', function ($query) {
-                $query->whereKey(
-                    auth()
-                        ->user()
-                        ->getAuthIdentifier()
-                );
-            })
-            ->orWhereHas('groups', function ($query) {
-                $query->whereHas('users', function ($query) {
-                    $query->whereKey(
+            ->where(function ($query) {
+                $query
+                    ->where('public', true)
+                    ->orWhereHas('owner', function ($query) {
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
+                    })
+                    ->orWhereHas('groups', function ($query) {
+                        $query->whereHas('users', function ($query) {
+                            $query->whereKey(
+                                auth()
+                                    ->user()
+                                    ->getAuthIdentifier()
+                            );
+                        });
+                    })
+                    ->when(
                         auth()
                             ->user()
-                            ->getAuthIdentifier()
+                            ->can('viewAnyPrivate', self::class),
+                        function ($query) {
+                            $query->orWhere('public', false);
+                        }
                     );
-                });
             })
-            ->when(
-                auth()
-                    ->user()
-                    ->can('viewAnyPrivate', self::class),
-                function ($query) {
-                    $query->orWhere('public', false);
-                }
-            );
+            ->where('draft', false);
     }
 
     /**
      * @return mixed
      */
-    public function getLastAvailableVersionIdAttribute()
+    public function getLastAvailableVersionAttribute()
     {
         return static::available()
             ->lastPerGroup()
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastVersionAttribute()
+    {
+        return static::lastPerGroup()
+            ->where('test_case_group_id', $this->test_case_group_id)
+            ->first();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLast()
+    {
+        return $this->version === $this->last_version->version ? true : false;
+    }
+
+    /**
+     * @return void
+     */
+    protected static function bootHasPosition()
+    {
+        static::addGlobalScope('position', function ($builder) {
+            $builder->orderBy($builder->getModel()->getPositionColumn());
+        });
+        static::creating(function ($model) {
+            $model->generatePositionOnCreate();
+        });
+        static::updating(function ($model) {
+            $model->generatePositionOnUpdate();
+        });
+        static::deleted(function ($model) {
+            $model->generatePositionOnDelete();
+        });
     }
 }

@@ -1,0 +1,48 @@
+.json-editor-block {
+  select {
+    cursor: pointer;
+  }
+  .json-editor {
+    &__input,
+    &__select {
+      &:focus {
+        border-color: $red;
+      }
+    }
+  }
+  .json-editor .object-view .value__input {
+    color: $red;
+  }
+  .json-editor__btn {
+    outline: none;
+  }
+  .json-editor__btn_icon {
+    color: $red;
+    .icon {
+      transition: transform 0.2s ease;
+    }
+  }
+  [data-collapsed='true'] {
+    .icon {
+      transform: rotateZ(90deg);
+    }
+  }
+  .new-item-form__group {
+    .json-editor__btn {
+      color: $red;
+      font-size: 12px;
+      font-weight: 500;
+      user-select: none;
+      background-color: transparent;
+      border: 1px solid $red;
+      border-radius: 3px;
+      padding: 3px 6px;
+      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      &:hover {
+        background-color: $red;
+        color: #fff;
+      }
+    }
+  }
+}

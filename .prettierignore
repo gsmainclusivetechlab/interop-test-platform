@@ -54,7 +54,7 @@ Thumbs.db
 /src/yarn-error.log
 
 # don't format external specs
-src/database/seeds/openapis/*
+src/database/seeders/openapis/*
 
 # Keep desired directory structure with .gitkeep files
 !.gitkeep

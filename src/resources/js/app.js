@@ -82,6 +82,9 @@ Vue.component('clipboard-json-to-curl', () =>
         /* webpackChunkName: "clipboard-json-to-curl" */ '@/components/clipboard-json-to-curl.vue'
     )
 );
+Vue.component('text-editor', () =>
+    import(/* webpackChunkName: "text-editor" */ '@/components/text-editor.vue')
+);
 
 let app = document.getElementById('app');
 
