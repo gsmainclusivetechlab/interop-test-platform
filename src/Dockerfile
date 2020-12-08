@@ -24,7 +24,7 @@ RUN composer dump-autoload --optimize && composer update
 
 
 # Set up final app container image
-FROM php:fpm-alpine3.12
+FROM php:7-fpm-alpine3.12
 ENV WAIT_VERSION 2.7.2
 ENV PHPREDIS_VERSION 5.2.2
 ARG PHP_INI_TEMPLATE

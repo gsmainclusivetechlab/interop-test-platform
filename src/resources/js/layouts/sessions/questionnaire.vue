@@ -12,7 +12,8 @@
                         <div class="steps steps-counter steps-primary mb-5">
                             <span
                                 class="step-item"
-                                v-for="section in sections.data"
+                                v-for="(section, i) in sections.data"
+                                :key="i"
                                 :class="{
                                     active:
                                         route().current(

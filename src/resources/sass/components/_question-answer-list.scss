@@ -11,8 +11,12 @@
     }
   }
   dt {
+    margin-bottom: 0.5em;
     &:before {
       content: 'Q:';
+    }
+    & ~ dd {
+      margin-bottom: 0;
     }
   }
   dd {
