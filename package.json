@@ -1,8 +1,8 @@
 {
     "private": true,
     "scripts": {
-        "format-all": "npx prettier --write .",
-        "precise-commits": "precise-commits",
+        "lint": "npx prettier . --write",
+        "precise-commits": "npx precise-commits",
         "precommit": "npm run precise-commits",
         "build": "npm run dev:all -- build",
         "docker-base": "docker-compose -f docker-compose.yml",
