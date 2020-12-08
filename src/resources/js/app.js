@@ -14,9 +14,6 @@ import {
     TabsPlugin,
 } from 'bootstrap-vue';
 
-import JsonEditor from 'vue-json-edit';
-Vue.use(JsonEditor);
-
 window.string = require('string');
 window.collect = require('collect.js');
 window.axios = require('axios');
