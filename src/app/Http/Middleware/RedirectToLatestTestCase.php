@@ -17,7 +17,7 @@ class RedirectToLatestTestCase
     public function handle($request, Closure $next)
     {
         $testCase = $request->testCase;
-        if (($testCase instanceof TestCase) && !$testCase->isLast()) {
+        if ($testCase instanceof TestCase && !$testCase->isLast()) {
             return redirect()->route(
                 \Route::currentRouteName(),
                 $testCase->last_version->id

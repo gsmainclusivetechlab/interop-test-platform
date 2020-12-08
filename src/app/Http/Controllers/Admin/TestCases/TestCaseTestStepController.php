@@ -27,10 +27,7 @@ class TestCaseTestStepController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->middleware('test-case.latest')->only([
-            'index',
-            'create',
-        ]);
+        $this->middleware('test-case.latest')->only(['index', 'create']);
         $this->authorizeResource(TestStep::class, 'test_step', [
             'except' => ['show'],
         ]);
