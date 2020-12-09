@@ -23,6 +23,7 @@ use App\Models\{
 };
 use Arr;
 use Exception;
+use File;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -160,7 +161,7 @@ class SessionController extends Controller
             'test_case_group_id'
         );
         $componentIds = $session->components->pluck('id')->all();
-        $session->environments();
+
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource($session))->resolve(),
             'components' => ComponentResource::collection($session->components),
@@ -471,12 +472,16 @@ class SessionController extends Controller
         $wordFile = app(ComplianceSessionExport::class)->export($session);
 
         $fileName = "Session-{$session->id}-{$session->name}";
-
-        header('Content-Type: application/octet-stream');
-        header("Content-Disposition: attachment;filename=\"{$fileName}.docx\"");
+        $path = storage_path("framework/docs/{$fileName}.docx");
 
         $objWriter = IOFactory::createWriter($wordFile);
-        $objWriter->save('php://output');
+        $objWriter->save($path);
+
+        app()->terminating(function () use ($path) {
+            File::delete($path);
+        });
+
+        return response()->download($path);
     }
 
     /**
