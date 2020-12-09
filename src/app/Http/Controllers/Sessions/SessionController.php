@@ -159,7 +159,8 @@ class SessionController extends Controller
         $sessionTestCasesGroupIds = $session->testCases->pluck(
             'test_case_group_id'
         );
-
+        $componentIds = $session->components->pluck('id')->all();
+        $session->environments();
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource($session))->resolve(),
             'components' => ComponentResource::collection($session->components),
@@ -167,15 +168,18 @@ class SessionController extends Controller
                 UseCase::with([
                     'testCases' => function ($query) use (
                         $session,
+                        $componentIds,
                         $sessionTestCasesIds,
                         $sessionTestCasesGroupIds
                     ) {
                         $query
                             ->where(function ($query) use (
+                                $componentIds,
                                 $sessionTestCasesIds,
                                 $sessionTestCasesGroupIds
                             ) {
                                 $query
+                                    ->withComponents($componentIds)
                                     ->available()
                                     ->lastPerGroup(
                                         $sessionTestCasesIds,
@@ -192,28 +196,17 @@ class SessionController extends Controller
                             });
                     },
                 ])
-                    ->whereHas('testCases', function ($query) use ($session) {
-                        $query
-                            ->when($session->components->count(), function (
-                                $query
-                            ) use ($session) {
-                                $query->whereHas('components', function (
-                                    $query
-                                ) use ($session) {
-                                    $query->whereIn(
-                                        'id',
-                                        $session->components->pluck('id')
-                                    );
-                                });
-                            })
-                            ->when(
-                                !auth()
-                                    ->user()
-                                    ->can('viewAny', TestCase::class),
-                                function ($query) {
-                                    $query->where('public', true);
-                                }
-                            );
+                    ->whereHas('testCases', function ($query) use (
+                        $componentIds
+                    ) {
+                        $query->withComponents($componentIds)->when(
+                            !auth()
+                                ->user()
+                                ->can('viewAny', TestCase::class),
+                            function ($query) {
+                                $query->where('public', true);
+                            }
+                        );
                     })
                     ->get()
             ),

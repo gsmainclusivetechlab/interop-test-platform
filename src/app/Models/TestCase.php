@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -274,6 +275,21 @@ class TestCase extends Model
                     );
             })
             ->where('draft', false);
+    }
+
+    /**
+     * @param Builder $query
+     * @param array $ids
+     *
+     * @return Builder
+     */
+    public function scopeWithComponents($query, array $ids)
+    {
+        return $query->when($ids, function ($query, $ids) {
+            $query->whereHas('components', function ($query) use ($ids) {
+                $query->whereIn('id', $ids);
+            });
+        });
     }
 
     /**
