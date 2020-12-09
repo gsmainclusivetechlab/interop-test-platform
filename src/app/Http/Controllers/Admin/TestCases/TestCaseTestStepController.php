@@ -18,6 +18,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\Loader\LoaderInterface;
 
 class TestCaseTestStepController extends Controller
 {
@@ -41,6 +44,44 @@ class TestCaseTestStepController extends Controller
     public function index(TestCase $testCase)
     {
         $this->authorize('update', $testCase);
+////        $generated = \Blade::compileString('@verbatim {{ steps[0].body.amount.amount + steps[0].body.amount.amount }} @endverbatim');
+//        $generated = \Blade::compileString('{!! Str::uuid()."\n".now() !!}');
+////        $generated = \Blade::compileString('{!! \App\Models\TestCase::where("id", 144)->update(["draft" => false]) !!}');
+//
+//        ob_start() and extract(['steps' => [
+//            ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 5, 'currency' => 'UAH']]],
+//            ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 13, 'currency' => 'UAH']]],
+//        ]], EXTR_SKIP);
+//
+//        // We'll include the view contents for parsing within a catcher
+//        // so we can avoid any WSOD errors. If an exception occurs we
+//        // will throw it out to the exception handler.
+//        try
+//        {
+/*            eval('?>'.$generated);*/
+//        }
+//
+//            // If we caught an exception, we'll silently flush the output
+//            // buffer so that no partially rendered views get thrown out
+//            // to the client and confuse the user with junk.
+//        catch (\Exception $e)
+//        {
+//            ob_get_clean(); throw $e;
+//        }
+//
+//        $content = ob_get_clean();
+//
+//        dd($content);
+
+        $twig = new Environment(new FilesystemLoader());
+        dd($twig->render('{{ site.name }}', array('site' => ['name'=>'lolo'])));
+//        $twig = new \Twig_Environment(new \Twig_Loader_String());
+//        $rendered = $twig->render(
+//            "<title>{{ site.name }}</title>",
+//            array('site' => ['name'=>'lolo'])
+//        );
+//        dd($rendered);
+
         return Inertia::render('admin/test-cases/test-steps/index', [
             'testCase' => (new TestCaseResource(
                 $testCase->load(['testSteps'])
