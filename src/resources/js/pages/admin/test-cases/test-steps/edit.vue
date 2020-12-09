@@ -395,287 +395,6 @@
                         </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-link card-title dropdown-toggle"
-                            v-b-toggle="'test-request-setups'"
-                        >
-                            Test Request Setups
-                        </button>
-                        <b-collapse id="test-request-setups" visible>
-                            <template
-                                v-for="(request, i) in test.setups.request.list"
-                            >
-                                <div
-                                    class="card-header"
-                                    :key="`test-request-setups-head-${i}`"
-                                >
-                                    <span class="text-muted text-break mr-2"
-                                        >{{ i + 1 }}. {{ request.name }}</span
-                                    >
-                                    <div class="card-options">
-                                        <label class="form-check form-switch">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="request.override"
-                                                v-b-tooltip.hover
-                                                title="Override all"
-                                            />
-                                        </label>
-                                        <button
-                                            type="button"
-                                            class="btn btn-link p-0 ml-2"
-                                            v-b-tooltip.hover
-                                            title="Delete"
-                                            v-b-modal="
-                                                `test-request-setups-modal-${i}`
-                                            "
-                                        >
-                                            <icon name="trash" />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div
-                                    class="card-body"
-                                    :key="`test-request-setups-form-${i}`"
-                                >
-                                    <label class="form-label">Name</label>
-                                    <input
-                                        type="text"
-                                        class="form-control mb-2"
-                                        :class="{
-                                            'is-invalid':
-                                                $page.errors[
-                                                    `test.setups.request.${i}.name`
-                                                ],
-                                        }"
-                                        v-model="request.name"
-                                    />
-                                    <span
-                                        v-if="
-                                            $page.errors[
-                                                `test.setups.request.${i}.name`
-                                            ]
-                                        "
-                                        class="invalid-feedback"
-                                    >
-                                        <strong>
-                                            {{
-                                                $page.errors[
-                                                    `test.setups.request.${i}.name`
-                                                ]
-                                            }}
-                                        </strong>
-                                    </span>
-                                    <label class="form-label mb-3"
-                                        >Values</label
-                                    >
-                                    <json-editor-block
-                                        :input-json="request.values"
-                                        @output-json="
-                                            (data) => (request.values = data)
-                                        "
-                                        :class="{
-                                            'form-control is-invalid p-0':
-                                                $page.errors[
-                                                    `test.setups.request.${i}.values`
-                                                ],
-                                        }"
-                                    />
-                                    <span
-                                        v-if="
-                                            $page.errors[
-                                                `test.setups.request.${i}.values`
-                                            ]
-                                        "
-                                        class="invalid-feedback"
-                                    >
-                                        <strong>
-                                            {{
-                                                $page.errors[
-                                                    `test.setups.request.${i}.values`
-                                                ]
-                                            }}
-                                        </strong>
-                                    </span>
-                                </div>
-                                <b-modal
-                                    :id="`test-request-setups-modal-${i}`"
-                                    :title="'Are you sure?'"
-                                    @ok="
-                                        deleteFormItem(
-                                            test.setups.request.list,
-                                            i
-                                        )
-                                    "
-                                    centered
-                                    :key="`test-request-setups-modal-${i}`"
-                                >
-                                    <p>
-                                        This test request setups will be
-                                        deleted.
-                                    </p>
-                                </b-modal>
-                            </template>
-                            <div class="text-right">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary"
-                                    @click="
-                                        addFormItem(test.setups.request.list, {
-                                            ...test.setups.request.pattern,
-                                        })
-                                    "
-                                >
-                                    <icon name="plus" />
-                                    <span>Add New Request Setup</span>
-                                </button>
-                            </div>
-                        </b-collapse>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-link card-title dropdown-toggle"
-                            v-b-toggle="'test-response-setups'"
-                        >
-                            Test Response Setups
-                        </button>
-                        <b-collapse id="test-response-setups" visible>
-                            <template
-                                v-for="(response, i) in test.setups.response
-                                    .list"
-                            >
-                                <div
-                                    class="card-header"
-                                    :key="`test-response-setups-head-${i}`"
-                                >
-                                    <span class="text-muted text-break mr-2"
-                                        >{{ i + 1 }}. {{ response.name }}</span
-                                    >
-                                    <div class="card-options">
-                                        <label class="form-check form-switch">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                v-model="response.override"
-                                                v-b-tooltip.hover
-                                                title="Override all"
-                                            />
-                                        </label>
-                                        <button
-                                            type="button"
-                                            class="btn btn-link p-0"
-                                            v-b-tooltip.hover
-                                            title="Delete"
-                                            v-b-modal="
-                                                `test-response-setups-modal-${i}`
-                                            "
-                                        >
-                                            <icon name="trash" />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div
-                                    class="card-body"
-                                    :key="`test-response-setups-form-${i}`"
-                                >
-                                    <label class="form-label">Name</label>
-                                    <input
-                                        type="text"
-                                        class="form-control mb-2"
-                                        :class="{
-                                            'is-invalid':
-                                                $page.errors[
-                                                    `test.setups.response.${i}.name`
-                                                ],
-                                        }"
-                                        v-model="response.name"
-                                    />
-                                    <span
-                                        v-if="
-                                            $page.errors[
-                                                `test.setups.response.${i}.name`
-                                            ]
-                                        "
-                                        class="invalid-feedback"
-                                    >
-                                        <strong>
-                                            {{
-                                                $page.errors[
-                                                    `test.setups.response.${i}.name`
-                                                ]
-                                            }}
-                                        </strong>
-                                    </span>
-                                    <label class="form-label mb-3"
-                                        >Values</label
-                                    >
-                                    <json-editor-block
-                                        :input-json="response.values"
-                                        @output-json="
-                                            (data) => (response.values = data)
-                                        "
-                                        :class="{
-                                            'form-control is-invalid p-0':
-                                                $page.errors[
-                                                    `test.setups.response.${i}.values`
-                                                ],
-                                        }"
-                                    />
-                                    <span
-                                        v-if="
-                                            $page.errors[
-                                                `test.setups.response.${i}.values`
-                                            ]
-                                        "
-                                        class="invalid-feedback"
-                                    >
-                                        <strong>
-                                            {{
-                                                $page.errors[
-                                                    `test.setups.response.${i}.values`
-                                                ]
-                                            }}
-                                        </strong>
-                                    </span>
-                                </div>
-                                <b-modal
-                                    :id="`test-response-setups-modal-${i}`"
-                                    :title="'Are you sure?'"
-                                    @ok="
-                                        deleteFormItem(
-                                            test.setups.response.list,
-                                            i
-                                        )
-                                    "
-                                    centered
-                                    :key="`test-response-setups-modal-${i}`"
-                                >
-                                    <p>
-                                        This test response setups will be
-                                        deleted.
-                                    </p>
-                                </b-modal>
-                            </template>
-                            <div class="text-right">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary"
-                                    @click="
-                                        addFormItem(test.setups.response.list, {
-                                            ...test.setups.response.pattern,
-                                        })
-                                    "
-                                >
-                                    <icon name="plus" />
-                                    <span>Add New Response Setup</span>
-                                </button>
-                            </div>
-                        </b-collapse>
-                    </div>
-                    <div class="col-12 mb-3">
                         <h2 class="card-title">Request Headers Examples</h2>
                         <json-editor-block
                             :input-json="example.request.headers"
@@ -833,41 +552,11 @@ export default {
                         },
                     },
                 },
-                setups: {
-                    request: {
-                        list: this.testStep.testSetups?.data?.filter(
-                            (el) => el.type === 'request'
-                        ),
-                        pattern: {
-                            override: false,
-                            name: '',
-                            values: {},
-                        },
-                    },
-                    response: {
-                        list: this.testStep.testSetups?.data?.filter(
-                            (el) => el.type === 'response'
-                        ),
-                        pattern: {
-                            override: false,
-                            name: '',
-                            values: {},
-                        },
-                    },
-                },
             },
             example: {
                 request: {
-                    headers:
-                        !Array.isArray(this.testStep.request.headers) &&
-                        typeof this.testStep.request.headers === 'object'
-                            ? this.testStep.request.headers
-                            : {},
-                    body:
-                        !Array.isArray(this.testStep.request.body) &&
-                        typeof this.testStep.request.body === 'object'
-                            ? this.testStep.request.body
-                            : {},
+                    headers: this.testStep.request.headers ?? {},
+                    body: this.testStep.request.body ?? {},
                 },
                 response: {
                     status: {
@@ -876,16 +565,8 @@ export default {
                         ],
                         list: collect(this.$page.statuses).toArray(),
                     },
-                    headers:
-                        !Array.isArray(this.testStep.response.headers) &&
-                        typeof this.testStep.response.headers === 'object'
-                            ? this.testStep.response.headers
-                            : {},
-                    body:
-                        !Array.isArray(this.testStep.response.body) &&
-                        typeof this.testStep.response.body === 'object'
-                            ? this.testStep.response.body
-                            : {},
+                    headers: this.testStep.response.headers ?? {},
+                    body: this.testStep.response.body ?? {},
                 },
             },
         };
@@ -908,10 +589,7 @@ export default {
                 target_id: this.$page.components.filter(
                     (el) => el.name === this.target
                 )?.[0]?.id,
-                trigger:
-                    Object.keys(this.trigger).length !== 0
-                        ? this.trigger
-                        : null,
+                trigger: this.trigger,
                 request: this.example.request,
                 response: {
                     status: collect(this.$page.statuses)
@@ -924,10 +602,6 @@ export default {
                     scripts: {
                         request: this.test.scripts.request.list,
                         response: this.test.scripts.response.list,
-                    },
-                    setups: {
-                        request: this.test.setups.request.list,
-                        response: this.test.setups.response.list,
                     },
                 },
             };
