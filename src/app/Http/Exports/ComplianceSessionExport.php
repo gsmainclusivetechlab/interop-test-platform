@@ -48,8 +48,8 @@ class ComplianceSessionExport
         }
 
         $this->title($section, 'Events');
-        $this->line($section, 'Creation', $session->created_at);
-        $this->line($section, 'Completion', $session->completed_at);
+        $this->line($section, 'Created', $session->created_at);
+        $this->line($section, 'Completed', $session->completed_at);
         $this->line($section, $session->status_name, $session->closed_at);
 
         $section->addText(PHP_EOL);

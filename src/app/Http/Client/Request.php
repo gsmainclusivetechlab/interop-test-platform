@@ -78,6 +78,8 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function withSubstitutions(array $tokens = [])
     {
         $data = $this->toArray();
+        $data['uri'] = urldecode($data['uri']);
+
         $substitution = new TokenSubstitution($tokens);
         array_walk_recursive($data, function (&$value) use ($substitution) {
             if (is_string($value)) {
