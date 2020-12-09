@@ -29,8 +29,15 @@ class ComplianceSessionExport
             $this->line($section, 'SUT', $component->name);
 
             $textRun = $section->addTextRun();
-            $textRun->addText("{$component->name} URL: ", ['size' => 12, 'bold' => true]);
-            $textRun->addLink($session->getBaseUriOfComponent($component), null, ['size' => 12]);
+            $textRun->addText("{$component->name} URL: ", [
+                'size' => 12,
+                'bold' => true,
+            ]);
+            $textRun->addLink(
+                $session->getBaseUriOfComponent($component),
+                null,
+                ['size' => 12]
+            );
 
             $section->addText(PHP_EOL);
         }
@@ -48,8 +55,8 @@ class ComplianceSessionExport
         }
 
         $this->title($section, 'Events');
-        $this->line($section, 'Creation', $session->created_at);
-        $this->line($section, 'Completion', $session->completed_at);
+        $this->line($section, 'Created', $session->created_at);
+        $this->line($section, 'Completed', $session->completed_at);
         $this->line($section, $session->status_name, $session->closed_at);
 
         $section->addText(PHP_EOL);
@@ -59,7 +66,11 @@ class ComplianceSessionExport
             QuestionnaireSection::getSessionQuestionnaire($session)
             as $sectionKey => $questionnaireSection
         ) {
-            $this->title($section, ($sectionKey + 1) . ". {$questionnaireSection->name}", 12);
+            $this->title(
+                $section,
+                $sectionKey + 1 . ". {$questionnaireSection->name}",
+                12
+            );
 
             foreach ($questionnaireSection->questions as $key => $question) {
                 $this->line($section, "Q{$key}", $question->question);
@@ -132,7 +143,10 @@ class ComplianceSessionExport
     ): void {
         if ($text) {
             $textRun = $section->addTextRun();
-            $textRun->addText(__($title) . ": ", ['size' => 12, 'bold' => true]);
+            $textRun->addText(__($title) . ': ', [
+                'size' => 12,
+                'bold' => true,
+            ]);
             $textRun->addText($text, ['size' => 12]);
         }
     }
