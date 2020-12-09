@@ -16,7 +16,7 @@
                         }"
                         placeholder="Select groups..."
                         label="name"
-                        :keys="['name']"
+                        :keys="['name', 'domain']"
                         :options="searchList"
                         :createItem="false"
                         :searchFn="searchGroups"
@@ -28,7 +28,11 @@
                             </div>
                         </template>
                     </selectize>
-                    <button type="submit" class="btn btn-primary">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        :disabled="newList.length === 0"
+                    >
                         <span
                             v-if="sending"
                             class="spinner-border spinner-border-sm mr-2"
@@ -79,7 +83,7 @@
                                         <icon name="dots-vertical"></icon>
                                     </template>
                                     <li>
-                                        <inertia-link
+                                        <confirm-link
                                             :href="
                                                 route(
                                                     'admin.test-cases.groups.destroy',
@@ -87,10 +91,12 @@
                                                 )
                                             "
                                             method="delete"
+                                            :confirm-title="'Confirm delete'"
+                                            :confirm-text="`Are you sure you want to delete '${group.name}'?`"
                                             class="dropdown-item"
                                         >
                                             Delete
-                                        </inertia-link>
+                                        </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
