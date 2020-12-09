@@ -30,7 +30,7 @@ class MapResponseHandler
     {
         $testResponse = new Response($response);
 
-        if (
+        /*if (
             !$this->testResult->session->hasComponent(
                 $this->testResult->testStep->target
             ) &&
@@ -42,7 +42,7 @@ class MapResponseHandler
             foreach ($testResponseSetups as $testResponseSetup) {
                 $testResponse = $testResponse->withSetup($testResponseSetup);
             }
-        }
+        }*/
 
         $testResponse = $testResponse->withSubstitutions(
             $this->testResult->session->environments()
