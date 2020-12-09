@@ -22,7 +22,7 @@ class ComplianceSessionExport
         $this->line(
             $section,
             'Group name',
-            $session->owner->groups->implode('name') ?: null
+            $session->owner->groups->implode('name', ', ') ?: null
         );
 
         foreach ($session->components as $component) {
