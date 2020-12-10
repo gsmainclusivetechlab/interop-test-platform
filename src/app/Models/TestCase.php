@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -277,6 +278,21 @@ class TestCase extends Model
     }
 
     /**
+     * @param Builder $query
+     * @param array $ids
+     *
+     * @return Builder
+     */
+    public function scopeWithComponents($query, array $ids)
+    {
+        return $query->when($ids, function ($query, $ids) {
+            $query->whereHas('components', function ($query) use ($ids) {
+                $query->whereIn('id', $ids);
+            });
+        });
+    }
+
+    /**
      * @return mixed
      */
     public function getLastAvailableVersionAttribute()
@@ -303,24 +319,5 @@ class TestCase extends Model
     public function isLast()
     {
         return $this->version === $this->last_version->version ? true : false;
-    }
-
-    /**
-     * @return void
-     */
-    protected static function bootHasPosition()
-    {
-        static::addGlobalScope('position', function ($builder) {
-            $builder->orderBy($builder->getModel()->getPositionColumn());
-        });
-        static::creating(function ($model) {
-            $model->generatePositionOnCreate();
-        });
-        static::updating(function ($model) {
-            $model->generatePositionOnUpdate();
-        });
-        static::deleted(function ($model) {
-            $model->generatePositionOnDelete();
-        });
     }
 }

@@ -23,6 +23,7 @@ use App\Models\{
 };
 use Arr;
 use Exception;
+use File;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -159,6 +160,7 @@ class SessionController extends Controller
         $sessionTestCasesGroupIds = $session->testCases->pluck(
             'test_case_group_id'
         );
+        $componentIds = $session->components->pluck('id')->all();
 
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource($session))->resolve(),
@@ -167,15 +169,18 @@ class SessionController extends Controller
                 UseCase::with([
                     'testCases' => function ($query) use (
                         $session,
+                        $componentIds,
                         $sessionTestCasesIds,
                         $sessionTestCasesGroupIds
                     ) {
                         $query
                             ->where(function ($query) use (
+                                $componentIds,
                                 $sessionTestCasesIds,
                                 $sessionTestCasesGroupIds
                             ) {
                                 $query
+                                    ->withComponents($componentIds)
                                     ->available()
                                     ->lastPerGroup(
                                         $sessionTestCasesIds,
@@ -192,28 +197,17 @@ class SessionController extends Controller
                             });
                     },
                 ])
-                    ->whereHas('testCases', function ($query) use ($session) {
-                        $query
-                            ->when($session->components->count(), function (
-                                $query
-                            ) use ($session) {
-                                $query->whereHas('components', function (
-                                    $query
-                                ) use ($session) {
-                                    $query->whereIn(
-                                        'id',
-                                        $session->components->pluck('id')
-                                    );
-                                });
-                            })
-                            ->when(
-                                !auth()
-                                    ->user()
-                                    ->can('viewAny', TestCase::class),
-                                function ($query) {
-                                    $query->where('public', true);
-                                }
-                            );
+                    ->whereHas('testCases', function ($query) use (
+                        $componentIds
+                    ) {
+                        $query->withComponents($componentIds)->when(
+                            !auth()
+                                ->user()
+                                ->can('viewAny', TestCase::class),
+                            function ($query) {
+                                $query->where('public', true);
+                            }
+                        );
                     })
                     ->get()
             ),
@@ -478,12 +472,16 @@ class SessionController extends Controller
         $wordFile = app(ComplianceSessionExport::class)->export($session);
 
         $fileName = "Session-{$session->id}-{$session->name}";
-
-        header('Content-Type: application/octet-stream');
-        header("Content-Disposition: attachment;filename=\"{$fileName}.docx\"");
+        $path = storage_path("framework/docs/{$fileName}.docx");
 
         $objWriter = IOFactory::createWriter($wordFile);
-        $objWriter->save('php://output');
+        $objWriter->save($path);
+
+        app()->terminating(function () use ($path) {
+            File::delete($path);
+        });
+
+        return response()->download($path);
     }
 
     /**

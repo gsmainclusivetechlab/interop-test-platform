@@ -20,6 +20,7 @@ precondition: |
 components:
   - Service Provider
   - Mobile Money Operator 1
+  - Mojaloop
   - Mobile Money Operator 2
 test_steps:
   - path: /transactions
@@ -106,7 +107,7 @@ test_steps:
       method: POST
       uri: /transactionRequests
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
@@ -123,7 +124,6 @@ test_steps:
         amount:
           amount: '5'
           currency: 'USD'
-        type: 'merchantpay'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -159,7 +159,7 @@ test_steps:
       method: POST
       uri: /transactionRequests
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo1fsp'
@@ -176,7 +176,6 @@ test_steps:
         amount:
           amount: '5'
           currency: 'USD'
-        type: 'merchantpay'
         transactionType:
           scenario: 'PAYMENT'
           initiator: 'PAYEE'
@@ -278,7 +277,7 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
@@ -343,7 +342,7 @@ test_steps:
       method: POST
       uri: /quotes
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
         date: '${CURRENT_TIMESTAMP_RFC2822}'
         fspiop-source: 'mmo2fsp'
@@ -404,7 +403,7 @@ test_steps:
         transferAmount:
           currency: 'USD'
           amount: '5'
-        expiration: '2000-01-01T00:00:00.000Z'
+        expiration: '2021-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
     response:
@@ -438,7 +437,7 @@ test_steps:
         transferAmount:
           currency: 'USD'
           amount: '5'
-        expiration: '2000-01-01T00:00:00.000Z'
+        expiration: '2021-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
     response:
@@ -473,9 +472,9 @@ test_steps:
       method: 'POST'
       uri: /transfers
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.transfers+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -487,7 +486,7 @@ test_steps:
           amount: '5'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        expiration: '2000-01-01T00:00:00.000Z'
+        expiration: '2021-01-01T00:00:00.000Z'
     response:
       status: 202
   - path: /transfers
@@ -520,9 +519,9 @@ test_steps:
       method: 'POST'
       uri: /transfers
       headers:
-        accept: 'application/json'
+        accept: 'application/vnd.interoperability.transfers+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -534,7 +533,7 @@ test_steps:
           amount: '5'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        expiration: '2000-01-01T00:00:00.000Z'
+        expiration: '2021-01-01T00:00:00.000Z'
     response:
       status: 202
   - path: '{X-Callback-URL}'
@@ -560,7 +559,7 @@ test_steps:
           status: 'required|in:204'
     request:
       method: 'PUT'
-      uri: 'http://example.com/callback'
+      uri: '${SP_BASE_URI}/callback'
       headers:
         content-type: 'application/json'
         x-date: '${CURRENT_TIMESTAMP_ISO8601}'
@@ -608,22 +607,13 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
-        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         transferState: 'COMMITTED'
-        completedTimestamp: '2000-01-01T00:00:00.000Z'
-        fulfilment: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
-        amount:
-          currency: 'USD'
-          amount: '5'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        expiration: '2000-01-01T00:00:00.000Z'
+        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
     response:
       status: 200
   - path: /transfers/{ID}
@@ -656,21 +646,12 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
-        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
         transferState: 'COMMITTED'
-        completedTimestamp: '2000-01-01T00:00:00.000Z'
-        fulfilment: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
-        amount:
-          currency: 'USD'
-          amount: '5'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        expiration: '2000-01-01T00:00:00.000Z'
+        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
     response:
       status: 200

@@ -305,14 +305,9 @@ class RegisterController extends Controller
                 ])
                     ->whereHas('testCases', function ($query) use ($testCases) {
                         $query
-                            ->whereHas('components', function (Builder $query) {
-                                $query->when(
-                                    session('session.sut.component_ids'),
-                                    function (Builder $query, $ids) {
-                                        $query->whereIn('id', $ids);
-                                    }
-                                );
-                            })
+                            ->withComponents(
+                                session('session.sut.component_ids')
+                            )
                             ->when(
                                 !auth()
                                     ->user()
@@ -633,14 +628,7 @@ class RegisterController extends Controller
         $testCases = $this->getTestCases();
 
         return $query
-            ->whereHas('components', function ($query) {
-                $query->when(session('session.sut.component_ids'), function (
-                    Builder $query,
-                    $ids
-                ) {
-                    $query->whereIn('id', $ids);
-                });
-            })
+            ->withComponents(session('session.sut.component_ids'))
             ->where(function ($query) {
                 $query->available();
             })

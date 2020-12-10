@@ -47,13 +47,13 @@ class TestStepRequest extends FormRequest
             'test.scripts.response' => ['nullable', 'array'],
             'test.scripts.response.*.name' => ['required', 'string', 'max:255'],
             'test.scripts.response.*.rules' => ['required', 'array'],
-            //test setups
+            /*test setups
             'test.setups.request' => ['nullable', 'array'],
             'test.setups.request.*.name' => ['required', 'string', 'max:255'],
             'test.setups.request.*.values' => ['required', 'array'],
             'test.setups.response' => ['nullable', 'array'],
             'test.setups.response.*.name' => ['required', 'string', 'max:255'],
-            'test.setups.response.*.values' => ['required', 'array'],
+            'test.setups.response.*.values' => ['required', 'array'],*/
         ];
     }
 
@@ -87,7 +87,7 @@ class TestStepRequest extends FormRequest
             $testStep = $this->setAttributes($testStep);
             $testStep->saveOrFail();
 
-            $this->createTestSetups(
+            /*$this->createTestSetups(
                 $testStep,
                 TestSetup::TYPE_REQUEST,
                 Arr::get($this->input('test.setups'), 'request', [])
@@ -96,7 +96,7 @@ class TestStepRequest extends FormRequest
                 $testStep,
                 TestSetup::TYPE_RESPONSE,
                 Arr::get($this->input('test.setups'), 'response', [])
-            );
+            );*/
 
             $this->createTestScripts(
                 $testStep,
@@ -122,7 +122,7 @@ class TestStepRequest extends FormRequest
             $testStep = $this->setAttributes($testStep);
             $testStep->update($this->getFillableData());
 
-            $this->updateTestSetups(
+            /*$this->updateTestSetups(
                 $testStep,
                 TestSetup::TYPE_REQUEST,
                 Arr::get($this->input('test.setups'), 'request', [])
@@ -131,7 +131,7 @@ class TestStepRequest extends FormRequest
                 $testStep,
                 TestSetup::TYPE_RESPONSE,
                 Arr::get($this->input('test.setups'), 'response', [])
-            );
+            );*/
 
             $this->updateTestScripts(
                 $testStep,

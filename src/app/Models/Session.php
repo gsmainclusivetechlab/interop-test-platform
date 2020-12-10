@@ -229,6 +229,7 @@ class Session extends Model
                 $defaultUrl
             ),
             'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
+            'CURRENT_TIMESTAMP_ISO8601_ZULU' => now()->toIso8601ZuluString('m'),
             'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),
             'CURRENT_TIMESTAMP_RFC7231' => now()->toRfc7231String(),
         ]);

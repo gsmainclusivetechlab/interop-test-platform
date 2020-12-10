@@ -22,17 +22,6 @@ test_steps:
     api_spec: MM v1.1.2
     trigger:
       amount: '15'
-    test_response_setups:
-      - name: Override response
-        values:
-          status: 400
-          body:
-            errorCode: 'genericError'
-            errorCategory: 'businessRule'
-            errorDateTime: '2000-01-01T00:00:00.000Z'
-            errorDescription:
-              'The specified property contents do not conform to the format
-              required for this Property.'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -77,7 +66,7 @@ test_steps:
       body:
         errorCode: 'genericError'
         errorCategory: 'businessRule'
-        errorDateTime: '2000-01-01T00:00:00.000Z'
+        errorDateTime: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
         errorDescription:
           'The specified property contents do not conform to the format required
           for this Property.'

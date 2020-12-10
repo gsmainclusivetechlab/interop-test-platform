@@ -19,7 +19,7 @@
                     >
                         <icon name="corner-down-left"></icon>
                     </inertia-link>
-                    <b>{{ `Run ID: ${testRun.uuid}` }}</b>
+                    <b>{{ `Run ID: #${testRun.id}` }}</b>
                 </h2>
                 <div class="card-options">
                     <span

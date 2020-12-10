@@ -25,7 +25,7 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li>
+                        <li v-if="session.components.data.length">
                             <p>
                                 <strong>Configuration</strong>
                             </p>
