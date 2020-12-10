@@ -19,6 +19,13 @@ class AuditLog extends Model
     /**
      * @var array
      */
+    protected $casts = [
+        'meta' => 'array'
+    ];
+
+    /**
+     * @var array
+     */
     protected $fillable = ['action', 'subject', 'type', 'meta'];
 
     /**

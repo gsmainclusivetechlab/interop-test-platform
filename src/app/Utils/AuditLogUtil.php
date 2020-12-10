@@ -25,9 +25,9 @@ class AuditLogUtil
      * @param string $action
      * @param string $subject
      * @param int $type
-     * @param string $meta
+     * @param array $meta
      */
-    public function __construct(Request $request, string $action, string $subject, int $type, string $meta)
+    public function __construct(Request $request, string $action, string $subject, int $type, array $meta)
     {
         $this->log($request, $action, $subject, $type, $meta);
     }
@@ -37,18 +37,18 @@ class AuditLogUtil
      * @param string $action
      * @param string $subject
      * @param int $type
-     * @param string $meta
+     * @param array $meta
 
      * @return null
      */
-    public function log(Request $request, string $action, string $subject, int $type, string $meta)
+    public function log(Request $request, string $action, string $subject, int $type, array $meta)
     {
         $log = new AuditLog;
         $log->fullname_id = $request->user()->id;
         $log->action = $action;
         $log->subject = $subject;
         $log->type = $type;
-        $log->meta = '[{}]';
+        $log->meta = $meta;
         $log->save();
 
         return null;

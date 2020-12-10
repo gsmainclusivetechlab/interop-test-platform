@@ -524,11 +524,10 @@ class RegisterController extends Controller
                         );
                 });
 
-                // log session creation
-                new AuditLogUtil($request, 'created new session', $request->session()->get('session.info.uuid')->toString(), 2,'');
-
                 return $session;
             });
+            // log session creation
+            new AuditLogUtil($request, 'created new session', $request->session()->get('session.info.uuid')->toString(), 2, $request->toArray());
             $request->session()->remove('session');
 
             return redirect()
