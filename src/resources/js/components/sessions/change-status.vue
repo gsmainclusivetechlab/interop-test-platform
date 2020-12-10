@@ -60,17 +60,16 @@ export default {
         };
     },
     methods: {
-        submit() {
+        submit(e) {
             if (this.form.reason !== '') {
                 this.formError = false;
             } else {
+                e.preventDefault();
                 this.formError = true;
                 return;
             }
 
-            this.$inertia.put(this.href, this.form).then(() => {
-                this.$bvModal.hide(`modal-status-${this.status}`);
-            });
+            this.$inertia.put(this.href, this.form).then(() => {});
         },
     },
 };
