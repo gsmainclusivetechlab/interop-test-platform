@@ -221,7 +221,7 @@
                                                         testCase.id
                                                     )
                                                 "
-                                                :confirm-text="'This test case is out draft. A new version will be created'"
+                                                :confirm-text="'The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime.'"
                                                 class="dropdown-item"
                                             >
                                                 Edit
