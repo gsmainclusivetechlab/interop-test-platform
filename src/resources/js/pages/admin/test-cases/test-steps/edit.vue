@@ -120,35 +120,44 @@
                         />
                     </div>
                     <div class="col-12 mb-3">
-                        <h2 class="card-title">Trigger</h2>
-                        <json-editor-block
-                            :input-json="trigger"
-                            @output-json="
-                                (data) => {
-                                    trigger = data;
-                                }
-                            "
-                        />
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'trigger'"
+                        >
+                            Trigger
+                        </button>
+                        <b-collapse id="trigger" class="card">
+                            <json-editor-block
+                                :input-json="trigger"
+                                @output-json="
+                                    (data) => {
+                                        trigger = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
                         <button
                             type="button"
-                            class="btn btn-link card-title dropdown-toggle"
+                            class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-request-scripts'"
                         >
                             Test Request Scripts
                         </button>
-                        <b-collapse id="test-request-scripts" visible>
-                            <template
+                        <b-collapse id="test-request-scripts" class="card">
+                            <div
                                 v-for="(request, i) in test.scripts.request
                                     .list"
+                                class="card-body"
+                                :key="`test-request-scripts-${i}`"
                             >
-                                <div
-                                    class="card-header"
-                                    :key="`test-request-scripts-head-${i}`"
-                                >
-                                    <span class="text-muted text-break mr-2"
-                                        >{{ i + 1 }}. {{ request.name }}</span
+                                <div class="card-header px-0 pt-0">
+                                    <span class="text-break mr-2"
+                                        ><b>{{ i + 1 }}.</b>
+                                        {{ request.name }}</span
                                     >
                                     <div class="card-options">
                                         <button
@@ -164,10 +173,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div
-                                    class="card-body"
-                                    :key="`test-request-scripts-form-${i}`"
-                                >
+                                <div class="card-body px-0 pb-0">
                                     <label class="form-label">Name</label>
                                     <input
                                         type="text"
@@ -243,8 +249,8 @@
                                         deleted.
                                     </p>
                                 </b-modal>
-                            </template>
-                            <div class="text-right">
+                            </div>
+                            <div class="card-footer text-right">
                                 <button
                                     type="button"
                                     class="btn btn-primary"
@@ -263,20 +269,19 @@
                     <div class="col-12 mb-3">
                         <button
                             type="button"
-                            class="btn btn-link card-title dropdown-toggle"
+                            class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-response-scripts'"
                         >
                             Test Response Scripts
                         </button>
-                        <b-collapse id="test-response-scripts" visible>
-                            <template
+                        <b-collapse id="test-response-scripts" class="card">
+                            <div
                                 v-for="(response, i) in test.scripts.response
                                     .list"
+                                class="card-body"
+                                :key="`test-response-scripts-${i}`"
                             >
-                                <div
-                                    class="card-header"
-                                    :key="`test-response-scripts-head-${i}`"
-                                >
+                                <div class="card-header px-0 pt-0">
                                     <span class="text-muted text-break mr-2"
                                         >{{ i + 1 }}. {{ response.name }}</span
                                     >
@@ -295,7 +300,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="card-body"
+                                    class="card-body px-0 pb-0"
                                     :key="`test-response-scripts-form-${i}`"
                                 >
                                     <label class="form-label">Name</label>
@@ -373,8 +378,8 @@
                                         deleted.
                                     </p>
                                 </b-modal>
-                            </template>
-                            <div class="text-right">
+                            </div>
+                            <div class="card-footer text-right">
                                 <button
                                     type="button"
                                     class="btn btn-primary"
@@ -395,26 +400,44 @@
                         </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
-                        <h2 class="card-title">Request Headers Examples</h2>
-                        <json-editor-block
-                            :input-json="example.request.headers"
-                            @output-json="
-                                (data) => {
-                                    example.request.headers = data;
-                                }
-                            "
-                        />
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-headers-examples'"
+                        >
+                            Request Headers Examples
+                        </button>
+                        <b-collapse id="request-headers-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.request.headers"
+                                @output-json="
+                                    (data) => {
+                                        example.request.headers = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
-                        <h2 class="card-title">Request Body Examples</h2>
-                        <json-editor-block
-                            :input-json="example.request.body"
-                            @output-json="
-                                (data) => {
-                                    example.request.body = data;
-                                }
-                            "
-                        />
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-body-examples'"
+                        >
+                            Request Body Examples
+                        </button>
+                        <b-collapse id="request-body-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.request.body"
+                                @output-json="
+                                    (data) => {
+                                        example.request.body = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">Response Status Example</h2>
@@ -438,26 +461,44 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <h2 class="card-title">Response Headers Examples</h2>
-                        <json-editor-block
-                            :input-json="example.response.headers"
-                            @output-json="
-                                (data) => {
-                                    example.response.headers = data;
-                                }
-                            "
-                        />
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'response-headers-examples'"
+                        >
+                            Response Headers Examples
+                        </button>
+                        <b-collapse id="response-headers-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.response.headers"
+                                @output-json="
+                                    (data) => {
+                                        example.response.headers = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
                     </div>
                     <div class="col-12 mb-3">
-                        <h2 class="card-title">Response Body Examples</h2>
-                        <json-editor-block
-                            :input-json="example.response.body"
-                            @output-json="
-                                (data) => {
-                                    example.response.body = data;
-                                }
-                            "
-                        />
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'response-body-examples'"
+                        >
+                            Response Body Examples
+                        </button>
+                        <b-collapse id="response-body-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.response.body"
+                                @output-json="
+                                    (data) => {
+                                        example.response.body = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
                     </div>
                 </div>
             </div>
