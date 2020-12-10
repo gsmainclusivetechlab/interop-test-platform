@@ -47,10 +47,10 @@ class InertiaServiceProvider extends ServiceProvider
                     'debug' => env('APP_DEBUG'),
                     'dark_mode' => request()->cookie('dark_mode'),
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
-                    'has_available_session_modes' =>
+                    'available_session_modes_count' =>
                         collect(config('service_session.available_modes'))
                             ->filter()
-                            ->count() > 0,
+                            ->count(),
                 ];
             },
             'auth' => function () {

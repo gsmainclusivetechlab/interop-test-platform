@@ -6,11 +6,15 @@
                     <h3 class="card-title">Configure components</h3>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3" v-for="sut in suts.data">
+                    <div
+                        class="mb-3"
+                        v-for="(sut, i) in suts.data"
+                        :key="`sut-${i}`"
+                    >
                         <h3>{{ sut.name }}</h3>
 
-                        <template v-for="connection in sut.connections">
-                            <div class="mb-3">
+                        <template v-for="(connection, i) in sut.connections">
+                            <div class="mb-3" :key="`connection-${i}`">
                                 <label class="form-label">
                                     {{ connection.name }}
                                 </label>

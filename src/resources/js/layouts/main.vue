@@ -304,7 +304,7 @@
 
                     <inertia-link
                         :href="route('sessions.register.type')"
-                        v-if="$page.app.has_available_session_modes"
+                        v-if="$page.app.available_session_modes_count > 0"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />

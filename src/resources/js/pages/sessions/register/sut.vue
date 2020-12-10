@@ -30,31 +30,34 @@
                             {{ $page.errors.component_ids }}
                         </span>
                     </div>
-                    <div
-                        class="mb-3"
-                        v-for="sut in suts.data"
-                        v-if="form.component_ids.includes(sut.id)"
-                    >
-                        <label class="form-label">{{ sut.name }} URL</label>
-                        <input
-                            v-model="form.base_urls[sut.id]"
-                            :class="{
-                                'is-invalid':
-                                    $page.errors[`base_urls.${sut.id}`],
-                            }"
-                            class="form-control"
-                        />
-                        <span
-                            v-if="$page.errors[`base_urls.${sut.id}`]"
-                            class="invalid-feedback"
+                    <template v-for="(sut, i) in suts.data">
+                        <div
+                            v-if="form.component_ids.includes(sut.id)"
+                            class="mb-3"
+                            :key="i"
                         >
-                            {{ $page.errors[`base_urls.${sut.id}`] }}
-                        </span>
-                    </div>
+                            <label class="form-label">{{ sut.name }} URL</label>
+                            <input
+                                v-model="form.base_urls[sut.id]"
+                                :class="{
+                                    'is-invalid':
+                                        $page.errors[`base_urls.${sut.id}`],
+                                }"
+                                class="form-control"
+                            />
+                            <span
+                                v-if="$page.errors[`base_urls.${sut.id}`]"
+                                class="invalid-feedback"
+                            >
+                                {{ $page.errors[`base_urls.${sut.id}`] }}
+                            </span>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
+                    v-if="$page.available_session_modes_count > 1"
                     :href="
                         route(
                             isCompliance
