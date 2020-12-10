@@ -13,7 +13,7 @@ class AuditLogResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'fullname' => $this->fullname,
+            'fullname' => new UserResource($this->whenLoaded('fullname')),
             'action' => $this->action,
             'subject' => $this->subject,
             'type' => $this->type,

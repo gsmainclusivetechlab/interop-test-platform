@@ -26,7 +26,7 @@ class AuditLog extends Model
      */
     public function fullname()
     {
-        return $this->belongsTo(User::class, 'fullname');
+        return $this->belongsTo(User::class, 'fullname_id');
     }
 
 }

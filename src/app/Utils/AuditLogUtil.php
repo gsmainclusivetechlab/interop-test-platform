@@ -44,7 +44,7 @@ class AuditLogUtil
     public function log(Request $request, string $action, string $subject, int $type, string $meta)
     {
         $log = new AuditLog;
-        $log->fullname = $request->user();
+        $log->fullname_id = $request->user()->id;
         $log->action = $action;
         $log->subject = $subject;
         $log->type = $type;

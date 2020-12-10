@@ -32,7 +32,7 @@
                         v-for="message in logItems.data"
                     >
                     <td>
-                        {{ message.fullname }}
+                        {{ message.fullname.name }}
                     </td>
                     <td>
                         {{ message.action }}
