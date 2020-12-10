@@ -45,7 +45,7 @@ export default {
     },
     props: {
         inputJson: {
-            type: Object,
+            type: Object | Array,
             required: false,
         },
     },

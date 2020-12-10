@@ -119,7 +119,7 @@
                                             "
                                             class="dropdown-item"
                                             :confirm-title="'Are you sure?'"
-                                            :confirm-text="'This test step version will be discarded'"
+                                            :confirm-text="'This version is draft, so it will be permanently removed.'"
                                         >
                                             Discard
                                         </confirm-link>
