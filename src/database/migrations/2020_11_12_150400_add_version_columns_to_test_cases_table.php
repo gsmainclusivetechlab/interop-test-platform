@@ -45,7 +45,6 @@ class AddVersionColumnsToTestCasesTable extends Migration
     public function down()
     {
         Schema::table('test_cases', function (Blueprint $table) {
-            $table->dropUnique(['test_case_group_id', 'version']);
             $table->dropColumn(['test_case_group_id', 'version']);
         });
     }
