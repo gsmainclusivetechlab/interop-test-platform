@@ -22,45 +22,55 @@ class ComplianceSessionExport
         $this->line(
             $section,
             'Group name',
-            $session->owner->groups()->first()->name ?? null
+            $session->owner->groups->implode('name', ', ') ?: null
         );
-
-        $section->addText("\n");
 
         foreach ($session->components as $component) {
             $this->line($section, 'SUT', $component->name);
-            $this->line(
-                $section,
-                "{$component->name} URL",
-                $session->getBaseUriOfComponent($component)
+
+            $textRun = $section->addTextRun();
+            $textRun->addText("{$component->name} URL: ", [
+                'size' => 12,
+                'bold' => true,
+            ]);
+            $textRun->addLink(
+                $session->getBaseUriOfComponent($component),
+                null,
+                ['size' => 12]
             );
 
-            $section->addText("\n");
+            $section->addText(PHP_EOL);
         }
 
         if ($session->environments) {
             $this->title($section, 'Environments');
 
             foreach ($session->environments as $key => $value) {
-                $section->addText("{$key}: {$value}", ['size' => 12]);
+                $textRun = $section->addTextRun();
+                $textRun->addText("{$key}: ", ['size' => 12, 'bold' => true]);
+                $textRun->addText($value, ['size' => 12]);
             }
 
-            $section->addText("\n");
+            $section->addText(PHP_EOL);
         }
 
         $this->title($section, 'Events');
-        $this->line($section, 'Creation', $session->created_at);
-        $this->line($section, 'Completion', $session->completed_at);
+        $this->line($section, 'Created', $session->created_at);
+        $this->line($section, 'Completed', $session->completed_at);
         $this->line($section, $session->status_name, $session->closed_at);
 
-        $section->addText("\n");
+        $section->addText(PHP_EOL);
 
         $this->title($section, 'Questionnaire');
         foreach (
             QuestionnaireSection::getSessionQuestionnaire($session)
-            as $questionnaireSection
+            as $sectionKey => $questionnaireSection
         ) {
-            $this->title($section, $questionnaireSection->name, 14);
+            $this->title(
+                $section,
+                $sectionKey + 1 . ". {$questionnaireSection->name}",
+                12
+            );
 
             foreach ($questionnaireSection->questions as $key => $question) {
                 $this->line($section, "Q{$key}", $question->question);
@@ -70,7 +80,7 @@ class ComplianceSessionExport
                     implode(', ', $question->answers_names)
                 );
 
-                $section->addText("\n");
+                $section->addText(PHP_EOL);
             }
         }
 
@@ -83,7 +93,7 @@ class ComplianceSessionExport
 
         $style = ['bold' => true];
         $table->addRow();
-        $table->addCell(6000)->addText(__('Test case'), $style);
+        $table->addCell(4500)->addText(__('Test case'), $style);
         $table->addCell(1500)->addText(__('Status'), $style);
         $table->addCell(1500)->addText(__('Duration'), $style);
         $table->addCell(1500)->addText(__('Attempts'), $style);
@@ -132,9 +142,12 @@ class ComplianceSessionExport
         ?string $text
     ): void {
         if ($text) {
-            $section->addText(sprintf('%s: %s', __($title), $text), [
+            $textRun = $section->addTextRun();
+            $textRun->addText(__($title) . ': ', [
                 'size' => 12,
+                'bold' => true,
             ]);
+            $textRun->addText($text, ['size' => 12]);
         }
     }
 }

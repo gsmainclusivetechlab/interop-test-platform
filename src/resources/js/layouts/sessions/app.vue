@@ -26,48 +26,6 @@
                     <div
                         class="col-4 d-flex align-items-center justify-content-end"
                     >
-                        <confirm-link
-                            method="post"
-                            class="btn btn-outline-primary"
-                            v-if="session.can.update && session.completable"
-                            :href="route('sessions.complete', session.id)"
-                            :confirm-title="'Confirm completion'"
-                            :confirm-text="`This is a non-reversible action, and you will need to create a new
-                                        session if you wish to execute any more test cases.`"
-                        >
-                            <icon name="checks"></icon>
-                            Completed
-                        </confirm-link>
-                        <change-status
-                            class="ml-1"
-                            v-if="canApprove"
-                            :href="
-                                route(
-                                    'admin.compliance-sessions.update',
-                                    session.id
-                                )
-                            "
-                            :confirm-title="'Approve session'"
-                            :status="'approved'"
-                        >
-                            <icon name="check"></icon>
-                            Approve
-                        </change-status>
-                        <change-status
-                            class="ml-1"
-                            v-if="canApprove"
-                            :href="
-                                route(
-                                    'admin.compliance-sessions.update',
-                                    session.id
-                                )
-                            "
-                            :confirm-title="'Decline session'"
-                            :status="'declined'"
-                        >
-                            <icon name="x"></icon>
-                            Decline
-                        </change-status>
                         <inertia-link
                             :href="
                                 route('sessions.message-log.index', session.id)
@@ -129,13 +87,11 @@
 <script>
 import Layout from '@/layouts/main';
 import SessionProgress from '@/components/sessions/progress';
-import ChangeStatus from '@/components/sessions/change-status';
 
 export default {
     components: {
         Layout,
         SessionProgress,
-        ChangeStatus,
     },
     metaInfo() {
         return {
@@ -156,14 +112,6 @@ export default {
                     { name: this.session.name },
                 ];
             },
-        },
-    },
-    computed: {
-        canApprove() {
-            return (
-                this.$page.auth.user.is_admin &&
-                this.session.status === 'in_verification'
-            );
         },
     },
 };

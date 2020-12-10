@@ -12,7 +12,7 @@ questions:
           merchant-yes: Yes, it does
           merchant-no: No, it doesn't
       - property: merchant-behaviors
-        question: What Test Case behaviors are you intesrested in?
+        question: What Test Case behaviors are you interested in?
         type: multiselect
         preconditions:
           merchant-question1:
@@ -42,7 +42,7 @@ questions:
           p2p-yes: Yes, it does
           p2p-no: No, it doesn't
       - property: p2p-behaviors
-        question: What Test Case behaviors are you intesrested in?
+        question: What Test Case behaviors are you interested in?
         type: multiselect
         preconditions:
           p2p-question1:
@@ -62,7 +62,7 @@ questions:
             in:
               - p2p-negative
       - property: cash-question1
-        question: Does your engine also support Customer Initiated Cash-Ou?
+        question: Does your engine also support Customer Initiated Cash-Out?
         type: select
         values:
           cash-yes: Yes, it does
