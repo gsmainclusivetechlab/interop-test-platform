@@ -16,7 +16,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
      */
     public function path()
     {
-        return $this->request->getUri()->getPath();
+        return (string) $this->request->getUri();
     }
 
     /**
