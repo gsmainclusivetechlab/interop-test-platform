@@ -559,7 +559,7 @@ test_steps:
           status: 'required|in:204'
     request:
       method: 'PUT'
-      uri: 'http://example.com/callback'
+      uri: '${SP_BASE_URI}/callback'
       headers:
         content-type: 'application/json'
         x-date: '${CURRENT_TIMESTAMP_ISO8601}'
