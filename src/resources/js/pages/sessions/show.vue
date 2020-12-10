@@ -175,9 +175,8 @@
                                 >
                                     <dt>{{ question.question }}</dt>
                                     <dd
-                                        v-for="(
-                                            answer, i
-                                        ) in question.answersNames"
+                                        v-for="(answer,
+                                        i) in question.answersNames"
                                         :key="i"
                                     >
                                         {{ answer }}
