@@ -11,6 +11,7 @@ use App\Http\Resources\{
 use App\Models\{ApiSpec, Component, TestCase, TestStep};
 use App\Enums\HttpMethod;
 use App\Enums\HttpStatus;
+use App\Extensions\Twig\Uuid;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TestStepRequest;
 use Exception;
@@ -19,6 +20,8 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
 
@@ -73,14 +76,20 @@ class TestCaseTestStepController extends Controller
 //
 //        dd($content);
 
-        $twig = new Environment(new FilesystemLoader());
-        dd($twig->render('{{ site.name }}', array('site' => ['name'=>'lolo'])));
-//        $twig = new \Twig_Environment(new \Twig_Loader_String());
-//        $rendered = $twig->render(
-//            "<title>{{ site.name }}</title>",
-//            array('site' => ['name'=>'lolo'])
-//        );
-//        dd($rendered);
+        $twig = new Environment(new ArrayLoader());
+        $twig->addExtension(new Uuid());
+//        $template = $twig->createTemplate('{{ steps.0.body.amount.amount + steps.1.body.amount.amount }}');
+//        $template = $twig->createTemplate('{{ post.published_at|date_modify("+1 day")|date("d/m/Y") }}');
+        $template = $twig->createTemplate('{{ uuidv4() }}');
+        dd($template->render(
+            [
+                'steps' => [
+                    ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 5, 'currency' => 'UAH']]],
+                    ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 13, 'currency' => 'UAH']]],
+                ],
+                'post' => ['published_at' => now()]
+            ]
+        ));
 
         return Inertia::render('admin/test-cases/test-steps/index', [
             'testCase' => (new TestCaseResource(
