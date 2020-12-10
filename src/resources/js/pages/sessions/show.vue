@@ -8,7 +8,81 @@
             <div class="card-body">
                 <dl>
                     <dt>Status</dt>
-                    <dd>{{ session.statusName }}</dd>
+                    <dd>
+                        {{ session.statusName }}
+                        <br />
+                        <i v-if="session.status === 'ready'">
+                            Your session is set up and ready to receive requests
+                            from your system. Execute any of the test cases
+                            below to continue.
+                        </i>
+                        <i v-else-if="session.status === 'in_execution'">
+                            <span v-if="session.completable">
+                                All of your test cases have now been executed at
+                                least one. When you are satisfied with your test
+                                results, you may submit them for verification.
+                                <br />
+                                <confirm-link
+                                    method="post"
+                                    class="btn btn-outline-primary"
+                                    v-if="session.can.update"
+                                    :href="
+                                        route('sessions.complete', session.id)
+                                    "
+                                    :confirm-title="'Confirm completion'"
+                                    :confirm-text="`This is a non-reversible action, and you will need to create a new
+                                        session if you wish to execute any more test cases.`"
+                                >
+                                    <icon name="checks"></icon>
+                                    Submit Results
+                                </confirm-link>
+                            </span>
+                            <span v-else>
+                                Some of your test cases have been executed. When
+                                all test cases have recorded at least one
+                                attempt, you will be able to submit your results
+                                for verification.
+                            </span>
+                        </i>
+                        <i v-else-if="session.status === 'in_verification'">
+                            <span v-if="$page.auth.user.is_admin">
+                                Please review the test results, and then Approve
+                                or Decline the session.
+                                <br />
+                                <change-status
+                                    :href="
+                                        route(
+                                            'admin.compliance-sessions.update',
+                                            session.id
+                                        )
+                                    "
+                                    :confirm-title="'Approve session'"
+                                    :status="'approved'"
+                                >
+                                    <icon name="check"></icon>
+                                    Approve
+                                </change-status>
+                                <change-status
+                                    class="ml-1"
+                                    :href="
+                                        route(
+                                            'admin.compliance-sessions.update',
+                                            session.id
+                                        )
+                                    "
+                                    :confirm-title="'Decline session'"
+                                    :status="'declined'"
+                                >
+                                    <icon name="x"></icon>
+                                    Decline
+                                </change-status>
+                            </span>
+                            <span v-else>
+                                Your test results have been submitted for
+                                verification.
+                            </span>
+                        </i>
+                    </dd>
                 </dl>
                 <dl v-if="session.reason">
                     <dt>Reason</dt>
@@ -67,9 +141,8 @@
                                 >
                                     <dt>{{ question.question }}</dt>
                                     <dd
-                                        v-for="(
-                                            answer, i
-                                        ) in question.answersNames"
+                                        v-for="(answer,
+                                        i) in question.answersNames"
                                         :key="i"
                                     >
                                         {{ answer }}
@@ -333,11 +406,13 @@
 <script>
 import Layout from '@/layouts/sessions/main';
 import SessionChart from '@/components/sessions/chart';
+import ChangeStatus from '@/components/sessions/change-status';
 
 export default {
     components: {
         Layout,
         SessionChart,
+        ChangeStatus,
     },
     props: {
         session: {

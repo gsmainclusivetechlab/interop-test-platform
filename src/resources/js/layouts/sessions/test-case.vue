@@ -37,9 +37,8 @@
                                 <h3>{{ component.name }}</h3>
                                 <div
                                     class="mb-3"
-                                    v-for="(
-                                        connection, i
-                                    ) in component.connections"
+                                    v-for="(connection,
+                                    i) in component.connections"
                                     :key="i"
                                 >
                                     <label>
