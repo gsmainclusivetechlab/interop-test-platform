@@ -20,7 +20,7 @@
                     <confirm-link
                         v-else
                         :href="route('admin.test-cases.info.edit', testCase.id)"
-                        :confirm-text="'The latest version of this test case if published, so a new draft version will be created to store your changes. You may publish or discard it anytime. Proceed?'"
+                        :confirm-text="'The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime.'"
                         class="btn btn-primary"
                     >
                         <icon name="refresh" />

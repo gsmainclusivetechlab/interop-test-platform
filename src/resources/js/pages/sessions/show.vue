@@ -7,81 +7,115 @@
 
             <div class="card-body">
                 <dl>
-                    <dt>Status</dt>
+                    <dt>
+                        Status:
+                        <span
+                            class="badge"
+                            :class="{
+                                'bg-secondary':
+                                    session.status === 'in_execution' ||
+                                    session.status === 'ready' ||
+                                    session.status === 'in_verification',
+                                'bg-success': session.status === 'approved',
+                                'bg-danger': session.status === 'declined',
+                            }"
+                            >{{ session.statusName }}</span
+                        >
+                    </dt>
                     <dd>
-                        {{ session.statusName }}
-                        <br />
-                        <i v-if="session.status === 'ready'">
-                            Your session is set up and ready to receive requests
-                            from your system. Execute any of the test cases
-                            below to continue.
-                        </i>
-                        <i v-else-if="session.status === 'in_execution'">
-                            <span v-if="session.completable">
-                                All of your test cases have now been executed at
-                                least one. When you are satisfied with your test
-                                results, you may submit them for verification.
-                                <br />
-                                <confirm-link
-                                    method="post"
-                                    class="btn btn-outline-primary"
+                        <span v-if="session.status === 'ready'">
+                            <i>
+                                Your session is set up and ready to receive
+                                requests from your system. Execute any of the
+                                test cases below to continue.</i
+                            >
+                        </span>
+                        <template v-else-if="session.status === 'in_execution'">
+                            <template v-if="session.completable">
+                                <span>
+                                    <i
+                                        >All of your test cases have now been
+                                        executed at least one. When you are
+                                        satisfied with your test results, you
+                                        may submit them for verification.</i
+                                    >
+                                </span>
+                                <div
                                     v-if="session.can.update"
-                                    :href="
-                                        route('sessions.complete', session.id)
-                                    "
-                                    :confirm-title="'Confirm completion'"
-                                    :confirm-text="`This is a non-reversible action, and you will need to create a new
+                                    class="text-right"
+                                >
+                                    <confirm-link
+                                        method="post"
+                                        class="btn btn-outline-primary"
+                                        :href="
+                                            route(
+                                                'sessions.complete',
+                                                session.id
+                                            )
+                                        "
+                                        :confirm-title="'Confirm completion'"
+                                        :confirm-text="`This is a non-reversible action, and you will need to create a new
                                         session if you wish to execute any more test cases.`"
-                                >
-                                    <icon name="checks"></icon>
-                                    Submit Results
-                                </confirm-link>
-                            </span>
+                                    >
+                                        <icon name="checks"></icon>
+                                        Submit Results
+                                    </confirm-link>
+                                </div>
+                            </template>
                             <span v-else>
-                                Some of your test cases have been executed. When
-                                all test cases have recorded at least one
-                                attempt, you will be able to submit your results
-                                for verification.
-                            </span>
-                        </i>
-                        <i v-else-if="session.status === 'in_verification'">
-                            <span v-if="$page.auth.user.is_admin">
-                                Please review the test results, and then Approve
-                                or Decline the session.
-                                <br />
-                                <change-status
-                                    :href="
-                                        route(
-                                            'admin.compliance-sessions.update',
-                                            session.id
-                                        )
-                                    "
-                                    :confirm-title="'Approve session'"
-                                    :status="'approved'"
+                                <i
+                                    >Some of your test cases have been executed.
+                                    When all test cases have recorded at least
+                                    one attempt, you will be able to submit your
+                                    results for verification.</i
                                 >
-                                    <icon name="check"></icon>
-                                    Approve
-                                </change-status>
-                                <change-status
-                                    class="ml-1"
-                                    :href="
-                                        route(
-                                            'admin.compliance-sessions.update',
-                                            session.id
-                                        )
-                                    "
-                                    :confirm-title="'Decline session'"
-                                    :status="'declined'"
-                                >
-                                    <icon name="x"></icon>
-                                    Decline
-                                </change-status>
                             </span>
+                        </template>
+                        <template
+                            v-else-if="session.status === 'in_verification'"
+                        >
+                            <template v-if="$page.auth.user.is_admin">
+                                <span
+                                    ><i
+                                        >Please review the test results, and
+                                        then Approve or Decline the session.</i
+                                    ></span
+                                >
+                                <div class="text-right">
+                                    <change-status
+                                        :href="
+                                            route(
+                                                'admin.compliance-sessions.update',
+                                                session.id
+                                            )
+                                        "
+                                        :confirm-title="'Approve session'"
+                                        :status="'approved'"
+                                    >
+                                        <icon name="check"></icon>
+                                        Approve
+                                    </change-status>
+                                    <change-status
+                                        class="ml-1"
+                                        :href="
+                                            route(
+                                                'admin.compliance-sessions.update',
+                                                session.id
+                                            )
+                                        "
+                                        :confirm-title="'Decline session'"
+                                        :status="'declined'"
+                                    >
+                                        <icon name="x"></icon>
+                                        Decline
+                                    </change-status>
+                                </div>
+                            </template>
                             <span v-else>
                                 Your test results have been submitted for
                                 verification.
                             </span>
-                        </i>
+                        </template>
                     </dd>
                 </dl>
                 <dl v-if="session.reason">

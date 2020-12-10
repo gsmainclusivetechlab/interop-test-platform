@@ -3,7 +3,7 @@
         <div
             class="alert alert-danger text-center"
             role="alert"
-            v-if="!$page.app.has_available_session_modes"
+            v-if="$page.app.available_session_modes_count === 0"
         >
             No test modes are enabled in the environment
         </div>
@@ -23,14 +23,16 @@
                         <p class="empty-title h3 mb-3">You have no sessions</p>
                         <p
                             class="empty-subtitle text-muted mb-0"
-                            v-if="$page.app.has_available_session_modes"
+                            v-if="$page.app.available_session_modes_count > 0"
                         >
                             Click the button below to create your first session.
                         </p>
                         <div class="empty-action">
                             <inertia-link
                                 :href="route('sessions.register.type')"
-                                v-if="$page.app.has_available_session_modes"
+                                v-if="
+                                    $page.app.available_session_modes_count > 0
+                                "
                                 class="btn btn-primary"
                             >
                                 <icon name="plus" />
@@ -65,7 +67,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="session in sessions.data">
+                            <tr v-for="(session, i) in sessions.data" :key="i">
                                 <td class="text-break">
                                     <inertia-link
                                         :href="
