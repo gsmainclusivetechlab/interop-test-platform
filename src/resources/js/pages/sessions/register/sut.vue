@@ -57,7 +57,11 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    v-if="$page.available_session_modes_count > 1"
+                    v-if="
+                        $page.available_session_modes_count > 1 ||
+                        isCompliance ||
+                        session.withQuestions
+                    "
                     :href="
                         route(
                             isCompliance
