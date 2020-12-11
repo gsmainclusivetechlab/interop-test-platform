@@ -1,19 +1,32 @@
+## v1.4
+
+-   Task: Control Available Session Modes [@KolyaSirik,@Kassaila]
+-   Task: Migration for Test Cases does not add "slug" value [@KolyaSirik]
+-   Task: Invite User Button Loading State Does not Reset [@jc-skushnir]
+-   Task: Control which components may be SUTs [@KolyaSirik]
+-   Task: Allow 0-N SUTs [@KolyaSirik]
+-   Task: Only draw relevant components on "Select SUT" Page [@KolyaSirik]
+-   Task: Remove Simulators [@KolyaSirik]
+-   Task: Compliance Session Tweaks [@KolyaSirik,@Kassaila]
+-   Task: Compliance session export file -> add more info [@KolyaSirik]
+-   Task: Test Case Visual Editor [@jc-skushnir,@Kassaila]
+
 ## v1.3
 
 -   Task: Editable Testcases [@jc-skushnir,@Kassaila]
--   Task: Email Notifications for Session Status Changes [@jc-nsiryk]
--   Task: Certification Sessions [@jc-nsiryk,@Kassaila]
--   Task: Compliance Session Results Page [@jc-nsiryk,@Kassaila]
+-   Task: Email Notifications for Session Status Changes [@KolyaSirik]
+-   Task: Certification Sessions [@KolyaSirik,@Kassaila]
+-   Task: Compliance Session Results Page [@KolyaSirik,@Kassaila]
 -   Task: Move invitation parameters to service.env [@jc-skushnir]
--   Task: Old Session does not accept incoming messages [@jc-nsiryk]
+-   Task: Old Session does not accept incoming messages [@KolyaSirik]
 
 ## v1.2
 
 -   Task: Email Invitations [@jc-skushnir,@Kassaila]
 -   Task: Implicit Group Admins [@jc-skushnir]
 -   Task: Block Registration Without Invitation Code [@jc-skushnir]
--   Task: Questionnaire Definition Parser [@jc-nsiryk]
--   Task: Test Case Selection Wizard [@jc-nsiryk,@Kassaila]
+-   Task: Questionnaire Definition Parser [@KolyaSirik]
+-   Task: Test Case Selection Wizard [@KolyaSirik,@Kassaila]
 
 ## v1.0
 
