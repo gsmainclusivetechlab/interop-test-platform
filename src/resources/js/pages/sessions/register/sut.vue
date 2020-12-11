@@ -64,7 +64,7 @@
                     "
                     :href="
                         route(
-                            isCompliance
+                            isCompliance || session.withQuestions
                                 ? 'sessions.register.questionnaire.summary'
                                 : 'sessions.register.type'
                         )
