@@ -25,6 +25,7 @@ $factory->define(TestCase::class, function (Faker $faker) {
                 ->getKey();
         },
         'name' => $faker->text,
+        'slug' => $faker->slug,
         'behavior' => $faker->randomElement([
             TestCase::BEHAVIOR_POSITIVE,
             TestCase::BEHAVIOR_NEGATIVE,
