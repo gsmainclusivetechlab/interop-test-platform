@@ -11,7 +11,6 @@ use App\Http\Resources\{
 use App\Models\{ApiSpec, Component, TestCase, TestStep};
 use App\Enums\HttpMethod;
 use App\Enums\HttpStatus;
-use App\Extensions\Twig\Uuid;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TestStepRequest;
 use Exception;
@@ -19,11 +18,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Twig\Environment;
-use Twig\Loader\ArrayLoader;
-use Twig\Loader\ChainLoader;
-use Twig\Loader\FilesystemLoader;
-use Twig\Loader\LoaderInterface;
 
 class TestCaseTestStepController extends Controller
 {
@@ -47,49 +41,6 @@ class TestCaseTestStepController extends Controller
     public function index(TestCase $testCase)
     {
         $this->authorize('update', $testCase);
-////        $generated = \Blade::compileString('@verbatim {{ steps[0].body.amount.amount + steps[0].body.amount.amount }} @endverbatim');
-//        $generated = \Blade::compileString('{!! Str::uuid()."\n".now() !!}');
-////        $generated = \Blade::compileString('{!! \App\Models\TestCase::where("id", 144)->update(["draft" => false]) !!}');
-//
-//        ob_start() and extract(['steps' => [
-//            ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 5, 'currency' => 'UAH']]],
-//            ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 13, 'currency' => 'UAH']]],
-//        ]], EXTR_SKIP);
-//
-//        // We'll include the view contents for parsing within a catcher
-//        // so we can avoid any WSOD errors. If an exception occurs we
-//        // will throw it out to the exception handler.
-//        try
-//        {
-/*            eval('?>'.$generated);*/
-//        }
-//
-//            // If we caught an exception, we'll silently flush the output
-//            // buffer so that no partially rendered views get thrown out
-//            // to the client and confuse the user with junk.
-//        catch (\Exception $e)
-//        {
-//            ob_get_clean(); throw $e;
-//        }
-//
-//        $content = ob_get_clean();
-//
-//        dd($content);
-
-        $twig = new Environment(new ArrayLoader());
-        $twig->addExtension(new Uuid());
-//        $template = $twig->createTemplate('{{ steps.0.body.amount.amount + steps.1.body.amount.amount }}');
-//        $template = $twig->createTemplate('{{ post.published_at|date_modify("+1 day")|date("d/m/Y") }}');
-        $template = $twig->createTemplate('{{ uuidv4() }}');
-        dd($template->render(
-            [
-                'steps' => [
-                    ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 5, 'currency' => 'UAH']]],
-                    ['headers' => ['ac' => 'ap/js'], 'body' => ['amount' => ['amount' => 13, 'currency' => 'UAH']]],
-                ],
-                'post' => ['published_at' => now()]
-            ]
-        ));
 
         return Inertia::render('admin/test-cases/test-steps/index', [
             'testCase' => (new TestCaseResource(

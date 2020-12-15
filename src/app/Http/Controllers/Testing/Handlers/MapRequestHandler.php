@@ -46,6 +46,8 @@ class MapRequestHandler
 
         $testRequest = $testRequest->withSubstitutions(
             $this->testResult->session->environments()
+        )->withVariables(
+            $this->testResult->testRun->testResults
         );
         $this->testResult->update(['request' => $testRequest]);
 

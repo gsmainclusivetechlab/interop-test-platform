@@ -4,6 +4,7 @@ namespace App\Http\Client;
 
 use App\Models\TestSetup;
 use App\Utils\TokenSubstitution;
+use App\Utils\TwigSubstitution;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 
@@ -60,6 +61,30 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
     {
         $data = $this->toArray();
         $substitution = new TokenSubstitution($tokens);
+        array_walk_recursive($data, function (&$value) use ($substitution) {
+            if (is_string($value)) {
+                $value = $substitution->replace($value);
+            }
+        });
+
+        return new self(
+            new \GuzzleHttp\Psr7\Response(
+                $data['status'],
+                $data['headers'],
+                json_encode($data['body'])
+            )
+        );
+    }
+
+    /**
+     * @param $testResults
+     * @return $this
+     */
+    public function withVariables($testResults)
+    {
+        $data = $this->toArray();
+        $substitution = new TwigSubstitution($testResults);
+
         array_walk_recursive($data, function (&$value) use ($substitution) {
             if (is_string($value)) {
                 $value = $substitution->replace($value);
