@@ -109,7 +109,7 @@ class TestCaseTestStepController extends Controller
      */
     public function edit(TestCase $testCase, TestStep $testStep)
     {
-        if (!$testCase->isLast()) {
+        if (!$testCase->isLastPosition()) {
             return redirect()->route(
                 'admin.test-cases.test-steps.index',
                 $testCase->last_version->id

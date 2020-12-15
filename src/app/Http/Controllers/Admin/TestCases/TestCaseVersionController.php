@@ -40,7 +40,7 @@ class TestCaseVersionController extends Controller
                     'test_case_group_id',
                     $testCase->test_case_group_id
                 )
-                    ->with('useCase', 'owner')
+                    ->with('useCase', 'owner', 'testSteps', 'groups')
                     ->orderByDesc('version')
                     ->paginate()
             ),
@@ -70,7 +70,7 @@ class TestCaseVersionController extends Controller
         $this->authorize('delete', $testCase);
         $testCase->delete();
 
-        if (1 === $testCase->version) {
+        if ($testCase->isFirstPosition()) {
             return redirect()
                 ->route('admin.test-cases.index')
                 ->with('success', __('Test case deleted successfully'));
