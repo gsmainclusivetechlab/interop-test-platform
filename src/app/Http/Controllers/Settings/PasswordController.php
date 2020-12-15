@@ -45,7 +45,7 @@ class PasswordController extends Controller
         $user->setRememberToken(Str::random(60));
         $user->save();
 
-        new AuditLogUtil($request, 'reset password', '', 1, $request->toArray());
+        new AuditLogUtil($request, 'reset password', '', 0, $request->toArray());
 
         return redirect()
             ->back()

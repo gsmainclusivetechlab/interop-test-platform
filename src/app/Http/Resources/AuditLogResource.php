@@ -17,8 +17,25 @@ class AuditLogResource extends JsonResource
             'action' => $this->action,
             'subject' => $this->subject,
             'type' => $this->type,
+            'url' => $this->getSubject($this->subject, $this->type),
             'meta' => $this->meta,
             'created_at' => $this->created_at->diffForHumans(),
         ];
+    }
+
+    /**
+     * @param $subject
+     * @param $type
+     * @return string
+     */
+    private function getSubject($subject, $type)
+    {
+        switch ($type) {
+            case 0:
+                break;
+            case 1:
+                return 'sessions.show';
+        }
+        return $subject;
     }
 }

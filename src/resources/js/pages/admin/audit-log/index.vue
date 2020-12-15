@@ -37,11 +37,25 @@
                     <td>
                         {{ message.action }}
                     </td>
-                    <td>
-                        {{ message.subject }}
+                    <td class="text-break">
+                        <inertia-link
+                            :href="
+                                route(message.url, message.subject)
+                            "
+                        >
+                            {{ message.subject }}
+                        </inertia-link>
                     </td>
                     <td>
-                        {{ message.meta }}
+                        <button
+                            class="btn btn-secondary"
+                            v-if="message.meta"
+                            v-b-modal="
+                            `modal-request-${message.name}`
+                            "
+                        >
+                            Request
+                        </button>
                     </td>
                     <td>
                         {{ message.created_at }}
