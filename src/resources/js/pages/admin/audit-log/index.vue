@@ -43,7 +43,7 @@
                                 route(message.url, message.subject)
                             "
                         >
-                            {{ message.subject }}
+                            #{{ message.subject }}
                         </inertia-link>
                     </td>
                     <td>

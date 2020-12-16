@@ -7,6 +7,7 @@ use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\GroupEnvironment;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -69,6 +70,8 @@ class GroupEnvironmentController extends Controller
             'variables' => ['required', 'array'],
         ]);
         $group->environments()->create($request->input());
+
+        new AuditLogUtil($request, 'Created a new environment', strval($group->id), 2, $request->toArray());
 
         return redirect()
             ->route('groups.environments.index', $group)

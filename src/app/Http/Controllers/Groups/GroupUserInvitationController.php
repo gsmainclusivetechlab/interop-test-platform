@@ -7,6 +7,7 @@ use App\Http\Resources\GroupUserInvitationResource;
 use App\Models\Group;
 use App\Models\GroupUserInvitation;
 use App\Http\Controllers\Controller;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -99,6 +100,8 @@ class GroupUserInvitationController extends Controller
             'expired_at' => env('INVITATION_LIFETIME', 432000),
         ]);
         $userInvitation->sendEmailInvitationNotification();
+
+        new AuditLogUtil($request, 'New user was invited', strval($group->id), 2, $request->toArray());
 
         return redirect()
             ->route('groups.user-invitations.index', $group)

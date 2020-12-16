@@ -36,6 +36,8 @@ class AuditLogResource extends JsonResource
                 break;
             case 1:
                 return 'sessions.show';
+            case 2:
+                return 'groups.show';
         }
         return $subject;
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Exports\ComplianceSessionExport;
 use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
+use App\Utils\AuditLogUtil;
 use App\Http\Resources\{
     ComponentResource,
     SectionResource,
@@ -410,6 +411,7 @@ class SessionController extends Controller
 
                 return $session;
             });
+            new AuditLogUtil($request, 'Session was edited', strval($session->id), 1, $request->toArray());
 
             return redirect()
                 ->route('sessions.show', $session)

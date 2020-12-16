@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -87,6 +88,8 @@ class GroupUserController extends Controller
         $group->users()->attach($request->input('user_id'), [
             'admin' => !$group->users()->exists(),
         ]);
+
+        new AuditLogUtil($request, 'New user was invited', strval($group->id), 2, $request->toArray());
 
         return redirect()
             ->route('groups.users.index', $group)
