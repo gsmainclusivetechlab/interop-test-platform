@@ -549,9 +549,9 @@ export default {
         return {
             sending: false,
             component: {
-                list: this.$page.components.map((el) => el.name),
+                list: this.$page.props.components.map((el) => el.name),
                 connections: new Map(
-                    this.$page.components.map((el) => [
+                    this.$page.props.components.map((el) => [
                         el.name,
                         el.connections.data.map(
                             (connection) => connection.name
@@ -561,7 +561,7 @@ export default {
             },
             method: {
                 selected: '',
-                list: collect(this.$page.methods).toArray(),
+                list: collect(this.$page.props.methods).toArray(),
             },
             path: '',
             pattern: '',
@@ -569,7 +569,10 @@ export default {
             target: '',
             apiSpec: {
                 selected: 'None',
-                list: ['None', ...this.$page.apiSpecs.map((el) => el.name)],
+                list: [
+                    'None',
+                    ...this.$page.props.apiSpecs.map((el) => el.name),
+                ],
             },
             trigger: {},
             test: {
@@ -598,7 +601,7 @@ export default {
                 response: {
                     status: {
                         selected: '',
-                        list: collect(this.$page.statuses).toArray(),
+                        list: collect(this.$page.props.statuses).toArray(),
                     },
                     headers: {},
                     body: {},
@@ -610,24 +613,24 @@ export default {
         submit() {
             const form = {
                 api_spec_id:
-                    this.$page.apiSpecs.filter(
+                    this.$page.props.apiSpecs.filter(
                         (el) => el.name === this.apiSpec.selected
                     )?.[0]?.id ?? null,
-                method: collect(this.$page.methods)
+                method: collect(this.$page.props.methods)
                     .flip()
                     .get(this.method.selected),
                 path: this.path,
                 pattern: this.pattern ?? null,
-                source_id: this.$page.components.filter(
+                source_id: this.$page.props.components.filter(
                     (el) => el.name === this.source
                 )?.[0]?.id,
-                target_id: this.$page.components.filter(
+                target_id: this.$page.props.components.filter(
                     (el) => el.name === this.target
                 )?.[0]?.id,
                 trigger: this.trigger,
                 request: this.example.request,
                 response: {
-                    status: collect(this.$page.statuses)
+                    status: collect(this.$page.props.statuses)
                         .flip()
                         .get(this.example.response.status.selected),
                     headers: this.example.response.headers,

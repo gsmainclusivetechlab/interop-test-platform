@@ -13,6 +13,9 @@ import {
     PopoverPlugin,
     TabsPlugin,
 } from 'bootstrap-vue';
+import { InertiaProgress } from '@inertiajs/progress';
+
+InertiaProgress.init();
 
 window.string = require('string');
 window.collect = require('collect.js');

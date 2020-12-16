@@ -82,7 +82,7 @@
                             v-model="useCase"
                             label="name"
                             placeholder="Select use case"
-                            :options="$page.useCases"
+                            :options="$page.props.useCases"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -164,7 +164,9 @@
                             multiple
                             placeholder="Select components"
                             label="name"
-                            :options="$page.components.map((el) => el.name)"
+                            :options="
+                                $page.props.components.map((el) => el.name)
+                            "
                             :createItem="false"
                             :disableSearch="true"
                         />
@@ -226,7 +228,7 @@ export default {
             behavior: collect(this.$page.props.enums.test_case_behaviors).get(
                 this.testCase.behavior
             ),
-            useCase: this.$page.useCases.filter(
+            useCase: this.$page.props.useCases.filter(
                 (el) => el.name === this.testCase.useCase.data.name
             )[0],
             description: this.testCase.description,
@@ -246,7 +248,7 @@ export default {
                 description: this.description,
                 precondition: this.precondition,
                 components_id: this.components.map((name) => {
-                    return this.$page.components.filter((obj) => {
+                    return this.$page.props.components.filter((obj) => {
                         return collect(obj).flip().has(name);
                     })[0].id;
                 }),

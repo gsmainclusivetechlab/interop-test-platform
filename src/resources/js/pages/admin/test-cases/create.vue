@@ -82,7 +82,7 @@
                             v-model="useCase"
                             label="name"
                             placeholder="Select use case"
-                            :options="$page.useCases"
+                            :options="$page.props.useCases"
                             :disableSearch="false"
                             :createItem="false"
                         />
@@ -164,7 +164,7 @@
                                 'is-invalid': $page.props.errors.components_id,
                             }"
                             label="name"
-                            :options="$page.components"
+                            :options="$page.props.components"
                             :createItem="false"
                             :disableSearch="true"
                         />
