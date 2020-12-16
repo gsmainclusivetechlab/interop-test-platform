@@ -19,15 +19,17 @@
                 <textarea
                     v-model="form.reason"
                     :class="{
-                        'is-invalid': $page.errors.reason || formError,
+                        'is-invalid': $page.props.errors.reason || formError,
                     }"
                     class="form-control"
                 ></textarea>
                 <span
-                    v-if="$page.errors.reason || formError"
+                    v-if="$page.props.errors.reason || formError"
                     class="invalid-feedback"
                 >
-                    {{ $page.errors.reason || 'Reason field is required' }}
+                    {{
+                        $page.props.errors.reason || 'Reason field is required'
+                    }}
                 </span>
             </form>
         </b-modal>

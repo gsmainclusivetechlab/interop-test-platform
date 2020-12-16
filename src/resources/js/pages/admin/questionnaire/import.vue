@@ -17,15 +17,16 @@
                                         v-model="form.file"
                                         placeholder="Choose file..."
                                         v-bind:class="{
-                                            'is-invalid': $page.errors.file,
+                                            'is-invalid':
+                                                $page.props.errors.file,
                                         }"
                                     />
                                     <span
-                                        v-if="$page.errors.file"
+                                        v-if="$page.props.errors.file"
                                         class="invalid-feedback"
                                     >
                                         <strong>
-                                            {{ $page.errors.file }}
+                                            {{ $page.props.errors.file }}
                                         </strong>
                                     </span>
                                 </div>

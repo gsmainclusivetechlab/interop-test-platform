@@ -11,27 +11,33 @@
                     <label class="form-label">Email address</label>
                     <input
                         v-model="form.email"
-                        :class="{ 'is-invalid': $page.errors.email }"
+                        :class="{ 'is-invalid': $page.props.errors.email }"
                         type="email"
                         readonly="readonly"
                         class="form-control"
                         placeholder="e.g., john.doe@email.com"
                     />
-                    <span v-if="$page.errors.email" class="invalid-feedback">
-                        {{ $page.errors.email }}
+                    <span
+                        v-if="$page.props.errors.email"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.email }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">New password</label>
                     <input
                         v-model="form.password"
-                        :class="{ 'is-invalid': $page.errors.password }"
+                        :class="{ 'is-invalid': $page.props.errors.password }"
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
                     />
-                    <span v-if="$page.errors.password" class="invalid-feedback">
-                        {{ $page.errors.password }}
+                    <span
+                        v-if="$page.props.errors.password"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.password }}
                     </span>
                 </div>
                 <div class="mb-3">
@@ -39,17 +45,18 @@
                     <input
                         v-model="form.password_confirmation"
                         :class="{
-                            'is-invalid': $page.errors.password_confirmation,
+                            'is-invalid':
+                                $page.props.errors.password_confirmation,
                         }"
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
                     />
                     <span
-                        v-if="$page.errors.password_confirmation"
+                        v-if="$page.props.errors.password_confirmation"
                         class="invalid-feedback"
                     >
-                        {{ $page.errors.password_confirmation }}
+                        {{ $page.props.errors.password_confirmation }}
                     </span>
                 </div>
                 <div class="form-footer">

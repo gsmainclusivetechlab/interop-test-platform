@@ -16,16 +16,17 @@
                                 v-model="form.current_password"
                                 class="form-control"
                                 :class="{
-                                    'is-invalid': $page.errors.current_password,
+                                    'is-invalid':
+                                        $page.props.errors.current_password,
                                 }"
                                 placeholder="e.g., **********"
                                 name="current_password"
                             />
                             <span
-                                v-if="$page.errors.current_password"
+                                v-if="$page.props.errors.current_password"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors.current_password }}
+                                {{ $page.props.errors.current_password }}
                             </span>
                         </div>
                     </div>
@@ -40,15 +41,17 @@
                                 type="password"
                                 v-model="form.password"
                                 class="form-control"
-                                :class="{ 'is-invalid': $page.errors.password }"
+                                :class="{
+                                    'is-invalid': $page.props.errors.password,
+                                }"
                                 placeholder="e.g., **********"
                                 name="password"
                             />
                             <span
-                                v-if="$page.errors.password"
+                                v-if="$page.props.errors.password"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors.password }}
+                                {{ $page.props.errors.password }}
                             </span>
                         </div>
                     </div>
@@ -65,16 +68,17 @@
                                 class="form-control"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors.password_confirmation,
+                                        $page.props.errors
+                                            .password_confirmation,
                                 }"
                                 placeholder="e.g., **********"
                                 name="password_confirmation"
                             />
                             <span
-                                v-if="$page.errors.password_confirmation"
+                                v-if="$page.props.errors.password_confirmation"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors.password_confirmation }}
+                                {{ $page.props.errors.password_confirmation }}
                             </span>
                         </div>
                     </div>

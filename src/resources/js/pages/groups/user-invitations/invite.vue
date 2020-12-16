@@ -17,16 +17,17 @@
                                 class="form-control"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors.user_email || !emailValid,
+                                        $page.props.errors.user_email ||
+                                        !emailValid,
                                 }"
                                 type="email"
                             />
                             <span
-                                v-if="$page.errors.user_email"
+                                v-if="$page.props.errors.user_email"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors.user_email }}
+                                    {{ $page.props.errors.user_email }}
                                 </strong>
                             </span>
                             <span v-if="!emailValid" class="invalid-feedback">

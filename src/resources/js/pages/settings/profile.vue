@@ -15,7 +15,7 @@
                                 type="text"
                                 readonly
                                 class="form-control"
-                                :value="$page.auth.user.email"
+                                :value="$page.props.auth.user.email"
                             />
                         </div>
                     </div>
@@ -31,16 +31,16 @@
                                 v-model="form.first_name"
                                 class="form-control"
                                 :class="{
-                                    'is-invalid': $page.errors.first_name,
+                                    'is-invalid': $page.props.errors.first_name,
                                 }"
                                 placeholder="e.g., John"
                                 name="first_name"
                             />
                             <span
-                                v-if="$page.errors.first_name"
+                                v-if="$page.props.errors.first_name"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors.first_name }}
+                                {{ $page.props.errors.first_name }}
                             </span>
                         </div>
                     </div>
@@ -56,16 +56,16 @@
                                 v-model="form.last_name"
                                 class="form-control"
                                 :class="{
-                                    'is-invalid': $page.errors.last_name,
+                                    'is-invalid': $page.props.errors.last_name,
                                 }"
                                 placeholder="e.g., Doe"
                                 name="last_name"
                             />
                             <span
-                                v-if="$page.errors.last_name"
+                                v-if="$page.props.errors.last_name"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors.last_name }}
+                                {{ $page.props.errors.last_name }}
                             </span>
                         </div>
                     </div>
@@ -80,15 +80,17 @@
                                 type="text"
                                 v-model="form.company"
                                 class="form-control"
-                                :class="{ 'is-invalid': $page.errors.company }"
+                                :class="{
+                                    'is-invalid': $page.props.errors.company,
+                                }"
                                 placeholder="e.g., GSMA"
                                 name="company"
                             />
                             <span
-                                v-if="$page.errors.company"
+                                v-if="$page.props.errors.company"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors.company }}
+                                {{ $page.props.errors.company }}
                             </span>
                         </div>
                     </div>
@@ -118,9 +120,9 @@ export default {
         return {
             sending: false,
             form: {
-                first_name: this.$page.auth.user.first_name,
-                last_name: this.$page.auth.user.last_name,
-                company: this.$page.auth.user.company,
+                first_name: this.$page.props.auth.user.first_name,
+                last_name: this.$page.props.auth.user.last_name,
+                company: this.$page.props.auth.user.company,
             },
         };
     },

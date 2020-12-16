@@ -11,7 +11,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.method,
+                                'is-invalid': $page.props.errors.method,
                             }"
                             v-model="method.selected"
                             placeholder="Select method"
@@ -19,11 +19,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.method"
+                            v-if="$page.props.errors.method"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.method }}
+                                {{ $page.props.errors.method }}
                             </strong>
                         </span>
                     </div>
@@ -34,13 +34,16 @@
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.path,
+                                'is-invalid': $page.props.errors.path,
                             }"
                             v-model="path"
                         />
-                        <span v-if="$page.errors.path" class="invalid-feedback">
+                        <span
+                            v-if="$page.props.errors.path"
+                            class="invalid-feedback"
+                        >
                             <strong>
-                                {{ $page.errors.path }}
+                                {{ $page.props.errors.path }}
                             </strong>
                         </span>
                     </div>
@@ -51,16 +54,16 @@
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.pattern,
+                                'is-invalid': $page.props.errors.pattern,
                             }"
                             v-model="pattern"
                         />
                         <span
-                            v-if="$page.errors.pattern"
+                            v-if="$page.props.errors.pattern"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.pattern }}
+                                {{ $page.props.errors.pattern }}
                             </strong>
                         </span>
                     </div>
@@ -69,7 +72,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.source_id,
+                                'is-invalid': $page.props.errors.source_id,
                             }"
                             v-model="source"
                             placeholder="Select source"
@@ -77,11 +80,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.source_id"
+                            v-if="$page.props.errors.source_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.source_id }}
+                                {{ $page.props.errors.source_id }}
                             </strong>
                         </span>
                     </div>
@@ -90,7 +93,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.target_id,
+                                'is-invalid': $page.props.errors.target_id,
                             }"
                             v-model="target"
                             placeholder="Select target"
@@ -98,11 +101,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.target_id"
+                            v-if="$page.props.errors.target_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.target_id }}
+                                {{ $page.props.errors.target_id }}
                             </strong>
                         </span>
                     </div>
@@ -111,7 +114,7 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.api_spec,
+                                'is-invalid': $page.props.errors.api_spec,
                             }"
                             v-model="apiSpec.selected"
                             placeholder="Select API specification"
@@ -180,7 +183,7 @@
                                         class="form-control mb-2"
                                         :class="{
                                             'is-invalid':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.name`
                                                 ],
                                         }"
@@ -188,7 +191,7 @@
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.request.${i}.name`
                                             ]
                                         "
@@ -196,7 +199,7 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.name`
                                                 ]
                                             }}
@@ -210,14 +213,14 @@
                                         "
                                         :class="{
                                             'form-control is-invalid p-0':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.rules`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.request.${i}.rules`
                                             ]
                                         "
@@ -225,7 +228,7 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.rules`
                                                 ]
                                             }}
@@ -309,7 +312,7 @@
                                         class="form-control mb-2"
                                         :class="{
                                             'is-invalid':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.name`
                                                 ],
                                         }"
@@ -317,7 +320,7 @@
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.response.${i}.name`
                                             ]
                                         "
@@ -325,7 +328,7 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.name`
                                                 ]
                                             }}
@@ -339,14 +342,14 @@
                                         "
                                         :class="{
                                             'form-control is-invalid p-0':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.rules`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.response.${i}.rules`
                                             ]
                                         "
@@ -354,7 +357,7 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.rules`
                                                 ]
                                             }}
@@ -444,7 +447,8 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors['response.status'],
+                                'is-invalid':
+                                    $page.props.errors['response.status'],
                             }"
                             v-model="example.response.status.selected"
                             placeholder="Select status"
@@ -452,11 +456,11 @@
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors['response.status']"
+                            v-if="$page.props.errors['response.status']"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors['response.status'] }}
+                                {{ $page.props.errors['response.status'] }}
                             </strong>
                         </span>
                     </div>

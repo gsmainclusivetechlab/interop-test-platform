@@ -60,9 +60,11 @@
                         />
                         <div
                             class="text-danger small mt-2"
-                            v-if="$page.errors.environments"
+                            v-if="$page.props.errors.environments"
                         >
-                            <strong>{{ $page.errors.environments }}</strong>
+                            <strong>{{
+                                $page.props.errors.environments
+                            }}</strong>
                         </div>
                     </div>
                 </div>

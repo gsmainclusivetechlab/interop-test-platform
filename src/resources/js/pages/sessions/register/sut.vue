@@ -11,7 +11,7 @@
                         <selectize
                             v-model="selectedComponents"
                             :class="{
-                                'is-invalid': $page.errors.component_ids,
+                                'is-invalid': $page.props.errors.component_ids,
                             }"
                             :options="suts.data"
                             keyBy="id"
@@ -24,10 +24,10 @@
                             :disabled="selectedSut"
                         />
                         <span
-                            v-if="$page.errors.component_ids"
+                            v-if="$page.props.errors.component_ids"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors.component_ids }}
+                            {{ $page.props.errors.component_ids }}
                         </span>
                     </div>
                     <template v-for="(sut, i) in suts.data">
@@ -41,15 +41,17 @@
                                 v-model="form.base_urls[sut.id]"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors[`base_urls.${sut.id}`],
+                                        $page.props.errors[
+                                            `base_urls.${sut.id}`
+                                        ],
                                 }"
                                 class="form-control"
                             />
                             <span
-                                v-if="$page.errors[`base_urls.${sut.id}`]"
+                                v-if="$page.props.errors[`base_urls.${sut.id}`]"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors[`base_urls.${sut.id}`] }}
+                                {{ $page.props.errors[`base_urls.${sut.id}`] }}
                             </span>
                         </div>
                     </template>

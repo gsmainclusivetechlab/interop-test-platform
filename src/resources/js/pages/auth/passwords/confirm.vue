@@ -18,13 +18,16 @@
                     </label>
                     <input
                         v-model="form.password"
-                        :class="{ 'is-invalid': $page.errors.password }"
+                        :class="{ 'is-invalid': $page.props.errors.password }"
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
                     />
-                    <span v-if="$page.errors.password" class="invalid-feedback">
-                        {{ $page.errors.password }}
+                    <span
+                        v-if="$page.props.errors.password"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.password }}
                     </span>
                 </div>
                 <div class="form-footer">
