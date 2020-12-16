@@ -58,11 +58,7 @@ class ProcessPendingRequest
     {
         $response = null;
         if ($this->simulateRequest) {
-            $response = $this->testResult->testStep->response->withSubstitutions(
-                $this->session->environments()
-            )->withVariables(
-                $this->testResult->testRun->testResults
-            );
+            $response = $this->testResult->testStep->response;
 
             $response = new Response(
                 $response->status(),

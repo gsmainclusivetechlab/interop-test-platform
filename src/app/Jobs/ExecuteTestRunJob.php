@@ -59,9 +59,7 @@ class ExecuteTestRunJob implements ShouldQueue
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $requestTemplate = $testStep->request->withSubstitutions(
-            $this->session->environments()
-        );
+        $requestTemplate = $testStep->request;
         $request = $requestTemplate
             ->toPsrRequest()
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent)
