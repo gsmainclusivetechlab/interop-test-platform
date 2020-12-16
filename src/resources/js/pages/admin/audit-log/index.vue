@@ -39,6 +39,7 @@
                     </td>
                     <td class="text-break">
                         <inertia-link
+                            v-if="message.type"
                             :href="
                                 route(message.url, message.subject)
                             "

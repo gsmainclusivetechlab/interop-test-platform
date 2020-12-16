@@ -411,7 +411,7 @@ class SessionController extends Controller
 
                 return $session;
             });
-            new AuditLogUtil($request, 'Session was edited', strval($session->id), 1, $request->toArray());
+            new AuditLogUtil($request, 'Session was edited', $session->id, 1, $request->toArray());
 
             return redirect()
                 ->route('sessions.show', $session)

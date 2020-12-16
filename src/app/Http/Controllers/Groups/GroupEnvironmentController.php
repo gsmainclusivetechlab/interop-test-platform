@@ -71,7 +71,7 @@ class GroupEnvironmentController extends Controller
         ]);
         $group->environments()->create($request->input());
 
-        new AuditLogUtil($request, 'Created a new environment', strval($group->id), 2, $request->toArray());
+        new AuditLogUtil($request, 'Created a new environment', $group->id, 2, $request->toArray());
 
         return redirect()
             ->route('groups.environments.index', $group)
