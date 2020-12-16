@@ -51,11 +51,38 @@
                             class="btn btn-secondary"
                             v-if="message.meta"
                             v-b-modal="
-                            `modal-request-${message.name}`
+                            `modal-request-${message.id}`
                             "
                         >
                             Request
                         </button>
+                        <b-modal
+                            :id="`modal-request-${message.id}`"
+                            size="lg"
+                            centered
+                            hide-footer
+                            hide-header-close
+                            title="Request"
+                        >
+                            <div
+                                class="d-flex"
+                                v-if="collect(message.meta).count()"
+                            >
+                                <div class="w-25 px-4 py-2 border">
+                                    <strong>Meta</strong>
+                                </div>
+                                <div class="w-75 px-4 py-2 border">
+                                    <div class="mb-0 p-0">
+                                        <json-tree
+                                            :data="message.meta"
+                                            :deep="1"
+                                            :show-line="false"
+                                            class="p-2"
+                                        ></json-tree>
+                                    </div>
+                                </div>
+                            </div>
+                        </b-modal>
                     </td>
                     <td>
                         {{ message.created_at }}
