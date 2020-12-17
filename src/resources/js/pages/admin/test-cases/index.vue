@@ -17,9 +17,16 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
+                        :href="route('admin.test-cases.create')"
+                        class="btn btn-primary"
+                    >
+                        <icon name="plus" />
+                        Create Test Case
+                    </inertia-link>
+                    <inertia-link
                         :href="route('admin.test-cases.import')"
                         v-if="$page.auth.user.can.test_cases.create"
-                        class="btn btn-primary"
+                        class="btn btn-primary ml-2"
                     >
                         <icon name="upload" />
                         Import Test Case
@@ -33,32 +40,60 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Version</th>
-                            <th class="text-nowrap">Behavior</th>
-                            <th class="text-nowrap">Public</th>
-                            <th class="text-nowrap">Use Case</th>
-                            <th class="text-nowrap">Test Steps</th>
-                            <th class="text-nowrap">Owner</th>
-                            <th class="text-nowrap">Groups</th>
-                            <th class="text-nowrap w-1"></th>
+                            <th class="text-nowrap text-center">Version</th>
+                            <th class="text-nowrap text-center">Behavior</th>
+                            <th class="text-nowrap text-center">Public</th>
+                            <th class="text-nowrap text-center">Use Case</th>
+                            <th class="text-nowrap text-center">Test Steps</th>
+                            <th class="text-nowrap text-center">Owner</th>
+                            <th class="text-nowrap text-center">Groups</th>
+                            <th class="text-nowrap text-center w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="testCase in testCases.data">
+                        <tr v-for="(testCase, i) in testCases.data" :key="i">
                             <td class="text-break">
-                                {{ testCase.name }}
+                                <div v-if="testCase.can.update">
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'admin.test-cases.info.show',
+                                                testCase.id
+                                            )
+                                        "
+                                    >
+                                        {{ testCase.name }}
+                                    </inertia-link>
+                                </div>
+                                <div v-else>
+                                    {{ testCase.name }}
+                                </div>
                             </td>
-                            <td class="text-break">
-                                {{ testCase.version }}
+                            <td class="text-center text-break">
+                                <div v-if="testCase.can.update">
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'admin.test-cases.versions.index',
+                                                testCase.id
+                                            )
+                                        "
+                                    >
+                                        {{ testCase.version }}
+                                    </inertia-link>
+                                </div>
+                                <div v-else>
+                                    {{ testCase.version }}
+                                </div>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 {{
                                     collect(
                                         $page.enums.test_case_behaviors
                                     ).get(testCase.behavior)
                                 }}
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 <label class="form-check form-switch">
                                     <input
                                         v-if="testCase.can.togglePublic"
@@ -83,23 +118,61 @@
                                     />
                                 </label>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 {{ testCase.useCase.name }}
                             </td>
-                            <td>
-                                {{
-                                    testCase.testSteps
-                                        ? testCase.testSteps.length
-                                        : 0
-                                }}
+                            <td class="text-center">
+                                <inertia-link
+                                    v-if="testCase.can.update"
+                                    :href="
+                                        route(
+                                            'admin.test-cases.test-steps.index',
+                                            testCase.id
+                                        )
+                                    "
+                                >
+                                    {{
+                                        testCase.testSteps
+                                            ? testCase.testSteps.length
+                                            : 0
+                                    }}
+                                </inertia-link>
+
+                                <span v-else>
+                                    {{
+                                        testCase.testSteps
+                                            ? testCase.testSteps.length
+                                            : 0
+                                    }}
+                                </span>
                             </td>
-                            <td class="text-break">
+                            <td class="text-center text-break">
                                 {{ testCase.owner ? testCase.owner.name : '' }}
                             </td>
-                            <td class="text-break">
-                                {{
-                                    testCase.groups ? testCase.groups.length : 0
-                                }}
+                            <td class="text-center text-break">
+                                <div v-if="testCase.can.update">
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'admin.test-cases.groups.index',
+                                                testCase.id
+                                            )
+                                        "
+                                    >
+                                        {{
+                                            testCase.groups
+                                                ? testCase.groups.length
+                                                : 0
+                                        }}
+                                    </inertia-link>
+                                </div>
+                                <div v-else>
+                                    {{
+                                        testCase.groups
+                                            ? testCase.groups.length
+                                            : 0
+                                    }}
+                                </div>
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
@@ -115,24 +188,6 @@
                                     </template>
                                     <li v-if="testCase.can.update">
                                         <inertia-link
-                                            class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'admin.test-cases.edit',
-                                                    testCase.id
-                                                )
-                                            "
-                                        >
-                                            Edit
-                                        </inertia-link>
-                                    </li>
-                                    <li
-                                        v-if="
-                                            $page.auth.user.can.test_cases
-                                                .create
-                                        "
-                                    >
-                                        <inertia-link
                                             :href="
                                                 route(
                                                     'admin.test-cases.import-version',
@@ -143,6 +198,35 @@
                                         >
                                             Import New Version
                                         </inertia-link>
+                                    </li>
+                                    <li v-if="testCase.can.update">
+                                        <div v-if="testCase.draft">
+                                            <inertia-link
+                                                :href="
+                                                    route(
+                                                        'admin.test-cases.info.edit',
+                                                        testCase.id
+                                                    )
+                                                "
+                                                class="dropdown-item"
+                                            >
+                                                Edit
+                                            </inertia-link>
+                                        </div>
+                                        <div v-else>
+                                            <confirm-link
+                                                :href="
+                                                    route(
+                                                        'admin.test-cases.info.edit',
+                                                        testCase.id
+                                                    )
+                                                "
+                                                :confirm-text="'The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime.'"
+                                                class="dropdown-item"
+                                            >
+                                                Edit
+                                            </confirm-link>
+                                        </div>
                                     </li>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
@@ -155,7 +239,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${testCase.name}?`"
+                                            :confirm-text="`Are you sure you want to delete all versions of ${testCase.name}?`"
                                         >
                                             Delete
                                         </confirm-link>

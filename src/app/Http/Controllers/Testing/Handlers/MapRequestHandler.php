@@ -30,7 +30,7 @@ class MapRequestHandler
     {
         $testRequest = new Request($request);
 
-        if (
+        /*if (
             !$this->testResult->session->hasComponent(
                 $this->testResult->testStep->source
             ) &&
@@ -42,7 +42,7 @@ class MapRequestHandler
             foreach ($testRequestSetups as $testRequestSetup) {
                 $testRequest = $testRequest->withSetup($testRequestSetup);
             }
-        }
+        }*/
 
         $testRequest = $testRequest->withSubstitutions(
             $this->testResult->session->environments()

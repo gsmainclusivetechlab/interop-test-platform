@@ -25,6 +25,8 @@ use Illuminate\Support\Collection;
  * @property array $values
  *
  * @property QuestionnaireAnswer[]|Collection $answers
+ *
+ * @property-read  array $answers_names
  */
 class QuestionnaireQuestions extends Model
 {
@@ -48,26 +50,17 @@ class QuestionnaireQuestions extends Model
         'values' => 'array',
     ];
 
-    /**
-     * @return HasMany
-     */
-    public function answers()
+    public function answers(): HasMany
     {
         return $this->hasMany(QuestionnaireAnswer::class, 'question_id');
     }
 
-    /**
-     * @return bool
-     */
     public function isMultiSelect(): bool
     {
         return $this->type == 'multiselect';
     }
 
-    /**
-     * @return array
-     */
-    public function getAnswersNamesAttribute()
+    public function getAnswersNamesAttribute(): array
     {
         return $this->answers
             ->map(function (QuestionnaireAnswer $answer) {

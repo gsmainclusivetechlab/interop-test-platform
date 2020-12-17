@@ -96,7 +96,7 @@
                                     "
                                     class="text-reset dropdown-item"
                                 >
-                                    Compliance Sessions
+                                    Certification Sessions
                                 </inertia-link>
                             </li>
                             <li v-if="$page.auth.user.can.api_specs.viewAny">
@@ -304,6 +304,7 @@
 
                     <inertia-link
                         :href="route('sessions.register.type')"
+                        v-if="$page.app.available_session_modes_count > 0"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />

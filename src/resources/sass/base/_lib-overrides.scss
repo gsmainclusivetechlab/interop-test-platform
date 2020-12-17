@@ -117,7 +117,7 @@ a {
 .form-selectgroup-input:checked + .form-selectgroup-label {
   border-color: currentColor;
 }
-.form-check {
+.form-check-input {
   cursor: pointer;
 }
 
@@ -188,11 +188,13 @@ a {
 }
 
 .table {
-  .text-break {
-    word-break: break-word;
+  &-cell_min-w {
+    min-width: 150px;
   }
 }
-
+.text-break {
+  word-break: break-word;
+}
 .outline {
   &-light {
     outline: 1px solid $gray-100;
@@ -201,4 +203,8 @@ a {
   &-dark {
     outline: 1px solid $gray-900;
   }
+}
+
+dt .badge {
+  font-size: 0.7rem;
 }

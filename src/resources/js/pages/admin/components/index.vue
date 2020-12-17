@@ -35,6 +35,7 @@
                             <th class="text-nowrap">#</th>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap">Base URL</th>
+                            <th class="text-nowrap">Can be SUT</th>
                             <th class="text-nowrap">Connections</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
@@ -49,6 +50,9 @@
                             </td>
                             <td class="text-break">
                                 {{ component.base_url }}
+                            </td>
+                            <td class="text-break">
+                                {{ component.sutable ? 'Yes' : 'No' }}
                             </td>
                             <td>
                                 {{

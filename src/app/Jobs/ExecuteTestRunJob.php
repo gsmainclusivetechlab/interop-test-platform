@@ -68,12 +68,19 @@ class ExecuteTestRunJob implements ShouldQueue
             ->withUri(
                 UriResolver::resolve(
                     new Uri(
-                        $this->session->getBaseUriOfComponent($testStep->target)
+                        ($uri = $this->session->getBaseUriOfComponent(
+                            $testStep->target
+                        ))
                     ),
                     new Uri($requestTemplate->path())
                 )
             );
 
-        (new ProcessPendingRequest($request, $testResult))();
+        (new ProcessPendingRequest(
+            $request,
+            $testResult,
+            $this->session,
+            empty($uri)
+        ))();
     }
 }

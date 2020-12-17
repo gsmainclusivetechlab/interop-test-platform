@@ -41,6 +41,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
+                    v-if="$page.app.available_session_modes_count > 1"
                     :href="
                         section !== firstSection
                             ? route(

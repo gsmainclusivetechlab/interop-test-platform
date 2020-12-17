@@ -2,6 +2,7 @@
     <layout
         :session="session"
         :testCase="testCase"
+        :isAvailableRun="isAvailableRun"
         :testStepFirstSource="testStepFirstSource"
     >
         <div class="card">
@@ -18,7 +19,7 @@
                     >
                         <icon name="corner-down-left"></icon>
                     </inertia-link>
-                    <b>{{ `Run ID: ${testRun.uuid}` }}</b>
+                    <b>{{ `Run ID: #${testRun.id}` }}</b>
                 </h2>
                 <div class="card-options">
                     <span
@@ -744,6 +745,10 @@ export default {
         },
         testStepFirstSource: {
             type: Object,
+            required: true,
+        },
+        isAvailableRun: {
+            type: Boolean,
             required: true,
         },
     },

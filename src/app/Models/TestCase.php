@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -35,9 +36,11 @@ class TestCase extends Model
         'name',
         'slug',
         'public',
+        'draft',
         'behavior',
         'description',
         'precondition',
+        'use_case_id',
         'test_case_group_id',
     ];
 
@@ -46,6 +49,7 @@ class TestCase extends Model
      */
     protected $attributes = [
         'public' => false,
+        'draft' => false,
     ];
 
     /**
@@ -242,41 +246,78 @@ class TestCase extends Model
     public function scopeAvailable($query)
     {
         return $query
-            ->where('public', true)
-            ->orWhereHas('owner', function ($query) {
-                $query->whereKey(
-                    auth()
-                        ->user()
-                        ->getAuthIdentifier()
-                );
-            })
-            ->orWhereHas('groups', function ($query) {
-                $query->whereHas('users', function ($query) {
-                    $query->whereKey(
+            ->where(function ($query) {
+                $query
+                    ->where('public', true)
+                    ->orWhereHas('owner', function ($query) {
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
+                    })
+                    ->orWhereHas('groups', function ($query) {
+                        $query->whereHas('users', function ($query) {
+                            $query->whereKey(
+                                auth()
+                                    ->user()
+                                    ->getAuthIdentifier()
+                            );
+                        });
+                    })
+                    ->when(
                         auth()
                             ->user()
-                            ->getAuthIdentifier()
+                            ->can('viewAnyPrivate', self::class),
+                        function ($query) {
+                            $query->orWhere('public', false);
+                        }
                     );
-                });
             })
-            ->when(
-                auth()
-                    ->user()
-                    ->can('viewAnyPrivate', self::class),
-                function ($query) {
-                    $query->orWhere('public', false);
-                }
-            );
+            ->where('draft', false);
+    }
+
+    /**
+     * @param Builder $query
+     * @param array $ids
+     *
+     * @return Builder
+     */
+    public function scopeWithComponents($query, array $ids)
+    {
+        return $query->when($ids, function ($query, $ids) {
+            $query->whereHas('components', function ($query) use ($ids) {
+                $query->whereIn('id', $ids);
+            });
+        });
     }
 
     /**
      * @return mixed
      */
-    public function getLastAvailableVersionIdAttribute()
+    public function getLastAvailableVersionAttribute()
     {
         return static::available()
             ->lastPerGroup()
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastVersionAttribute()
+    {
+        return static::lastPerGroup()
+            ->where('test_case_group_id', $this->test_case_group_id)
+            ->first();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLast()
+    {
+        return $this->version === $this->last_version->version ? true : false;
     }
 }

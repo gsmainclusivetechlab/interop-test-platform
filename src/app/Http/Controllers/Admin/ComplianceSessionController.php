@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SessionResource;
 use App\Models\Session;
 use App\Notifications\SessionStatusChanged;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -73,7 +74,7 @@ class ComplianceSessionController extends Controller
             ],
         ]);
 
-        $session->update($data);
+        $session->update($data + ['closed_at' => now()]);
 
         $session->owner->notify(new SessionStatusChanged($session));
 

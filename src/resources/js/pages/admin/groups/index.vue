@@ -40,7 +40,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="group in groups.data">
+                        <tr v-for="(group, i) in groups.data" :key="i">
                             <td class="text-break">
                                 <inertia-link
                                     :href="route('groups.show', group.id)"

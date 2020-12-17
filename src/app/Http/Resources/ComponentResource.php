@@ -24,6 +24,7 @@ class ComponentResource extends JsonResource
                 $this->base_url
             ),
             'position' => $this->position,
+            'sutable' => $this->sutable,
             'connections' => static::collection(
                 $this->whenLoaded('connections')
             ),

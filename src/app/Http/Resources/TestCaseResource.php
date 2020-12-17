@@ -20,14 +20,23 @@ class TestCaseResource extends JsonResource
             'version' => $this->version,
             'name' => $this->name,
             'public' => $this->public,
+            'slug' => $this->slug,
+            'draft' => $this->draft,
             'behavior' => $this->behavior,
-            'description' => Markdown::parse($this->description)->toHtml(),
-            'precondition' => Markdown::parse($this->precondition)->toHtml(),
+            'description' => Markdown::parse(
+                $this->description ?? ''
+            )->toHtml(),
+            'precondition' => Markdown::parse(
+                $this->precondition ?? ''
+            )->toHtml(),
             'owner' => new UserResource($this->whenLoaded('owner')),
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
             'testSteps' => TestStepResource::collection(
                 $this->whenLoaded('testSteps')
+            ),
+            'components' => ComponentResource::collection(
+                $this->whenLoaded('components')
             ),
             'lastTestRun' => new TestRunResource(
                 $this->whenLoaded('lastTestRun', function () {
@@ -50,7 +59,7 @@ class TestCaseResource extends JsonResource
                         ->count();
                 }
             ),
-            'lastAvailableVersion' => $this->last_available_version_id,
+            'lastAvailableVersion' => $this->last_available_version,
             'can' => [
                 'update' => auth()
                     ->user()

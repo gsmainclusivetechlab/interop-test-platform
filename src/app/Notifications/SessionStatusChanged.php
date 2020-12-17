@@ -75,9 +75,9 @@ class SessionStatusChanged extends Notification implements ShouldQueue
     {
         return [
             Session::STATUS_IN_VERIFICATION =>
-                'Compliance session: verification request',
-            Session::STATUS_APPROVED => 'Compliance session: approved',
-            Session::STATUS_DECLINED => 'Compliance session: declined',
+                'Certification session: verification request',
+            Session::STATUS_APPROVED => 'Certification session: approved',
+            Session::STATUS_DECLINED => 'Certification session: declined',
         ];
     }
 

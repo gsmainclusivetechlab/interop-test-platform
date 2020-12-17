@@ -2,6 +2,7 @@
     <layout
         :session="session"
         :testCase="testCase"
+        :isAvailableRun="isAvailableRun"
         :testStepFirstSource="testStepFirstSource"
     >
         <div class="card mb-0">
@@ -55,6 +56,10 @@ export default {
         },
         testStepFirstSource: {
             type: Object,
+            required: true,
+        },
+        isAvailableRun: {
+            type: Boolean,
             required: true,
         },
     },

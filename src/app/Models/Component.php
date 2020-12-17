@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $base_url
  */
 class Component extends Model
 {
@@ -19,10 +23,14 @@ class Component extends Model
      */
     protected $table = 'components';
 
+    protected $attributes = [
+        'sutable' => true,
+    ];
+
     /**
      * @var array
      */
-    protected $fillable = ['name', 'base_url', 'description'];
+    protected $fillable = ['name', 'base_url', 'description', 'sutable'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

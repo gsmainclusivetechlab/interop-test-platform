@@ -1,0 +1,917 @@
+name: Authorized Transaction by Payer FSP w/ Authorisation Code
+slug: authorized-with-authorizationcode
+use_case: Merchant-Initiated Merchant Payment
+behavior: positive
+description: |
+  The Service Provider wants to test if he is capable of receiving a transaction from a different wallet provider that he has an account. In this case, we simulate the scenario when the Payer would like to buy goods or services from a Service Provider (the Payee), but each of them uses different wallet providers. This flow shows the necessary steps for this transaction simulating an approved transaction using an authorisation code.
+precondition: |
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer exist in Mojaloop as Parties.
+  - Configuration for MMO1 as SUT:
+    - fspiop-source: 'mmo1fsp'.
+    - fspiop-destination: 'mmo2fsp'.
+  - Configuration for MMO2 as SUT:
+    - fspiop-source: 'mmo2fsp'.
+    - fspiop-destination: 'mmo1fsp'.
+  - Required Parameters for Execution:
+    - Amount should be the value "20.01".
+components:
+  - Service Provider
+  - Mobile Money Operator 1
+  - Mojaloop
+  - Mobile Money Operator 2
+test_steps:
+  ##------------------------------POST/Transactions: SP -> MMO1------------------------------##
+  - path: /transactions
+    pattern: '^transactions$'
+    method: POST
+    source: Service Provider
+    target: Mobile Money Operator 1
+    api_spec: MM v1.1.2
+    trigger:
+      amount: '20.01'
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.x-callback-url.*: 'required|url'
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'required|in:20.01'
+      - name: Transaction is a Merchant Payment
+        rules:
+          body.type: 'required|in:merchantpay'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+
+    request:
+      method: POST
+      uri: /transactions
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        x-callback-url: '${SP_BASE_URI}/callback'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+      body:
+        amount: '20.01'
+        currency: 'USD'
+        type: 'merchantpay'
+        debitParty:
+          - key: 'msisdn'
+            value: '+33555123456'
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
+
+    response:
+      status: 202
+      headers:
+        content-type: 'application/json'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+      body:
+        serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ##------------------------------POST/TransanctionRequests: MMO1 -> Mojaloop------------------------------##
+  - path: /transactionRequests
+    pattern: '^transactionRequests$'
+    method: POST
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Transaction Type is a Merchant Payment
+        rules:
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
+      - name: Transaction Request Id created
+        rules:
+          body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Amount is specified correctly
+        rules:
+          body.amount.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: POST
+      uri: /transactionRequests
+      headers:
+        accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        payee:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: '+33555789123'
+        payer:
+          partyIdType: 'MSISDN'
+          partyIdentifier: '+33555123456'
+        amount:
+          amount: '20.01'
+          currency: 'USD'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+
+    response:
+      status: 202
+
+  ##------------------------------POST/TransanctionRequests: Mojaloop -> MMO2------------------------------##
+  - path: /transactionRequests
+    pattern: '^transactionRequests$'
+    method: POST
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Transaction Type is a Merchant Payment
+        rules:
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
+      - name: Transaction Request Id created
+        rules:
+          body.transactionRequestId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Amount is specified correctly
+        rules:
+          body.amount.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: POST
+      uri: /transactionRequests
+      headers:
+        accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        payee:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: '+33555789123'
+        payer:
+          partyIdType: 'MSISDN'
+          partyIdentifier: '+33555123456'
+        amount:
+          amount: '20.01'
+          currency: 'USD'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+
+    response:
+      status: 202
+
+  ##------------------------------PUT/TransanctionRequests: MMO2 -> Mojaloop------------------------------##
+  - path: /transactionRequests/{ID}
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
+    test_request_scripts:
+      - name: ID is Valid
+        rules:
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Status is Received
+        rules:
+          body.transactionRequestState: 'required|in:RECEIVED'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: PUT
+      uri: /transactionRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+      body:
+        transactionRequestState: 'RECEIVED'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+
+    response:
+      status: 200
+
+  ##------------------------------PUT/TransanctionRequests: Mojaloop -> MMO1------------------------------##
+  - path: /transactionRequests/{ID}
+    pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    api_spec: Mojaloop v1.0
+    trigger:
+      transactionRequestState: 'RECEIVED'
+    test_request_scripts:
+      - name: ID is Valid
+        rules:
+          path: 'required|regex:/transactionRequests\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Status is Received
+        rules:
+          body.transactionRequestState: 'required|in:RECEIVED'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: PUT
+      uri: /transactionRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      headers:
+        content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+      body:
+        transactionRequestState: 'RECEIVED'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+
+    response:
+      status: 200
+
+  ##------------------------------POST/Quotes: MMO2 -> Mojaloop------------------------------##
+  - path: /quotes
+    pattern: '^quotes$'
+    method: POST
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Mandatory IDs is present
+        rules:
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a Merchant Payment
+        rules:
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
+      - name: Payer wants to send money to Payee
+        rules:
+          body.amountType: 'required|in:SEND'
+      - name: Amount is specified correctly
+        rules:
+          body.amount.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: '+33555789123'
+        payer:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: '+33555123456'
+          personalInfo:
+            complexName:
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
+        amountType: 'SEND'
+        amount:
+          currency: 'USD'
+          amount: '20.01'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+
+    response:
+      status: 202
+
+  ##------------------------------POST/Quotes: Mojaloop -> MMO1------------------------------##
+  - path: /quotes
+    pattern: '^quotes$'
+    method: POST
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Mandatory IDs is present
+        rules:
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Transaction Type is a Merchant Payment
+        rules:
+          body.transactionType.scenario: 'required|in:PAYMENT'
+          body.transactionType.initiator: 'required|in:PAYEE'
+          body.transactionType.initiatorType: 'required|in:BUSINESS'
+      - name: Payer wants to send money to Payee
+        rules:
+          body.amountType: 'required|in:SEND'
+      - name: Amount is specified correctly
+        rules:
+          body.amount.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+      body:
+        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
+        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        payee:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: '+33555789123'
+        payer:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier: '+33555123456'
+          personalInfo:
+            complexName:
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
+        amountType: 'SEND'
+        amount:
+          currency: 'USD'
+          amount: '20.01'
+        transactionType:
+          scenario: 'PAYMENT'
+          initiator: 'PAYEE'
+          initiatorType: 'BUSINESS'
+
+    response:
+      status: 202
+
+  ##------------------------------PUT/Quotes: MMO1 -> Mojaloop------------------------------##
+  - path: /quotes/{ID}
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      transferAmount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Amount and currency are specified correctly
+        rules:
+          body.transferAmount.amount: 'required|in:20.01'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'PUT'
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        transferAmount:
+          currency: 'USD'
+          amount: '20.01'
+        expiration: '2021-01-01T00:00:00.000Z'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+
+    response:
+      status: 200
+
+  ##------------------------------PUT/Quotes: Mojaloop -> MMO2------------------------------##
+  - path: /quotes/{ID}
+    pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    api_spec: Mojaloop v1.0
+    trigger:
+      transferAmount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Amount and currency are specified correctly
+        rules:
+          body.transferAmount.amount: 'required|in:20.01'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'PUT'
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      headers:
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        transferAmount:
+          currency: 'USD'
+          amount: '20.01'
+        expiration: '2021-01-01T00:00:00.000Z'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+
+    response:
+      status: 200
+
+  ##------------------------------GET/Authorizations: MMO2 -> Mojaloop------------------------------##
+  - path: /authorizations/{ID}
+    method: GET
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    test_request_scripts:
+      - name: ID is valid
+        rules:
+          path: 'required|regex:/authorizations\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+
+    test_response_scripts:
+      - name: Authorisation was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: 'GET'
+      uri: /authorizations/84c5cac8-98e1-4b80-91ef-950c8637d521?amount=20.01&authenticationType=OTP&currency=USD&retriesLeft=3
+      headers:
+        accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+
+    response:
+      status: 202
+
+  ##------------------------------GET/Authorizations: Mojaloop -> MMO1------------------------------##
+  - path: /authorizations/{ID}
+    method: GET
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    api_spec: Mojaloop v1.0
+    test_request_scripts:
+      - name: ID is valid
+        rules:
+          path: 'required|regex:/authorizations\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+
+    test_response_scripts:
+      - name: Authorisation was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: 'GET'
+      uri: /authorizations/84c5cac8-98e1-4b80-91ef-950c8637d521?amount=20.01&authenticationType=OTP&currency=USD&retriesLeft=3
+      headers:
+        accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+
+    response:
+      status: 202
+
+  ##------------------------------POST/Accounts: MMO1 -> SP------------------------------##
+  - path: /accounts/{identifierType}/{identifier}/authorisationcodes
+    method: POST
+    pattern: '^accounts/msisdn/[+]?[0-9]{6,15}/authorisationcodes$'
+    source: Mobile Money Operator 1
+    target: Service Provider
+    api_spec: MM v1.1.2
+    trigger:
+      amount: '20.01'
+    test_request_scripts:
+      - name: Amount is correct
+        rules:
+          body.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Authorisation code is valid and state is active
+        rules:
+          body.authorisationCode: 'required|in:12345'
+          body.codeState: 'required|in:active'
+
+    request:
+      method: 'POST'
+      uri: /accounts/msisdn/33555123456/authorisationcodes
+      headers:
+        content-type: 'application/json'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+      body:
+        requestDate: '${CURRENT_TIMESTAMP_ISO8601}'
+        amount: '20.01'
+        currency: 'USD'
+
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+      body:
+        authorisationCode: '12345'
+        codeState: 'active'
+
+  ##------------------------------PUT/Authorizations: MMO1 -> Mojaloop------------------------------##
+  - path: /authorizations/{ID}
+    method: PUT
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      authenticationInfo:
+        authenticationValue: '12345'
+    test_request_scripts:
+      - name: Authentication information is correct
+        rules:
+          body.authenticationInfo.authentication: 'required|in:OTP'
+          body.authenticationInfo.authenticationValue: 'required|in:12345'
+          body.responseType: 'required|in:ENTERED'
+
+    test_response_scripts:
+      - name: Authorisation was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'PUT'
+      uri: /authorizations/84c5cac8-98e1-4b80-91ef-950c8637d521
+      headers:
+        accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        authenticationInfo:
+          authentication: 'OTP'
+          authenticationValue: '12345'
+        responseType: 'ENTERED'
+
+    response:
+      status: 200
+
+  ##------------------------------PUT/Authorizations: Mojaloop -> MMO2------------------------------##
+  - path: /authorizations/{ID}
+    method: PUT
+    pattern: '^authorizations/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    api_spec: Mojaloop v1.0
+    trigger:
+      authenticationInfo:
+        authenticationValue: '12345'
+    test_request_scripts:
+      - name: Authentication information is correct
+        rules:
+          body.authenticationInfo.authentication: 'required|in:OTP'
+          body.authenticationInfo.authenticationValue: 'required|in:12345'
+          body.responseType: 'required|in:ENTERED'
+
+    test_response_scripts:
+      - name: Authorisation was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'PUT'
+      uri: /authorizations/84c5cac8-98e1-4b80-91ef-950c8637d521
+      headers:
+        accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        authenticationInfo:
+          authentication: 'OTP'
+          authenticationValue: '12345'
+        responseType: 'ENTERED'
+
+    response:
+      status: 200
+
+  ##------------------------------POST/Transfers: MMO2 -> Mojaloop------------------------------##
+  - path: /transfers
+    pattern: '^transfers$'
+    method: POST
+    source: Mobile Money Operator 2
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Transfer ID is present
+        rules:
+          body.transferId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Payee Fsp is specified correctly
+        rules:
+          body.payeeFsp: 'required|regex:/[0-9a-z]{1,32}$/'
+      - name: Payer Fsp Fsp is specified correctly
+        rules:
+          body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
+      - name: Amount is specified correctly
+        rules:
+          body.amount.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: 'POST'
+      uri: /transfers
+      headers:
+        accept: 'application/vnd.interoperability.transfers+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+      body:
+        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
+        payeeFsp: 'mmo1fsp'
+        payerFsp: 'mmo2fsp'
+        amount:
+          currency: 'USD'
+          amount: '20.01'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '2021-01-01T00:00:00.000Z'
+
+    response:
+      status: 202
+
+  ##------------------------------POST/Transfers: Mojaloop -> MMO1------------------------------##
+  - path: /transfers
+    pattern: '^transfers$'
+    method: POST
+    source: Mojaloop
+    target: Mobile Money Operator 1
+    api_spec: Mojaloop v1.0
+    trigger:
+      amount:
+        amount: '20.01'
+    test_request_scripts:
+      - name: Transfer ID is present
+        rules:
+          body.transferId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: Payee Fsp is specified correctly
+        rules:
+          body.payeeFsp: 'required|regex:/[0-9a-z]{1,32}$/'
+      - name: Payer Fsp Fsp is specified correctly
+        rules:
+          body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
+      - name: Amount is specified correctly
+        rules:
+          body.amount.amount: 'required|in:20.01'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+
+    request:
+      method: 'POST'
+      uri: /transfers
+      headers:
+        accept: 'application/vnd.interoperability.transfers+json;version=1.0'
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        fspiop-source: 'mmo2fsp'
+        fspiop-destination: 'mmo1fsp'
+      body:
+        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
+        payeeFsp: 'mmo1fsp'
+        payerFsp: 'mmo2fsp'
+        amount:
+          currency: 'USD'
+          amount: '20.01'
+        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '2021-01-01T00:00:00.000Z'
+
+    response:
+      status: 202
+
+  ##------------------------------PUT/X-Callback-URL: MMO1 -> Service Provider------------------------------##
+  - path: '{X-Callback-URL}'
+    pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
+    method: PUT
+    source: Mobile Money Operator 1
+    target: Service Provider
+    trigger:
+      amount: '20.01'
+    test_request_scripts:
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'required|in:20.01'
+          body.currency: 'required|regex:/^[A-Z]{3}/'
+      - name: Transaction is a Merchant Payment
+        rules:
+          body.type: 'required|in:merchantpay'
+      - name: Transaction was approved
+        rules:
+          body.transactionStatus: 'required|in:Completed'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:204'
+
+    request:
+      method: 'PUT'
+      uri: '${SP_BASE_URI}/callback'
+      headers:
+        content-type: 'application/json'
+        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+      body:
+        amount: '20.01'
+        currency: 'USD'
+        type: 'merchantpay'
+        transactionReference: ''
+        transactionStatus: 'Completed'
+        debitParty:
+          - key: 'msisdn'
+            value: '+33555123456'
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
+
+    response:
+      status: 204
+
+  ##------------------------------PUT/Transfers: MMO1 -> Mojaloop------------------------------##
+  - path: /transfers/{ID}
+    pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: Mobile Money Operator 1
+    target: Mojaloop
+    api_spec: Mojaloop v1.0
+    trigger:
+      transferState: 'COMMITTED'
+    test_request_scripts:
+      - name: ID is Valid
+        rules:
+          path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+      - name: Transfer State is COMMITTED
+        rules:
+          body.transferState: 'required|in:COMMITTED'
+      - name: completedTimestamp is specified correctly
+        rules:
+          body.completedTimestamp:
+            - 'required'
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: fulfilment is specified correctly
+        rules:
+          body.fulfilment: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'PUT'
+      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+      headers:
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
+        transferState: 'COMMITTED'
+
+    response:
+      status: 200
+
+  ##------------------------------PUT/Transfers: Mojaloop -> MMO2------------------------------##
+  - path: /transfers/{ID}
+    pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: Mojaloop
+    target: Mobile Money Operator 2
+    api_spec: Mojaloop v1.0
+    trigger:
+      transferState: 'COMMITTED'
+    test_request_scripts:
+      - name: ID is Valid
+        rules:
+          path: 'required|regex:/transfers\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i'
+      - name: Transfer State is COMMITTED
+        rules:
+          body.transferState: 'required|in:COMMITTED'
+      - name: completedTimestamp is specified correctly
+        rules:
+          body.completedTimestamp:
+            - 'required'
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: fulfilment is specified correctly
+        rules:
+          body.fulfilment: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'PUT'
+      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+      headers:
+        content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        fspiop-source: 'mmo1fsp'
+        fspiop-destination: 'mmo2fsp'
+      body:
+        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
+        transferState: 'COMMITTED'
+
+    response:
+      status: 200

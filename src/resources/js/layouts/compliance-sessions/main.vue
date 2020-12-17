@@ -94,7 +94,7 @@ export default {
             default: function () {
                 return [
                     {
-                        name: 'Compliance sessions',
+                        name: 'Certification sessions',
                         url: route('admin.compliance-sessions.index'),
                     },
                     { name: this.title },
