@@ -99,9 +99,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('groups.environments.store', this.group), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('groups.environments.store', this.group),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

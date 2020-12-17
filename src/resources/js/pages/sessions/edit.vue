@@ -253,9 +253,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .put(route('sessions.update', this.session.id), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('sessions.update', this.session.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadGroupEnvironmentList(query = '') {
             axios

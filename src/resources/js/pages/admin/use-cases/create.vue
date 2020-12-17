@@ -96,9 +96,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.use-cases.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.use-cases.store'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

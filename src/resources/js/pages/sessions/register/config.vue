@@ -146,9 +146,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('sessions.register.config.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.config.store'),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadGroupEnvironmentList(query = '') {
             axios

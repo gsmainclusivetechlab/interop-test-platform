@@ -103,15 +103,18 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .put(
-                    route('groups.environments.update', [
-                        this.group,
-                        this.environment,
-                    ]),
-                    this.form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('groups.environments.update', [
+                    this.group,
+                    this.environment,
+                ]),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

@@ -197,9 +197,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.components.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.components.store'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
         loadConnectionsList(query = '') {
             axios

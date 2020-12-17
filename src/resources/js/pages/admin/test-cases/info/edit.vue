@@ -255,12 +255,15 @@ export default {
             };
 
             this.sending = true;
-            this.$inertia
-                .put(
-                    route('admin.test-cases.info.update', this.testCase.id),
-                    form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('admin.test-cases.info.update', this.testCase.id),
+                form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

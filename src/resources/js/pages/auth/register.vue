@@ -206,9 +206,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('register'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('register'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

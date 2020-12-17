@@ -140,13 +140,17 @@ export default {
             this.sending = true;
 
             this.hideModal();
-            this.$inertia
-                .post(route('groups.user-invitations.store', this.group), {
+            this.$inertia.post(
+                route('groups.user-invitations.store', this.group),
+                {
                     user_email: this.form.userEmail,
-                })
-                .then(() => {
-                    this.sending = false;
-                });
+                },
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         checkEmail() {
             for (let i = 0; i < this.emailPatterns.length; i++) {

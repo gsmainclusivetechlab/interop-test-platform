@@ -103,9 +103,11 @@ export default {
                 data.append('file', this.form.file);
             }
 
-            this.$inertia
-                .post(route('admin.api-specs.import.confirm'), data)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.api-specs.import.confirm'), data, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

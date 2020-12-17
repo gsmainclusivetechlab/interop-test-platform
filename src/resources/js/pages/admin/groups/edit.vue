@@ -135,9 +135,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .put(route('admin.groups.update', this.group.id), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('admin.groups.update', this.group.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

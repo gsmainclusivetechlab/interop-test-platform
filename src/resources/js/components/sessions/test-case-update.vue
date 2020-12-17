@@ -61,17 +61,18 @@ export default {
     },
     methods: {
         submit() {
-            this.$inertia
-                .put(
-                    route('sessions.update-test-case', [
-                        this.sessionId,
-                        this.versions.current.id,
-                        this.versions.last.id,
-                    ])
-                )
-                .then(() => {
-                    this.$emit('update', this.versions);
-                });
+            this.$inertia.put(
+                route('sessions.update-test-case', [
+                    this.sessionId,
+                    this.versions.current.id,
+                    this.versions.last.id,
+                ]),
+                {
+                    onSuccess: () => {
+                        this.$emit('update', this.versions);
+                    },
+                }
+            );
         },
     },
     computed: {

@@ -645,15 +645,15 @@ export default {
             };
 
             this.sending = true;
-            this.$inertia
-                .post(
-                    route(
-                        'admin.test-cases.test-steps.store',
-                        this.testCase.id
-                    ),
-                    form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('admin.test-cases.test-steps.store', this.testCase.id),
+                form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         addFormItem(formsList, formPattern) {
             formsList.push(formPattern);

@@ -113,11 +113,17 @@ export default {
         submit() {
             this.sending = true;
 
-            this.$inertia
-                .post(route('groups.users.store', this.group), {
+            this.$inertia.post(
+                route('groups.users.store', this.group),
+                {
                     user_id: this.user?.id,
-                })
-                .then(() => (this.sending = false));
+                },
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadUserList(query = '') {
             axios

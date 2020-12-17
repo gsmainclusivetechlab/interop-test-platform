@@ -64,9 +64,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('password.email'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('password.email'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

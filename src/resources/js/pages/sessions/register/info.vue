@@ -156,9 +156,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('sessions.register.info.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.info.store'),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

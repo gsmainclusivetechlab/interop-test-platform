@@ -81,9 +81,15 @@ export default {
             this.sending = true;
             let data = new FormData();
             data.append('file', this.form.file);
-            this.$inertia
-                .post(route('admin.questionnaire.import.confirm'), data)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('admin.questionnaire.import.confirm'),
+                data,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

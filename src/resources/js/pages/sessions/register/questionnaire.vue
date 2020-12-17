@@ -120,15 +120,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(
-                    route(
-                        'sessions.register.questionnaire.store',
-                        this.section
-                    ),
-                    this.form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.questionnaire.store', this.section),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         updateAnswers() {
             if (

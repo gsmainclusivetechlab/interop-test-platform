@@ -158,15 +158,16 @@ export default {
         addGroups() {
             this.sending = true;
 
-            this.$inertia
-                .post(
-                    route('admin.test-cases.groups.store', this.testCase.id),
-                    this.form
-                )
-                .then(() => {
-                    this.sending = false;
-                    this.newList = [];
-                });
+            this.$inertia.post(
+                route('admin.test-cases.groups.store', this.testCase.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                        this.newList = [];
+                    },
+                }
+            );
         },
         loadSearchList(query = '') {
             axios

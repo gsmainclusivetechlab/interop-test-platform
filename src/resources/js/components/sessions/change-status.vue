@@ -71,7 +71,7 @@ export default {
                 return;
             }
 
-            this.$inertia.put(this.href, this.form).then(() => {});
+            this.$inertia.put(this.href, this.form);
         },
     },
 };
