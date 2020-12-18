@@ -13,6 +13,7 @@ import {
     PopoverPlugin,
     TabsPlugin,
 } from 'bootstrap-vue';
+import VueI18n from 'vue-i18n';
 
 window.string = require('string');
 window.collect = require('collect.js');
@@ -21,6 +22,7 @@ window.axios.defaults.withCredentials = true;
 
 Vue.use(VueMeta);
 Vue.use(InertiaApp);
+Vue.use(VueI18n);
 
 [
     NavPlugin,
@@ -85,10 +87,16 @@ Vue.component('clipboard-json-to-curl', () =>
 Vue.component('text-editor', () =>
     import(/* webpackChunkName: "text-editor" */ '@/components/text-editor.vue')
 );
+const i18n = new VueI18n({
+    locale: 'en-GB',
+    fallbackLocale: 'en-GB',
+    messages: {},
+});
 
 let app = document.getElementById('app');
 
 new Vue({
+    i18n,
     render: (h) =>
         h(InertiaApp, {
             props: {

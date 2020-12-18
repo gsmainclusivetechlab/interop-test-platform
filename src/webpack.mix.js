@@ -17,6 +17,21 @@ mix.setPublicPath('public/assets')
             },
         },
     })
+    .extend(
+        'i18n',
+        new (class {
+            webpackRules() {
+                return [
+                    {
+                        resourceQuery: /blockType=i18n/,
+                        type: 'javascript/auto',
+                        loader: '@kazupon/vue-i18n-loader',
+                    },
+                ];
+            }
+        })()
+    )
+    .i18n()
     .js('resources/js/app.js', 'js')
     .sass('resources/sass/app.scss', 'css')
     .sourceMaps(!mix.inProduction(), 'source-map')
