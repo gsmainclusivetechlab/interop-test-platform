@@ -1,0 +1,47 @@
+{
+    "en-GB": {
+        "page": {
+            "title": "Latest sessions"
+        },
+        "content": {
+            "title": "You have no sessions",
+            "comment": "Click the button below to create your first session."
+        },
+        "buttons": {
+            "new-session": "New Session"
+        },
+        "alerts": {
+            "no-modes": "No test modes are enabled in the environment"
+        }
+    },
+    "en-US": {
+        "page": {
+            "title": "Latest sessions"
+        },
+        "content": {
+            "title": "You have no sessions",
+            "comment": "Click the button below to create your first session."
+        },
+        "buttons": {
+            "new-session": "New Session"
+        },
+        "alerts": {
+            "no-modes": "No test modes are enabled in the environment"
+        }
+    },
+    "ru-RU": {
+        "page": {
+            "title": "Последние сессии"
+        },
+        "content": {
+            "title": "У вас нет сессий",
+            "comment": "Нажмите на кнопку для создания первой сессии."
+        },
+        "buttons": {
+            "new-session": "Новая Сессия"
+        },
+        "alerts": {
+            "no-modes": "Тестовый режим окружения не включены"
+        }
+    }
+}

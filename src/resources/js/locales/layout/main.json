@@ -1,17 +1,89 @@
 {
     "en-GB": {
+        "menu": {
+            "users": "Users",
+            "groups": "Groups",
+            "sessions": "Sessions",
+            "cert-sessions": "Certification Sessions",
+            "api-specs": "Api Specs",
+            "components": "Components",
+            "use-cases": "Use Cases",
+            "test-cases": "Test Cases",
+            "message-log": "Message Log",
+            "import-question-def": "Import Questionnaire Definition"
+        },
+        "user-menu": {
+            "settings": "Settings",
+            "logout": "Logout"
+        },
+        "main-nav": {
+            "dashboard": "Dashboard",
+            "sessions": "Sessions",
+            "groups": "Groups",
+            "tutorials": "Tutorials",
+            "doc": "Documentation",
+            "lab": "The Lab"
+        },
         "buttons": {
-            "home": "Take me home"
+            "new-session": "New Session"
         }
     },
     "en-US": {
+        "menu": {
+            "users": "Users",
+            "groups": "Groups",
+            "sessions": "Sessions",
+            "cert-sessions": "Certification Sessions",
+            "api-specs": "Api Specs",
+            "components": "Components",
+            "use-cases": "Use Cases",
+            "test-cases": "Test Cases",
+            "message-log": "Message Log",
+            "import-question-def": "Import Questionnaire Definition"
+        },
+        "user-menu": {
+            "settings": "Settings",
+            "logout": "Logout"
+        },
+        "main-nav": {
+            "dashboard": "Dashboard",
+            "sessions": "Sessions",
+            "groups": "Groups",
+            "tutorials": "Tutorials",
+            "doc": "Documentation",
+            "lab": "The Lab"
+        },
         "buttons": {
-            "home": "Take me home"
+            "new-session": "New Session"
         }
     },
     "ru-RU": {
+        "menu": {
+            "users": "Пользователи",
+            "groups": "Группы",
+            "sessions": "Сессии",
+            "cert-sessions": "Сертифицированные Сессии",
+            "api-specs": "Api Спецификации",
+            "components": "Компоненты",
+            "use-cases": "Пользовательские Кейсы",
+            "test-cases": "Тест Кейсы",
+            "message-log": "Логи",
+            "import-question-def": "Импорт Анкеты"
+        },
+        "user-menu": {
+            "settings": "Настройки",
+            "logout": "Выход"
+        },
+        "main-nav": {
+            "dashboard": "Панель",
+            "sessions": "Сессии",
+            "groups": "Группы",
+            "tutorials": "Руководство",
+            "doc": "Документация",
+            "lab": "Лаборатория"
+        },
         "buttons": {
-            "home": "На стартовую"
+            "new-session": "Новая Сессия"
         }
     }
 }

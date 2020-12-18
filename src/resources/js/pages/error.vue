@@ -9,7 +9,7 @@
                         </div>
                     </div>
                     <p class="empty-title h3">
-                        Oops...You just found an error page
+                        {{ $t('page.title') }}
                     </p>
                     <p class="empty-subtitle text-muted">
                         {{ message }}
@@ -20,7 +20,7 @@
                             class="btn btn-primary"
                         >
                             <icon name="arrow-left" />
-                            Take me home
+                            {{ $t('buttons.home') }}
                         </inertia-link>
                     </div>
                 </div>
@@ -36,15 +36,15 @@ export default {
     metaInfo() {
         return {
             title: {
-                400: '400 Bad Request',
-                401: '401 Unauthorized',
-                403: '403 Forbidden',
-                404: '404 Page Not Found',
-                405: '405 Method Not Supported',
-                419: '419 Page Expired',
-                429: '429 Too Many Requests',
-                500: '500 Server Error',
-                503: '503 Service Unavailable',
+                400: this.$t('errors.e-400.title'),
+                401: this.$t('errors.e-401.title'),
+                403: this.$t('errors.e-403.title'),
+                404: this.$t('errors.e-404.title'),
+                405: this.$t('errors.e-405.title'),
+                419: this.$t('errors.e-419.title'),
+                429: this.$t('errors.e-429.title'),
+                500: this.$t('errors.e-500.title'),
+                503: this.$t('errors.e-503.title'),
             }[this.status],
         };
     },
@@ -60,17 +60,18 @@ export default {
     computed: {
         message() {
             return {
-                400: 'We are sorry but your browser sent a request that this server could not understand.',
-                401: 'We are sorry but you are not authorized to access this page.',
-                403: 'We are sorry but you do not have permission to access this page',
-                404: 'We are sorry but the page you were looking for does not exist.',
-                405: 'We are sorry but the method not supported.',
-                419: 'We are sorry but your session has expired.',
-                429: 'We are sorry but too many requests.',
-                500: 'We are sorry but your request contains bad syntax and cannot be fulfilled.',
-                503: 'We are sorry but the service is temporarily unavailable.',
+                400: this.$t('errors.e-400.comment'),
+                401: this.$t('errors.e-401.comment'),
+                403: this.$t('errors.e-403.comment'),
+                404: this.$t('errors.e-404.comment'),
+                405: this.$t('errors.e-405.comment'),
+                419: this.$t('errors.e-419.comment'),
+                429: this.$t('errors.e-429.comment'),
+                500: this.$t('errors.e-500.comment'),
+                503: this.$t('errors.e-503.comment'),
             }[this.status];
         },
     },
 };
 </script>
+<i18n src="@/locales/pages/error.json"></i18n>

@@ -5,13 +5,13 @@
             role="alert"
             v-if="$page.app.available_session_modes_count === 0"
         >
-            No test modes are enabled in the environment
+            {{ $t('alerts.no-modes') }}
         </div>
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        <b>Latest sessions</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-10 mx-auto">
                                 <p class="empty-title h3 mb-3">
-                                    You have no sessions
+                                    {{ $t('content.title') }}
                                 </p>
                                 <p
                                     class="empty-subtitle text-muted mb-0"
@@ -32,8 +32,7 @@
                                             .available_session_modes_count > 0
                                     "
                                 >
-                                    Click the button below to create your first
-                                    session.
+                                    {{ $t('content.comment') }}
                                 </p>
                                 <div class="empty-action">
                                     <inertia-link
@@ -46,7 +45,7 @@
                                         class="btn btn-primary"
                                     >
                                         <icon name="plus" />
-                                        New Session
+                                        {{ $t('buttons.new-session') }}
                                     </inertia-link>
                                 </div>
                             </div>
@@ -181,3 +180,4 @@ export default {
     },
 };
 </script>
+<i18n src="@/locales/pages/home.json"></i18n>
