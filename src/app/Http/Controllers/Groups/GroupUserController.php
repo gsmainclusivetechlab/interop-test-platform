@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\UserResource;
@@ -89,7 +91,7 @@ class GroupUserController extends Controller
             'admin' => !$group->users()->exists(),
         ]);
 
-        new AuditLogUtil($request, 'New user was invited', $group->id, 2, $request->toArray());
+        new AuditLogUtil($request, AuditActionEnum::GROUP_INVITE(), AuditTypeEnum::GROUP_TYPE, $group->id, $request->toArray());
 
         return redirect()
             ->route('groups.users.index', $group)

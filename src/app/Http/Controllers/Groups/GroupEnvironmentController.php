@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupEnvironmentResource;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
@@ -71,7 +73,7 @@ class GroupEnvironmentController extends Controller
         ]);
         $group->environments()->create($request->input());
 
-        new AuditLogUtil($request, 'Created a new environment', $group->id, 2, $request->toArray());
+        new AuditLogUtil($request, AuditActionEnum::GROUP_ENVIRONMENT(),AuditTypeEnum::GROUP_TYPE, $group->id, $request->toArray());
 
         return redirect()
             ->route('groups.environments.index', $group)

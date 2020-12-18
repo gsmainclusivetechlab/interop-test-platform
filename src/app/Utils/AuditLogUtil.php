@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 
+use App\Enums\AuditActionEnum;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
 
@@ -13,41 +14,33 @@ use Illuminate\Http\Request;
 class AuditLogUtil
 {
     /**
-     * @var array
-     */
-    protected $actions = [
-        'Created a session',
-        'Password was reset',
-    ];
-
-    /**
      * @param Request $request
-     * @param string $action
-     * @param int $subject
+     * @param AuditActionEnum $action
      * @param int $type
+     * @param int $subject
      * @param array $meta
      */
-    public function __construct(Request $request, string $action, ?int $subject, int $type, ?array $meta)
+    public function __construct(Request $request, AuditActionEnum $action, int $type, ?int $subject, ?array $meta)
     {
-        $this->log($request, $action, $subject, $type, $meta);
+        $this->log($request, $action, $type, $subject, $meta);
     }
 
     /**
      * @param Request $request
-     * @param string $action
-     * @param int $subject
+     * @param AuditActionEnum $action
      * @param int $type
+     * @param int $subject
      * @param array $meta
 
      * @return null
      */
-    public function log(Request $request, string $action, ?int $subject, int $type, ?array $meta)
+    public function log(Request $request, AuditActionEnum $action, int $type, ?int $subject, ?array $meta)
     {
         $log = new AuditLog;
-        $log->fullname_id = $request->user()->id;
+        $log->user_id = $request->user()->id;
         $log->action = $action;
-        $log->subject = $subject;
         $log->type = $type;
+        $log->subject = $subject;
         $log->meta = $meta;
         $log->save();
 

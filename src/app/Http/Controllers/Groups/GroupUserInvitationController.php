@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserInvitationResource;
 use App\Models\Group;
@@ -101,7 +103,7 @@ class GroupUserInvitationController extends Controller
         ]);
         $userInvitation->sendEmailInvitationNotification();
 
-        new AuditLogUtil($request, 'New user was invited', $group->id, 2, $request->toArray());
+        new AuditLogUtil($request, AuditActionEnum::GROUP_INVITE(),AuditTypeEnum::GROUP_TYPE, $group->id, $request->toArray());
 
         return redirect()
             ->route('groups.user-invitations.index', $group)

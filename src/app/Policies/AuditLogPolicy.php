@@ -28,7 +28,6 @@ class AuditLogPolicy
     {
         return $user->isAdmin() ||
             $model
-                ->session()
                 ->whereHas('owner', function ($query) use ($user) {
                     $query->whereKey($user->getKey());
                 })

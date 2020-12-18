@@ -31,9 +31,9 @@ class AuditLog extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function fullname()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'fullname_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 }

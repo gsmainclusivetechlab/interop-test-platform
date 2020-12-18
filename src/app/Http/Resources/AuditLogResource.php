@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\AuditTypeEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AuditLogResource extends JsonResource
@@ -14,7 +15,7 @@ class AuditLogResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'fullname' => new UserResource($this->whenLoaded('fullname')),
+            'user' => new UserResource($this->whenLoaded('user')),
             'action' => $this->action,
             'subject' => $this->subject,
             'type' => $this->type,
@@ -32,11 +33,11 @@ class AuditLogResource extends JsonResource
     private function getSubject($subject, $type)
     {
         switch ($type) {
-            case 0:
+            case AuditTypeEnum::NO_TYPE():
                 break;
-            case 1:
+            case AuditTypeEnum::SESSION_TYPE():
                 return 'sessions.show';
-            case 2:
+            case AuditTypeEnum::GROUP_TYPE():
                 return 'groups.show';
         }
         return $subject;
