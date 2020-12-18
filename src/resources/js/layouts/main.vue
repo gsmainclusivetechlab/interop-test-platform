@@ -43,13 +43,14 @@
                             </span>
                         </span>
                     </label>
+                    <locale-changer class="align-self-center mr-2" />
                     <b-navbar-nav class="flex-row">
                         <b-nav-item-dropdown
                             right
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
-                            class="admin-settings-dropdown"
+                            class="admin-settings-dropdown mr-2"
                             v-if="
                                 $page.auth.user.can.users.viewAny ||
                                 $page.auth.user.can.groups.viewAny ||
@@ -363,10 +364,13 @@
 
 <script>
 import Layout from '@/layouts/app';
+import LocaleChanger from '@/components/locale-changer';
 
 export default {
     components: {
         Layout,
+        LocaleChanger,
     },
 };
 </script>
+<i18n src="@/locales/layout/main.json"></i18n>

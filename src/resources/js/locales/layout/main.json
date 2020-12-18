@@ -1,0 +1,17 @@
+{
+    "en-GB": {
+        "buttons": {
+            "home": "Take me home"
+        }
+    },
+    "en-US": {
+        "buttons": {
+            "home": "Take me home"
+        }
+    },
+    "ru-RU": {
+        "buttons": {
+            "home": "На стартовую"
+        }
+    }
+}
