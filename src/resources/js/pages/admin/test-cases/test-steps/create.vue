@@ -405,7 +405,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'request-headers-examples'"
                         >
-                            Request Headers Examples
+                            Request Headers
                         </button>
                         <b-collapse id="request-headers-examples" class="card">
                             <json-editor-block
@@ -425,7 +425,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'request-body-examples'"
                         >
-                            Request Body Examples
+                            Request Body
                         </button>
                         <b-collapse id="request-body-examples" class="card">
                             <json-editor-block
@@ -440,7 +440,7 @@
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
-                        <h2 class="card-title">Response Status Example</h2>
+                        <h2 class="card-title">Response Status</h2>
                         <selectize
                             class="form-select"
                             :class="{
@@ -466,7 +466,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'response-headers-examples'"
                         >
-                            Response Headers Examples
+                            Response Headers
                         </button>
                         <b-collapse id="response-headers-examples" class="card">
                             <json-editor-block
@@ -486,7 +486,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'response-body-examples'"
                         >
-                            Response Body Examples
+                            Response Body
                         </button>
                         <b-collapse id="response-body-examples" class="card">
                             <json-editor-block
