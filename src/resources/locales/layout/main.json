@@ -28,35 +28,7 @@
             "new-session": "New Session"
         }
     },
-    "en-US": {
-        "menu": {
-            "users": "Users",
-            "groups": "Groups",
-            "sessions": "Sessions",
-            "cert-sessions": "Certification Sessions",
-            "api-specs": "Api Specs",
-            "components": "Components",
-            "use-cases": "Use Cases",
-            "test-cases": "Test Cases",
-            "message-log": "Message Log",
-            "import-question-def": "Import Questionnaire Definition"
-        },
-        "user-menu": {
-            "settings": "Settings",
-            "logout": "Logout"
-        },
-        "main-nav": {
-            "dashboard": "Dashboard",
-            "sessions": "Sessions",
-            "groups": "Groups",
-            "tutorials": "Tutorials",
-            "doc": "Documentation",
-            "lab": "The Lab"
-        },
-        "buttons": {
-            "new-session": "New Session"
-        }
-    },
+    "en-US": {},
     "ru-RU": {
         "menu": {
             "users": "Пользователи",

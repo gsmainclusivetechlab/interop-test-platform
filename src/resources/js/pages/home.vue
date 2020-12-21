@@ -180,4 +180,4 @@ export default {
     },
 };
 </script>
-<i18n src="@/locales/pages/home.json"></i18n>
+<i18n src="@locales/pages/home.json"></i18n>

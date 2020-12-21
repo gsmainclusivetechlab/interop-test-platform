@@ -14,6 +14,7 @@ mix.setPublicPath('public/assets')
         resolve: {
             alias: {
                 '@': path.resolve('resources/js'),
+                '@locales': path.resolve('resources/locales'),
             },
         },
     })

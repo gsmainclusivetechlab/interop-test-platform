@@ -45,52 +45,7 @@
             "home": "Take me home"
         }
     },
-    "en-US": {
-        "page": {
-            "title": "Oops...You just found an error page"
-        },
-        "errors": {
-            "e-400": {
-                "title": "400 Bad Request",
-                "comment": "We are sorry but your browser sent a request that this server could not understand."
-            },
-            "e-401": {
-                "title": "401 Unauthorized",
-                "comment": "We are sorry but you are not authorized to access this page."
-            },
-            "e-403": {
-                "title": "403 Forbidden",
-                "comment": "We are sorry but you do not have permission to access this page."
-            },
-            "e-404": {
-                "title": "404 Page Not Found",
-                "comment": "We are sorry but the page you were looking for does not exist."
-            },
-            "e-405": {
-                "title": "405 Method Not Supported",
-                "comment": "We are sorry but the method not supported."
-            },
-            "e-419": {
-                "title": "419 Page Expired",
-                "comment": "We are sorry but your session has expired."
-            },
-            "e-429": {
-                "title": "429 Too Many Requests",
-                "comment": "We are sorry but too many requests."
-            },
-            "e-500": {
-                "title": "500 Server Error",
-                "comment": "We are sorry but your request contains bad syntax and cannot be fulfilled."
-            },
-            "e-503": {
-                "title": "503 Service Unavailable",
-                "comment": "We are sorry but the service is temporarily unavailable."
-            }
-        },
-        "buttons": {
-            "home": "Take me home"
-        }
-    },
+    "en-US": {},
     "ru-RU": {
         "page": {
             "title": "Ой... Это страница ошибки"

@@ -1,0 +1,17 @@
+{
+    "en-GB": {
+        "page": {
+            "title": "Settings",
+            "sub-title": "General"
+        },
+        "tabs": ["Profile", "Change password"]
+    },
+    "en-US": {},
+    "ru-RU": {
+        "page": {
+            "title": "Настройки",
+            "sub-title": "Главное"
+        },
+        "tabs": ["Профиль", "Изменить пароль"]
+    }
+}

@@ -801,4 +801,4 @@ export default {
     },
 };
 </script>
-<i18n src="@/locales/pages/tutorials.json"></i18n>
+<i18n src="@locales/pages/tutorials.json"></i18n>

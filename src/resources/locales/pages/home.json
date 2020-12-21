@@ -14,21 +14,7 @@
             "no-modes": "No test modes are enabled in the environment"
         }
     },
-    "en-US": {
-        "page": {
-            "title": "Latest sessions"
-        },
-        "content": {
-            "title": "You have no sessions",
-            "comment": "Click the button below to create your first session."
-        },
-        "buttons": {
-            "new-session": "New Session"
-        },
-        "alerts": {
-            "no-modes": "No test modes are enabled in the environment"
-        }
-    },
+    "en-US": {},
     "ru-RU": {
         "page": {
             "title": "Последние сессии"
