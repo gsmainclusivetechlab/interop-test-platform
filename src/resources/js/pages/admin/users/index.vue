@@ -3,7 +3,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
+                    <div class="page-pretitle">{{ $t('page.pre-title') }}</div>
                     <h2 class="page-title">
                         <b>{{ $t('page.title') }}</b>
                     </h2>
@@ -265,4 +265,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/index.json"></i18n>
 <i18n src="@locales/pages/admin/users/index.json"></i18n>

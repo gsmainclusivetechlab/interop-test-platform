@@ -3,9 +3,9 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
+                    <div class="page-pretitle">{{ $t('page.pre-title') }}</div>
                     <h2 class="page-title">
-                        <b>Test Cases</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        Create Test Case
+                        {{ $t('buttons.create') }}
                     </inertia-link>
                     <inertia-link
                         :href="route('admin.test-cases.import')"
@@ -29,7 +29,7 @@
                         class="btn btn-primary ml-2"
                     >
                         <icon name="upload" />
-                        Import Test Case
+                        {{ $t('buttons.import') }}
                     </inertia-link>
                 </div>
             </div>
@@ -39,14 +39,30 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap text-center">Version</th>
-                            <th class="text-nowrap text-center">Behavior</th>
-                            <th class="text-nowrap text-center">Public</th>
-                            <th class="text-nowrap text-center">Use Case</th>
-                            <th class="text-nowrap text-center">Test Steps</th>
-                            <th class="text-nowrap text-center">Owner</th>
-                            <th class="text-nowrap text-center">Groups</th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.name') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.version') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.behavior') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.public') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.use-case') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.test-steps') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.owner') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.groups') }}
+                            </th>
                             <th class="text-nowrap text-center w-1"></th>
                         </tr>
                     </thead>
@@ -196,11 +212,11 @@
                                             "
                                             class="dropdown-item"
                                         >
-                                            Import New Version
+                                            {{ $t('table.menu.import') }}
                                         </inertia-link>
                                     </li>
                                     <li v-if="testCase.can.update">
-                                        <div v-if="testCase.draft">
+                                        <template v-if="testCase.draft">
                                             <inertia-link
                                                 :href="
                                                     route(
@@ -210,10 +226,12 @@
                                                 "
                                                 class="dropdown-item"
                                             >
-                                                Edit
+                                                {{
+                                                    $t('table.menu.edit.title')
+                                                }}
                                             </inertia-link>
-                                        </div>
-                                        <div v-else>
+                                        </template>
+                                        <template v-else>
                                             <confirm-link
                                                 :href="
                                                     route(
@@ -221,12 +239,18 @@
                                                         testCase.id
                                                     )
                                                 "
-                                                :confirm-text="'The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime.'"
+                                                :confirm-text="
+                                                    $t(
+                                                        'table.menu.edit.modal.text'
+                                                    )
+                                                "
                                                 class="dropdown-item"
                                             >
-                                                Edit
+                                                {{
+                                                    $t('table.menu.edit.title')
+                                                }}
                                             </confirm-link>
-                                        </div>
+                                        </template>
                                     </li>
                                     <li v-if="testCase.can.delete">
                                         <confirm-link
@@ -238,10 +262,16 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete all versions of ${testCase.name}?`"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="`${$t(
+                                                'table.menu.delete.modal.text'
+                                            )} ${testCase.name}?`"
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
@@ -298,3 +328,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/index.json"></i18n>
+<i18n src="@locales/pages/admin/test-cases/index.json"></i18n>

@@ -1,0 +1,35 @@
+{
+    "en-GB": {
+        "page": {
+            "title": "Import test case"
+        },
+        "inputs": {
+            "file": {
+                "label": "File",
+                "placeholder": "Choose file...",
+                "browse": "Browse"
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "import": "Import"
+        }
+    },
+    "en-US": {},
+    "ru-RU": {
+        "page": {
+            "title": "Импорт тестового образца"
+        },
+        "inputs": {
+            "file": {
+                "label": "Файл",
+                "placeholder": "Выбрать файл...",
+                "browse": "Выбрать"
+            }
+        },
+        "buttons": {
+            "cancel": "Отмена",
+            "import": "Импорт"
+        }
+    }
+}
