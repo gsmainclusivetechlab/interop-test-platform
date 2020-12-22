@@ -296,8 +296,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Test Cases',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,

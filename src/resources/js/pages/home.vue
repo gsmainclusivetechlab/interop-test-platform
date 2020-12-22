@@ -165,8 +165,10 @@ import Layout from '@/layouts/main';
 import SessionProgress from '@/components/sessions/progress';
 
 export default {
-    metaInfo: {
-        title: 'Dashboard',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,

@@ -230,8 +230,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Users',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,

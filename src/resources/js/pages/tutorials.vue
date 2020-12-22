@@ -510,7 +510,7 @@ const executeMMOImgPath = 'assets/images/tutorials/mobile-money-operator/';
 export default {
     metaInfo() {
         return {
-            title: 'Tutorials',
+            title: this.$t('page.title'),
             script: [
                 {
                     src: 'https://code.jquery.com/jquery-3.5.0.min.js',

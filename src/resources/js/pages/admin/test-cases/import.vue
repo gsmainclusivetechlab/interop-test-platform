@@ -21,7 +21,7 @@
                                             $t('inputs.file.placeholder')
                                         "
                                         :browse-text="$t('inputs.file.browse')"
-                                        v-bind:class="{
+                                        :class="{
                                             'is-invalid': $page.errors.file,
                                         }"
                                     />
@@ -66,8 +66,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Import test case',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
