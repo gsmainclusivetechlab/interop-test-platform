@@ -67,38 +67,56 @@
                                 class="mb-3"
                                 v-for="component in components.data"
                             >
-                                <div>
+                                <div class="mb-3">
                                     <label>
                                         <b>{{ component.name }} URL</b>
                                     </label>
                                     <input
                                         type="text"
                                         v-model="
-                                            form.component_base_urls[
-                                                component.id
-                                            ]
+                                            form.components[component.id].base_url
                                         "
                                         class="form-control"
                                         :class="{
                                             'is-invalid':
                                                 $page.errors[
-                                                    `component_base_urls.${component.id}`
+                                                    `components.${component.id}.base_url`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
                                             $page.errors[
-                                                `component_base_urls.${component.id}`
+                                                `components.${component.id}.base_url`
                                             ]
                                         "
                                         class="invalid-feedback"
                                     >
                                         {{
                                             $page.errors[
-                                                `component_base_urls.${component.id}`
+                                                `components.${component.id}.base_url`
                                             ]
                                         }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <label class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="form.components[
+                                                component.id
+                                            ].use_encryption"
+                                        />
+                                        <span class="form-check-label">Use Encryption</span>
+                                    </label>
+                                    <span
+                                        v-if="$page.errors[`components.${component.id}.use_encryption`]"
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{ $page.errors[`components.${component.id}.use_encryption`] }}
+                                        </strong>
                                     </span>
                                 </div>
                             </div>
@@ -219,11 +237,11 @@ export default {
                     ? this.session.groupEnvironment.data.id
                     : null,
                 environments: this.session.environments,
-                component_base_urls: collect(this.components.data)
-                    .mapWithKeys((collection) => [
-                        collection.id,
-                        collection.base_url,
-                    ])
+                components: collect(this.components.data)
+                    .map(function (component) {
+                        return collect(component).only(['id', 'base_url', 'use_encryption']).all()
+                    })
+                    .keyBy('id')
                     .all(),
                 test_cases: collect(this.session.testCases.data)
                     .pluck('id')

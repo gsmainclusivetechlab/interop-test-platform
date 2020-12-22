@@ -304,11 +304,12 @@ class SessionController extends Controller
         $urlRules = $session->components
             ->mapWithKeys(function (Component $component) {
                 return [
-                    "component_base_urls.{$component->id}" => [
+                    "components.{$component->id}.base_url" => [
                         'required',
                         'url',
                         'max:255',
                     ],
+                    "components.{$component->id}.use_encryption" => ['boolean']
                 ];
             })
             ->all();
@@ -353,7 +354,10 @@ class SessionController extends Controller
                         ->components()
                         ->updateExistingPivot($id = $component->id, [
                             'base_url' => $request->input(
-                                "component_base_urls.{$id}"
+                                "components.{$id}.base_url"
+                            ),
+                            'use_encryption' => $request->input(
+                                "components.{$id}.use_encryption"
                             ),
                         ]);
                 });

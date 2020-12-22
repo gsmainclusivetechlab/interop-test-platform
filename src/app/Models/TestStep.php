@@ -12,7 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  *
  * @property string $uuid
+ * @property int $source_id
+ * @property int $target_id
  * @property Response $response
+ *
+ * @property Component $source
+ * @property Component $target
  */
 class TestStep extends Model
 {

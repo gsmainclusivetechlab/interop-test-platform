@@ -18,14 +18,6 @@ use Inertia\Response;
 class GroupUserInvitationController extends Controller
 {
     /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
-
-    /**
      * @param Group $group
      * @return Response
      * @throws AuthorizationException

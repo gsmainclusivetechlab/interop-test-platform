@@ -26,7 +26,7 @@ Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
 /**
  * Groups Routes
  */
-Route::namespace('Groups')->group(function () {
+Route::namespace('Groups')->middleware(['auth', 'verified'])->group(function () {
     Route::resource('groups', 'GroupController')->only(['index', 'show']);
     Route::resource('groups.users', 'GroupUserController')->only([
         'index',
@@ -46,6 +46,10 @@ Route::namespace('Groups')->group(function () {
         'groups.environments',
         'GroupEnvironmentController'
     )->except(['show']);
+    Route::resource(
+        'groups.certificates',
+        'GroupCertificatesController'
+    )->except(['show', 'edit']);
     Route::resource(
         'groups.user-invitations',
         'GroupUserInvitationController'
@@ -149,6 +153,10 @@ Route::name('sessions.')
                     'environment-candidates',
                     'RegisterController@groupEnvironmentCandidates'
                 )->name('group-environment-candidates');
+                Route::get(
+                    'certificate-candidates',
+                    'RegisterController@groupCertificateCandidates'
+                )->name('group-certificate-candidates');
             });
     });
 

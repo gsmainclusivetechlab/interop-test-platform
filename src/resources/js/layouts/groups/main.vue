@@ -86,6 +86,24 @@
                                         Environments
                                     </inertia-link>
                                 </li>
+                                <li class="nav-item">
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'groups.certificates.index',
+                                                group.id
+                                            )
+                                        "
+                                        class="nav-link rounded-0"
+                                        v-bind:class="{
+                                            active: route().current(
+                                                'groups.certificates.*'
+                                            ),
+                                        }"
+                                    >
+                                        CA Certificates
+                                    </inertia-link>
+                                </li>
                             </ul>
                         </div>
                         <slot />

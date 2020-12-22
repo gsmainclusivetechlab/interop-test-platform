@@ -23,6 +23,12 @@ class ComponentResource extends JsonResource
                 },
                 $this->base_url
             ),
+            'use_encryption' => $this->whenPivotLoaded(
+                'session_components',
+                function () {
+                    return $this->pivot->use_encryption;
+                },
+            ),
             'position' => $this->position,
             'sutable' => $this->sutable,
             'connections' => static::collection(

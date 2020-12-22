@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Pivots\SessionComponent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +60,7 @@ class Session extends Model
         'status',
         'reason',
         'description',
+        'use_encryption',
         'group_environment_id',
         'environments',
         'completed_at',
@@ -105,7 +107,9 @@ class Session extends Model
             'session_components',
             'session_id',
             'component_id'
-        )->withPivot(['base_url']);
+        )
+            ->using(SessionComponent::class)
+            ->withPivot(['base_url', 'use_encryption', 'certificate_id']);
     }
 
     /**

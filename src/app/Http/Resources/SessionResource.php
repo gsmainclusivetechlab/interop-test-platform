@@ -23,6 +23,7 @@ class SessionResource extends JsonResource
             'statusName' => $this->status_name,
             'completable' => $this->completable,
             'description' => $this->description,
+            'use_encryption' => $this->use_encryption,
             'environments' => $this->environments,
             'owner' => new UserResource($this->whenLoaded('owner')),
             'groupEnvironment' => new GroupEnvironmentResource(

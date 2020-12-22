@@ -57,6 +57,7 @@ class ProcessPendingRequest
     public function __invoke()
     {
         $response = null;
+        $options = [];
         if ($this->simulateRequest) {
             $response = $this->testResult->testStep->response->withSubstitutions(
                 $this->session->environments()
@@ -69,10 +70,26 @@ class ProcessPendingRequest
             );
         }
 
+        $targetComponent = $this->session
+            ->components()
+            ->find($this->testResult->testStep->target_id);
+
+        if ($targetComponent && $targetComponent->pivot->use_encryption) {
+//            $uri = $this->request->getUri()->withScheme('https');
+//            $this->request = $this->request->withUri($uri);
+
+            $options = [
+//                'verify' => $targetComponent->pivot->certificate->getFullPath(),
+//                'verify' => false,
+//                'cert' => ['/var/www/html/user.crt', 'pass'],
+//                'ssl_key' => ['/var/www/html/user.key', 'pass']
+            ];
+        }
+
         return (new PendingRequest($response))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
-            ->transfer($this->request)
+            ->transfer($this->request, $options)
             ->then(
                 new SendingFulfilledHandler($this->testResult, $this->session)
             )

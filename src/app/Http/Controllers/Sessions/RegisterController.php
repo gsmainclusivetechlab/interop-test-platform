@@ -6,14 +6,13 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
-use App\Http\Resources\{
+use App\Http\Resources\{CertificateResource,
     ComponentResource,
     GroupEnvironmentResource,
     QuestionResource,
     SectionResource,
-    UseCaseResource
-};
-use App\Models\{
+    UseCaseResource};
+use App\Models\{Certificate,
     Component,
     GroupEnvironment,
     QuestionnaireQuestions,
@@ -21,8 +20,7 @@ use App\Models\{
     QuestionnaireTestCase,
     Session,
     TestCase,
-    UseCase
-};
+    UseCase};
 use Arr;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -185,6 +183,18 @@ class RegisterController extends Controller
                     ->get()
             ),
             'components' => $this->getComponents(),
+            'hasGroupCertificates' => Certificate::whereHas(
+                'group',
+                function (Builder $query) {
+                    $query->whereHas('users', function (Builder $query) {
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
+                    });
+                }
+            )->exists()
         ]);
     }
 
@@ -195,7 +205,18 @@ class RegisterController extends Controller
      */
     public function storeSut(SessionSutRequest $request)
     {
-        $request->session()->put('session.sut', $request->validated());
+        $data = collect($request->validated()['components'])->map(function ($sut) {
+            if (isset($sut['certificate'])) {
+                $sut['certificate_id'] = Certificate::create([
+                    'name' => $sut['certificate']->getClientOriginalName(),
+                    'path' => $sut['certificate']->store('certificates')
+                ])->id;
+            }
+
+            return Arr::except($sut, ['id', 'certificate']);
+        })->all();
+
+        $request->session()->put('session.sut', $data);
 
         return redirect()->route('sessions.register.info');
     }
@@ -306,7 +327,7 @@ class RegisterController extends Controller
                     ->whereHas('testCases', function ($query) use ($testCases) {
                         $query
                             ->withComponents(
-                                session('session.sut.component_ids')
+                                array_keys(session('session.sut'))
                             )
                             ->when(
                                 !auth()
@@ -334,14 +355,14 @@ class RegisterController extends Controller
      */
     public function storeInfo(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
         $request->session()->put(
             'session.info',
-            array_merge($request->input(), [
+            array_merge($validated, [
                 'uuid' => Str::uuid(),
             ])
         );
@@ -359,7 +380,7 @@ class RegisterController extends Controller
             'suts' => ComponentResource::collection(
                 Component::whereIn(
                     'id',
-                    session('session.sut.component_ids', [0])
+                    array_keys(session('session.sut', [0]))
                 )
                     ->with('connections')
                     ->get()
@@ -448,12 +469,10 @@ class RegisterController extends Controller
                                 ->get('session.info.test_cases')
                     );
 
-                collect(session('session.sut.component_ids'))->each(function (
-                    $id
+                collect(session('session.sut'))->each(function (
+                    $component, $id
                 ) use ($session) {
-                    $session->components()->attach($id, [
-                        'base_url' => session("session.sut.base_urls.{$id}"),
-                    ]);
+                    $session->components()->attach($id, $component);
                 });
 
                 return $session;
@@ -487,6 +506,34 @@ class RegisterController extends Controller
                                 ->getAuthIdentifier()
                         );
                     });
+                })
+                ->latest()
+                ->paginate()
+        );
+    }
+
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function groupCertificateCandidates()
+    {
+        $sessionIds = collect(session('session.sut'))->pluck('certificate_id')->filter();
+
+        return CertificateResource::collection(
+            Certificate::when(request('q'), function (Builder $query, $q) {
+                $query->whereRaw('name like ?', "%{$q}%");
+            })
+                ->whereHas('group', function (Builder $query) {
+                    $query->whereHas('users', function (Builder $query) {
+                        $query->whereKey(
+                            auth()
+                                ->user()
+                                ->getAuthIdentifier()
+                        );
+                    });
+                })
+                ->when($sessionIds, function (Builder $query, $ids) {
+                    $query->orWhereIn('id', $ids);
                 })
                 ->latest()
                 ->paginate()
@@ -628,7 +675,7 @@ class RegisterController extends Controller
         $testCases = $this->getTestCases();
 
         return $query
-            ->withComponents(session('session.sut.component_ids'))
+            ->withComponents(array_keys(session('session.sut')))
             ->where(function ($query) {
                 $query->available();
             })
