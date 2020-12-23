@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
+use App\Http\Client\Request;
 use App\Http\Client\Response;
 use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  *
  * @property string $uuid
+ * @property Request $request
  * @property Response $response
  */
 class TestStep extends Model

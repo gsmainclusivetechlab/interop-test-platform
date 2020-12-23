@@ -198,41 +198,26 @@ class Session extends Model
         return $this->hasMany(QuestionnaireAnswer::class);
     }
 
-    /**
-     * @return array
-     */
-    public function environments()
+    public function environments(): array
     {
-        $defaultUrl = config('app.url');
-
         return array_merge($this->environments ?? [], [
-            'SP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Service Provider')->firstOrFail(),
-                $defaultUrl
-            ),
-            'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where(
-                    'name',
-                    'Mobile Money Operator 1'
-                )->firstOrFail(),
-                $defaultUrl
-            ),
-            'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Mojaloop')->firstOrFail(),
-                $defaultUrl
-            ),
-            'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where(
-                    'name',
-                    'Mobile Money Operator 2'
-                )->firstOrFail(),
-                $defaultUrl
-            ),
+            'SP_BASE_URI' => $this->getBaseUriForEnvironment('service-provider'),
+            'MMO1_BASE_URI' => $this->getBaseUriForEnvironment('mmo-1'),
+            'MOJALOOP_BASE_URI' => $this->getBaseUriForEnvironment('mojaloop'),
+            'MMO2_BASE_URI' => $this->getBaseUriForEnvironment('mmo-2'),
             'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
             'CURRENT_TIMESTAMP_ISO8601_ZULU' => now()->toIso8601ZuluString('m'),
             'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),
             'CURRENT_TIMESTAMP_RFC7231' => now()->toRfc7231String(),
         ]);
+    }
+
+    public function getBaseUriForEnvironment(string $slug): string
+    {
+        return $this->getBaseUriOfComponent(
+            Component::where('slug', $slug)->first(),
+            config('app.url')
+        );
     }
 
     /**
@@ -253,12 +238,12 @@ class Session extends Model
      *
      * @return string
      */
-    public function getBaseUriOfComponent(Component $component, $default = null)
+    public function getBaseUriOfComponent(Component $component = null, $default = null)
     {
         return Arr::get(
-            $this->components()
+            $component ? $this->components()
                 ->whereKey($component->getKey())
-                ->first(),
+                ->first() : [],
             'pivot.base_url',
             $default
         );
