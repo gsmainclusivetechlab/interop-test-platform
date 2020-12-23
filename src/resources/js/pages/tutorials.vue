@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        <b>Tutorials</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -27,11 +27,10 @@
                                 src="/assets/images/tutorials/Gizmo_RED_Stack.png"
                                 class="icon"
                             />
-                            How do I create a new session?
+                            {{ $t('panel[0].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to be directed to an interactive demo
-                            showing you the steps to create a new session.
+                            {{ $t('panel[0].comment') }}
                         </div>
                     </a>
 
@@ -50,12 +49,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
-                            How do I execute a session as a Service Provider?
+                            {{ $t('panel[1].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to learn more about Postman and links to
-                            collections you can use to simulate a Service
-                            Provider.
+                            {{ $t('panel[1].comment') }}
                         </div>
                     </a>
 
@@ -74,12 +71,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
-                            How do I execute a session as a Mobile Money
-                            Operator?
+                            {{ $t('panel[2].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to learn more about how you can execute
-                            test cases as a Mobile Money Operator.
+                            {{ $t('panel[2].comment') }}
                         </div>
                     </a>
                 </section>
@@ -98,11 +93,10 @@
                                 src="assets/images/tutorials/logo-postman.png"
                                 class="icon"
                             />
-                            Postman Collections
+                            {{ $t('panel[3].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to be taken to a list of Postman
-                            collections you can use on the test platform.
+                            {{ $t('panel[3].comment') }}
                         </div>
                     </a>
 
@@ -120,11 +114,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_World.png"
                                 class="icon"
                             />
-                            Learn more about Mojaloop
+                            {{ $t('panel[4].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to learn more about Mojaloop with links
-                            to documentations and specifications
+                            {{ $t('panel[4].comment') }}
                         </div>
                     </a>
 
@@ -142,11 +135,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_Mobile_Operator.png"
                                 class="icon"
                             />
-                            Learn more about Mobile Money API
+                            {{ $t('panel[5].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            Click here to learn more about the Mobile Money API
-                            with links to documentations and specifications
+                            {{ $t('panel[5].comment') }}
                         </div>
                     </a>
                 </section>
@@ -166,7 +158,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                How do I create a new session?
+                                {{ $t('drop-panel[0].title') }}
                             </h3>
                         </button>
                     </header>
@@ -177,10 +169,7 @@
                     >
                         <div class="card-body">
                             <div id="demo-desc">
-                                To start the interactive demo, simply press the
-                                "Start interactive demo" below and follow the
-                                red circle which will indicate where to click
-                                and give you additional information.
+                                {{ $t('drop-panel[0].comment') }}
                             </div>
                             <div class="demo-create-session mt-3 mx-auto">
                                 <div class="demo-inner-container mb-4">
@@ -190,7 +179,7 @@
                                             @click.prevent="continueDemo"
                                         ></div>
                                         <div
-                                            class="d-flex align-items-center justify-content-center circle-label"
+                                            class="d-flex align-items-center justify-content-center circle-label p-2"
                                         >
                                             {{ labelText }}
                                         </div>
@@ -204,7 +193,7 @@
                                         class="btn border-primary start-demo-btn"
                                         @click.prevent="startDemo"
                                     >
-                                        Start interactive demo
+                                        {{ $t('buttons.start-demo') }}
                                     </a>
                                 </div>
                                 <button
@@ -213,7 +202,7 @@
                                     type="button"
                                     @click.prevent="resetDemo"
                                 >
-                                    Reset Demo
+                                    {{ $t('buttons.reset-demo') }}
                                 </button>
                             </div>
                         </div>
@@ -233,8 +222,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                How do I execute a session as a Service
-                                Provider?
+                                {{ $t('drop-panel[1].title') }}
                             </h3>
                         </button>
                     </header>
@@ -246,19 +234,14 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    To start the interactive demo, simply press
-                                    the "Start interactive demo" below and
-                                    follow the red circle which will indicate
-                                    where to click and give you additional
-                                    information.
+                                    {{ $t('drop-panel[1].comment[0]') }}
                                 </p>
                                 <p>
-                                    You can find a Postman collection ready to
-                                    use by clicking
+                                    {{ $t('drop-panel[1].comment[1]') }}
                                     <a
                                         href="#postman-collections"
                                         v-b-toggle.accordion-4
-                                        >here</a
+                                        >{{ $t('drop-panel[1].links[0]') }}</a
                                     >
                                 </p>
                             </div>
@@ -270,7 +253,7 @@
                                             @click.prevent="continueDemo"
                                         ></div>
                                         <div
-                                            class="d-flex align-items-center justify-content-center circle-label"
+                                            class="d-flex align-items-center justify-content-center circle-label p-2"
                                         >
                                             {{ labelText }}
                                         </div>
@@ -284,7 +267,7 @@
                                         class="btn border-primary start-demo-btn"
                                         @click.prevent="startDemo"
                                     >
-                                        Start interactive demo
+                                        {{ $t('buttons.start-demo') }}
                                     </a>
                                 </div>
                                 <button
@@ -293,7 +276,7 @@
                                     type="button"
                                     @click.prevent="resetDemo"
                                 >
-                                    Reset Demo
+                                    {{ $t('buttons.reset-demo') }}
                                 </button>
                             </div>
                         </div>
@@ -313,8 +296,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                How do I execute a session as a Mobile Money
-                                Operator?
+                                {{ $t('drop-panel[2].title') }}
                             </h3>
                         </button>
                     </header>
@@ -326,11 +308,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    To start the interactive demo, simply press
-                                    the "Start interactive demo" below and
-                                    follow the red circle which will indicate
-                                    where to click and give you additional
-                                    information.
+                                    {{ $t('drop-panel[2].comment') }}
                                 </p>
                             </div>
                             <div
@@ -343,7 +321,7 @@
                                             @click.prevent="continueDemo"
                                         ></div>
                                         <div
-                                            class="d-flex align-items-center justify-content-center circle-label"
+                                            class="d-flex align-items-center justify-content-center circle-label p-2"
                                         >
                                             {{ labelText }}
                                         </div>
@@ -357,7 +335,7 @@
                                         class="btn border-primary start-demo-btn"
                                         @click.prevent="startDemo"
                                     >
-                                        Start interactive demo
+                                        {{ $t('buttons.start-demo') }}
                                     </a>
                                 </div>
                                 <button
@@ -366,7 +344,7 @@
                                     type="button"
                                     @click.prevent="resetDemo"
                                 >
-                                    Reset Demo
+                                    {{ $t('buttons.reset-demo') }}
                                 </button>
                             </div>
                         </div>
@@ -385,7 +363,7 @@
                             type="button"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                Postman Collections
+                                {{ $t('drop-panel[3].title') }}
                             </h3>
                         </button>
                     </header>
@@ -397,9 +375,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    Below is an updated list of Postman
-                                    Collections you can use in the test
-                                    platform:
+                                    {{ $t('drop-panel[3].comment') }}
                                 </p>
                                 <ul class="mb-0">
                                     <li>
@@ -407,7 +383,9 @@
                                             href="https://explore.postman.com/api/5380/interoperability-test-platform---service-provider-simulator"
                                             target="_blank"
                                             class="ml-1"
-                                            >Service Provider Simulator</a
+                                            >{{
+                                                $t('drop-panel[3].links[0]')
+                                            }}</a
                                         >
                                     </li>
                                 </ul>
@@ -428,7 +406,7 @@
                             type="button"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                Learn more about Mojaloop
+                                {{ $t('drop-panel[4].title') }}
                             </h3>
                         </button>
                     </header>
@@ -440,8 +418,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    To learn more about Mojaloop, you can follow
-                                    the links below:
+                                    {{ $t('drop-panel[4].comment') }}
                                 </p>
                                 <ul class="mb-0">
                                     <li>
@@ -449,7 +426,9 @@
                                             href="https://mojaloop.io/documentation/"
                                             target="_blank"
                                             class="ml-1"
-                                            >Mojaloop documentation</a
+                                            >{{
+                                                $t('drop-panel[4].links[0]')
+                                            }}</a
                                         >
                                     </li>
                                     <li>
@@ -457,7 +436,9 @@
                                             href="https://mojaloop.io/mojaloop-specification/"
                                             target="_blank"
                                             class="ml-1"
-                                            >Mojaloop specification</a
+                                            >{{
+                                                $t('drop-panel[4].links[0]')
+                                            }}</a
                                         >
                                     </li>
                                 </ul>
@@ -474,7 +455,7 @@
                     >
                         <button v-b-toggle.accordion-6 class="btn shadow-none">
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                Learn more about Mobile Money API
+                                {{ $t('drop-panel[5].title') }}
                             </h3>
                         </button>
                     </header>
@@ -486,8 +467,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    To learn more about the GSMA Mobile Money
-                                    API, you can follow the links below:
+                                    {{ $t('drop-panel[5].comment') }}
                                 </p>
                                 <ul class="mb-0">
                                     <li>
@@ -495,7 +475,9 @@
                                             href="https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/"
                                             target="_blank"
                                             class="ml-1"
-                                            >GSMA Mobile Money API website</a
+                                            >{{
+                                                $t('drop-panel[5].links[0]')
+                                            }}</a
                                         >
                                     </li>
                                     <li>
@@ -503,8 +485,9 @@
                                             href="https://developer.mobilemoneyapi.io/"
                                             target="_blank"
                                             class="ml-1"
-                                            >GSMA Mobile Money API developer
-                                            portal</a
+                                            >{{
+                                                $t('drop-panel[5].links[1]')
+                                            }}</a
                                         >
                                     </li>
                                 </ul>
@@ -524,153 +507,10 @@ const createImgPath = '/assets/images/tutorials/create-session/';
 const executeSPImgPath = '/assets/images/tutorials/service-provider/';
 const executeMMOImgPath = 'assets/images/tutorials/mobile-money-operator/';
 
-const createSession = [
-    [
-        `${createImgPath}dashboard.png`,
-        [1150, 35],
-        'Start by creating a new session',
-    ],
-    [
-        `${createImgPath}select_sut.png`,
-        [415, 360],
-        'Select the System Under Test',
-    ],
-    [
-        `${createImgPath}select_sut_2.png`,
-        [415, 410],
-        "Let's select Service Provider, and enter our URL",
-    ],
-    [`${createImgPath}select_sut_3.png`, [785, 460], 'Press Next'],
-    [
-        `${createImgPath}session_info.png`,
-        [616, 337],
-        'Add a name and select test cases by ticking the corresponding box',
-    ],
-    [
-        `${createImgPath}session_info_2.png`,
-        [616, 360],
-        'Select test cases by ticking the corresponding box',
-    ],
-    [
-        `${createImgPath}session_info_3.png`,
-        [616, 405],
-        'Select test cases by ticking the corresponding box',
-    ],
-    [
-        `${createImgPath}session_info_4.png`,
-        [900, 500],
-        'Press Next when you are finished',
-    ],
-    [
-        `${createImgPath}configure_sut.png`,
-        [780, 436],
-        'Configure your System Under Test using this data and press Confirm',
-    ],
-    [
-        `${createImgPath}session_created.png`,
-        [47, 195],
-        'Your session has now been created and test cases can be accessed on the left. Click "Reset Demo" to start the demo again',
-        true,
-    ],
-];
-
-const serviceProvider = [
-    [
-        `${executeSPImgPath}1-session-page.png`,
-        [3, 185],
-        'First, select the session you would like to execute',
-    ],
-    [
-        `${executeSPImgPath}2-session-usecase.png`,
-        [61, 195],
-        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test',
-    ],
-    [
-        `${executeSPImgPath}3-test-runs.png`,
-        [430, 120],
-        'This page details the test case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test',
-    ],
-    [
-        `${executeSPImgPath}4-test-flow.png`,
-        [251, 199],
-        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs',
-    ],
-    [
-        `${executeSPImgPath}7-postman-1.png`,
-        [1053, 74],
-        'Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press "Send"',
-    ],
-    [
-        `${executeSPImgPath}9-test-runs.png`,
-        [384, 209],
-        'You should now see your test run. Click to be taken to the test run page',
-    ],
-    [
-        `${executeSPImgPath}10-test-details-1.png`,
-        [604, 437],
-        'On this page are all the details about the test run. Clicking on any particular test will give you more information',
-    ],
-    [
-        `${executeSPImgPath}11-test-details-2.png`,
-        [75, 35],
-        'You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click "Reset Demo"',
-        true,
-    ],
-];
-
-const mobileMoneyOperator = [
-    [
-        `${executeMMOImgPath}1-session-page.png`,
-        [5, 240],
-        'First, select the session you would like to execute',
-    ],
-    [
-        `${executeMMOImgPath}2-test-usecase.png`,
-        [65, 215],
-        'On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test',
-    ],
-    [
-        `${executeMMOImgPath}3-test-runs.png`,
-        [430, 120],
-        'This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test',
-    ],
-    [
-        `${executeMMOImgPath}4-test-flow.png`,
-        [109, 225],
-        'Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs',
-    ],
-    [
-        `${executeMMOImgPath}4-test-flow.png`,
-        [1150, 115],
-        'In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run',
-    ],
-    [
-        `${executeMMOImgPath}5-run-test.png`,
-        [315, 119],
-        'We should now be able to see the test run by returning to the test run page',
-    ],
-    [
-        `${executeMMOImgPath}6-test-runs-2.png`,
-        [370, 205],
-        'Click the test run to see more details',
-    ],
-    [
-        `${executeMMOImgPath}7-test-details.png`,
-        [600, 395],
-        'Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results',
-    ],
-    [
-        `${executeMMOImgPath}8-test-details-2.png`,
-        [5, 240],
-        'You can also see the request and response data and validation for each step of the use case flow. To start the demo again press "Reset Demo"',
-        true,
-    ],
-];
-
 export default {
     metaInfo() {
         return {
-            title: 'Tutorials',
+            title: this.$t('page.title'),
             script: [
                 {
                     src: 'https://code.jquery.com/jquery-3.5.0.min.js',
@@ -694,6 +534,158 @@ export default {
             originalHeight: 0,
         };
     },
+    computed: {
+        demoData() {
+            return {
+                createSession: [
+                    [
+                        `${createImgPath}dashboard.png`,
+                        [1150, 35],
+                        this.$t('drop-panel[0].demo-steps[0]'),
+                    ],
+                    [
+                        `${createImgPath}select_sut.png`,
+                        [415, 360],
+                        this.$t('drop-panel[0].demo-steps[1]'),
+                    ],
+                    [
+                        `${createImgPath}select_sut_2.png`,
+                        [415, 410],
+                        this.$t('drop-panel[0].demo-steps[2]'),
+                    ],
+                    [
+                        `${createImgPath}select_sut_3.png`,
+                        [785, 460],
+                        this.$t('drop-panel[0].demo-steps[3]'),
+                    ],
+                    [
+                        `${createImgPath}session_info.png`,
+                        [616, 337],
+                        this.$t('drop-panel[0].demo-steps[4]'),
+                    ],
+                    [
+                        `${createImgPath}session_info_2.png`,
+                        [616, 360],
+                        this.$t('drop-panel[0].demo-steps[5]'),
+                    ],
+                    [
+                        `${createImgPath}session_info_3.png`,
+                        [616, 405],
+                        this.$t('drop-panel[0].demo-steps[6]'),
+                    ],
+                    [
+                        `${createImgPath}session_info_4.png`,
+                        [900, 500],
+                        this.$t('drop-panel[0].demo-steps[7]'),
+                    ],
+                    [
+                        `${createImgPath}configure_sut.png`,
+                        [780, 436],
+                        this.$t('drop-panel[0].demo-steps[8]'),
+                    ],
+                    [
+                        `${createImgPath}session_created.png`,
+                        [47, 195],
+                        this.$t('drop-panel[0].demo-steps[9]'),
+                        true,
+                    ],
+                ],
+
+                serviceProvider: [
+                    [
+                        `${executeSPImgPath}1-session-page.png`,
+                        [3, 185],
+                        this.$t('drop-panel[1].demo-steps[0]'),
+                    ],
+                    [
+                        `${executeSPImgPath}2-session-usecase.png`,
+                        [61, 195],
+                        this.$t('drop-panel[1].demo-steps[1]'),
+                    ],
+                    [
+                        `${executeSPImgPath}3-test-runs.png`,
+                        [430, 120],
+                        this.$t('drop-panel[1].demo-steps[2]'),
+                    ],
+                    [
+                        `${executeSPImgPath}4-test-flow.png`,
+                        [251, 199],
+                        this.$t('drop-panel[1].demo-steps[3]'),
+                    ],
+                    [
+                        `${executeSPImgPath}7-postman-1.png`,
+                        [1053, 74],
+                        this.$t('drop-panel[1].demo-steps[4]'),
+                    ],
+                    [
+                        `${executeSPImgPath}9-test-runs.png`,
+                        [384, 209],
+                        this.$t('drop-panel[1].demo-steps[5]'),
+                    ],
+                    [
+                        `${executeSPImgPath}10-test-details-1.png`,
+                        [604, 437],
+                        this.$t('drop-panel[1].demo-steps[6]'),
+                    ],
+                    [
+                        `${executeSPImgPath}11-test-details-2.png`,
+                        [75, 35],
+                        this.$t('drop-panel[1].demo-steps[7]'),
+                        true,
+                    ],
+                ],
+
+                mobileMoneyOperator: [
+                    [
+                        `${executeMMOImgPath}1-session-page.png`,
+                        [5, 240],
+                        this.$t('drop-panel[2].demo-steps[0]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}2-test-usecase.png`,
+                        [65, 215],
+                        this.$t('drop-panel[2].demo-steps[1]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}3-test-runs.png`,
+                        [430, 120],
+                        this.$t('drop-panel[2].demo-steps[2]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}4-test-flow.png`,
+                        [109, 225],
+                        this.$t('drop-panel[2].demo-steps[3]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}4-test-flow.png`,
+                        [1150, 115],
+                        this.$t('drop-panel[2].demo-steps[4]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}5-run-test.png`,
+                        [315, 119],
+                        this.$t('drop-panel[2].demo-steps[5]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}6-test-runs-2.png`,
+                        [370, 205],
+                        this.$t('drop-panel[2].demo-steps[6]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}7-test-details.png`,
+                        [600, 395],
+                        this.$t('drop-panel[2].demo-steps[7]'),
+                    ],
+                    [
+                        `${executeMMOImgPath}8-test-details-2.png`,
+                        [5, 240],
+                        this.$t('drop-panel[2].demo-steps[8]'),
+                        true,
+                    ],
+                ],
+            };
+        },
+    },
     methods: {
         initDemo(e) {
             const $target = $(e.currentTarget);
@@ -704,19 +696,19 @@ export default {
             this.originalHeight = 592;
 
             if ($target.hasClass('demo1')) {
-                this.steps = createSession;
+                this.steps = this.demoData.createSession;
                 this.screenshotUrl =
                     'assets/images/tutorials/create-session/dashboard.png';
             }
 
             if ($target.hasClass('demo2')) {
-                this.steps = serviceProvider;
+                this.steps = this.demoData.serviceProvider;
                 this.screenshotUrl =
                     'assets/images/tutorials/service-provider/1-session-page.png';
             }
 
             if ($target.hasClass('demo3')) {
-                this.steps = mobileMoneyOperator;
+                this.steps = this.demoData.mobileMoneyOperator;
                 this.screenshotUrl =
                     'assets/images/tutorials/mobile-money-operator/1-session-page.png';
             }
@@ -809,3 +801,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/tutorials.json"></i18n>

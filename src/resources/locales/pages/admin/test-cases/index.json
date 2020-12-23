@@ -1,0 +1,77 @@
+{
+    "en-GB": {
+        "page": {
+            "title": "Test Cases"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "version": "Version",
+                "behavior": "Behavior",
+                "public": "Public",
+                "use-case": "Use Case",
+                "test-steps": "Test Steps",
+                "owner": "Owner",
+                "groups": "Groups"
+            },
+            "menu": {
+                "import": "Import New Version",
+                "edit": {
+                    "title": "Edit",
+                    "modal": {
+                        "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
+                    }
+                },
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete all versions of"
+                    }
+                }
+            }
+        },
+        "buttons": {
+            "create": "Create Test Case",
+            "import": "Import Test Case"
+        }
+    },
+    "en-US": {},
+    "ru-RU": {
+        "page": {
+            "title": "Тестовые образцы"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "version": "Версия",
+                "behavior": "Поведение",
+                "public": "Публичность",
+                "use-case": "Образец использования",
+                "test-steps": "Тестовые этапы",
+                "owner": "Владелец",
+                "groups": "Группы"
+            },
+            "menu": {
+                "import": "Импорт Новой Версии",
+                "edit": {
+                    "title": "Редактировать",
+                    "modal": {
+                        "text": "Опубликована последняя версия тестового образца, будет создана новая черновая версия для хранения ваших изменений. Вы можете опубликовать или отказаться от него в любое время."
+                    }
+                },
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены, что хотите удалить все версии"
+                    }
+                }
+            }
+        },
+        "buttons": {
+            "create": "Создать",
+            "import": "Импорт"
+        }
+    }
+}

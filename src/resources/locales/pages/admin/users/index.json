@@ -1,0 +1,51 @@
+{
+    "en-GB": {
+        "page": {
+            "title": "Users"
+        },
+        "tabs": {
+            "active": "Active",
+            "blocked": "Blocked"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "email": "Email",
+                "company": "Company",
+                "role": "Role",
+                "verified": "Verified"
+            },
+            "menu": {
+                "unblock": "Unblock",
+                "block": "Block",
+                "verify": "Verify",
+                "delete": "Delete"
+            }
+        }
+    },
+    "en-US": {},
+    "ru-RU": {
+        "page": {
+            "title": "Пользователи"
+        },
+        "tabs": {
+            "active": "Активные",
+            "blocked": "Заблокированные"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "email": "Email",
+                "company": "Компания",
+                "role": "Роль",
+                "verified": "Подтверждено"
+            },
+            "menu": {
+                "unblock": "Разблокировать",
+                "block": "Заблокировать",
+                "verify": "Подтвердить",
+                "delete": "Удалить"
+            }
+        }
+    }
+}
