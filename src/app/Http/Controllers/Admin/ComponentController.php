@@ -70,7 +70,7 @@ class ComponentController extends Controller
             'sutable' => ['required', 'boolean'],
             'connections_id.*' => [
                 'integer',
-                'exists:component_connections,target_id',
+                'exists:components,id',
             ],
         ]);
         DB::transaction(function () use ($request) {
@@ -111,7 +111,7 @@ class ComponentController extends Controller
             'sutable' => ['required', 'boolean'],
             'connections_id.*' => [
                 'integer',
-                'exists:component_connections,target_id',
+                'exists:components,id',
             ],
         ]);
         DB::transaction(function () use ($component, $request) {
