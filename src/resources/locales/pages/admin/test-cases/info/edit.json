@@ -1,0 +1,39 @@
+{
+    "en-GB": {
+        "card": {
+            "title": "Edit"
+        },
+        "inputs": {
+            "name": {
+                "label": "Name"
+            },
+            "slug": {
+                "label": "Slug"
+            },
+            "behavior": {
+                "label": "Behavior",
+                "placeholder": "Select behavior"
+            },
+            "use-case": {
+                "label": "Use Case",
+                "placeholder": "Select use case"
+            },
+            "precondition": {
+                "label": "Precondition"
+            },
+            "description": {
+                "label": "Description"
+            },
+            "components": {
+                "label": "Components",
+                "placeholder": "Select components"
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "update": "Update"
+        }
+    },
+    "en-US": {},
+    "ru-RU": {}
+}

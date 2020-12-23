@@ -45,8 +45,10 @@ export default {
     components: {
         Layout,
     },
-    metaInfo: {
-        title: 'Settings',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
 };
 </script>

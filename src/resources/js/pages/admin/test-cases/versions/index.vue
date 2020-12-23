@@ -2,7 +2,7 @@
     <layout :test-case="currentTestCase">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">{{ $t('page.title') }}</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
                 <div class="card-options">
                     <inertia-link
                         :href="
@@ -194,7 +194,7 @@ import Layout from '@/layouts/test-cases/main';
 export default {
     metaInfo() {
         return {
-            title: 'Test Case Versions',
+            title: `${this.currentTestCase.name} - ${this.$t('card.title')}`,
         };
     },
     components: {

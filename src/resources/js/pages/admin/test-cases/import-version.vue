@@ -95,7 +95,7 @@ import Layout from '@/layouts/main';
 export default {
     metaInfo() {
         return {
-            title: this.$t('page.title'),
+            title: `${this.testCase.name} - ${this.$t('page.title')}`,
         };
     },
     components: {

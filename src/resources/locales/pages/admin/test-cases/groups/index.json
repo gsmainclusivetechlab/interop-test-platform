@@ -1,0 +1,69 @@
+{
+    "en-GB": {
+        "card": {
+            "title": "Groups"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "email-filter": "Email filter",
+                "description": "Description"
+            },
+            "content": {
+                "no-results": "No Results"
+            },
+            "menu": {
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete"
+                    }
+                }
+            }
+        },
+        "inputs": {
+            "add-groups": {
+                "label": "Add groups",
+                "placeholder": "Select groups..."
+            }
+        },
+        "buttons": {
+            "add": "Add"
+        }
+    },
+    "en-US": {},
+    "ru-RU": {
+        "card": {
+            "title": "Группы"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "email-filter": "Email фильтер",
+                "description": "Описание"
+            },
+            "content": {
+                "no-results": "Результатов нет"
+            },
+            "menu": {
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтверждение удаления",
+                        "text": "Вы уверены, что хотите удалить"
+                    }
+                }
+            }
+        },
+        "inputs": {
+            "add-groups": {
+                "label": "Добавить группы",
+                "placeholder": "Выберите группы..."
+            }
+        },
+        "buttons": {
+            "add": "Добавить"
+        }
+    }
+}
