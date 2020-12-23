@@ -8,8 +8,9 @@
         "watch-poll": "npm run watch -- --watch-poll"
     },
     "devDependencies": {
-        "@inertiajs/inertia": "^0.1.7",
-        "@inertiajs/inertia-vue": "^0.1.2",
+        "@inertiajs/inertia": "^0.7.0",
+        "@inertiajs/inertia-vue": "^0.4.3",
+        "@inertiajs/progress": "^0.2.3",
         "@isneezy/vue-selectize": "^0.4.1",
         "@kassaila/vue-json-editor": "^0.1.0",
         "axios": "^0.19",

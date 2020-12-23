@@ -17,15 +17,16 @@
                                         v-model="form.file"
                                         placeholder="Choose file..."
                                         v-bind:class="{
-                                            'is-invalid': $page.errors.file,
+                                            'is-invalid':
+                                                $page.props.errors.file,
                                         }"
                                     />
                                     <span
-                                        v-if="$page.errors.file"
+                                        v-if="$page.props.errors.file"
                                         class="invalid-feedback"
                                     >
                                         <strong>
-                                            {{ $page.errors.file }}
+                                            {{ $page.props.errors.file }}
                                         </strong>
                                     </span>
                                 </div>
@@ -80,9 +81,15 @@ export default {
             this.sending = true;
             let data = new FormData();
             data.append('file', this.form.file);
-            this.$inertia
-                .post(route('admin.questionnaire.import.confirm'), data)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('admin.questionnaire.import.confirm'),
+                data,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };

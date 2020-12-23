@@ -18,7 +18,7 @@
                 <div class="card-options">
                     <inertia-link
                         :href="route('admin.components.create')"
-                        v-if="$page.auth.user.can.components.create"
+                        v-if="$page.props.auth.user.can.components.create"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
@@ -41,7 +41,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="component in components.data">
+                        <tr
+                            v-for="(component, i) in components.data"
+                            :key="`component-${i}`"
+                        >
                             <td class="text-break">
                                 {{ component.position }}
                             </td>

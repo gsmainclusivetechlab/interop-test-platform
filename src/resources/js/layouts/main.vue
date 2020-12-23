@@ -29,11 +29,11 @@
                             class="sr-only toggle-input"
                             type="checkbox"
                             @change.prevent="$inertia.post(route('dark-mode'))"
-                            :checked="$page.app.dark_mode"
+                            :checked="$page.props.app.dark_mode"
                         />
                         <span
                             class="toggle-switch d-flex justify-content-between align-items-center rounded-pill"
-                            :class="{ enabled: $page.app.dark_mode }"
+                            :class="{ enabled: $page.props.app.dark_mode }"
                         >
                             <span class="toggle-switch-icon">
                                 <icon name="sun" />
@@ -51,21 +51,21 @@
                             toggle-class="align-items-center"
                             class="admin-settings-dropdown"
                             v-if="
-                                $page.auth.user.can.users.viewAny ||
-                                $page.auth.user.can.groups.viewAny ||
-                                $page.auth.user.can.sessions.viewAny ||
-                                $page.auth.user.can.api_specs.viewAny ||
-                                $page.auth.user.can.components.viewAny ||
-                                $page.auth.user.can.use_cases.viewAny ||
-                                $page.auth.user.can.message_log.viewAny ||
-                                $page.auth.user.can.test_cases.viewAny
+                                $page.props.auth.user.can.users.viewAny ||
+                                $page.props.auth.user.can.groups.viewAny ||
+                                $page.props.auth.user.can.sessions.viewAny ||
+                                $page.props.auth.user.can.api_specs.viewAny ||
+                                $page.props.auth.user.can.components.viewAny ||
+                                $page.props.auth.user.can.use_cases.viewAny ||
+                                $page.props.auth.user.can.message_log.viewAny ||
+                                $page.props.auth.user.can.test_cases.viewAny
                             "
                         >
                             <template v-slot:button-content>
                                 <icon name="settings" />
                             </template>
 
-                            <li v-if="$page.auth.user.can.users.viewAny">
+                            <li v-if="$page.props.auth.user.can.users.viewAny">
                                 <inertia-link
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
@@ -73,7 +73,7 @@
                                     Users
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.groups.viewAny">
+                            <li v-if="$page.props.auth.user.can.groups.viewAny">
                                 <inertia-link
                                     :href="route('admin.groups.index')"
                                     class="text-reset dropdown-item"
@@ -81,7 +81,11 @@
                                     Groups
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.sessions.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.sessions.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
@@ -89,7 +93,11 @@
                                     Sessions
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.sessions.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.sessions.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="
                                         route('admin.compliance-sessions.index')
@@ -99,7 +107,11 @@
                                     Certification Sessions
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.api_specs.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.api_specs.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.api-specs.index')"
                                     class="text-reset dropdown-item"
@@ -107,7 +119,11 @@
                                     Api Specs
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.components.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.components.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.components.index')"
                                     class="text-reset dropdown-item"
@@ -115,7 +131,11 @@
                                     Components
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.use_cases.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.use_cases.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.use-cases.index')"
                                     class="text-reset dropdown-item"
@@ -123,7 +143,11 @@
                                     Use Cases
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.test_cases.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.test_cases.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.test-cases.index')"
                                     class="text-reset dropdown-item"
@@ -131,7 +155,12 @@
                                     Test Cases
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.message_log.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.message_log
+                                        .viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.message-log')"
                                     class="text-reset dropdown-item"
@@ -139,7 +168,12 @@
                                     Message Log
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.questionnaire.create">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.questionnaire
+                                        .create
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.questionnaire.import')"
                                     class="text-reset dropdown-item"
@@ -166,7 +200,7 @@
                                     <span class="text-default">
                                         {{
                                             string(
-                                                $page.auth.user.name
+                                                $page.props.auth.user.name
                                             ).truncate(30)
                                         }}
                                     </span>
@@ -304,7 +338,7 @@
 
                     <inertia-link
                         :href="route('sessions.register.type')"
-                        v-if="$page.app.available_session_modes_count > 0"
+                        v-if="$page.props.app.available_session_modes_count > 0"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />

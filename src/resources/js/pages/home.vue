@@ -3,7 +3,7 @@
         <div
             class="alert alert-danger text-center"
             role="alert"
-            v-if="$page.app.available_session_modes_count === 0"
+            v-if="$page.props.app.available_session_modes_count === 0"
         >
             No test modes are enabled in the environment
         </div>
@@ -28,7 +28,7 @@
                                 <p
                                     class="empty-subtitle text-muted mb-0"
                                     v-if="
-                                        $page.app
+                                        $page.props.app
                                             .available_session_modes_count > 0
                                     "
                                 >
@@ -39,7 +39,7 @@
                                     <inertia-link
                                         :href="route('sessions.register.type')"
                                         v-if="
-                                            $page.app
+                                            $page.props.app
                                                 .available_session_modes_count >
                                             0
                                         "
