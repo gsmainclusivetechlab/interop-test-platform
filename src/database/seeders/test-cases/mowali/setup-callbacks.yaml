@@ -1,0 +1,797 @@
+name: Mowali Setup Callbacks
+slug: mowali-setup-callbacks
+use_case: Setup
+behavior: positive
+description: |
+  Allows MPOP to set up callback URLs instructing Mowali to send callbacks to MPOP.
+precondition: |
+  - DFSP 1 and DFSP 2 exist in Mojaloop as Participants.
+  - The following values are set in the session environment:
+    - ADMIN_OAUTH_TOKEN
+    - SUT_FSPIOP
+    - REMOTE_FSPIOP
+    - ADMIN_OAUTH_TOKEN
+    - MMO1_MAPPED_URI
+    - MMO2_MAPPED_URI
+components:
+  - MPOP
+  - Mowali Central Admin
+
+test_steps:
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_QUOTES'
+        value: ${MMO1_MAPPED_URI}
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
+        value: '${MMO1_MAPPED_URI}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
+        value: '${MMO1_MAPPED_URI}/transfers'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
+        value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
+        value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
+        value: '${MMO1_MAPPED_URI}'
+
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
+        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
+        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
+        value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
+        value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
+        value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
+        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
+        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: GET
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Status is 200
+        rules:
+          status: 'required|in:200'
+    request:
+      method: GET
+      uri: participants/${SUT_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+      body:
+        - type: 'FSPIOP_CALLBACK_URL_QUOTES'
+          value: '${MMO1_MAPPED_URI}'
+        - type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
+          value: '${MMO1_MAPPED_URI}'
+        - type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
+          value: '${MMO1_MAPPED_URI}/transfers'
+        - type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
+          value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+        - type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
+          value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
+          value: '${MMO1_MAPPED_URI}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
+          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
+          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
+          value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
+          value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
+          value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
+          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
+          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_QUOTES'
+        value: ${MMO2_MAPPED_URI}
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
+        value: '${MMO2_MAPPED_URI}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
+        value: '${MMO2_MAPPED_URI}/transfers'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
+        value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
+        value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
+        value: '${MMO2_MAPPED_URI}'
+
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
+        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
+        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
+        value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
+        value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
+        value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
+        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: POST
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:201'
+    request:
+      method: POST
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+        type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
+        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+    response:
+      status: 201
+      headers:
+        content-type: 'application/json'
+      body:
+
+  - path: participants/{FSPIOP}/endpoints
+    pattern: 'participants/[^/]+/endpoints$'
+    method: GET
+    source: MPOP
+    target: Mowali Central Admin
+    test_response_scripts:
+      - name: Status is 200
+        rules:
+          status: 'required|in:200'
+    request:
+      method: GET
+      uri: participants/${REMOTE_FSPIOP}/endpoints
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        Date: '${CURRENT_TIMESTAMP_RFC2822}'
+        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+      body:
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+      body:
+        - type: 'FSPIOP_CALLBACK_URL_QUOTES'
+          value: '${MMO2_MAPPED_URI}'
+        - type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
+          value: '${MMO2_MAPPED_URI}'
+        - type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
+          value: '${MMO2_MAPPED_URI}/transfers'
+        - type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
+          value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+        - type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
+          value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
+          value: '${MMO2_MAPPED_URI}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
+          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
+          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
+          value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
+          value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
+          value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
+          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
+          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
