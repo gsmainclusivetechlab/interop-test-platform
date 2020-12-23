@@ -213,7 +213,9 @@
                             </td>
                         </tr>
                         <tr v-if="!users.data.length">
-                            <td class="text-center" colspan="6">No Results</td>
+                            <td class="text-center" colspan="6">
+                                {{ $t('table.content.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

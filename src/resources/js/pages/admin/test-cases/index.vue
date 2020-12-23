@@ -278,7 +278,9 @@
                             </td>
                         </tr>
                         <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="8">No Results</td>
+                            <td class="text-center" colspan="8">
+                                {{ $t('table.content.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

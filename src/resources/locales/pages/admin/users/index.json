@@ -15,6 +15,9 @@
                 "role": "Role",
                 "verified": "Verified"
             },
+            "content": {
+                "no-results": "No Results"
+            },
             "menu": {
                 "unblock": "Unblock",
                 "block": "Block",
