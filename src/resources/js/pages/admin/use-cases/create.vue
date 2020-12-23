@@ -18,15 +18,15 @@
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.name }}
+                                        {{ $page.props.errors.name }}
                                     </strong>
                                 </span>
                             </div>
@@ -38,15 +38,16 @@
                                     rows="5"
                                     v-model="form.description"
                                     :class="{
-                                        'is-invalid': $page.errors.description,
+                                        'is-invalid':
+                                            $page.props.errors.description,
                                     }"
                                 ></textarea>
                                 <span
-                                    v-if="$page.errors.description"
+                                    v-if="$page.props.errors.description"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.description }}
+                                        {{ $page.props.errors.description }}
                                     </strong>
                                 </span>
                             </div>
@@ -95,9 +96,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.use-cases.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.use-cases.store'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

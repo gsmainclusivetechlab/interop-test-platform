@@ -25,7 +25,7 @@
                     </inertia-link>
                     <inertia-link
                         :href="route('admin.test-cases.import')"
-                        v-if="$page.auth.user.can.test_cases.create"
+                        v-if="$page.props.auth.user.can.test_cases.create"
                         class="btn btn-primary ml-2"
                     >
                         <icon name="upload" />
@@ -105,7 +105,7 @@
                             <td class="text-center text-break">
                                 {{
                                     collect(
-                                        $page.enums.test_case_behaviors
+                                        $page.props.enums.test_case_behaviors
                                     ).get(testCase.behavior)
                                 }}
                             </td>

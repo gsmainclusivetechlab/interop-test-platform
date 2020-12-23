@@ -18,15 +18,15 @@
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.name }}
+                                        {{ $page.props.errors.name }}
                                     </strong>
                                 </span>
                             </div>
@@ -36,15 +36,15 @@
                                     v-model="form.file"
                                     placeholder="Choose file..."
                                     v-bind:class="{
-                                        'is-invalid': $page.errors.file,
+                                        'is-invalid': $page.props.errors.file,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.file"
+                                    v-if="$page.props.errors.file"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.file }}
+                                        {{ $page.props.errors.file }}
                                     </strong>
                                 </span>
                             </div>
@@ -103,9 +103,11 @@ export default {
                 data.append('file', this.form.file);
             }
 
-            this.$inertia
-                .post(route('admin.api-specs.import.confirm'), data)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.api-specs.import.confirm'), data, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

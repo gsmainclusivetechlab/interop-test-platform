@@ -15,13 +15,16 @@
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.name,
+                                'is-invalid': $page.props.errors.name,
                             }"
                             v-model="name"
                         />
-                        <span v-if="$page.errors.name" class="invalid-feedback">
+                        <span
+                            v-if="$page.props.errors.name"
+                            class="invalid-feedback"
+                        >
                             <strong>
-                                {{ $page.errors.name }}
+                                {{ $page.props.errors.name }}
                             </strong>
                         </span>
                     </div>
@@ -34,13 +37,16 @@
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.slug,
+                                'is-invalid': $page.props.errors.slug,
                             }"
                             v-model="slug"
                         />
-                        <span v-if="$page.errors.slug" class="invalid-feedback">
+                        <span
+                            v-if="$page.props.errors.slug"
+                            class="invalid-feedback"
+                        >
                             <strong>
-                                {{ $page.errors.slug }}
+                                {{ $page.props.errors.slug }}
                             </strong>
                         </span>
                     </div>
@@ -51,24 +57,24 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.behavior,
+                                'is-invalid': $page.props.errors.behavior,
                             }"
                             v-model="behavior"
                             :placeholder="$t('inputs.behavior.placeholder')"
                             :options="
                                 collect(
-                                    $page.enums.test_case_behaviors
+                                    $page.props.enums.test_case_behaviors
                                 ).toArray()
                             "
                             :disableSearch="false"
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.behavior"
+                            v-if="$page.props.errors.behavior"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.behavior }}
+                                {{ $page.props.errors.behavior }}
                             </strong>
                         </span>
                     </div>
@@ -79,21 +85,21 @@
                         <selectize
                             class="form-select"
                             :class="{
-                                'is-invalid': $page.errors.use_case_id,
+                                'is-invalid': $page.props.errors.use_case_id,
                             }"
                             v-model="useCase"
                             label="name"
                             :placeholder="$t('inputs.use-case.placeholder')"
-                            :options="$page.useCases"
+                            :options="$page.props.useCases"
                             :disableSearch="false"
                             :createItem="false"
                         />
                         <span
-                            v-if="$page.errors.use_case_id"
+                            v-if="$page.props.errors.use_case_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.use_case_id }}
+                                {{ $page.props.errors.use_case_id }}
                             </strong>
                         </span>
                     </div>
@@ -103,7 +109,7 @@
                         }}</label>
                         <text-editor
                             :class="{
-                                'is-invalid': $page.errors.precondition,
+                                'is-invalid': $page.props.errors.precondition,
                             }"
                             :menu-items="[
                                 'bold',
@@ -120,11 +126,11 @@
                             @output-html="(content) => (precondition = content)"
                         />
                         <span
-                            v-if="$page.errors.precondition"
+                            v-if="$page.props.errors.precondition"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.precondition }}
+                                {{ $page.props.errors.precondition }}
                             </strong>
                         </span>
                     </div>
@@ -134,7 +140,7 @@
                         }}</label>
                         <text-editor
                             :class="{
-                                'is-invalid': $page.errors.description,
+                                'is-invalid': $page.props.errors.description,
                             }"
                             :menu-items="[
                                 'bold',
@@ -151,11 +157,11 @@
                             @output-html="(content) => (description = content)"
                         />
                         <span
-                            v-if="$page.errors.description"
+                            v-if="$page.props.errors.description"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.description }}
+                                {{ $page.props.errors.description }}
                             </strong>
                         </span>
                     </div>
@@ -169,22 +175,22 @@
                             class="form-select"
                             :placeholder="$t('inputs.components.placeholder')"
                             :class="{
-                                'is-invalid': $page.errors.components_id,
+                                'is-invalid': $page.props.errors.components_id,
                             }"
                             label="name"
-                            :options="$page.components"
+                            :options="$page.props.components"
                             :createItem="false"
                             :disableSearch="true"
                         />
                         <span
-                            v-if="$page.errors.components_id"
+                            v-if="$page.props.errors.components_id"
                             class="invalid-feedback"
                         >
                             <strong>
                                 {{
-                                    collect($page.errors.components_id).implode(
-                                        ' '
-                                    )
+                                    collect(
+                                        $page.props.errors.components_id
+                                    ).implode(' ')
                                 }}
                             </strong>
                         </span>
@@ -237,9 +243,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.test-cases.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.test-cases.store'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
     computed: {
@@ -247,7 +255,7 @@ export default {
             const form = {
                 name: this.name,
                 slug: this.slug,
-                behavior: collect(this.$page.enums.test_case_behaviors)
+                behavior: collect(this.$page.props.enums.test_case_behaviors)
                     .flip()
                     .all()[this.behavior],
                 use_case_id: this.useCase?.id,

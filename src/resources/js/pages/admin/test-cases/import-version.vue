@@ -27,15 +27,16 @@
                                         "
                                         :browse-text="$t('inputs.file.browse')"
                                         :class="{
-                                            'is-invalid': $page.errors.file,
+                                            'is-invalid':
+                                                $page.props.errors.file,
                                         }"
                                     />
                                     <span
-                                        v-if="$page.errors.file"
+                                        v-if="$page.props.errors.file"
                                         class="invalid-feedback"
                                     >
                                         <strong>
-                                            {{ $page.errors.file }}
+                                            {{ $page.props.errors.file }}
                                         </strong>
                                     </span>
                                 </div>
@@ -120,9 +121,11 @@ export default {
             let data = new FormData();
             data.append('file', this.form.file);
             data.append('testCaseId', this.testCase.id);
-            this.$inertia
-                .post(route('admin.test-cases.import.confirm'), data)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.test-cases.import.confirm'), data, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

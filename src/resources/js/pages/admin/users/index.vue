@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users.data">
+                        <tr v-for="(user, i) in users.data" :key="`user-${i}`">
                             <td class="text-break">
                                 {{ user.name }}
                             </td>
@@ -84,17 +84,18 @@
                                 >
                                     <template v-slot:button-content>
                                         {{
-                                            collect($page.enums.user_roles).get(
-                                                user.role
-                                            )
+                                            collect(
+                                                $page.props.enums.user_roles
+                                            ).get(user.role)
                                         }}
                                     </template>
                                     <li
                                         v-for="(role_name, role) in collect(
-                                            $page.enums.user_roles
+                                            $page.props.enums.user_roles
                                         )
                                             .except(['superadmin'])
                                             .all()"
+                                        :key="role"
                                     >
                                         <inertia-link
                                             class="dropdown-item"
@@ -119,9 +120,9 @@
                                     disabled
                                 >
                                     {{
-                                        collect($page.enums.user_roles).get(
-                                            user.role
-                                        )
+                                        collect(
+                                            $page.props.enums.user_roles
+                                        ).get(user.role)
                                     }}
                                 </button>
                             </td>

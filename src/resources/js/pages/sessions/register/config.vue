@@ -60,9 +60,11 @@
                         />
                         <div
                             class="text-danger small mt-2"
-                            v-if="$page.errors.environments"
+                            v-if="$page.props.errors.environments"
                         >
-                            <strong>{{ $page.errors.environments }}</strong>
+                            <strong>{{
+                                $page.props.errors.environments
+                            }}</strong>
                         </div>
                     </div>
                 </div>
@@ -144,9 +146,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('sessions.register.config.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.config.store'),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadGroupEnvironmentList(query = '') {
             axios
