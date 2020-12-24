@@ -3,7 +3,6 @@
 namespace App\Http\Client;
 
 use App\Models\TestSetup;
-use App\Utils\TokenSubstitution;
 use App\Utils\TwigSubstitution;
 use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
@@ -18,14 +17,6 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function path()
     {
         return (string) $this->request->getUri();
-    }
-
-    /**
-     * @return array
-     */
-    public function json()
-    {
-        return parent::json() ?? [];
     }
 
     /**
@@ -74,45 +65,15 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
 
     /**
      * @param array|null $tokens
-     * @return $this
-     */
-    public function withSubstitutions(array $tokens = [])
-    {
-        $data = $this->toArray();
-        $data['uri'] = urldecode($data['uri']);
-
-        $substitution = new TokenSubstitution($tokens);
-        array_walk_recursive($data, function (&$value) use ($substitution) {
-            if (is_string($value)) {
-                $value = $substitution->replace($value);
-            }
-        });
-
-        return new self(
-            new ServerRequest(
-                $data['method'],
-                $data['uri'],
-                $data['headers'],
-                json_encode($data['body'])
-            )
-        );
-    }
-
-    /**
      * @param $testResults
      * @return $this
      */
-    public function withVariables($testResults)
+    public function withSubstitutions($testResults, array $tokens = [])
     {
         $data = $this->toArray();
         $data['uri'] = urldecode($data['uri']);
-        $substitution = new TwigSubstitution($testResults);
-
-        array_walk_recursive($data, function (&$value) use ($substitution) {
-            if (is_string($value)) {
-                $value = $substitution->replace($value);
-            }
-        });
+        $substitution = new TwigSubstitution($testResults, $tokens);
+        $data = $substitution->replaceRecursive($data);
 
         return new self(
             new ServerRequest(

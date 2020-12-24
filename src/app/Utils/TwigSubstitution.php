@@ -21,21 +21,51 @@ class TwigSubstitution
      */
     protected $twigExtensions = [
         \App\Extensions\Twig\Uuid::class,
+        \App\Extensions\Twig\Datetime::class,
     ];
 
     /**
      * @var array
      */
-    protected $testResults;
+    protected $data = [];
 
     /**
      * @param $testResults
+     * @param array $envs
      */
-    public function __construct($testResults)
+    public function __construct($testResults, $envs = [])
     {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
-        $this->testResults = $this->mapResults($testResults);
+        $this->data = $this->mapInto($testResults, $envs);
+    }
+
+    /**
+     * @param array $input
+     * @return array
+     */
+    public function replaceRecursive(array $input = [])
+    {
+        $result = [];
+        foreach ($input as $key => $value) {
+            if (is_string($key)) {
+                $key = $this->replace($key);
+            }
+
+            if (is_array($value)) {
+                $value = $this->replaceRecursive($value);
+            } elseif (is_string($value)) {
+                $replaced = $this->replace($value);
+
+                $value = is_numeric($replaced)
+                    ? $replaced
+                    : json_decode($replaced, true) ?? $replaced;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 
     /**
@@ -44,19 +74,13 @@ class TwigSubstitution
      */
     public function replace(string $content)
     {
-        return preg_replace_callback(
-            '/\{\{([^\}]+)\}\}/',
-            function ($matches) use ($content) {
-                try {
-                    $template = $this->twig->createTemplate($matches[0]);
+        try {
+            $template = $this->twig->createTemplate($content);
 
-                    return $template->render(['steps' => $this->testResults]);
-                } catch (\Exception $e) {
-                    return $content;
-                }
-            },
-            $content
-        );
+            return htmlspecialchars_decode($template->render($this->data));
+        } catch (\Exception $e) {
+            return $content;
+        }
     }
 
     /**
@@ -71,19 +95,23 @@ class TwigSubstitution
 
     /**
      * @param $testResults
+     * @param array $envs
      * @return mixed
      */
-    protected function mapResults($testResults)
+    protected function mapInto($testResults, $envs)
     {
-        return $testResults->load('testStep')
-            ->mapWithKeys(function ($item) {
-                return [
-                    $item->testStep->position => [
-                        'request' => $item->request ? $item->request->toArray() : [],
-                        'response' => $item->response ? $item->response->toArray() : [],
-                    ]
-                ];
-            })
-            ->toArray();
+        return [
+            'steps' => $testResults->load('testStep')
+                ->mapWithKeys(function ($item) {
+                    return [
+                        $item->testStep->position => [
+                            'request' => $item->request ? $item->request->toArray() : [],
+                            'response' => $item->response ? $item->response->toArray() : [],
+                        ]
+                    ];
+                })
+                ->toArray(),
+            'env' => $envs,
+        ];
     }
 }

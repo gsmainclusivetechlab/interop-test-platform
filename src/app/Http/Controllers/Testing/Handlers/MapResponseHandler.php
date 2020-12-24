@@ -45,9 +45,8 @@ class MapResponseHandler
         }*/
 
         $testResponse = $testResponse->withSubstitutions(
+            $this->testResult->testRun->testResults,
             $this->testResult->session->environments()
-        )->withVariables(
-            $this->testResult->testRun->testResults
         );
         $this->testResult->update(['response' => $testResponse]);
 
