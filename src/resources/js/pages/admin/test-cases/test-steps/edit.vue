@@ -571,7 +571,7 @@ export default {
                 selected: this.testStep.apiSpec?.data?.name,
                 list: ['None', ...this.$page.apiSpecs.map((el) => el.name)],
             },
-            trigger: this.testStep?.trigger ?? {},
+            trigger: this.testStep?.trigger,
             test: {
                 scripts: {
                     request: {
@@ -596,8 +596,8 @@ export default {
             },
             example: {
                 request: {
-                    headers: this.testStep.request.headers ?? {},
-                    body: this.testStep.request.body ?? {},
+                    headers: this.testStep.request.headers,
+                    body: this.testStep.request.body,
                 },
                 response: {
                     status: {
@@ -606,8 +606,8 @@ export default {
                         ],
                         list: collect(this.$page.statuses).toArray(),
                     },
-                    headers: this.testStep.response.headers ?? {},
-                    body: this.testStep.response.body ?? {},
+                    headers: this.testStep.response.headers,
+                    body: this.testStep.response.body,
                 },
             },
         };
@@ -623,7 +623,7 @@ export default {
                     .flip()
                     .get(this.method.selected),
                 path: this.path,
-                pattern: this.pattern ?? null,
+                pattern: this.pattern,
                 source_id: this.$page.components.filter(
                     (el) => el.name === this.source
                 )?.[0]?.id,

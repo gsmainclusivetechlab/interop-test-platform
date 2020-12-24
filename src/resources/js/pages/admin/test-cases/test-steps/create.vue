@@ -567,7 +567,7 @@ export default {
                 selected: 'None',
                 list: ['None', ...this.$page.apiSpecs.map((el) => el.name)],
             },
-            trigger: {},
+            trigger: null,
             test: {
                 scripts: {
                     request: {
@@ -589,7 +589,7 @@ export default {
             example: {
                 request: {
                     headers: {},
-                    body: {},
+                    body: null,
                 },
                 response: {
                     status: {
@@ -597,7 +597,7 @@ export default {
                         list: collect(this.$page.statuses).toArray(),
                     },
                     headers: {},
-                    body: {},
+                    body: null,
                 },
             },
         };
