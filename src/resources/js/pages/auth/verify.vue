@@ -46,9 +46,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('verification.resend'))
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('verification.resend'), {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

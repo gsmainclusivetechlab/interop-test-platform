@@ -18,7 +18,7 @@
                 <div class="card-options">
                     <inertia-link
                         :href="route('admin.api-specs.import')"
-                        v-if="$page.auth.user.can.api_specs.create"
+                        v-if="$page.props.auth.user.can.api_specs.create"
                         class="btn btn-primary"
                     >
                         <icon name="upload" />

@@ -18,14 +18,14 @@
                                     class="form-control"
                                     :readonly="isCompliance"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
-                                    {{ $page.errors.name }}
+                                    {{ $page.props.errors.name }}
                                 </span>
                             </div>
                             <div class="mb-3">
@@ -38,14 +38,15 @@
                                     v-model="form.description"
                                     :readonly="isCompliance"
                                     :class="{
-                                        'is-invalid': $page.errors.description,
+                                        'is-invalid':
+                                            $page.props.errors.description,
                                     }"
                                 ></textarea>
                                 <span
-                                    v-if="$page.errors.description"
+                                    v-if="$page.props.errors.description"
                                     class="invalid-feedback"
                                 >
-                                    {{ $page.errors.description }}
+                                    {{ $page.props.errors.description }}
                                 </span>
                             </div>
                             <div class="mb-3" v-if="components.data">
@@ -65,7 +66,8 @@
                             </div>
                             <div
                                 class="mb-3"
-                                v-for="component in components.data"
+                                v-for="(component, i) in components.data"
+                                :key="`component-${i}`"
                             >
                                 <div>
                                     <label>
@@ -81,21 +83,21 @@
                                         class="form-control"
                                         :class="{
                                             'is-invalid':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `component_base_urls.${component.id}`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `component_base_urls.${component.id}`
                                             ]
                                         "
                                         class="invalid-feedback"
                                     >
                                         {{
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `component_base_urls.${component.id}`
                                             ]
                                         }}
@@ -123,10 +125,10 @@
                                 />
                                 <div
                                     class="text-danger small mt-2"
-                                    v-if="$page.errors.environments"
+                                    v-if="$page.props.errors.environments"
                                 >
                                     <strong>{{
-                                        $page.errors.environments
+                                        $page.props.errors.environments
                                     }}</strong>
                                 </div>
                             </div>
@@ -137,7 +139,7 @@
                                     <b>Test Cases</b>
                                 </label>
                                 <test-case-checkboxes
-                                    style="max-height: 485px"
+                                    style="max-height: 485px;"
                                     :session="session"
                                     :useCases="useCases"
                                     :isCompliance="isCompliance"
@@ -145,10 +147,10 @@
                                 />
                                 <div
                                     class="text-danger small mt-3"
-                                    v-if="$page.errors.test_cases"
+                                    v-if="$page.props.errors.test_cases"
                                 >
                                     <strong>{{
-                                        $page.errors.test_cases
+                                        $page.props.errors.test_cases
                                     }}</strong>
                                 </div>
                             </div>
@@ -251,9 +253,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .put(route('sessions.update', this.session.id), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('sessions.update', this.session.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadGroupEnvironmentList(query = '') {
             axios

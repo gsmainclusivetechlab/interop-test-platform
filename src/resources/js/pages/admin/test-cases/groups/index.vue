@@ -12,7 +12,7 @@
                         multiple
                         class="form-select"
                         :class="{
-                            'is-invalid': $page.errors.groups_id,
+                            'is-invalid': $page.props.errors.groups_id,
                         }"
                         placeholder="Select groups..."
                         label="name"
@@ -40,9 +40,12 @@
                         Add
                     </button>
                 </form>
-                <span v-if="$page.errors.groups_id" class="invalid-feedback">
+                <span
+                    v-if="$page.props.errors.groups_id"
+                    class="invalid-feedback"
+                >
                     <strong>
-                        {{ collect($page.errors.groups_id).implode(' ') }}
+                        {{ collect($page.props.errors.groups_id).implode(' ') }}
                     </strong>
                 </span>
             </div>
@@ -155,15 +158,16 @@ export default {
         addGroups() {
             this.sending = true;
 
-            this.$inertia
-                .post(
-                    route('admin.test-cases.groups.store', this.testCase.id),
-                    this.form
-                )
-                .then(() => {
-                    this.sending = false;
-                    this.newList = [];
-                });
+            this.$inertia.post(
+                route('admin.test-cases.groups.store', this.testCase.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                        this.newList = [];
+                    },
+                }
+            );
         },
         loadSearchList(query = '') {
             axios

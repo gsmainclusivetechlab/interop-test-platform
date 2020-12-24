@@ -81,7 +81,7 @@ export default {
         return {
             name: this.testCase.name,
             slug: this.testCase.slug,
-            behavior: collect(this.$page.enums.test_case_behaviors).get(
+            behavior: collect(this.$page.props.enums.test_case_behaviors).get(
                 this.testCase.behavior
             ),
             useCase: this.testCase.useCase.data.name,
