@@ -4,6 +4,10 @@ set -e
 role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
 
+if [ ! -f /etc/nginx/ssl/client-certs/CA.crt ]; then
+    cp /etc/nginx/ssl/default-certs/RootCA.crt /etc/nginx/ssl/client-certs/CA.crt
+fi
+
 if [ "$role" = "app" ]; then
 	exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
 
@@ -22,3 +26,5 @@ else
     echo "Could not match the container role \"$role\""
     exit 1
 fi
+
+

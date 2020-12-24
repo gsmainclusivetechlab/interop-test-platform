@@ -28,6 +28,8 @@ services:
     <<: *php-defaults
     environment:
       CONTAINER_ROLE: app
+    volumes:
+      - certs:/etc/nginx/ssl/client-certs
 
   queue:
     <<: *php-defaults
@@ -60,3 +62,4 @@ services:
 volumes:
   mysqldata:
   redisdata:
+  certs:

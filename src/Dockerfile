@@ -78,6 +78,20 @@ RUN chmod +x artisan && \
     php artisan dusk:chrome-driver 81 && \
     chmod -R 777 storage bootstrap/cache
 
+RUN mkdir -p /etc/nginx/ssl/default-certs && \
+    cd /etc/nginx/ssl/default-certs && \
+    openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.crt -subj "/C=UK/CN=localhost-CA" &&\
+    openssl x509 -outform pem -in RootCA.crt -out RootCA.crt &&\
+    openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=UK/ST=State/L=City/O=Default-Localhost-Certificates/CN=localhost" &&\
+    openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.crt -CAkey RootCA.key -CAcreateserial -out localhost.crt &&\
+    mkdir -p /etc/nginx/ssl/client-certs &&\
+    cp RootCA.crt /etc/nginx/ssl/client-certs/CA.crt
+
+COPY --chmod=+x build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
+
+
+
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
