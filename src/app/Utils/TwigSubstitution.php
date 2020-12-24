@@ -57,15 +57,28 @@ class TwigSubstitution
             } elseif (is_string($value)) {
                 $replaced = $this->replace($value);
 
-                $value = is_numeric($replaced)
-                    ? $replaced
-                    : json_decode($replaced, true) ?? $replaced;
+                if ($this->isJsonSubstitution($replaced)) {
+                    $replaced = json_decode($replaced, true) ?? $replaced;
+                }
+                $value = $replaced;
             }
 
             $result[$key] = $value;
         }
 
         return $result;
+    }
+
+    /**
+     * @param mixed $input
+     * @return bool
+     */
+    protected function isJsonSubstitution($input)
+    {
+        return is_string($input)
+            && !is_numeric($input)
+            && is_array(json_decode($input, true))
+            && (json_last_error() == JSON_ERROR_NONE);
     }
 
     /**

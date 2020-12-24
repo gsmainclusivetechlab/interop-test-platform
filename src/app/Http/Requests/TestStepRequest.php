@@ -183,6 +183,12 @@ class TestStepRequest extends FormRequest
         $request = $this->input('request');
         $request['method'] = $this->input('method');
         $request['uri'] = $this->input('path');
+        if (Arr::exists($request, 'headers')
+            && (!is_array($request['headers'])
+                || empty($request['headers']))
+        ) {
+            $request = Arr::except($request, 'headers');
+        }
 
         return $request;
     }
@@ -192,9 +198,15 @@ class TestStepRequest extends FormRequest
      */
     protected function mapTestStepResponse()
     {
-        $request = $this->input('response');
+        $response = $this->input('response');
+        if (Arr::exists($response, 'headers')
+            && (!is_array($response['headers'])
+                || empty($response['headers']))
+        ) {
+            $response = Arr::except($response, 'headers');
+        }
 
-        return $request;
+        return $response;
     }
 
     /**
