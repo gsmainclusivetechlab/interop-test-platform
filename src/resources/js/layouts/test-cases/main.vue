@@ -5,7 +5,9 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <div class="page-pretitle">Administration</div>
+                            <div class="page-pretitle">
+                                {{ $t('page.pre-title') }}
+                            </div>
                             <div class="page-pretitle font-weight-normal">
                                 <breadcrumb
                                     class="breadcrumb-bullets"
@@ -57,10 +59,10 @@ export default {
         breadcrumbs: {
             type: Array,
             required: false,
-            default: function () {
+            default() {
                 return [
                     {
-                        name: 'Test Cases',
+                        name: this.$t('breadcrumb.test-cases'),
                         url: route('admin.test-cases.index'),
                     },
                     { name: this.testCase.name },
@@ -72,14 +74,14 @@ export default {
         return {
             navLinks: [
                 {
-                    title: 'Info',
+                    title: this.$t('breadcrumb.info'),
                     route: 'admin.test-cases.info.show',
                     condition:
                         route().current('admin.test-cases.info.show') ||
                         route().current('admin.test-cases.info.edit'),
                 },
                 {
-                    title: 'Test steps',
+                    title: this.$t('breadcrumb.test-steps'),
                     route: 'admin.test-cases.test-steps.index',
                     condition:
                         route().current('admin.test-cases.test-steps.index') ||
@@ -87,14 +89,14 @@ export default {
                         route().current('admin.test-cases.test-steps.edit'),
                 },
                 {
-                    title: 'Groups',
+                    title: this.$t('breadcrumb.groups'),
                     route: 'admin.test-cases.groups.index',
                     condition:
                         route().current('admin.test-cases.groups.index') ||
                         route().current('admin.test-cases.groups.edit'),
                 },
                 {
-                    title: 'Versions',
+                    title: this.$t('breadcrumb.versions'),
                     route: 'admin.test-cases.versions.index',
                     condition: route().current(
                         'admin.test-cases.versions.index'
@@ -105,3 +107,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/index.json"></i18n>
+<i18n src="@locales/layout/test-cases/main.json"></i18n>

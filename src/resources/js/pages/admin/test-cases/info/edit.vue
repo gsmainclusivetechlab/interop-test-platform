@@ -166,7 +166,9 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Components</label>
+                        <label class="form-label">{{
+                            this.$t('inputs.components.label')
+                        }}</label>
                         <selectize
                             class="form-select"
                             :class="{
