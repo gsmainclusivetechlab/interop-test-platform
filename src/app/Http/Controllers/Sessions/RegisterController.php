@@ -205,15 +205,17 @@ class RegisterController extends Controller
      */
     public function storeSut(SessionSutRequest $request)
     {
-        $data = collect($request->validated()['components'])->map(function ($sut) {
-            if (isset($sut['certificate'])) {
+        $data = collect($request->validated()['components'])->map(function ($sut, $key) use ($request) {
+            if (!Arr::get($sut, 'certificate_id')) {
                 $sut['certificate_id'] = Certificate::create([
-                    'name' => $sut['certificate']->getClientOriginalName(),
-                    'path' => $sut['certificate']->store('certificates')
+                    'name' => $sut['ca_crt']->getClientOriginalName(),
+                    'ca_crt_path' => Certificate::storeFile($request, "components.{$key}.ca_crt"),
+                    'client_crt_path' => Certificate::storeFile($request, "components.{$key}.client_crt"),
+                    'client_key_path' => Certificate::storeFile($request, "components.{$key}.client_key"),
                 ])->id;
             }
 
-            return Arr::except($sut, ['id', 'certificate']);
+            return Arr::only($sut, ['base_url', 'use_encryption', 'certificate_id']);
         })->all();
 
         $request->session()->put('session.sut', $data);

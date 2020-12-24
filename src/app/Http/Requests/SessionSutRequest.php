@@ -17,16 +17,27 @@ class SessionSutRequest extends FormRequest
         return $this->components()
             ->mapWithKeys(function ($component, $id) {
                 $useEncription = (int) Arr::get($component, 'use_encryption');
+                $filesRequired = Rule::requiredIf($useEncription && !Arr::get($component, 'certificate_id'));
 
                 return [
                     "components.{$id}.certificate_id" => [
-                        Rule::requiredIf($useEncription && !$this->hasFile("components.{$id}.certificate")),
+                        Rule::requiredIf($useEncription && !$this->hasFile("components.{$id}.ca_crt")),
                         'nullable',
                         Rule::exists('certificates', 'id')
                             ->whereIn('group_id', auth()->user()->groups->pluck('id')->all())
                     ],
-                    "components.{$id}.certificate" => [
-                        Rule::requiredIf($useEncription && !Arr::get($component, 'certificate_id')),
+                    "components.{$id}.ca_crt" => [
+                        $filesRequired,
+                        'nullable',
+                        'mimetypes:text/plain',
+                    ],
+                    "components.{$id}.client_crt" => [
+                        $filesRequired,
+                        'nullable',
+                        'mimetypes:text/plain',
+                    ],
+                    "components.{$id}.client_key" => [
+                        $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
                     ],
@@ -53,7 +64,9 @@ class SessionSutRequest extends FormRequest
         return $this->components()->mapWithKeys(function ($component, $id) {
             return [
                 "components.{$id}.certificate_id" => __('Certificate'),
-                "components.{$id}.certificate" => __('Certificate'),
+                "components.{$id}.ca_crt" => __('CA certificate'),
+                "components.{$id}.client_crt" => __('Client certificate'),
+                "components.{$id}.client_key" => __('Client key'),
             ];
         })->merge([
             'components' => __('SUTs'),

@@ -61,14 +61,19 @@ class GroupCertificatesController extends Controller
     public function store(Request $request, Group $group)
     {
         $this->authorize('admin', $group);
-        $validated = $request->validate([
+        $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'file' => ['required', 'mimetypes:text/plain'],
+            'ca_crt' => ['required', 'mimetypes:text/plain'],
+            'client_crt' => ['required', 'mimetypes:text/plain'],
+            'client_key' => ['required', 'mimetypes:text/plain'],
         ]);
 
-        $validated['path'] = $request->file('file')->store('certificates');
-
-        $group->certificates()->create($validated);
+        $group->certificates()->create([
+            'name' => $request->get('name'),
+            'ca_crt_path' => Certificate::storeFile($request, 'ca_crt'),
+            'client_crt_path' => Certificate::storeFile($request, 'client_crt'),
+            'client_key_path' => Certificate::storeFile($request, 'client_key'),
+        ]);
 
         return redirect()
             ->route('groups.certificates.index', $group)
