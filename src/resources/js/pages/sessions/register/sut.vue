@@ -11,7 +11,7 @@
                         <selectize
                             v-model="selectedComponents"
                             :class="{
-                                'is-invalid': $page.errors.components,
+                                'is-invalid': $page.props.errors.components,
                             }"
                             :options="suts.data"
                             keyBy="id"
@@ -24,10 +24,10 @@
                             :disabled="selectedSut"
                         />
                         <span
-                            v-if="$page.errors.components"
+                            v-if="$page.props.errors.components"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors.components }}
+                            {{ $page.props.errors.components }}
                         </span>
                     </div>
                     <template v-for="(sut, i) in suts.data" v-if="form.components[sut.id]">
@@ -37,15 +37,15 @@
                                 v-model="componentsData.base_url[sut.id]"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors[`components.${sut.id}.base_url`],
+                                        $page.props.errors[`components.${sut.id}.base_url`],
                                 }"
                                 class="form-control"
                             />
                             <span
-                                v-if="$page.errors[`components.${sut.id}.base_url`]"
+                                v-if="$page.props.errors[`components.${sut.id}.base_url`]"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors[`components.${sut.id}.base_url`] }}
+                                {{ $page.props.errors[`components.${sut.id}.base_url`] }}
                             </span>
                         </div>
                         <div class="mb-3">
@@ -58,11 +58,11 @@
                                 <span class="form-check-label">Use Encryption</span>
                             </label>
                             <span
-                                v-if="$page.errors[`components.${sut.id}.use_encryption`]"
+                                v-if="$page.props.errors[`components.${sut.id}.use_encryption`]"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors[`components.${sut.id}.use_encryption`] }}
+                                    {{ $page.props.errors[`components.${sut.id}.use_encryption`] }}
                                 </strong>
                             </span>
                         </div>
@@ -174,7 +174,7 @@
             <div class="d-flex justify-content-between">
                 <inertia-link
                     v-if="
-                        $page.app.available_session_modes_count > 1 ||
+                        $page.props.available_session_modes_count > 1 ||
                         isCompliance ||
                         session.withQuestions
                     "
@@ -306,9 +306,15 @@ export default {
         submit() {
             this.sending = true;
 
-            this.$inertia
-                .post(route('sessions.register.sut.store'), this.jsonToFormData(this.form))
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.sut.store'),
+                this.jsonToFormData(this.form),
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         showGroupCertificates(sut) {
             return this.hasGroupCertificates

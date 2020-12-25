@@ -22,7 +22,7 @@
                         <selectize
                             v-model="answers[question.name]"
                             :class="{
-                                'is-invalid': $page.errors[question.name],
+                                'is-invalid': $page.props.errors[question.name],
                             }"
                             :options="question.values"
                             :multiple="question.type === 'multiselect'"
@@ -31,17 +31,17 @@
                             placeholder="Select answer..."
                         />
                         <span
-                            v-if="$page.errors[question.name]"
+                            v-if="$page.props.errors[question.name]"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors[question.name] }}
+                            {{ $page.props.errors[question.name] }}
                         </span>
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    v-if="$page.app.available_session_modes_count > 1"
+                    v-if="$page.props.app.available_session_modes_count > 1"
                     :href="
                         section !== firstSection
                             ? route(
@@ -120,15 +120,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(
-                    route(
-                        'sessions.register.questionnaire.store',
-                        this.section
-                    ),
-                    this.form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.questionnaire.store', this.section),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         updateAnswers() {
             if (
@@ -244,7 +244,7 @@ export default {
                     .where('id', parseInt(route().params.section))
                     .first().description;
 
-                if (this.$page.errors?.length === 0) this.updateAnswers();
+                if (this.$page.props.errors?.length === 0) this.updateAnswers();
             },
         },
     },

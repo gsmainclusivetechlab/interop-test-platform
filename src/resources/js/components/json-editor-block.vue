@@ -2,7 +2,6 @@
     <div class="json-editor-block row mt-2">
         <div class="col-6">
             <json-editor
-                class="json-editor"
                 :data-input="jsonData"
                 @data-output="(data) => (jsonData = data)"
             >

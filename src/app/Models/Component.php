@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
+use App\Models\Concerns\HasSlug;
 use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,7 @@ class Component extends Model
 {
     use HasUuid;
     use HasPosition;
+    use HasSlug;
 
     /**
      * @var string
@@ -30,7 +32,13 @@ class Component extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'base_url', 'description', 'sutable'];
+    protected $fillable = [
+        'name',
+        'base_url',
+        'description',
+        'sutable',
+        'slug',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

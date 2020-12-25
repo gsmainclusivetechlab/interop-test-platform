@@ -45,7 +45,7 @@
                             <td class="text-center">
                                 {{
                                     collect(
-                                        $page.enums.test_case_behaviors
+                                        $page.props.enums.test_case_behaviors
                                     ).get(testCase.behavior)
                                 }}
                             </td>
@@ -87,7 +87,7 @@
                                     </template>
                                     <li
                                         v-if="
-                                            $page.auth.user.can.test_cases
+                                            $page.props.auth.user.can.test_cases
                                                 .create && testCase.draft
                                         "
                                     >
@@ -105,7 +105,7 @@
                                     </li>
                                     <li
                                         v-if="
-                                            $page.auth.user.can.test_cases
+                                            $page.props.auth.user.can.test_cases
                                                 .create && testCase.draft
                                         "
                                     >
@@ -126,7 +126,7 @@
                                     </li>
                                     <li
                                         v-if="
-                                            $page.auth.user.can.test_cases
+                                            $page.props.auth.user.can.test_cases
                                                 .create
                                         "
                                     >

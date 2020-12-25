@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueMeta from 'vue-meta';
-import { InertiaApp } from '@inertiajs/inertia-vue';
+import { App, plugin } from '@inertiajs/inertia-vue';
 import {
     NavPlugin,
     NavbarPlugin,
@@ -13,6 +13,9 @@ import {
     PopoverPlugin,
     TabsPlugin,
 } from 'bootstrap-vue';
+import { InertiaProgress } from '@inertiajs/progress';
+
+InertiaProgress.init();
 
 window.string = require('string');
 window.collect = require('collect.js');
@@ -20,7 +23,7 @@ window.axios = require('axios');
 window.axios.defaults.withCredentials = true;
 
 Vue.use(VueMeta);
-Vue.use(InertiaApp);
+Vue.use(plugin);
 
 [
     NavPlugin,
@@ -90,7 +93,7 @@ let app = document.getElementById('app');
 
 new Vue({
     render: (h) =>
-        h(InertiaApp, {
+        h(App, {
             props: {
                 initialPage: JSON.parse(app.dataset.page),
                 resolveComponent: (name) =>

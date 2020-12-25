@@ -68,10 +68,7 @@ class ComponentController extends Controller
             'base_url' => ['required', 'url', 'max:255'],
             'description' => ['string', 'nullable'],
             'sutable' => ['required', 'boolean'],
-            'connections_id.*' => [
-                'integer',
-                'exists:component_connections,target_id',
-            ],
+            'connections_id.*' => ['integer', 'exists:components,id'],
         ]);
         DB::transaction(function () use ($request) {
             $component = Component::create($request->input());
@@ -109,10 +106,7 @@ class ComponentController extends Controller
             'base_url' => ['required', 'url', 'max:255'],
             'description' => ['string', 'nullable'],
             'sutable' => ['required', 'boolean'],
-            'connections_id.*' => [
-                'integer',
-                'exists:component_connections,target_id',
-            ],
+            'connections_id.*' => ['integer', 'exists:components,id'],
         ]);
         DB::transaction(function () use ($component, $request) {
             $component->update($request->input());

@@ -17,16 +17,17 @@
                                 class="form-control"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors.user_email || !emailValid,
+                                        $page.props.errors.user_email ||
+                                        !emailValid,
                                 }"
                                 type="email"
                             />
                             <span
-                                v-if="$page.errors.user_email"
+                                v-if="$page.props.errors.user_email"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors.user_email }}
+                                    {{ $page.props.errors.user_email }}
                                 </strong>
                             </span>
                             <span v-if="!emailValid" class="invalid-feedback">
@@ -139,13 +140,17 @@ export default {
             this.sending = true;
 
             this.hideModal();
-            this.$inertia
-                .post(route('groups.user-invitations.store', this.group), {
+            this.$inertia.post(
+                route('groups.user-invitations.store', this.group),
+                {
                     user_email: this.form.userEmail,
-                })
-                .then(() => {
-                    this.sending = false;
-                });
+                },
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         checkEmail() {
             for (let i = 0; i < this.emailPatterns.length; i++) {

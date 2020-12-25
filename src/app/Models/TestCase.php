@@ -312,12 +312,4 @@ class TestCase extends Model
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
     }
-
-    /**
-     * @return bool
-     */
-    public function isLast()
-    {
-        return $this->version === $this->last_version->version ? true : false;
-    }
 }
