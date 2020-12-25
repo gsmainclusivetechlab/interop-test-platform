@@ -100,7 +100,13 @@ class SimulatorController extends Controller
             ->create(['test_step_id' => $testStep->id]);
         $request = $request->withUri(
             UriResolver::resolve(
-                new Uri(($uri = $session->getBaseUriOfComponent($connection))),
+                new Uri(
+                    ($uri = $session->getBaseUriOfComponent(
+                        $connection,
+                        null,
+                        true
+                    ))
+                ),
                 new Uri($path)
             )->withQuery((string) request()->getQueryString())
         );

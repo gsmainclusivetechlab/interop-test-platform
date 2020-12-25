@@ -11,11 +11,19 @@ use Psr\Http\Message\RequestInterface;
 
 class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
-    public function path($forResolver = false): string
+    public function urlForResolver()
     {
-        return ($path = $this->request->getUri()->getPath())[0] === '/' && $forResolver
-            ? substr($path, 1)
-            : $path;
+        return $this->host() ? $this->url() : ltrim($this->path(), '/');
+    }
+
+    public function path(): string
+    {
+        return $this->request->getUri()->getPath();
+    }
+
+    public function host(): string
+    {
+        return $this->request->getUri()->getHost();
     }
 
     public function query(): string

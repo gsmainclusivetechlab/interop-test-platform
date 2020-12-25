@@ -6,6 +6,7 @@ use App\Models\TestResult;
 use App\Models\TestSetup;
 use App\Http\Client\Request;
 use Psr\Http\Message\RequestInterface;
+use Str;
 
 class MapRequestHandler
 {
@@ -50,8 +51,10 @@ class MapRequestHandler
         );
 
         $testRequestData = array_merge($data = $testRequest->toArray(), [
-            'uri' => ($isEqual = $data['uri'] === $data['path']) ? "/{$data['uri']}" : $data['uri'],
-            'path' => $isEqual ? "/{$data['path']}" : $data['path'],
+            'uri' => Str::startsWith($data['uri'], 'http')
+                ? $data['uri']
+                : Str::start($data['uri'], '/'),
+            'path' => Str::start($data['path'], '/'),
         ]);
 
         $this->testResult->update(['request' => $testRequestData]);

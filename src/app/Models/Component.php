@@ -32,7 +32,13 @@ class Component extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'base_url', 'description', 'sutable', 'slug'];
+    protected $fillable = [
+        'name',
+        'base_url',
+        'description',
+        'sutable',
+        'slug',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

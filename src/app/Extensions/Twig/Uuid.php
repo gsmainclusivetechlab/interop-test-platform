@@ -15,7 +15,7 @@ class Uuid extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('uuidv4', function (){
+            new TwigFunction('uuidv4', function () {
                 return \Ramsey\Uuid\Uuid::uuid4();
             }),
         ];

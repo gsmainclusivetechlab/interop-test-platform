@@ -14,8 +14,7 @@ class AddSlugColumnToComponentsTable extends Migration
     public function up()
     {
         Schema::table('components', function (Blueprint $table) {
-            $table->string('slug')
-                ->after('sutable');
+            $table->string('slug')->after('sutable');
         });
 
         $this->addSlugs();
@@ -43,11 +42,13 @@ class AddSlugColumnToComponentsTable extends Migration
             'Service Provider' => 'service-provider',
             'Mobile Money Operator 1' => 'mmo-1',
             'Mojaloop' => 'mojaloop',
-            'Mobile Money Operator 2' => 'mmo-2'
+            'Mobile Money Operator 2' => 'mmo-2',
         ])->each(function ($slug, $name) {
-            DB::table('components')->where('name', $name)->update([
-                'slug' => $slug
-            ]);
+            DB::table('components')
+                ->where('name', $name)
+                ->update([
+                    'slug' => $slug,
+                ]);
         });
 
         DB::table('components')

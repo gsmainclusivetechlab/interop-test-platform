@@ -16,14 +16,11 @@ trait ScriptValidationTest
             $this->testResult->testRun->testResults,
             $this->testResult->session->environments()
         );
-        array_walk_recursive(
-            $rules,
-            function (&$value) use ($substitution) {
-                if (is_string($value)) {
-                    $value = $substitution->replace($value);
-                }
+        array_walk_recursive($rules, function (&$value) use ($substitution) {
+            if (is_string($value)) {
+                $value = $substitution->replace($value);
             }
-        );
+        });
 
         return $rules;
     }

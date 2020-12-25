@@ -34,9 +34,11 @@
                         <tr>
                             <th class="text-nowrap">#</th>
                             <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Slug</th>
                             <th class="text-nowrap">Base URL</th>
                             <th class="text-nowrap">Can be SUT</th>
                             <th class="text-nowrap">Connections</th>
+                            <th class="text-nowrap">Connected with</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
@@ -52,6 +54,9 @@
                                 {{ component.name }}
                             </td>
                             <td class="text-break">
+                                {{ component.slug }}
+                            </td>
+                            <td class="text-break">
                                 {{ component.base_url }}
                             </td>
                             <td class="text-break">
@@ -63,6 +68,13 @@
                                         ? component.connections.length
                                         : 0
                                 }}
+                            </td>
+                            <td>
+                                <span
+                                    v-for="connection in component.connections"
+                                >
+                                    {{ connection.name }}<br />
+                                </span>
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
