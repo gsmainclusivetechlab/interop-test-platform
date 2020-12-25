@@ -79,7 +79,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => "env('LOCALE_DEFAULT', App::getFallbackLocale())",
 
     /*
     |--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ return [
     |
     */
 
-    'locales' => ['es', 'gb', 'ru'],
+    'locales' => "explode('|', env('LOCALE_SUPPORTED', App::getFallbackLocale()))",
 
     /*
     |--------------------------------------------------------------------------
