@@ -78,8 +78,8 @@ class ExecuteTestStepJob implements ShouldQueue
                             $testStep->target
                         ))
                     ),
-                    new Uri($requestTemplate->path())
-                )
+                    new Uri($requestTemplate->path(true))
+                )->withQuery($requestTemplate->query())
             );
 
         (new ProcessPendingRequest(

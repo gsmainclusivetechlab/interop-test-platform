@@ -16,6 +16,7 @@ class ComponentResource extends JsonResource
             'id' => $this->id,
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'slug' => $this->slug,
             'base_url' => $this->whenPivotLoaded(
                 'session_components',
                 function () {

@@ -101,7 +101,7 @@ class SimulatorController extends Controller
         $request = $request->withUri(
             UriResolver::resolve(
                 new Uri(($uri = $session->getBaseUriOfComponent($connection))),
-                new Uri("/$path")
+                new Uri($path)
             )->withQuery((string) request()->getQueryString())
         );
 

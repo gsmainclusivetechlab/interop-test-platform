@@ -11,26 +11,24 @@ use Psr\Http\Message\RequestInterface;
 
 class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
-    /**
-     * @return string
-     */
-    public function path()
+    public function path($forResolver = false): string
     {
-        return (string) $this->request->getUri();
+        return ($path = $this->request->getUri()->getPath())[0] === '/' && $forResolver
+            ? substr($path, 1)
+            : $path;
     }
 
-    /**
-     * @return RequestInterface
-     */
-    public function toPsrRequest()
+    public function query(): string
+    {
+        return $this->request->getUri()->getQuery();
+    }
+
+    public function toPsrRequest(): RequestInterface
     {
         return $this->request;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'method' => $this->method(),
@@ -71,7 +69,8 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function withSubstitutions($testResults, array $tokens = [])
     {
         $data = $this->toArray();
-        $data['uri'] = urldecode($data['uri']);
+        $data['uri'] = rawurldecode($data['uri']);
+
         $substitution = new TwigSubstitution($testResults, $tokens);
         $data = $substitution->replaceRecursive($data);
 

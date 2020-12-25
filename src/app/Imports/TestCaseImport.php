@@ -55,7 +55,9 @@ class TestCaseImport implements Importable
                 $testCase
                     ->components()
                     ->attach(
-                        Component::whereIn('name', $componentRows)->pluck('id')
+                        Component::whereIn('name', $componentRows)
+                            ->orWhereIn('slug', $componentRows)
+                            ->pluck('id')
                     );
             }
 
@@ -83,12 +85,18 @@ class TestCaseImport implements Importable
                         Component::where(
                             'name',
                             Arr::get($testStepRow, 'source')
+                        )->orWhere(
+                            'slug',
+                            Arr::get($testStepRow, 'source')
                         )->value('id')
                     );
                     $testStep->setAttribute(
                         'target_id',
                         Component::where(
                             'name',
+                            Arr::get($testStepRow, 'target')
+                        )->orWhere(
+                            'slug',
                             Arr::get($testStepRow, 'target')
                         )->value('id')
                     );
