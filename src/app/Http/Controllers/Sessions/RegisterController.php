@@ -199,11 +199,11 @@ class RegisterController extends Controller
     }
 
     /**
-     * @param SessionSutRequest $request
+     * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function storeSut(SessionSutRequest $request)
+    public function storeSut(Request $request)
     {
         $data = collect($request->validated()['components'])->map(function ($sut, $key) use ($request) {
             if ((bool) $sut['use_encryption'] && !Arr::get($sut, 'certificate_id')) {
