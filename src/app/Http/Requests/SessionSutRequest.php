@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Models\Session;
+use App\Rules\SslCertificate;
+use App\Rules\SslKey;
 use Arr;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
@@ -30,17 +32,21 @@ class SessionSutRequest extends FormRequest
                         $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
+                        new SslCertificate
                     ],
                     "components.{$id}.client_crt" => [
                         $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
+                        new SslCertificate
                     ],
                     "components.{$id}.client_key" => [
                         $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
+                        new SslKey(Arr::get($this->all(), "components.{$id}.passphrase"))
                     ],
+                    "components.{$id}.passphrase" => ['nullable', 'string'],
                 ];
             })
             ->merge([

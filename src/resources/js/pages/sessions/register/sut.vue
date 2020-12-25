@@ -147,6 +147,25 @@
                                         </strong>
                                     </span>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pass phrase</label>
+                                    <input
+                                        v-model="componentsData.passphrase[sut.id]"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[`components.${sut.id}.passphrase`],
+                                        }"
+                                        class="form-control"
+                                    />
+                                    <span
+                                        v-if="$page.errors[`components.${sut.id}.passphrase`]"
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{ $page.errors[`components.${sut.id}.passphrase`] }}
+                                        </strong>
+                                    </span>
+                                </div>
                             </template>
                         </div>
                     </template>
@@ -224,6 +243,7 @@ export default {
                 ca_crt: [],
                 client_crt: [],
                 client_key: [],
+                passphrase: [],
             },
             selectedComponents:
                 this.session && this.session.sut
@@ -261,7 +281,8 @@ export default {
                         certificate_id: c.certificate_id[c.id] ? c.certificate_id[c.id].id : null,
                         ca_crt: c.ca_crt[c.id],
                         client_crt: c.client_crt[c.id],
-                        client_key: c.client_key[c.id]
+                        client_key: c.client_key[c.id],
+                        passphrase: c.passphrase[c.id],
                     };
                 });
             },
@@ -276,6 +297,7 @@ export default {
                     c.ca_crt = values.ca_crt[c.id]
                     c.client_crt = values.client_crt[c.id]
                     c.client_key = values.client_key[c.id]
+                    c.passphrase = values.passphrase[c.id]
                 });
             }
         }

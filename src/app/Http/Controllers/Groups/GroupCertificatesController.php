@@ -7,6 +7,8 @@ use App\Http\Resources\CertificateResource;
 use App\Http\Resources\GroupResource;
 use App\Models\Certificate;
 use App\Models\Group;
+use App\Rules\SslCertificate;
+use App\Rules\SslKey;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -63,13 +65,15 @@ class GroupCertificatesController extends Controller
         $this->authorize('admin', $group);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'ca_crt' => ['required', 'mimetypes:text/plain'],
-            'client_crt' => ['required', 'mimetypes:text/plain'],
-            'client_key' => ['required', 'mimetypes:text/plain'],
+            'ca_crt' => ['required', 'mimetypes:text/plain', new SslCertificate],
+            'client_crt' => ['required', 'mimetypes:text/plain', new SslCertificate],
+            'client_key' => ['required', 'mimetypes:text/plain', new SslKey($request->get('passphrase'))],
+            'passphrase' => ['nullable', 'string'],
         ]);
 
         $group->certificates()->create([
             'name' => $request->get('name'),
+            'passphrase' => $request->get('passphrase'),
             'ca_crt_path' => Certificate::storeFile($request, 'ca_crt'),
             'client_crt_path' => Certificate::storeFile($request, 'client_crt'),
             'client_key_path' => Certificate::storeFile($request, 'client_key'),

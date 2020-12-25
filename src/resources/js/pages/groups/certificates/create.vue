@@ -84,6 +84,25 @@
                                     </strong>
                                 </span>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label"> Pass phrase </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="form.passphrase"
+                                    :class="{
+                                        'is-invalid': $page.errors.passphrase,
+                                    }"
+                                />
+                                <span
+                                    v-if="$page.errors.passphrase"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors.passphrase }}
+                                    </strong>
+                                </span>
+                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -132,9 +151,10 @@ export default {
             sending: false,
             form: {
                 name: '',
-                ca_crt: null,
-                client_crt: null,
-                client_key: null,
+                ca_crt: '',
+                client_crt: '',
+                client_key: '',
+                passphrase: ''
             },
         };
     },
@@ -143,10 +163,7 @@ export default {
             this.sending = true;
 
             let data = new FormData();
-            data.append('name', this.form.name);
-            data.append('ca_crt', this.form.ca_crt);
-            data.append('client_crt', this.form.client_crt);
-            data.append('client_key', this.form.client_key);
+            Object.keys(this.form).forEach((key) => data.append(key, this.form[key]))
 
             this.$inertia
                 .post(route('groups.certificates.store', this.group), data)

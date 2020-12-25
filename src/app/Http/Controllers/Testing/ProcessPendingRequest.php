@@ -58,10 +58,12 @@ class ProcessPendingRequest
      */
     public function __invoke()
     {
+        $options = $this->getRequestOptions();
+
         return (new PendingRequest($this->getResponse()))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
-            ->transfer($this->request, $this->getRequestOptions())
+            ->transfer($this->request, $options)
             ->then(
                 new SendingFulfilledHandler($this->testResult, $this->session)
             )
@@ -72,7 +74,6 @@ class ProcessPendingRequest
     protected function getRequestOptions(): array
     {
         $options = [];
-
         $targetComponent = $this->session
             ->components()
             ->find($this->testResult->testStep->target_id);
@@ -86,8 +87,8 @@ class ProcessPendingRequest
 
             $options = [
                 'verify' => Storage::path($certificate->ca_crt_path),
-                'cert' => Storage::path($certificate->client_crt_path),
-                'ssl_key' => Storage::path($certificate->client_key_path)
+                'cert' => [Storage::path($certificate->client_crt_path), $certificate->passphrase],
+                'ssl_key' => [Storage::path($certificate->client_key_path), $certificate->passphrase]
             ];
         }
 

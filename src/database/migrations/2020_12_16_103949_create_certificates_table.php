@@ -21,6 +21,7 @@ class CreateCertificatesTable extends Migration
             $table->string('ca_crt_path');
             $table->string('client_crt_path');
             $table->string('client_key_path');
+            $table->string('passphrase')->nullable();
             $table->timestamp('created_at')->nullable();
         });
 
