@@ -45,6 +45,7 @@ class MapRequestHandler
         }*/
 
         $testRequest = $testRequest->withSubstitutions(
+            $this->testResult->testRun->testResults,
             $this->testResult->session->environments()
         );
 

@@ -74,6 +74,12 @@ class TestCaseImport implements Importable
                                 TestStep::make()->getFillable()
                             )
                         );
+                    $testStep->request = $this->checkHeaders(
+                        Arr::get($testStepRow, 'request')
+                    );
+                    $testStep->response = $this->checkHeaders(
+                        Arr::get($testStepRow, 'response')
+                    );
                     $testStep->setAttribute(
                         'source_id',
                         Component::where(
@@ -129,6 +135,22 @@ class TestCaseImport implements Importable
 
             return $testCase;
         });
+    }
+
+    /**
+     * @param array $input
+     * @return array
+     */
+    protected function checkHeaders($input)
+    {
+        if (Arr::exists($input, 'headers')
+            && (!is_array($input['headers'])
+                || empty($input['headers']))
+        ) {
+            $input = Arr::except($input, 'headers');
+        }
+
+        return $input;
     }
 
     /**

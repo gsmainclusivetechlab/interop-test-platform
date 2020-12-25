@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
-use App\Models\TestCase;
-use App\Models\TestScript;
-use App\Models\TestSetup;
-use App\Models\TestStep;
+use App\Models\{
+    TestCase,
+    TestScript,
+    TestSetup,
+    TestStep
+};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -182,7 +184,7 @@ class TestStepRequest extends FormRequest
         $request['method'] = $this->input('method');
         $request['uri'] = $this->input('path');
 
-        return array_filter($request);
+        return $this->checkHeaders($request);
     }
 
     /**
@@ -190,9 +192,25 @@ class TestStepRequest extends FormRequest
      */
     protected function mapTestStepResponse()
     {
-        $request = $this->input('response');
+        $response = $this->input('response');
 
-        return array_filter($request);
+        return $this->checkHeaders($response);
+    }
+
+    /**
+     * @param array $input
+     * @return array
+     */
+    protected function checkHeaders($input)
+    {
+        if (Arr::exists($input, 'headers')
+            && (!is_array($input['headers'])
+                || empty($input['headers']))
+        ) {
+            $input = Arr::except($input, 'headers');
+        }
+
+        return $input;
     }
 
     /**

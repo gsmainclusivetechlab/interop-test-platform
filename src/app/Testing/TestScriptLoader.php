@@ -27,7 +27,7 @@ class TestScriptLoader
             foreach ($testRequestScripts as $testRequestScript) {
                 $testSuite->addTest(
                     new RequestScriptValidationTest(
-                        $testResult->request,
+                        $testResult,
                         $testRequestScript
                     )
                 );
@@ -43,7 +43,7 @@ class TestScriptLoader
             foreach ($testResponseScripts as $testResponseScript) {
                 $testSuite->addTest(
                     new ResponseScriptValidationTest(
-                        $testResult->response,
+                        $testResult,
                         $testResponseScript
                     )
                 );
