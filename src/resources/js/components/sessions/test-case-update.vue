@@ -67,8 +67,9 @@ export default {
                     this.versions.current.id,
                     this.versions.last.id,
                 ]),
+                {},
                 {
-                    onSuccess: () => {
+                    onFinish: () => {
                         this.$emit('update', this.versions);
                     },
                 }
