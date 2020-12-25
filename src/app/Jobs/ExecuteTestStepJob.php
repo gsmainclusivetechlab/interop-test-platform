@@ -68,7 +68,7 @@ class ExecuteTestStepJob implements ShouldQueue
             ->withTraceId($this->testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $requestTemplate = $testStep->request->withSubstitutions(
-            $tokens = $this->session->environments()
+            $this->session->environments()
         );
         $request = $requestTemplate
             ->toPsrRequest()
@@ -80,8 +80,8 @@ class ExecuteTestStepJob implements ShouldQueue
                             $testStep->target
                         ))
                     ),
-                    new Uri($requestTemplate->path())
-                )
+                    new Uri($requestTemplate->path(true))
+                )->withQuery($requestTemplate->query())
             );
 
         (new ProcessPendingRequest(

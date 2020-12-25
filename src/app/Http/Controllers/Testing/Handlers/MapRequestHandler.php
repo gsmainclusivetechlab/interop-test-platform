@@ -47,7 +47,13 @@ class MapRequestHandler
         $testRequest = $testRequest->withSubstitutions(
             $this->testResult->session->environments()
         );
-        $this->testResult->update(['request' => $testRequest]);
+
+        $testRequestData = array_merge($data = $testRequest->toArray(), [
+            'uri' => ($isEqual = $data['uri'] === $data['path']) ? "/{$data['uri']}" : $data['uri'],
+            'path' => $isEqual ? "/{$data['path']}" : $data['path'],
+        ]);
+
+        $this->testResult->update(['request' => $testRequestData]);
 
         return $testRequest->toPsrRequest();
     }

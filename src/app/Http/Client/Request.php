@@ -11,34 +11,29 @@ use Psr\Http\Message\RequestInterface;
 
 class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
-    /**
-     * @return string
-     */
-    public function path()
+    public function path($forResolver = false): string
     {
-        return (string) $this->request->getUri();
+        return ($path = $this->request->getUri()->getPath())[0] === '/' && $forResolver
+            ? substr($path, 1)
+            : $path;
     }
 
-    /**
-     * @return array
-     */
-    public function json()
+    public function query(): string
+    {
+        return $this->request->getUri()->getQuery();
+    }
+
+    public function json(): array
     {
         return parent::json() ?? [];
     }
 
-    /**
-     * @return RequestInterface
-     */
-    public function toPsrRequest()
+    public function toPsrRequest(): RequestInterface
     {
         return $this->request;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'method' => $this->method(),
@@ -78,7 +73,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function withSubstitutions(array $tokens = [])
     {
         $data = $this->toArray();
-        $data['uri'] = urldecode($data['uri']);
+        $data['uri'] = rawurldecode($data['uri']);
 
         $substitution = new TokenSubstitution($tokens);
         array_walk_recursive($data, function (&$value) use ($substitution) {

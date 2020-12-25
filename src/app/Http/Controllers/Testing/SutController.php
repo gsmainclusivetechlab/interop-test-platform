@@ -132,11 +132,7 @@ class SutController extends Controller
                     new Uri(
                         ($uri = $session->getBaseUriOfComponent($connection))
                     ),
-                    new Uri(
-                        Str::startsWith($path, ['http://', 'https://'])
-                            ? $path
-                            : "/$path"
-                    )
+                    new Uri($path)
                 )->withQuery((string) request()->getQueryString())
             );
 

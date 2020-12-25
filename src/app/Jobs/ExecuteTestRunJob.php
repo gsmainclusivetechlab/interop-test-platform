@@ -6,6 +6,7 @@ use App\Http\Controllers\Testing\ProcessPendingRequest;
 use App\Http\Headers\TraceparentHeader;
 use App\Models\Session;
 use App\Models\TestCase;
+use App\Models\TestStep;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Bus\Queueable;
@@ -48,6 +49,7 @@ class ExecuteTestRunJob implements ShouldQueue
      */
     public function handle()
     {
+        /** @var TestStep $testStep */
         $testStep = $this->testCase->testSteps()->firstOrFail();
         $testRun = $this->session
             ->testRuns()
@@ -72,8 +74,8 @@ class ExecuteTestRunJob implements ShouldQueue
                             $testStep->target
                         ))
                     ),
-                    new Uri($requestTemplate->path())
-                )
+                    new Uri($requestTemplate->path(true))
+                )->withQuery($requestTemplate->query())
             );
 
         (new ProcessPendingRequest(
