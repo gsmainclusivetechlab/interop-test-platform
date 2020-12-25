@@ -443,7 +443,7 @@
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
-                        <h2 class="card-title">Response Status Example</h2>
+                        <h2 class="card-title">Response Status</h2>
                         <selectize
                             class="form-select"
                             :class="{
