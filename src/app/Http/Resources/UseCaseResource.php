@@ -19,6 +19,9 @@ class UseCaseResource extends JsonResource
             'testCases' => TestCaseResource::collection(
                 $this->whenLoaded('testCases')
             ),
+            'testCasesCount' => $this->whenLoaded('testCases', function () {
+                return $this->testCases->unique('test_case_group_id')->count();
+            }),
             'can' => [
                 'update' => auth()
                     ->user()

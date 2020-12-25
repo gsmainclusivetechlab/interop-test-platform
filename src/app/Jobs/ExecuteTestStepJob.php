@@ -67,7 +67,10 @@ class ExecuteTestStepJob implements ShouldQueue
         $traceparent = (new TraceparentHeader())
             ->withTraceId($this->testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $requestTemplate = $testStep->request;
+        $requestTemplate = $testStep->request->withSubstitutions(
+            $this->testRun->testResults,
+            $this->session->environments()
+        );
         $request = $requestTemplate
             ->toPsrRequest()
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent)
@@ -75,10 +78,12 @@ class ExecuteTestStepJob implements ShouldQueue
                 UriResolver::resolve(
                     new Uri(
                         ($uri = $this->session->getBaseUriOfComponent(
-                            $testStep->target
+                            $testStep->target,
+                            null,
+                            true
                         ))
                     ),
-                    new Uri($requestTemplate->path(true))
+                    new Uri($requestTemplate->urlForResolver())
                 )->withQuery($requestTemplate->query())
             );
 

@@ -4,16 +4,16 @@ a {
 
 #nprogress {
   .bar {
-    background: $primary!important;
+    background: $primary !important;
   }
 
   .peg {
-    box-shadow: 0 0 10px $primary, 0 0 5px $primary!important;
+    box-shadow: 0 0 10px $primary, 0 0 5px $primary !important;
   }
 
   .spinner-icon {
-    border-top-color: $primary!important;
-    border-left-color: $primary!important;
+    border-top-color: $primary !important;
+    border-left-color: $primary !important;
   }
 }
 

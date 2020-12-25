@@ -46,11 +46,7 @@
                                 {{ useCase.name }}
                             </td>
                             <td>
-                                {{
-                                    useCase.testCases
-                                        ? useCase.testCases.length
-                                        : 0
-                                }}
+                                {{ useCase.testCasesCount }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

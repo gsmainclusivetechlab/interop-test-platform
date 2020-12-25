@@ -75,10 +75,10 @@ class TwigSubstitution
      */
     protected function isJsonSubstitution($input)
     {
-        return is_string($input)
-            && !is_numeric($input)
-            && is_array(json_decode($input, true))
-            && (json_last_error() == JSON_ERROR_NONE);
+        return is_string($input) &&
+            !is_numeric($input) &&
+            is_array(json_decode($input, true)) &&
+            json_last_error() == JSON_ERROR_NONE;
     }
 
     /**
@@ -102,7 +102,7 @@ class TwigSubstitution
     protected function registerTwigExtensions()
     {
         foreach ($this->twigExtensions as $twigExtension) {
-            $this->twig->addExtension(new $twigExtension);
+            $this->twig->addExtension(new $twigExtension());
         }
     }
 
@@ -114,13 +114,18 @@ class TwigSubstitution
     protected function mapInto($testResults, $envs)
     {
         return [
-            'steps' => $testResults->load('testStep')
+            'steps' => $testResults
+                ->load('testStep')
                 ->mapWithKeys(function ($item) {
                     return [
                         $item->testStep->position => [
-                            'request' => $item->request ? $item->request->toArray() : [],
-                            'response' => $item->response ? $item->response->toArray() : [],
-                        ]
+                            'request' => $item->request
+                                ? $item->request->toArray()
+                                : [],
+                            'response' => $item->response
+                                ? $item->response->toArray()
+                                : [],
+                        ],
                     ];
                 })
                 ->toArray(),

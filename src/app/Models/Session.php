@@ -4,13 +4,19 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Str;
 
 /**
- * @mixin \Eloquent
+ * @mixin Eloquent
  *
  * @property int $id
  * @property string $name
@@ -77,7 +83,7 @@ class Session extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function owner()
     {
@@ -85,7 +91,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function groupEnvironment()
     {
@@ -96,7 +102,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function components()
     {
@@ -109,7 +115,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function testRuns()
     {
@@ -117,7 +123,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
     public function testResults()
     {
@@ -130,7 +136,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function messageLog()
     {
@@ -148,7 +154,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function testCases()
     {
@@ -163,7 +169,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function testCasesWithSoftDeletes()
     {
@@ -176,7 +182,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function testSteps()
     {
@@ -191,7 +197,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function questionnaireAnswers()
     {
@@ -201,18 +207,24 @@ class Session extends Model
     public function environments(): array
     {
         return array_merge($this->environments ?? [], [
-            'SP_BASE_URI' => $this->getBaseUriForEnvironment('service-provider'),
+            'SP_BASE_URI' => $this->getBaseUriForEnvironment(
+                'service-provider'
+            ),
             'MMO1_BASE_URI' => $this->getBaseUriForEnvironment('mmo-1'),
             'MOJALOOP_BASE_URI' => $this->getBaseUriForEnvironment('mojaloop'),
             'MMO2_BASE_URI' => $this->getBaseUriForEnvironment('mmo-2'),
         ]);
     }
 
-    public function getBaseUriForEnvironment(string $slug): string
+    /**
+     * @param string $slug
+     *
+     * @return string|null
+     */
+    public function getBaseUriForEnvironment(string $slug)
     {
         return $this->getBaseUriOfComponent(
-            Component::where('slug', $slug)->first(),
-            config('app.url')
+            Component::where('slug', $slug)->first()
         );
     }
 
@@ -231,18 +243,26 @@ class Session extends Model
     /**
      * @param Component $component
      * @param string|null $default
+     * @param bool $forResolver
      *
      * @return string
      */
-    public function getBaseUriOfComponent(Component $component = null, $default = null)
-    {
-        return Arr::get(
-            $component ? $this->components()
-                ->whereKey($component->getKey())
-                ->first() : [],
+    public function getBaseUriOfComponent(
+        Component $component = null,
+        $default = null,
+        $forResolver = false
+    ) {
+        $url = Arr::get(
+            $component
+                ? $this->components()
+                    ->whereKey($component->getKey())
+                    ->first()
+                : [],
             'pivot.base_url',
             $default
         );
+
+        return $url && $forResolver ? Str::finish($url, '/') : $url;
     }
 
     /**

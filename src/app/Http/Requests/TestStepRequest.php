@@ -2,12 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\{
-    TestCase,
-    TestScript,
-    TestSetup,
-    TestStep
-};
+use App\Models\{TestCase, TestScript, TestSetup, TestStep};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -203,9 +198,9 @@ class TestStepRequest extends FormRequest
      */
     protected function checkHeaders($input)
     {
-        if (Arr::exists($input, 'headers')
-            && (!is_array($input['headers'])
-                || empty($input['headers']))
+        if (
+            Arr::exists($input, 'headers') &&
+            (!is_array($input['headers']) || empty($input['headers']))
         ) {
             $input = Arr::except($input, 'headers');
         }
