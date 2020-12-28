@@ -19,6 +19,7 @@ precondition: |
     - Transfer Amount: 50.04.
 components:
   - Mobile Money Operator 1
+  - Mojaloop
   - Mobile Money Operator 2
 
 test_steps:
@@ -70,7 +71,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -153,7 +154,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -208,14 +209,6 @@ test_steps:
           body.errorInformation.errorCode: 'required|in:5103'
           body.errorInformation.errorDescription: 'required|regex:/^.{1,128}$/'
 
-    test_request_setup:
-      - name: Error Code is specified correctly
-        rules:
-          body.errorInformation.errorCode: 'required|in:5103'
-          body.errorInformation.errorDescription:
-            'required|in:Rejected Quote: Payee FSP does not want to proceed with
-            the financial transaction after receiving a quote.'
-
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -223,23 +216,18 @@ test_steps:
 
     request:
       method: 'PUT'
-      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a/error
       headers:
-        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
-        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         errorInformation:
           errorCode: '5103'
           errorDescription:
             'Rejected Quote: Payee FSP does not want to proceed with the
             financial transaction after receiving a quote.'
-        expiration: '2000-01-01T00:00:00.000Z'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
 
     response:
       status: 200
@@ -264,14 +252,6 @@ test_steps:
           body.errorInformation.errorCode: 'required|in:5103'
           body.errorInformation.errorDescription: 'required|regex:/^.{1,128}$/'
 
-    test_request_setup:
-      - name: Error Code is specified correctly
-        rules:
-          body.errorInformation.errorCode: 'required|in:5103'
-          body.errorInformation.errorDescription:
-            'required|in:Rejected Quote: Payee FSP does not want to proceed with
-            the financial transaction after receiving a quote.'
-
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -281,20 +261,16 @@ test_steps:
       method: 'PUT'
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a/error
       headers:
-        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
-        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
         errorInformation:
           errorCode: '5103'
           errorDescription:
             'Rejected Quote: Payee FSP does not want to proceed with the
             financial transaction after receiving a quote.'
-        expiration: '2000-01-01T00:00:00.000Z'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+
     response:
       status: 200
