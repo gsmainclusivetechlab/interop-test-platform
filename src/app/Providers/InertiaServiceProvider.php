@@ -47,7 +47,7 @@ class InertiaServiceProvider extends ServiceProvider
                     'debug' => env('APP_DEBUG'),
                     'dark_mode' => request()->cookie('dark_mode'),
                     'locale' => app()->getLocale(),
-                    'locales' => env('APP_LOCALES'),
+                    'locales' => config('app.locales'),
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
                     'available_session_modes_count' => collect(
                         config('service_session.available_modes')

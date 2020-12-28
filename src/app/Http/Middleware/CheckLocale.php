@@ -15,9 +15,12 @@ class CheckLocale
      */
     public function handle($request, Closure $next)
     {
-        if ($user = auth()->user()) {//dd(env('LOCALE_SUPPORTED'));
-            \App::setLocale($user->locale ?? \App::getFallbackLocale());
-//            \App::setLocale($user->locale);
+        if ($user = auth()->user()) {
+            \App::setLocale(
+                $user->locale && in_array($user->locale, config('app.locales'))
+                    ? $user->locale
+                    : \App::getFallbackLocale()
+            );
         }
 
         return $next($request);

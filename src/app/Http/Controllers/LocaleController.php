@@ -13,9 +13,13 @@ class LocaleController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $locale = $request->input('locale');
+        $locale = $locale && in_array($locale, config('app.locales'))
+            ? $locale
+            : \App::getFallbackLocale();
         if ($user = auth()->user()) {
             $user->update([
-                'locale' => $request->input('locale')
+                'locale' => $locale
             ]);
             app()->setLocale($user->locale);
         }
