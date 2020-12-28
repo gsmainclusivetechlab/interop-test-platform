@@ -19,32 +19,41 @@ class SessionSutRequest extends FormRequest
         return $this->components()
             ->mapWithKeys(function ($component, $id) {
                 $useEncription = (int) Arr::get($component, 'use_encryption');
-                $filesRequired = Rule::requiredIf($useEncription && !Arr::get($component, 'certificate_id'));
+                $filesRequired = Rule::requiredIf(
+                    $useEncription && !Arr::get($component, 'certificate_id')
+                );
 
                 return [
                     "components.{$id}.certificate_id" => [
-                        Rule::requiredIf($useEncription && !$this->hasFile("components.{$id}.ca_crt")),
+                        Rule::requiredIf(
+                            $useEncription &&
+                                !$this->hasFile("components.{$id}.ca_crt")
+                        ),
                         'nullable',
-                        Rule::exists('certificates', 'id')
-                            ->whereIn('group_id', auth()->user()->groups->pluck('id')->all())
+                        'exists:certificates,id',
                     ],
                     "components.{$id}.ca_crt" => [
                         $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
-                        new SslCertificate
+                        new SslCertificate(),
                     ],
                     "components.{$id}.client_crt" => [
                         $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
-                        new SslCertificate
+                        new SslCertificate(),
                     ],
                     "components.{$id}.client_key" => [
                         $filesRequired,
                         'nullable',
                         'mimetypes:text/plain',
-                        new SslKey(Arr::get($this->all(), "components.{$id}.passphrase"))
+                        new SslKey(
+                            Arr::get(
+                                $this->all(),
+                                "components.{$id}.passphrase"
+                            )
+                        ),
                     ],
                     "components.{$id}.passphrase" => ['nullable', 'string'],
                 ];
@@ -67,17 +76,20 @@ class SessionSutRequest extends FormRequest
 
     public function attributes(): array
     {
-        return $this->components()->mapWithKeys(function ($component, $id) {
-            return [
-                "components.{$id}.certificate_id" => __('Certificate'),
-                "components.{$id}.ca_crt" => __('CA certificate'),
-                "components.{$id}.client_crt" => __('Client certificate'),
-                "components.{$id}.client_key" => __('Client key'),
-            ];
-        })->merge([
-            'components' => __('SUTs'),
-            'components.*.base_url' => __('URL'),
-        ])->all();
+        return $this->components()
+            ->mapWithKeys(function ($component, $id) {
+                return [
+                    "components.{$id}.certificate_id" => __('Certificate'),
+                    "components.{$id}.ca_crt" => __('CA certificate'),
+                    "components.{$id}.client_crt" => __('Client certificate'),
+                    "components.{$id}.client_key" => __('Client key'),
+                ];
+            })
+            ->merge([
+                'components' => __('SUTs'),
+                'components.*.base_url' => __('URL'),
+            ])
+            ->all();
     }
 
     protected function components(): Collection

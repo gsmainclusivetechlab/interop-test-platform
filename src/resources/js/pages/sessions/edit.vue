@@ -76,7 +76,8 @@
                                     <input
                                         type="text"
                                         v-model="
-                                            form.components[component.id].base_url
+                                            form.components[component.id]
+                                                .base_url
                                         "
                                         class="form-control"
                                         :class="{
@@ -106,18 +107,29 @@
                                         <input
                                             class="form-check-input"
                                             type="checkbox"
-                                            v-model="form.components[
-                                                component.id
-                                            ].use_encryption"
+                                            v-model="
+                                                form.components[component.id]
+                                                    .use_encryption
+                                            "
                                         />
-                                        <span class="form-check-label">Use Encryption</span>
+                                        <span class="form-check-label"
+                                            >Use Encryption</span
+                                        >
                                     </label>
                                     <span
-                                        v-if="$page.errors[`components.${component.id}.use_encryption`]"
+                                        v-if="
+                                            $page.props.errors[
+                                                `components.${component.id}.use_encryption`
+                                            ]
+                                        "
                                         class="invalid-feedback"
                                     >
                                         <strong>
-                                            {{ $page.errors[`components.${component.id}.use_encryption`] }}
+                                            {{
+                                                $page.props.errors[
+                                                    `components.${component.id}.use_encryption`
+                                                ]
+                                            }}
                                         </strong>
                                     </span>
                                 </div>
@@ -241,7 +253,9 @@ export default {
                 environments: this.session.environments,
                 components: collect(this.components.data)
                     .map(function (component) {
-                        return collect(component).only(['id', 'base_url', 'use_encryption']).all()
+                        return collect(component)
+                            .only(['id', 'base_url', 'use_encryption'])
+                            .all();
                     })
                     .keyBy('id')
                     .all(),

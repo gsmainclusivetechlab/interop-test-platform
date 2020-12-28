@@ -6,13 +6,16 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
-use App\Http\Resources\{CertificateResource,
+use App\Http\Resources\{
+    CertificateResource,
     ComponentResource,
     GroupEnvironmentResource,
     QuestionResource,
     SectionResource,
-    UseCaseResource};
-use App\Models\{Certificate,
+    UseCaseResource
+};
+use App\Models\{
+    Certificate,
     Component,
     GroupEnvironment,
     QuestionnaireQuestions,
@@ -20,7 +23,8 @@ use App\Models\{Certificate,
     QuestionnaireTestCase,
     Session,
     TestCase,
-    UseCase};
+    UseCase
+};
 use Arr;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -183,41 +187,54 @@ class RegisterController extends Controller
                     ->get()
             ),
             'components' => $this->getComponents(),
-            'hasGroupCertificates' => Certificate::whereHas(
-                'group',
-                function (Builder $query) {
-                    $query->whereHas('users', function (Builder $query) {
-                        $query->whereKey(
-                            auth()
-                                ->user()
-                                ->getAuthIdentifier()
-                        );
-                    });
-                }
-            )->exists()
+            'hasGroupCertificates' => Certificate::whereHas('group', function (
+                Builder $query
+            ) {
+                $query->whereHas('users', function (Builder $query) {
+                    $query->whereKey(
+                        auth()
+                            ->user()
+                            ->getAuthIdentifier()
+                    );
+                });
+            })->exists(),
         ]);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function storeSut(Request $request)
+    public function storeSut(SessionSutRequest $request): RedirectResponse
     {
-        $data = collect($request->validated()['components'])->map(function ($sut, $key) use ($request) {
-            if ((bool) $sut['use_encryption'] && !Arr::get($sut, 'certificate_id')) {
-                $sut['certificate_id'] = Certificate::create([
-                    'passphrase' => $sut['passphrase'],
-                    'name' => $sut['ca_crt']->getClientOriginalName(),
-                    'ca_crt_path' => Certificate::storeFile($request, "components.{$key}.ca_crt"),
-                    'client_crt_path' => Certificate::storeFile($request, "components.{$key}.client_crt"),
-                    'client_key_path' => Certificate::storeFile($request, "components.{$key}.client_key"),
-                ])->id;
-            }
+        $data = collect($request->validated()['components'])
+            ->map(function ($sut, $key) use ($request) {
+                if (
+                    (bool) $sut['use_encryption'] &&
+                    !Arr::get($sut, 'certificate_id')
+                ) {
+                    $sut['certificate_id'] = Certificate::create([
+                        'passphrase' => $sut['passphrase'],
+                        'name' => $sut['ca_crt']->getClientOriginalName(),
+                        'ca_crt_path' => Certificate::storeFile(
+                            $request,
+                            "components.{$key}.ca_crt"
+                        ),
+                        'client_crt_path' => Certificate::storeFile(
+                            $request,
+                            "components.{$key}.client_crt"
+                        ),
+                        'client_key_path' => Certificate::storeFile(
+                            $request,
+                            "components.{$key}.client_key"
+                        ),
+                    ])->id;
+                }
 
-            return Arr::only($sut, ['base_url', 'use_encryption', 'certificate_id']);
-        })->all();
+                return Arr::except($sut, [
+                    'ca_crt',
+                    'client_crt',
+                    'client_key',
+                    'passphrase',
+                ]);
+            })
+            ->all();
 
         $request->session()->put('session.sut', $data);
 
@@ -329,9 +346,7 @@ class RegisterController extends Controller
                 ])
                     ->whereHas('testCases', function ($query) use ($testCases) {
                         $query
-                            ->withComponents(
-                                array_keys(session('session.sut'))
-                            )
+                            ->withComponents(array_keys(session('session.sut')))
                             ->when(
                                 !auth()
                                     ->user()
@@ -473,9 +488,19 @@ class RegisterController extends Controller
                     );
 
                 collect(session('session.sut'))->each(function (
-                    $component, $id
+                    $component,
+                    $id
                 ) use ($session) {
-                    $session->components()->attach($id, $component);
+                    $session
+                        ->components()
+                        ->attach(
+                            $id,
+                            Arr::only($component, [
+                                'base_url',
+                                'use_encryption',
+                                'certificate_id',
+                            ])
+                        );
                 });
 
                 return $session;
@@ -520,7 +545,9 @@ class RegisterController extends Controller
      */
     public function groupCertificateCandidates()
     {
-        $sessionIds = collect(session('session.sut'))->pluck('certificate_id')->filter();
+        $sessionIds = collect(session('session.sut'))
+            ->pluck('certificate_id')
+            ->filter();
 
         return CertificateResource::collection(
             Certificate::when(request('q'), function (Builder $query, $q) {

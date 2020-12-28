@@ -154,11 +154,11 @@
                                     >
                                 </label>
                                 <span
-                                    v-if="$page.errors.sutable"
+                                    v-if="$page.props.errors.sutable"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.sutable }}
+                                        {{ $page.props.errors.sutable }}
                                     </strong>
                                 </span>
                             </div>

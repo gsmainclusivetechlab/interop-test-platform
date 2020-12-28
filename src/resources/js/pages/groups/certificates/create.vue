@@ -18,51 +18,56 @@
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.name }}
+                                        {{ $page.props.errors.name }}
                                     </strong>
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> CA certificate </label>
+                                <label class="form-label">
+                                    CA certificate
+                                </label>
                                 <b-form-file
                                     v-model="form.ca_crt"
                                     placeholder="Choose file..."
                                     v-bind:class="{
-                                        'is-invalid': $page.errors.ca_crt,
+                                        'is-invalid': $page.props.errors.ca_crt,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.ca_crt"
+                                    v-if="$page.props.errors.ca_crt"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.ca_crt }}
+                                        {{ $page.props.errors.ca_crt }}
                                     </strong>
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Client certificate </label>
+                                <label class="form-label">
+                                    Client certificate
+                                </label>
                                 <b-form-file
                                     v-model="form.client_crt"
                                     placeholder="Choose file..."
                                     v-bind:class="{
-                                        'is-invalid': $page.errors.client_crt,
+                                        'is-invalid':
+                                            $page.props.errors.client_crt,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.client_crt"
+                                    v-if="$page.props.errors.client_crt"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.client_crt }}
+                                        {{ $page.props.errors.client_crt }}
                                     </strong>
                                 </span>
                             </div>
@@ -72,15 +77,16 @@
                                     v-model="form.client_key"
                                     placeholder="Choose file..."
                                     v-bind:class="{
-                                        'is-invalid': $page.errors.client_key,
+                                        'is-invalid':
+                                            $page.props.errors.client_key,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.client_key"
+                                    v-if="$page.props.errors.client_key"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.client_key }}
+                                        {{ $page.props.errors.client_key }}
                                     </strong>
                                 </span>
                             </div>
@@ -91,15 +97,16 @@
                                     class="form-control"
                                     v-model="form.passphrase"
                                     :class="{
-                                        'is-invalid': $page.errors.passphrase,
+                                        'is-invalid':
+                                            $page.props.errors.passphrase,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.passphrase"
+                                    v-if="$page.props.errors.passphrase"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.passphrase }}
+                                        {{ $page.props.errors.passphrase }}
                                     </strong>
                                 </span>
                             </div>
@@ -154,7 +161,7 @@ export default {
                 ca_crt: '',
                 client_crt: '',
                 client_key: '',
-                passphrase: ''
+                passphrase: '',
             },
         };
     },
@@ -163,7 +170,9 @@ export default {
             this.sending = true;
 
             let data = new FormData();
-            Object.keys(this.form).forEach((key) => data.append(key, this.form[key]))
+            Object.keys(this.form).forEach((key) =>
+                data.append(key, this.form[key])
+            );
 
             this.$inertia
                 .post(route('groups.certificates.store', this.group), data)
