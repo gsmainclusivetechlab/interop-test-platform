@@ -2,7 +2,7 @@
     <layout :test-case="testCase">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">Test steps</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
                 <div class="card-options">
                     <inertia-link
                         v-if="testCase.draft"
@@ -15,16 +15,16 @@
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        <span>Create Test Step</span>
+                        <span>{{ $t('buttons.create') }}</span>
                     </inertia-link>
                     <confirm-link
                         v-else
                         :href="route('admin.test-cases.info.edit', testCase.id)"
-                        :confirm-text="'The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime.'"
+                        :confirm-text="$t('buttons.make-draft.modal.text')"
                         class="btn btn-primary"
                     >
                         <icon name="refresh" />
-                        <span>Make Test Case Draft</span>
+                        <span>{{ $t('buttons.make-draft.title') }}</span>
                     </confirm-link>
                 </div>
             </div>
@@ -32,13 +32,23 @@
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap text-center">Number</th>
-                            <th class="text-nowrap text-center">Method</th>
-                            <th class="text-nowrap text-center">Endpoint</th>
-                            <th class="text-nowrap text-center">Source</th>
-                            <th class="text-nowrap text-center">Target</th>
                             <th class="text-nowrap text-center">
-                                Expected Data
+                                {{ $t('table.header.number') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.method') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.endpoint') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.source') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.target') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.expected-data') }}
                             </th>
                             <th class="w-1"></th>
                         </tr>
@@ -74,7 +84,7 @@
                                             `modal-request-${testStep.id}`
                                         "
                                     >
-                                        Request
+                                        {{ $t('table.buttons.request') }}
                                     </button>
                                     <button
                                         type="button"
@@ -84,7 +94,7 @@
                                             `modal-response-${testStep.id}`
                                         "
                                     >
-                                        Response
+                                        {{ $t('table.buttons.response') }}
                                     </button>
                                 </div>
                             </td>
@@ -110,7 +120,7 @@
                                             "
                                             class="dropdown-item"
                                         >
-                                            Edit
+                                            {{ $t('table.menu.edit') }}
                                         </inertia-link>
                                     </li>
                                     <li>
@@ -122,18 +132,28 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="'Are you sure, you want to delete this test step?'"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
                                             class="dropdown-item"
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!testSteps.data.length">
-                            <td class="text-center" colspan="6">No Results</td>
+                            <td class="text-center" colspan="6">
+                                {{ $t('table.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -146,7 +166,7 @@
                 centered
                 hide-footer
                 hide-header-close
-                title="Request"
+                :title="$t('modals.request.title')"
                 :key="`modal-request-${testStep.id}`"
             >
                 <clipboard-json-to-curl :request="testStep.request">
@@ -157,7 +177,9 @@
                         v-if="testStep.request && testStep.request.uri"
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Endpoint</strong>
+                            <strong>{{
+                                $t('modals.request.table.endpoint')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -170,7 +192,9 @@
                         v-if="testStep.request && testStep.request.method"
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Method</strong>
+                            <strong>{{
+                                $t('modals.request.table.method')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -186,7 +210,9 @@
                         "
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Headers</strong>
+                            <strong>{{
+                                $t('modals.request.table.headers')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -207,7 +233,9 @@
                         "
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Body</strong>
+                            <strong>{{
+                                $t('modals.request.table.body')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -228,7 +256,7 @@
                 centered
                 hide-footer
                 hide-header-close
-                title="Response"
+                :title="$t('modals.response.title')"
                 :key="`modal-response-${testStep.id}`"
             >
                 <div class="border">
@@ -237,7 +265,9 @@
                         v-if="testStep.response && testStep.response.status"
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Status</strong>
+                            <strong>{{
+                                $t('modals.response.table.status')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -253,7 +283,9 @@
                         "
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Headers</strong>
+                            <strong>{{
+                                $t('modals.response.table.status')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -274,7 +306,9 @@
                         "
                     >
                         <div class="w-25 px-4 py-2 border">
-                            <strong>Body</strong>
+                            <strong>{{
+                                $t('modals.response.table.status')
+                            }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
                             <div class="mb-0 p-0">
@@ -297,8 +331,10 @@
 import Layout from '@/layouts/test-cases/main';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Steps',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -315,3 +351,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/test-steps/index.json"></i18n>

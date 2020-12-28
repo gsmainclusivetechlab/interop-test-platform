@@ -1,0 +1,119 @@
+{
+    "en-GB": {
+        "card": {
+            "title": "Test steps"
+        },
+        "table": {
+            "header": {
+                "number": "Number",
+                "method": "Method",
+                "endpoint": "Endpoint",
+                "source": "Source",
+                "target": "Target",
+                "expected-data": "Expected Data"
+            },
+            "buttons": {
+                "request": "Request",
+                "response": "Response"
+            },
+            "menu": {
+                "edit": "Edit",
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure, you want to delete this test step?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        },
+        "modals": {
+            "request": {
+                "title": "Request",
+                "table": {
+                    "endpoint": "Endpoint",
+                    "method": "Method",
+                    "headers": "Headers",
+                    "body": "Body"
+                }
+            },
+            "response": {
+                "title": "Response",
+                "table": {
+                    "status": "Status",
+                    "headers": "Headers",
+                    "body": "Body"
+                }
+            }
+        },
+        "buttons": {
+            "create": "Create Test Step",
+            "make-draft": {
+                "title": "Make Test Case Draft",
+                "modal": {
+                    "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
+                }
+            }
+        }
+    },
+    "en-US": {},
+    "ru-RU": {
+        "card": {
+            "title": "Test steps"
+        },
+        "table": {
+            "header": {
+                "number": "Number",
+                "method": "Method",
+                "endpoint": "Endpoint",
+                "source": "Source",
+                "target": "Target",
+                "expected-data": "Expected Data"
+            },
+            "buttons": {
+                "request": "Request",
+                "response": "Response"
+            },
+            "menu": {
+                "edit": "Edit",
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure, you want to delete this test step?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        },
+        "modals": {
+            "request": {
+                "title": "Request",
+                "table": {
+                    "endpoint": "Endpoint",
+                    "method": "Method",
+                    "headers": "Headers",
+                    "body": "Body"
+                }
+            },
+            "response": {
+                "title": "Response",
+                "table": {
+                    "status": "Status",
+                    "headers": "Headers",
+                    "body": "Body"
+                }
+            }
+        },
+        "buttons": {
+            "create": "Create Test Step",
+            "make-draft": {
+                "title": "Make Test Case Draft",
+                "modal": {
+                    "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
+                }
+            }
+        }
+    }
+}

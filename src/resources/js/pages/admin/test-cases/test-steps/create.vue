@@ -532,8 +532,10 @@ import Layout from '@/layouts/test-cases/main';
 import JsonEditorBlock from '@/components/json-editor-block';
 
 export default {
-    metaInfo: {
-        title: 'Test Step Create',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -680,3 +682,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/index.json"></i18n>
