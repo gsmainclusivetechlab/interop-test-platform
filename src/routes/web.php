@@ -22,6 +22,7 @@ Route::name('legal.')
         );
     });
 Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
+Route::post('/locale', 'LocaleController')->name('locale');
 
 /**
  * Groups Routes
