@@ -2,8 +2,7 @@
     "private": true,
     "scripts": {
         "lint": "npx prettier . --write",
-        "precise-commits": "npx precise-commits",
-        "precommit": "npm run precise-commits",
+        "pre-commit": "npx lint-staged",
         "build": "npm run dev:all -- build",
         "docker-base": "docker-compose -f docker-compose.yml",
         "prepare:dev:node": "docker cp \"$(docker-compose -f docker-compose.yml -f compose/webpack.yml ps -q webpack):/usr/src/app/node_modules\" \"src/node_modules\"",
@@ -27,9 +26,9 @@
         "certbot": "ENV_FILE=$(pwd)/.env docker-compose run --rm --entrypoint ' sh -c \"rm -rf /etc/letsencrypt/live/${PROJECT_DOMAIN} || true && certbot certonly --webroot -w /var/www/certbot -d ${PROJECT_DOMAIN} --register-unsafely-without-email --agree-tos --non-interactive \" ' certbot && docker-compose exec -u root app sh -c 'nginx -s reload'"
     },
     "devDependencies": {
-        "@prettier/plugin-php": "^0.14.2",
-        "husky": "^4.3.0",
-        "precise-commits": "^1.0.2",
-        "prettier": "^2.0.5"
+        "@prettier/plugin-php": "^0.16.1",
+        "husky": "^4.3.6",
+        "lint-staged": "^10.5.3",
+        "prettier": "^2.2.1"
     }
 }

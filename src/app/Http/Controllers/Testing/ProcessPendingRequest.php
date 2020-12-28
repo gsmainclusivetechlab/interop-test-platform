@@ -6,10 +6,12 @@ use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
 use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
+use App\Models\Certificate;
 use App\Models\Session;
 use App\Models\TestResult;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use Storage;
 
 class ProcessPendingRequest
 {
@@ -56,37 +58,9 @@ class ProcessPendingRequest
      */
     public function __invoke()
     {
-        $response = null;
-        $options = [];
-        if ($this->simulateRequest) {
-            $response = $this->testResult->testStep->response->withSubstitutions(
-                $this->session->environments()
-            );
+        $options = $this->getRequestOptions();
 
-            $response = new Response(
-                $response->status(),
-                $response->headers(),
-                $response->body()
-            );
-        }
-
-        $targetComponent = $this->session
-            ->components()
-            ->find($this->testResult->testStep->target_id);
-
-        if ($targetComponent && $targetComponent->pivot->use_encryption) {
-//            $uri = $this->request->getUri()->withScheme('https');
-//            $this->request = $this->request->withUri($uri);
-
-            $options = [
-//                'verify' => $targetComponent->pivot->certificate->getFullPath(),
-//                'verify' => false,
-//                'cert' => ['/var/www/html/user.crt', 'pass'],
-//                'ssl_key' => ['/var/www/html/user.key', 'pass']
-            ];
-        }
-
-        return (new PendingRequest($response))
+        return (new PendingRequest($this->getResponse()))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
             ->transfer($this->request, $options)
@@ -95,5 +69,48 @@ class ProcessPendingRequest
             )
             ->otherwise(new SendingRejectedHandler($this->testResult))
             ->wait();
+    }
+
+    protected function getRequestOptions(): array
+    {
+        $options = [];
+        $targetComponent = $this->session
+            ->components()
+            ->find($this->testResult->testStep->target_id);
+
+        if ($targetComponent && $targetComponent->pivot->use_encryption) {
+            /** @var Certificate $certificate */
+            $certificate = $targetComponent->pivot->certificate;
+            $this->request = $this->request->withUri(
+                $this->request->getUri()->withScheme('https')
+            );
+
+            $options = [
+                'verify' => Storage::path($certificate->ca_crt_path),
+                'cert' => [Storage::path($certificate->client_crt_path), $certificate->passphrase],
+                'ssl_key' => [Storage::path($certificate->client_key_path), $certificate->passphrase]
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return Response|null
+     */
+    protected function getResponse()
+    {
+        $response = null;
+        if ($this->simulateRequest) {
+            $response = $this->testResult->testStep->response;
+
+            $response = new Response(
+                $response->status(),
+                $response->headers(),
+                $response->body()
+            );
+        }
+
+        return $response;
     }
 }

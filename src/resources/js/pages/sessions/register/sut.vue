@@ -11,7 +11,7 @@
                         <selectize
                             v-model="selectedComponents"
                             :class="{
-                                'is-invalid': $page.errors.components,
+                                'is-invalid': $page.props.errors.components,
                             }"
                             :options="suts.data"
                             keyBy="id"
@@ -24,10 +24,10 @@
                             :disabled="selectedSut"
                         />
                         <span
-                            v-if="$page.errors.components"
+                            v-if="$page.props.errors.components"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors.components }}
+                            {{ $page.props.errors.components }}
                         </span>
                     </div>
                     <template v-for="(sut, i) in suts.data" v-if="form.components[sut.id]">
@@ -37,15 +37,15 @@
                                 v-model="componentsData.base_url[sut.id]"
                                 :class="{
                                     'is-invalid':
-                                        $page.errors[`components.${sut.id}.base_url`],
+                                        $page.props.errors[`components.${sut.id}.base_url`],
                                 }"
                                 class="form-control"
                             />
                             <span
-                                v-if="$page.errors[`components.${sut.id}.base_url`]"
+                                v-if="$page.props.errors[`components.${sut.id}.base_url`]"
                                 class="invalid-feedback"
                             >
-                                {{ $page.errors[`components.${sut.id}.base_url`] }}
+                                {{ $page.props.errors[`components.${sut.id}.base_url`] }}
                             </span>
                         </div>
                         <div class="mb-3">
@@ -58,49 +58,115 @@
                                 <span class="form-check-label">Use Encryption</span>
                             </label>
                             <span
-                                v-if="$page.errors[`components.${sut.id}.use_encryption`]"
+                                v-if="$page.props.errors[`components.${sut.id}.use_encryption`]"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors[`components.${sut.id}.use_encryption`] }}
+                                    {{ $page.props.errors[`components.${sut.id}.use_encryption`] }}
                                 </strong>
                             </span>
                         </div>
-                        <div class="mb-3" v-if="componentsData.use_encryption[sut.id]">
-                            <label class="form-label">Certificate</label>
-                            <selectize
-                                v-model="componentsData.certificate_id[sut.id]"
-                                class="form-select mb-3"
-                                placeholder="Select group certificate..."
-                                label="name"
-                                :keys="['name']"
-                                :options="groupCertificatesList"
-                                :createItem="false"
-                                :searchFn="searchGroupCertificates"
-                                :class="{
-                                    'is-invalid': $page.errors[`components.${sut.id}.certificate_id`],
-                                }"
-                                v-if="hasGroupCertificates && !componentsData.certificate[sut.id]"
-                            />
-                            <div class="hr-text" v-if="hasGroupCertificates && !componentsData.certificate[sut.id] && !componentsData.certificate_id[sut.id]">or</div>
-                            <b-form-file
-                                v-model="componentsData.certificate[sut.id]"
-                                v-if="!componentsData.certificate_id[sut.id]"
-                                placeholder="Choose file..."
-                                :class="{
-                                    'is-invalid': $page.errors[`components.${sut.id}.certificate`],
-                                }"
-                            />
-                            <span
-                                v-if="$page.errors[`components.${sut.id}.certificate`] || $page.errors[`components.${sut.id}.certificate_id`]"
-                                class="invalid-feedback"
-                            >
-                                <strong>
-                                    {{ $page.errors[`components.${sut.id}.certificate`]
-                                        ? $page.errors[`components.${sut.id}.certificate`]
-                                        : $page.errors[`components.${sut.id}.certificate_id`] }}
-                                </strong>
-                            </span>
+                        <div v-if="componentsData.use_encryption[sut.id]">
+                            <div v-if="showGroupCertificates(sut)">
+                                <label class="form-label">Certificate</label>
+                                <selectize
+                                    v-model="componentsData.certificate_id[sut.id]"
+                                    class="form-select"
+                                    placeholder="Select group certificate..."
+                                    label="name"
+                                    :keys="['name']"
+                                    :options="groupCertificatesList"
+                                    :createItem="false"
+                                    :searchFn="searchGroupCertificates"
+                                    :class="{
+                                        'is-invalid': $page.errors[`components.${sut.id}.certificate_id`],
+                                    }"
+                                />
+                                <span
+                                    v-if="$page.errors[`components.${sut.id}.certificate_id`]"
+                                    class="invalid-feedback"
+                                >
+                                    <strong>
+                                        {{ $page.errors[`components.${sut.id}.certificate_id`] }}
+                                    </strong>
+                                </span>
+                            </div>
+                            <div class="hr-text" v-if="showGroupCertificates(sut) && !componentsData.certificate_id[sut.id]">or</div>
+                            <template v-if="!componentsData.certificate_id[sut.id]">
+                                <div class="mb-3">
+                                    <label class="form-label">CA certificate</label>
+                                    <b-form-file
+                                        v-model="componentsData.ca_crt[sut.id]"
+                                        placeholder="Choose file..."
+                                        :class="{
+                                            'is-invalid': $page.errors[`components.${sut.id}.ca_crt`],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="$page.errors[`components.${sut.id}.ca_crt`]"
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{ $page.errors[`components.${sut.id}.ca_crt`] }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Client certificate</label>
+                                    <b-form-file
+                                        v-model="componentsData.client_crt[sut.id]"
+                                        placeholder="Choose file..."
+                                        :class="{
+                                            'is-invalid': $page.errors[`components.${sut.id}.client_crt`],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="$page.errors[`components.${sut.id}.client_crt`]"
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{ $page.errors[`components.${sut.id}.client_crt`] }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Client key</label>
+                                    <b-form-file
+                                        v-model="componentsData.client_key[sut.id]"
+                                        placeholder="Choose file..."
+                                        :class="{
+                                            'is-invalid': $page.errors[`components.${sut.id}.client_key`],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="$page.errors[`components.${sut.id}.client_key`]"
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{ $page.errors[`components.${sut.id}.client_key`] }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pass phrase</label>
+                                    <input
+                                        v-model="componentsData.passphrase[sut.id]"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.errors[`components.${sut.id}.passphrase`],
+                                        }"
+                                        class="form-control"
+                                    />
+                                    <span
+                                        v-if="$page.errors[`components.${sut.id}.passphrase`]"
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{ $page.errors[`components.${sut.id}.passphrase`] }}
+                                        </strong>
+                                    </span>
+                                </div>
+                            </template>
                         </div>
                     </template>
                 </div>
@@ -108,7 +174,7 @@
             <div class="d-flex justify-content-between">
                 <inertia-link
                     v-if="
-                        $page.app.available_session_modes_count > 1 ||
+                        $page.props.available_session_modes_count > 1 ||
                         isCompliance ||
                         session.withQuestions
                     "
@@ -174,7 +240,10 @@ export default {
                 base_url: collect(sessionData).mapWithKeys((s) => [s.id, s.base_url]).all(),
                 use_encryption: collect(sessionData).mapWithKeys((s) => [s.id, s.use_encryption]).all(),
                 certificate_id: collect(sessionData).mapWithKeys((s) => [s.id, s.certificate_id]).all(),
-                certificate: [],
+                ca_crt: [],
+                client_crt: [],
+                client_key: [],
+                passphrase: [],
             },
             selectedComponents:
                 this.session && this.session.sut
@@ -210,7 +279,10 @@ export default {
                         base_url: c.base_url[c.id],
                         use_encryption: c.use_encryption[c.id],
                         certificate_id: c.certificate_id[c.id] ? c.certificate_id[c.id].id : null,
-                        certificate: c.certificate[c.id]
+                        ca_crt: c.ca_crt[c.id],
+                        client_crt: c.client_crt[c.id],
+                        client_key: c.client_key[c.id],
+                        passphrase: c.passphrase[c.id],
                     };
                 });
             },
@@ -222,7 +294,10 @@ export default {
                     c.base_url = values.base_url[c.id]
                     c.use_encryption = values.use_encryption[c.id]
                     c.certificate_id = values.certificate_id[c.id] ? values.certificate_id[c.id].id : null
-                    c.certificate = values.certificate[c.id]
+                    c.ca_crt = values.ca_crt[c.id]
+                    c.client_crt = values.client_crt[c.id]
+                    c.client_key = values.client_key[c.id]
+                    c.passphrase = values.passphrase[c.id]
                 });
             }
         }
@@ -231,9 +306,21 @@ export default {
         submit() {
             this.sending = true;
 
-            this.$inertia
-                .post(route('sessions.register.sut.store'), this.jsonToFormData(this.form))
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.sut.store'),
+                this.jsonToFormData(this.form),
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
+        },
+        showGroupCertificates(sut) {
+            return this.hasGroupCertificates
+                && !this.componentsData.ca_crt[sut.id]
+                && !this.componentsData.client_crt[sut.id]
+                && !this.componentsData.client_key[sut.id];
         },
         loadGroupCertificateList(query = '') {
             axios

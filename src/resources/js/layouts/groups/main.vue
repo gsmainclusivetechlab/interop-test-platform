@@ -101,7 +101,7 @@
                                             ),
                                         }"
                                     >
-                                        CA Certificates
+                                        Certificates
                                     </inertia-link>
                                 </li>
                             </ul>

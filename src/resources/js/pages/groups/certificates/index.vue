@@ -9,7 +9,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        Upload Certificate
+                        Upload Certificates
                     </inertia-link>
                 </div>
             </div>

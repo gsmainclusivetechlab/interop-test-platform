@@ -17,7 +17,11 @@ class CreateCertificatesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('group_id')->nullable();
             $table->string('name');
-            $table->string('path');
+            $table->string('ca_md5');
+            $table->string('ca_crt_path');
+            $table->string('client_crt_path');
+            $table->string('client_key_path');
+            $table->string('passphrase')->nullable();
             $table->timestamp('created_at')->nullable();
         });
 

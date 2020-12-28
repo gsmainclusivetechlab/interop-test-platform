@@ -7,93 +7,104 @@
                     <label class="form-label">First name</label>
                     <input
                         v-model="form.first_name"
-                        :class="{ 'is-invalid': $page.errors.first_name }"
+                        :class="{ 'is-invalid': $page.props.errors.first_name }"
                         type="text"
                         class="form-control"
                         placeholder="e.g., John"
                         name="first_name"
                     />
                     <span
-                        v-if="$page.errors.first_name"
+                        v-if="$page.props.errors.first_name"
                         class="invalid-feedback"
                     >
-                        {{ $page.errors.first_name }}
+                        {{ $page.props.errors.first_name }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Last name</label>
                     <input
                         v-model="form.last_name"
-                        :class="{ 'is-invalid': $page.errors.last_name }"
+                        :class="{ 'is-invalid': $page.props.errors.last_name }"
                         type="text"
                         class="form-control"
                         placeholder="e.g., Doe"
                         name="last_name"
                     />
                     <span
-                        v-if="$page.errors.last_name"
+                        v-if="$page.props.errors.last_name"
                         class="invalid-feedback"
                     >
-                        {{ $page.errors.last_name }}
+                        {{ $page.props.errors.last_name }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email address</label>
                     <input
                         v-model="form.email"
-                        :class="{ 'is-invalid': $page.errors.email }"
+                        :class="{ 'is-invalid': $page.props.errors.email }"
                         type="email"
                         class="form-control"
                         placeholder="e.g., john.doe@email.com"
                         name="email"
                     />
-                    <span v-if="$page.errors.email" class="invalid-feedback">
-                        {{ $page.errors.email }}
+                    <span
+                        v-if="$page.props.errors.email"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.email }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Company</label>
                     <input
                         v-model="form.company"
-                        :class="{ 'is-invalid': $page.errors.company }"
+                        :class="{ 'is-invalid': $page.props.errors.company }"
                         type="text"
                         class="form-control"
                         placeholder="e.g., GSMA"
                         name="company"
                     />
-                    <span v-if="$page.errors.company" class="invalid-feedback">
-                        {{ $page.errors.company }}
+                    <span
+                        v-if="$page.props.errors.company"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.company }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Invitation Code</label>
                     <input
                         v-model="form.invitation_code"
-                        :class="{ 'is-invalid': $page.errors.invitation_code }"
+                        :class="{
+                            'is-invalid': $page.props.errors.invitation_code,
+                        }"
                         type="text"
                         class="form-control"
                         placeholder="e.g., gdI2EWG3hjHDG6d"
                         name="invitation_code"
                     />
                     <span
-                        v-if="$page.errors.invitation_code"
+                        v-if="$page.props.errors.invitation_code"
                         class="invalid-feedback"
                     >
-                        {{ $page.errors.invitation_code }}
+                        {{ $page.props.errors.invitation_code }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
                     <input
                         v-model="form.password"
-                        :class="{ 'is-invalid': $page.errors.password }"
+                        :class="{ 'is-invalid': $page.props.errors.password }"
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
                         name="password"
                     />
-                    <span v-if="$page.errors.password" class="invalid-feedback">
-                        {{ $page.errors.password }}
+                    <span
+                        v-if="$page.props.errors.password"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.password }}
                     </span>
                 </div>
                 <div class="mb-3">
@@ -101,7 +112,8 @@
                     <input
                         v-model="form.password_confirmation"
                         :class="{
-                            'is-invalid': $page.errors.password_confirmation,
+                            'is-invalid':
+                                $page.props.errors.password_confirmation,
                         }"
                         type="password"
                         class="form-control"
@@ -109,15 +121,15 @@
                         name="password_confirmation"
                     />
                     <span
-                        v-if="$page.errors.password_confirmation"
+                        v-if="$page.props.errors.password_confirmation"
                         class="invalid-feedback"
                     >
-                        {{ $page.errors.password_confirmation }}
+                        {{ $page.props.errors.password_confirmation }}
                     </span>
                 </div>
                 <div class="mb-3">
                     <label
-                        :class="{ 'is-invalid': $page.errors.terms }"
+                        :class="{ 'is-invalid': $page.props.errors.terms }"
                         class="form-check"
                     >
                         <input
@@ -135,8 +147,11 @@
                             >.
                         </span>
                     </label>
-                    <span v-if="$page.errors.terms" class="invalid-feedback">
-                        {{ $page.errors.terms }}
+                    <span
+                        v-if="$page.props.errors.terms"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.terms }}
                     </span>
                 </div>
                 <div class="form-footer">
@@ -191,9 +206,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('register'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('register'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

@@ -18,7 +18,7 @@
                 <div class="card-options">
                     <inertia-link
                         :href="route('admin.groups.create')"
-                        v-if="$page.auth.user.can.groups.create"
+                        v-if="$page.props.auth.user.can.groups.create"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />

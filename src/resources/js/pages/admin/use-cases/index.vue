@@ -18,7 +18,7 @@
                 <div class="card-options">
                     <inertia-link
                         :href="route('admin.use-cases.create')"
-                        v-if="$page.auth.user.can.use_cases.create"
+                        v-if="$page.props.auth.user.can.use_cases.create"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
@@ -38,16 +38,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="useCase in useCases.data">
+                        <tr
+                            v-for="(useCase, i) in useCases.data"
+                            :key="`use-case-${i}`"
+                        >
                             <td class="text-break">
                                 {{ useCase.name }}
                             </td>
                             <td>
-                                {{
-                                    useCase.testCases
-                                        ? useCase.testCases.length
-                                        : 0
-                                }}
+                                {{ useCase.testCasesCount }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

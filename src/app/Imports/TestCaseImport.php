@@ -52,11 +52,11 @@ class TestCaseImport implements Importable
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
-                $testCase
-                    ->components()
-                    ->attach(
-                        Component::whereIn('name', $componentRows)->pluck('id')
-                    );
+                $testCase->components()->attach(
+                    Component::whereIn('name', $componentRows)
+                        ->orWhereIn('slug', $componentRows)
+                        ->pluck('id')
+                );
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
@@ -72,19 +72,29 @@ class TestCaseImport implements Importable
                                 TestStep::make()->getFillable()
                             )
                         );
+                    $testStep->request = $this->checkHeaders(
+                        Arr::get($testStepRow, 'request')
+                    );
+                    $testStep->response = $this->checkHeaders(
+                        Arr::get($testStepRow, 'response')
+                    );
                     $testStep->setAttribute(
                         'source_id',
                         Component::where(
                             'name',
                             Arr::get($testStepRow, 'source')
-                        )->value('id')
+                        )
+                            ->orWhere('slug', Arr::get($testStepRow, 'source'))
+                            ->value('id')
                     );
                     $testStep->setAttribute(
                         'target_id',
                         Component::where(
                             'name',
                             Arr::get($testStepRow, 'target')
-                        )->value('id')
+                        )
+                            ->orWhere('slug', Arr::get($testStepRow, 'target'))
+                            ->value('id')
                     );
                     $testStep->setAttribute(
                         'api_spec_id',
@@ -121,6 +131,22 @@ class TestCaseImport implements Importable
 
             return $testCase;
         });
+    }
+
+    /**
+     * @param array $input
+     * @return array
+     */
+    protected function checkHeaders($input)
+    {
+        if (
+            Arr::exists($input, 'headers') &&
+            (!is_array($input['headers']) || empty($input['headers']))
+        ) {
+            $input = Arr::except($input, 'headers');
+        }
+
+        return $input;
     }
 
     /**
