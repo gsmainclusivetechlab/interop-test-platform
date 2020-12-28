@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "card": {
             "title": "Test steps"
         },
@@ -57,8 +57,8 @@
             }
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "card": {
             "title": "Тестовые шаги"
         },

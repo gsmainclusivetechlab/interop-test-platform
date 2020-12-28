@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "card": {
             "title": "Edit"
         },
@@ -34,8 +34,8 @@
             "update": "Update"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "card": {
             "title": "Редактировать"
         },

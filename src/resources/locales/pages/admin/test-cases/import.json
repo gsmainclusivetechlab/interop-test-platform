@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "title": "Import test case"
         },
@@ -15,8 +15,8 @@
             "import": "Import"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "title": "Импорт тестового образца"
         },

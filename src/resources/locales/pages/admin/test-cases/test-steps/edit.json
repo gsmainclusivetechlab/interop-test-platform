@@ -55,7 +55,7 @@
             }
         },
         "buttons": {
-            "create": "Create",
+            "update": "Update",
             "cancel": "Cancel"
         }
     },
@@ -116,7 +116,7 @@
             }
         },
         "buttons": {
-            "create": "Создать",
+            "update": "Обновить",
             "cancel": "Отмена"
         }
     }

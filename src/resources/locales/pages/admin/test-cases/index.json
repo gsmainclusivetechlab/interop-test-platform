@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "title": "Test Cases"
         },
@@ -39,8 +39,8 @@
             "import": "Import Test Case"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "title": "Тестовые Образцы"
         },

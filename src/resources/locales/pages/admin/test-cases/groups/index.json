@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "card": {
             "title": "Groups"
         },
@@ -32,8 +32,8 @@
             "add": "Add"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "card": {
             "title": "Группы"
         },

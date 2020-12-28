@@ -1,13 +1,13 @@
 {
-    "en-GB": {
+    "en": {
         "comment": ["Showing", "to", "of", "entry | entries"],
         "buttons": {
             "prev": "Prev",
             "next": "Next"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "comment": ["Показано с", "по", "из", "записи | записей"],
         "buttons": {
             "prev": "Назад",

@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "menu": {
             "users": "Users",
             "groups": "Groups",
@@ -28,8 +28,8 @@
             "new-session": "New Session"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "menu": {
             "users": "Пользователи",
             "groups": "Группы",

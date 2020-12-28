@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "title": "Tutorials"
         },
@@ -103,8 +103,8 @@
             "reset-demo": "Reset Demo"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "title": "Руководство"
         },

@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "card": {
             "title": "Versions"
         },
@@ -34,8 +34,8 @@
             "import": "Import New Version"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "card": {
             "title": "Версии"
         },

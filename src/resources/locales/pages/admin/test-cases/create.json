@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "title": "Test Case Create"
         },
@@ -34,8 +34,8 @@
             "create": "Create"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "title": "Создать Тестовый Образец"
         },

@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "title": "Latest sessions"
         },
@@ -14,8 +14,8 @@
             "no-modes": "No test modes are enabled in the environment"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "title": "Последние сессии"
         },

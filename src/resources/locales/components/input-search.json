@@ -1,9 +1,9 @@
 {
-    "en-GB": {
+    "en": {
         "placeholder": "Search..."
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "placeholder": "Поиск..."
     }
 }

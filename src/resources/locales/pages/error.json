@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "title": "Oops...You just found an error page"
         },
@@ -45,8 +45,8 @@
             "home": "Take me home"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "title": "Ой... Это страница ошибки"
         },

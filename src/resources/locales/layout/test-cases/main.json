@@ -1,5 +1,5 @@
 {
-    "en-GB": {
+    "en": {
         "breadcrumb": {
             "test-cases": "Test Cases",
             "info": "Info",
@@ -8,8 +8,8 @@
             "versions": "Versions"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "breadcrumb": {
             "test-cases": "Тестовые образцы",
             "info": "Информация",

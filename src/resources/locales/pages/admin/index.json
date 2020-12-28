@@ -1,11 +1,11 @@
 {
-    "en-GB": {
+    "en": {
         "page": {
             "pre-title": "Administration"
         }
     },
-    "en-US": {},
-    "ru-RU": {
+
+    "ru": {
         "page": {
             "pre-title": "Администрация"
         }
