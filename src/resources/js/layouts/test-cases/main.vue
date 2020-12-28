@@ -56,23 +56,19 @@ export default {
             type: Object,
             required: true,
         },
-        breadcrumbs: {
-            type: Array,
-            required: false,
-            default() {
-                return [
-                    {
-                        name: this.$t('breadcrumb.test-cases'),
-                        url: route('admin.test-cases.index'),
-                    },
-                    { name: this.testCase.name },
-                ];
-            },
-        },
     },
-    data() {
-        return {
-            navLinks: [
+    computed: {
+        breadcrumbs() {
+            return [
+                {
+                    name: this.$t('breadcrumb.test-cases'),
+                    url: route('admin.test-cases.index'),
+                },
+                { name: this.testCase.name },
+            ];
+        },
+        navLinks() {
+            return [
                 {
                     title: this.$t('breadcrumb.info'),
                     route: 'admin.test-cases.info.show',
@@ -102,8 +98,8 @@ export default {
                         'admin.test-cases.versions.index'
                     ),
                 },
-            ],
-        };
+            ];
+        },
     },
 };
 </script>
