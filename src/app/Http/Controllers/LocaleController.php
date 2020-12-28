@@ -21,8 +21,8 @@ class LocaleController extends Controller
             $user->update([
                 'locale' => $locale
             ]);
-            app()->setLocale($user->locale);
         }
+        app()->setLocale($user->locale);
 
         return redirect()->back();
     }
