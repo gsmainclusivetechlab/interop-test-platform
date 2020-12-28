@@ -459,7 +459,12 @@
                                     </b-collapse>
                                     <div
                                         class="d-flex"
-                                        v-if="testResult.request.body"
+                                        v-if="
+                                            testResult.request &&
+                                            collect(
+                                                testResult.request.body
+                                            ).count()
+                                        "
                                     >
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
@@ -479,7 +484,12 @@
                                     </div>
                                     <b-collapse
                                         :id="`request-body-${testResult.id}`"
-                                        v-if="testResult.request.body"
+                                        v-if="
+                                            testResult.request &&
+                                            collect(
+                                                testResult.request.body
+                                            ).count()
+                                        "
                                     >
                                         <div class="d-flex">
                                             <div
@@ -613,7 +623,12 @@
                                     </b-collapse>
                                     <div
                                         class="d-flex"
-                                        v-if="testResult.response.body"
+                                        v-if="
+                                            testResult.response &&
+                                            collect(
+                                                testResult.response.body
+                                            ).count()
+                                        "
                                     >
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
@@ -633,7 +648,12 @@
                                     </div>
                                     <b-collapse
                                         :id="`response-body-${testResult.id}`"
-                                        v-if="testResult.response.body"
+                                        v-if="
+                                            testResult.response &&
+                                            collect(
+                                                testResult.response.body
+                                            ).count()
+                                        "
                                     >
                                         <div class="d-flex">
                                             <div

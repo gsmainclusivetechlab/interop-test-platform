@@ -2,7 +2,7 @@
 
 namespace App\Testing\Tests;
 
-use App\Http\Client\Response;
+use App\Models\TestResult;
 use App\Models\TestScript;
 use App\Testing\TestCase;
 use Illuminate\Support\Facades\Validator;
@@ -12,10 +12,12 @@ use PHPUnit\Framework\AssertionFailedError;
 
 class ResponseScriptValidationTest extends TestCase
 {
+    use ScriptValidationTest;
+
     /**
-     * @var Response
+     * @var TestResult
      */
-    protected $response;
+    protected $testResult;
 
     /**
      * @var TestScript
@@ -23,12 +25,12 @@ class ResponseScriptValidationTest extends TestCase
     protected $testScript;
 
     /**
-     * @param Response $response
+     * @param TestResult $testResult
      * @param TestScript $testScript
      */
-    public function __construct(Response $response, TestScript $testScript)
+    public function __construct(TestResult $testResult, TestScript $testScript)
     {
-        $this->response = $response;
+        $this->testResult = $testResult;
         $this->testScript = $testScript;
     }
 
@@ -38,8 +40,8 @@ class ResponseScriptValidationTest extends TestCase
     public function test()
     {
         $validator = Validator::make(
-            $this->response->toArray(),
-            (array) $this->testScript->rules,
+            $this->testResult->response->toArray(),
+            $this->getExpected(),
             (array) $this->testScript->messages
         );
 
@@ -67,7 +69,7 @@ class ResponseScriptValidationTest extends TestCase
     {
         return tap([], function (&$actual) {
             $expected = $this->getExpected();
-            $data = $this->response->toArray();
+            $data = $this->testResult->response->toArray();
 
             foreach (array_keys($expected) as $attribute) {
                 $actual = array_merge(
@@ -76,13 +78,5 @@ class ResponseScriptValidationTest extends TestCase
                 );
             }
         });
-    }
-
-    /**
-     * @return array
-     */
-    public function getExpected(): array
-    {
-        return (array) $this->testScript->rules;
     }
 }

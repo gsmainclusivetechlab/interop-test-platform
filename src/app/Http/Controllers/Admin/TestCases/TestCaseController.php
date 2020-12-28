@@ -248,7 +248,7 @@ class TestCaseController extends Controller
 
         header('Content-Type: application/yaml');
         header(
-            "Content-Disposition: attachment; filename=\"{$fileName}\".yaml"
+            "Content-Disposition: attachment; filename=\"{$fileName}.yaml\""
         );
         header('Content-Length: ' . strlen($data));
 

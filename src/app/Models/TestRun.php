@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\HasUuid;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\DB;
  * @property Carbon $completed_at
  *
  * @property Session $session
+ * @property TestResult[]|Collection $testResults
  *
  * @property-read bool $successful
  */

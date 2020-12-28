@@ -6,6 +6,7 @@ use App\Http\Controllers\Testing\ProcessPendingRequest;
 use App\Http\Headers\TraceparentHeader;
 use App\Models\Session;
 use App\Models\TestCase;
+use App\Models\TestStep;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Bus\Queueable;
@@ -48,6 +49,7 @@ class ExecuteTestRunJob implements ShouldQueue
      */
     public function handle()
     {
+        /** @var TestStep $testStep */
         $testStep = $this->testCase->testSteps()->firstOrFail();
         $testRun = $this->session
             ->testRuns()
@@ -60,6 +62,7 @@ class ExecuteTestRunJob implements ShouldQueue
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $requestTemplate = $testStep->request->withSubstitutions(
+            $testRun->testResults,
             $this->session->environments()
         );
         $request = $requestTemplate
@@ -69,11 +72,13 @@ class ExecuteTestRunJob implements ShouldQueue
                 UriResolver::resolve(
                     new Uri(
                         ($uri = $this->session->getBaseUriOfComponent(
-                            $testStep->target
+                            $testStep->target,
+                            null,
+                            true
                         ))
                     ),
-                    new Uri($requestTemplate->path())
-                )
+                    new Uri($requestTemplate->urlForResolver())
+                )->withQuery($requestTemplate->query())
             );
 
         (new ProcessPendingRequest(

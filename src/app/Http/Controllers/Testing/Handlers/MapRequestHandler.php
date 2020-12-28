@@ -6,6 +6,7 @@ use App\Models\TestResult;
 use App\Models\TestSetup;
 use App\Http\Client\Request;
 use Psr\Http\Message\RequestInterface;
+use Str;
 
 class MapRequestHandler
 {
@@ -45,9 +46,18 @@ class MapRequestHandler
         }*/
 
         $testRequest = $testRequest->withSubstitutions(
+            $this->testResult->testRun->testResults,
             $this->testResult->session->environments()
         );
-        $this->testResult->update(['request' => $testRequest]);
+
+        $testRequestData = array_merge($data = $testRequest->toArray(), [
+            'uri' => Str::startsWith($data['uri'], 'http')
+                ? $data['uri']
+                : Str::start($data['uri'], '/'),
+            'path' => Str::start($data['path'], '/'),
+        ]);
+
+        $this->testResult->update(['request' => $testRequestData]);
 
         return $testRequest->toPsrRequest();
     }

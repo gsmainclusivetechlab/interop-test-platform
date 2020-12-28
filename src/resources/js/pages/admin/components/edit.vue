@@ -31,6 +31,16 @@
                                 </span>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label"> Slug </label>
+                                <input
+                                    name="name"
+                                    type="text"
+                                    class="form-control"
+                                    :value="component.slug"
+                                    readonly
+                                />
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label"> Base URL </label>
                                 <input
                                     name="name"
