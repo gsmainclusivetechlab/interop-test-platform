@@ -1,119 +1,123 @@
 {
     "en-GB": {
         "card": {
-            "title": "Test steps"
+            "title": "Create"
         },
-        "table": {
-            "header": {
-                "number": "Number",
-                "method": "Method",
-                "endpoint": "Endpoint",
-                "source": "Source",
-                "target": "Target",
-                "expected-data": "Expected Data"
+        "inputs": {
+            "method": {
+                "label": "Method",
+                "placeholder": "Select method"
             },
-            "buttons": {
-                "request": "Request",
-                "response": "Response"
+            "path": "Path",
+            "pattern": "Pattern",
+            "source": {
+                "label": "Source",
+                "placeholder": "Select source"
             },
-            "menu": {
-                "edit": "Edit",
-                "delete": {
-                    "title": "Delete",
+            "target": {
+                "label": "Target",
+                "placeholder": "Select target"
+            },
+            "api-spec": {
+                "label": "API specification",
+                "placeholder": "Select API specification"
+            },
+            "trigger": "Trigger",
+            "test-scripts": {
+                "request": "Test Request Scripts",
+                "response": "Test Response Scripts",
+                "form": {
+                    "inputs": {
+                        "name": "Name",
+                        "rules": "Rules"
+                    },
                     "modal": {
-                        "title": "Confirm delete",
-                        "text": "Are you sure, you want to delete this test step?"
+                        "title": "Are you sure?",
+                        "text": "This test scripts will be deleted."
+                    },
+                    "buttons": {
+                        "delete": "Delete",
+                        "add-script": "Add New Script"
                     }
                 }
             },
-            "no-results": "No Results"
-        },
-        "modals": {
             "request": {
-                "title": "Request",
-                "table": {
-                    "endpoint": "Endpoint",
-                    "method": "Method",
-                    "headers": "Headers",
-                    "body": "Body"
-                }
+                "headers": "Request Headers",
+                "body": "Request Body"
             },
             "response": {
-                "title": "Response",
-                "table": {
-                    "status": "Status",
-                    "headers": "Headers",
-                    "body": "Body"
+                "headers": "Response Headers",
+                "body": "Response Body",
+                "status": {
+                    "label": "Response Status",
+                    "placeholder": "Select status"
                 }
             }
         },
         "buttons": {
-            "create": "Create Test Step",
-            "make-draft": {
-                "title": "Make Test Case Draft",
-                "modal": {
-                    "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
-                }
-            }
+            "create": "Create",
+            "cancel": "Cancel"
         }
     },
     "en-US": {},
     "ru-RU": {
         "card": {
-            "title": "Test steps"
+            "title": "Создать"
         },
-        "table": {
-            "header": {
-                "number": "Number",
-                "method": "Method",
-                "endpoint": "Endpoint",
-                "source": "Source",
-                "target": "Target",
-                "expected-data": "Expected Data"
+        "inputs": {
+            "method": {
+                "label": "Метод",
+                "placeholder": "Выберите метод"
             },
-            "buttons": {
-                "request": "Request",
-                "response": "Response"
+            "path": "Путь",
+            "pattern": "Шаблон",
+            "source": {
+                "label": "Источник",
+                "placeholder": "Выберите источник"
             },
-            "menu": {
-                "edit": "Edit",
-                "delete": {
-                    "title": "Delete",
+            "target": {
+                "label": "Цель",
+                "placeholder": "Выберите цель"
+            },
+            "api-spec": {
+                "label": "API спецификации",
+                "placeholder": "Выберите API спецификации"
+            },
+            "trigger": "Триггер",
+            "test-scripts": {
+                "request": "Скрипты Тестового Запроса",
+                "response": "Скрипты Тестового Ответа",
+                "form": {
+                    "inputs": {
+                        "name": "Имя",
+                        "rules": "Правила"
+                    },
                     "modal": {
-                        "title": "Confirm delete",
-                        "text": "Are you sure, you want to delete this test step?"
+                        "title": "Вы уверены?",
+                        "text": "Этот скрипт будет удален."
+                    },
+                    "buttons": {
+                        "delete": "Удалить",
+                        "add-script": "Добавить Новый Скрипт"
                     }
                 }
             },
-            "no-results": "No Results"
-        },
-        "modals": {
             "request": {
-                "title": "Request",
-                "table": {
-                    "endpoint": "Endpoint",
-                    "method": "Method",
-                    "headers": "Headers",
-                    "body": "Body"
-                }
+                "headers": "Заголовки Запроса",
+                "body": "Тело Запроса"
             },
             "response": {
-                "title": "Response",
-                "table": {
-                    "status": "Status",
-                    "headers": "Headers",
-                    "body": "Body"
+                "headers": "Заголовки Ответа",
+                "body": "Тело Ответа",
+                "status": {
+                    "label": "Статус Ответа",
+                    "placeholder": "Выберите статус"
                 }
             }
         },
         "buttons": {
-            "create": "Create Test Step",
-            "make-draft": {
-                "title": "Make Test Case Draft",
-                "modal": {
-                    "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
-                }
-            }
+            "create": "Создать",
+            "cancel": "Отмена"
         }
     }
 }
