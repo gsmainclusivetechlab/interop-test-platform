@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sleep 30
+
 NEW_CA_CLIENTS_CERTS=/var/www/html/storage/certificates/certificates.pem
 NEW_CA_CLIENTS_CERTS_FAILED=/var/www/html/storage/certificates/NGINX-ERROR
 NGINX_CA_CLIENTS_CERTS=/etc/nginx/ssl/client-certs/CA.crt
