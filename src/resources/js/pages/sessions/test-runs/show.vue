@@ -82,7 +82,8 @@
                         <div class="col-3 pr-0">
                             <ul class="list-group mb-0">
                                 <template
-                                    v-for="testStep in testCase.testSteps.data"
+                                    v-for="(testStep, i) in testCase.testSteps
+                                        .data"
                                 >
                                     <li
                                         v-if="
@@ -102,6 +103,7 @@
                                                 testStep.id,
                                         }"
                                         class="list-group-item p-0 rounded-0 border-0"
+                                        :key="`step-${i}`"
                                     >
                                         <inertia-link
                                             :href="
@@ -184,6 +186,7 @@
                                     <li
                                         v-else
                                         class="list-group-item px-4 rounded-0 border-0 disabled"
+                                        :key="`step-${i}`"
                                     >
                                         <div class="text-truncate">
                                             <b>
@@ -272,8 +275,9 @@
                                 <ul class="m-0 p-0">
                                     <li
                                         class="d-flex flex-wrap py-2"
-                                        v-for="testExecution in testResult
+                                        v-for="(testExecution, i) in testResult
                                             .testExecutions.data"
+                                        :key="`execution-${i}`"
                                     >
                                         <div class="d-flex align-items-center">
                                             <span
@@ -416,7 +420,10 @@
                                     </div>
                                     <div
                                         class="d-flex"
-                                        v-if="testResult.request.headers"
+                                        v-if="
+                                            testResult.request.headers !==
+                                            undefined
+                                        "
                                     >
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
@@ -436,7 +443,10 @@
                                     </div>
                                     <b-collapse
                                         :id="`request-headers-${testResult.id}`"
-                                        v-if="testResult.request.headers"
+                                        v-if="
+                                            testResult.request.headers !==
+                                            undefined
+                                        "
                                     >
                                         <div class="d-flex">
                                             <div
@@ -460,10 +470,8 @@
                                     <div
                                         class="d-flex"
                                         v-if="
-                                            testResult.request &&
-                                            collect(
-                                                testResult.request.body
-                                            ).count()
+                                            testResult.request.body !==
+                                            undefined
                                         "
                                     >
                                         <div
@@ -485,10 +493,8 @@
                                     <b-collapse
                                         :id="`request-body-${testResult.id}`"
                                         v-if="
-                                            testResult.request &&
-                                            collect(
-                                                testResult.request.body
-                                            ).count()
+                                            testResult.request.body !==
+                                            undefined
                                         "
                                     >
                                         <div class="d-flex">
@@ -580,7 +586,10 @@
                                     </div>
                                     <div
                                         class="d-flex"
-                                        v-if="testResult.response.headers"
+                                        v-if="
+                                            testResult.response.headers !==
+                                            undefined
+                                        "
                                     >
                                         <div
                                             class="w-25 px-4 py-2 border dropdown-toggle"
@@ -600,7 +609,10 @@
                                     </div>
                                     <b-collapse
                                         :id="`response-headers-${testResult.id}`"
-                                        v-if="testResult.response.headers"
+                                        v-if="
+                                            testResult.response.headers !==
+                                            undefined
+                                        "
                                     >
                                         <div class="d-flex">
                                             <div
@@ -624,10 +636,8 @@
                                     <div
                                         class="d-flex"
                                         v-if="
-                                            testResult.response &&
-                                            collect(
-                                                testResult.response.body
-                                            ).count()
+                                            testResult.response.body !==
+                                            undefined
                                         "
                                     >
                                         <div
@@ -649,10 +659,8 @@
                                     <b-collapse
                                         :id="`response-body-${testResult.id}`"
                                         v-if="
-                                            testResult.response &&
-                                            collect(
-                                                testResult.response.body
-                                            ).count()
+                                            testResult.response.body !==
+                                            undefined
                                         "
                                     >
                                         <div class="d-flex">

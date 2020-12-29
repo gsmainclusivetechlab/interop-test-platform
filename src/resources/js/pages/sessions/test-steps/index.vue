@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="testStep in testSteps.data">
+                        <tr v-for="(testStep, i) in testSteps.data" :key="i">
                             <td class="align-middle">
                                 {{ testStep.position }}
                             </td>
@@ -116,9 +116,8 @@
                                             class="d-flex"
                                             v-if="
                                                 testStep.request &&
-                                                collect(
-                                                    testStep.request.headers
-                                                ).count()
+                                                testStep.request.headers !==
+                                                    undefined
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -142,9 +141,8 @@
                                             class="d-flex"
                                             v-if="
                                                 testStep.request &&
-                                                collect(
-                                                    testStep.request.body
-                                                ).count()
+                                                testStep.request.body !==
+                                                    undefined
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -197,9 +195,8 @@
                                             class="d-flex"
                                             v-if="
                                                 testStep.response &&
-                                                collect(
-                                                    testStep.response.headers
-                                                ).count()
+                                                testStep.response.headers !==
+                                                    undefined
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -223,9 +220,8 @@
                                             class="d-flex"
                                             v-if="
                                                 testStep.response &&
-                                                collect(
-                                                    testStep.response.body
-                                                ).count()
+                                                testStep.response.body !==
+                                                    undefined
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
