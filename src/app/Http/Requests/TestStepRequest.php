@@ -34,7 +34,8 @@ class TestStepRequest extends FormRequest
             'method' => ['required', 'string', 'max:255'],
             'pattern' => ['required', 'string', 'max:255'],
             'trigger' => ['nullable', 'array'],
-            'request' => ['nullable', 'array'],
+            'request' => ['required', 'array'],
+            'request.uri' => ['required', 'string'],
             'response' => ['required', 'array'],
             'response.status' => ['required'],
             // test scripts
@@ -61,6 +62,7 @@ class TestStepRequest extends FormRequest
     {
         return [
             '*.required' => __('Field is required.'),
+            'request.uri.required' => __('Field is required.'),
             'response.status.required' => __('Field is required.'),
             'test.*.*.*.*.required' => __('Field is required.'),
             'test.*.*.*.name.max' => __(
@@ -177,7 +179,6 @@ class TestStepRequest extends FormRequest
     {
         $request = $this->input('request');
         $request['method'] = $this->input('method');
-        $request['uri'] = $this->input('path');
 
         return $this->checkHeaders($request);
     }

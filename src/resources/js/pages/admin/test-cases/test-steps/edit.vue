@@ -402,6 +402,25 @@
                             </div>
                         </b-collapse>
                     </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">Request URI</h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.props.errors['request.uri'],
+                            }"
+                            v-model="example.request.uri"
+                        />
+                        <span
+                            v-if="$page.props.errors['request.uri']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['request.uri'] }}
+                            </strong>
+                        </span>
+                    </div>
                     <div class="col-12 mb-3">
                         <button
                             type="button"
@@ -603,6 +622,7 @@ export default {
             },
             example: {
                 request: {
+                    uri: this.testStep.request.uri,
                     headers: this.testStep.request.headers,
                     body: this.testStep.request.body,
                 },
