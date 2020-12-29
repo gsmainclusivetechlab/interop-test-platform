@@ -83,6 +83,7 @@ class SessionSutRequest extends FormRequest
                     "components.{$id}.ca_crt" => __('CA certificate'),
                     "components.{$id}.client_crt" => __('Client certificate'),
                     "components.{$id}.client_key" => __('Client key'),
+                    "components.{$id}.passphrase" => __('Pass phrase'),
                 ];
             })
             ->merge([

@@ -5,8 +5,10 @@ namespace App\Models;
 use Artisan;
 use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -32,17 +34,26 @@ class Certificate extends Model
     const UPDATED_AT = null;
 
     /** @var string[] */
-    protected $fillable = ['group_id', 'name', 'ca_crt_path', 'client_crt_path', 'client_key_path', 'passphrase'];
+    protected $fillable = [
+        'group_id',
+        'name',
+        'ca_crt_path',
+        'client_crt_path',
+        'client_key_path',
+        'passphrase',
+    ];
 
     /** @var string[] */
     protected $casts = [
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
 
     protected static function booted(): void
     {
         static::saving(function (self $certificate) {
-            $certificate->ca_md5 = md5_file(Storage::path($certificate->ca_crt_path));
+            $certificate->ca_md5 = md5_file(
+                Storage::path($certificate->ca_crt_path)
+            );
         });
 
         static::saved(function (self $certificate) {
@@ -55,7 +66,7 @@ class Certificate extends Model
             Storage::delete([
                 $certificate->ca_crt_path,
                 $certificate->client_crt_path,
-                $certificate->client_key_path
+                $certificate->client_key_path,
             ]);
 
             if (!static::where('ca_md5', $certificate->ca_md5)->exists()) {
@@ -72,5 +83,28 @@ class Certificate extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function sessions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Session::class,
+            'session_components',
+            'certificate_id',
+            'session_id'
+        );
+    }
+
+    public static function hasGroupCertificates(): bool
+    {
+        return static::whereHas('group', function (Builder $query) {
+            $query->whereHas('users', function (Builder $query) {
+                $query->whereKey(
+                    auth()
+                        ->user()
+                        ->getAuthIdentifier()
+                );
+            });
+        })->exists();
     }
 }

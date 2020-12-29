@@ -405,7 +405,9 @@ export default {
         },
         componentsData: {
             deep: true,
-            handler: (values) => this.setForm(values),
+            handler: function (values) {
+                this.setForm(values);
+            },
         },
     },
     methods: {

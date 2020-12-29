@@ -30,13 +30,24 @@ class GenerateClientCA extends Command
      */
     public function handle()
     {
+        Certificate::whereDoesntHave('group')
+            ->whereDoesntHave('sessions')
+            ->each(function (Certificate $certificate) {
+                $certificate->delete();
+            });
+
         $pemPath = Storage::path('certificates/certificates.pem');
         $tmpPath = "{$pemPath}.tmp";
 
         File::delete([$pemPath, $tmpPath]);
 
-        Certificate::pluck('ca_crt_path', 'ca_md5')->each(function ($caPath) use ($tmpPath) {
-            File::append($tmpPath, trim(Storage::get($caPath), PHP_EOL) . PHP_EOL);
+        Certificate::pluck('ca_crt_path', 'ca_md5')->each(function (
+            $caPath
+        ) use ($tmpPath) {
+            File::append(
+                $tmpPath,
+                trim(Storage::get($caPath), PHP_EOL) . PHP_EOL
+            );
         });
 
         File::move($tmpPath, $pemPath);

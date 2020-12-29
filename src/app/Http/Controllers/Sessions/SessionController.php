@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Http\Exports\ComplianceSessionExport;
+use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
 use App\Http\Resources\{
     ComponentResource,
@@ -13,6 +14,7 @@ use App\Http\Resources\{
     UseCaseResource
 };
 use App\Models\{
+    Certificate,
     Component,
     GroupEnvironment,
     QuestionnaireSection,
@@ -165,6 +167,7 @@ class SessionController extends Controller
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource($session))->resolve(),
             'components' => ComponentResource::collection($session->components),
+            'hasGroupCertificates' => Certificate::hasGroupCertificates(),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) use (
@@ -292,51 +295,44 @@ class SessionController extends Controller
 
     /**
      * @param Session $session
-     * @param Request $request
+     * @param SessionRequest $request
      * @return RedirectResponse
      * @throws AuthorizationException
      * @throws Throwable
      */
-    public function update(Session $session, Request $request)
+    public function update(Session $session, SessionRequest $request)
     {
         $this->authorize('update', $session);
 
-        $urlRules = $session->components
-            ->mapWithKeys(function (Component $component) {
-                return [
-                    "components.{$component->id}.base_url" => [
-                        'required',
-                        'url',
-                        'max:255',
-                    ],
-                    "components.{$component->id}.use_encryption" => ['boolean']
-                ];
-            })
-            ->all();
-        $request->validate(
-            [
-                'name' => ['required', 'string', 'max:255'],
-                'description' => ['string', 'nullable'],
-                'group_environment_id' => [
-                    'nullable',
-                    'exists:group_environments,id',
-                ],
-                'environments' => ['nullable', 'array'],
-                'test_cases' => ['required', 'array', 'exists:test_cases,id'],
-            ] + $urlRules,
-            [],
-            $session->components
-                ->mapWithKeys(function (Component $component) {
-                    return [
-                        "component_base_urls.{$component->id}" => "{$component->name} URL",
-                    ];
-                })
-                ->all()
-        );
-
         try {
             $session = DB::transaction(function () use ($session, $request) {
-                $data = $request->input();
+                $data = $request->validated();
+                collect($request->get('certificates'))->each(function (
+                    $certificate,
+                    $componentId
+                ) use ($request, &$data) {
+                    $data['components'][$componentId][
+                        'certificate_id'
+                    ] = Certificate::create([
+                        'passphrase' => $certificate['passphrase'],
+                        'name' => $request
+                            ->file("certificates.{$componentId}.ca_crt")
+                            ->getClientOriginalName(),
+                        'ca_crt_path' => Certificate::storeFile(
+                            $request,
+                            "certificates.{$componentId}.ca_crt"
+                        ),
+                        'client_crt_path' => Certificate::storeFile(
+                            $request,
+                            "certificates.{$componentId}.client_crt"
+                        ),
+                        'client_key_path' => Certificate::storeFile(
+                            $request,
+                            "certificates.{$componentId}.client_key"
+                        ),
+                    ])->id;
+                });
+
                 $session->update(
                     $session->isComplianceSession()
                         ? Arr::only($data, [
@@ -347,19 +343,15 @@ class SessionController extends Controller
                 );
 
                 $session->components->each(function (Component $component) use (
-                    $request,
+                    $data,
                     $session
                 ) {
                     $session
                         ->components()
-                        ->updateExistingPivot($id = $component->id, [
-                            'base_url' => $request->input(
-                                "components.{$id}.base_url"
-                            ),
-                            'use_encryption' => $request->input(
-                                "components.{$id}.use_encryption"
-                            ),
-                        ]);
+                        ->updateExistingPivot(
+                            $component->id,
+                            $data['components'][$component->id]
+                        );
                 });
 
                 if (!$session->isComplianceSession()) {
