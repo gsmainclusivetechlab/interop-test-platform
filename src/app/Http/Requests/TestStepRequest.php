@@ -62,6 +62,7 @@ class TestStepRequest extends FormRequest
     {
         return [
             '*.required' => __('Field is required.'),
+            'request.uri.required' => __('Field is required.'),
             'response.status.required' => __('Field is required.'),
             'test.*.*.*.*.required' => __('Field is required.'),
             'test.*.*.*.name.max' => __(
