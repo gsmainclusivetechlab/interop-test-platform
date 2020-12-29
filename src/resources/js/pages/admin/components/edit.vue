@@ -184,15 +184,13 @@ export default {
     data() {
         return {
             sending: false,
-            connections: this.component.connections
-                ? this.component.connections.data
-                : [],
+            connections: this.component?.connections?.data ?? [],
             connectionsList: [],
             form: {
-                name: this.component.name,
-                base_url: this.component.base_url,
-                description: this.component.description,
-                sutable: this.component.sutable,
+                name: this.component?.name,
+                base_url: this.component?.base_url ?? null,
+                description: this.component?.description ?? null,
+                sutable: this.component?.sutable ?? false,
                 connections_id: null,
             },
         };
