@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Admin\TestCases;
 
 use App\Exports\TestCaseExport;
-use App\Http\Resources\{ComponentResource, GroupResource, TestCaseResource, TestStepResource, UseCaseResource};
+use App\Http\Resources\{
+    ComponentResource,
+    GroupResource,
+    TestCaseResource,
+    TestStepResource,
+    UseCaseResource
+};
 use App\Imports\TestCaseImport;
 use App\Models\{Component, Group, TestCase, UseCase};
 use App\Http\Controllers\Controller;
@@ -26,7 +32,10 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->middleware('test-case.latest')->only(['showImportVersionForm', 'flow']);
+        $this->middleware('test-case.latest')->only([
+            'showImportVersionForm',
+            'flow',
+        ]);
         $this->authorizeResource(TestCase::class, 'test_case', [
             'except' => ['show', 'edit', 'update'],
         ]);

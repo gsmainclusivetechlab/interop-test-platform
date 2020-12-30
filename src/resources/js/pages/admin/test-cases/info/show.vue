@@ -2,36 +2,50 @@
     <layout :test-case="testCase">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">Info</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{
+                            $t('inputs.name.label')
+                        }}</label>
                         <div>{{ name }}</div>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Slug</label>
+                        <label class="form-label">{{
+                            $t('inputs.slug.label')
+                        }}</label>
                         <div>{{ slug }}</div>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Behavior</label>
+                        <label class="form-label">{{
+                            $t('inputs.behavior.label')
+                        }}</label>
                         <div>{{ behavior }}</div>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Use Case</label>
+                        <label class="form-label">{{
+                            $t('inputs.use-case.label')
+                        }}</label>
                         <div>{{ useCase }}</div>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Precondition</label>
+                        <label class="form-label">{{
+                            $t('inputs.precondition.label')
+                        }}</label>
                         <div v-html="precondition"></div>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{
+                            $t('inputs.description.label')
+                        }}</label>
                         <div v-html="description"></div>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Components</label>
+                        <label class="form-label">{{
+                            $t('inputs.components.label')
+                        }}</label>
                         <div>
                             {{ collect(components).implode('name', ', ') }}
                         </div>
@@ -44,16 +58,16 @@
                         :href="route('admin.test-cases.info.edit', testCase.id)"
                         class="btn btn-primary"
                     >
-                        Edit
+                        {{ $t('buttons.edit.title') }}
                     </inertia-link>
                 </div>
                 <div v-else>
                     <confirm-link
                         :href="route('admin.test-cases.info.edit', testCase.id)"
-                        :confirm-text="'The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime.'"
+                        :confirm-text="$t('buttons.edit.modal.text')"
                         class="btn btn-primary"
                     >
-                        Edit
+                        {{ $t('buttons.edit.title') }}
                     </confirm-link>
                 </div>
             </div>
@@ -65,8 +79,10 @@
 import Layout from '@/layouts/test-cases/main';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Info',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -92,3 +108,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/info/show.json"></i18n>

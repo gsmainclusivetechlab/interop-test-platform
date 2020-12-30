@@ -407,8 +407,9 @@ test_steps:
       body:
         errorInformation:
           errorCode: '5103'
-          errorDescription: 
-            'Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
+          errorDescription:
+            'Payee FSP does not want to proceed with the financial transaction
+            after receiving a quote.'
     response:
       status: 200
   - path: /quotes/{ID}/error
@@ -438,10 +439,11 @@ test_steps:
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
-         errorInformation:
+        errorInformation:
           errorCode: '5103'
-          errorDescription: 
-            'Payee FSP does not want to proceed with the financial transaction after receiving a quote.'
+          errorDescription:
+            'Payee FSP does not want to proceed with the financial transaction
+            after receiving a quote.'
     response:
       status: 200
   - path: '{X-Callback-URL}'
