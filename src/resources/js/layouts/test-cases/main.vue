@@ -6,12 +6,12 @@
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <div class="page-pretitle">
-                                {{ $t('page.pre-title') }}
+                                {{ $t('special-locales.administration') }}
                             </div>
                             <div class="page-pretitle font-weight-normal">
                                 <breadcrumb
                                     class="breadcrumb-bullets"
-                                    :items="breadcrumbs"
+                                    :items="items"
                                 ></breadcrumb>
                             </div>
                             <h2 class="page-title">
@@ -56,16 +56,22 @@ export default {
             type: Object,
             required: true,
         },
+        breadcrumbs: {
+            type: Array,
+            required: false,
+        },
     },
     computed: {
-        breadcrumbs() {
-            return [
-                {
-                    name: this.$t('breadcrumb.test-cases'),
-                    url: route('admin.test-cases.index'),
-                },
-                { name: this.testCase.name },
-            ];
+        items() {
+            return (
+                this.breadcrumbs ?? [
+                    {
+                        name: this.$t('breadcrumb.test-cases'),
+                        url: route('admin.test-cases.index'),
+                    },
+                    { name: this.testCase.name },
+                ]
+            );
         },
         navLinks() {
             return [
@@ -103,5 +109,5 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/pages/admin/index.json"></i18n>
+<i18n src="@locales/special-locales.json"></i18n>
 <i18n src="@locales/layout/test-cases/main.json"></i18n>

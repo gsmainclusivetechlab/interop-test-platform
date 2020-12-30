@@ -3,7 +3,9 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">{{ $t('page.pre-title') }}</div>
+                    <div class="page-pretitle">
+                        {{ $t('special-locales.administration') }}
+                    </div>
                     <h2 class="page-title">
                         <b>{{ $t('page.title') }}</b>
                     </h2>
@@ -332,5 +334,5 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/pages/admin/index.json"></i18n>
+<i18n src="@locales/special-locales.json"></i18n>
 <i18n src="@locales/pages/admin/test-cases/index.json"></i18n>

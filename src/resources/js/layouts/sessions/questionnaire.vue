@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Certification session questionnaire</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -35,7 +35,7 @@
                                 }"
                             >
                                 <span class="d-inline-block mt-2">
-                                    Summary
+                                    {{ $t('info.summary') }}
                                 </span>
                             </span>
                         </div>
@@ -53,8 +53,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Certification session questionnaire',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -67,3 +69,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/layout/sessions/questionnaire.json"></i18n>

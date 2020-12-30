@@ -3,9 +3,11 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
+                    <div class="page-pretitle">
+                        {{ $t('special-locales.administration') }}
+                    </div>
                     <h2 class="page-title">
-                        <b>Certification Sessions</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -22,18 +24,35 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-nowrap w-25">Name</th>
-                            <th class="text-nowrap w-auto">Owner</th>
-                            <th class="text-nowrap w-auto">Use Cases</th>
-                            <th class="text-nowrap w-auto">Test Cases</th>
-                            <th class="text-nowrap w-25">TC statuses</th>
-                            <th class="text-nowrap w-auto">Last Run</th>
-                            <th class="text-nowrap w-auto">Session status</th>
-                            <th class="text-nowrap w-1"></th>
+                            <th class="text-nowrap w-25">
+                                {{ $t('table.header.name') }}
+                            </th>
+                            <th class="w-auto">
+                                {{ $t('table.header.owner') }}
+                            </th>
+                            <th class="text-center w-auto">
+                                {{ $t('table.header.use-cases') }}
+                            </th>
+                            <th class="text-center w-auto">
+                                {{ $t('table.header.test-cases') }}
+                            </th>
+                            <th class="text-center text-nowrap w-25">
+                                {{ $t('table.header.statuses') }}
+                            </th>
+                            <th class="text-center text-nowrap w-auto">
+                                {{ $t('table.header.last-run') }}
+                            </th>
+                            <th class="text-center text-nowrap w-auto">
+                                {{ $t('table.header.session-status') }}
+                            </th>
+                            <th class="text-center text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="session in sessions.data">
+                        <tr
+                            v-for="(session, i) in sessions.data"
+                            :key="`session-${i}`"
+                        >
                             <td class="text-break">
                                 <inertia-link
                                     :href="route('sessions.show', session.id)"
@@ -44,7 +63,7 @@
                             <td class="text-break">
                                 {{ session.owner.name }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{
                                     session.testCases
                                         ? collect(session.testCases)
@@ -56,7 +75,7 @@
                                         : 0
                                 }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{
                                     session.testCases
                                         ? session.testCases.length
@@ -68,14 +87,14 @@
                                     :testCases="session.testCases"
                                 />
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{
                                     session.lastTestRun
                                         ? session.lastTestRun.created_at
                                         : ''
                                 }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 {{ session.statusName }}
                             </td>
                             <td class="text-center text-break">
@@ -100,17 +119,25 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${session.name}?`"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="`${$t(
+                                                'table.menu.delete.modal.text'
+                                            )} ${session.name}?`"
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!sessions.data.length">
-                            <td class="text-center" colspan="7">No Results</td>
+                            <td class="text-center" colspan="7">
+                                {{ $t('table.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -129,8 +156,10 @@ import Layout from '@/layouts/compliance-sessions/main';
 import SessionProgress from '@/components/sessions/progress';
 
 export default {
-    metaInfo: {
-        title: 'Sessions',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -175,3 +204,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/pages/admin/compliance-sessions/index.json"></i18n>
