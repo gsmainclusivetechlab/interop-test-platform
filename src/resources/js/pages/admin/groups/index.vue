@@ -3,9 +3,11 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
+                    <div class="page-pretitle">
+                        {{ $t('special-locales.administration') }}
+                    </div>
                     <h2 class="page-title">
-                        <b>Groups</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -22,7 +24,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        New Group
+                        {{ $t('buttons.new-group') }}
                     </inertia-link>
                 </div>
             </div>
@@ -32,10 +34,18 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Email Filter</th>
-                            <th class="text-nowrap">Users</th>
-                            <th class="text-nowrap">Sessions</th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.name') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.email-filter') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.users') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.sessions') }}
+                            </th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
@@ -79,7 +89,7 @@
                                                 )
                                             "
                                         >
-                                            Edit
+                                            {{ $t('table.menu.edit') }}
                                         </inertia-link>
                                     </li>
                                     <li v-if="group.can.delete">
@@ -92,17 +102,28 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${group.name}?`"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="
+                                                $t(
+                                                    'table.menu.delete.modal.text',
+                                                    { name: group.name }
+                                                )
+                                            "
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!groups.data.length">
-                            <td class="text-center" colspan="4">No Results</td>
+                            <td class="text-center" colspan="5">
+                                {{ $t('table.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -120,8 +141,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Groups',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -152,3 +175,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/pages/admin/groups/index.json"></i18n>
