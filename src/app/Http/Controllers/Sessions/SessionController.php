@@ -30,7 +30,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -76,13 +75,7 @@ class SessionController extends Controller
                     ->when(request('q'), function ($query, $q) {
                         return $query->where('name', 'like', "%{$q}%");
                     })
-                    ->with([
-                        'owner',
-                        'testCases' => function ($query) {
-                            return $query->with(['useCase', 'lastTestRun']);
-                        },
-                        'lastTestRun',
-                    ])
+                    ->with(['owner', 'lastTestRun'])
                     ->latest()
                     ->paginate()
             ),
@@ -123,8 +116,13 @@ class SessionController extends Controller
         return Inertia::render('sessions/show', [
             'session' => (new SessionResource(
                 $session->load([
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                    'testCases' => function ($query) use ($session) {
+                        return $query->with([
+                            'useCase',
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ]);
                     },
                 ])
             ))->resolve(),
@@ -153,8 +151,13 @@ class SessionController extends Controller
     {
         $this->authorize('update', $session);
         $session->load([
-            'testCases' => function ($query) {
-                return $query->with(['useCase', 'lastTestRun']);
+            'testCases' => function ($query) use ($session) {
+                return $query->with([
+                    'useCase',
+                    'lastTestRun' => function ($query) use ($session) {
+                        $query->where('session_id', $session->id);
+                    },
+                ]);
             },
             'groupEnvironment',
         ]);

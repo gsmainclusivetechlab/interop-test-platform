@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class SessionResource extends JsonResource
 {
@@ -12,6 +13,23 @@ class SessionResource extends JsonResource
      */
     public function toArray($request)
     {
+        /** @var Collection $testCases */
+        $testCases = $this->whenLoaded(
+            'testCases',
+            function () {
+                return $this->testCases;
+            },
+            function () {
+                return $this->testCases()
+                    ->with([
+                        'lastTestRun' => function ($query) {
+                            $query->where('session_id', $this->id);
+                        },
+                    ])
+                    ->get();
+            }
+        );
+
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
@@ -26,6 +44,29 @@ class SessionResource extends JsonResource
             'use_encryption' => $this->use_encryption,
             'environments' => $this->environments,
             'owner' => new UserResource($this->whenLoaded('owner')),
+            'testCasesCount' => $testCases->count(),
+            'useCasesCount' => $testCases
+                ->pluck('use_case_id')
+                ->unique()
+                ->count(),
+            'progress' => [
+                'passed' => $testCases
+                    ->map(function ($testCase) {
+                        return $testCase->lastTestRun &&
+                            $testCase->lastTestRun->successful
+                            ? 1
+                            : 0;
+                    })
+                    ->sum(),
+                'failures' => $testCases
+                    ->map(function ($testCase) {
+                        return $testCase->lastTestRun &&
+                            !$testCase->lastTestRun->successful
+                            ? 1
+                            : 0;
+                    })
+                    ->sum(),
+            ],
             'groupEnvironment' => new GroupEnvironmentResource(
                 $this->whenLoaded('groupEnvironment')
             ),

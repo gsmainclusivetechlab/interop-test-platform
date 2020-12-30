@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $uuid
  * @property int $source_id
  * @property int $target_id
+ * @property bool $mtls
  * @property Request $request
  * @property Response $response
  *
@@ -40,6 +41,7 @@ class TestStep extends Model
         'trigger',
         'request',
         'response',
+        'mtls',
     ];
 
     /**

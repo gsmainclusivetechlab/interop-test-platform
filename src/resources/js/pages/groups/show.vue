@@ -50,9 +50,7 @@
                                 }}
                             </td>
                             <td>
-                                <session-progress
-                                    :testCases="session.testCases"
-                                />
+                                <session-progress :session="session" />
                             </td>
                             <td>
                                 {{

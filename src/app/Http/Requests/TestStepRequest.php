@@ -37,6 +37,7 @@ class TestStepRequest extends FormRequest
             'request' => ['nullable', 'array'],
             'response' => ['required', 'array'],
             'response.status' => ['required'],
+            'mtls' => ['required', 'boolean'],
             // test scripts
             'test.scripts.request' => ['nullable', 'array'],
             'test.scripts.request.*.name' => ['required', 'string', 'max:255'],
