@@ -91,6 +91,11 @@ export default {
                         route().current('admin.test-cases.test-steps.edit'),
                 },
                 {
+                    title: this.$t('breadcrumb.test-flow'),
+                    route: 'admin.test-cases.flow',
+                    condition: route().current('admin.test-cases.flow'),
+                },
+                {
                     title: this.$t('breadcrumb.groups'),
                     route: 'admin.test-cases.groups.index',
                     condition:

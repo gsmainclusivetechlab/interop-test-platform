@@ -291,6 +291,9 @@ Route::name('admin.')
                         Route::get('export', 'TestCaseController@export')->name(
                             'export'
                         );
+                        Route::get('flow', 'TestCaseController@flow')->name(
+                            'flow'
+                        );
                         Route::put(
                             'toggle-public',
                             'TestCaseController@togglePublic'
