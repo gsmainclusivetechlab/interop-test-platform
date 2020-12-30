@@ -21,17 +21,23 @@ export default {
         },
         confirmTitle: {
             type: String,
-            default: 'Are you sure?',
         },
         confirmText: {
             type: String,
-            default: "You won't be able to revert this!",
         },
     },
     data() {
         return {
             confirmed: false,
         };
+    },
+    computed: {
+        modalTitle() {
+            return this.confirmTitle ?? this.$t('modal.title');
+        },
+        modalText() {
+            return this.confirmText ?? this.$t('modal.text');
+        },
     },
     methods: {
         confirm(e) {
@@ -42,15 +48,16 @@ export default {
                 {
                     class: ['text-break'],
                 },
-                [this.confirmText]
+                [this.modalText]
             );
 
             if (!this.confirmed) {
                 e.preventDefault();
                 this.$bvModal
                     .msgBoxConfirm([messageVNode], {
-                        title: this.confirmTitle,
-                        okTitle: 'Confirm',
+                        title: this.modalTitle,
+                        okTitle: this.$t('buttons.ok'),
+                        cancelTitle: this.$t('buttons.cancel'),
                         centered: true,
                     })
                     .then((value) => {
@@ -64,3 +71,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/components/confirm-link.json"></i18n>
