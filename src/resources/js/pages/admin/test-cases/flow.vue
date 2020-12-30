@@ -3,7 +3,7 @@
         <div class="card mb-0">
             <div class="card-header">
                 <h2 class="card-title">
-                    <b>{{ `Flow of ${testCase.name}` }}</b>
+                    <b>{{ $t('card.title', { name: testCase.name }) }}</b>
                 </h2>
                 <div class="card-options">
                     <a
@@ -13,7 +13,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="external-link"></icon>
-                        Diagram Editor
+                        {{ $t('buttons.diagram-editor') }}
                     </a>
                 </div>
             </div>
@@ -95,3 +95,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/flow.json"></i18n>

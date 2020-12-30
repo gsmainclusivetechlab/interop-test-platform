@@ -2,7 +2,7 @@
     <layout :test-case="currentTestCase">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">Versions</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
                 <div class="card-options">
                     <inertia-link
                         :href="
@@ -14,7 +14,7 @@
                         class="btn btn-primary ml-2"
                     >
                         <icon name="upload" />
-                        Import New Version
+                        {{ $t('buttons.import') }}
                     </inertia-link>
                 </div>
             </div>
@@ -22,15 +22,33 @@
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap text-center">Version</th>
-                            <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap text-center">Behavior</th>
-                            <th class="text-nowrap text-center">Public</th>
-                            <th class="text-nowrap">Use Case</th>
-                            <th class="text-nowrap text-center">Test Steps</th>
-                            <th class="text-nowrap text-center">Owner</th>
-                            <th class="text-nowrap text-center">Groups</th>
-                            <th class="text-nowrap text-center">Status</th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.version') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.name') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.behavior') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.public') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.use-case') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.test-steps') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.owner') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.groups') }}
+                            </th>
+                            <th class="text-nowrap text-center">
+                                {{ $t('table.header.status') }}
+                            </th>
                             <th class="w-1 text-nowrap text-center"></th>
                         </tr>
                     </thead>
@@ -100,7 +118,7 @@
                                             "
                                             class="dropdown-item"
                                         >
-                                            Publish
+                                            {{ $t('table.menu.publish') }}
                                         </inertia-link>
                                     </li>
                                     <li
@@ -118,10 +136,18 @@
                                                 )
                                             "
                                             class="dropdown-item"
-                                            :confirm-title="'Are you sure?'"
-                                            :confirm-text="'This version is draft, so it will be permanently removed.'"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.discard.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="
+                                                $t(
+                                                    'table.menu.discard.modal.text'
+                                                )
+                                            "
                                         >
-                                            Discard
+                                            {{ $t('table.menu.discard.title') }}
                                         </confirm-link>
                                     </li>
                                     <li
@@ -139,14 +165,16 @@
                                             "
                                             class="dropdown-item"
                                         >
-                                            Export to yaml
+                                            {{ $t('table.menu.export-yaml') }}
                                         </a>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!testCases.data.length">
-                            <td class="text-center" colspan="6">No Results</td>
+                            <td class="text-center" colspan="6">
+                                {{ $t('content.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -164,8 +192,10 @@
 import Layout from '@/layouts/test-cases/main';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Versions',
+    metaInfo() {
+        return {
+            title: `${this.currentTestCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -182,3 +212,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/versions/index.json"></i18n>

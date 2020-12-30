@@ -2,12 +2,14 @@
     <layout :test-case="testCase">
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Edit</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{
+                            $t('inputs.name.label')
+                        }}</label>
                         <input
                             name="name"
                             type="text"
@@ -27,7 +29,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Slug</label>
+                        <label class="form-label">{{
+                            $t('inputs.slug.label')
+                        }}</label>
                         <input
                             name="slug"
                             type="text"
@@ -47,14 +51,16 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Behavior</label>
+                        <label class="form-label">{{
+                            $t('inputs.behavior.label')
+                        }}</label>
                         <selectize
                             class="form-select"
                             :class="{
                                 'is-invalid': $page.props.errors.behavior,
                             }"
                             v-model="behavior"
-                            placeholder="Select behavior"
+                            :placeholder="$t('inputs.behavior.placeholder')"
                             :options="
                                 collect(
                                     $page.props.enums.test_case_behaviors
@@ -73,7 +79,9 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Use Case</label>
+                        <label class="form-label">{{
+                            $t('inputs.use-case.label')
+                        }}</label>
                         <selectize
                             class="form-select"
                             :class="{
@@ -81,7 +89,7 @@
                             }"
                             v-model="useCase"
                             label="name"
-                            placeholder="Select use case"
+                            :placeholder="$t('inputs.use-case.placeholder')"
                             :options="$page.props.useCases"
                             :disableSearch="false"
                             :createItem="false"
@@ -96,7 +104,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Precondition</label>
+                        <label class="form-label">{{
+                            $t('inputs.precondition.label')
+                        }}</label>
                         <text-editor
                             :class="{
                                 'is-invalid': $page.props.errors.precondition,
@@ -125,7 +135,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{
+                            $t('inputs.precondition.label')
+                        }}</label>
                         <text-editor
                             :class="{
                                 'is-invalid': $page.props.errors.description,
@@ -154,7 +166,9 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Components</label>
+                        <label class="form-label">{{
+                            this.$t('inputs.components.label')
+                        }}</label>
                         <selectize
                             class="form-select"
                             :class="{
@@ -162,7 +176,7 @@
                             }"
                             v-model="components"
                             multiple
-                            placeholder="Select components"
+                            :placeholder="$t('inputs.components.label')"
                             label="name"
                             :options="
                                 $page.props.components.map((el) => el.name)
@@ -190,14 +204,14 @@
                     :href="route('admin.test-cases.info.show', testCase.id)"
                     class="btn btn-link"
                 >
-                    Cancel
+                    {{ this.$t('buttons.cancel') }}
                 </inertia-link>
                 <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Update
+                    {{ this.$t('buttons.update') }}
                 </button>
             </div>
         </form>
@@ -208,8 +222,10 @@
 import Layout from '@/layouts/test-cases/main';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Edit',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -268,3 +284,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/info/edit.json"></i18n>

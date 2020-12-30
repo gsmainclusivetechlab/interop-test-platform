@@ -1,0 +1,73 @@
+{
+    "en": {
+        "card": {
+            "title": "Versions"
+        },
+        "table": {
+            "header": {
+                "version": "Version",
+                "name": "Name",
+                "behavior": "Behavior",
+                "public": "Public",
+                "use-case": "Use Case",
+                "test-steps": "Test Steps",
+                "owner": "Owner",
+                "groups": "Groups",
+                "status": "Status"
+            },
+            "content": {
+                "no-results": "No Results"
+            },
+            "menu": {
+                "publish": "Publish",
+                "discard": {
+                    "title": "Discard",
+                    "modal": {
+                        "title": "Are you sure?",
+                        "text": "This version is draft, so it will be permanently removed."
+                    }
+                },
+                "export-yaml": "Export to yaml"
+            }
+        },
+        "buttons": {
+            "import": "Import New Version"
+        }
+    },
+
+    "ru": {
+        "card": {
+            "title": "Версии"
+        },
+        "table": {
+            "header": {
+                "version": "Версия",
+                "name": "Имя",
+                "behavior": "Состояние",
+                "public": "Публичность",
+                "use-case": "Образец использования",
+                "test-steps": "Тестовые этапы",
+                "owner": "Владелец",
+                "groups": "Группы",
+                "status": "Статус"
+            },
+            "content": {
+                "no-results": "Результатов нет"
+            },
+            "menu": {
+                "publish": "Опубликовать",
+                "discard": {
+                    "title": "Сбросить",
+                    "modal": {
+                        "title": "Вы уверены?",
+                        "text": "Это черновая версия, поэтому она будет удалена без возможности восстановления."
+                    }
+                },
+                "export-yaml": "Экспорт в yaml"
+            }
+        },
+        "buttons": {
+            "import": "Импорт Новой Версии"
+        }
+    }
+}

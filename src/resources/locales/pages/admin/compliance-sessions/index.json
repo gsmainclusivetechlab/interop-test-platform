@@ -1,0 +1,54 @@
+{
+    "en": {
+        "page": {
+            "title": "@:(special-locales.compliance) session"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "owner": "Owner",
+                "use-cases": "Use Cases",
+                "test-cases": "Test Cases",
+                "statuses": "TC statuses",
+                "last-run": "Last Run",
+                "session-status": "Session Status"
+            },
+            "menu": {
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "@:(special-locales.compliance) сессий"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "owner": "Владелец",
+                "use-cases": "Образец Использования",
+                "test-cases": "Тестовый Образец",
+                "statuses": "Статусы ТО",
+                "last-run": "Последний Запуск",
+                "session-status": "Статус Сессии"
+            },
+            "menu": {
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены что хотите удалить"
+                    }
+                }
+            },
+            "no-results": "Результатов нет"
+        }
+    }
+}

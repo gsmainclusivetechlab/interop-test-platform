@@ -5,11 +5,13 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <div class="page-pretitle">Administration</div>
+                            <div class="page-pretitle">
+                                {{ $t('special-locales.administration') }}
+                            </div>
                             <div class="page-pretitle font-weight-normal">
                                 <breadcrumb
                                     class="breadcrumb-bullets"
-                                    :items="breadcrumbs"
+                                    :items="items"
                                 ></breadcrumb>
                             </div>
                             <h2 class="page-title">
@@ -57,29 +59,31 @@ export default {
         breadcrumbs: {
             type: Array,
             required: false,
-            default: function () {
-                return [
+        },
+    },
+    computed: {
+        items() {
+            return (
+                this.breadcrumbs ?? [
                     {
-                        name: 'Test Cases',
+                        name: this.$t('breadcrumb.test-cases'),
                         url: route('admin.test-cases.index'),
                     },
                     { name: this.testCase.name },
-                ];
-            },
+                ]
+            );
         },
-    },
-    data() {
-        return {
-            navLinks: [
+        navLinks() {
+            return [
                 {
-                    title: 'Info',
+                    title: this.$t('breadcrumb.info'),
                     route: 'admin.test-cases.info.show',
                     condition:
                         route().current('admin.test-cases.info.show') ||
                         route().current('admin.test-cases.info.edit'),
                 },
                 {
-                    title: 'Test steps',
+                    title: this.$t('breadcrumb.test-steps'),
                     route: 'admin.test-cases.test-steps.index',
                     condition:
                         route().current('admin.test-cases.test-steps.index') ||
@@ -87,27 +91,28 @@ export default {
                         route().current('admin.test-cases.test-steps.edit'),
                 },
                 {
-                    title: 'Test Flow',
+                    title: this.$t('breadcrumb.test-flow'),
                     route: 'admin.test-cases.flow',
-                    condition:
-                        route().current('admin.test-cases.flow'),
+                    condition: route().current('admin.test-cases.flow'),
                 },
                 {
-                    title: 'Groups',
+                    title: this.$t('breadcrumb.groups'),
                     route: 'admin.test-cases.groups.index',
                     condition:
                         route().current('admin.test-cases.groups.index') ||
                         route().current('admin.test-cases.groups.edit'),
                 },
                 {
-                    title: 'Versions',
+                    title: this.$t('breadcrumb.versions'),
                     route: 'admin.test-cases.versions.index',
                     condition: route().current(
                         'admin.test-cases.versions.index'
                     ),
                 },
-            ],
-        };
+            ];
+        },
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/layout/test-cases/main.json"></i18n>

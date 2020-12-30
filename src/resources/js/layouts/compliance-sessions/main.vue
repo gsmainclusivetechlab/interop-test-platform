@@ -6,12 +6,9 @@
                     <div class="page-pretitle font-weight-normal">
                         <breadcrumb
                             class="breadcrumb-bullets"
-                            :items="breadcrumbs"
+                            :items="items"
                         ></breadcrumb>
                     </div>
-                    <h1 class="page-title mw-100 mr-2 text-break">
-                        <b>{{ title }}</b>
-                    </h1>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -27,14 +24,14 @@
                                             )
                                         "
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active:
                                                 route().current(
                                                     'admin.compliance-sessions.index'
                                                 ) && status === undefined,
                                         }"
                                     >
-                                        All
+                                        {{ $t('tabs.all') }}
                                     </inertia-link>
                                 </li>
                                 <li class="nav-item">
@@ -46,7 +43,7 @@
                                             )
                                         "
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active:
                                                 route().current(
                                                     'admin.compliance-sessions.index'
@@ -54,7 +51,7 @@
                                                 status === 'in_verification',
                                         }"
                                     >
-                                        In verification
+                                        {{ $t('tabs.in-verification') }}
                                     </inertia-link>
                                 </li>
                             </ul>
@@ -74,11 +71,6 @@ export default {
     components: {
         Layout,
     },
-    metaInfo() {
-        return {
-            title: this.title,
-        };
-    },
     props: {
         title: {
             type: String,
@@ -91,16 +83,22 @@ export default {
         breadcrumbs: {
             type: Array,
             required: false,
-            default: function () {
-                return [
+        },
+    },
+    computed: {
+        items() {
+            return (
+                this.breadcrumbs ?? [
                     {
-                        name: 'Certification sessions',
+                        name: this.$t('page.title'),
                         url: route('admin.compliance-sessions.index'),
                     },
                     { name: this.title },
-                ];
-            },
+                ]
+            );
         },
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/layout/compliance-sessions/main.json"></i18n>

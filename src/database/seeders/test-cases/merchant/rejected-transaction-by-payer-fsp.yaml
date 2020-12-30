@@ -159,7 +159,7 @@ test_steps:
       method: POST
       uri: /transactionRequests
       headers:
-        accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'        
+        accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'

@@ -103,7 +103,7 @@ test_steps:
     trigger:
       amount:
         amount: '500'
-        
+
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:

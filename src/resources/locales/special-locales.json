@@ -1,0 +1,14 @@
+{
+    "en": {
+        "special-locales": {
+            "compliance": "Certification",
+            "administration": "Administration"
+        }
+    },
+    "ru": {
+        "special-locales": {
+            "compliance": "Сертификации",
+            "administration": "Администрация"
+        }
+    }
+}

@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Update group</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -11,7 +11,9 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label"> Name </label>
+                                <label class="form-label">{{
+                                    $t('inputs.name')
+                                }}</label>
                                 <input
                                     name="name"
                                     type="text"
@@ -31,7 +33,9 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Email Filter </label>
+                                <label class="form-label">{{
+                                    $t('inputs.email-filter.label')
+                                }}</label>
                                 <selectize
                                     v-model="domains"
                                     multiple
@@ -49,12 +53,13 @@
                                     </strong>
                                 </span>
                                 <div class="mt-1 text-muted small">
-                                    Only users whose email matches these filters
-                                    will be eligible to join the group
+                                    {{ $t('inputs.email-filter.comment') }}
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Description </label>
+                                <label class="form-label">{{
+                                    $t('inputs.description')
+                                }}</label>
                                 <textarea
                                     name="description"
                                     class="form-control"
@@ -80,14 +85,14 @@
                                 :href="route('admin.groups.index')"
                                 class="btn btn-link"
                             >
-                                Cancel
+                                {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Update
+                                {{ $t('buttons.update') }}
                             </button>
                         </div>
                     </form>
@@ -101,8 +106,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Update group',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -148,3 +155,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/groups/create.json"></i18n>
+<i18n src="@locales/pages/admin/groups/edit.json"></i18n>
