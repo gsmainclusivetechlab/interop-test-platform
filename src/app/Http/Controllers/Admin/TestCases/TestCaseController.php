@@ -3,12 +3,7 @@
 namespace App\Http\Controllers\Admin\TestCases;
 
 use App\Exports\TestCaseExport;
-use App\Http\Resources\{
-    ComponentResource,
-    GroupResource,
-    TestCaseResource,
-    UseCaseResource
-};
+use App\Http\Resources\{ComponentResource, GroupResource, TestCaseResource, TestStepResource, UseCaseResource};
 use App\Imports\TestCaseImport;
 use App\Models\{Component, Group, TestCase, UseCase};
 use App\Http\Controllers\Controller;
@@ -31,7 +26,7 @@ class TestCaseController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-        $this->middleware('test-case.latest')->only(['showImportVersionForm']);
+        $this->middleware('test-case.latest')->only(['showImportVersionForm', 'flow']);
         $this->authorizeResource(TestCase::class, 'test_case', [
             'except' => ['show', 'edit', 'update'],
         ]);
@@ -254,6 +249,23 @@ class TestCaseController extends Controller
 
         ($file = fopen('php://output', 'w')) or die('Unable to open file!');
         fwrite($file, $data);
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return Response
+     */
+    public function flow(TestCase $testCase)
+    {
+        return Inertia::render('admin/test-cases/flow', [
+            'testCase' => (new TestCaseResource($testCase))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase
+                    ->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
+        ]);
     }
 
     /**

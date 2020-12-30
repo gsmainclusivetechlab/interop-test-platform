@@ -1,10 +1,5 @@
 <template>
-    <layout
-        :session="session"
-        :testCase="testCase"
-        :isAvailableRun="isAvailableRun"
-        :testStepFirstSource="testStepFirstSource"
-    >
+    <layout :test-case="testCase">
         <div class="card mb-0">
             <div class="card-header">
                 <h2 class="card-title">
@@ -32,7 +27,7 @@
 </template>
 
 <script>
-import Layout from '@/layouts/sessions/test-case';
+import Layout from '@/layouts/test-cases/main';
 import Diagram from '@/components/diagram';
 
 import { Base64 } from 'js-base64';
@@ -43,24 +38,12 @@ export default {
         Diagram,
     },
     props: {
-        session: {
-            type: Object,
-            required: true,
-        },
         testCase: {
             type: Object,
             required: true,
         },
         testSteps: {
             type: Object,
-            required: true,
-        },
-        testStepFirstSource: {
-            type: Object,
-            required: true,
-        },
-        isAvailableRun: {
-            type: Boolean,
             required: true,
         },
     },
