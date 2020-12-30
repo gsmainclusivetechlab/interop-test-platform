@@ -289,7 +289,7 @@ class RegisterController extends Controller
                 'session.info.test_cases',
                 TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
                     ->available()
-                    ->lastPerGroup()
+                    ->lastPerGroup(false)
                     ->pluck('id')
             );
         }
@@ -637,7 +637,7 @@ class RegisterController extends Controller
             ) {
                 $query->whereIn('slug', $testCases ?: ['']);
             })
-            ->lastPerGroup();
+            ->lastPerGroup(false);
     }
 
     protected function getComponents()
