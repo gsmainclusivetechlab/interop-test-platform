@@ -1,22 +1,23 @@
 <template>
     <layout :test-case="testCase">
         <div class="card mb-0">
-            <div class="card-header justify-content-between">
+            <div class="card-header">
                 <h2 class="card-title">
                     <b>{{ `Flow of ${testCase.name}` }}</b>
                 </h2>
-
-                <a
-                    :href="editorLink"
-                    target="_blank"
-                    rel="noreferrer"
-                    class="btn btn-primary"
-                >
-                    <icon name="external-link"></icon>
-                    Diagram Editor
-                </a>
+                <div class="card-options">
+                    <a
+                        :href="editorLink"
+                        target="_blank"
+                        rel="noreferrer"
+                        class="btn btn-primary"
+                    >
+                        <icon name="external-link"></icon>
+                        Diagram Editor
+                    </a>
+                </div>
             </div>
-            <div class="pt-2 pb-4">
+            <div class="card-body">
                 <diagram ref="diagram">
                     {{ diagramCode }}
                 </diagram>
