@@ -199,22 +199,26 @@ class TestCase extends Model
      * Get the latest version for each group.
      *
      * @param $query
+     * @param $draftAble bool
      * @param null $testCasesIds
      * @param null $testCasesGroupsIds
      * @return
      */
     public function scopeLastPerGroup(
         $query,
+        $draftAble = true,
         $testCasesIds = null,
         $testCasesGroupsIds = null
     ) {
         return $query
             ->when($testCasesIds, function ($query) use (
+                $draftAble,
                 $testCasesIds,
                 $testCasesGroupsIds
             ) {
                 $query
                     ->whereIn('id', function ($query) use (
+                        $draftAble,
                         $testCasesIds,
                         $testCasesGroupsIds
                     ) {
@@ -226,15 +230,21 @@ class TestCase extends Model
                                 $testCasesGroupsIds
                             )
                             ->groupBy(static::getPositionGroupColumn());
+                        if (!$draftAble) {
+                            $query->where('draft', false);
+                        }
                     })
                     ->orWhereIn('id', $testCasesIds);
             })
-            ->when(!$testCasesIds, function ($query) {
-                $query->whereIn('id', function ($query) {
+            ->when(!$testCasesIds, function ($query) use ($draftAble) {
+                $query->whereIn('id', function ($query) use ($draftAble) {
                     $query
                         ->from(static::getTable())
                         ->selectRaw('MAX(`id`)')
                         ->groupBy(static::getPositionGroupColumn());
+                    if (!$draftAble) {
+                        $query->where('draft', false);
+                    }
                 });
             });
     }
@@ -298,7 +308,7 @@ class TestCase extends Model
     public function getLastAvailableVersionAttribute()
     {
         return static::available()
-            ->lastPerGroup()
+            ->lastPerGroup(false)
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
     }
