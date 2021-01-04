@@ -317,15 +317,15 @@ Route::name('admin.')
                         Route::resource(
                             'groups',
                             'TestCaseGroupController'
-                        )->only('index', 'store', 'destroy');
+                        )->only(['index', 'store', 'destroy']);
                         Route::resource(
                             'test-steps',
                             'TestCaseTestStepController'
-                        )->except('show');
+                        )->except(['show']);
                         Route::resource(
                             'versions',
                             'TestCaseVersionController'
-                        )->only('index');
+                        )->only(['index']);
                         Route::get(
                             'versions/publish',
                             'TestCaseVersionController@publish'
