@@ -284,7 +284,7 @@
                     >
                         <div class="w-25 px-4 py-2 border">
                             <strong>{{
-                                $t('modals.response.table.status')
+                                $t('modals.response.table.headers')
                             }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
@@ -307,7 +307,7 @@
                     >
                         <div class="w-25 px-4 py-2 border">
                             <strong>{{
-                                $t('modals.response.table.status')
+                                $t('modals.response.table.body')
                             }}</strong>
                         </div>
                         <div class="w-75 px-4 py-2 border">
