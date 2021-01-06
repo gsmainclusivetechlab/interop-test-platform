@@ -32,7 +32,7 @@ class TestRun extends Model
     /**
      * @var array
      */
-    protected $fillable = ['test_case_id'];
+    protected $fillable = ['test_case_id', 'session_id'];
 
     /**
      * @var array

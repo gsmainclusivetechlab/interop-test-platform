@@ -20,13 +20,13 @@ use Faker\Generator as Faker;
 
 $factory->define(TestResult::class, function (Faker $faker) {
     return [
-        'test_step_id' => function () {
-            return factory(TestStep::class)
+        'test_run_id' => function () {
+            return factory(TestRun::class)
                 ->create()
                 ->getKey();
         },
-        'test_run_id' => function () {
-            return factory(TestRun::class)
+        'test_step_id' => function () {
+            return factory(TestStep::class)
                 ->create()
                 ->getKey();
         },
