@@ -133,7 +133,7 @@ class TwigSubstitution
                     ];
                 })
                 ->toArray(),
-            'env' => $session->environments,
+            'env' => $session->environments(),
             'components' => $components
                 ->mapWithKeys(function ($item) {
                     return [
