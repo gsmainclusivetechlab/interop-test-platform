@@ -47,7 +47,7 @@ class MapRequestHandler
 
         $testRequest = $testRequest->withSubstitutions(
             $this->testResult->testRun->testResults,
-            $this->testResult->session->environments()
+            $this->testResult->session
         );
 
         $testRequestData = array_merge($data = $testRequest->toArray(), [

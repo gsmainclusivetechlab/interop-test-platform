@@ -2,6 +2,7 @@
 
 namespace App\Http\Client;
 
+use App\Models\Session;
 use App\Models\TestSetup;
 use App\Utils\TwigSubstitution;
 use Illuminate\Contracts\Support\Arrayable;
@@ -43,14 +44,14 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
     }
 
     /**
-     * @param array|null $tokens
      * @param $testResults
+     * @param Session $session
      * @return $this
      */
-    public function withSubstitutions($testResults, array $tokens = [])
+    public function withSubstitutions($testResults, $session)
     {
         $data = $this->toArray();
-        $substitution = new TwigSubstitution($testResults, $tokens);
+        $substitution = new TwigSubstitution($testResults, $session);
         $data = $substitution->replaceRecursive($data);
 
         return new self(
