@@ -3,6 +3,8 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\TestCase;
+use App\Models\Session;
+use App\Models\TestRun;
 use Faker\Generator as Faker;
 
 /*
@@ -18,11 +20,15 @@ use Faker\Generator as Faker;
 
 $factory->define(TestRun::class, function (Faker $faker) {
     return [
+        'session_id' => function () {
+            return factory(Session::class)
+                ->create()
+                ->getKey();
+        },
         'test_case_id' => function () {
             return factory(TestCase::class)
                 ->create()
                 ->getKey();
         },
-        'completed_at' => $faker->datetime,
     ];
 });
