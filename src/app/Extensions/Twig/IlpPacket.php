@@ -7,7 +7,6 @@ use Twig\TwigFunction;
 
 class IlpPacket extends AbstractExtension
 {
-
     /**
      * Get functions.
      *
@@ -16,10 +15,9 @@ class IlpPacket extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('ilpFulfilment', function (){return $this->ilpFulfilment(); }),
-            new TwigFunction('ilpCondition', function ($fulfillment){return $this->ilpCondition($fulfillment); }),
-            new TwigFunction('ilpPacket', function ($amount, $expires, $condition, $destination, $data){return $this->ilpPacket($amount, $expires, $condition, $destination, $data); }),
-            new TwigFunction('base64url_encode', function ($data){return $this->base64url_encode($data); }),
+            new TwigFunction('ilpFulfilment', [$this, 'ilpFulfilment']),
+            new TwigFunction('ilpCondition', [$this, 'ilpCondition']),
+            new TwigFunction('ilpPacket', [$this, 'ilpPacket']),
         ];
     }
 
@@ -61,7 +59,7 @@ class IlpPacket extends AbstractExtension
 
     function ilpFulfilment()
     {
-      // TODO: read a seed from an environment value or something
+        // TODO: read a seed from an environment value or something
         return hex2bin(
             'd8011d77fbfed64323c157b8755f11b75f18024dd5b6510039ad003b03a75a95'
         );
@@ -72,13 +70,8 @@ class IlpPacket extends AbstractExtension
         return hash('sha256', $fulfillment, true);
     }
 
-    function ilpPacket(
-        $amount,
-        $expires,
-        $condition,
-        $destination,
-        $data
-    ) {
+    function ilpPacket($amount, $expires, $condition, $destination, $data)
+    {
         $amountB = pack('J', $amount);
         $expiresB = $this->dateToInterledgerTime(new \DateTime($expires));
         $destinationB = $this->varLength($destination);
@@ -92,18 +85,4 @@ class IlpPacket extends AbstractExtension
         $envelopeB = $typeB . $contentB;
         return $envelopeB;
     }
-
-    function base64url_encode($data)
-    {
-        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-    }
-
-    function base64url_decode($data)
-    {
-        return base64_decode(
-            strtr($data, '-_', '+/') .
-                str_repeat('=', 3 - ((3 + strlen($data)) % 4))
-        );
-    }
-
 }
