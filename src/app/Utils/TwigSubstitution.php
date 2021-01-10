@@ -25,6 +25,7 @@ class TwigSubstitution
     protected $twigExtensions = [
         \App\Extensions\Twig\Uuid::class,
         \App\Extensions\Twig\Datetime::class,
+        \App\Extensions\Twig\Base64::class,
     ];
 
     /**
