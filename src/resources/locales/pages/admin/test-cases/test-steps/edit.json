@@ -1,7 +1,7 @@
 {
     "en": {
         "card": {
-            "title": "Create"
+            "title": "Edit"
         },
         "inputs": {
             "method": {
@@ -43,7 +43,8 @@
             },
             "request": {
                 "headers": "Request Headers",
-                "body": "Request Body"
+                "body": "Request Body",
+                "uri": "Request URI"
             },
             "response": {
                 "headers": "Response Headers",
@@ -62,7 +63,7 @@
 
     "ru": {
         "card": {
-            "title": "Создать"
+            "title": "Редактировать"
         },
         "inputs": {
             "method": {
@@ -104,7 +105,8 @@
             },
             "request": {
                 "headers": "Заголовки Запроса",
-                "body": "Тело Запроса"
+                "body": "Тело Запроса",
+                "uri": "URI Запроса"
             },
             "response": {
                 "headers": "Заголовки Ответа",

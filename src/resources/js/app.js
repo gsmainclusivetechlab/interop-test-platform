@@ -92,6 +92,7 @@ Vue.component('text-editor', () =>
 );
 const i18n = new VueI18n({
     fallbackLocale: 'en',
+    silentFallbackWarn: true,
     messages: {},
 });
 

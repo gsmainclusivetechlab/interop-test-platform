@@ -1,5 +1,5 @@
 <template>
-    <div class="locale-changer">
+    <div v-if="$page.props.app.locales.length > 0" class="locale-changer">
         <selectize
             v-model="$i18n.locale"
             class="form-select"

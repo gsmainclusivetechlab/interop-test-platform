@@ -2,7 +2,7 @@
     <layout :test-case="testCase">
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Edit</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -461,7 +461,9 @@
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
-                        <h2 class="card-title">Request URI</h2>
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.uri') }}
+                        </h2>
                         <input
                             type="text"
                             class="form-control"

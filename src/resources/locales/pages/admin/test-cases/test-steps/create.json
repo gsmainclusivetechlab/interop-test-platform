@@ -43,7 +43,8 @@
             },
             "request": {
                 "headers": "Request Headers",
-                "body": "Request Body"
+                "body": "Request Body",
+                "uri": "Request URI"
             },
             "response": {
                 "headers": "Response Headers",
@@ -104,7 +105,8 @@
             },
             "request": {
                 "headers": "Заголовки Запроса",
-                "body": "Тело Запроса"
+                "body": "Тело Запроса",
+                "uri": "URI Запроса"
             },
             "response": {
                 "headers": "Заголовки Ответа",

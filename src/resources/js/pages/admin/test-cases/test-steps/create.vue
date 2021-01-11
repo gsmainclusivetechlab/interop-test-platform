@@ -461,7 +461,9 @@
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
-                        <h2 class="card-title">Request URI</h2>
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.uri') }}
+                        </h2>
                         <input
                             type="text"
                             class="form-control"
