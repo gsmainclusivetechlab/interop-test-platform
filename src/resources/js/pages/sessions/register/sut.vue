@@ -8,7 +8,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">SUTs</label>
-                        <selectize
+                        <!-- <selectize
                             v-model="selectedComponents"
                             :class="{
                                 'is-invalid': $page.props.errors.component_ids,
@@ -21,6 +21,18 @@
                             :multiple="true"
                             class="form-select"
                             placeholder="Select SUT..."
+                            :disabled="selectedSut"
+                        /> -->
+                        <v-select
+                            v-model="selectedComponents"
+                            :options="suts.data"
+                            label="name"
+                            multiple
+                            placeholder="Select SUT..."
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.component_ids,
+                            }"
                             :disabled="selectedSut"
                         />
                         <span
@@ -116,23 +128,15 @@ export default {
             sending: false,
             isCompliance,
             selectedSut,
-            selectedComponents:
-                this.session &&
-                this.session.sut &&
-                this.session.sut.component_ids
-                    ? collect(this.suts.data)
-                          .whereIn('id', this.session.sut.component_ids)
-                          .all()
-                    : selectedSut
-                    ? [collect(this.suts.data).first()]
-                    : [],
+            selectedComponents: this?.session?.sut?.component_ids
+                ? collect(this.suts.data)
+                      .whereIn('id', this.session.sut.component_ids)
+                      .all()
+                : selectedSut
+                ? [collect(this.suts.data).first()]
+                : [],
             form: {
-                base_urls:
-                    this.session &&
-                    this.session.sut &&
-                    this.session.sut.base_urls
-                        ? this.session.sut.base_urls
-                        : [],
+                base_urls: this?.session?.sut?.base_urls ?? [],
                 component_ids: [],
             },
         };
@@ -140,12 +144,9 @@ export default {
     watch: {
         selectedComponents: {
             immediate: true,
-            handler: function (values) {
-                this.form.component_ids = [];
-
-                Object.values(values ? values : []).forEach((value) => {
-                    this.form.component_ids.push(value.id);
-                });
+            handler(values) {
+                this.form.component_ids =
+                    Object.values(values)?.map((value) => value.id) ?? [];
             },
         },
     },

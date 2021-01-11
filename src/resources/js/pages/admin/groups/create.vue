@@ -36,13 +36,16 @@
                                 <label class="form-label">{{
                                     $t('inputs.email-filter.label')
                                 }}</label>
-                                <selectize
+                                <v-select
                                     v-model="domains"
                                     multiple
-                                    class="form-select"
+                                    taggable
+                                    push-tags
+                                    class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid': $page.props.errors.domain,
                                     }"
+                                    @input="setDomain"
                                 />
                                 <span
                                     v-if="$page.props.errors.domain"
@@ -125,14 +128,6 @@ export default {
             },
         };
     },
-    watch: {
-        domains: {
-            immediate: true,
-            handler: function (value) {
-                this.form.domain = value ? collect(value).implode(', ') : null;
-            },
-        },
-    },
     methods: {
         submit() {
             this.sending = true;
@@ -141,6 +136,9 @@ export default {
                     this.sending = false;
                 },
             });
+        },
+        setDomain(items) {
+            this.form.domain = items.length > 0 ? items.join(', ') : null;
         },
     },
 };

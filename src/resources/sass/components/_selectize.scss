@@ -12,3 +12,50 @@
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
+
+// vue-select
+
+.form-control {
+  .vs__dropdown-toggle {
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+  }
+  .vs__dropdown-menu {
+    min-width: 0;
+  }
+  .vs__selected {
+    line-height: 1;
+  }
+  .vs__deselect,
+  .vs__clear {
+    fill: $gray-500;
+    transform: scale(0.8);
+    transition: fill 0.2s ease;
+    &:hover {
+      fill: $red;
+    }
+  }
+  .vs__open-indicator {
+    fill: $gray-500;
+    transform: scale(0.7);
+    cursor: pointer;
+    transition: fill 0.2s ease;
+    &:hover {
+      fill: $blue;
+    }
+  }
+  &.vs--open {
+    &.vs--single {
+      .vs__selected {
+        position: static;
+      }
+    }
+    .vs__dropdown-toggle {
+      box-shadow: 0 0 0 0.2rem rgba(0, 86, 143, 0.25);
+    }
+    .vs__open-indicator {
+      transform: rotate(180deg) scale(0.7);
+    }
+  }
+}

@@ -63,31 +63,26 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Connections </label>
-                                <selectize
-                                    v-model="connections"
-                                    multiple
-                                    class="form-select"
-                                    placeholder="Select connections..."
+                                <v-select
+                                    class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid':
                                             $page.props.errors.connections_id,
                                     }"
+                                    :value="connections.selected"
+                                    multiple
+                                    placeholder="Select connections..."
                                     label="name"
-                                    :keys="['name']"
-                                    :options="connectionsList"
-                                    :createItem="false"
-                                    :searchFn="searchConnections"
+                                    :options="connections.list"
+                                    @input="setConnections"
                                 >
-                                    <template
-                                        slot="option"
-                                        slot-scope="{ option }"
-                                    >
-                                        <div>{{ option.name }}</div>
+                                    <template #option="{ name, base_url }">
+                                        <div>{{ name }}</div>
                                         <div class="text-muted small">
-                                            {{ option.base_url }}
+                                            {{ base_url }}
                                         </div>
                                     </template>
-                                </selectize>
+                                </v-select>
                                 <span
                                     v-if="$page.props.errors.groups_id"
                                     class="invalid-feedback"
@@ -184,28 +179,20 @@ export default {
     data() {
         return {
             sending: false,
-            connections: this.component?.connections?.data ?? [],
-            connectionsList: [],
+            connections: {
+                list: [],
+                selected: this.component?.connections?.data ?? [],
+            },
             form: {
                 name: this.component?.name,
                 base_url: this.component?.base_url ?? null,
                 description: this.component?.description ?? null,
                 sutable: this.component?.sutable ?? false,
-                connections_id: null,
+                connections_id: this.component?.connections?.data?.map(
+                    (item) => item.id ?? null
+                ),
             },
         };
-    },
-    watch: {
-        connections: {
-            immediate: true,
-            handler: function (value) {
-                this.form.connections_id = value
-                    ? collect(value)
-                          .map((item) => item.id)
-                          .all()
-                    : [];
-            },
-        },
     },
     mounted() {
         this.loadConnectionsList();
@@ -226,17 +213,26 @@ export default {
         loadConnectionsList(query = '') {
             axios
                 .get(route('admin.components.connection-candidates'), {
-                    params: { q: query, component_id: this.component.id },
+                    params: { q: query },
                 })
                 .then((result) => {
-                    this.connectionsList = collect(result.data.data)
-                        .whereNotIn('id', this.form.connections_id)
-                        .all();
+                    if (!this.form.connections_id) {
+                        this.connections.list = result.data.data;
+                    } else {
+                        this.connections.list = result.data.data.filter(
+                            (item) =>
+                                !this.form.connections_id.includes(item.id)
+                        );
+                    }
                 });
         },
-        searchConnections(query, callback) {
-            this.loadConnectionsList(query);
-            callback();
+        setConnections(items = []) {
+            this.connections.selected = items;
+            this.form.connections_id = this.connections.selected.map(
+                (item) => item.id
+            );
+
+            this.loadConnectionsList();
         },
     },
 };

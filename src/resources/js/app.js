@@ -69,6 +69,9 @@ Vue.component('input-search', () =>
 Vue.component('selectize', () =>
     import(/* webpackChunkName: "selectize" */ '@isneezy/vue-selectize')
 );
+Vue.component('v-select', () =>
+    import(/* webpackChunkName: "v-select" */ 'vue-select')
+);
 Vue.component('confirm-link', () =>
     import(
         /* webpackChunkName: "confirm-link" */ '@/components/confirm-link.vue'

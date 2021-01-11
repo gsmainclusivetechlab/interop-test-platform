@@ -10,15 +10,14 @@
                         <label class="form-label">{{
                             $t('inputs.method.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
+                        <v-select
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.method,
                             }"
                             v-model="method.selected"
                             :placeholder="$t('inputs.method.placeholder')"
                             :options="method.list"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.method"
@@ -77,15 +76,14 @@
                         <label class="form-label">{{
                             $t('inputs.source.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
+                        <v-select
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.source_id,
                             }"
                             v-model="source"
                             :placeholder="$t('inputs.source.placeholder')"
                             :options="sourceList"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.source_id"
@@ -100,15 +98,14 @@
                         <label class="form-label">{{
                             $t('inputs.target.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
+                        <v-select
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.target_id,
                             }"
                             v-model="target"
                             :placeholder="$t('inputs.target.placeholder')"
                             :options="targetList"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.target_id"
@@ -123,15 +120,14 @@
                         <label class="form-label">{{
                             $t('inputs.api-spec.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
+                        <v-select
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.api_spec,
                             }"
                             v-model="apiSpec.selected"
                             :placeholder="$t('inputs.api-spec.placeholder')"
                             :options="apiSpec.list"
-                            :createItem="false"
                         />
                     </div>
                     <div class="col-12 mb-3">
@@ -525,8 +521,8 @@
                         <h2 class="card-title">
                             {{ $t('inputs.response.status.label') }}
                         </h2>
-                        <selectize
-                            class="form-select"
+                        <v-select
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid':
                                     $page.props.errors['response.status'],
@@ -536,7 +532,6 @@
                                 $t('inputs.response.status.placeholder')
                             "
                             :options="example.response.status.list"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors['response.status']"
