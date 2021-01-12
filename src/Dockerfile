@@ -91,9 +91,12 @@ RUN mkdir -p /etc/nginx/ssl/default-certs && \
     mkdir -p /etc/nginx/ssl/client-certs &&\
     cp RootCA.crt /etc/nginx/ssl/client-certs/CA.crt
 
-COPY --chmod=+x build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
-COPY --chmod=+x build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
+COPY build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
+COPY build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
 COPY build/nginx-includes /etc/nginx/includes
+
+RUN chmod +x /etc/periodic/hourly/client-CA-nginx-renew.sh && \
+    chmod +x /etc/periodic/hourly/certbot-cert-nginx-reload.sh
 
 # Apply certbot SSL config if HTTPS_SSL_CERT=certbot
 ARG HTTPS_SSL_CERT=selfsigned
