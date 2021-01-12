@@ -93,7 +93,7 @@ export default {
         certificates: {
             type: Object,
             required: true,
-        }
-    }
+        },
+    },
 };
 </script>

@@ -57,13 +57,10 @@ The API simulator is built using microservices, coordinated using
     $ yarn prod
     ```
 5. Get valid SSL certificates for domain in production mode for valid domain:
-    ```bash
-    $ yarn certbot
-    ```
-<span id="1">\*</span>This is required to populate dependencies on the host
-(useful for IDEs) and when using volumes to synchronise source code (otherwise
-the empty host dependency directories will overwrite those inside the
-container).
+   `bash $ yarn certbot ` <span id="1">\*</span>This is required to populate
+   dependencies on the host (useful for IDEs) and when using volumes to
+   synchronise source code (otherwise the empty host dependency directories will
+   overwrite those inside the container).
 
 ### Updates
 
@@ -83,11 +80,9 @@ $ yarn prod
 ```
 
 ## mTLS
-Client CA certificates renews every one hour.
-To renew CA certificates manually please run:
-    ```bash
-    $ yarn mtls:renew
-    ```
+
+Client CA certificates renews every one hour. To renew CA certificates manually
+please run: `bash $ yarn mtls:renew `
 
 ## Local development
 

@@ -58,8 +58,10 @@ class PendingRequest
         return $this;
     }
 
-    public function transfer(RequestInterface $request, array $options = []): PromiseInterface
-    {
+    public function transfer(
+        RequestInterface $request,
+        array $options = []
+    ): PromiseInterface {
         return $this->buildClient()->sendAsync($request, $options);
     }
 

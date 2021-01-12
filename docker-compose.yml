@@ -73,11 +73,12 @@ services:
     volumes:
       - certbot_certs:/etc/letsencrypt
       - certbot_www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    entrypoint:
+      "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait
+      $${!}; done;'"
 volumes:
   mysqldata:
   redisdata:
   ca_certs:
   certbot_certs:
   certbot_www:
-  

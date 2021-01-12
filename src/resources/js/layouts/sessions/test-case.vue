@@ -50,11 +50,20 @@
                                             :id="`testing-${component.id}-${connection.id}`"
                                             type="text"
                                             :value="
-                                                route('testing.sut', [
-                                                    session.uuid,
-                                                    component.uuid,
-                                                    connection.uuid,
-                                                ])
+                                                component.use_encryption
+                                                    ? route('testing.sut', [
+                                                          session.uuid,
+                                                          component.uuid,
+                                                          connection.uuid,
+                                                      ])
+                                                    : route(
+                                                          'testing-insecure.sut',
+                                                          [
+                                                              session.uuid,
+                                                              component.uuid,
+                                                              connection.uuid,
+                                                          ]
+                                                      )
                                             "
                                             class="form-control"
                                             readonly

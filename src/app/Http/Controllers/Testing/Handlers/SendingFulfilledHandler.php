@@ -44,7 +44,11 @@ class SendingFulfilledHandler
     public function __invoke(ResponseInterface $response)
     {
         $testSuite = new TestSuite();
-        $testSuite->addTest(new RequestMtlsValidationTest($this->testResult));
+        if ($this->testResult->testStep->mtls) {
+            $testSuite->addTest(
+                new RequestMtlsValidationTest($this->testResult)
+            );
+        }
         $testSuite->addTestSuite(
             (new TestSpecLoader())->load($this->testResult)
         );

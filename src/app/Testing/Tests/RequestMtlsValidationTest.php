@@ -5,6 +5,7 @@ namespace App\Testing\Tests;
 use App\Models\TestResult;
 use App\Testing\TestCase;
 use PHPUnit\Framework\AssertionFailedError;
+use Route;
 
 class RequestMtlsValidationTest extends TestCase
 {
@@ -18,13 +19,13 @@ class RequestMtlsValidationTest extends TestCase
 
     public function getName(): string
     {
-        return 'Request: mTLS';
+        return 'Was encrypted?';
     }
 
     public function getActual(): array
     {
         return [
-            'mtls' => (bool) $this->testResult->testStep->mtls,
+            'mtls' => $this->getEncryptionStatus(),
         ];
     }
 
@@ -35,8 +36,13 @@ class RequestMtlsValidationTest extends TestCase
 
     protected function test()
     {
-        if ($this->testResult->testStep->mtls) {
+        if (!$this->getEncryptionStatus()) {
             throw new AssertionFailedError();
         }
+    }
+
+    protected function getEncryptionStatus(): bool
+    {
+        return Route::currentRouteNamed('testing.sut');
     }
 }

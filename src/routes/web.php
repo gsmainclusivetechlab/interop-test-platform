@@ -26,35 +26,37 @@ Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
 /**
  * Groups Routes
  */
-Route::namespace('Groups')->middleware(['auth', 'verified'])->group(function () {
-    Route::resource('groups', 'GroupController')->only(['index', 'show']);
-    Route::resource('groups.users', 'GroupUserController')->only([
-        'index',
-        'create',
-        'store',
-        'destroy',
-    ]);
-    Route::get(
-        'groups/{group}/users/candidates',
-        'GroupUserController@candidates'
-    )->name('groups.users.candidates');
-    Route::put(
-        'groups/{group}/users/{user}/toggle-admin',
-        'GroupUserController@toggleAdmin'
-    )->name('groups.users.toggle-admin');
-    Route::resource(
-        'groups.environments',
-        'GroupEnvironmentController'
-    )->except(['show']);
-    Route::resource(
-        'groups.certificates',
-        'GroupCertificatesController'
-    )->except(['show', 'edit']);
-    Route::resource(
-        'groups.user-invitations',
-        'GroupUserInvitationController'
-    )->except(['show', 'edit']);
-});
+Route::namespace('Groups')
+    ->middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::resource('groups', 'GroupController')->only(['index', 'show']);
+        Route::resource('groups.users', 'GroupUserController')->only([
+            'index',
+            'create',
+            'store',
+            'destroy',
+        ]);
+        Route::get(
+            'groups/{group}/users/candidates',
+            'GroupUserController@candidates'
+        )->name('groups.users.candidates');
+        Route::put(
+            'groups/{group}/users/{user}/toggle-admin',
+            'GroupUserController@toggleAdmin'
+        )->name('groups.users.toggle-admin');
+        Route::resource(
+            'groups.environments',
+            'GroupEnvironmentController'
+        )->except(['show']);
+        Route::resource(
+            'groups.certificates',
+            'GroupCertificatesController'
+        )->except(['show', 'edit']);
+        Route::resource(
+            'groups.user-invitations',
+            'GroupUserInvitationController'
+        )->except(['show', 'edit']);
+    });
 
 /**
  * Sessions Routes
@@ -184,6 +186,18 @@ Route::name('settings.')
 /**
  * Testing Routes
  */
+Route::name('testing-insecure.')
+    ->prefix('testing-insecure')
+    ->namespace('Testing')
+    ->group(function () {
+        Route::any(
+            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
+            'SutController'
+        )
+            ->name('sut')
+            ->where('path', '.*');
+    });
+
 Route::name('testing.')
     ->prefix('testing')
     ->namespace('Testing')

@@ -26,8 +26,7 @@ class CreateCertificatesTable extends Migration
         });
 
         Schema::table('session_components', function (Blueprint $table) {
-            $table->boolean('use_encryption')
-                ->default(false);
+            $table->boolean('use_encryption')->default(false);
             $table->unsignedBigInteger('certificate_id')->nullable();
 
             $table

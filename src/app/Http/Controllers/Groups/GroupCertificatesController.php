@@ -34,7 +34,7 @@ class GroupCertificatesController extends Controller
                     ->certificates()
                     ->latest()
                     ->paginate()
-            )
+            ),
         ]);
     }
 
@@ -65,9 +65,21 @@ class GroupCertificatesController extends Controller
         $this->authorize('admin', $group);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'ca_crt' => ['required', 'mimetypes:text/plain', new SslCertificate],
-            'client_crt' => ['required', 'mimetypes:text/plain', new SslCertificate],
-            'client_key' => ['required', 'mimetypes:text/plain', new SslKey($request->get('passphrase'))],
+            'ca_crt' => [
+                'required',
+                'mimetypes:text/plain',
+                new SslCertificate(),
+            ],
+            'client_crt' => [
+                'required',
+                'mimetypes:text/plain',
+                new SslCertificate(),
+            ],
+            'client_key' => [
+                'required',
+                'mimetypes:text/plain',
+                new SslKey($request->get('passphrase')),
+            ],
             'passphrase' => ['nullable', 'string'],
         ]);
 
