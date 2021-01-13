@@ -23,7 +23,6 @@
                             v-model="answers[question.name]"
                             :multiple="question.type === 'multiselect'"
                             :options="question.values"
-                            :clearable="false"
                             :selectable="
                                 (option) =>
                                     isSelectable(option, answers[question.name])
@@ -137,37 +136,33 @@ export default {
             );
         },
         updateAnswers() {
-            if (this?.session?.questionnaire?.[this.section]) {
-                const sessionAnswers = this.session.questionnaire[this.section];
-                const answers = {};
+            if (!this?.session?.questionnaire?.[this.section]) return;
 
-                Object.keys(sessionAnswers).forEach((name) => {
-                    const question = collect(this.questions.data)
-                        .where('name', name)
-                        .first();
+            const sessionAnswers = this.session.questionnaire[this.section];
+            const answers = {};
 
-                    if (question.type === 'multiselect') {
-                        answers[name] = [];
+            Object.keys(sessionAnswers).forEach((name) => {
+                const question = collect(this.questions.data)
+                    .where('name', name)
+                    .first();
 
-                        Object.values(sessionAnswers[name]).forEach(
-                            (answer) => {
-                                answers[name].push(
-                                    this.getValue(question, answer)
-                                );
-                            }
-                        );
-                    } else {
-                        answers[name] = this.getValue(
-                            question,
-                            sessionAnswers[name]
-                        );
-                    }
-                });
+                if (question.type === 'multiselect') {
+                    answers[name] = [];
 
-                this.answers = answers;
-            }
+                    Object.values(sessionAnswers[name]).forEach((answer) => {
+                        answers[name].push(this.getValue(question, answer));
+                    });
+                } else {
+                    answers[name] = this.getValue(
+                        question,
+                        sessionAnswers[name]
+                    );
+                }
+            });
+
+            this.answers = answers;
         },
-        availablePreconditions: function (question) {
+        availablePreconditions(question) {
             const preconditions = question.preconditions;
 
             let result = false;
@@ -206,6 +201,8 @@ export default {
                 result[question.name] =
                     Object.keys(question.preconditions).length > 0 &&
                     !this.availablePreconditions(question);
+
+                if (result[question.name]) this.answers[question.name] = null;
             });
 
             return result;
