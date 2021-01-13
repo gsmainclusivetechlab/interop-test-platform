@@ -8,32 +8,22 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">SUTs</label>
-                        <!-- <selectize
-                            v-model="selectedComponents"
-                            :class="{
-                                'is-invalid': $page.props.errors.component_ids,
-                            }"
-                            :options="suts.data"
-                            keyBy="id"
-                            :keys="['name']"
-                            label="name"
-                            :createItem="false"
-                            :multiple="true"
-                            class="form-select"
-                            placeholder="Select SUT..."
-                            :disabled="selectedSut"
-                        /> -->
                         <v-select
-                            v-model="selectedComponents"
-                            :options="suts.data"
+                            v-model="currentSuts.selected"
+                            :options="currentSuts.list"
                             label="name"
                             multiple
                             placeholder="Select SUT..."
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, currentSuts.selected)
+                            "
                             class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.component_ids,
                             }"
                             :disabled="selectedSut"
+                            @input="setComponents"
                         />
                         <span
                             v-if="$page.props.errors.component_ids"
@@ -101,6 +91,7 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     components: {
@@ -121,36 +112,28 @@ export default {
         },
     },
     data() {
-        const isCompliance = this.session.type === 'compliance';
-        const selectedSut = isCompliance && this.suts.data.length === 1;
-
         return {
             sending: false,
-            isCompliance,
-            selectedSut,
-            selectedComponents: this?.session?.sut?.component_ids
-                ? collect(this.suts.data)
-                      .whereIn('id', this.session.sut.component_ids)
-                      .all()
-                : selectedSut
-                ? [collect(this.suts.data).first()]
-                : [],
+            isCompliance: this.session.type === 'compliance',
+            selectedSut: this.isCompliance && this.suts.data.length === 1,
+            currentSuts: {
+                list: this.suts.data,
+                selected: this?.session?.sut?.component_ids
+                    ? collect(this.suts.data)
+                          .whereIn('id', this.session.sut.component_ids)
+                          .all()
+                    : this.selectedSut
+                    ? [collect(this.suts.data).first()]
+                    : [],
+            },
             form: {
                 base_urls: this?.session?.sut?.base_urls ?? [],
                 component_ids: [],
             },
         };
     },
-    watch: {
-        selectedComponents: {
-            immediate: true,
-            handler(values) {
-                this.form.component_ids =
-                    Object.values(values)?.map((value) => value.id) ?? [];
-            },
-        },
-    },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(
@@ -162,6 +145,9 @@ export default {
                     },
                 }
             );
+        },
+        setComponents(items) {
+            this.form.component_ids = items?.map((item) => item.id) ?? [];
         },
     },
 };

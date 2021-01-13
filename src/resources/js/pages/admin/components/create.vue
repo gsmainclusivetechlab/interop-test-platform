@@ -54,16 +54,23 @@
                             <div class="mb-3">
                                 <label class="form-label"> Connections </label>
                                 <v-select
+                                    v-model="connections.selected"
+                                    :options="connections.list"
+                                    multiple
+                                    placeholder="Select connections..."
+                                    label="name"
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(
+                                                option,
+                                                connections.selected
+                                            )
+                                    "
                                     class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid':
                                             $page.props.errors.connections_id,
                                     }"
-                                    :value="connections.selected"
-                                    multiple
-                                    placeholder="Select connections..."
-                                    label="name"
-                                    :options="connections.list"
                                     @input="setConnections"
                                 >
                                     <template #option="{ name, base_url }">
@@ -152,6 +159,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo: {
@@ -180,6 +188,7 @@ export default {
         this.loadConnectionsList();
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(route('admin.components.store'), this.form, {
@@ -194,23 +203,13 @@ export default {
                     params: { q: query },
                 })
                 .then((result) => {
-                    if (!this.form.connections_id) {
-                        this.connections.list = result.data.data;
-                    } else {
-                        this.connections.list = result.data.data.filter(
-                            (item) =>
-                                !this.form.connections_id.includes(item.id)
-                        );
-                    }
+                    this.connections.list = result.data.data;
                 });
         },
-        setConnections(items = []) {
-            this.connections.selected = items;
+        setConnections() {
             this.form.connections_id = this.connections.selected.map(
                 (item) => item.id
             );
-
-            this.loadConnectionsList();
         },
     },
 };

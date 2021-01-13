@@ -19,16 +19,20 @@
                         <label class="form-label">{{
                             question.question
                         }}</label>
-                        <selectize
+                        <v-select
                             v-model="answers[question.name]"
+                            :multiple="question.type === 'multiselect'"
+                            :options="question.values"
+                            :clearable="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, answers[question.name])
+                            "
+                            placeholder="Select answer..."
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors[question.name],
                             }"
-                            :options="question.values"
-                            :multiple="question.type === 'multiselect'"
-                            :createItem="false"
-                            class="form-select"
-                            placeholder="Select answer..."
                         />
                         <span
                             v-if="$page.props.errors[question.name]"
@@ -68,6 +72,7 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     components: {
@@ -118,6 +123,7 @@ export default {
         this.updateAnswers();
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(
@@ -131,11 +137,7 @@ export default {
             );
         },
         updateAnswers() {
-            if (
-                this.session &&
-                this.session.questionnaire &&
-                this.session.questionnaire[this.section]
-            ) {
+            if (this?.session?.questionnaire?.[this.section]) {
                 const sessionAnswers = this.session.questionnaire[this.section];
                 const answers = {};
 

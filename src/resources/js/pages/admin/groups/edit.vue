@@ -41,6 +41,10 @@
                                     multiple
                                     taggable
                                     push-tags
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(option, domains)
+                                    "
                                     class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid': $page.props.errors.domain,
@@ -107,6 +111,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -135,6 +140,7 @@ export default {
         };
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.put(

@@ -5,16 +5,19 @@
             class="form-control d-flex p-0"
             :options="$page.props.app.locales"
             :clearable="false"
-            :searchable="false"
+            :selectable="(option) => isSelectable(option, $i18n.locale)"
             @input="changeLang"
         />
     </div>
 </template>
 
 <script>
+import { isSelectable } from '@/components/v-select';
+
 export default {
     name: 'LocaleChanger',
     methods: {
+        isSelectable,
         changeLang() {
             this.$inertia.post(
                 route('locale'),
