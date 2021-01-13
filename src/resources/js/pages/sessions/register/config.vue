@@ -23,7 +23,8 @@
                                         :id="`testing-${connection.id}`"
                                         type="text"
                                         :value="
-                                            component.use_encryption
+                                            session.sut[sut.id]
+                                                .use_encryption === '1'
                                                 ? route('testing.sut', [
                                                       session.info.uuid,
                                                       sut.uuid,

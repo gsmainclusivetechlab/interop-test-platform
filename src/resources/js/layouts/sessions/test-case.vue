@@ -32,15 +32,14 @@
                             <div v-if="hasEncrypted" class="mb-3">
                                 <h3>Encrypted connection</h3>
 
-                                <inertia-link
+                                <a
                                     :href="
                                         route('sessions.certificates.download')
                                     "
                                     class="btn btn-outline-primary"
-                                    method="post"
                                 >
                                     Download certificates
-                                </inertia-link>
+                                </a>
                             </div>
                             <div
                                 v-for="(component, i) in session.components
