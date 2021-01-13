@@ -202,7 +202,7 @@ class RegisterController extends Controller
                 ) {
                     $sut['certificate_id'] = Certificate::create([
                         'passphrase' => $sut['passphrase'],
-                        'name' => $sut['ca_crt']->getClientOriginalName(),
+                        'name' => Component::find($sut['id'])->name,
                         'ca_crt_path' => Certificate::storeFile(
                             $request,
                             "components.{$key}.ca_crt"

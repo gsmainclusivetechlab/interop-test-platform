@@ -310,17 +310,18 @@ class SessionController extends Controller
         try {
             $session = DB::transaction(function () use ($session, $request) {
                 $data = $request->validated();
-                collect($request->get('certificates'))->each(function (
+                collect($request->file('certificates'))->each(function (
                     $certificate,
                     $componentId
-                ) use ($request, &$data) {
+                ) use ($session, $request, &$data) {
                     $data['components'][$componentId][
                         'certificate_id'
                     ] = Certificate::create([
-                        'passphrase' => $certificate['passphrase'],
-                        'name' => $request
-                            ->file("certificates.{$componentId}.ca_crt")
-                            ->getClientOriginalName(),
+                        'passphrase' => Arr::get($certificate, 'passphrase'),
+                        'name' => $session->components->firstWhere(
+                            'id',
+                            $componentId
+                        )->name,
                         'ca_crt_path' => Certificate::storeFile(
                             $request,
                             "certificates.{$componentId}.ca_crt"
