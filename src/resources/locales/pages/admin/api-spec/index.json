@@ -1,0 +1,48 @@
+{
+    "en": {
+        "page": {
+            "title": "API Specs"
+        },
+        "buttons": {
+            "import": "Import Api Spec"
+        },
+        "table": {
+            "header": {
+                "name": "Name"
+            },
+            "menu": {
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete {name}?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "API Спецификации"
+        },
+        "buttons": {
+            "import": "Импорт"
+        },
+        "table": {
+            "header": {
+                "name": "Имя"
+            },
+            "menu": {
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены что хотите удалить {name}?"
+                    }
+                }
+            },
+            "no-results": "Результатов нет"
+        }
+    }
+}

@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Create new use case</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -11,7 +11,9 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label"> Name </label>
+                                <label class="form-label">{{
+                                    $t('inputs.name.label')
+                                }}</label>
                                 <input
                                     name="name"
                                     type="text"
@@ -31,7 +33,9 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Description </label>
+                                <label class="form-label">{{
+                                    $t('inputs.description.label')
+                                }}</label>
                                 <textarea
                                     name="description"
                                     class="form-control"
@@ -57,14 +61,14 @@
                                 :href="route('admin.use-cases.index')"
                                 class="btn btn-link"
                             >
-                                Cancel
+                                {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Create
+                                {{ $t('buttons.create') }}
                             </button>
                         </div>
                     </form>
@@ -78,8 +82,8 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Create new use case',
+    metaInfo() {
+        return { title: this.$t('page.title') };
     },
     components: {
         Layout,
@@ -105,3 +109,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/use-cases/create.json"></i18n>
