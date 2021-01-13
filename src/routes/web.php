@@ -66,6 +66,9 @@ Route::name('sessions.')
     ->namespace('Sessions')
     ->group(function () {
         Route::get('/', 'SessionController@index')->name('index');
+        Route::post('certificates', 'CertificatesController@download')->name(
+            'certificates.download'
+        );
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
         Route::get('{session}/export', 'SessionController@export')->name(

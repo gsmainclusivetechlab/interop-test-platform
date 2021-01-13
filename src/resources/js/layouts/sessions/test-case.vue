@@ -29,6 +29,19 @@
                             <p>
                                 <strong>Configuration</strong>
                             </p>
+                            <div v-if="hasEncrypted" class="mb-3">
+                                <h3>Encrypted connection</h3>
+
+                                <inertia-link
+                                    :href="
+                                        route('sessions.certificates.download')
+                                    "
+                                    class="btn btn-outline-primary"
+                                    method="post"
+                                >
+                                    Download certificates
+                                </inertia-link>
+                            </div>
                             <div
                                 v-for="(component, i) in session.components
                                     .data"
@@ -231,6 +244,14 @@ export default {
             type: Number | String,
             required: false,
         },
+    },
+    data() {
+        return {
+            hasEncrypted:
+                collect(this.session.components.data)
+                    .filter((component) => component.use_encryption)
+                    .count() > 0,
+        };
     },
 };
 </script>
