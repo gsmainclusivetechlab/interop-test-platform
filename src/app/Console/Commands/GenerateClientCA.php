@@ -30,6 +30,8 @@ class GenerateClientCA extends Command
      */
     public function handle()
     {
+        $this->info('Start generation...');
+
         Certificate::whereDoesntHave('group')
             ->whereDoesntHave('sessions')
             ->each(function (Certificate $certificate) {
@@ -44,12 +46,18 @@ class GenerateClientCA extends Command
         Certificate::pluck('ca_crt_path', 'ca_md5')->each(function (
             $caPath
         ) use ($tmpPath) {
-            File::append(
-                $tmpPath,
-                trim(Storage::get($caPath), PHP_EOL) . PHP_EOL
-            );
+            $this->appendToFile($tmpPath, Storage::get($caPath));
         });
 
+        $this->appendToFile($tmpPath, File::get(env('ROOT_CA_PATH')));
+
         File::move($tmpPath, $pemPath);
+
+        $this->info('Generated!');
+    }
+
+    protected function appendToFile($filePath, $content)
+    {
+        File::append($filePath, trim($content, PHP_EOL) . PHP_EOL);
     }
 }

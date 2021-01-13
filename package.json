@@ -22,7 +22,7 @@
         "migrate": "npm run docker-ops -- run migrate",
         "test": "npm run docker-ops -- run test && docker cp `docker-compose -f docker-compose.yml -f compose/mailhog.yml -f compose/ops.yml ps --all -q test | head -n 1`:/var/www/results .",
         "dusk": "npm run docker-ops -- run dusk && docker cp `docker-compose -f docker-compose.yml -f compose/mailhog.yml -f compose/ops.yml ps --all -q dusk | head -n 1`:/var/www/html/tests/Browser/screenshots ./results/screenshots",
-        "mtls:renew": "docker-compose exec -u root app sh -c '/etc/periodic/hourly/client-CA-nginx-renew.sh'",
+        "mtls:renew": "docker-compose exec app sh -c 'php artisan certificates:generate-ca' && docker-compose exec -u root app sh -c '/etc/periodic/hourly/client-CA-nginx-renew.sh'",
         "certbot": "ENV_FILE=$(pwd)/.env docker-compose run --rm --entrypoint ' sh -c \"rm -rf /etc/letsencrypt/live/${PROJECT_DOMAIN} || true && certbot certonly --webroot -w /var/www/certbot -d ${PROJECT_DOMAIN} --register-unsafely-without-email --agree-tos --non-interactive \" ' certbot && docker-compose exec -u root app sh -c 'nginx -s reload'"
     },
     "devDependencies": {
