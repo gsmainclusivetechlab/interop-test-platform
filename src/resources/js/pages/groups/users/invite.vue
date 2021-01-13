@@ -11,26 +11,26 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <label class="form-label">User</label>
-                            <selectize
+                            <v-select
                                 v-model.trim="user"
-                                class="form-select"
+                                :options="userList"
+                                :selectable="
+                                    (option) => isSelectable(option, user)
+                                "
+                                label="name"
                                 placeholder="Select user..."
+                                class="form-control d-flex p-0 mb-3"
                                 :class="{
                                     'is-invalid': $page.props.errors.user_id,
                                 }"
-                                label="name"
-                                :keys="['name', 'email']"
-                                :options="userList"
-                                :createItem="false"
-                                :searchFn="searchUser"
                             >
-                                <template #option="{ option }">
+                                <template #option="option">
                                     <div>{{ option.name }}</div>
                                     <div class="text-muted small">
                                         {{ option.company }}
                                     </div>
                                 </template>
-                            </selectize>
+                            </v-select>
                             <span
                                 v-if="$page.props.errors.user_id"
                                 class="invalid-feedback"
@@ -83,6 +83,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -110,6 +111,7 @@ export default {
         this.loadUserList();
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
 
@@ -133,10 +135,6 @@ export default {
                 .then((result) => {
                     this.userList = result.data.data;
                 });
-        },
-        searchUser(query, callback) {
-            this.loadUserList(query);
-            callback();
         },
     },
 };

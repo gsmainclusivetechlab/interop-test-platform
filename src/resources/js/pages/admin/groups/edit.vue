@@ -36,13 +36,20 @@
                                 <label class="form-label">{{
                                     $t('inputs.email-filter.label')
                                 }}</label>
-                                <selectize
+                                <v-select
                                     v-model="domains"
                                     multiple
-                                    class="form-select"
+                                    taggable
+                                    push-tags
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(option, domains)
+                                    "
+                                    class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid': $page.props.errors.domain,
                                     }"
+                                    @input="setDomain"
                                 />
                                 <span
                                     v-if="$page.props.errors.domain"
@@ -104,6 +111,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -126,20 +134,13 @@ export default {
             domains: this.group.domain.split(', '),
             form: {
                 name: this.group.name,
-                domain: null,
+                domain: this.group.domain,
                 description: this.group.description,
             },
         };
     },
-    watch: {
-        domains: {
-            immediate: true,
-            handler: function (value) {
-                this.form.domain = value ? collect(value).implode(', ') : null;
-            },
-        },
-    },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.put(
@@ -151,6 +152,9 @@ export default {
                     },
                 }
             );
+        },
+        setDomain(items) {
+            this.form.domain = items.length > 0 ? items.join(', ') : null;
         },
     },
 };

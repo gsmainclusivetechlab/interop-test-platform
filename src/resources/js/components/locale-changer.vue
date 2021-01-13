@@ -1,19 +1,23 @@
 <template>
     <div v-if="$page.props.app.locales.length > 0" class="locale-changer">
-        <selectize
+        <v-select
             v-model="$i18n.locale"
-            class="form-select"
+            class="form-control d-flex p-0"
             :options="$page.props.app.locales"
-            :createItem="false"
+            :clearable="false"
+            :selectable="(option) => isSelectable(option, $i18n.locale)"
             @input="changeLang"
         />
     </div>
 </template>
 
 <script>
+import { isSelectable } from '@/components/v-select';
+
 export default {
     name: 'LocaleChanger',
     methods: {
+        isSelectable,
         changeLang() {
             this.$inertia.post(
                 route('locale'),

@@ -54,20 +54,22 @@
                         <label class="form-label">{{
                             $t('inputs.behavior.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.props.errors.behavior,
-                            }"
+                        <v-select
                             v-model="behavior"
-                            :placeholder="$t('inputs.behavior.placeholder')"
                             :options="
                                 collect(
                                     $page.props.enums.test_case_behaviors
                                 ).toArray()
                             "
-                            :disableSearch="false"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, behavior)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.behavior.placeholder')"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.behavior,
+                            }"
                         />
                         <span
                             v-if="$page.props.errors.behavior"
@@ -82,17 +84,18 @@
                         <label class="form-label">{{
                             $t('inputs.use-case.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
+                        <v-select
+                            v-model="useCase"
+                            :options="$page.props.useCases"
+                            :selectable="
+                                (option) => isSelectable(option, useCase)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.use-case.placeholder')"
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.use_case_id,
                             }"
-                            v-model="useCase"
-                            label="name"
-                            :placeholder="$t('inputs.use-case.placeholder')"
-                            :options="$page.props.useCases"
-                            :disableSearch="false"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.use_case_id"
@@ -169,18 +172,19 @@
                         <label class="form-label">{{
                             $t('inputs.components.label')
                         }}</label>
-                        <selectize
+                        <v-select
                             v-model="components"
+                            :options="$page.props.components"
                             multiple
-                            class="form-select"
+                            :selectable="
+                                (option) => isSelectable(option, components)
+                            "
+                            label="name"
                             :placeholder="$t('inputs.components.placeholder')"
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.components_id,
                             }"
-                            label="name"
-                            :options="$page.props.components"
-                            :createItem="false"
-                            :disableSearch="true"
                         />
                         <span
                             v-if="$page.props.errors.components_id"
@@ -218,6 +222,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -231,16 +236,17 @@ export default {
     data() {
         return {
             sending: false,
-            name: '',
-            slug: '',
-            behavior: '',
-            useCase: {},
-            description: '',
-            precondition: '',
+            name: null,
+            slug: null,
+            behavior: null,
+            useCase: null,
+            description: null,
+            precondition: null,
             components: [],
         };
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(route('admin.test-cases.store'), this.form, {
@@ -257,8 +263,8 @@ export default {
                 slug: this.slug,
                 behavior: collect(this.$page.props.enums.test_case_behaviors)
                     .flip()
-                    .all()[this.behavior],
-                use_case_id: this.useCase?.id,
+                    .all()[this?.behavior],
+                use_case_id: this.useCase?.id ?? null,
                 components_id: this.components?.map((el) => el.id),
                 description: this.description,
                 precondition: this.precondition,

@@ -36,13 +36,20 @@
                                 <label class="form-label">{{
                                     $t('inputs.email-filter.label')
                                 }}</label>
-                                <selectize
+                                <v-select
                                     v-model="domains"
                                     multiple
-                                    class="form-select"
+                                    taggable
+                                    push-tags
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(option, domains)
+                                    "
+                                    class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid': $page.props.errors.domain,
                                     }"
+                                    @input="setDomain"
                                 />
                                 <span
                                     v-if="$page.props.errors.domain"
@@ -104,6 +111,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -125,15 +133,8 @@ export default {
             },
         };
     },
-    watch: {
-        domains: {
-            immediate: true,
-            handler: function (value) {
-                this.form.domain = value ? collect(value).implode(', ') : null;
-            },
-        },
-    },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(route('admin.groups.store'), this.form, {
@@ -141,6 +142,9 @@ export default {
                     this.sending = false;
                 },
             });
+        },
+        setDomain(items) {
+            this.form.domain = items.length > 0 ? items.join(', ') : null;
         },
     },
 };

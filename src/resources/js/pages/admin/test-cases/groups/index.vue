@@ -9,27 +9,25 @@
                     $t('inputs.add-groups.label')
                 }}</label>
                 <form class="input-group" @submit.prevent="addGroups">
-                    <selectize
+                    <v-select
                         v-model="newList"
+                        :options="searchList"
                         multiple
-                        class="form-select"
+                        :selectable="(option) => isSelectable(option, newList)"
+                        label="name"
+                        :placeholder="$t('inputs.add-groups.placeholder')"
+                        class="form-control d-flex p-0"
                         :class="{
                             'is-invalid': $page.props.errors.groups_id,
                         }"
-                        :placeholder="$t('inputs.add-groups.placeholder')"
-                        label="name"
-                        :keys="['name', 'domain']"
-                        :options="searchList"
-                        :createItem="false"
-                        :searchFn="searchGroups"
                     >
-                        <template #option="{ option }">
+                        <template #option="option">
                             <div>{{ option.name }}</div>
                             <div class="text-muted small">
                                 {{ option.domain }}
                             </div>
                         </template>
-                    </selectize>
+                    </v-select>
                     <button
                         type="submit"
                         class="btn btn-primary"
@@ -137,6 +135,7 @@
 
 <script>
 import Layout from '@/layouts/test-cases/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -173,6 +172,7 @@ export default {
         },
     },
     methods: {
+        isSelectable,
         addGroups() {
             this.sending = true;
 
@@ -198,10 +198,6 @@ export default {
                         .whereNotIn('id', this.currentList)
                         .all();
                 });
-        },
-        searchGroups(query, callback) {
-            this.loadSearchList(query);
-            callback();
         },
     },
     computed: {

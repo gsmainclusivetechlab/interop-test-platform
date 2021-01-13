@@ -10,15 +10,18 @@
                         <label class="form-label">{{
                             $t('inputs.method.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.props.errors.method,
-                            }"
+                        <v-select
                             v-model="method.selected"
                             :placeholder="$t('inputs.method.placeholder')"
                             :options="method.list"
-                            :createItem="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, method.selected)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.method,
+                            }"
                         />
                         <span
                             v-if="$page.props.errors.method"
@@ -77,15 +80,17 @@
                         <label class="form-label">{{
                             $t('inputs.source.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.props.errors.source_id,
-                            }"
+                        <v-select
                             v-model="source"
                             :placeholder="$t('inputs.source.placeholder')"
                             :options="sourceList"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, source)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.source_id,
+                            }"
                         />
                         <span
                             v-if="$page.props.errors.source_id"
@@ -100,15 +105,17 @@
                         <label class="form-label">{{
                             $t('inputs.target.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.props.errors.target_id,
-                            }"
+                        <v-select
                             v-model="target"
                             :placeholder="$t('inputs.target.placeholder')"
                             :options="targetList"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, target)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.target_id,
+                            }"
                         />
                         <span
                             v-if="$page.props.errors.target_id"
@@ -123,15 +130,18 @@
                         <label class="form-label">{{
                             $t('inputs.api-spec.label')
                         }}</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.props.errors.api_spec,
-                            }"
+                        <v-select
                             v-model="apiSpec.selected"
                             :placeholder="$t('inputs.api-spec.placeholder')"
                             :options="apiSpec.list"
-                            :createItem="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, apiSpec.selected)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.api_spec,
+                            }"
                         />
                     </div>
                     <div class="col-12 mb-3">
@@ -525,18 +535,24 @@
                         <h2 class="card-title">
                             {{ $t('inputs.response.status.label') }}
                         </h2>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid':
-                                    $page.props.errors['response.status'],
-                            }"
+                        <v-select
                             v-model="example.response.status.selected"
                             :placeholder="
                                 $t('inputs.response.status.placeholder')
                             "
                             :options="example.response.status.list"
-                            :createItem="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(
+                                        option,
+                                        example.response.status.selected
+                                    )
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['response.status'],
+                            }"
                         />
                         <span
                             v-if="$page.props.errors['response.status']"
@@ -613,6 +629,7 @@
 <script>
 import Layout from '@/layouts/test-cases/main';
 import JsonEditorBlock from '@/components/json-editor-block';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo() {
@@ -706,6 +723,7 @@ export default {
         };
     },
     methods: {
+        isSelectable,
         submit() {
             const form = {
                 api_spec_id:
