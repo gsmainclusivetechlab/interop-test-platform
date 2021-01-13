@@ -66,9 +66,6 @@ Vue.component('input-search', () =>
         /* webpackChunkName: "input-search" */ '@/components/input-search.vue'
     )
 );
-Vue.component('selectize', () =>
-    import(/* webpackChunkName: "selectize" */ '@isneezy/vue-selectize')
-);
 Vue.component('v-select', () =>
     import(/* webpackChunkName: "v-select" */ 'vue-select')
 );
