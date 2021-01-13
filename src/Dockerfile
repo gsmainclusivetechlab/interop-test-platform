@@ -89,7 +89,9 @@ RUN mkdir -p /etc/nginx/ssl/default-certs && \
     cp localhost.crt /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/fullchain.pem &&\
     cp localhost.key /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/privkey.pem &&\
     mkdir -p /etc/nginx/ssl/client-certs &&\
-    cp RootCA.crt /etc/nginx/ssl/client-certs/CA.crt
+    cp RootCA.crt /etc/nginx/ssl/client-certs/CA.crt && \
+    chmod +x /etc/nginx/ssl/default-certs/RootCA.crt && \
+    chmod +x /etc/nginx/ssl/default-certs/RootCA.key
 
 COPY build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
 COPY build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
