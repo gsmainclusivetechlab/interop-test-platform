@@ -73,10 +73,10 @@
                                     }"
                                     @input="setConnections"
                                 >
-                                    <template #option="{ name, base_url }">
-                                        <div>{{ name }}</div>
+                                    <template #option="option">
+                                        <div>{{ option.name }}</div>
                                         <div class="text-muted small">
-                                            {{ base_url }}
+                                            {{ option.base_url }}
                                         </div>
                                     </template>
                                 </v-select>
