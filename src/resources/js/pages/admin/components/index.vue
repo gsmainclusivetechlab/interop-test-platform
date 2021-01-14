@@ -35,6 +35,7 @@
                             <th class="text-nowrap">#</th>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap">Slug</th>
+                            <th class="text-nowrap">UUID</th>
                             <th class="text-nowrap">Base URL</th>
                             <th class="text-nowrap">Can be SUT</th>
                             <th class="text-nowrap">Connections</th>
@@ -55,6 +56,9 @@
                             </td>
                             <td class="text-break">
                                 {{ component.slug }}
+                            </td>
+                            <td class="text-break">
+                                {{ component.uuid }}
                             </td>
                             <td class="text-break">
                                 {{ component.base_url }}

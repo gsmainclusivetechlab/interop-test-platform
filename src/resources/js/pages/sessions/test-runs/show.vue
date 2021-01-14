@@ -2,6 +2,7 @@
     <layout
         :session="session"
         :testCase="testCase"
+        :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
         :testStepFirstSource="testStepFirstSource"
     >
@@ -763,6 +764,10 @@ export default {
             type: Object,
             required: true,
         },
+      testSteps: {
+        type: Object,
+        required: true,
+      },
         testRun: {
             type: Object,
             required: true,

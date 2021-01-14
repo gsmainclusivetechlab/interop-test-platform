@@ -6,23 +6,21 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
-use App\Http\Resources\{
-    ComponentResource,
+use App\Http\Resources\{ComponentResource,
     GroupEnvironmentResource,
     QuestionResource,
     SectionResource,
-    UseCaseResource
-};
-use App\Models\{
-    Component,
+    TestStepResource,
+    UseCaseResource};
+use App\Models\{Component,
     GroupEnvironment,
     QuestionnaireQuestions,
     QuestionnaireSection,
     QuestionnaireTestCase,
     Session,
     TestCase,
-    UseCase
-};
+    TestStep,
+    UseCase};
 use Arr;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -354,8 +352,9 @@ class RegisterController extends Controller
      */
     public function showConfigForm()
     {
+        $session = session('session');
         return Inertia::render('sessions/register/config', [
-            'session' => session('session'),
+            'session' => $session,
             'suts' => ComponentResource::collection(
                 Component::whereIn(
                     'id',
@@ -377,6 +376,14 @@ class RegisterController extends Controller
                     });
                 }
             )->exists(),
+            'testSteps' => TestStepResource::collection(
+                TestStep::whereIn(
+                    'test_case_id',
+                    session('session.info.test_cases', [0])
+                )
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
         ]);
     }
 

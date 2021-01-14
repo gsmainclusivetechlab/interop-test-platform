@@ -7,6 +7,7 @@ use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\TestStepResource;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
 use App\Models\Session;
@@ -68,6 +69,12 @@ class TestCaseController extends Controller
                     //                    ->completed()
                     ->latest()
                     ->paginate()
+            ),
+            'testSteps' => TestStepResource::collection(
+                $testCase
+                    ->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
             ),
         ]);
     }

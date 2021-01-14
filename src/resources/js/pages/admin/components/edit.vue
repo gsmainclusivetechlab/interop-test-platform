@@ -41,6 +41,16 @@
                                 />
                             </div>
                             <div class="mb-3">
+                                <label class="form-label"> UUID </label>
+                                <input
+                                    name="name"
+                                    type="text"
+                                    class="form-control"
+                                    :value="component.uuid"
+                                    readonly
+                                />
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label"> Base URL </label>
                                 <input
                                     name="name"

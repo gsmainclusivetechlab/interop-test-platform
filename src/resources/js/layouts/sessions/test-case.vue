@@ -25,7 +25,16 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li v-if="session.components.data.length">
+                        <li v-if="
+                            session.components.data.length &&
+                            inArray(
+                                session.components.data,
+                                collect(testSteps.data)
+                                    .map((value) => value.source.id)
+                                    .unique()
+                                    .toArray()
+                            )
+                        ">
                             <p>
                                 <strong>Configuration</strong>
                             </p>
@@ -34,38 +43,58 @@
                                     .data"
                                 :key="i"
                             >
-                                <h3>{{ component.name }}</h3>
                                 <div
-                                    class="mb-3"
-                                    v-for="(
-                                        connection, i
-                                    ) in component.connections"
-                                    :key="i"
+                                    v-if="inArray(
+                                            [component],
+                                            collect(testSteps.data)
+                                                .map((value) => value.source.id)
+                                                .unique()
+                                                .toArray()
+                                        )"
                                 >
-                                    <label>
-                                        {{ connection.name }}
-                                    </label>
-                                    <div class="input-group">
-                                        <input
-                                            :id="`testing-${component.id}-${connection.id}`"
-                                            type="text"
-                                            :value="
-                                                route('testing.sut', [
-                                                    session.uuid,
-                                                    component.uuid,
-                                                    connection.uuid,
-                                                ])
-                                            "
-                                            class="form-control"
-                                            readonly
-                                        />
-                                        <clipboard-copy-btn
-                                            :target="`#testing-${component.id}-${connection.id}`"
-                                            title="Copy"
-                                        ></clipboard-copy-btn>
+                                    <h3>{{ component.name }}</h3>
+                                    <div
+                                        class="mb-3"
+                                        v-for="(
+                                            connection, i
+                                        ) in component.connections"
+                                        :key="i"
+                                    >
+                                        <div
+                                            v-if="inArray(
+                                                [connection],
+                                                collect(testSteps.data)
+                                                    .map((value) => value.target.id)
+                                                    .unique()
+                                                    .toArray()
+                                            )"
+                                        >
+                                            <label>
+                                                {{ connection.name }}
+                                            </label>
+                                            <div class="input-group">
+                                                <input
+                                                    :id="`testing-${component.id}-${connection.id}`"
+                                                    type="text"
+                                                    :value="
+                                                        route('testing.sut', [
+                                                            session.uuid,
+                                                            component.uuid,
+                                                            connection.uuid,
+                                                        ])
+                                                    "
+                                                    class="form-control"
+                                                    readonly
+                                                />
+                                                <clipboard-copy-btn
+                                                    :target="`#testing-${component.id}-${connection.id}`"
+                                                    title="Copy"
+                                                ></clipboard-copy-btn>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <hr />
                                 </div>
-                                <hr />
                             </div>
                         </li>
                         <li v-if="testCase.description">
@@ -165,7 +194,7 @@
                                         ])
                                     "
                                     :confirm-title="'Run test case'"
-                                    :confirm-text="`Start new test case run?`"
+                                    :confirm-text="`Start a new test case run?`"
                                     v-if="isAvailableRun"
                                     class="btn btn-primary"
                                     method="post"
@@ -212,6 +241,10 @@ export default {
             type: Object,
             required: true,
         },
+        testSteps: {
+            type: Object,
+            required: true,
+        },
         testStepFirstSource: {
             type: Object,
             required: true,
@@ -223,6 +256,17 @@ export default {
         testRunAttempts: {
             type: Number | String,
             required: false,
+        },
+    },
+    methods: {
+        inArray(components, array) {
+            let result = false;
+            components.forEach(function(component) {
+                if (array.includes(component.id)) {
+                    result = true;
+                }
+            });
+            return result;
         },
     },
 };
