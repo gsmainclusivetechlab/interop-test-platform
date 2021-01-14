@@ -52,7 +52,7 @@ ARG HOST_UID=www-data:www-data
 RUN chmod +x /wait /usr/local/bin/start && \
     chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx  /run
 
-USER root
+USER ${HOST_UID}
 
 WORKDIR /var/www/html
 RUN mkdir /var/www/logs
@@ -97,14 +97,14 @@ COPY build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.s
 COPY build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
 COPY build/nginx-includes /etc/nginx/includes
 
+USER root
+
 RUN chmod +x /etc/periodic/hourly/client-CA-nginx-renew.sh && \
     chmod +x /etc/periodic/hourly/certbot-cert-nginx-reload.sh
 
 # Apply certbot SSL config if HTTPS_SSL_CERT=certbot
 ARG HTTPS_SSL_CERT=selfsigned
 ARG PROJECT_DOMAIN=itp-test-control.test
-
-USER root
 
 RUN if [ "${HTTPS_SSL_CERT}" = 'certbot' ]; then \
         sed 's?include /etc/nginx/includes/selfsigned-https.conf;?include /etc/nginx/includes/certbot-https.conf;?' -i /etc/nginx/nginx.conf; \
