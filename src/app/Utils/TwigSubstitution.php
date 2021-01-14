@@ -2,6 +2,9 @@
 
 namespace App\Utils;
 
+use App\Models\Component;
+use App\Models\Session;
+use Illuminate\Support\Arr;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
@@ -31,13 +34,13 @@ class TwigSubstitution
 
     /**
      * @param $testResults
-     * @param array $envs
+     * @param Session $session
      */
-    public function __construct($testResults, $envs = [])
+    public function __construct($testResults, $session)
     {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
-        $this->data = $this->mapInto($testResults, $envs);
+        $this->data = $this->mapInto($testResults, $session);
     }
 
     /**
@@ -108,11 +111,12 @@ class TwigSubstitution
 
     /**
      * @param $testResults
-     * @param array $envs
+     * @param Session $session
      * @return mixed
      */
-    protected function mapInto($testResults, $envs)
+    protected function mapInto($testResults, $session)
     {
+        $components = Component::all()->load('connections');
         return [
             'steps' => $testResults
                 ->load('testStep')
@@ -129,7 +133,36 @@ class TwigSubstitution
                     ];
                 })
                 ->toArray(),
-            'env' => $envs,
+            'env' => $session->environments(),
+            'components' => $components
+                ->mapWithKeys(function ($item) {
+                    return [
+                        $item->slug => Arr::only(
+                            $item->toArray(),
+                            ['uuid', 'name', 'description', 'slug', 'base_url']
+                        ),
+                    ];
+                })->toArray(),
+            'mapped_urls' => $components
+                ->mapWithKeys(function (Component $item) use ($session) {
+                    $connectionUrls = [];
+                    foreach ($item->connections as $connection) {
+                        $connectionUrls[$item->slug][$connection->slug] = [
+                            'sut' => route('testing.sut', [
+                                $session->uuid,
+                                $item->uuid,
+                                $connection->uuid,
+                            ]),
+                            'simulator' => route('testing.simulator', [
+                                $item->uuid,
+                                $connection->uuid,
+                            ])
+                        ];
+                    }
+                    return $connectionUrls;
+                })->toArray(),
+            'session_uuid' => $session->uuid,
+            'app_url' => route('home')
         ];
     }
 }

@@ -53,14 +53,11 @@
                                 <label class="col-sm-3">
                                     <b>SUTs</b>
                                 </label>
-                                <selectize
+                                <v-select
                                     :value="components.data"
-                                    :options="components.data"
-                                    keyBy="id"
-                                    :keys="['name']"
                                     label="name"
-                                    :multiple="true"
-                                    class="form-select"
+                                    multiple
+                                    class="form-control d-flex p-0"
                                     disabled
                                 />
                             </div>
@@ -344,16 +341,19 @@
                                 <label class="col-sm-3">
                                     <b>Environments</b>
                                 </label>
-                                <selectize
-                                    v-model="groupEnvironment"
-                                    class="form-select mb-3"
-                                    placeholder="Group environment..."
-                                    label="name"
-                                    :keys="['name']"
-                                    :options="groupEnvironmentsList"
-                                    :createItem="false"
-                                    :searchFn="searchGroupEnvironments"
+                                <v-select
                                     v-if="hasGroupEnvironments"
+                                    v-model="groupEnvironment"
+                                    :options="groupEnvironmentsList"
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(
+                                                option,
+                                                groupEnvironment
+                                            )
+                                    "
+                                    label="name"
+                                    class="form-control d-flex p-0 mb-3"
                                 />
                                 <environments
                                     v-model="form.environments"
@@ -418,6 +418,7 @@ import { serialize } from '@/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     components: {
@@ -493,7 +494,7 @@ export default {
     watch: {
         groupEnvironment: {
             immediate: false,
-            handler: function (value) {
+            handler(value) {
                 this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     this.form.environments = value.variables;
@@ -519,6 +520,7 @@ export default {
         this.loadGroupCertificateList();
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(

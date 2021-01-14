@@ -2,12 +2,14 @@
     <layout :test-case="testCase">
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Edit</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{
+                            $t('inputs.name.label')
+                        }}</label>
                         <input
                             name="name"
                             type="text"
@@ -27,7 +29,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Slug</label>
+                        <label class="form-label">{{
+                            $t('inputs.slug.label')
+                        }}</label>
                         <input
                             name="slug"
                             type="text"
@@ -47,21 +51,25 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Behavior</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.props.errors.behavior,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.behavior.label')
+                        }}</label>
+                        <v-select
                             v-model="behavior"
-                            placeholder="Select behavior"
                             :options="
                                 collect(
                                     $page.props.enums.test_case_behaviors
                                 ).toArray()
                             "
-                            :disableSearch="false"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, behavior)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.behavior.placeholder')"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.behavior,
+                            }"
                         />
                         <span
                             v-if="$page.props.errors.behavior"
@@ -73,18 +81,21 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Use Case</label>
-                        <selectize
-                            class="form-select"
+                        <label class="form-label">{{
+                            $t('inputs.use-case.label')
+                        }}</label>
+                        <v-select
+                            v-model="useCase"
+                            :options="$page.props.useCases"
+                            :selectable="
+                                (option) => isSelectable(option, useCase)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.use-case.placeholder')"
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.use_case_id,
                             }"
-                            v-model="useCase"
-                            label="name"
-                            placeholder="Select use case"
-                            :options="$page.props.useCases"
-                            :disableSearch="false"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.use_case_id"
@@ -96,7 +107,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Precondition</label>
+                        <label class="form-label">{{
+                            $t('inputs.precondition.label')
+                        }}</label>
                         <text-editor
                             :class="{
                                 'is-invalid': $page.props.errors.precondition,
@@ -125,7 +138,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{
+                            $t('inputs.precondition.label')
+                        }}</label>
                         <text-editor
                             :class="{
                                 'is-invalid': $page.props.errors.description,
@@ -154,21 +169,22 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Components</label>
-                        <selectize
-                            class="form-select"
+                        <label class="form-label">{{
+                            this.$t('inputs.components.label')
+                        }}</label>
+                        <v-select
+                            v-model="components"
+                            :options="$page.props.components"
+                            multiple
+                            :selectable="
+                                (option) => isSelectable(option, components)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.components.placeholder')"
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.components_id,
                             }"
-                            v-model="components"
-                            multiple
-                            placeholder="Select components"
-                            label="name"
-                            :options="
-                                $page.props.components.map((el) => el.name)
-                            "
-                            :createItem="false"
-                            :disableSearch="true"
                         />
                         <span
                             v-if="$page.props.errors.components_id"
@@ -190,14 +206,14 @@
                     :href="route('admin.test-cases.info.show', testCase.id)"
                     class="btn btn-link"
                 >
-                    Cancel
+                    {{ this.$t('buttons.cancel') }}
                 </inertia-link>
                 <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Update
+                    {{ this.$t('buttons.update') }}
                 </button>
             </div>
         </form>
@@ -206,10 +222,13 @@
 
 <script>
 import Layout from '@/layouts/test-cases/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Edit',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -233,10 +252,11 @@ export default {
             )[0],
             description: this.testCase.description,
             precondition: this.testCase.precondition,
-            components: this.testCase.components.data?.map((el) => el.name),
+            components: this.testCase.components.data,
         };
     },
     methods: {
+        isSelectable,
         submit() {
             const form = {
                 name: this.name,
@@ -247,11 +267,7 @@ export default {
                 use_case_id: this.useCase?.id,
                 description: this.description,
                 precondition: this.precondition,
-                components_id: this.components.map((name) => {
-                    return this.$page.props.components.filter((obj) => {
-                        return collect(obj).flip().has(name);
-                    })[0].id;
-                }),
+                components_id: this.components.map((item) => item.id),
             };
 
             this.sending = true;
@@ -268,3 +284,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/info/edit.json"></i18n>

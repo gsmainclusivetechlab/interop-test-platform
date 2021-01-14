@@ -2,21 +2,26 @@
     <layout :test-case="testCase">
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Edit</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label">Method</label>
-                        <selectize
-                            class="form-select"
+                        <label class="form-label">{{
+                            $t('inputs.method.label')
+                        }}</label>
+                        <v-select
+                            v-model="method.selected"
+                            :placeholder="$t('inputs.method.placeholder')"
+                            :options="method.list"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, method.selected)
+                            "
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.method,
                             }"
-                            v-model="method.selected"
-                            placeholder="Select method"
-                            :options="method.list"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.method"
@@ -28,7 +33,9 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Path</label>
+                        <label class="form-label">{{
+                            $t('inputs.path')
+                        }}</label>
                         <input
                             name="path"
                             type="text"
@@ -48,7 +55,9 @@
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Pattern</label>
+                        <label class="form-label">{{
+                            $t('inputs.pattern')
+                        }}</label>
                         <input
                             name="pattern"
                             type="text"
@@ -68,16 +77,20 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Source</label>
-                        <selectize
-                            class="form-select"
+                        <label class="form-label">{{
+                            $t('inputs.source.label')
+                        }}</label>
+                        <v-select
+                            v-model="source"
+                            :placeholder="$t('inputs.source.placeholder')"
+                            :options="sourceList"
+                            :selectable="
+                                (option) => isSelectable(option, source)
+                            "
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.source_id,
                             }"
-                            v-model="source"
-                            placeholder="Select source"
-                            :options="sourceList"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.source_id"
@@ -89,16 +102,20 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Target</label>
-                        <selectize
-                            class="form-select"
+                        <label class="form-label">{{
+                            $t('inputs.target.label')
+                        }}</label>
+                        <v-select
+                            v-model="target"
+                            :placeholder="$t('inputs.target.placeholder')"
+                            :options="targetList"
+                            :selectable="
+                                (option) => isSelectable(option, target)
+                            "
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.target_id,
                             }"
-                            v-model="target"
-                            placeholder="Select target"
-                            :options="targetList"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors.target_id"
@@ -110,16 +127,21 @@
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">API specification</label>
-                        <selectize
-                            class="form-select"
+                        <label class="form-label">{{
+                            $t('inputs.api-spec.label')
+                        }}</label>
+                        <v-select
+                            v-model="apiSpec.selected"
+                            :placeholder="$t('inputs.api-spec.placeholder')"
+                            :options="apiSpec.list"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, apiSpec.selected)
+                            "
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.api_spec,
                             }"
-                            v-model="apiSpec.selected"
-                            placeholder="Select API specification"
-                            :options="apiSpec.list"
-                            :createItem="false"
                         />
                     </div>
                     <div class="col-12 mb-3">
@@ -146,7 +168,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'trigger'"
                         >
-                            Trigger
+                            {{ $t('inputs.trigger') }}
                         </button>
                         <b-collapse id="trigger" class="card">
                             <json-editor-block
@@ -166,7 +188,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-request-scripts'"
                         >
-                            Test Request Scripts
+                            {{ $t('inputs.test-scripts.request') }}
                         </button>
                         <b-collapse id="test-request-scripts" class="card">
                             <div
@@ -185,7 +207,11 @@
                                             type="button"
                                             class="btn btn-link p-0"
                                             v-b-tooltip.hover
-                                            title="Delete"
+                                            :title="
+                                                $t(
+                                                    'inputs.test-scripts.form.buttons.delete'
+                                                )
+                                            "
                                             v-b-modal="
                                                 `test-request-scripts-modal-${i}`
                                             "
@@ -195,7 +221,11 @@
                                     </div>
                                 </div>
                                 <div class="card-body px-0 pb-0">
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.name'
+                                        )
+                                    }}</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
@@ -223,7 +253,11 @@
                                             }}
                                         </strong>
                                     </span>
-                                    <label class="form-label mb-3">Rules</label>
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
                                     <json-editor-block
                                         :input-json="request.rules"
                                         @output-json="
@@ -255,7 +289,11 @@
                                 </div>
                                 <b-modal
                                     :id="`test-request-scripts-modal-${i}`"
-                                    :title="'Are you sure?'"
+                                    :title="
+                                        $t(
+                                            'inputs.test-scripts.form.modal.title'
+                                        )
+                                    "
                                     @ok="
                                         deleteFormItem(
                                             test.scripts.request.list,
@@ -266,8 +304,11 @@
                                     :key="`test-request-scripts-modal-${i}`"
                                 >
                                     <p>
-                                        This test request scripts will be
-                                        deleted.
+                                        {{
+                                            $t(
+                                                'inputs.test-scripts.form.modal.text'
+                                            )
+                                        }}
                                     </p>
                                 </b-modal>
                             </div>
@@ -282,7 +323,11 @@
                                     "
                                 >
                                     <icon name="plus" />
-                                    <span>Add New Request Script</span>
+                                    <span>{{
+                                        $t(
+                                            'inputs.test-scripts.form.buttons.add-script'
+                                        )
+                                    }}</span>
                                 </button>
                             </div>
                         </b-collapse>
@@ -293,7 +338,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-response-scripts'"
                         >
-                            Test Response Scripts
+                            {{ $t('inputs.test-scripts.response') }}
                         </button>
                         <b-collapse id="test-response-scripts" class="card">
                             <div
@@ -311,7 +356,11 @@
                                             type="button"
                                             class="btn btn-link p-0"
                                             v-b-tooltip.hover
-                                            title="Delete"
+                                            :title="
+                                                $t(
+                                                    'inputs.test-scripts.form.buttons.delete'
+                                                )
+                                            "
                                             v-b-modal="
                                                 `test-response-scripts-modal-${i}`
                                             "
@@ -324,7 +373,11 @@
                                     class="card-body px-0 pb-0"
                                     :key="`test-response-scripts-form-${i}`"
                                 >
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.name'
+                                        )
+                                    }}</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
@@ -352,7 +405,11 @@
                                             }}
                                         </strong>
                                     </span>
-                                    <label class="form-label mb-3">Rules</label>
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
                                     <json-editor-block
                                         :input-json="response.rules"
                                         @output-json="
@@ -384,7 +441,11 @@
                                 </div>
                                 <b-modal
                                     :id="`test-response-scripts-modal-${i}`"
-                                    :title="'Are you sure?'"
+                                    :title="
+                                        $t(
+                                            'inputs.test-scripts.form.modal.title'
+                                        )
+                                    "
                                     @ok="
                                         deleteFormItem(
                                             test.scripts.response.list,
@@ -395,8 +456,11 @@
                                     :key="`test-response-scripts-modal-${i}`"
                                 >
                                     <p>
-                                        This test response scripts will be
-                                        deleted.
+                                        {{
+                                            $t(
+                                                'inputs.test-scripts.form.modal.text'
+                                            )
+                                        }}
                                     </p>
                                 </b-modal>
                             </div>
@@ -415,10 +479,35 @@
                                     "
                                 >
                                     <icon name="plus" />
-                                    <span>Add New Response Script</span>
+                                    <span>{{
+                                        $t(
+                                            'inputs.test-scripts.form.buttons.add-script'
+                                        )
+                                    }}</span>
                                 </button>
                             </div>
                         </b-collapse>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.uri') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.props.errors['request.uri'],
+                            }"
+                            v-model="example.request.uri"
+                        />
+                        <span
+                            v-if="$page.props.errors['request.uri']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['request.uri'] }}
+                            </strong>
+                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <button
@@ -426,7 +515,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'request-headers-examples'"
                         >
-                            Request Headers
+                            {{ $t('inputs.request.headers') }}
                         </button>
                         <b-collapse id="request-headers-examples" class="card">
                             <json-editor-block
@@ -446,7 +535,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'request-body-examples'"
                         >
-                            Request Body
+                            {{ $t('inputs.request.body') }}
                         </button>
                         <b-collapse id="request-body-examples" class="card">
                             <json-editor-block
@@ -461,17 +550,27 @@
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
-                        <h2 class="card-title">Response Status Example</h2>
-                        <selectize
-                            class="form-select"
+                        <h2 class="card-title">
+                            {{ $t('inputs.response.status.label') }}
+                        </h2>
+                        <v-select
+                            v-model="example.response.status.selected"
+                            :placeholder="
+                                $t('inputs.response.status.placeholder')
+                            "
+                            :options="example.response.status.list"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(
+                                        option,
+                                        example.response.status.selected
+                                    )
+                            "
+                            class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid':
                                     $page.props.errors['response.status'],
                             }"
-                            v-model="example.response.status.selected"
-                            placeholder="Select status"
-                            :options="example.response.status.list"
-                            :createItem="false"
                         />
                         <span
                             v-if="$page.props.errors['response.status']"
@@ -488,7 +587,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'response-headers-examples'"
                         >
-                            Response Headers
+                            {{ $t('inputs.response.headers') }}
                         </button>
                         <b-collapse id="response-headers-examples" class="card">
                             <json-editor-block
@@ -508,7 +607,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'response-body-examples'"
                         >
-                            Response Body
+                            {{ $t('inputs.response.body') }}
                         </button>
                         <b-collapse id="response-body-examples" class="card">
                             <json-editor-block
@@ -531,14 +630,14 @@
                     "
                     class="btn btn-link"
                 >
-                    Cancel
+                    {{ $t('buttons.cancel') }}
                 </inertia-link>
                 <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Update
+                    {{ $t('buttons.update') }}
                 </button>
             </div>
         </form>
@@ -548,10 +647,13 @@
 <script>
 import Layout from '@/layouts/test-cases/main';
 import JsonEditorBlock from '@/components/json-editor-block';
+import { isSelectable } from '@/components/v-select';
 
 export default {
-    metaInfo: {
-        title: 'Test Step Edit',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -622,6 +724,7 @@ export default {
             },
             example: {
                 request: {
+                    uri: this.testStep.request.uri,
                     headers: this.testStep.request.headers,
                     body: this.testStep.request.body,
                 },
@@ -639,6 +742,7 @@ export default {
         };
     },
     methods: {
+        isSelectable,
         submit() {
             const form = {
                 api_spec_id:
@@ -713,3 +817,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/test-steps/edit.json"></i18n>

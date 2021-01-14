@@ -93,10 +93,20 @@ class TestCaseController extends Controller
             __('Test case execution limit.')
         );
 
-        ExecuteTestRunJob::dispatch($session, $testCase)->afterResponse();
+        $testRun = $session
+            ->testRuns()
+            ->create(['test_case_id' => $testCase->id]);
+        ExecuteTestRunJob::dispatch($testRun)->afterResponse();
 
         return redirect()
-            ->back()
+            ->route(
+                'sessions.test-cases.test-runs.show',
+                [
+                    $session->id,
+                    $testCase->id,
+                    $testRun->id,
+                ]
+            )
             ->with('success', __('Run started successfully'));
     }
 }

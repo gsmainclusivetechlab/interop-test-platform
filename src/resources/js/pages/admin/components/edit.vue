@@ -63,31 +63,33 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Connections </label>
-                                <selectize
-                                    v-model="connections"
+                                <v-select
+                                    v-model="connections.selected"
                                     multiple
-                                    class="form-select"
                                     placeholder="Select connections..."
+                                    label="name"
+                                    :options="connections.list"
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(
+                                                option,
+                                                connections.selected
+                                            )
+                                    "
+                                    class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid':
                                             $page.props.errors.connections_id,
                                     }"
-                                    label="name"
-                                    :keys="['name']"
-                                    :options="connectionsList"
-                                    :createItem="false"
-                                    :searchFn="searchConnections"
+                                    @input="setConnections"
                                 >
-                                    <template
-                                        slot="option"
-                                        slot-scope="{ option }"
-                                    >
+                                    <template #option="option">
                                         <div>{{ option.name }}</div>
                                         <div class="text-muted small">
                                             {{ option.base_url }}
                                         </div>
                                     </template>
-                                </selectize>
+                                </v-select>
                                 <span
                                     v-if="$page.props.errors.groups_id"
                                     class="invalid-feedback"
@@ -167,6 +169,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     metaInfo: {
@@ -184,35 +187,26 @@ export default {
     data() {
         return {
             sending: false,
-            connections: this.component.connections
-                ? this.component.connections.data
-                : [],
-            connectionsList: [],
+            connections: {
+                list: [],
+                selected: this.component?.connections?.data ?? [],
+            },
             form: {
-                name: this.component.name,
-                base_url: this.component.base_url,
-                description: this.component.description,
-                sutable: this.component.sutable,
-                connections_id: null,
+                name: this.component?.name,
+                base_url: this.component?.base_url ?? null,
+                description: this.component?.description ?? null,
+                sutable: this.component?.sutable ?? false,
+                connections_id: this.component?.connections?.data?.map(
+                    (item) => item.id ?? null
+                ),
             },
         };
-    },
-    watch: {
-        connections: {
-            immediate: true,
-            handler: function (value) {
-                this.form.connections_id = value
-                    ? collect(value)
-                          .map((item) => item.id)
-                          .all()
-                    : [];
-            },
-        },
     },
     mounted() {
         this.loadConnectionsList();
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.put(
@@ -231,14 +225,13 @@ export default {
                     params: { q: query, component_id: this.component.id },
                 })
                 .then((result) => {
-                    this.connectionsList = collect(result.data.data)
-                        .whereNotIn('id', this.form.connections_id)
-                        .all();
+                    this.connections.list = result.data.data;
                 });
         },
-        searchConnections(query, callback) {
-            this.loadConnectionsList(query);
-            callback();
+        setConnections() {
+            this.form.connections_id = this.connections.selected.map(
+                (item) => item.id
+            );
         },
     },
 };

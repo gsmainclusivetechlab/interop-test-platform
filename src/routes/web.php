@@ -22,6 +22,7 @@ Route::name('legal.')
         );
     });
 Route::post('/dark-mode', 'DarkModeController')->name('dark-mode');
+Route::post('/locale', 'LocaleController')->name('locale');
 
 /**
  * Groups Routes
@@ -215,12 +216,12 @@ Route::name('testing.')
         )
             ->name('sut')
             ->where('path', '.*');
-        //        Route::any(
-        //            '{component:uuid}/{connection:uuid}/simulator/{path?}',
-        //            'SimulatorController'
-        //        )
-        //            ->name('simulator')
-        //            ->where('path', '.*');
+        Route::any(
+            '{component:uuid}/{connection:uuid}/simulator/{path?}',
+            'SimulatorController'
+        )
+            ->name('simulator')
+            ->where('path', '.*');
     });
 
 /**
@@ -319,6 +320,9 @@ Route::name('admin.')
                         Route::get('export', 'TestCaseController@export')->name(
                             'export'
                         );
+                        Route::get('flow', 'TestCaseController@flow')->name(
+                            'flow'
+                        );
                         Route::put(
                             'toggle-public',
                             'TestCaseController@togglePublic'
@@ -342,15 +346,15 @@ Route::name('admin.')
                         Route::resource(
                             'groups',
                             'TestCaseGroupController'
-                        )->only('index', 'store', 'destroy');
+                        )->only(['index', 'store', 'destroy']);
                         Route::resource(
                             'test-steps',
                             'TestCaseTestStepController'
-                        )->except('show');
+                        )->except(['show']);
                         Route::resource(
                             'versions',
                             'TestCaseVersionController'
-                        )->only('index');
+                        )->only(['index']);
                         Route::get(
                             'versions/publish',
                             'TestCaseVersionController@publish'

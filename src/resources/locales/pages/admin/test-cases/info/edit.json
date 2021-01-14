@@ -1,0 +1,73 @@
+{
+    "en": {
+        "card": {
+            "title": "Edit"
+        },
+        "inputs": {
+            "name": {
+                "label": "Name"
+            },
+            "slug": {
+                "label": "Slug"
+            },
+            "behavior": {
+                "label": "Behavior",
+                "placeholder": "Select behavior"
+            },
+            "use-case": {
+                "label": "Use Case",
+                "placeholder": "Select use case"
+            },
+            "precondition": {
+                "label": "Precondition"
+            },
+            "description": {
+                "label": "Description"
+            },
+            "components": {
+                "label": "Components",
+                "placeholder": "Select components"
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "update": "Update"
+        }
+    },
+
+    "ru": {
+        "card": {
+            "title": "Редактировать"
+        },
+        "inputs": {
+            "name": {
+                "label": "Имя"
+            },
+            "slug": {
+                "label": "Слаг"
+            },
+            "behavior": {
+                "label": "Состояние",
+                "placeholder": "Выберите состояние"
+            },
+            "use-case": {
+                "label": "Образец использования",
+                "placeholder": "Выберите образец использования"
+            },
+            "precondition": {
+                "label": "Условие"
+            },
+            "description": {
+                "label": "Описание"
+            },
+            "components": {
+                "label": "Компоненты",
+                "placeholder": "Выберите компоненты"
+            }
+        },
+        "buttons": {
+            "cancel": "Отмена",
+            "update": "Обновить"
+        }
+    }
+}

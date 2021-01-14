@@ -189,6 +189,7 @@ class SessionController extends Controller
                                     ->withComponents($componentIds)
                                     ->available()
                                     ->lastPerGroup(
+                                        false,
                                         $sessionTestCasesIds,
                                         $sessionTestCasesGroupIds
                                     );

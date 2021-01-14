@@ -4,9 +4,7 @@ namespace App\Jobs;
 
 use App\Http\Controllers\Testing\ProcessPendingRequest;
 use App\Http\Headers\TraceparentHeader;
-use App\Models\Session;
-use App\Models\TestCase;
-use App\Models\TestStep;
+use App\Models\{Session, TestRun, TestStep};
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Bus\Queueable;
@@ -25,23 +23,17 @@ class ExecuteTestRunJob implements ShouldQueue
     public $tries = 1;
 
     /**
-     * @var Session
+     * @var TestRun
      */
-    protected $session;
+    protected $testRun;
 
     /**
-     * @var TestCase
+     * ExecuteTestRunJob constructor.
+     * @param TestRun $testRun
      */
-    protected $testCase;
-
-    /**
-     * @param Session $session
-     * @param TestCase $testCase
-     */
-    public function __construct(Session $session, TestCase $testCase)
+    public function __construct(TestRun $testRun)
     {
-        $this->session = $session;
-        $this->testCase = $testCase;
+        $this->testRun = $testRun;
     }
 
     /**
@@ -49,11 +41,14 @@ class ExecuteTestRunJob implements ShouldQueue
      */
     public function handle()
     {
+        /** @var Session $session */
+        $session = $this->testRun->session;
         /** @var TestStep $testStep */
-        $testStep = $this->testCase->testSteps()->firstOrFail();
-        $testRun = $this->session
-            ->testRuns()
-            ->create(['test_case_id' => $testStep->test_case_id]);
+        $testStep = $this->testRun
+            ->testCase
+            ->testSteps()
+            ->firstOrFail();
+        $testRun = $this->testRun;
         $testResult = $testRun
             ->testResults()
             ->create(['test_step_id' => $testStep->id]);
@@ -63,7 +58,7 @@ class ExecuteTestRunJob implements ShouldQueue
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $requestTemplate = $testStep->request->withSubstitutions(
             $testRun->testResults,
-            $this->session->environments()
+            $session
         );
         $request = $requestTemplate
             ->toPsrRequest()
@@ -71,7 +66,7 @@ class ExecuteTestRunJob implements ShouldQueue
             ->withUri(
                 UriResolver::resolve(
                     new Uri(
-                        ($uri = $this->session->getBaseUriOfComponent(
+                        ($uri = $session->getBaseUriOfComponent(
                             $testStep->target,
                             null,
                             true
@@ -84,7 +79,7 @@ class ExecuteTestRunJob implements ShouldQueue
         (new ProcessPendingRequest(
             $request,
             $testResult,
-            $this->session,
+            $session,
             empty($uri)
         ))();
     }

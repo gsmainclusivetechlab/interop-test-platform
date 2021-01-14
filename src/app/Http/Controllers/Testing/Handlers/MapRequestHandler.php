@@ -45,10 +45,16 @@ class MapRequestHandler
             }
         }*/
 
-        $testRequest = $testRequest->withSubstitutions(
-            $this->testResult->testRun->testResults,
-            $this->testResult->session->environments()
-        );
+        if (
+            !$this->testResult->session->hasComponent(
+                $this->testResult->testStep->source
+            )
+        ) {
+            $testRequest = $testRequest->withSubstitutions(
+                $this->testResult->testRun->testResults,
+                $this->testResult->session
+            );
+        }
 
         $testRequestData = array_merge($data = $testRequest->toArray(), [
             'uri' => Str::startsWith($data['uri'], 'http')

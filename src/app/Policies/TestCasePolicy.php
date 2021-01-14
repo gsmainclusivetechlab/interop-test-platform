@@ -25,7 +25,7 @@ class TestCasePolicy
      */
     public function viewAnyPrivate(User $user)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -35,7 +35,7 @@ class TestCasePolicy
      */
     public function view(User $user, TestCase $model)
     {
-        return $user->isAdmin() || $user->is($model->owner);
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -54,8 +54,7 @@ class TestCasePolicy
      */
     public function update(User $user, TestCase $model)
     {
-        return $user->isAdmin() ||
-            ($user->is($model->owner) && !$model->public);
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -75,7 +74,6 @@ class TestCasePolicy
      */
     public function delete(User $user, TestCase $model)
     {
-        return $user->isAdmin() ||
-            ($user->is($model->owner) && !$model->public);
+        return $user->isTestCaseCreator();
     }
 }

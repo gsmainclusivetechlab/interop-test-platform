@@ -178,20 +178,22 @@
                             "
                         >
                             <div class="d-flex">
-                                <inertia-link
+                                <confirm-link
                                     :href="
                                         route('sessions.test-cases.run', [
                                             session.id,
                                             testCase.id,
                                         ])
                                     "
+                                    :confirm-title="'Run test case'"
+                                    :confirm-text="`Start new test case run?`"
                                     v-if="isAvailableRun"
                                     class="btn btn-primary"
                                     method="post"
                                 >
                                     <icon name="bike"></icon>
                                     Run Test Case
-                                </inertia-link>
+                                </confirm-link>
                                 <button
                                     class="btn btn-secondary"
                                     v-else

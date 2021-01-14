@@ -16,7 +16,7 @@ class UseCasePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**

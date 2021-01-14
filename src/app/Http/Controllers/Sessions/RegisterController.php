@@ -308,24 +308,24 @@ class RegisterController extends Controller
 
     public function showInfoForm(): Response
     {
-        $ids = $this->getTestCasesIds();
+        $withQuestions = session('session.withQuestions');
+        if ($withQuestions) {
+            $ids = $this->getTestCasesIds();
 
-        if (
-            session('session.withQuestions') &&
-            !session()->has('session.info')
-        ) {
-            session()->put('session.info.test_cases', $ids);
+            if (!session()->has('session.info')) {
+                session()->put('session.info.test_cases', $ids);
+            }
         }
 
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
             'components' => $this->getComponents(),
             'hasDifferentAnswers' =>
-                collect(
+                $withQuestions && (collect(
                     $testCasesIds = session()->get('session.info.test_cases')
                 )
                     ->diff($ids)
-                    ->count() > 0 || count($testCasesIds) != count($ids),
+                    ->count() > 0 || count($testCasesIds) != count($ids)),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) {
@@ -370,7 +370,7 @@ class RegisterController extends Controller
     {
         return TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
             ->available()
-            ->lastPerGroup()
+            ->lastPerGroup(false)
             ->pluck('id');
     }
 
@@ -741,7 +741,7 @@ class RegisterController extends Controller
             ) {
                 $query->whereIn('slug', $testCases ?: ['']);
             })
-            ->lastPerGroup();
+            ->lastPerGroup(false);
     }
 
     protected function getComponents()

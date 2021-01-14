@@ -1,0 +1,20 @@
+{
+    "en": {
+        "page": {
+            "title": "@:(special-locales.compliance) session"
+        },
+        "tabs": {
+            "all": "All",
+            "in-verification": "In verification"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "@:(special-locales.compliance) сессий"
+        },
+        "tabs": {
+            "all": "Все",
+            "in-verification": "В процессе проверки"
+        }
+    }
+}

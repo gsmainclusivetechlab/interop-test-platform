@@ -13,6 +13,7 @@ import {
     PopoverPlugin,
     TabsPlugin,
 } from 'bootstrap-vue';
+import VueI18n from 'vue-i18n';
 import { InertiaProgress } from '@inertiajs/progress';
 
 InertiaProgress.init();
@@ -23,6 +24,7 @@ window.axios = require('axios');
 window.axios.defaults.withCredentials = true;
 
 Vue.use(VueMeta);
+Vue.use(VueI18n);
 Vue.use(plugin);
 
 [
@@ -64,8 +66,8 @@ Vue.component('input-search', () =>
         /* webpackChunkName: "input-search" */ '@/components/input-search.vue'
     )
 );
-Vue.component('selectize', () =>
-    import(/* webpackChunkName: "selectize" */ '@isneezy/vue-selectize')
+Vue.component('v-select', () =>
+    import(/* webpackChunkName: "v-select" */ 'vue-select')
 );
 Vue.component('confirm-link', () =>
     import(
@@ -88,10 +90,16 @@ Vue.component('clipboard-json-to-curl', () =>
 Vue.component('text-editor', () =>
     import(/* webpackChunkName: "text-editor" */ '@/components/text-editor.vue')
 );
+const i18n = new VueI18n({
+    fallbackLocale: 'en',
+    silentFallbackWarn: true,
+    messages: {},
+});
 
 let app = document.getElementById('app');
 
 new Vue({
+    i18n,
     render: (h) =>
         h(App, {
             props: {

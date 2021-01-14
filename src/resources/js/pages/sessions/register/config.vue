@@ -53,16 +53,17 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label"> Environments </label>
-                        <selectize
-                            v-model="groupEnvironment"
-                            class="form-select mb-3"
-                            placeholder="Group environment..."
-                            label="name"
-                            :keys="['name']"
-                            :options="groupEnvironmentsList"
-                            :createItem="false"
-                            :searchFn="searchGroupEnvironments"
+                        <v-select
                             v-if="hasGroupEnvironments"
+                            v-model="groupEnvironment"
+                            :options="groupEnvironmentsList"
+                            label="name"
+                            placeholder="Group environment..."
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, groupEnvironment)
+                            "
+                            class="form-control d-flex p-0 mb-3"
                         />
                         <environments
                             v-model="form.environments"
@@ -101,6 +102,7 @@
 <script>
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
+import { isSelectable } from '@/components/v-select';
 
 export default {
     components: {
@@ -139,7 +141,7 @@ export default {
     watch: {
         groupEnvironment: {
             immediate: true,
-            handler: function (value) {
+            handler(value) {
                 this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     this.form.environments = value.variables;
@@ -154,6 +156,7 @@ export default {
         this.loadGroupEnvironmentList();
     },
     methods: {
+        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(
@@ -174,10 +177,6 @@ export default {
                 .then((result) => {
                     this.groupEnvironmentsList = result.data.data;
                 });
-        },
-        searchGroupEnvironments(query, callback) {
-            this.loadGroupEnvironmentList(query);
-            callback();
         },
     },
 };

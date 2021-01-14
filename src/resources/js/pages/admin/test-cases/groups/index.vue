@@ -2,32 +2,32 @@
     <layout :test-case="testCase">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title">Groups</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
-                <label class="form-label">Add groups</label>
+                <label class="form-label">{{
+                    $t('inputs.add-groups.label')
+                }}</label>
                 <form class="input-group" @submit.prevent="addGroups">
-                    <selectize
+                    <v-select
                         v-model="newList"
+                        :options="searchList"
                         multiple
-                        class="form-select"
+                        :selectable="(option) => isSelectable(option, newList)"
+                        label="name"
+                        :placeholder="$t('inputs.add-groups.placeholder')"
+                        class="form-control d-flex p-0"
                         :class="{
                             'is-invalid': $page.props.errors.groups_id,
                         }"
-                        placeholder="Select groups..."
-                        label="name"
-                        :keys="['name', 'domain']"
-                        :options="searchList"
-                        :createItem="false"
-                        :searchFn="searchGroups"
                     >
-                        <template #option="{ option }">
+                        <template #option="option">
                             <div>{{ option.name }}</div>
                             <div class="text-muted small">
                                 {{ option.domain }}
                             </div>
                         </template>
-                    </selectize>
+                    </v-select>
                     <button
                         type="submit"
                         class="btn btn-primary"
@@ -37,7 +37,7 @@
                             v-if="sending"
                             class="spinner-border spinner-border-sm mr-2"
                         ></span>
-                        Add
+                        {{ $t('buttons.add') }}
                     </button>
                 </form>
                 <span
@@ -53,9 +53,15 @@
                 <table class="table table-striped card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Email filter</th>
-                            <th class="w-50 text-nowrap">Description</th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.name') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.email-filter') }}
+                            </th>
+                            <th class="w-50 text-nowrap">
+                                {{ $t('table.header.description') }}
+                            </th>
                             <th class="w-1"></th>
                         </tr>
                     </thead>
@@ -94,18 +100,26 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete '${group.name}'?`"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="`${$t(
+                                                'table.menu.delete.modal.text'
+                                            )} '${group.name}'?`"
                                             class="dropdown-item"
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="groups.data.length === 0">
-                            <td class="text-center" colspan="6">No Results</td>
+                            <td class="text-center" colspan="6">
+                                {{ $t('table.content.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -121,10 +135,13 @@
 
 <script>
 import Layout from '@/layouts/test-cases/main';
+import { isSelectable } from '@/components/v-select';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Groups',
+    metaInfo() {
+        return {
+            title: `${this.testCase.name} - ${this.$t('card.title')}`,
+        };
     },
     components: {
         Layout,
@@ -155,6 +172,7 @@ export default {
         },
     },
     methods: {
+        isSelectable,
         addGroups() {
             this.sending = true;
 
@@ -181,10 +199,6 @@ export default {
                         .all();
                 });
         },
-        searchGroups(query, callback) {
-            this.loadSearchList(query);
-            callback();
-        },
     },
     computed: {
         currentList() {
@@ -198,3 +212,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/groups/index.json"></i18n>
