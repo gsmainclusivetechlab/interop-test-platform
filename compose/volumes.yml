@@ -11,7 +11,6 @@ services:
       - ./src/build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
       - ./src:/var/www/html
       - ./src/build/client-CA-nginx-renew.sh:/etc/periodic/15min/client-CA-nginx-renew.sh
-      - ./runtime/storage:/var/www/html/storage/app
 
   mysqldb:
     volumes:

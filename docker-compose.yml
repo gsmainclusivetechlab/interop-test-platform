@@ -36,6 +36,7 @@ services:
       - ca_certs:/etc/nginx/ssl/client-certs
       - certbot_certs:/etc/nginx/ssl/letsencrypt/
       - certbot_www:/var/www/certbot
+      - ./runtime/storage:/var/www/html/storage/app
   queue:
     <<: *php-defaults
     environment:
