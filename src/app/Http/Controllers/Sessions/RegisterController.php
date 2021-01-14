@@ -749,7 +749,7 @@ class RegisterController extends Controller
         $testCases = $this->getTestCases();
         $isCompliance = Session::isCompliance(session('session.type'));
 
-        $componentsQuery = function ($query) use ($testCases) {
+        $complianceComponentsQuery = function ($query) use ($testCases) {
             $testCasesQuery = function ($query) use ($testCases) {
                 $query->whereHas('testCase', function ($query) use (
                     $testCases
@@ -763,14 +763,22 @@ class RegisterController extends Controller
                 ->orWhereHas('targetTestSteps', $testCasesQuery);
         };
 
+        $testComponentsQuery = function ($query) {
+            $query->whereHas('sourceTestSteps')->orWhereHas('targetTestSteps');
+        };
+
         return ComponentResource::collection(
-            Component::when($isCompliance, $componentsQuery)
+            Component::when($isCompliance, $complianceComponentsQuery)
+                ->when(!$isCompliance, $testComponentsQuery)
                 ->with([
                     'connections' => function ($query) use (
                         $isCompliance,
-                        $componentsQuery
+                        $complianceComponentsQuery,
+                        $testComponentsQuery
                     ) {
-                        $query->when($isCompliance, $componentsQuery);
+                        $query
+                            ->when($isCompliance, $complianceComponentsQuery)
+                            ->when(!$isCompliance, $testComponentsQuery);
                     },
                 ])
                 ->get()
