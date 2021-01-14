@@ -201,8 +201,6 @@ export default {
                 result[question.name] =
                     Object.keys(question.preconditions).length > 0 &&
                     !this.availablePreconditions(question);
-
-                if (result[question.name]) this.answers[question.name] = null;
             });
 
             return result;
