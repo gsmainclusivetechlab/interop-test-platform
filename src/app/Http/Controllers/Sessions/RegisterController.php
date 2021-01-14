@@ -194,7 +194,7 @@ class RegisterController extends Controller
 
     public function storeSut(SessionSutRequest $request): RedirectResponse
     {
-        $data = collect($request->validated()['components'])
+        $data = collect($request->get('components'))
             ->map(function ($sut, $key) use ($request) {
                 if (
                     (bool) $sut['use_encryption'] &&
@@ -306,36 +306,35 @@ class RegisterController extends Controller
         ]);
     }
 
-    /**
-     * @return Response
-     */
-    public function showInfoForm()
+    public function showInfoForm(): Response
     {
-        $testCases = $this->getTestCases();
+        $ids = $this->getTestCasesIds();
 
         if (
             session('session.withQuestions') &&
             !session()->has('session.info')
         ) {
-            session()->put(
-                'session.info.test_cases',
-                TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
-                    ->available()
-                    ->lastPerGroup()
-                    ->pluck('id')
-            );
+            session()->put('session.info.test_cases', $ids);
         }
 
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
             'components' => $this->getComponents(),
+            'hasDifferentAnswers' =>
+                collect(
+                    $testCasesIds = session()->get('session.info.test_cases')
+                )
+                    ->diff($ids)
+                    ->count() > 0 || count($testCasesIds) != count($ids),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) {
                         $this->getTestCasesQuery($query);
                     },
                 ])
-                    ->whereHas('testCases', function ($query) use ($testCases) {
+                    ->whereHas('testCases', function ($query) {
+                        $testCases = $this->getTestCases();
+
                         $query
                             ->withComponents(array_keys(session('session.sut')))
                             ->when(
@@ -355,6 +354,24 @@ class RegisterController extends Controller
                     ->get()
             ),
         ]);
+    }
+
+    public function resetTestCases(): RedirectResponse
+    {
+        session()->put('session.info.test_cases', $this->getTestCasesIds());
+
+        return redirect()->route('sessions.register.info');
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getTestCasesIds()
+    {
+        return TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
+            ->available()
+            ->lastPerGroup()
+            ->pluck('id');
     }
 
     /**

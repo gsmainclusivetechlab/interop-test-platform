@@ -120,6 +120,10 @@ Route::name('sessions.')
                 Route::get('type', 'RegisterController@showTypeForm')->name(
                     'type'
                 );
+                Route::get(
+                    'reset-test-cases',
+                    'RegisterController@resetTestCases'
+                )->name('reset-test-cases');
                 Route::post(
                     'type/{type}',
                     'RegisterController@storeType'
