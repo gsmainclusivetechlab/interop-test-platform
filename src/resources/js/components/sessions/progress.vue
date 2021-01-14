@@ -1,7 +1,7 @@
 <template>
     <b-progress
         class="w-100 h-3 rounded-0 progress"
-        v-b-tooltip.hover
+        v-b-tooltip.hover.top
         :title="title"
     >
         <b-progress-bar
