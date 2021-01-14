@@ -52,7 +52,7 @@ ARG HOST_UID=www-data:www-data
 RUN chmod +x /wait /usr/local/bin/start && \
     chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx  /run
 
-USER ${HOST_UID}
+USER root
 
 WORKDIR /var/www/html
 RUN mkdir /var/www/logs
@@ -90,8 +90,8 @@ RUN mkdir -p /etc/nginx/ssl/default-certs && \
     cp localhost.key /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/privkey.pem &&\
     mkdir -p /etc/nginx/ssl/client-certs &&\
     cp RootCA.crt /etc/nginx/ssl/client-certs/CA.crt && \
-    chmod +x /etc/nginx/ssl/default-certs/RootCA.crt && \
-    chmod +x /etc/nginx/ssl/default-certs/RootCA.key
+    chmod +xr /etc/nginx/ssl/default-certs/RootCA.crt && \
+    chmod +xr /etc/nginx/ssl/default-certs/RootCA.key
 
 COPY build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
 COPY build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
