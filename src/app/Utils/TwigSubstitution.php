@@ -117,6 +117,9 @@ class TwigSubstitution
     protected function mapInto($testResults, $session)
     {
         $components = Component::all()->load('connections');
+        $sutBaseUrls = $session->components
+            ->pluck('pivot.base_url', 'id')
+            ->toArray();
         return [
             'steps' => $testResults
                 ->load('testStep')
@@ -135,11 +138,21 @@ class TwigSubstitution
                 ->toArray(),
             'env' => $session->environments(),
             'components' => $components
-                ->mapWithKeys(function ($item) {
+                ->mapWithKeys(function ($item) use ($sutBaseUrls) {
                     return [
-                        $item->slug => Arr::only(
-                            $item->toArray(),
-                            ['uuid', 'name', 'description', 'slug', 'base_url']
+                        $item->slug => array_merge(
+                            Arr::only(
+                                $item->toArray(),
+                                ['uuid', 'name', 'description', 'slug']
+                            ),
+                            [
+                                'base_url' => in_array(
+                                    $item->id,
+                                    array_keys($sutBaseUrls)
+                                )
+                                    ? $sutBaseUrls[$item->id]
+                                    : $item->base_url
+                            ]
                         ),
                     ];
                 })->toArray(),
