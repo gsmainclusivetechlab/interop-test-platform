@@ -34,6 +34,7 @@ Thumbs.db
 /runtime/installed
 /runtime/mysql/*
 /runtime/redis/*
+/runtime/storage/*
 /src/public/hot
 /src/public/storage
 /src/storage/debugbar/*

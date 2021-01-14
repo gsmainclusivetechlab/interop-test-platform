@@ -46,7 +46,9 @@ class GenerateClientCA extends Command
         Certificate::pluck('ca_crt_path', 'ca_md5')->each(function (
             $caPath
         ) use ($tmpPath) {
-            $this->appendToFile($tmpPath, Storage::get($caPath));
+            if (Storage::exists($caPath)) {
+                $this->appendToFile($tmpPath, Storage::get($caPath));
+            }
         });
 
         $this->appendToFile($tmpPath, File::get(env('ROOT_CA_PATH')));
