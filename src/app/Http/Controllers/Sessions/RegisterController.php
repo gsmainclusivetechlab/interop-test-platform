@@ -87,7 +87,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|Res/snse
      */
     public function showTypeForm()
     {

@@ -1,21 +1,20 @@
-name: Mowali Setup Callbacks
+name: 'Mowali Setup Callbacks'
 slug: mowali-setup-callbacks
 use_case: Setup
 behavior: positive
 description: |
   Allows MPOP to set up callback URLs instructing Mowali to send callbacks to MPOP.
+
 precondition: |
   - DFSP 1 and DFSP 2 exist in Mojaloop as Participants.
   - The following values are set in the session environment:
-    - ADMIN_OAUTH_TOKEN
     - SUT_FSPIOP
     - REMOTE_FSPIOP
     - ADMIN_OAUTH_TOKEN
-    - MMO1_MAPPED_URI
-    - MMO2_MAPPED_URI
+
 components:
+  - 'Mowali Central Admin'
   - MPOP
-  - Mowali Central Admin
 
 test_steps:
   - path: participants/{FSPIOP}/endpoints
@@ -29,15 +28,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_QUOTES'
-        value: ${MMO1_MAPPED_URI}
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid }}/sut'
+        # value: 'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{ session_uuid }}/{{ components.mojaloop.uuid }}/{{ components["mmo-1"].uuid }}/sut'
     response:
       status: 201
       headers:
@@ -55,15 +58,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
-        value: '${MMO1_MAPPED_URI}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid }}/sut'
     response:
       status: 201
       headers:
@@ -81,15 +87,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
-        value: '${MMO1_MAPPED_URI}/transfers'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid }}/sut/transfers'
     response:
       status: 201
       headers:
@@ -107,15 +116,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
-        value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid }}/sut/transfers/{{"{{transferId}}"}}'
     response:
       status: 201
       headers:
@@ -133,15 +145,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
-        value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid }}/sut/transfers/{{"{{transferId}}"}}/error'
     response:
       status: 201
       headers:
@@ -159,16 +174,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
-        value: '${MMO1_MAPPED_URI}'
-
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid }}/sut'
     response:
       status: 201
       headers:
@@ -186,15 +203,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
-        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -212,15 +233,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
-        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}/error'
     response:
       status: 201
       headers:
@@ -238,15 +263,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
-        value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/parties/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -264,15 +293,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
-        value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/parties/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}/error'
     response:
       status: 201
       headers:
@@ -290,15 +323,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
-        value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/parties/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -316,20 +353,23 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
-        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}/error'
     response:
       status: 201
       headers:
         content-type: 'application/json'
-      body:
 
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
@@ -342,15 +382,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
-        value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-1"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -368,12 +412,12 @@ test_steps:
           status: 'required|in:200'
     request:
       method: GET
-      uri: participants/${SUT_FSPIOP}/endpoints
+      uri: participants/{{ env.SUT_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
     response:
       status: 200
@@ -381,31 +425,31 @@ test_steps:
         content-type: 'application/json'
       body:
         - type: 'FSPIOP_CALLBACK_URL_QUOTES'
-          value: '${MMO1_MAPPED_URI}'
+          value: '{{ steps.1.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
-          value: '${MMO1_MAPPED_URI}'
+          value: '{{ steps.2.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
-          value: '${MMO1_MAPPED_URI}/transfers'
+          value: '{{ steps.3.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
-          value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+          value: '{{ steps.4.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
-          value: '${MMO1_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+          value: '{{ steps.5.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
-          value: '${MMO1_MAPPED_URI}'
+          value: '{{ steps.6.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
-          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.7.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
-          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+          value: '{{ steps.8.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
-          value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.9.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
-          value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+          value: '{{ steps.10.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
-          value: '${MMO1_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.11.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
-          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+          value: '{{ steps.12.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
-          value: '${MMO1_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.13.request.body.value }}'
 
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
@@ -418,15 +462,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_QUOTES'
-        value: ${MMO2_MAPPED_URI}
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid }}/sut'
     response:
       status: 201
       headers:
@@ -444,15 +491,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
-        value: '${MMO2_MAPPED_URI}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid }}/sut'
     response:
       status: 201
       headers:
@@ -470,15 +520,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
-        value: '${MMO2_MAPPED_URI}/transfers'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid }}/sut/transfers'
     response:
       status: 201
       headers:
@@ -496,15 +549,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
-        value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid }}/sut/transfers/{{"{{transferId}}"}}'
     response:
       status: 201
       headers:
@@ -522,15 +578,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
-        value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid }}/sut/transfers/{{"{{transferId}}"}}/error'
     response:
       status: 201
       headers:
@@ -548,16 +607,18 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
-        value: '${MMO2_MAPPED_URI}'
-
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid }}/sut'
     response:
       status: 201
       headers:
@@ -575,15 +636,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
-        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -601,15 +666,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
-        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}/error'
     response:
       status: 201
       headers:
@@ -627,15 +696,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
-        value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/parties/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -653,15 +726,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
-        value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/parties/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}/error'
     response:
       status: 201
       headers:
@@ -679,15 +756,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
-        value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/parties/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -705,20 +786,23 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
-        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}/error'
     response:
       status: 201
       headers:
         content-type: 'application/json'
-      body:
 
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
@@ -731,15 +815,19 @@ test_steps:
           status: 'required|in:201'
     request:
       method: POST
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
         type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
-        value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+        value:
+          'http://mojaloop.dev.interop.gsmainclusivetechlab.io/testing-insecure/{{
+          session_uuid }}/{{ components.mojaloop.uuid }}/{{
+          components["mmo-2"].uuid
+          }}/sut/participants/{{"{{partyIdType}}"}}/{{"{{partyIdentifier}}"}}'
     response:
       status: 201
       headers:
@@ -757,12 +845,12 @@ test_steps:
           status: 'required|in:200'
     request:
       method: GET
-      uri: participants/${REMOTE_FSPIOP}/endpoints
+      uri: participants/{{ env.REMOTE_FSPIOP }}/endpoints
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
-        Date: '${CURRENT_TIMESTAMP_RFC2822}'
-        Authorization: Bearer ${ADMIN_OAUTH_TOKEN}
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Authorization: Bearer {{ env.ADMIN_OAUTH_TOKEN }}
       body:
     response:
       status: 200
@@ -770,28 +858,28 @@ test_steps:
         content-type: 'application/json'
       body:
         - type: 'FSPIOP_CALLBACK_URL_QUOTES'
-          value: '${MMO2_MAPPED_URI}'
+          value: '{{ steps.15.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRX_REQ_SERVICE'
-          value: '${MMO2_MAPPED_URI}'
+          value: '{{ steps.16.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRANSFER_POST'
-          value: '${MMO2_MAPPED_URI}/transfers'
+          value: '{{ steps.17.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRANSFER_PUT'
-          value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}'
+          value: '{{ steps.18.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_TRANSFER_ERROR'
-          value: '${MMO2_MAPPED_URI}/transfers/{{"{{"}}transferId}}/error'
+          value: '{{ steps.19.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_AUTHORIZATIONS'
-          value: '${MMO2_MAPPED_URI}'
+          value: '{{ steps.20.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT'
-          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.21.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_PUT_ERROR'
-          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+          value: '{{ steps.22.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT'
-          value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.23.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTIES_PUT_ERROR'
-          value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+          value: '{{ steps.24.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTIES_GET'
-          value: '${MMO2_MAPPED_URI}/parties/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.25.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT_ERROR'
-          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}/error'
+          value: '{{ steps.26.request.body.value }}'
         - type: 'FSPIOP_CALLBACK_URL_PARTICIPANT_BATCH_PUT'
-          value: '${MMO2_MAPPED_URI}/participants/{{"{{"}}partyIdType}}/{{"{{"}}partyIdentifier}}'
+          value: '{{ steps.27.request.body.value }}'
