@@ -143,19 +143,25 @@
                                         <label class="form-label"
                                             >Certificate</label
                                         >
-                                        <selectize
+                                        <v-select
                                             v-model="
                                                 selectedCertificates[
                                                     component.id
                                                 ]
                                             "
-                                            class="form-select"
                                             placeholder="Select group certificate..."
                                             label="name"
-                                            :keys="['name']"
                                             :options="groupCertificatesList"
-                                            :createItem="false"
-                                            :searchFn="searchGroupCertificates"
+                                            :selectable="
+                                                (option) =>
+                                                    isSelectable(
+                                                        option,
+                                                        selectedCertificates[
+                                                            component.id
+                                                        ]
+                                                    )
+                                            "
+                                            class="form-controls d-flex p-0"
                                             :class="{
                                                 'is-invalid':
                                                     $page.props.errors[
@@ -579,10 +585,6 @@ export default {
                             .first();
                     });
                 });
-        },
-        searchGroupCertificates(query, callback) {
-            this.loadGroupCertificateList(query);
-            callback();
         },
     },
 };

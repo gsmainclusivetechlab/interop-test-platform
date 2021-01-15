@@ -89,6 +89,4 @@ const serialize = (obj, cfg, fd, pre) => {
     return fd;
 };
 
-module.exports = {
-    serialize,
-};
+export { serialize };
