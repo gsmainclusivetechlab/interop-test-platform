@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Certificate;
+use Carbon\Carbon;
 use File;
 use Illuminate\Console\Command;
 use Storage;
@@ -34,6 +35,7 @@ class GenerateClientCA extends Command
 
         Certificate::whereDoesntHave('group')
             ->whereDoesntHave('sessions')
+            ->whereDate('created_at', '<', Carbon::now()->subDays(30))
             ->each(function (Certificate $certificate) {
                 $certificate->delete();
             });
