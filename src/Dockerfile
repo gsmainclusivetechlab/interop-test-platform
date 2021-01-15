@@ -83,7 +83,7 @@ RUN mkdir -p /etc/nginx/ssl/default-certs && \
     cd /etc/nginx/ssl/default-certs && \
     openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.crt -subj "/C=UK/CN=localhost-CA" &&\
     openssl x509 -outform pem -in RootCA.crt -out RootCA.crt &&\
-    openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=UK/ST=State/L=City/O=Default-Localhost-Certificates/CN=localhost" &&\
+    openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=UK/ST=State/L=City/O=Default-Localhost-Certificates/CN=${PROJECT_DOMAIN}" &&\
     openssl x509 -req -sha256 -days 365 -in localhost.csr -CA RootCA.crt -CAkey RootCA.key -CAcreateserial -out localhost.crt &&\
     mkdir -p /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/ &&\
     cp localhost.crt /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/fullchain.pem &&\
