@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-5" v-show="!isQuestionnaireStep">
+                <div class="row mb-5" v-if="!isQuestionnaireStep">
                     <div class="col">
                         <diagram>
                             graph LR;
