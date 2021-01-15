@@ -44,22 +44,22 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li v-if="certificate.can.delete">
-                                        <confirm-link
-                                            class="dropdown-item"
-                                            :href="
-                                                route(
-                                                    'groups.certificates.destroy',
-                                                    [group.id, certificate.id]
-                                                )
-                                            "
-                                            method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${certificate.name}?`"
-                                        >
-                                            Delete
-                                        </confirm-link>
-                                    </li>
+                                    <!--                                    <li v-if="certificate.can.delete">-->
+                                    <!--                                        <confirm-link-->
+                                    <!--                                            class="dropdown-item"-->
+                                    <!--                                            :href="-->
+                                    <!--                                                route(-->
+                                    <!--                                                    'groups.certificates.destroy',-->
+                                    <!--                                                    [group.id, certificate.id]-->
+                                    <!--                                                )-->
+                                    <!--                                            "-->
+                                    <!--                                            method="delete"-->
+                                    <!--                                            :confirm-title="'Confirm delete'"-->
+                                    <!--                                            :confirm-text="`Are you sure you want to delete ${certificate.name}?`"-->
+                                    <!--                                        >-->
+                                    <!--                                            Delete-->
+                                    <!--                                        </confirm-link>-->
+                                    <!--                                    </li>-->
                                 </b-dropdown>
                             </td>
                         </tr>
