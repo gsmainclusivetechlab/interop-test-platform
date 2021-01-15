@@ -145,6 +145,24 @@
                         />
                     </div>
                     <div class="col-12 mb-3">
+                        <label class="form-check form-switch">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                v-model="mtls"
+                            />
+                            <span class="form-check-label">mTLS</span>
+                        </label>
+                        <span
+                            v-if="$page.props.errors.mtls"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors.mtls }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
                         <button
                             type="button"
                             class="btn btn-link card-title dropdown-toggle px-0"
@@ -677,6 +695,7 @@ export default {
                 ],
             },
             trigger: null,
+            mtls: false,
             test: {
                 scripts: {
                     request: {
@@ -724,6 +743,7 @@ export default {
                     .flip()
                     .get(this.method.selected),
                 path: this.path,
+                mtls: this.mtls,
                 pattern: this.pattern ?? null,
                 source_id: this.$page.props.components.filter(
                     (el) => el.name === this.source

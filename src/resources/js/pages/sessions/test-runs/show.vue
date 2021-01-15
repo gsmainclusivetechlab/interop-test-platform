@@ -764,10 +764,10 @@ export default {
             type: Object,
             required: true,
         },
-      testSteps: {
-        type: Object,
-        required: true,
-      },
+        testSteps: {
+            type: Object,
+            required: true,
+        },
         testRun: {
             type: Object,
             required: true,

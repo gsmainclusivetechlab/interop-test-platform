@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  *
  * @property TestStep $testStep
+ * @property Session $session
  */
 class TestResult extends Model
 {

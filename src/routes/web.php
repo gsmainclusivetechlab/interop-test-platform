@@ -27,31 +27,37 @@ Route::post('/locale', 'LocaleController')->name('locale');
 /**
  * Groups Routes
  */
-Route::namespace('Groups')->group(function () {
-    Route::resource('groups', 'GroupController')->only(['index', 'show']);
-    Route::resource('groups.users', 'GroupUserController')->only([
-        'index',
-        'create',
-        'store',
-        'destroy',
-    ]);
-    Route::get(
-        'groups/{group}/users/candidates',
-        'GroupUserController@candidates'
-    )->name('groups.users.candidates');
-    Route::put(
-        'groups/{group}/users/{user}/toggle-admin',
-        'GroupUserController@toggleAdmin'
-    )->name('groups.users.toggle-admin');
-    Route::resource(
-        'groups.environments',
-        'GroupEnvironmentController'
-    )->except(['show']);
-    Route::resource(
-        'groups.user-invitations',
-        'GroupUserInvitationController'
-    )->except(['show', 'edit']);
-});
+Route::namespace('Groups')
+    ->middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::resource('groups', 'GroupController')->only(['index', 'show']);
+        Route::resource('groups.users', 'GroupUserController')->only([
+            'index',
+            'create',
+            'store',
+            'destroy',
+        ]);
+        Route::get(
+            'groups/{group}/users/candidates',
+            'GroupUserController@candidates'
+        )->name('groups.users.candidates');
+        Route::put(
+            'groups/{group}/users/{user}/toggle-admin',
+            'GroupUserController@toggleAdmin'
+        )->name('groups.users.toggle-admin');
+        Route::resource(
+            'groups.environments',
+            'GroupEnvironmentController'
+        )->except(['show']);
+        Route::resource(
+            'groups.certificates',
+            'GroupCertificatesController'
+        )->except(['show', 'edit']);
+        Route::resource(
+            'groups.user-invitations',
+            'GroupUserInvitationController'
+        )->except(['show', 'edit']);
+    });
 
 /**
  * Sessions Routes
@@ -61,6 +67,9 @@ Route::name('sessions.')
     ->namespace('Sessions')
     ->group(function () {
         Route::get('/', 'SessionController@index')->name('index');
+        Route::get('certificates', 'CertificatesController@download')->name(
+            'certificates.download'
+        );
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
         Route::get('{session}/export', 'SessionController@export')->name(
@@ -112,6 +121,10 @@ Route::name('sessions.')
                 Route::get('type', 'RegisterController@showTypeForm')->name(
                     'type'
                 );
+                Route::get(
+                    'reset-test-cases',
+                    'RegisterController@resetTestCases'
+                )->name('reset-test-cases');
                 Route::post(
                     'type/{type}',
                     'RegisterController@storeType'
@@ -150,6 +163,10 @@ Route::name('sessions.')
                     'environment-candidates',
                     'RegisterController@groupEnvironmentCandidates'
                 )->name('group-environment-candidates');
+                Route::get(
+                    'certificate-candidates',
+                    'RegisterController@groupCertificateCandidates'
+                )->name('group-certificate-candidates');
             });
     });
 
@@ -177,6 +194,18 @@ Route::name('settings.')
 /**
  * Testing Routes
  */
+Route::name('testing-insecure.')
+    ->prefix('testing-insecure')
+    ->namespace('Testing')
+    ->group(function () {
+        Route::any(
+            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
+            'SutController'
+        )
+            ->name('sut')
+            ->where('path', '.*');
+    });
+
 Route::name('testing.')
     ->prefix('testing')
     ->namespace('Testing')

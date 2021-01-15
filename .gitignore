@@ -34,6 +34,7 @@ Thumbs.db
 /runtime/installed
 /runtime/mysql/*
 /runtime/redis/*
+/runtime/storage/*
 /src/public/hot
 /src/public/storage
 /src/storage/debugbar/*
@@ -42,6 +43,7 @@ Thumbs.db
 /src/storage/framework/testing/*
 /src/storage/framework/views/*
 /src/storage/logs/*
+/src/storage/app/certificates/*
 /src/public/assets
 
 # testing assets

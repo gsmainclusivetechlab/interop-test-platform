@@ -8,6 +8,8 @@ x-php-defaults: &php-defaults
       PHP_INI_TEMPLATE: $PHP_INI_TEMPLATE
       APP_ENV: $APP_ENV
       HOST_UID: ${HOST_UID:-www-data:www-data}
+      HTTPS_SSL_CERT: ${HTTPS_SSL_CERT:-selfsigned}
+      PROJECT_DOMAIN: ${PROJECT_DOMAIN}
   cap_add:
     - SYS_PTRACE
   security_opt:
@@ -28,7 +30,13 @@ services:
     <<: *php-defaults
     environment:
       CONTAINER_ROLE: app
-
+      PROJECT_DOMAIN: ${PROJECT_DOMAIN}
+      HTTPS_SSL_CERT: ${HTTPS_SSL_CERT:-selfsigned}
+    volumes:
+      - ca_certs:/etc/nginx/ssl/client-certs
+      - certbot_certs:/etc/nginx/ssl/letsencrypt/
+      - certbot_www:/var/www/certbot
+      - storage:/var/www/html/storage/app
   queue:
     <<: *php-defaults
     environment:
@@ -56,7 +64,23 @@ services:
       internal:
     volumes:
       - mysqldata:/var/lib/mysql
-
+  certbot:
+    env_file: ${ENV_FILE:-.env}
+    environment:
+      PROJECT_DOMAIN: ${PROJECT_DOMAIN}
+    container_name: certbot
+    image: certbot/certbot
+    restart: unless-stopped #+++
+    volumes:
+      - certbot_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint:
+      "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait
+      $${!}; done;'"
 volumes:
   mysqldata:
   redisdata:
+  ca_certs:
+  certbot_certs:
+  certbot_www:
+  storage:

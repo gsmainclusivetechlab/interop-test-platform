@@ -29,6 +29,7 @@ class TestStepResource extends JsonResource
             ),
             'response' => optional($this->response)->toArray(),
             'position' => $this->position,
+            'mtls' => $this->mtls,
             'source' => new ComponentResource($this->whenLoaded('source')),
             'target' => new ComponentResource($this->whenLoaded('target')),
             'apiSpec' => new ApiSpecResource($this->whenLoaded('apiSpec')),

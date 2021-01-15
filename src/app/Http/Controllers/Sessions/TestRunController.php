@@ -54,8 +54,13 @@ class TestRunController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'components.connections',
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                    'testCases' => function ($query) use ($session) {
+                        return $query->with([
+                            'useCase',
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ]);
                     },
                 ])
             ))->resolve(),

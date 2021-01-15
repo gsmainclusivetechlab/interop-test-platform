@@ -66,39 +66,281 @@
                                 v-for="(component, i) in components.data"
                                 :key="`component-${i}`"
                             >
-                                <div>
+                                <div class="mb-3">
                                     <label>
                                         <b>{{ component.name }} URL</b>
                                     </label>
                                     <input
                                         type="text"
                                         v-model="
-                                            form.component_base_urls[
-                                                component.id
-                                            ]
+                                            form.components[component.id]
+                                                .base_url
                                         "
                                         class="form-control"
                                         :class="{
                                             'is-invalid':
                                                 $page.props.errors[
-                                                    `component_base_urls.${component.id}`
+                                                    `components.${component.id}.base_url`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
                                             $page.props.errors[
-                                                `component_base_urls.${component.id}`
+                                                `components.${component.id}.base_url`
                                             ]
                                         "
                                         class="invalid-feedback"
                                     >
                                         {{
                                             $page.props.errors[
-                                                `component_base_urls.${component.id}`
+                                                `components.${component.id}.base_url`
                                             ]
                                         }}
                                     </span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            v-model="
+                                                form.components[component.id]
+                                                    .use_encryption
+                                            "
+                                        />
+                                        <span class="form-check-label"
+                                            >Use Encryption</span
+                                        >
+                                    </label>
+                                    <span
+                                        v-if="
+                                            $page.props.errors[
+                                                `components.${component.id}.use_encryption`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.props.errors[
+                                                    `components.${component.id}.use_encryption`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div
+                                    v-if="
+                                        form.components[component.id]
+                                            .use_encryption
+                                    "
+                                >
+                                    <div
+                                        class="mb-3"
+                                        v-if="showGroupCertificates(component)"
+                                    >
+                                        <label class="form-label"
+                                            >Certificate</label
+                                        >
+                                        <v-select
+                                            v-model="
+                                                selectedCertificates[
+                                                    component.id
+                                                ]
+                                            "
+                                            placeholder="Select group certificate..."
+                                            label="name"
+                                            :options="groupCertificatesList"
+                                            :selectable="
+                                                (option) =>
+                                                    isSelectable(
+                                                        option,
+                                                        selectedCertificates[
+                                                            component.id
+                                                        ]
+                                                    )
+                                            "
+                                            class="form-controls d-flex p-0"
+                                            :class="{
+                                                'is-invalid':
+                                                    $page.props.errors[
+                                                        `components.${component.id}.certificate_id`
+                                                    ],
+                                            }"
+                                        />
+                                        <span
+                                            v-if="
+                                                $page.props.errors[
+                                                    `components.${component.id}.certificate_id`
+                                                ]
+                                            "
+                                            class="invalid-feedback"
+                                        >
+                                            <strong>
+                                                {{
+                                                    $page.props.errors[
+                                                        `components.${component.id}.certificate_id`
+                                                    ]
+                                                }}
+                                            </strong>
+                                        </span>
+                                    </div>
+                                    <div
+                                        class="hr-text"
+                                        v-if="
+                                            showGroupCertificates(component) &&
+                                            !selectedCertificates[component.id]
+                                        "
+                                    >
+                                        or
+                                    </div>
+                                    <template
+                                        v-if="
+                                            !selectedCertificates[component.id]
+                                        "
+                                    >
+                                        <div class="mb-3">
+                                            <label class="form-label"
+                                                >CA certificate</label
+                                            >
+                                            <b-form-file
+                                                v-model="
+                                                    form.certificates[
+                                                        component.id
+                                                    ].ca_crt
+                                                "
+                                                placeholder="Choose file..."
+                                                :class="{
+                                                    'is-invalid':
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.ca_crt`
+                                                        ],
+                                                }"
+                                            />
+                                            <span
+                                                v-if="
+                                                    $page.props.errors[
+                                                        `certificates.${component.id}.ca_crt`
+                                                    ]
+                                                "
+                                                class="invalid-feedback"
+                                            >
+                                                <strong>
+                                                    {{
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.ca_crt`
+                                                        ]
+                                                    }}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label"
+                                                >Client certificate</label
+                                            >
+                                            <b-form-file
+                                                v-model="
+                                                    form.certificates[
+                                                        component.id
+                                                    ].client_crt
+                                                "
+                                                placeholder="Choose file..."
+                                                :class="{
+                                                    'is-invalid':
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.client_crt`
+                                                        ],
+                                                }"
+                                            />
+                                            <span
+                                                v-if="
+                                                    $page.props.errors[
+                                                        `certificates.${component.id}.client_crt`
+                                                    ]
+                                                "
+                                                class="invalid-feedback"
+                                            >
+                                                <strong>
+                                                    {{
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.client_crt`
+                                                        ]
+                                                    }}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label"
+                                                >Client key</label
+                                            >
+                                            <b-form-file
+                                                v-model="
+                                                    form.certificates[
+                                                        component.id
+                                                    ].client_key
+                                                "
+                                                placeholder="Choose file..."
+                                                :class="{
+                                                    'is-invalid':
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.client_key`
+                                                        ],
+                                                }"
+                                            />
+                                            <span
+                                                v-if="
+                                                    $page.props.errors[
+                                                        `certificates.${component.id}.client_key`
+                                                    ]
+                                                "
+                                                class="invalid-feedback"
+                                            >
+                                                <strong>
+                                                    {{
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.client_key`
+                                                        ]
+                                                    }}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label"
+                                                >Pass phrase</label
+                                            >
+                                            <input
+                                                v-model="
+                                                    form.certificates[
+                                                        component.id
+                                                    ].passphrase
+                                                "
+                                                :class="{
+                                                    'is-invalid':
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.passphrase`
+                                                        ],
+                                                }"
+                                                class="form-control"
+                                            />
+                                            <span
+                                                v-if="
+                                                    $page.props.errors[
+                                                        `certificates.${component.id}.passphrase`
+                                                    ]
+                                                "
+                                                class="invalid-feedback"
+                                            >
+                                                <strong>
+                                                    {{
+                                                        $page.props.errors[
+                                                            `certificates.${component.id}.passphrase`
+                                                        ]
+                                                    }}
+                                                </strong>
+                                            </span>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -178,6 +420,7 @@
 </template>
 
 <script>
+import { serialize } from '@/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
@@ -206,6 +449,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        hasGroupCertificates: {
+            type: Boolean,
+            required: true,
+        },
     },
     data() {
         return {
@@ -215,18 +462,34 @@ export default {
                 ? this.session.groupEnvironment.data
                 : null,
             groupEnvironmentsList: [],
+            groupCertificatesList: [],
+            selectedCertificates: [],
             form: {
+                _method: 'PUT',
                 name: this.session.name,
                 description: this.session.description,
                 group_environment_id: this.session.groupEnvironment
                     ? this.session.groupEnvironment.data.id
                     : null,
                 environments: this.session.environments,
-                component_base_urls: collect(this.components.data)
-                    .mapWithKeys((collection) => [
-                        collection.id,
-                        collection.base_url,
-                    ])
+                components: collect(this.components.data)
+                    .map((component) => {
+                        return collect(component)
+                            .only([
+                                'id',
+                                'base_url',
+                                'use_encryption',
+                                'certificate_id',
+                            ])
+                            .all();
+                    })
+                    .keyBy('id')
+                    .all(),
+                certificates: collect(this.components.data)
+                    .keyBy('id')
+                    .map(() => {
+                        return {};
+                    })
                     .all(),
                 test_cases: collect(this.session.testCases.data)
                     .pluck('id')
@@ -247,22 +510,44 @@ export default {
                 }
             },
         },
+        selectedCertificates: {
+            immediate: false,
+            handler: function (values) {
+                Object.keys(values).forEach(
+                    (key) =>
+                        (this.form.components[key].certificate_id =
+                            values[key]?.id)
+                );
+            },
+        },
     },
     mounted() {
         this.loadGroupEnvironmentList();
+        this.loadGroupCertificateList();
     },
     methods: {
         isSelectable,
         submit() {
             this.sending = true;
-            this.$inertia.put(
+            this.$inertia.post(
                 route('sessions.update', this.session.id),
-                this.form,
+                serialize(this.form, {
+                    indices: true,
+                    booleansAsIntegers: true,
+                }),
                 {
                     onFinish: () => {
                         this.sending = false;
                     },
                 }
+            );
+        },
+        showGroupCertificates(component) {
+            return (
+                this.hasGroupCertificates &&
+                !this.form.certificates[component.id].ca_crt &&
+                !this.form.certificates[component.id].client_crt &&
+                !this.form.certificates[component.id].client_key
             );
         },
         loadGroupEnvironmentList(query = '') {
@@ -272,6 +557,33 @@ export default {
                 })
                 .then((result) => {
                     this.groupEnvironmentsList = result.data.data;
+                });
+        },
+        searchGroupEnvironments(query, callback) {
+            this.loadGroupEnvironmentList(query);
+            callback();
+        },
+        loadGroupCertificateList(query = '') {
+            axios
+                .get(route('sessions.register.group-certificate-candidates'), {
+                    params: {
+                        q: query,
+                        session: this.session.id,
+                    },
+                })
+                .then((result) => {
+                    this.groupCertificatesList = result.data.data;
+
+                    const collection = collect(result.data.data);
+                    const ids = collect(this.components.data)
+                        .mapWithKeys((s) => [s.id, s.certificate_id])
+                        .all();
+
+                    Object.keys(ids).forEach((key) => {
+                        this.selectedCertificates[key] = collection
+                            .where('id', parseInt(ids[key]))
+                            .first();
+                    });
                 });
         },
     },

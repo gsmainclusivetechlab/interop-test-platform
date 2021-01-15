@@ -64,7 +64,7 @@
                         class="card-header flex-column align-items-start h-100 border-bottom py-4"
                     >
                         <div class="d-flex align-items-center w-100 mb-2">
-                            <session-progress :testCases="session.testCases" />
+                            <session-progress :session="session" />
                         </div>
                         <h2 class="card-title w-100 text-truncate">
                             <inertia-link
