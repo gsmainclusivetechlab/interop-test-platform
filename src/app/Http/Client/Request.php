@@ -12,6 +12,8 @@ use Psr\Http\Message\RequestInterface;
 
 class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
+    const EMPTY_BODY = 'empty_body';
+
     public function urlForResolver()
     {
         return $this->host() ? $this->url() : ltrim($this->path(), '/');
@@ -91,5 +93,13 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 json_encode($data['body'])
             )
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmptyBody(): bool
+    {
+        return static::EMPTY_BODY === $this->json();
     }
 }

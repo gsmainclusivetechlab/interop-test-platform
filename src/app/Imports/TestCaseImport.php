@@ -2,13 +2,17 @@
 
 namespace App\Imports;
 
-use App\Models\ApiSpec;
-use App\Models\Component;
-use App\Models\TestCase;
-use App\Models\TestScript;
-use App\Models\TestSetup;
-use App\Models\TestStep;
-use App\Models\UseCase;
+use App\Http\Client\Request;
+use App\Http\Client\Response;
+use App\Models\{
+    ApiSpec,
+    Component,
+    TestCase,
+    TestScript,
+    TestSetup,
+    TestStep,
+    UseCase,
+};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -72,12 +76,20 @@ class TestCaseImport implements Importable
                                 TestStep::make()->getFillable()
                             )
                         );
-                    $testStep->request = $this->checkHeaders(
-                        Arr::get($testStepRow, 'request')
-                    );
-                    $testStep->response = $this->checkHeaders(
-                        Arr::get($testStepRow, 'response')
-                    );
+
+                    $request = Arr::get($testStepRow, 'request');
+                    $response = Arr::get($testStepRow, 'response');
+
+                    if (!Arr::exists($request, 'body')) {
+                        $request['body'] = Request::EMPTY_BODY;
+                    }
+                    $testStep->request = $this->checkHeaders($request);
+
+                    if (!Arr::exists($response, 'body')) {
+                        $response['body'] = Response::EMPTY_BODY;
+                    }
+                    $testStep->response = $this->checkHeaders($response);
+
                     $testStep->setAttribute(
                         'source_id',
                         Component::where(
