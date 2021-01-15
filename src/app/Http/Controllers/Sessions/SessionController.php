@@ -413,7 +413,13 @@ class SessionController extends Controller
 
                 return $session;
             });
-            new AuditLogUtil($request, AuditActionEnum::SESSION_EDITED(),AuditTypeEnum::SESSION_TYPE, $session->id, $request->toArray());
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_EDITED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
 
             return redirect()
                 ->route('sessions.show', $session)

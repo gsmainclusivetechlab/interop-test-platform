@@ -25,7 +25,8 @@ class RoleAdminTest extends DuskTestCase
                 ->with(
                     '.card .table tbody tr:first-child td:last-child',
                     function ($td) {
-                        $td->click('.dropdown-toggle')
+                        $td
+                            ->click('.dropdown-toggle')
                             ->waitFor('.dropdown-menu')
                             ->with('.dropdown-menu', function ($dropdown) {
                                 $dropdown->clickLink('Block');
@@ -42,16 +43,16 @@ class RoleAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:first-child', function ($tr) use (
                     $user
                 ) {
-                    $tr->assertSeeLink($user->email)->with(
-                        'td:last-child',
-                        function ($td) {
-                            $td->click('.dropdown-toggle')
+                    $tr
+                        ->assertSeeLink($user->email)
+                        ->with('td:last-child', function ($td) {
+                            $td
+                                ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
                                     $dropdown->clickLink('Unblock');
                                 });
-                        }
-                    );
+                        });
                 })
                 ->waitForText('User unblocked successfully')
                 ->assertVisible('@notificationBox');
@@ -73,16 +74,16 @@ class RoleAdminTest extends DuskTestCase
                 ->with('.card .table tbody tr:first-child', function ($tr) use (
                     $user
                 ) {
-                    $tr->assertSeeLink($user->email)->with(
-                        'td:last-child',
-                        function ($td) {
-                            $td->click('.dropdown-toggle')
+                    $tr
+                        ->assertSeeLink($user->email)
+                        ->with('td:last-child', function ($td) {
+                            $td
+                                ->click('.dropdown-toggle')
                                 ->waitFor('.dropdown-menu')
                                 ->with('.dropdown-menu', function ($dropdown) {
                                     $dropdown->clickLink('Delete');
                                 });
-                        }
-                    );
+                        });
                 })
                 ->whenAvailable('.modal', function ($modal) {
                     $modal->press('Confirm');

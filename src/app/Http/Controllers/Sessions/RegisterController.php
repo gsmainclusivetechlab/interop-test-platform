@@ -529,7 +529,13 @@ class RegisterController extends Controller
                 return $session;
             });
             // log session creation
-            new AuditLogUtil($request, AuditActionEnum::SESSION_CREATED(), AuditTypeEnum::SESSION_TYPE, $session->id, $request->toArray());
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_CREATED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
             $request->session()->remove('session');
 
             return redirect()

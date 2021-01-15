@@ -32,5 +32,4 @@ class CreateAuditLogTable extends Migration
     {
         Schema::dropIfExists('audit_log');
     }
-
 }

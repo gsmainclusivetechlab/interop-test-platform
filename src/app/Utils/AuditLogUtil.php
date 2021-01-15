@@ -2,7 +2,6 @@
 
 namespace App\Utils;
 
-
 use App\Enums\AuditActionEnum;
 use App\Models\AuditLog;
 use Illuminate\Http\Request;
@@ -20,8 +19,13 @@ class AuditLogUtil
      * @param int $subject
      * @param array $meta
      */
-    public function __construct(Request $request, AuditActionEnum $action, int $type, ?int $subject, ?array $meta)
-    {
+    public function __construct(
+        Request $request,
+        AuditActionEnum $action,
+        int $type,
+        ?int $subject,
+        ?array $meta
+    ) {
         $this->log($request, $action, $type, $subject, $meta);
     }
 
@@ -34,9 +38,14 @@ class AuditLogUtil
 
      * @return null
      */
-    public function log(Request $request, AuditActionEnum $action, int $type, ?int $subject, ?array $meta)
-    {
-        $log = new AuditLog;
+    public function log(
+        Request $request,
+        AuditActionEnum $action,
+        int $type,
+        ?int $subject,
+        ?array $meta
+    ) {
+        $log = new AuditLog();
         $log->user_id = $request->user()->id;
         $log->action = $action;
         $log->type = $type;

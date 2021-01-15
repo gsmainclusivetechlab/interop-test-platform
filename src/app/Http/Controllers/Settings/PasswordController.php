@@ -47,7 +47,13 @@ class PasswordController extends Controller
         $user->setRememberToken(Str::random(60));
         $user->save();
 
-        new AuditLogUtil($request, AuditActionEnum::PASSWORD_RESET(),AuditTypeEnum::NO_TYPE, 0, null);
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::PASSWORD_RESET(),
+            AuditTypeEnum::NO_TYPE,
+            0,
+            null
+        );
 
         return redirect()
             ->back()

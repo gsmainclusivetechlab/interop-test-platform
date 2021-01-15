@@ -73,7 +73,13 @@ class GroupEnvironmentController extends Controller
         ]);
         $group->environments()->create($request->input());
 
-        new AuditLogUtil($request, AuditActionEnum::GROUP_ENVIRONMENT(),AuditTypeEnum::GROUP_TYPE, $group->id, $request->toArray());
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_ENVIRONMENT(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.environments.index', $group)

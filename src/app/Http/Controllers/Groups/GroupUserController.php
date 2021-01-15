@@ -91,7 +91,13 @@ class GroupUserController extends Controller
             'admin' => !$group->users()->exists(),
         ]);
 
-        new AuditLogUtil($request, AuditActionEnum::GROUP_INVITE(), AuditTypeEnum::GROUP_TYPE, $group->id, $request->toArray());
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_INVITE(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.users.index', $group)

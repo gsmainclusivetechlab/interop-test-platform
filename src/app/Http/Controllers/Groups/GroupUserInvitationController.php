@@ -103,7 +103,13 @@ class GroupUserInvitationController extends Controller
         ]);
         $userInvitation->sendEmailInvitationNotification();
 
-        new AuditLogUtil($request, AuditActionEnum::GROUP_INVITE(),AuditTypeEnum::GROUP_TYPE, $group->id, $request->toArray());
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_INVITE(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.user-invitations.index', $group)

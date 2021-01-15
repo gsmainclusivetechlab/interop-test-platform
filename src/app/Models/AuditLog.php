@@ -20,7 +20,7 @@ class AuditLog extends Model
      * @var array
      */
     protected $casts = [
-        'meta' => 'array'
+        'meta' => 'array',
     ];
 
     /**
@@ -35,5 +35,4 @@ class AuditLog extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }

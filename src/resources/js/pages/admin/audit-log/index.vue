@@ -19,78 +19,74 @@
             <div class="table-responsive mb-0">
                 <table class="table table-striped table-hover card-table">
                     <thead>
-                    <tr>
-                        <th class="text-nowrap w-20">User</th>
-                        <th class="text-nowrap w-auto">Action</th>
-                        <th class="text-nowrap w-15">Subject</th>
-                        <th class="text-nowrap w-15">Meta</th>
-                        <th class="text-nowrap w-15">Action Performed</th>
-                    </tr>
+                        <tr>
+                            <th class="text-nowrap w-20">User</th>
+                            <th class="text-nowrap w-auto">Action</th>
+                            <th class="text-nowrap w-15">Subject</th>
+                            <th class="text-nowrap w-15">Meta</th>
+                            <th class="text-nowrap w-15">Action Performed</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr
-                        v-for="message in logItems.data"
-                    >
-                    <td>
-                        {{ message.user.name }}
-                    </td>
-                    <td>
-                        {{ message.action }}
-                    </td>
-                    <td class="text-break">
-                        <inertia-link
-                            v-if="message.type"
-                            :href="
-                                route(message.url, message.subject)
-                            "
-                        >
-                            #{{ message.subject }}
-                        </inertia-link>
-                    </td>
-                    <td>
-                        <button
-                            class="btn btn-secondary"
-                            v-if="message.meta"
-                            v-b-modal="
-                            `modal-request-${message.id}`
-                            "
-                        >
-                            Request
-                        </button>
-                        <b-modal
-                            :id="`modal-request-${message.id}`"
-                            size="lg"
-                            centered
-                            hide-footer
-                            hide-header-close
-                            title="Request"
-                        >
-                            <div
-                                class="d-flex"
-                                v-if="collect(message.meta).count()"
-                            >
-                                <div class="w-25 px-4 py-2 border">
-                                    <strong>Meta</strong>
-                                </div>
-                                <div class="w-75 px-4 py-2 border">
-                                    <div class="mb-0 p-0">
-                                        <json-tree
-                                            :data="message.meta"
-                                            :deep="1"
-                                            :show-line="false"
-                                            class="p-2"
-                                        ></json-tree>
+                        <tr v-for="message in logItems.data">
+                            <td>
+                                {{ message.user.name }}
+                            </td>
+                            <td>
+                                {{ message.action }}
+                            </td>
+                            <td class="text-break">
+                                <inertia-link
+                                    v-if="message.type"
+                                    :href="route(message.url, message.subject)"
+                                >
+                                    #{{ message.subject }}
+                                </inertia-link>
+                            </td>
+                            <td>
+                                <button
+                                    class="btn btn-secondary"
+                                    v-if="message.meta"
+                                    v-b-modal="`modal-request-${message.id}`"
+                                >
+                                    Request
+                                </button>
+                                <b-modal
+                                    :id="`modal-request-${message.id}`"
+                                    size="lg"
+                                    centered
+                                    hide-footer
+                                    hide-header-close
+                                    title="Request"
+                                >
+                                    <div
+                                        class="d-flex"
+                                        v-if="collect(message.meta).count()"
+                                    >
+                                        <div class="w-25 px-4 py-2 border">
+                                            <strong>Meta</strong>
+                                        </div>
+                                        <div class="w-75 px-4 py-2 border">
+                                            <div class="mb-0 p-0">
+                                                <json-tree
+                                                    :data="message.meta"
+                                                    :deep="1"
+                                                    :show-line="false"
+                                                    class="p-2"
+                                                ></json-tree>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </b-modal>
-                    </td>
-                    <td>
-                        {{ message.created_at }}
-                    </td>
-                    <tr v-if="!logItems.data.length">
-                        <td class="text-center" colspan="5">No Results</td>
-                    </tr>
+                                </b-modal>
+                            </td>
+                            <td>
+                                {{ message.created_at }}
+                            </td>
+                        </tr>
+
+                        <tr v-if="!logItems.data.length">
+                            <td class="text-center" colspan="5">No Results</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -105,17 +101,17 @@
 </template>
 
 <script>
-    import Layout from '@/layouts/main';
+import Layout from '@/layouts/main';
 
-    export default {
-        components: {
-            Layout,
+export default {
+    components: {
+        Layout,
+    },
+    props: {
+        logItems: {
+            type: Object,
+            required: true,
         },
-        props: {
-            logItems: {
-                type: Object,
-                required: true,
-            },
-        },
-    };
+    },
+};
 </script>
