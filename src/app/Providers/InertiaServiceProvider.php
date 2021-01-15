@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AuditLog;
 use App\Models\Component;
 use App\Models\Group;
 use App\Models\QuestionnaireSection;
@@ -135,6 +136,11 @@ class InertiaServiceProvider extends ServiceProvider
                                             'create',
                                             QuestionnaireSection::class
                                         ),
+                                ],
+                                'audit_log' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', AuditLog::class),
                                 ],
                             ],
                         ]

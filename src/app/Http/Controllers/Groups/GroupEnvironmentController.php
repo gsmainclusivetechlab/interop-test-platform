@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupEnvironmentResource;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\GroupEnvironment;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -69,6 +72,14 @@ class GroupEnvironmentController extends Controller
             'variables' => ['required', 'array'],
         ]);
         $group->environments()->create($request->input());
+
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_ENVIRONMENT(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.environments.index', $group)

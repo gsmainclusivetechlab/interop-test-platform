@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Exceptions\MessageMismatchException;
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
@@ -28,6 +30,7 @@ use App\Models\{
     UseCase
 };
 use Arr;
+use App\Utils\AuditLogUtil;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -522,6 +525,14 @@ class RegisterController extends Controller
 
                 return $session;
             });
+            // log session creation
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_CREATED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
             $request->session()->remove('session');
 
             return redirect()

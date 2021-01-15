@@ -381,7 +381,7 @@
                                     <b>Test Cases</b>
                                 </label>
                                 <test-case-checkboxes
-                                    style="max-height: 485px"
+                                    style="max-height: 485px;"
                                     :session="session"
                                     :useCases="useCases"
                                     :isCompliance="isCompliance"

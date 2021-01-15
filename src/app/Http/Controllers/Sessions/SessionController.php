@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Sessions;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Exports\ComplianceSessionExport;
 use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
+use App\Utils\AuditLogUtil;
 use App\Http\Resources\{
     ComponentResource,
     SectionResource,
@@ -410,6 +413,13 @@ class SessionController extends Controller
 
                 return $session;
             });
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_EDITED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
 
             return redirect()
                 ->route('sessions.show', $session)
