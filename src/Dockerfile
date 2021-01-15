@@ -78,6 +78,10 @@ RUN chmod +x artisan && \
     php artisan dusk:chrome-driver 81 && \
     chmod -R 777 storage bootstrap/cache
 
+# Apply certbot SSL config if HTTPS_SSL_CERT=certbot
+ARG HTTPS_SSL_CERT=selfsigned
+ARG PROJECT_DOMAIN=itp-test-control.test
+
 # Generate self signet certificates cnd create dummy certs for certbot config
 RUN mkdir -p /etc/nginx/ssl/default-certs && \
     cd /etc/nginx/ssl/default-certs && \
@@ -101,10 +105,6 @@ USER root
 
 RUN chmod +x /etc/periodic/hourly/client-CA-nginx-renew.sh && \
     chmod +x /etc/periodic/hourly/certbot-cert-nginx-reload.sh
-
-# Apply certbot SSL config if HTTPS_SSL_CERT=certbot
-ARG HTTPS_SSL_CERT=selfsigned
-ARG PROJECT_DOMAIN=itp-test-control.test
 
 RUN if [ "${HTTPS_SSL_CERT}" = 'certbot' ]; then \
         sed 's?include /etc/nginx/includes/selfsigned-https.conf;?include /etc/nginx/includes/certbot-https.conf;?' -i /etc/nginx/nginx.conf; \
