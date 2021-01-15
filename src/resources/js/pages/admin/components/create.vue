@@ -159,7 +159,7 @@
 
 <script>
 import Layout from '@/layouts/main';
-import { isSelectable } from '@/components/v-select';
+import { isSelectable } from '@/components/v-select/extending';
 
 export default {
     metaInfo: {

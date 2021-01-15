@@ -88,28 +88,13 @@
                                     {{ session.owner.name }}
                                 </td>
                                 <td>
-                                    {{
-                                        session.testCases
-                                            ? collect(session.testCases)
-                                                  .map(function (value) {
-                                                      return value.useCase.id;
-                                                  })
-                                                  .unique()
-                                                  .count()
-                                            : 0
-                                    }}
+                                    {{ session.useCasesCount }}
                                 </td>
                                 <td>
-                                    {{
-                                        session.testCases
-                                            ? session.testCases.length
-                                            : 0
-                                    }}
+                                    {{ session.testCasesCount }}
                                 </td>
                                 <td>
-                                    <session-progress
-                                        :testCases="session.testCases"
-                                    />
+                                    <session-progress :session="session" />
                                 </td>
                                 <td>
                                     {{

@@ -14,14 +14,6 @@ use Inertia\Response;
 class GroupController extends Controller
 {
     /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
-
-    /**
      * @return Response
      */
     public function index()

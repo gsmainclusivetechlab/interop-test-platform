@@ -141,21 +141,24 @@ class TwigSubstitution
                 ->mapWithKeys(function ($item) use ($sutBaseUrls) {
                     return [
                         $item->slug => array_merge(
-                            Arr::only(
-                                $item->toArray(),
-                                ['uuid', 'name', 'description', 'slug']
-                            ),
+                            Arr::only($item->toArray(), [
+                                'uuid',
+                                'name',
+                                'description',
+                                'slug',
+                            ]),
                             [
                                 'base_url' => in_array(
                                     $item->id,
                                     array_keys($sutBaseUrls)
                                 )
                                     ? $sutBaseUrls[$item->id]
-                                    : $item->base_url
+                                    : $item->base_url,
                             ]
                         ),
                     ];
-                })->toArray(),
+                })
+                ->toArray(),
             'mapped_urls' => $components
                 ->mapWithKeys(function (Component $item) use ($session) {
                     $connectionUrls = [];
@@ -169,13 +172,14 @@ class TwigSubstitution
                             'simulator' => route('testing.simulator', [
                                 $item->uuid,
                                 $connection->uuid,
-                            ])
+                            ]),
                         ];
                     }
                     return $connectionUrls;
-                })->toArray(),
+                })
+                ->toArray(),
             'session_uuid' => $session->uuid,
-            'app_url' => route('home')
+            'app_url' => route('home'),
         ];
     }
 }

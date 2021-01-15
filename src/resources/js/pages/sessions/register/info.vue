@@ -52,7 +52,9 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card-header pl-0 border-0">
+                        <div
+                            class="card-header pl-0 border-0 justify-content-between"
+                        >
                             <h3 class="card-title">
                                 {{
                                     isCompliance
@@ -60,6 +62,17 @@
                                         : 'Select use cases'
                                 }}
                             </h3>
+                            <a
+                                :href="
+                                    route('sessions.register.reset-test-cases')
+                                "
+                                v-if="
+                                    session.withQuestions && hasDifferentAnswers
+                                "
+                                class="btn btn-outline-primary btn-sm"
+                            >
+                                Reset
+                            </a>
                         </div>
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
@@ -124,6 +137,10 @@ export default {
         },
         useCases: {
             type: Object,
+            required: true,
+        },
+        hasDifferentAnswers: {
+            type: Boolean,
             required: true,
         },
     },

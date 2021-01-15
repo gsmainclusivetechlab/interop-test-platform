@@ -16,3 +16,5 @@ services:
 volumes:
   mysqldata:
   redisdata:
+  certbot_certs:
+  certbot_www:

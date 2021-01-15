@@ -70,9 +70,7 @@
                                     }}
                                 </small>
                             </div>
-                            <session-progress
-                                :testCases="session.testCases.data"
-                            />
+                            <session-progress :session="session" />
                         </div>
                     </div>
                 </div>

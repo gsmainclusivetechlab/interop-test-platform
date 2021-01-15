@@ -78,6 +78,46 @@ RUN chmod +x artisan && \
     php artisan dusk:chrome-driver 81 && \
     chmod -R 777 storage bootstrap/cache
 
+# Apply certbot SSL config if HTTPS_SSL_CERT=certbot
+ARG HTTPS_SSL_CERT=selfsigned
+ARG PROJECT_DOMAIN=itp-test-control.test
+
+# Generate self signet certificates cnd create dummy certs for certbot config
+RUN mkdir -p /etc/nginx/ssl/default-certs && \
+    cd /etc/nginx/ssl/default-certs && \
+    openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.crt -subj "/C=UK/CN=localhost-CA" &&\
+    openssl x509 -outform pem -in RootCA.crt -out RootCA.crt &&\
+    openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=UK/ST=State/L=City/O=Default-Localhost-Certificates/CN=${PROJECT_DOMAIN}" &&\
+    openssl x509 -req -sha256 -days 365 -in localhost.csr -CA RootCA.crt -CAkey RootCA.key -CAcreateserial -out localhost.crt &&\
+    mkdir -p /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/ &&\
+    cp localhost.crt /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/fullchain.pem &&\
+    cp localhost.key /etc/nginx/ssl/letsencrypt/live/${PROJECT_DOMAIN}/privkey.pem &&\
+    mkdir -p /etc/nginx/ssl/client-certs &&\
+    cp RootCA.crt /etc/nginx/ssl/client-certs/CA.crt && \
+    chmod +xr /etc/nginx/ssl/default-certs/RootCA.crt && \
+    chmod +xr /etc/nginx/ssl/default-certs/RootCA.key
+
+COPY build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
+COPY build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
+COPY build/nginx-includes /etc/nginx/includes
+
+USER root
+
+RUN chmod +x /etc/periodic/hourly/client-CA-nginx-renew.sh && \
+    chmod +x /etc/periodic/hourly/certbot-cert-nginx-reload.sh
+
+RUN if [ "${HTTPS_SSL_CERT}" = 'certbot' ]; then \
+        sed 's?include /etc/nginx/includes/selfsigned-https.conf;?include /etc/nginx/includes/certbot-https.conf;?' -i /etc/nginx/nginx.conf; \
+        sed 's?example\.com?'${PROJECT_DOMAIN}'?' -i /etc/nginx/includes/certbot-https.conf; \
+        sed 's?.*server_name.*?server_name '${PROJECT_DOMAIN}';?' -i /etc/nginx/nginx.conf; \
+    fi;
+
+# Remove recidect drom http to https in dev mode
+RUN if [ "${APP_ENV}" = "development" ]; then \
+        sed 's?include /etc/nginx/includes/http-to-http-redirect.conf;??g' -i /etc/nginx/nginx.conf; \
+    fi;
+
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
 

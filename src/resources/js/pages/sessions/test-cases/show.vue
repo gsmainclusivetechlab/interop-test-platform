@@ -138,10 +138,10 @@ export default {
             type: Object,
             required: true,
         },
-      testSteps: {
-        type: Object,
-        required: true,
-      },
+        testSteps: {
+            type: Object,
+            required: true,
+        },
         testRuns: {
             type: Object,
             required: true,

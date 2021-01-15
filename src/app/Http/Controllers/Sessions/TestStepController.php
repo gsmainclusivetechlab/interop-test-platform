@@ -42,8 +42,13 @@ class TestStepController extends Controller
         return Inertia::render('sessions/test-steps/index', [
             'session' => (new SessionResource(
                 $session->load([
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                    'testCases' => function ($query) use ($session) {
+                        return $query->with([
+                            'useCase',
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ]);
                     },
                     'components' => function ($query) {
                         return $query->with(['connections']);
@@ -80,8 +85,13 @@ class TestStepController extends Controller
         return Inertia::render('sessions/test-steps/flow', [
             'session' => (new SessionResource(
                 $session->load([
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                    'testCases' => function ($query) use ($session) {
+                        return $query->with([
+                            'useCase',
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ]);
                     },
                     'components' => function ($query) {
                         return $query->with(['connections']);

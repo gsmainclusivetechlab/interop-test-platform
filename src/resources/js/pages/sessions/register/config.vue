@@ -15,14 +15,17 @@
 
                         <template v-for="(connection, i) in sut.connections">
                             <div
-                                class="mb-3" :key="`connection-${i}`"
-                                v-if="inArray(
-                                    [connection],
-                                    collect(testSteps.data)
-                                        .map((value) => value.target.id)
-                                        .unique()
-                                        .toArray()
-                                )"
+                                class="mb-3"
+                                :key="`connection-${i}`"
+                                v-if="
+                                    inArray(
+                                        [connection],
+                                        collect(testSteps.data)
+                                            .map((value) => value.target.id)
+                                            .unique()
+                                            .toArray()
+                                    )
+                                "
                             >
                                 <label class="form-label">
                                     {{ connection.name }}
@@ -32,11 +35,21 @@
                                         :id="`testing-${connection.id}`"
                                         type="text"
                                         :value="
-                                            route('testing.sut', [
-                                                session.info.uuid,
-                                                sut.uuid,
-                                                connection.uuid,
-                                            ])
+                                            session.sut[sut.id]
+                                                .use_encryption === '1'
+                                                ? route('testing.sut', [
+                                                      session.info.uuid,
+                                                      sut.uuid,
+                                                      connection.uuid,
+                                                  ])
+                                                : route(
+                                                      'testing-insecure.sut',
+                                                      [
+                                                          session.info.uuid,
+                                                          sut.uuid,
+                                                          connection.uuid,
+                                                      ]
+                                                  )
                                         "
                                         class="form-control"
                                         readonly
@@ -101,7 +114,7 @@
 <script>
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
-import { isSelectable } from '@/components/v-select';
+import { isSelectable } from '@/components/v-select/extending';
 
 export default {
     components: {
@@ -183,7 +196,7 @@ export default {
         },
         inArray(components, array) {
             let result = false;
-            components.forEach(function(component) {
+            components.forEach(function (component) {
                 if (array.includes(component.id)) {
                     result = true;
                 }

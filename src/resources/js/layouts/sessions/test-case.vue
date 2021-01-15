@@ -25,32 +25,48 @@
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled">
-                        <li v-if="
-                            session.components.data.length &&
-                            inArray(
-                                session.components.data,
-                                collect(testSteps.data)
-                                    .map((value) => value.source.id)
-                                    .unique()
-                                    .toArray()
-                            )
-                        ">
+                        <li
+                            v-if="
+                                session.components.data.length &&
+                                inArray(
+                                    session.components.data,
+                                    collect(testSteps.data)
+                                        .map((value) => value.source.id)
+                                        .unique()
+                                        .toArray()
+                                )
+                            "
+                        >
                             <p>
                                 <strong>Configuration</strong>
                             </p>
+                            <div v-if="hasEncrypted" class="mb-3">
+                                <h3>Encrypted connection</h3>
+
+                                <a
+                                    :href="
+                                        route('sessions.certificates.download')
+                                    "
+                                    class="btn btn-outline-primary"
+                                >
+                                    Download certificates
+                                </a>
+                            </div>
                             <div
                                 v-for="(component, i) in session.components
                                     .data"
                                 :key="i"
                             >
                                 <div
-                                    v-if="inArray(
+                                    v-if="
+                                        inArray(
                                             [component],
                                             collect(testSteps.data)
                                                 .map((value) => value.source.id)
                                                 .unique()
                                                 .toArray()
-                                        )"
+                                        )
+                                    "
                                 >
                                     <h3>{{ component.name }}</h3>
                                     <div
@@ -61,13 +77,18 @@
                                         :key="i"
                                     >
                                         <div
-                                            v-if="inArray(
-                                                [connection],
-                                                collect(testSteps.data)
-                                                    .map((value) => value.target.id)
-                                                    .unique()
-                                                    .toArray()
-                                            )"
+                                            v-if="
+                                                inArray(
+                                                    [connection],
+                                                    collect(testSteps.data)
+                                                        .map(
+                                                            (value) =>
+                                                                value.target.id
+                                                        )
+                                                        .unique()
+                                                        .toArray()
+                                                )
+                                            "
                                         >
                                             <label>
                                                 {{ connection.name }}
@@ -77,11 +98,23 @@
                                                     :id="`testing-${component.id}-${connection.id}`"
                                                     type="text"
                                                     :value="
-                                                        route('testing.sut', [
-                                                            session.uuid,
-                                                            component.uuid,
-                                                            connection.uuid,
-                                                        ])
+                                                        component.use_encryption
+                                                            ? route(
+                                                                  'testing.sut',
+                                                                  [
+                                                                      session.uuid,
+                                                                      component.uuid,
+                                                                      connection.uuid,
+                                                                  ]
+                                                              )
+                                                            : route(
+                                                                  'testing-insecure.sut',
+                                                                  [
+                                                                      session.uuid,
+                                                                      component.uuid,
+                                                                      connection.uuid,
+                                                                  ]
+                                                              )
                                                     "
                                                     class="form-control"
                                                     readonly
@@ -258,10 +291,18 @@ export default {
             required: false,
         },
     },
+    data() {
+        return {
+            hasEncrypted:
+                collect(this.session.components.data)
+                    .filter((component) => component.use_encryption)
+                    .count() > 0,
+        };
+    },
     methods: {
         inArray(components, array) {
             let result = false;
-            components.forEach(function(component) {
+            components.forEach(function (component) {
                 if (array.includes(component.id)) {
                     result = true;
                 }
