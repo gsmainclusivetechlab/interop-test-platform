@@ -42,7 +42,7 @@
                                 Execution:
                                 <icon
                                     name="briefcase"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Use Case"
                                 />
                                 <small>
@@ -59,7 +59,7 @@
                                 </small>
                                 <icon
                                     name="file-text"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Test Case"
                                 />
                                 <small>
@@ -70,9 +70,7 @@
                                     }}
                                 </small>
                             </div>
-                            <session-progress
-                                :testCases="session.testCases.data"
-                            />
+                            <session-progress :session="session" />
                         </div>
                     </div>
                 </div>

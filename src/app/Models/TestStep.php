@@ -13,8 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  *
  * @property string $uuid
+ * @property int $source_id
+ * @property int $target_id
+ * @property bool $mtls
  * @property Request $request
  * @property Response $response
+ *
+ * @property Component $source
+ * @property Component $target
  */
 class TestStep extends Model
 {
@@ -35,6 +41,7 @@ class TestStep extends Model
         'trigger',
         'request',
         'response',
+        'mtls',
     ];
 
     /**

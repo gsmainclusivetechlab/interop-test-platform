@@ -7,6 +7,7 @@ use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\TestStepResource;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
 use App\Models\Session;
@@ -44,8 +45,13 @@ class TestCaseController extends Controller
         return Inertia::render('sessions/test-cases/show', [
             'session' => (new SessionResource(
                 $session->load([
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                    'testCases' => function ($query) use ($session) {
+                        return $query->with([
+                            'useCase',
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ]);
                     },
                     'components' => function ($query) {
                         return $query->with(['connections']);
@@ -68,6 +74,12 @@ class TestCaseController extends Controller
                     //                    ->completed()
                     ->latest()
                     ->paginate()
+            ),
+            'testSteps' => TestStepResource::collection(
+                $testCase
+                    ->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
             ),
         ]);
     }
@@ -94,14 +106,11 @@ class TestCaseController extends Controller
         ExecuteTestRunJob::dispatch($testRun)->afterResponse();
 
         return redirect()
-            ->route(
-                'sessions.test-cases.test-runs.show',
-                [
-                    $session->id,
-                    $testCase->id,
-                    $testRun->id,
-                ]
-            )
+            ->route('sessions.test-cases.test-runs.show', [
+                $session->id,
+                $testCase->id,
+                $testRun->id,
+            ])
             ->with('success', __('Run started successfully'));
     }
 }

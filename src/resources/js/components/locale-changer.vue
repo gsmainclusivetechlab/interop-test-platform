@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { isSelectable } from '@/components/v-select';
+import { isSelectable } from '@/components/v-select/extending';
 
 export default {
     name: 'LocaleChanger',

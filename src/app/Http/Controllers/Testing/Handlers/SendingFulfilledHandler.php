@@ -6,6 +6,7 @@ use App\Jobs\ExecuteTestStepJob;
 use App\Models\Session;
 use App\Models\TestResult;
 use App\Testing\TestExecutionListener;
+use App\Testing\Tests\RequestMtlsValidationTest;
 use App\Testing\TestScriptLoader;
 use App\Testing\TestSpecLoader;
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
@@ -43,6 +44,11 @@ class SendingFulfilledHandler
     public function __invoke(ResponseInterface $response)
     {
         $testSuite = new TestSuite();
+        if ($this->testResult->testStep->mtls) {
+            $testSuite->addTest(
+                new RequestMtlsValidationTest($this->testResult)
+            );
+        }
         $testSuite->addTestSuite(
             (new TestSpecLoader())->load($this->testResult)
         );

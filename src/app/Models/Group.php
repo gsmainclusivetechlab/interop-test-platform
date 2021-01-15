@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
+ * @property int $id
+ *
  * @mixin \Eloquent
  */
 class Group extends Model
@@ -76,6 +79,11 @@ class Group extends Model
             'group_id',
             'test_case_id'
         );
+    }
+
+    public function certificates(): HasMany
+    {
+        return $this->hasMany(Certificate::class);
     }
 
     /**

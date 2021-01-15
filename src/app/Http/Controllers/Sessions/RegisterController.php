@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
 use App\Http\Resources\{
+    CertificateResource,
     ComponentResource,
     GroupEnvironmentResource,
     QuestionResource,
@@ -14,6 +15,7 @@ use App\Http\Resources\{
     UseCaseResource
 };
 use App\Models\{
+    Certificate,
     Component,
     GroupEnvironment,
     QuestionnaireQuestions,
@@ -21,6 +23,7 @@ use App\Models\{
     QuestionnaireTestCase,
     Session,
     TestCase,
+    TestStep,
     UseCase
 };
 use Arr;
@@ -185,17 +188,47 @@ class RegisterController extends Controller
                     ->get()
             ),
             'components' => $this->getComponents(),
+            'hasGroupCertificates' =>
+                Certificate::hasGroupCertificates() || $this->getSessionIds(),
         ]);
     }
 
-    /**
-     * @param SessionSutRequest $request
-     *
-     * @return RedirectResponse
-     */
-    public function storeSut(SessionSutRequest $request)
+    public function storeSut(SessionSutRequest $request): RedirectResponse
     {
-        $request->session()->put('session.sut', $request->validated());
+        $data = collect($request->get('components'))
+            ->map(function ($sut, $key) use ($request) {
+                if (
+                    (bool) $sut['use_encryption'] &&
+                    !Arr::get($sut, 'certificate_id')
+                ) {
+                    $sut['certificate_id'] = Certificate::create([
+                        'passphrase' => $sut['passphrase'],
+                        'name' => Component::find($sut['id'])->name,
+                        'ca_crt_path' => Certificate::storeFile(
+                            $request,
+                            "components.{$key}.ca_crt"
+                        ),
+                        'client_crt_path' => Certificate::storeFile(
+                            $request,
+                            "components.{$key}.client_crt"
+                        ),
+                        'client_key_path' => Certificate::storeFile(
+                            $request,
+                            "components.{$key}.client_key"
+                        ),
+                    ])->id;
+                }
+
+                return Arr::except($sut, [
+                    'ca_crt',
+                    'client_crt',
+                    'client_key',
+                    'passphrase',
+                ]);
+            })
+            ->all();
+
+        $request->session()->put('session.sut', $data);
 
         return redirect()->route('sessions.register.info');
     }
@@ -274,40 +307,39 @@ class RegisterController extends Controller
         ]);
     }
 
-    /**
-     * @return Response
-     */
-    public function showInfoForm()
+    public function showInfoForm(): Response
     {
-        $testCases = $this->getTestCases();
+        $withQuestions = session('session.withQuestions');
+        if ($withQuestions) {
+            $ids = $this->getTestCasesIds();
 
-        if (
-            session('session.withQuestions') &&
-            !session()->has('session.info')
-        ) {
-            session()->put(
-                'session.info.test_cases',
-                TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
-                    ->available()
-                    ->lastPerGroup(false)
-                    ->pluck('id')
-            );
+            if (!session()->has('session.info')) {
+                session()->put('session.info.test_cases', $ids);
+            }
         }
 
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
             'components' => $this->getComponents(),
+            'hasDifferentAnswers' =>
+                $withQuestions &&
+                (collect(
+                    $testCasesIds = session()->get('session.info.test_cases')
+                )
+                    ->diff($ids)
+                    ->count() > 0 ||
+                    count($testCasesIds) != count($ids)),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) {
                         $this->getTestCasesQuery($query);
                     },
                 ])
-                    ->whereHas('testCases', function ($query) use ($testCases) {
+                    ->whereHas('testCases', function ($query) {
+                        $testCases = $this->getTestCases();
+
                         $query
-                            ->withComponents(
-                                session('session.sut.component_ids')
-                            )
+                            ->withComponents(array_keys(session('session.sut')))
                             ->when(
                                 !auth()
                                     ->user()
@@ -327,6 +359,24 @@ class RegisterController extends Controller
         ]);
     }
 
+    public function resetTestCases(): RedirectResponse
+    {
+        session()->put('session.info.test_cases', $this->getTestCasesIds());
+
+        return redirect()->route('sessions.register.info');
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getTestCasesIds()
+    {
+        return TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
+            ->available()
+            ->lastPerGroup(false)
+            ->pluck('id');
+    }
+
     /**
      * @param Request $request
      *
@@ -334,14 +384,14 @@ class RegisterController extends Controller
      */
     public function storeInfo(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ]);
         $request->session()->put(
             'session.info',
-            array_merge($request->input(), [
+            array_merge($validated, [
                 'uuid' => Str::uuid(),
             ])
         );
@@ -354,12 +404,13 @@ class RegisterController extends Controller
      */
     public function showConfigForm()
     {
+        $session = session('session');
         return Inertia::render('sessions/register/config', [
-            'session' => session('session'),
+            'session' => $session,
             'suts' => ComponentResource::collection(
                 Component::whereIn(
                     'id',
-                    session('session.sut.component_ids', [0])
+                    array_keys(session('session.sut', [0]))
                 )
                     ->with('connections')
                     ->get()
@@ -377,6 +428,14 @@ class RegisterController extends Controller
                     });
                 }
             )->exists(),
+            'testSteps' => TestStepResource::collection(
+                TestStep::whereIn(
+                    'test_case_id',
+                    session('session.info.test_cases', [0])
+                )
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
         ]);
     }
 
@@ -448,12 +507,20 @@ class RegisterController extends Controller
                                 ->get('session.info.test_cases')
                     );
 
-                collect(session('session.sut.component_ids'))->each(function (
+                collect(session('session.sut'))->each(function (
+                    $component,
                     $id
                 ) use ($session) {
-                    $session->components()->attach($id, [
-                        'base_url' => session("session.sut.base_urls.{$id}"),
-                    ]);
+                    $session
+                        ->components()
+                        ->attach(
+                            $id,
+                            Arr::only($component, [
+                                'base_url',
+                                'use_encryption',
+                                'certificate_id',
+                            ])
+                        );
                 });
 
                 return $session;
@@ -491,6 +558,55 @@ class RegisterController extends Controller
                 ->latest()
                 ->paginate()
         );
+    }
+
+    public function groupCertificateCandidates(): AnonymousResourceCollection
+    {
+        return CertificateResource::collection(
+            Certificate::when(request('q'), function (Builder $query, $q) {
+                $query->whereRaw('name like ?', "%{$q}%");
+            })
+                ->where(function (Builder $query) {
+                    $query
+                        ->whereHas('group', function (Builder $query) {
+                            $query->whereHas('users', function (
+                                Builder $query
+                            ) {
+                                $query->whereKey(
+                                    auth()
+                                        ->user()
+                                        ->getAuthIdentifier()
+                                );
+                            });
+                        })
+                        ->when($this->getSessionIds(), function (
+                            Builder $query,
+                            $ids
+                        ) {
+                            $query->orWhereIn('id', $ids);
+                        })
+                        ->when(request('session'), function (
+                            Builder $query,
+                            $session
+                        ) {
+                            $query->orWhereHas('sessions', function (
+                                Builder $query
+                            ) use ($session) {
+                                $query->whereKey($session);
+                            });
+                        });
+                })
+                ->latest()
+                ->paginate()
+        );
+    }
+
+    protected function getSessionIds(): array
+    {
+        return collect(session('session.sut'))
+            ->pluck('certificate_id')
+            ->filter()
+            ->all();
     }
 
     /**
@@ -628,7 +744,7 @@ class RegisterController extends Controller
         $testCases = $this->getTestCases();
 
         return $query
-            ->withComponents(session('session.sut.component_ids'))
+            ->withComponents(array_keys(session('session.sut')))
             ->where(function ($query) {
                 $query->available();
             })
@@ -645,7 +761,7 @@ class RegisterController extends Controller
         $testCases = $this->getTestCases();
         $isCompliance = Session::isCompliance(session('session.type'));
 
-        $componentsQuery = function ($query) use ($testCases) {
+        $complianceComponentsQuery = function ($query) use ($testCases) {
             $testCasesQuery = function ($query) use ($testCases) {
                 $query->whereHas('testCase', function ($query) use (
                     $testCases
@@ -659,14 +775,22 @@ class RegisterController extends Controller
                 ->orWhereHas('targetTestSteps', $testCasesQuery);
         };
 
+        $testComponentsQuery = function ($query) {
+            $query->whereHas('sourceTestSteps')->orWhereHas('targetTestSteps');
+        };
+
         return ComponentResource::collection(
-            Component::when($isCompliance, $componentsQuery)
+            Component::when($isCompliance, $complianceComponentsQuery)
+                ->when(!$isCompliance, $testComponentsQuery)
                 ->with([
                     'connections' => function ($query) use (
                         $isCompliance,
-                        $componentsQuery
+                        $complianceComponentsQuery,
+                        $testComponentsQuery
                     ) {
-                        $query->when($isCompliance, $componentsQuery);
+                        $query
+                            ->when($isCompliance, $complianceComponentsQuery)
+                            ->when(!$isCompliance, $testComponentsQuery);
                     },
                 ])
                 ->get()
