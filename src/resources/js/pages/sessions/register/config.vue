@@ -114,7 +114,7 @@
 <script>
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
-import { isSelectable } from '@/components/v-select';
+import { isSelectable } from '@/components/v-select/extending';
 
 export default {
     components: {

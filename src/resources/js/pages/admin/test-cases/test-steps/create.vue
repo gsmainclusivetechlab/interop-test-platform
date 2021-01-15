@@ -647,7 +647,7 @@
 <script>
 import Layout from '@/layouts/test-cases/main';
 import JsonEditorBlock from '@/components/json-editor-block';
-import { isSelectable } from '@/components/v-select';
+import { isSelectable } from '@/components/v-select/extending';
 
 export default {
     metaInfo() {

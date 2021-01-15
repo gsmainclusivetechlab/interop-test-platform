@@ -420,11 +420,11 @@
 </template>
 
 <script>
-import { serialize } from '@/object-to-formdata';
+import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
-import { isSelectable } from '@/components/v-select';
+import { isSelectable } from '@/components/v-select/extending';
 
 export default {
     components: {
