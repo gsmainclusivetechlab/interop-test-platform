@@ -21,7 +21,7 @@
                         <tr>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap w-auto">Uploaded At</th>
-                            <th class="text-nowrap w-1"></th>
+                            <!--                            <th class="text-nowrap w-1"></th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -32,36 +32,36 @@
                             <td class="text-break">
                                 {{ certificate.created_at }}
                             </td>
-                            <td class="text-center text-break">
-                                <b-dropdown
-                                    v-if="certificate.can.delete"
-                                    no-caret
-                                    right
-                                    toggle-class="align-items-center text-muted"
-                                    variant="link"
-                                    boundary="window"
-                                >
-                                    <template v-slot:button-content>
-                                        <icon name="dots-vertical"></icon>
-                                    </template>
-                                    <!--                                    <li v-if="certificate.can.delete">-->
-                                    <!--                                        <confirm-link-->
-                                    <!--                                            class="dropdown-item"-->
-                                    <!--                                            :href="-->
-                                    <!--                                                route(-->
-                                    <!--                                                    'groups.certificates.destroy',-->
-                                    <!--                                                    [group.id, certificate.id]-->
-                                    <!--                                                )-->
-                                    <!--                                            "-->
-                                    <!--                                            method="delete"-->
-                                    <!--                                            :confirm-title="'Confirm delete'"-->
-                                    <!--                                            :confirm-text="`Are you sure you want to delete ${certificate.name}?`"-->
-                                    <!--                                        >-->
-                                    <!--                                            Delete-->
-                                    <!--                                        </confirm-link>-->
-                                    <!--                                    </li>-->
-                                </b-dropdown>
-                            </td>
+                            <!--                            <td class="text-center text-break">-->
+                            <!--                                <b-dropdown-->
+                            <!--                                    v-if="certificate.can.delete"-->
+                            <!--                                    no-caret-->
+                            <!--                                    right-->
+                            <!--                                    toggle-class="align-items-center text-muted"-->
+                            <!--                                    variant="link"-->
+                            <!--                                    boundary="window"-->
+                            <!--                                >-->
+                            <!--                                    <template v-slot:button-content>-->
+                            <!--                                        <icon name="dots-vertical"></icon>-->
+                            <!--                                    </template>-->
+                            <!--                                    <li v-if="certificate.can.delete">-->
+                            <!--                                        <confirm-link-->
+                            <!--                                            class="dropdown-item"-->
+                            <!--                                            :href="-->
+                            <!--                                                route(-->
+                            <!--                                                    'groups.certificates.destroy',-->
+                            <!--                                                    [group.id, certificate.id]-->
+                            <!--                                                )-->
+                            <!--                                            "-->
+                            <!--                                            method="delete"-->
+                            <!--                                            :confirm-title="'Confirm delete'"-->
+                            <!--                                            :confirm-text="`Are you sure you want to delete ${certificate.name}?`"-->
+                            <!--                                        >-->
+                            <!--                                            Delete-->
+                            <!--                                        </confirm-link>-->
+                            <!--                                    </li>-->
+                            <!--                                </b-dropdown>-->
+                            <!--                            </td>-->
                         </tr>
                         <tr v-if="!certificates.data.length">
                             <td class="text-center" colspan="5">No Results</td>
