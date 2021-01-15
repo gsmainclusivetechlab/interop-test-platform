@@ -84,7 +84,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="briefcase"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Use Case"
                                 />
                                 <span>
@@ -105,7 +105,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="file-text"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Test Case"
                                 />
                                 <span>{{
@@ -118,7 +118,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="clock"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Last Run"
                                 />
                                 <span>{{
@@ -129,7 +129,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="user"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Owner"
                                 />
                                 <span>{{ session.owner.name }}</span>
@@ -138,7 +138,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="chart-candle"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Type"
                                 />
                                 <span>{{ session.typeName }}</span>
@@ -147,7 +147,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="list-check"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Status"
                                 />
                                 <span>{{ session.statusName }}</span>

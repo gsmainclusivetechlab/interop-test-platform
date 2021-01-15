@@ -23,6 +23,7 @@ use App\Models\{
     QuestionnaireTestCase,
     Session,
     TestCase,
+    TestStep,
     UseCase
 };
 use Arr;
@@ -321,11 +322,13 @@ class RegisterController extends Controller
             'session' => session('session'),
             'components' => $this->getComponents(),
             'hasDifferentAnswers' =>
-                $withQuestions && (collect(
+                $withQuestions &&
+                (collect(
                     $testCasesIds = session()->get('session.info.test_cases')
                 )
                     ->diff($ids)
-                    ->count() > 0 || count($testCasesIds) != count($ids)),
+                    ->count() > 0 ||
+                    count($testCasesIds) != count($ids)),
             'useCases' => UseCaseResource::collection(
                 UseCase::with([
                     'testCases' => function ($query) {
@@ -401,8 +404,9 @@ class RegisterController extends Controller
      */
     public function showConfigForm()
     {
+        $session = session('session');
         return Inertia::render('sessions/register/config', [
-            'session' => session('session'),
+            'session' => $session,
             'suts' => ComponentResource::collection(
                 Component::whereIn(
                     'id',
@@ -424,6 +428,14 @@ class RegisterController extends Controller
                     });
                 }
             )->exists(),
+            'testSteps' => TestStepResource::collection(
+                TestStep::whereIn(
+                    'test_case_id',
+                    session('session.info.test_cases', [0])
+                )
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
         ]);
     }
 

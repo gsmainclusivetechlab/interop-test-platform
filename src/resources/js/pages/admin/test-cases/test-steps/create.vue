@@ -206,7 +206,7 @@
                                         <button
                                             type="button"
                                             class="btn btn-link p-0"
-                                            v-b-tooltip.hover
+                                            v-b-tooltip.hover.top
                                             :title="
                                                 $t(
                                                     'inputs.test-scripts.form.buttons.delete'
@@ -355,7 +355,7 @@
                                         <button
                                             type="button"
                                             class="btn btn-link p-0"
-                                            v-b-tooltip.hover
+                                            v-b-tooltip.hover.top
                                             :title="
                                                 $t(
                                                     'inputs.test-scripts.form.buttons.delete'

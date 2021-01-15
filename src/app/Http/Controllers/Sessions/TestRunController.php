@@ -8,6 +8,7 @@ use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestResultResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\TestStepResource;
 use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\Session;
@@ -125,6 +126,12 @@ class TestRunController extends Controller
                     ])
                     ->firstOrFail()
             ))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase
+                    ->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
         ]);
     }
 }

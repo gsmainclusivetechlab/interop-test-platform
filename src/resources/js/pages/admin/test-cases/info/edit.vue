@@ -139,7 +139,7 @@
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
-                            $t('inputs.precondition.label')
+                            $t('inputs.description.label')
                         }}</label>
                         <text-editor
                             :class="{

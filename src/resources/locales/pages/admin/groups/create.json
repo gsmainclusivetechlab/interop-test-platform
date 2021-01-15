@@ -7,7 +7,7 @@
             "name": "Name",
             "email-filter": {
                 "label": "Email Filter",
-                "comment": "Only users whose email matches these filters will be eligible to join the group"
+                "comment": "Only users whose email matches these filters will be eligible to join the group, e.g. domain.com or @domain.com"
             },
             "description": "Description"
         },
@@ -24,7 +24,7 @@
             "name": "Имя",
             "email-filter": {
                 "label": "Email Фильтр",
-                "comment": "Только пользователи, чей email соответствует этим фильтрам, смогут присоединиться к группе."
+                "comment": "Только пользователи, чей email соответствует этим фильтрам, смогут присоединиться к группе, например domain.com или @domain.com"
             },
             "description": "Описание"
         },

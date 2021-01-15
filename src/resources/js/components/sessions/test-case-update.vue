@@ -9,7 +9,7 @@
             v-b-modal="`update-test-case-${versions.current.id}`"
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
-            v-b-tooltip.hover
+            v-b-tooltip.hover.top
             title="A newer version of this test case is available. Click to update your session with it."
         >
             update

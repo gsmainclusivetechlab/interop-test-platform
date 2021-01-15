@@ -14,7 +14,19 @@
                         <h3>{{ sut.name }}</h3>
 
                         <template v-for="(connection, i) in sut.connections">
-                            <div class="mb-3" :key="`connection-${i}`">
+                            <div
+                                class="mb-3"
+                                :key="`connection-${i}`"
+                                v-if="
+                                    inArray(
+                                        [connection],
+                                        collect(testSteps.data)
+                                            .map((value) => value.target.id)
+                                            .unique()
+                                            .toArray()
+                                    )
+                                "
+                            >
                                 <label class="form-label">
                                     {{ connection.name }}
                                 </label>
@@ -126,6 +138,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        testSteps: {
+            type: Object,
+            required: true,
+        },
     },
     data() {
         return {
@@ -177,6 +193,15 @@ export default {
                 .then((result) => {
                     this.groupEnvironmentsList = result.data.data;
                 });
+        },
+        inArray(components, array) {
+            let result = false;
+            components.forEach(function (component) {
+                if (array.includes(component.id)) {
+                    result = true;
+                }
+            });
+            return result;
         },
     },
 };

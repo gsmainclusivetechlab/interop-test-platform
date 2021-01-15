@@ -5,7 +5,7 @@
                 <div class="col-auto">
                     <div class="page-pretitle">Administration</div>
                     <h2 class="page-title">
-                        <b>Api Specs</b>
+                        <b>API Specs</b>
                     </h2>
                 </div>
             </div>
