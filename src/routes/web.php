@@ -199,7 +199,7 @@ Route::name('testing-insecure.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{session:uuid}/{componentId}/{connectionId}/sut/{path}',
+            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
             'SutController'
         )
             ->name('sut')
@@ -211,7 +211,7 @@ Route::name('testing.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{session:uuid}/{componentId}/{connectionId}/sut/{path}',
+            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
             'SutController'
         )
             ->name('sut')
