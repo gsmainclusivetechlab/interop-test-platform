@@ -12,6 +12,7 @@ use App\Http\Resources\{
     GroupEnvironmentResource,
     QuestionResource,
     SectionResource,
+    TestStepResource,
     UseCaseResource
 };
 use App\Models\{
