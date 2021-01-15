@@ -5,11 +5,12 @@
                 <div class="card-header border-0">
                     <h3 class="card-title">{{ section.name }}</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body q-a-list">
                     <dl
                         v-for="(question, i) in section.questions"
                         :key="i"
-                        :hidden="isHidden(section.id, question)"
+                        v-show="!isHidden(section.id, question)"
+                        class="pl-4"
                     >
                         <dt>{{ question.question }}</dt>
                         <dd
