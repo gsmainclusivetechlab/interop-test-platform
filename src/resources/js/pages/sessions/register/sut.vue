@@ -73,12 +73,20 @@
                                 <div class="mb-3">
                                     <label class="form-check form-switch">
                                         <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            v-model="
+                                            :checked="
                                                 componentsData.use_encryption[
                                                     sut.id
-                                                ]
+                                                ] !== '0'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (componentsData.use_encryption[
+                                                        sut.id
+                                                    ] = e.target.checked
+                                                        ? '1'
+                                                        : '0')
                                             "
                                         />
                                         <span class="form-check-label"
@@ -103,7 +111,11 @@
                                     </span>
                                 </div>
                                 <div
-                                    v-if="componentsData.use_encryption[sut.id]"
+                                    v-if="
+                                        componentsData.use_encryption[
+                                            sut.id
+                                        ] !== '0'
+                                    "
                                 >
                                     <div v-if="showGroupCertificates(sut)">
                                         <label class="form-label"
