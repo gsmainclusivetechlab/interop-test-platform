@@ -696,7 +696,7 @@
 import Layout from '@/layouts/test-cases/main';
 import mixin from '@/pages/admin/test-cases/test-steps/mixin';
 import JsonEditorBlock from '@/components/json-editor-block';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
@@ -709,7 +709,7 @@ export default {
             required: true,
         },
     },
-    mixins: [mixin],
+    mixins: [mixin, mixinVSelect],
     data() {
         return {
             method: {
@@ -765,7 +765,6 @@ export default {
         };
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.put(

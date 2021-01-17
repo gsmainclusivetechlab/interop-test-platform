@@ -361,7 +361,7 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
@@ -385,10 +385,11 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         const isCompliance = this.session.type === 'compliance';
         const selectedSut = isCompliance && this.suts.data.length === 1;
-        const sessionData = this.session?.sut || [];
+        const sessionData = this.session?.sut ?? [];
 
         return {
             sending: false,
@@ -424,7 +425,7 @@ export default {
                     : [],
             },
             form: {
-                components: this.session?.sut || [],
+                components: this.session?.sut ?? [],
             },
         };
     },
@@ -436,7 +437,7 @@ export default {
     watch: {
         'currentSuts.selected': {
             immediate: true,
-            handler: function (values) {
+            handler(values) {
                 const c = this.componentsData;
                 this.form.components = [];
 
@@ -460,13 +461,12 @@ export default {
         },
         'componentsData': {
             deep: true,
-            handler: function (values) {
+            handler(values) {
                 this.setForm(values);
             },
         },
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
 

@@ -12,12 +12,12 @@
 </template>
 
 <script>
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     name: 'LocaleChanger',
+    mixins: [mixinVSelect],
     methods: {
-        isSelectable,
         changeLang() {
             this.$inertia.post(
                 route('locale'),
