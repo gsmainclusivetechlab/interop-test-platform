@@ -40,7 +40,7 @@ class TwigSubstitution
     {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
-        $this->data = $this->mapInto($testResults, $session);
+        $this->data = $this->mapInto($testResults, $session);logger($this->data['mapped_urls']);
     }
 
     /**
@@ -159,27 +159,69 @@ class TwigSubstitution
                     ];
                 })
                 ->toArray(),
-            'mapped_urls' => $components
-                ->mapWithKeys(function (Component $item) use ($session) {
-                    $connectionUrls = [];
-                    foreach ($item->connections as $connection) {
-                        $connectionUrls[$item->slug][$connection->slug] = [
-                            'sut' => route('testing.sut', [
-                                $session->uuid,
-                                $item->uuid,
-                                $connection->uuid,
-                            ]),
-                            'simulator' => route('testing.simulator', [
-                                $item->uuid,
-                                $connection->uuid,
-                            ]),
-                        ];
-                    }
-                    return $connectionUrls;
-                })
-                ->toArray(),
+            'mapped_urls' => [
+                'testing' => $this->mapUrls(
+                    $components,
+                    $session,
+                    'testing',
+                    true
+                ),
+                'testing-insecure' => $this->mapUrls(
+                    $components,
+                    $session,
+                    'testing-insecure',
+                    false
+                ),
+            ],
             'session_uuid' => $session->uuid,
             'app_url' => route('home'),
         ];
+    }
+
+    /**
+     * @param $components
+     * @param $session
+     * @param string $route
+     * @param bool $withSimulators
+     * @return array
+     */
+    protected function mapUrls(
+        $components,
+        $session,
+        $route,
+        $withSimulators
+    )
+    {
+        return $components
+            ->mapWithKeys(function (Component $item) use (
+                $session,
+                $route,
+                $withSimulators
+            ) {
+                $connectionUrls = [];
+                foreach ($item->connections as $connection) {
+                    $urls = [
+                        'sut' => route($route . '.sut', [
+                            $session->uuid,
+                            $item->uuid,
+                            $connection->uuid,
+                        ])
+                    ];
+                    if ($withSimulators) {
+                        $urls = Arr::add(
+                            $urls,
+                            'simulator',
+                            route($route . '.simulator', [
+                                $item->uuid,
+                                $connection->uuid,
+                            ])
+                        );
+                    }
+                    $connectionUrls[$item->slug][$connection->slug] = $urls;
+                }
+
+                return $connectionUrls;
+            })
+            ->toArray();
     }
 }
