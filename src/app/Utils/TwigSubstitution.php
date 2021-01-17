@@ -40,7 +40,7 @@ class TwigSubstitution
     {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
-        $this->data = $this->mapInto($testResults, $session);logger($this->data['mapped_urls']);
+        $this->data = $this->mapInto($testResults, $session);
     }
 
     /**
