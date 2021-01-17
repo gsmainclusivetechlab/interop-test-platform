@@ -37,7 +37,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="apiSpec in apiSpecs.data">
+                        <tr
+                            v-for="(apiSpec, i) in apiSpecs.data"
+                            :key="`spec-${i}`"
+                        >
                             <td class="text-break">
                                 {{ apiSpec.name }}
                             </td>

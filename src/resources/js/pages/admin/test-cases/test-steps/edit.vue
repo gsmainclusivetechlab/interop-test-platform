@@ -538,7 +538,31 @@
                             {{ $t('inputs.request.body') }}
                         </button>
                         <b-collapse id="request-body-examples" class="card">
+                            <div class="card-header">
+                                <div class="card-options">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            :checked="
+                                                example.request.body ===
+                                                'empty_body'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (example.request.body = toggleEmptyBody(
+                                                        e
+                                                    ))
+                                            "
+                                        />
+                                        <span class="form-check-label"
+                                            >Empty body</span
+                                        >
+                                    </label>
+                                </div>
+                            </div>
                             <json-editor-block
+                                v-if="example.request.body !== 'empty_body'"
                                 :input-json="example.request.body"
                                 @output-json="
                                     (data) => {
@@ -610,7 +634,31 @@
                             {{ $t('inputs.response.body') }}
                         </button>
                         <b-collapse id="response-body-examples" class="card">
+                            <div class="card-header">
+                                <div class="card-options">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            :checked="
+                                                example.response.body ===
+                                                'empty_body'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (example.response.body = toggleEmptyBody(
+                                                        e
+                                                    ))
+                                            "
+                                        />
+                                        <span class="form-check-label"
+                                            >Empty body</span
+                                        >
+                                    </label>
+                                </div>
+                            </div>
                             <json-editor-block
+                                v-if="example.response.body !== 'empty_body'"
                                 :input-json="example.response.body"
                                 @output-json="
                                     (data) => {
@@ -646,57 +694,33 @@
 
 <script>
 import Layout from '@/layouts/test-cases/main';
+import mixin from '@/pages/admin/test-cases/test-steps/mixin';
 import JsonEditorBlock from '@/components/json-editor-block';
 import { isSelectable } from '@/components/v-select/extending';
 
 export default {
-    metaInfo() {
-        return {
-            title: `${this.testCase.name} - ${this.$t('card.title')}`,
-        };
-    },
     components: {
         Layout,
         JsonEditorBlock,
     },
     props: {
-        testCase: {
-            type: Object,
-            required: true,
-        },
         testStep: {
             type: Object,
             required: true,
         },
     },
+    mixins: [mixin],
     data() {
         return {
-            sending: false,
-            component: {
-                list: this.$page.props.components.map((el) => el.name),
-                connections: new Map(
-                    this.$page.props.components.map((el) => [
-                        el.name,
-                        el.connections.data.map(
-                            (connection) => connection.name
-                        ),
-                    ])
-                ),
-            },
             method: {
                 selected: this.testStep.method,
-                list: collect(this.$page.props.methods).toArray(),
             },
             path: this.testStep?.path,
             pattern: this.testStep?.pattern,
             source: this.testStep.source?.data?.name,
             target: this.testStep.target?.data?.name,
             apiSpec: {
-                selected: this.testStep.apiSpec?.data?.name,
-                list: [
-                    'None',
-                    ...this.$page.props.apiSpecs.map((el) => el.name),
-                ],
+                selected: this.testStep.apiSpec?.data?.name ?? null,
             },
             trigger: this.testStep?.trigger,
             mtls: this.testStep?.mtls,
@@ -733,7 +757,6 @@ export default {
                         selected: this.$page.props.statuses[
                             this.testStep.response.status
                         ],
-                        list: collect(this.$page.props.statuses).toArray(),
                     },
                     headers: this.testStep.response.headers,
                     body: this.testStep.response.body,
@@ -744,75 +767,19 @@ export default {
     methods: {
         isSelectable,
         submit() {
-            const form = {
-                api_spec_id:
-                    this.$page.props.apiSpecs.filter(
-                        (el) => el.name === this.apiSpec.selected
-                    )?.[0]?.id ?? null,
-                method: collect(this.$page.props.methods)
-                    .flip()
-                    .get(this.method.selected),
-                path: this.path,
-                mtls: this.mtls,
-                pattern: this.pattern,
-                source_id: this.$page.props.components.filter(
-                    (el) => el.name === this.source
-                )?.[0]?.id,
-                target_id: this.$page.props.components.filter(
-                    (el) => el.name === this.target
-                )?.[0]?.id,
-                trigger: this.trigger,
-                request: this.example.request,
-                response: {
-                    status: collect(this.$page.props.statuses)
-                        .flip()
-                        .get(this.example.response.status.selected),
-                    headers: this.example.response.headers,
-                    body: this.example.response.body,
-                },
-                test: {
-                    scripts: {
-                        request: this.test.scripts.request.list,
-                        response: this.test.scripts.response.list,
-                    },
-                },
-            };
-
             this.sending = true;
             this.$inertia.put(
                 route('admin.test-cases.test-steps.update', [
                     this.testCase.id,
                     this.testStep.id,
                 ]),
-                form,
+                this.getForm(),
                 {
                     onFinish: () => {
                         this.sending = false;
                     },
                 }
             );
-        },
-        addFormItem(formsList, formPattern) {
-            formsList.push(formPattern);
-        },
-        deleteFormItem(formList, i) {
-            formList.splice(i, 1);
-        },
-    },
-    computed: {
-        sourceList() {
-            const list = this.component.connections.get(this.target);
-
-            if (list) return list;
-
-            return this.component.list;
-        },
-        targetList() {
-            const list = this.component.connections.get(this.source);
-
-            if (list) return list;
-
-            return this.component.list;
         },
     },
 };

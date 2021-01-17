@@ -143,7 +143,9 @@
                                             v-if="
                                                 testStep.request &&
                                                 testStep.request.body !==
-                                                    undefined
+                                                    undefined &&
+                                                testStep.request.body !==
+                                                    'empty_body'
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -222,7 +224,9 @@
                                             v-if="
                                                 testStep.response &&
                                                 testStep.response.body !==
-                                                    undefined
+                                                    undefined &&
+                                                testStep.response.body !==
+                                                    'empty_body'
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
