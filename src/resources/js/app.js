@@ -91,7 +91,6 @@ Vue.component('text-editor', () =>
     import(/* webpackChunkName: "text-editor" */ '@/components/text-editor.vue')
 );
 const i18n = new VueI18n({
-    fallbackLocale: 'en',
     silentFallbackWarn: true,
     messages: {},
 });
