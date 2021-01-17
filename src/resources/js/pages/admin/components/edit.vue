@@ -179,7 +179,7 @@
 
 <script>
 import Layout from '@/layouts/main';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     metaInfo: {
@@ -194,6 +194,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -216,7 +217,6 @@ export default {
         this.loadConnectionsList();
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.put(

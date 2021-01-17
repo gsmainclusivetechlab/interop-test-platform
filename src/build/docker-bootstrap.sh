@@ -34,5 +34,3 @@ else
     echo "Could not match the container role \"$role\""
     exit 1
 fi
-
-

@@ -135,7 +135,7 @@
 
 <script>
 import Layout from '@/layouts/test-cases/main';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     metaInfo() {
@@ -156,6 +156,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -172,7 +173,6 @@ export default {
         },
     },
     methods: {
-        isSelectable,
         addGroups() {
             this.sending = true;
 

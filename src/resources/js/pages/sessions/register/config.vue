@@ -114,7 +114,7 @@
 <script>
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
@@ -143,6 +143,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -172,7 +173,6 @@ export default {
         this.loadGroupEnvironmentList();
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(

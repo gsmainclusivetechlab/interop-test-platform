@@ -472,7 +472,9 @@
                                         class="d-flex"
                                         v-if="
                                             testResult.request.body !==
-                                            undefined
+                                                undefined &&
+                                            testResult.request.body !==
+                                                'empty_body'
                                         "
                                     >
                                         <div
@@ -495,7 +497,9 @@
                                         :id="`request-body-${testResult.id}`"
                                         v-if="
                                             testResult.request.body !==
-                                            undefined
+                                                undefined &&
+                                            testResult.request.body !==
+                                                'empty_body'
                                         "
                                     >
                                         <div class="d-flex">
@@ -638,7 +642,9 @@
                                         class="d-flex"
                                         v-if="
                                             testResult.response.body !==
-                                            undefined
+                                                undefined &&
+                                            testResult.response.body !==
+                                                'empty_body'
                                         "
                                     >
                                         <div
@@ -661,7 +667,9 @@
                                         :id="`response-body-${testResult.id}`"
                                         v-if="
                                             testResult.response.body !==
-                                            undefined
+                                                undefined &&
+                                            testResult.response.body !==
+                                                'empty_body'
                                         "
                                     >
                                         <div class="d-flex">
@@ -786,7 +794,7 @@ export default {
         },
     },
     computed: {
-        testResultRequestSetups: function () {
+        testResultRequestSetups() {
             let data = collect();
             collect(this.testResult.testStep.data.testSetups)
                 .where('type', 'request')
@@ -795,7 +803,7 @@ export default {
                 });
             return data;
         },
-        testResultResponseSetups: function () {
+        testResultResponseSetups() {
             let data = collect();
             collect(this.testResult.testStep.data.testSetups)
                 .where('type', 'response')

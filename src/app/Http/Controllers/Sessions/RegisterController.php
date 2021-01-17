@@ -12,6 +12,7 @@ use App\Http\Resources\{
     GroupEnvironmentResource,
     QuestionResource,
     SectionResource,
+    TestStepResource,
     UseCaseResource
 };
 use App\Models\{
@@ -197,6 +198,8 @@ class RegisterController extends Controller
     {
         $data = collect($request->get('components'))
             ->map(function ($sut, $key) use ($request) {
+                $sut['use_encryption'] = $sut['use_encryption'] ?? false;
+
                 if (
                     (bool) $sut['use_encryption'] &&
                     !Arr::get($sut, 'certificate_id')

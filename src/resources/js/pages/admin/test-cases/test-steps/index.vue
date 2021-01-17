@@ -229,7 +229,8 @@
                         class="d-flex"
                         v-if="
                             testStep.request &&
-                            testStep.request.body !== undefined
+                            testStep.request.body !== undefined &&
+                            testStep.request.body !== 'empty_body'
                         "
                     >
                         <div class="w-25 px-4 py-2 border">
@@ -302,7 +303,8 @@
                         class="d-flex"
                         v-if="
                             testStep.response &&
-                            testStep.response.body !== undefined
+                            testStep.response.body !== undefined &&
+                            testStep.response.body !== 'empty_body'
                         "
                     >
                         <div class="w-25 px-4 py-2 border">

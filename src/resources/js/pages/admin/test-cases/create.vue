@@ -222,7 +222,7 @@
 
 <script>
 import Layout from '@/layouts/main';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     metaInfo() {
@@ -233,6 +233,7 @@ export default {
     components: {
         Layout,
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -246,7 +247,6 @@ export default {
         };
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(route('admin.test-cases.store'), this.form, {

@@ -10,6 +10,8 @@ use Illuminate\Support\Arr;
 
 class Response extends \Illuminate\Http\Client\Response implements Arrayable
 {
+    const EMPTY_BODY = 'empty_body';
+
     /**
      * @return array
      */
@@ -61,5 +63,13 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
                 json_encode($data['body'])
             )
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmptyBody(): bool
+    {
+        return static::EMPTY_BODY === $this->json();
     }
 }

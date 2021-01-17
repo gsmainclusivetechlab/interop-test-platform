@@ -14,7 +14,7 @@
         "dev": "npm run dev:all -- up",
         "dev:run": "npm run dev:all -- run",
         "dev:exec": "npm run dev:all -- exec",
-        "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up -d --force-recreate ",
+        "prod": "npm run docker-base -- -f compose/expose-web.yml -f compose/production.yml up -d --force-recreate && npm run mtls:renew",
         "down": "npm run dev:all -- down --remove-orphans",
         "has-db": "npm run docker-ops -- run has-db",
         "backup": "npm run docker-ops -- run backup",
