@@ -33,7 +33,7 @@ services:
       PROJECT_DOMAIN: ${PROJECT_DOMAIN}
       HTTPS_SSL_CERT: ${HTTPS_SSL_CERT:-selfsigned}
     volumes:
-      - ca_certs:/etc/nginx/ssl/client-certs
+      - ca_certs:/etc/nginx/ssl/default-certs
       - certbot_certs:/etc/nginx/ssl/letsencrypt/
       - certbot_www:/var/www/certbot
       - storage:/var/www/html/storage/app
