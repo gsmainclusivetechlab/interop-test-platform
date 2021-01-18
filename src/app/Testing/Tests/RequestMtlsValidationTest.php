@@ -43,6 +43,7 @@ class RequestMtlsValidationTest extends TestCase
 
     protected function getEncryptionStatus(): bool
     {
-        return Route::currentRouteNamed('testing.sut');
+        return !Route::currentRouteNamed('testing*') ||
+            Route::currentRouteNamed('testing.sut');
     }
 }
