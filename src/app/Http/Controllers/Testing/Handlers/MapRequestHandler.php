@@ -44,7 +44,7 @@ class MapRequestHandler
             foreach ($testRequestSetups as $testRequestSetup) {
                 $testRequest = $testRequest->withSetup($testRequestSetup);
             }
-        }*/
+        }
 
         if (
             !$this->testResult->session->hasComponent(
@@ -55,7 +55,7 @@ class MapRequestHandler
                 $this->testResult->testRun->testResults,
                 $this->testResult->session
             );
-        }
+        }*/
 
         $testRequestData = array_merge($data = $testRequest->toArray(), [
             'uri' => Str::startsWith($data['uri'], 'http')
