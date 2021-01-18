@@ -389,7 +389,12 @@ export default {
                     .mapWithKeys((s) => [s.id, s.base_url])
                     .all(),
                 use_encryption: collect(sessionData)
-                    .mapWithKeys((s) => [s.id, s.use_encryption])
+                    .mapWithKeys((s) => [
+                        s.id,
+                        s.use_encryption === '0'
+                            ? false
+                            : values.use_encryption[c.id],
+                    ])
                     .all(),
                 certificate_id: [],
                 ca_crt: [],
