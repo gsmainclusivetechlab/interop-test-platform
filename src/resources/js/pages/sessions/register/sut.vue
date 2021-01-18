@@ -391,9 +391,7 @@ export default {
                 use_encryption: collect(sessionData)
                     .mapWithKeys((s) => [
                         s.id,
-                        s.use_encryption === '0'
-                            ? false
-                            : values.use_encryption[c.id],
+                        s.use_encryption === '0' ? false : s.use_encryption,
                     ])
                     .all(),
                 certificate_id: [],
