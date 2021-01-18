@@ -424,7 +424,7 @@ import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
@@ -454,6 +454,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -512,7 +513,7 @@ export default {
         },
         selectedCertificates: {
             immediate: false,
-            handler: function (values) {
+            handler(values) {
                 Object.keys(values).forEach(
                     (key) =>
                         (this.form.components[key].certificate_id =
@@ -526,7 +527,6 @@ export default {
         this.loadGroupCertificateList();
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
             this.$inertia.post(

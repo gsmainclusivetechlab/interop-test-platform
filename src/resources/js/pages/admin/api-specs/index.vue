@@ -3,9 +3,11 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
+                    <div class="page-pretitle">
+                        {{ $t('special-locales.administration') }}
+                    </div>
                     <h2 class="page-title">
-                        <b>API Specs</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -22,7 +24,7 @@
                         class="btn btn-primary"
                     >
                         <icon name="upload" />
-                        Import Api Spec
+                        {{ $t('buttons.import') }}
                     </inertia-link>
                 </div>
             </div>
@@ -32,12 +34,17 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.name') }}
+                            </th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="apiSpec in apiSpecs.data">
+                        <tr
+                            v-for="(apiSpec, i) in apiSpecs.data"
+                            :key="`spec-${i}`"
+                        >
                             <td class="text-break">
                                 {{ apiSpec.name }}
                             </td>
@@ -50,7 +57,7 @@
                                     variant="link"
                                     boundary="window"
                                 >
-                                    <template v-slot:button-content>
+                                    <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="apiSpec.can.delete">
@@ -63,17 +70,28 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${apiSpec.name}?`"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="
+                                                $t(
+                                                    'table.menu.delete.modal.text',
+                                                    { name: apiSpec.name }
+                                                )
+                                            "
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!apiSpecs.data.length">
-                            <td class="text-center" colspan="2">No Results</td>
+                            <td class="text-center" colspan="2">
+                                {{ $t('table.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -91,8 +109,8 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Specifications',
+    metaInfo() {
+        return { title: this.$t('page.title') };
     },
     components: {
         Layout,
@@ -123,3 +141,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/pages/admin/api-spec/index.json"></i18n>

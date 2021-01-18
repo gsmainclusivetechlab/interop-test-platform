@@ -1,0 +1,52 @@
+{
+    "en": {
+        "page": {
+            "title": "Use Cases"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "test-cases": "Test Cases"
+            },
+            "menu": {
+                "edit": "Edit",
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete {name}?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        },
+        "buttons": {
+            "create": "New Use Case"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Образцы Использования"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "test-cases": "Тестовые образцы"
+            },
+            "menu": {
+                "edit": "Редактировать",
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены что хотите удалить {name}?"
+                    }
+                }
+            },
+            "no-results": "Результатов нет"
+        },
+        "buttons": {
+            "create": "Новый Образец"
+        }
+    }
+}

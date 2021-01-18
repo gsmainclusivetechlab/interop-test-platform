@@ -83,7 +83,7 @@
 
 <script>
 import Layout from '@/layouts/main';
-import { isSelectable } from '@/components/v-select/extending';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     metaInfo() {
@@ -100,6 +100,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             user: null,
@@ -111,7 +112,6 @@ export default {
         this.loadUserList();
     },
     methods: {
-        isSelectable,
         submit() {
             this.sending = true;
 

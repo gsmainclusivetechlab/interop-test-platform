@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Import api spec</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -11,7 +11,9 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label"> Name </label>
+                                <label class="form-label">{{
+                                    $t('inputs.name.label')
+                                }}</label>
                                 <input
                                     name="name"
                                     type="text"
@@ -31,11 +33,14 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> File </label>
+                                <label class="form-label">{{
+                                    $t('inputs.file.label')
+                                }}</label>
                                 <b-form-file
                                     v-model="form.file"
-                                    placeholder="Choose file..."
-                                    v-bind:class="{
+                                    :placeholder="$t('inputs.file.placeholder')"
+                                    :browse-text="$t('inputs.file.browse')"
+                                    :class="{
                                         'is-invalid': $page.props.errors.file,
                                     }"
                                 />
@@ -54,14 +59,14 @@
                                 :href="route('admin.api-specs.index')"
                                 class="btn btn-link"
                             >
-                                Cancel
+                                {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Import
+                                {{ $t('buttons.import') }}
                             </button>
                         </div>
                     </form>
@@ -75,8 +80,8 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Import api spec',
+    metaInfo() {
+        return { title: this.$t('page.title') };
     },
     components: {
         Layout,
@@ -112,3 +117,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/api-spec/import.json"></i18n>

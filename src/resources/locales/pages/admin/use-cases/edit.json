@@ -1,0 +1,18 @@
+{
+    "en": {
+        "page": {
+            "title": "Update use case"
+        },
+        "buttons": {
+            "update": "Update"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Обновить образец использования"
+        },
+        "buttons": {
+            "update": "Обновить"
+        }
+    }
+}
