@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -312,9 +313,15 @@ class RegisterController extends Controller
 
     public function showInfoForm(): Response
     {
+        $useCases = $this->getUseCases();
+        $availableTestCasesIds = $useCases
+            ->pluck('testCases')
+            ->flatten()
+            ->pluck('id');
+
         $withQuestions = session('session.withQuestions');
         if ($withQuestions) {
-            $ids = $this->getTestCasesIds();
+            $ids = $this->getTestCasesIds($availableTestCasesIds);
 
             if (!session()->has('session.info')) {
                 session()->put('session.info.test_cases', $ids);
@@ -323,7 +330,7 @@ class RegisterController extends Controller
 
         return Inertia::render('sessions/register/info', [
             'session' => session('session'),
-            'components' => $this->getComponents(),
+            'components' => $this->getComponents($availableTestCasesIds),
             'hasDifferentAnswers' =>
                 $withQuestions &&
                 (collect(
@@ -332,52 +339,69 @@ class RegisterController extends Controller
                     ->diff($ids)
                     ->count() > 0 ||
                     count($testCasesIds) != count($ids)),
-            'useCases' => UseCaseResource::collection(
-                UseCase::with([
-                    'testCases' => function ($query) {
-                        $this->getTestCasesQuery($query);
-                    },
-                ])
-                    ->whereHas('testCases', function ($query) {
-                        $testCases = $this->getTestCases();
-
-                        $query
-                            ->withComponents(array_keys(session('session.sut')))
-                            ->when(
-                                !auth()
-                                    ->user()
-                                    ->can('viewAny', TestCase::class),
-                                function ($query) {
-                                    $query->where('public', true);
-                                }
-                            )
-                            ->when($testCases !== null, function (
-                                Builder $query
-                            ) use ($testCases) {
-                                $query->whereIn('slug', $testCases ?: ['']);
-                            });
-                    })
-                    ->get()
-            ),
+            'useCases' => UseCaseResource::collection($useCases),
         ]);
     }
 
     public function resetTestCases(): RedirectResponse
     {
-        session()->put('session.info.test_cases', $this->getTestCasesIds());
+        $availableTestCasesIds = $this->getUseCases()
+            ->pluck('testCases')
+            ->flatten()
+            ->pluck('id');
+
+        session()->put(
+            'session.info.test_cases',
+            $this->getTestCasesIds($availableTestCasesIds)
+        );
 
         return redirect()->route('sessions.register.info');
     }
 
     /**
+     * @param array|Collection $availableTestCasesIds
+     *
      * @return mixed
      */
-    protected function getTestCasesIds()
+    protected function getTestCasesIds($availableTestCasesIds)
     {
         return TestCase::whereIn('slug', $this->getTestCases(true) ?: [''])
+            ->whereIn('id', $availableTestCasesIds)
             ->available()
             ->lastPerGroup(false)
             ->pluck('id');
+    }
+
+    /**
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    protected function getUseCases()
+    {
+        return UseCase::with([
+            'testCases' => function ($query) {
+                $this->getTestCasesQuery($query);
+            },
+        ])
+            ->whereHas('testCases', function ($query) {
+                $testCases = $this->getTestCases();
+
+                $query
+                    ->withComponents(array_keys(session('session.sut')))
+                    ->when(
+                        !auth()
+                            ->user()
+                            ->can('viewAny', TestCase::class),
+                        function ($query) {
+                            $query->where('public', true);
+                        }
+                    )
+                    ->when($testCases !== null, function (Builder $query) use (
+                        $testCases
+                    ) {
+                        $query->whereIn('slug', $testCases ?: ['']);
+                    });
+            })
+            ->get();
     }
 
     /**
@@ -418,7 +442,9 @@ class RegisterController extends Controller
                     ->with('connections')
                     ->get()
             ),
-            'components' => $this->getComponents(),
+            'components' => $this->getComponents(
+                session('session.info.test_cases')
+            ),
             'hasGroupEnvironments' => GroupEnvironment::whereHas(
                 'group',
                 function (Builder $query) {
@@ -759,8 +785,9 @@ class RegisterController extends Controller
             ->lastPerGroup(false);
     }
 
-    protected function getComponents()
-    {
+    protected function getComponents(
+        $testCasesIds = null
+    ): AnonymousResourceCollection {
         $testCases = $this->getTestCases();
         $isCompliance = Session::isCompliance(session('session.type'));
 
@@ -778,8 +805,18 @@ class RegisterController extends Controller
                 ->orWhereHas('targetTestSteps', $testCasesQuery);
         };
 
-        $testComponentsQuery = function ($query) {
-            $query->whereHas('sourceTestSteps')->orWhereHas('targetTestSteps');
+        $testComponentsQuery = function ($query) use ($testCasesIds) {
+            $testCasesQuery = function ($query) use ($testCasesIds) {
+                $query->when($testCasesIds, function ($query, $ids) {
+                    $query->whereHas('testCase', function ($query) use ($ids) {
+                        $query->whereIn('id', $ids);
+                    });
+                });
+            };
+
+            $query
+                ->whereHas('sourceTestSteps', $testCasesQuery)
+                ->orWhereHas('targetTestSteps', $testCasesQuery);
         };
 
         return ComponentResource::collection(

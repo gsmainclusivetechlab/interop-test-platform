@@ -70,9 +70,7 @@
                                     component.name
                                 }})<template
                                     v-if="
-                                        collect(session.sut)
-                                            .get('component_ids', [])
-                                            .includes(component.id)
+                                        session.sut && session.sut[component.id]
                                     "
                                     >:::is-active</template
                                 ><template v-else></template>;
