@@ -24,10 +24,11 @@ class SslKey implements Rule
      */
     public function passes($attribute, $value)
     {
-        return (bool) openssl_pkey_get_private(
-            file_get_contents($value->getRealPath()),
-            $this->passphrase
-        );
+        return $value &&
+            openssl_pkey_get_private(
+                file_get_contents($value->getRealPath()),
+                $this->passphrase
+            );
     }
 
     /**

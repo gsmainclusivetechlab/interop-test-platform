@@ -16,9 +16,8 @@ class SslCertificate implements Rule
      */
     public function passes($attribute, $value)
     {
-        return (bool) openssl_x509_parse(
-            file_get_contents($value->getRealPath())
-        );
+        return $value &&
+            openssl_x509_parse(file_get_contents($value->getRealPath()));
     }
 
     /**

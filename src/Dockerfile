@@ -104,7 +104,9 @@ COPY build/docker-bootstrap.sh /usr/local/bin/start
 # Use custom user to ensure correct permissions
 ARG HOST_UID=www-data:www-data
 RUN chmod +x /wait /usr/local/bin/start && \
-    chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx  /run
+    mkdir -p /etc/nginx/ssl/default-certs && \
+    mkdir -p /etc/nginx/ssl/letsencrypt && \
+    chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx /run
 
 CMD ["/usr/local/bin/start"]
 

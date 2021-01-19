@@ -373,38 +373,6 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    protected function getUseCases()
-    {
-        return UseCase::with([
-            'testCases' => function ($query) {
-                $this->getTestCasesQuery($query);
-            },
-        ])
-            ->whereHas('testCases', function ($query) {
-                $testCases = $this->getTestCases();
-
-                $query
-                    ->withComponents(array_keys(session('session.sut')))
-                    ->when(
-                        !auth()
-                            ->user()
-                            ->can('viewAny', TestCase::class),
-                        function ($query) {
-                            $query->where('public', true);
-                        }
-                    )
-                    ->when($testCases !== null, function (Builder $query) use (
-                        $testCases
-                    ) {
-                        $query->whereIn('slug', $testCases ?: ['']);
-                    });
-            })
-            ->get();
-    }
-
-    /**
      * @param Request $request
      *
      * @return RedirectResponse
@@ -764,6 +732,22 @@ class RegisterController extends Controller
     }
 
     /**
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    protected function getUseCases()
+    {
+        return UseCase::with([
+            'testCases' => function ($query) {
+                $this->getTestCasesQuery($query);
+            },
+        ])
+            ->whereHas('testCases', function ($query) {
+                $this->getTestCasesQuery($query);
+            })
+            ->get();
+    }
+
+    /**
      * @param Builder $query
      *
      * @return \Illuminate\Database\Concerns\BuildsQueries|Builder|mixed
@@ -777,6 +761,14 @@ class RegisterController extends Controller
             ->where(function ($query) {
                 $query->available();
             })
+            ->when(
+                !auth()
+                    ->user()
+                    ->can('viewAny', TestCase::class),
+                function ($query) {
+                    $query->where('public', true);
+                }
+            )
             ->when($testCases !== null, function (Builder $query) use (
                 $testCases
             ) {
