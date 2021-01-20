@@ -37,6 +37,11 @@ if [ "$role" = "app" ]; then
             fi
         fi
     fi
+
+    if [ ! -f ClientCA.pem ]; then
+        cp RootCA.crt ClientCA.pem
+    fi
+
 	exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
 
 elif [ "$role" = "queue" ]; then

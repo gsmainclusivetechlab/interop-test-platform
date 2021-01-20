@@ -161,7 +161,7 @@
                                                         ]
                                                     )
                                             "
-                                            class="form-controls d-flex p-0"
+                                            class="form-control d-flex p-0"
                                             :class="{
                                                 'is-invalid':
                                                     $page.props.errors[

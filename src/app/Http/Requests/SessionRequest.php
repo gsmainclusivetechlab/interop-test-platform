@@ -44,19 +44,16 @@ class SessionRequest extends FormRequest
                     "certificates.{$id}.ca_crt" => [
                         $filesRequired,
                         'nullable',
-                        'mimetypes:text/plain',
                         new SslCertificate(),
                     ],
                     "certificates.{$id}.client_crt" => [
                         $filesRequired,
                         'nullable',
-                        'mimetypes:text/plain',
                         new SslCertificate(),
                     ],
                     "certificates.{$id}.client_key" => [
                         $filesRequired,
                         'nullable',
-                        'mimetypes:text/plain',
                         new SslKey(
                             $this->input("certificates.{$id}.passphrase")
                         ),
