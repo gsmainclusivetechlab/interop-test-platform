@@ -108,7 +108,7 @@ Route::name('sessions.')
             'TestRunController@show'
         )->name('test-cases.test-runs.show');
         Route::get(
-            '{session}/test-cases/{testCase}/test-runs/{testRun}',
+            '{session}/test-cases/{testCase}/test-runs/{testRun}/refresh/{position?}',
             'TestRunController@refresh'
         )->name('test-cases.test-runs.refresh');
         Route::get(

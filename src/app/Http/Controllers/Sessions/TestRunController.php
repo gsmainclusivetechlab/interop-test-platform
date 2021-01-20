@@ -32,13 +32,15 @@ class TestRunController extends Controller
      * @param Session $session
      * @param TestCase $testCase
      * @param TestRun $testRun
+     * @param int $position
      * @return Response
      * @throws AuthorizationException
      */
     public function show(
         Session $session,
         TestCase $testCase,
-        TestRun $testRun
+        TestRun $testRun,
+        int $position = 1
     ) {
         $this->authorize('view', $session);
 
