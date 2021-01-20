@@ -35,19 +35,16 @@ class SessionSutRequest extends FormRequest
                     "components.{$id}.ca_crt" => [
                         $filesRequired,
                         'nullable',
-                        'mimetypes:text/plain',
                         new SslCertificate(),
                     ],
                     "components.{$id}.client_crt" => [
                         $filesRequired,
                         'nullable',
-                        'mimetypes:text/plain',
                         new SslCertificate(),
                     ],
                     "components.{$id}.client_key" => [
                         $filesRequired,
                         'nullable',
-                        'mimetypes:text/plain',
                         new SslKey(
                             Arr::get(
                                 $this->all(),
