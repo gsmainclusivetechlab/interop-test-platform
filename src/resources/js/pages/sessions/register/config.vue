@@ -90,6 +90,18 @@
                             }}</strong>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label"> File Environments </label>
+                        <file-environments v-model="form.fileEnvironments" />
+                        <div
+                            class="text-danger small mt-2"
+                            v-if="$page.props.errors.fileEnvironments"
+                        >
+                            <strong>{{
+                                $page.props.errors.fileEnvironments
+                            }}</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -112,14 +124,17 @@
 </template>
 
 <script>
+import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
+import FileEnvironments from '@/components/file-environments';
 import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
         Layout,
         Environments,
+        FileEnvironments,
     },
     props: {
         session: {
@@ -152,6 +167,7 @@ export default {
             form: {
                 group_environment_id: null,
                 environments: null,
+                fileEnvironments: null,
             },
         };
     },
@@ -177,7 +193,9 @@ export default {
             this.sending = true;
             this.$inertia.post(
                 route('sessions.register.config.store'),
-                this.form,
+                serialize(this.form, {
+                    indices: true,
+                }),
                 {
                     onFinish: () => {
                         this.sending = false;

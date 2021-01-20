@@ -221,6 +221,7 @@
                                     :href="route('logout')"
                                     method="post"
                                     class="text-reset dropdown-item"
+                                    as="button"
                                 >
                                     {{ $t('user-menu.logout') }}
                                 </inertia-link>

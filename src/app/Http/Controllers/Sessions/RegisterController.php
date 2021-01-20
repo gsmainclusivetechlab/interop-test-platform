@@ -449,6 +449,7 @@ class RegisterController extends Controller
                 'exists:group_environments,id',
             ],
             'environments' => ['nullable', 'array'],
+            'fileEnvironments' => ['nullable', 'array'],
         ]);
 
         try {
