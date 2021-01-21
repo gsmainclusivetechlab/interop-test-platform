@@ -96,18 +96,14 @@
                                         .data"
                                 >
                                     <li
-                                        v-if="
-                                            testResultSteps[
-                                                `step-${testStep.id}`
-                                            ]
-                                        "
+                                        v-if="testResultSteps.has(testStep.id)"
                                         :class="{
-                                            'active':
-                                                testResult.testStep.data.id ===
-                                                testStep.id,
-                                            'list-group-item-action':
-                                                testResult.testStep.data.id !==
-                                                testStep.id,
+                                            'active': testResultSteps.has(
+                                                testStep.id
+                                            ),
+                                            'list-group-item-action': !testResultSteps.has(
+                                                testStep.id
+                                            ),
                                         }"
                                         class="list-group-item p-0 rounded-0 border-0"
                                         :key="`step-${i}`"
@@ -135,62 +131,62 @@
                                                 <div
                                                     class="d-flex align-items-baseline text-truncate"
                                                     v-if="
-                                                        testResultSteps[
-                                                            `step-${testStep.id}`
-                                                        ].request
+                                                        testResultSteps.get(
+                                                            testStep.id
+                                                        ).request
                                                     "
                                                 >
                                                     <span
                                                         class="font-weight-bold"
                                                         :class="{
                                                             'text-orange':
-                                                                testResultSteps[
-                                                                    `step-${testStep.id}`
-                                                                ].request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'POST',
                                                             'text-blue':
-                                                                testResultSteps[
-                                                                    `step-${testStep.id}`
-                                                                ].request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'PUT',
                                                             'text-red':
-                                                                testResultSteps[
-                                                                    `step-${testStep.id}`
-                                                                ].request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'DELETE',
                                                             'text-mint':
-                                                                testResultSteps[
-                                                                    `step-${testStep.id}`
-                                                                ].request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'GET',
                                                         }"
                                                     >
                                                         {{
-                                                            testResultSteps[
-                                                                `step-${testStep.id}`
-                                                            ].request.method
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.method
                                                         }}
                                                     </span>
                                                     <span
                                                         class="d-inline-block ml-1 text-truncate"
                                                         :title="`${
-                                                            testResultSteps[
-                                                                `step-${testStep.id}`
-                                                            ].request.method
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.method
                                                         } ${
-                                                            testResultSteps[
-                                                                `step-${testStep.id}`
-                                                            ].request.path
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.path
                                                         }`"
                                                     >
                                                         {{
-                                                            testResultSteps[
-                                                                `step-${testStep.id}`
-                                                            ].request.path
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.path
                                                         }}
                                                     </span>
                                                 </div>
@@ -198,13 +194,12 @@
                                             <span
                                                 class="flex-shrink-0 badge mr-0"
                                                 :class="{
-                                                    'bg-success':
-                                                        testResultSteps[
-                                                            `step-${testStep.id}`
-                                                        ].successful,
-                                                    'bg-danger': !testResultSteps[
-                                                        `step-${testStep.id}`
-                                                    ].successful,
+                                                    'bg-success': testResultSteps.get(
+                                                        testStep.id
+                                                    ).successful,
+                                                    'bg-danger': !testResultSteps.get(
+                                                        testStep.id
+                                                    ).successful,
                                                 }"
                                             >
                                             </span>
@@ -834,11 +829,8 @@ export default {
     },
     computed: {
         testResultSteps() {
-            return Object.fromEntries(
-                this.testRun.testResults.data.map((el) => [
-                    `step-${el.testStep.id}`,
-                    el,
-                ])
+            return new Map(
+                this.testRun.testResults.data.map((el) => [el.testStep.id, el])
             );
         },
         testResultRequestSetups() {
