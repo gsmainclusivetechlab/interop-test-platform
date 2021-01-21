@@ -317,7 +317,9 @@
                                                 }}
                                             </span>
                                             <button
-                                                :id="`test-execution-${testExecution.id}`"
+                                                v-b-modal="
+                                                    `test-execution-${testExecution.id}`
+                                                "
                                                 class="btn btn-link p-0 font-weight-normal"
                                                 type="button"
                                                 v-if="
@@ -332,10 +334,12 @@
                                                 {{ testExecution.name }}
                                             </span>
                                         </div>
-                                        <b-popover
-                                            :target="`test-execution-${testExecution.id}`"
-                                            triggers="click blur"
-                                            placement="bottom"
+                                        <b-modal
+                                            :id="`test-execution-${testExecution.id}`"
+                                            size="lg"
+                                            centered
+                                            hide-footer
+                                            :title="testExecution.name"
                                             v-if="
                                                 testExecution.actual ||
                                                 testExecution.expected ||
@@ -408,7 +412,7 @@
                                                     }}
                                                 </p>
                                             </div>
-                                        </b-popover>
+                                        </b-modal>
                                     </li>
                                 </ul>
                             </div>
