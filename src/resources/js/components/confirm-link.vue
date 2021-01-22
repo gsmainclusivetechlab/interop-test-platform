@@ -64,6 +64,7 @@ export default {
                         this.confirmed = value;
                         if (this.confirmed) {
                             this.$el.click();
+                            this.confirmed = false;
                         }
                     });
             }

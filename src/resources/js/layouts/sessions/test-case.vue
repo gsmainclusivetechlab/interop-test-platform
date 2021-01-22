@@ -149,7 +149,7 @@
         <div class="col-9 mt-3">
             <div class="row">
                 <div class="col">
-                    <div class="d-flex align-items-baseline border-bottom mb-4">
+                    <div class="d-flex align-items-center border-bottom mb-4">
                         <ul class="nav nav-tabs mx-0 border-0">
                             <li class="nav-item">
                                 <inertia-link
@@ -218,37 +218,35 @@
                                     .count()
                             "
                         >
-                            <div class="d-flex">
-                                <confirm-link
-                                    :href="
-                                        route('sessions.test-cases.run', [
-                                            session.id,
-                                            testCase.id,
-                                        ])
-                                    "
-                                    :confirm-title="'Run test case'"
-                                    :confirm-text="`Start a new test case run?`"
-                                    v-if="isAvailableRun"
-                                    class="btn btn-primary"
-                                    method="post"
-                                >
-                                    <icon name="bike"></icon>
-                                    Run Test Case
-                                </confirm-link>
-                                <button
-                                    class="btn btn-secondary"
-                                    v-else
-                                    v-b-tooltip.hover.left
-                                    :title="
-                                        session.status !== 'in_execution'
-                                            ? 'Session not available to update'
-                                            : `You have reached the limit of ${testRunAttempts} allowed test runs per test case.`
-                                    "
-                                >
-                                    <icon name="bike"></icon>
-                                    Run Test Case
-                                </button>
-                            </div>
+                            <confirm-link
+                                v-if="isAvailableRun"
+                                :href="
+                                    route('sessions.test-cases.run', [
+                                        session.id,
+                                        testCase.id,
+                                    ])
+                                "
+                                :confirm-title="'Run test case'"
+                                :confirm-text="`Start a new test case run?`"
+                                method="post"
+                                class="btn btn-primary"
+                            >
+                                <icon name="bike"></icon>
+                                Run Test Case
+                            </confirm-link>
+                            <button
+                                class="btn btn-secondary"
+                                v-else
+                                v-b-tooltip.hover.left
+                                :title="
+                                    session.status !== 'in_execution'
+                                        ? 'Session not available to update'
+                                        : `You have reached the limit of ${testRunAttempts} allowed test runs per test case.`
+                                "
+                            >
+                                <icon name="bike"></icon>
+                                Run Test Case
+                            </button>
                         </div>
                     </div>
                     <slot />
