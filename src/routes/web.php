@@ -204,7 +204,7 @@ Route::name('testing-insecure.')
     ->group(function () {
         Route::any(
             '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
-            'SutController'
+            'SutController@testingSession'
         )
             ->name('sut')
             ->where('path', '.*');
@@ -216,7 +216,7 @@ Route::name('testing.')
     ->group(function () {
         Route::any(
             '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
-            'SutController'
+            'SutController@testingSession'
         )
             ->name('sut')
             ->where('path', '.*');
@@ -225,6 +225,30 @@ Route::name('testing.')
             'SimulatorController'
         )
             ->name('simulator')
+            ->where('path', '.*');
+    });
+
+Route::name('testing-insecure-group.')
+    ->prefix('testing-insecure-group')
+    ->namespace('Testing')
+    ->group(function () {
+        Route::any(
+            '{group}/{componentId}/{connectionId}/sut/{path?}',
+            'SutController@testingGroup'
+        )
+            ->name('sut')
+            ->where('path', '.*');
+    });
+
+Route::name('testing-group.')
+    ->prefix('testing-group')
+    ->namespace('Testing')
+    ->group(function () {
+        Route::any(
+            '{group}/{componentId}/{connectionId}/sut/{path?}',
+            'SutController@testingGroup'
+        )
+            ->name('sut')
             ->where('path', '.*');
     });
 
