@@ -31,6 +31,10 @@ Route::namespace('Groups')
     ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::resource('groups', 'GroupController')->only(['index', 'show']);
+        Route::put(
+            'groups/{group}/toggle-default-session/{session}',
+            'GroupController@toggleDefaultSession'
+        )->name('groups.toggle-default-session');
         Route::resource('groups.users', 'GroupUserController')->only([
             'index',
             'create',

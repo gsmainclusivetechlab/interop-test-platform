@@ -13,6 +13,7 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
+                            <th class="text-nowrap w-auto"></th>
                             <th class="text-nowrap w-auto">Owner</th>
                             <th class="text-nowrap w-auto">Use Cases</th>
                             <th class="text-nowrap w-auto">Test Cases</th>
@@ -29,6 +30,26 @@
                                 >
                                     {{ session.name }}
                                 </inertia-link>
+                            </td>
+                            <td class="text-break">
+                                <button
+                                    class="btn btn-sm btn-primary"
+                                    v-if="group.defaultSession && group.defaultSession.id === session.id"
+                                    disabled
+                                    v-else
+                                >
+                                    Default Session
+                                </button>
+                                <confirm-link
+                                    :href="
+                                        route('groups.toggle-default-session', [group.id, session.id])
+                                    "
+                                    v-else
+                                    class="btn btn-sm btn-secondary"
+                                    method="put"
+                                >
+                                    Make Default
+                                </confirm-link>
                             </td>
                             <td class="text-break">
                                 {{ session.owner.name }}
