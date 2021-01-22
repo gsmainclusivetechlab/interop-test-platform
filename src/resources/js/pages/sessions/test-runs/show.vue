@@ -20,18 +20,46 @@
                     >
                         <icon name="corner-down-left"></icon>
                     </inertia-link>
-                    <b>{{ `Run ID: #${testRun.id}` }}</b>
+                    <b class="mr-2">{{ `Run ID: #${testRun.id} - ` }}</b>
+                    <span
+                        class="mr-2"
+                        :class="{
+                            'text-success': testRun.completed_at,
+                        }"
+                    >
+                        {{ `${testRun.duration} ms` }}
+                    </span>
+                    <div v-if="!testRun.completed_at">
+                        <span class="spinner-border spinner-border-sm"></span>
+                        <span class="ml-1">Processing</span>
+                    </div>
+                    <template v-else>
+                        <span
+                            class="text-success d-flex align-items-center"
+                            v-if="testRun.successful"
+                        >
+                            <icon
+                                name="circle-check"
+                                class="icon-md mr-1"
+                            ></icon>
+                            Pass
+                        </span>
+                        <span
+                            class="text-danger d-flex align-items-center"
+                            v-else
+                        >
+                            <icon
+                                name="alert-circle"
+                                class="icon-md mr-1"
+                            ></icon>
+                            Fail
+                        </span>
+                    </template>
                 </h2>
                 <div class="card-options">
-                    <div
-                        class="mr-2 align-items-center d-flex"
-                        v-if="!testRun.completed_at"
+                    <b v-if="testRun.passed || testRun.failures" class="mr-2"
+                        >Steps:</b
                     >
-                        <span
-                            class="spinner-border spinner-border-sm mr-2"
-                        ></span>
-                        Processing
-                    </div>
                     <span
                         class="text-success mr-2 align-items-center d-flex"
                         v-if="testRun.passed"
@@ -40,7 +68,7 @@
                         {{ `${testRun.passed} Pass` }}
                     </span>
                     <span
-                        class="text-danger mr-2 align-items-center d-flex"
+                        class="text-danger align-items-center d-flex"
                         v-if="testRun.failures"
                     >
                         <icon name="alert-circle" class="icon-md mr-1"></icon>
