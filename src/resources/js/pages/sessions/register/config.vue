@@ -2,6 +2,33 @@
     <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card">
+                <template v-if="groupsDefaultList.length > 0">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">
+                            Make this session default for groups
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <v-select
+                            v-model="form.groupsDefault"
+                            :options="groupsDefaultList"
+                            multiple
+                            label="name"
+                            placeholder="Groups"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, form.groupsDefault) &&
+                                    isSelectable(
+                                        option,
+                                        groupsDefaultList.filter(
+                                            (group) => !group.isAdmin
+                                        )
+                                    )
+                            "
+                            class="form-control d-flex p-0"
+                        />
+                    </div>
+                </template>
                 <div class="card-header border-0">
                     <h3 class="card-title">Configure components</h3>
                 </div>
@@ -64,7 +91,7 @@
                         <hr />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label"> Environments </label>
+                        <label class="form-label">Environments</label>
                         <v-select
                             v-if="hasGroupEnvironments"
                             v-model="groupEnvironment"
@@ -149,9 +176,11 @@ export default {
             sending: false,
             groupEnvironment: null,
             groupEnvironmentsList: [],
+            groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 group_environment_id: null,
                 environments: null,
+                groupsDefault: null,
             },
         };
     },
