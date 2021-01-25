@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="session in sessions.data">
+                        <tr v-for="(session, i) in sessions.data" :key="i">
                             <td class="text-break">
                                 <inertia-link
                                     :href="route('sessions.show', session.id)"
@@ -33,20 +33,27 @@
                             </td>
                             <td class="text-break">
                                 <button
+                                    v-if="
+                                        group.defaultSession &&
+                                        group.defaultSession.id === session.id
+                                    "
                                     class="btn btn-sm btn-primary"
-                                    v-if="group.defaultSession && group.defaultSession.id === session.id"
                                     disabled
-                                    v-else
                                 >
                                     Default Session
                                 </button>
                                 <confirm-link
-                                    :href="
-                                        route('groups.toggle-default-session', [group.id, session.id])
-                                    "
                                     v-else
-                                    class="btn btn-sm btn-secondary"
+                                    :href="
+                                        route('groups.toggle-default-session', [
+                                            group.id,
+                                            session.id,
+                                        ])
+                                    "
                                     method="put"
+                                    :confirm-title="'Confirm change'"
+                                    :confirm-text="`Are you sure you want to make default session - '${session.name}'?`"
+                                    class="btn btn-sm btn-outline-primary"
                                 >
                                     Make Default
                                 </confirm-link>
@@ -89,7 +96,7 @@
                                     variant="link"
                                     boundary="window"
                                 >
-                                    <template v-slot:button-content>
+                                    <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="session.can.delete">
@@ -103,7 +110,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${session.name}?`"
+                                            :confirm-text="`Are you sure you want to delete session - '${session.name}'?`"
                                         >
                                             Delete
                                         </confirm-link>
