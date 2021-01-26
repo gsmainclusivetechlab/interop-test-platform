@@ -2,10 +2,123 @@
     <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card">
-                <div class="card-header border-0">
-                    <h3 class="card-title">Configure components</h3>
-                </div>
-                <div class="card-body">
+                <template v-if="groupsDefaultList.length > 0">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Make this session default for groups
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <label class="form-label">Set groups</label>
+                        <v-select
+                            v-model="form.groupsDefault"
+                            :options="groupsDefaultList"
+                            multiple
+                            label="name"
+                            placeholder="Groups"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, form.groupsDefault) &&
+                                    isSelectable(
+                                        option,
+                                        groupsDefaultList.filter(
+                                            (group) => !group.isAdmin
+                                        )
+                                    )
+                            "
+                            class="form-control d-flex p-0 mb-3"
+                        />
+                    </div>
+                    <div class="card-header">
+                        <h3 class="card-title">Configure components</h3>
+                    </div>
+                    <template
+                        v-if="
+                            form.groupsDefault && form.groupsDefault.length > 0
+                        "
+                    >
+                        <div
+                            class="card-body"
+                            v-if="suts.data && suts.data.length > 0"
+                        >
+                            <h3 class="text-primary mb-3">By groups</h3>
+                            <template v-for="(group, k) in form.groupsDefault">
+                                <h3
+                                    class="text-secondary mb-3"
+                                    :key="`name-${k}`"
+                                >
+                                    {{ group.name }}
+                                </h3>
+                                <div
+                                    class="mb-3"
+                                    v-for="(sut, i) in suts.data"
+                                    :key="`sut-${i}-${k}`"
+                                >
+                                    <h3>{{ sut.name }}</h3>
+
+                                    <template
+                                        v-for="(
+                                            connection, j
+                                        ) in sut.connections"
+                                    >
+                                        <div
+                                            class="mb-3"
+                                            :key="`connection-${j}`"
+                                            v-if="
+                                                Array.from(
+                                                    new Set(
+                                                        testSteps.data.map(
+                                                            (el) => el.target.id
+                                                        )
+                                                    )
+                                                ).includes(connection.id)
+                                            "
+                                        >
+                                            <label class="form-label">
+                                                {{ connection.name }}
+                                            </label>
+                                            <div class="input-group">
+                                                <input
+                                                    :id="`testing-${connection.id}`"
+                                                    type="text"
+                                                    :value="
+                                                        session.sut[sut.id]
+                                                            .use_encryption ===
+                                                        '1'
+                                                            ? route(
+                                                                  'testing-group.sut',
+                                                                  [
+                                                                      group.id,
+                                                                      sut.uuid,
+                                                                      connection.uuid,
+                                                                  ]
+                                                              )
+                                                            : route(
+                                                                  'testing-insecure-group.sut',
+                                                                  [
+                                                                      group.id,
+                                                                      sut.uuid,
+                                                                      connection.uuid,
+                                                                  ]
+                                                              )
+                                                    "
+                                                    class="form-control"
+                                                    readonly
+                                                />
+                                                <clipboard-copy-btn
+                                                    :target="`#testing-${connection.id}`"
+                                                    title="Copy"
+                                                ></clipboard-copy-btn>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+                <div class="card-body" v-if="suts.data && suts.data.length > 0">
+                    <h3 class="text-primary mb-3">By session</h3>
                     <div
                         class="mb-3"
                         v-for="(sut, i) in suts.data"
@@ -18,13 +131,13 @@
                                 class="mb-3"
                                 :key="`connection-${i}`"
                                 v-if="
-                                    inArray(
-                                        [connection],
-                                        collect(testSteps.data)
-                                            .map((value) => value.target.id)
-                                            .unique()
-                                            .toArray()
-                                    )
+                                    Array.from(
+                                        new Set(
+                                            testSteps.data.map(
+                                                (el) => el.target.id
+                                            )
+                                        )
+                                    ).includes(connection.id)
                                 "
                             >
                                 <label class="form-label">
@@ -61,10 +174,11 @@
                                 </div>
                             </div>
                         </template>
-                        <hr />
                     </div>
+                </div>
+                <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label"> Environments </label>
+                        <label class="form-label">Environments</label>
                         <v-select
                             v-if="hasGroupEnvironments"
                             v-model="groupEnvironment"
@@ -167,9 +281,11 @@ export default {
             sending: false,
             groupEnvironment: null,
             groupEnvironmentsList: [],
+            groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 group_environment_id: null,
                 environments: null,
+                groupsDefault: null,
                 fileEnvironments: null,
             },
         };
@@ -178,7 +294,7 @@ export default {
         groupEnvironment: {
             immediate: true,
             handler(value) {
-                this.form.group_environment_id = value ? value.id : null;
+                this.form.group_environment_id = value?.id ?? null;
                 if (value !== null) {
                     this.form.environments = value.variables;
                     this.$refs.environments.syncEnvironments(
@@ -219,15 +335,6 @@ export default {
                 .then((result) => {
                     this.groupEnvironmentsList = result.data.data;
                 });
-        },
-        inArray(components, array) {
-            let result = false;
-            components.forEach(function (component) {
-                if (array.includes(component.id)) {
-                    result = true;
-                }
-            });
-            return result;
         },
     },
 };

@@ -24,16 +24,9 @@ class SslKey implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (
-            !$value ||
-            !($fileData = file_get_contents($value->getRealPath()))
-        ) {
-            return false;
-        }
-
-        return openssl_pkey_get_private($fileData, $this->passphrase) ||
+        return $value &&
             openssl_pkey_get_private(
-                $this->getFromBinnary($fileData),
+                file_get_contents($value->getRealPath()),
                 $this->passphrase
             );
     }
@@ -46,12 +39,5 @@ class SslKey implements Rule
     public function message()
     {
         return 'The private key or passphrase is not valid.';
-    }
-
-    protected function getFromBinnary(string $fileData): string
-    {
-        return "-----BEGIN PRIVATE KEY-----\n" .
-            chunk_split(base64_encode($fileData), 64, "\n") .
-            '-----END PRIVATE KEY-----';
     }
 }

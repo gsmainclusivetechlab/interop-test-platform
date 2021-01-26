@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label class="col-sm-3">
+                                <label>
                                     <b>Name</b>
                                 </label>
                                 <input
@@ -29,7 +29,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="col-sm-3">
+                                <label>
                                     <b>Description</b>
                                 </label>
                                 <textarea
@@ -50,7 +50,7 @@
                                 </span>
                             </div>
                             <div class="mb-3" v-if="components.data">
-                                <label class="col-sm-3">
+                                <label>
                                     <b>SUTs</b>
                                 </label>
                                 <v-select
@@ -99,7 +99,7 @@
                                         }}
                                     </span>
                                 </div>
-                                <div class="mb-3">
+                                <div class="d-flex mb-3">
                                     <label class="form-check form-switch">
                                         <input
                                             class="form-check-input"
@@ -343,8 +343,26 @@
                                     </template>
                                 </div>
                             </div>
+                            <div
+                                class="mb-3"
+                                v-if="
+                                    $page.props.auth.user.groups &&
+                                    $page.props.auth.user.groups.length > 0
+                                "
+                            >
+                                <label>
+                                    <b>Session default for groups</b>
+                                </label>
+                                <v-select
+                                    :value="$page.props.auth.user.groups"
+                                    label="name"
+                                    multiple
+                                    class="form-control d-flex p-0"
+                                    disabled
+                                />
+                            </div>
                             <div class="mb-3">
-                                <label class="col-sm-3">
+                                <label>
                                     <b>Environments</b>
                                 </label>
                                 <v-select
@@ -394,7 +412,7 @@
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
-                                <label class="col-sm-3">
+                                <label>
                                     <b>Test Cases</b>
                                 </label>
                                 <test-case-checkboxes

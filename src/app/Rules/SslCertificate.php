@@ -16,15 +16,8 @@ class SslCertificate implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (
-            !$value ||
-            !($fileData = file_get_contents($value->getRealPath()))
-        ) {
-            return false;
-        }
-
-        return openssl_x509_parse($fileData) ||
-            openssl_x509_parse($this->getFromBinnary($fileData));
+        return $value &&
+            openssl_x509_parse(file_get_contents($value->getRealPath()));
     }
 
     /**
@@ -35,12 +28,5 @@ class SslCertificate implements Rule
     public function message()
     {
         return 'The certificate is not valid.';
-    }
-
-    protected function getFromBinnary(string $fileData): string
-    {
-        return "-----BEGIN CERTIFICATE-----\n" .
-            chunk_split(base64_encode($fileData), 64, "\n") .
-            '-----END CERTIFICATE-----';
     }
 }
