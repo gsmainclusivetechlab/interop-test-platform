@@ -19,6 +19,6 @@ use Faker\Generator as Faker;
 $factory->define(MessageMismatch::class, function (Faker $faker) {
     return [
         'request' => $faker->randomElements(),
-        'exception' => $faker->randomElements(),
+        'exception' => $faker->text,
     ];
 });
