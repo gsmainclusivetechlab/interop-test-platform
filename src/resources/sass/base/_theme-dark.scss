@@ -39,6 +39,7 @@
   & ~ .popover.b-popover {
     color: $dark-mode-text;
     background-color: $dark;
+    border-color: $dark-mode-text;
 
     &.bs-popover-bottom > .arrow {
       &::after {
