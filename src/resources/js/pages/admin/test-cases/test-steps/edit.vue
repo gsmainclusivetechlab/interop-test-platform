@@ -798,7 +798,7 @@ export default {
                     body: this.testStep.request.body,
                 },
                 response: {
-                    delay: this.testStep.request.delay,
+                    delay: this.testStep.response.delay,
                     status: {
                         selected: this.$page.props.statuses[
                             this.testStep.response.status
