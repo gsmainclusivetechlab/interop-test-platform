@@ -41,10 +41,12 @@
                     }
                 }
             },
+            "empty-body": "Empty body",
             "request": {
                 "headers": "Request Headers",
                 "body": "Request Body",
-                "uri": "Request URI"
+                "uri": "Request URI",
+                "delay": "Request Delay"
             },
             "response": {
                 "headers": "Response Headers",
@@ -52,7 +54,8 @@
                 "status": {
                     "label": "Response Status",
                     "placeholder": "Select status"
-                }
+                },
+                "delay": "Response Delay"
             }
         },
         "buttons": {
@@ -103,10 +106,12 @@
                     }
                 }
             },
+            "empty-body": "Пустое Тело",
             "request": {
                 "headers": "Заголовки Запроса",
                 "body": "Тело Запроса",
-                "uri": "URI Запроса"
+                "uri": "URI Запроса",
+                "delay": "Задержка Запроса"
             },
             "response": {
                 "headers": "Заголовки Ответа",
@@ -114,7 +119,8 @@
                 "status": {
                     "label": "Статус Ответа",
                     "placeholder": "Выберите статус"
-                }
+                },
+                "delay": "Задержка Ответа"
             }
         },
         "buttons": {
