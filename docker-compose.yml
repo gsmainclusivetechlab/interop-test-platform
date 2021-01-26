@@ -1,13 +1,13 @@
+# N.B. this docker-compose file is only designed for use in development,
+# testing and building. For production use, see the interop-release-config
+# repository (TODO)
 version: '3.7'
 
 x-php-defaults: &php-defaults
-  image: gsmainclusivetechlab/interop-test-platform:${CIRCLE_SHA1:-latest}
+  image: gsmainclusivetechlab/interop-test-platform:latest
   build:
     context: src
-    args:
-      PHP_INI_TEMPLATE: $PHP_INI_TEMPLATE
-      APP_ENV: $APP_ENV
-      HOST_UID: ${HOST_UID:-www-data:www-data}
+    dockerfile: $PWD/Dockerfiles/${ENV:-development}.Dockerfile
   cap_add:
     - SYS_PTRACE
   security_opt:
@@ -16,18 +16,33 @@ x-php-defaults: &php-defaults
   depends_on:
     - redis
     - mysqldb
-  networks:
-    - internal
-
-networks:
-  internal:
-    driver: bridge
+  volumes:
+    - ./src/build/php-ini-development.ini:/usr/local/etc/php/conf.d/custom.ini
+    - ./src/build/php-fpm.conf:/etc/php7/php-fpm.d/www.conf
+    - ./src/build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+    - ./src/build/nginx-server.conf:/etc/nginx/nginx.conf
+    - ./src/build/client-CA-nginx-renew.sh:/etc/periodic/15min/client-CA-nginx-renew.sh
+    - ./src/build/certbot-cert-nginx-reload.sh:/etc/periodic/15min/certbot-cert-nginx-reload.sh
+    - ./src/build/nginx-includes:/etc/nginx/includes
+    - ./src/build/docker-bootstrap.sh:/usr/local/bin/start
+    - ./src:/var/www/html
+    - certbot_certs:/etc/nginx/ssl/letsencrypt
+    - certbot_www:/var/www/certbot
+    - storage:/var/www/html/storage/app
 
 services:
   app:
     <<: *php-defaults
+    ports:
+      - '${HOST_WEB_PORT:-80}:8080'
+      - '${HOST_HTTPS_WEB_PORT:-443}:8443'
     environment:
       CONTAINER_ROLE: app
+      PROJECT_DOMAIN: ${PROJECT_DOMAIN}
+      HTTPS_SSL_CERT: ${HTTPS_SSL_CERT:-selfsigned}
+      WAIT_HOSTS: mysqldb:3306
+      WAIT_SLEEP_INTERVAL: 5
+      WAIT_HOSTS_TIMEOUT: 100
 
   queue:
     <<: *php-defaults
@@ -38,13 +53,11 @@ services:
     image: redis:5
     environment:
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
-    networks:
-      - internal
     volumes:
       - redisdata:/data
 
   mysqldb:
-    image: gsmainclusivetechlab/interop-test-platform/mysqldb:${CIRCLE_SHA1:-latest}
+    image: gsmainclusivetechlab/interop-test-platform/mysqldb:latest
     build:
       context: mysqldb
     env_file: service.env
@@ -52,11 +65,44 @@ services:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s
       retries: 10
-    networks:
-      internal:
     volumes:
       - mysqldata:/var/lib/mysql
+
+  # TODO: do we need certbot in development?
+  certbot:
+    environment:
+      PROJECT_DOMAIN: ${PROJECT_DOMAIN}
+    container_name: certbot
+    image: certbot/certbot
+    restart: unless-stopped #+++
+    volumes:
+      - certbot_certs:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint:
+      "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait
+      $${!}; done;'"
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - '${HOST_MAILHOG_PORT}:8025'
+
+  phpmyadmin:
+    depends_on:
+      - mysqldb
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_HOST=mysqldb
+    ports:
+      - '${HOST_PHPMYADMIN_PORT}:80'
+    volumes:
+      - /sessions
 
 volumes:
   mysqldata:
   redisdata:
+  certbot_certs:
+  certbot_www:
+  storage:

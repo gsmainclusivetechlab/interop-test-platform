@@ -1,0 +1,36 @@
+{
+    "en": {
+        "page": {
+            "title": "Create new group"
+        },
+        "inputs": {
+            "name": "Name",
+            "email-filter": {
+                "label": "Email Filter",
+                "comment": "Only users whose email matches these filters will be eligible to join the group, e.g. domain.com or @domain.com"
+            },
+            "description": "Description"
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "create": "Create"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Создать новую группу"
+        },
+        "inputs": {
+            "name": "Имя",
+            "email-filter": {
+                "label": "Email Фильтр",
+                "comment": "Только пользователи, чей email соответствует этим фильтрам, смогут присоединиться к группе, например domain.com или @domain.com"
+            },
+            "description": "Описание"
+        },
+        "buttons": {
+            "cancel": "Отменить",
+            "create": "Создать"
+        }
+    }
+}

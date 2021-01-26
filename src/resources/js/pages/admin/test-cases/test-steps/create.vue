@@ -2,122 +2,165 @@
     <layout :test-case="testCase">
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Create</h2>
+                <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label">Method</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors.method,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.method.label')
+                        }}</label>
+                        <v-select
                             v-model="method.selected"
-                            placeholder="Select method"
+                            :placeholder="$t('inputs.method.placeholder')"
                             :options="method.list"
-                            :createItem="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, method.selected)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.method,
+                            }"
                         />
                         <span
-                            v-if="$page.errors.method"
+                            v-if="$page.props.errors.method"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.method }}
+                                {{ $page.props.errors.method }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Path</label>
+                        <label class="form-label">{{
+                            $t('inputs.path')
+                        }}</label>
                         <input
                             name="path"
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.path,
+                                'is-invalid': $page.props.errors.path,
                             }"
                             v-model="path"
                         />
-                        <span v-if="$page.errors.path" class="invalid-feedback">
+                        <span
+                            v-if="$page.props.errors.path"
+                            class="invalid-feedback"
+                        >
                             <strong>
-                                {{ $page.errors.path }}
+                                {{ $page.props.errors.path }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Pattern</label>
+                        <label class="form-label">{{
+                            $t('inputs.pattern')
+                        }}</label>
                         <input
                             name="pattern"
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.pattern,
+                                'is-invalid': $page.props.errors.pattern,
                             }"
                             v-model="pattern"
                         />
                         <span
-                            v-if="$page.errors.pattern"
+                            v-if="$page.props.errors.pattern"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.pattern }}
+                                {{ $page.props.errors.pattern }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Source</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors.source_id,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.source.label')
+                        }}</label>
+                        <v-select
                             v-model="source"
-                            placeholder="Select source"
+                            :placeholder="$t('inputs.source.placeholder')"
                             :options="sourceList"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, source)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.source_id,
+                            }"
                         />
                         <span
-                            v-if="$page.errors.source_id"
+                            v-if="$page.props.errors.source_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.source_id }}
+                                {{ $page.props.errors.source_id }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Target</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors.target_id,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.target.label')
+                        }}</label>
+                        <v-select
                             v-model="target"
-                            placeholder="Select target"
+                            :placeholder="$t('inputs.target.placeholder')"
                             :options="targetList"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, target)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.target_id,
+                            }"
                         />
                         <span
-                            v-if="$page.errors.target_id"
+                            v-if="$page.props.errors.target_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.target_id }}
+                                {{ $page.props.errors.target_id }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">API specification</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors.api_spec,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.api-spec.label')
+                        }}</label>
+                        <v-select
                             v-model="apiSpec.selected"
-                            placeholder="Select API specification"
+                            :placeholder="$t('inputs.api-spec.placeholder')"
                             :options="apiSpec.list"
-                            :createItem="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, apiSpec.selected)
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.api_spec,
+                            }"
                         />
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-check form-switch">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                v-model="mtls"
+                            />
+                            <span class="form-check-label">mTLS</span>
+                        </label>
+                        <span
+                            v-if="$page.props.errors.mtls"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors.mtls }}
+                            </strong>
+                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <button
@@ -125,7 +168,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'trigger'"
                         >
-                            Trigger
+                            {{ $t('inputs.trigger') }}
                         </button>
                         <b-collapse id="trigger" class="card">
                             <json-editor-block
@@ -145,7 +188,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-request-scripts'"
                         >
-                            Test Request Scripts
+                            {{ $t('inputs.test-scripts.request') }}
                         </button>
                         <b-collapse id="test-request-scripts" class="card">
                             <div
@@ -163,8 +206,12 @@
                                         <button
                                             type="button"
                                             class="btn btn-link p-0"
-                                            v-b-tooltip.hover
-                                            title="Delete"
+                                            v-b-tooltip.hover.top
+                                            :title="
+                                                $t(
+                                                    'inputs.test-scripts.form.buttons.delete'
+                                                )
+                                            "
                                             v-b-modal="
                                                 `test-request-scripts-modal-${i}`
                                             "
@@ -174,13 +221,17 @@
                                     </div>
                                 </div>
                                 <div class="card-body px-0 pb-0">
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.name'
+                                        )
+                                    }}</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
                                         :class="{
                                             'is-invalid':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.name`
                                                 ],
                                         }"
@@ -188,7 +239,7 @@
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.request.${i}.name`
                                             ]
                                         "
@@ -196,13 +247,17 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.name`
                                                 ]
                                             }}
                                         </strong>
                                     </span>
-                                    <label class="form-label mb-3">Rules</label>
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
                                     <json-editor-block
                                         :input-json="request.rules"
                                         @output-json="
@@ -210,14 +265,14 @@
                                         "
                                         :class="{
                                             'form-control is-invalid p-0':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.rules`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.request.${i}.rules`
                                             ]
                                         "
@@ -225,7 +280,7 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.request.${i}.rules`
                                                 ]
                                             }}
@@ -234,7 +289,11 @@
                                 </div>
                                 <b-modal
                                     :id="`test-request-scripts-modal-${i}`"
-                                    :title="'Are you sure?'"
+                                    :title="
+                                        $t(
+                                            'inputs.test-scripts.form.modal.title'
+                                        )
+                                    "
                                     @ok="
                                         deleteFormItem(
                                             test.scripts.request.list,
@@ -245,8 +304,11 @@
                                     :key="`test-request-scripts-modal-${i}`"
                                 >
                                     <p>
-                                        This test request scripts will be
-                                        deleted.
+                                        {{
+                                            $t(
+                                                'inputs.test-scripts.form.modal.text'
+                                            )
+                                        }}
                                     </p>
                                 </b-modal>
                             </div>
@@ -261,7 +323,11 @@
                                     "
                                 >
                                     <icon name="plus" />
-                                    <span>Add New Request Script</span>
+                                    <span>{{
+                                        $t(
+                                            'inputs.test-scripts.form.buttons.add-script'
+                                        )
+                                    }}</span>
                                 </button>
                             </div>
                         </b-collapse>
@@ -272,7 +338,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-response-scripts'"
                         >
-                            Test Response Scripts
+                            {{ $t('inputs.test-scripts.response') }}
                         </button>
                         <b-collapse id="test-response-scripts" class="card">
                             <div
@@ -289,8 +355,12 @@
                                         <button
                                             type="button"
                                             class="btn btn-link p-0"
-                                            v-b-tooltip.hover
-                                            title="Delete"
+                                            v-b-tooltip.hover.top
+                                            :title="
+                                                $t(
+                                                    'inputs.test-scripts.form.buttons.delete'
+                                                )
+                                            "
                                             v-b-modal="
                                                 `test-response-scripts-modal-${i}`
                                             "
@@ -303,13 +373,17 @@
                                     class="card-body px-0 pb-0"
                                     :key="`test-response-scripts-form-${i}`"
                                 >
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.name'
+                                        )
+                                    }}</label>
                                     <input
                                         type="text"
                                         class="form-control mb-2"
                                         :class="{
                                             'is-invalid':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.name`
                                                 ],
                                         }"
@@ -317,7 +391,7 @@
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.response.${i}.name`
                                             ]
                                         "
@@ -325,13 +399,17 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.name`
                                                 ]
                                             }}
                                         </strong>
                                     </span>
-                                    <label class="form-label mb-3">Rules</label>
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
                                     <json-editor-block
                                         :input-json="response.rules"
                                         @output-json="
@@ -339,14 +417,14 @@
                                         "
                                         :class="{
                                             'form-control is-invalid p-0':
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.rules`
                                                 ],
                                         }"
                                     />
                                     <span
                                         v-if="
-                                            $page.errors[
+                                            $page.props.errors[
                                                 `test.scripts.response.${i}.rules`
                                             ]
                                         "
@@ -354,7 +432,7 @@
                                     >
                                         <strong>
                                             {{
-                                                $page.errors[
+                                                $page.props.errors[
                                                     `test.scripts.response.${i}.rules`
                                                 ]
                                             }}
@@ -363,7 +441,11 @@
                                 </div>
                                 <b-modal
                                     :id="`test-response-scripts-modal-${i}`"
-                                    :title="'Are you sure?'"
+                                    :title="
+                                        $t(
+                                            'inputs.test-scripts.form.modal.title'
+                                        )
+                                    "
                                     @ok="
                                         deleteFormItem(
                                             test.scripts.response.list,
@@ -374,8 +456,11 @@
                                     :key="`test-response-scripts-modal-${i}`"
                                 >
                                     <p>
-                                        This test response scripts will be
-                                        deleted.
+                                        {{
+                                            $t(
+                                                'inputs.test-scripts.form.modal.text'
+                                            )
+                                        }}
                                     </p>
                                 </b-modal>
                             </div>
@@ -394,10 +479,35 @@
                                     "
                                 >
                                     <icon name="plus" />
-                                    <span>Add New Response Script</span>
+                                    <span>{{
+                                        $t(
+                                            'inputs.test-scripts.form.buttons.add-script'
+                                        )
+                                    }}</span>
                                 </button>
                             </div>
                         </b-collapse>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.uri') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.props.errors['request.uri'],
+                            }"
+                            v-model="example.request.uri"
+                        />
+                        <span
+                            v-if="$page.props.errors['request.uri']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['request.uri'] }}
+                            </strong>
+                        </span>
                     </div>
                     <div class="col-12 mb-3">
                         <button
@@ -405,7 +515,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'request-headers-examples'"
                         >
-                            Request Headers
+                            {{ $t('inputs.request.headers') }}
                         </button>
                         <b-collapse id="request-headers-examples" class="card">
                             <json-editor-block
@@ -425,10 +535,34 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'request-body-examples'"
                         >
-                            Request Body
+                            {{ $t('inputs.request.body') }}
                         </button>
                         <b-collapse id="request-body-examples" class="card">
+                            <div class="card-header">
+                                <div class="card-options">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            :checked="
+                                                example.request.body ===
+                                                'empty_body'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (example.request.body = toggleEmptyBody(
+                                                        e
+                                                    ))
+                                            "
+                                        />
+                                        <span class="form-check-label"
+                                            >Empty body</span
+                                        >
+                                    </label>
+                                </div>
+                            </div>
                             <json-editor-block
+                                v-if="example.request.body !== 'empty_body'"
                                 :input-json="example.request.body"
                                 @output-json="
                                     (data) => {
@@ -440,23 +574,34 @@
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
-                        <h2 class="card-title">Response Status</h2>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors['response.status'],
-                            }"
+                        <h2 class="card-title">
+                            {{ $t('inputs.response.status.label') }}
+                        </h2>
+                        <v-select
                             v-model="example.response.status.selected"
-                            placeholder="Select status"
+                            :placeholder="
+                                $t('inputs.response.status.placeholder')
+                            "
                             :options="example.response.status.list"
-                            :createItem="false"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(
+                                        option,
+                                        example.response.status.selected
+                                    )
+                            "
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['response.status'],
+                            }"
                         />
                         <span
-                            v-if="$page.errors['response.status']"
+                            v-if="$page.props.errors['response.status']"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors['response.status'] }}
+                                {{ $page.props.errors['response.status'] }}
                             </strong>
                         </span>
                     </div>
@@ -466,7 +611,7 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'response-headers-examples'"
                         >
-                            Response Headers
+                            {{ $t('inputs.response.headers') }}
                         </button>
                         <b-collapse id="response-headers-examples" class="card">
                             <json-editor-block
@@ -486,10 +631,34 @@
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'response-body-examples'"
                         >
-                            Response Body
+                            {{ $t('inputs.response.body') }}
                         </button>
                         <b-collapse id="response-body-examples" class="card">
+                            <div class="card-header">
+                                <div class="card-options">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            :checked="
+                                                example.response.body ===
+                                                'empty_body'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (example.response.body = toggleEmptyBody(
+                                                        e
+                                                    ))
+                                            "
+                                        />
+                                        <span class="form-check-label"
+                                            >Empty body</span
+                                        >
+                                    </label>
+                                </div>
+                            </div>
                             <json-editor-block
+                                v-if="example.response.body !== 'empty_body'"
                                 :input-json="example.response.body"
                                 @output-json="
                                     (data) => {
@@ -509,14 +678,14 @@
                     "
                     class="btn btn-link"
                 >
-                    Cancel
+                    {{ $t('buttons.cancel') }}
                 </inertia-link>
                 <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Create
+                    {{ $t('buttons.create') }}
                 </button>
             </div>
         </form>
@@ -525,49 +694,30 @@
 
 <script>
 import Layout from '@/layouts/test-cases/main';
+import mixin from '@/pages/admin/test-cases/test-steps/mixin';
 import JsonEditorBlock from '@/components/json-editor-block';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
-    metaInfo: {
-        title: 'Test Step Create',
-    },
     components: {
         Layout,
         JsonEditorBlock,
     },
-    props: {
-        testCase: {
-            type: Object,
-            required: true,
-        },
-    },
+    mixins: [mixin, mixinVSelect],
     data() {
         return {
-            sending: false,
-            component: {
-                list: this.$page.components.map((el) => el.name),
-                connections: new Map(
-                    this.$page.components.map((el) => [
-                        el.name,
-                        el.connections.data.map(
-                            (connection) => connection.name
-                        ),
-                    ])
-                ),
-            },
             method: {
-                selected: '',
-                list: collect(this.$page.methods).toArray(),
+                selected: null,
             },
             path: '',
             pattern: '',
             source: '',
             target: '',
             apiSpec: {
-                selected: 'None',
-                list: ['None', ...this.$page.apiSpecs.map((el) => el.name)],
+                selected: null,
             },
-            trigger: {},
+            trigger: null,
+            mtls: false,
             test: {
                 scripts: {
                     request: {
@@ -588,88 +738,34 @@ export default {
             },
             example: {
                 request: {
+                    uri: '',
                     headers: {},
-                    body: {},
+                    body: 'empty_body',
                 },
                 response: {
                     status: {
-                        selected: '',
-                        list: collect(this.$page.statuses).toArray(),
+                        selected: null,
                     },
                     headers: {},
-                    body: {},
+                    body: 'empty_body',
                 },
             },
         };
     },
     methods: {
         submit() {
-            const form = {
-                api_spec_id:
-                    this.$page.apiSpecs.filter(
-                        (el) => el.name === this.apiSpec.selected
-                    )?.[0]?.id ?? null,
-                method: collect(this.$page.methods)
-                    .flip()
-                    .get(this.method.selected),
-                path: this.path,
-                pattern: this.pattern ?? null,
-                source_id: this.$page.components.filter(
-                    (el) => el.name === this.source
-                )?.[0]?.id,
-                target_id: this.$page.components.filter(
-                    (el) => el.name === this.target
-                )?.[0]?.id,
-                trigger: this.trigger,
-                request: this.example.request,
-                response: {
-                    status: collect(this.$page.statuses)
-                        .flip()
-                        .get(this.example.response.status.selected),
-                    headers: this.example.response.headers,
-                    body: this.example.response.body,
-                },
-                test: {
-                    scripts: {
-                        request: this.test.scripts.request.list,
-                        response: this.test.scripts.response.list,
-                    },
-                },
-            };
-
             this.sending = true;
-            this.$inertia
-                .post(
-                    route(
-                        'admin.test-cases.test-steps.store',
-                        this.testCase.id
-                    ),
-                    form
-                )
-                .then(() => (this.sending = false));
-        },
-        addFormItem(formsList, formPattern) {
-            formsList.push(formPattern);
-        },
-        deleteFormItem(formList, i) {
-            formList.splice(i, 1);
-        },
-    },
-    computed: {
-        sourceList() {
-            const list = this.component.connections.get(this.target);
-
-            if (list) return list;
-
-            return this.component.list;
-        },
-        targetList() {
-            const list = this.component.connections.get(this.source);
-
-            if (list) return list;
-
-            return this.component.list;
+            this.$inertia.post(
+                route('admin.test-cases.test-steps.store', this.testCase.id),
+                this.getForm(),
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/test-steps/create.json"></i18n>

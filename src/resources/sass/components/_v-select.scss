@@ -1,0 +1,65 @@
+.form-control {
+  .vs__dropdown-toggle {
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+  }
+  .vs__dropdown-menu {
+    top: calc(100% - 2px);
+    left: -1px;
+    min-width: 0;
+    width: calc(100% + 2px);
+    box-shadow: 0px 3px 3px 0px rgba($gray-900, 0.1);
+  }
+  .vs__selected {
+    line-height: 1;
+  }
+  .vs__dropdown-option {
+    padding: 3px 8px;
+    &--highlight {
+      background-color: $list-group-active-bg;
+      color: $list-group-active-color;
+    }
+    &--disabled {
+      background-color: $white;
+      color: $input-placeholder-color;
+      cursor: not-allowed;
+    }
+  }
+  .vs__deselect,
+  .vs__clear {
+    fill: $gray-500;
+    transform: scale(0.8);
+    transition: fill 0.2s ease;
+    &:hover {
+      fill: $red;
+    }
+  }
+  .vs__open-indicator {
+    fill: $gray-500;
+    transform: scale(0.7);
+    cursor: pointer;
+    transition: fill 0.2s ease;
+    &:hover {
+      fill: $blue;
+    }
+  }
+  .vs__search {
+    &::placeholder {
+      color: $input-placeholder-color;
+    }
+  }
+  &.vs--open {
+    &.vs--single {
+      .vs__selected {
+        position: static;
+      }
+    }
+    .vs__dropdown-toggle {
+      box-shadow: 0 0 0 0.2rem rgba(0, 86, 143, 0.25);
+    }
+    .vs__open-indicator {
+      transform: rotate(180deg) scale(0.7);
+    }
+  }
+}

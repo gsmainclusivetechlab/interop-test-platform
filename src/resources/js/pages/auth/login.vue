@@ -7,14 +7,17 @@
                     <label class="form-label">Email address</label>
                     <input
                         v-model="form.email"
-                        :class="{ 'is-invalid': $page.errors.email }"
+                        :class="{ 'is-invalid': $page.props.errors.email }"
                         type="email"
                         class="form-control"
                         placeholder="e.g., john.doe@email.com"
                         name="email"
                     />
-                    <span v-if="$page.errors.email" class="invalid-feedback">
-                        {{ $page.errors.email }}
+                    <span
+                        v-if="$page.props.errors.email"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.email }}
                     </span>
                 </div>
                 <div class="mb-3">
@@ -28,14 +31,17 @@
                     </label>
                     <input
                         v-model="form.password"
-                        :class="{ 'is-invalid': $page.errors.password }"
+                        :class="{ 'is-invalid': $page.props.errors.password }"
                         type="password"
                         class="form-control"
                         placeholder="e.g., **********"
                         name="password"
                     />
-                    <span v-if="$page.errors.password" class="invalid-feedback">
-                        {{ $page.errors.password }}
+                    <span
+                        v-if="$page.props.errors.password"
+                        class="invalid-feedback"
+                    >
+                        {{ $page.props.errors.password }}
                     </span>
                 </div>
                 <div class="mb-3">
@@ -89,9 +95,11 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('login'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('login'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };

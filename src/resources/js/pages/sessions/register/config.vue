@@ -14,7 +14,19 @@
                         <h3>{{ sut.name }}</h3>
 
                         <template v-for="(connection, i) in sut.connections">
-                            <div class="mb-3" :key="`connection-${i}`">
+                            <div
+                                class="mb-3"
+                                :key="`connection-${i}`"
+                                v-if="
+                                    inArray(
+                                        [connection],
+                                        collect(testSteps.data)
+                                            .map((value) => value.target.id)
+                                            .unique()
+                                            .toArray()
+                                    )
+                                "
+                            >
                                 <label class="form-label">
                                     {{ connection.name }}
                                 </label>
@@ -23,11 +35,21 @@
                                         :id="`testing-${connection.id}`"
                                         type="text"
                                         :value="
-                                            route('testing.sut', [
-                                                session.info.uuid,
-                                                sut.uuid,
-                                                connection.uuid,
-                                            ])
+                                            session.sut[sut.id]
+                                                .use_encryption === '1'
+                                                ? route('testing.sut', [
+                                                      session.info.uuid,
+                                                      sut.uuid,
+                                                      connection.uuid,
+                                                  ])
+                                                : route(
+                                                      'testing-insecure.sut',
+                                                      [
+                                                          session.info.uuid,
+                                                          sut.uuid,
+                                                          connection.uuid,
+                                                      ]
+                                                  )
                                         "
                                         class="form-control"
                                         readonly
@@ -43,16 +65,17 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label"> Environments </label>
-                        <selectize
-                            v-model="groupEnvironment"
-                            class="form-select mb-3"
-                            placeholder="Group environment..."
-                            label="name"
-                            :keys="['name']"
-                            :options="groupEnvironmentsList"
-                            :createItem="false"
-                            :searchFn="searchGroupEnvironments"
+                        <v-select
                             v-if="hasGroupEnvironments"
+                            v-model="groupEnvironment"
+                            :options="groupEnvironmentsList"
+                            label="name"
+                            placeholder="Group environment..."
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, groupEnvironment)
+                            "
+                            class="form-control d-flex p-0 mb-3"
                         />
                         <environments
                             v-model="form.environments"
@@ -60,9 +83,11 @@
                         />
                         <div
                             class="text-danger small mt-2"
-                            v-if="$page.errors.environments"
+                            v-if="$page.props.errors.environments"
                         >
-                            <strong>{{ $page.errors.environments }}</strong>
+                            <strong>{{
+                                $page.props.errors.environments
+                            }}</strong>
                         </div>
                     </div>
                 </div>
@@ -89,6 +114,7 @@
 <script>
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
@@ -112,7 +138,12 @@ export default {
             type: Boolean,
             required: true,
         },
+        testSteps: {
+            type: Object,
+            required: true,
+        },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -127,7 +158,7 @@ export default {
     watch: {
         groupEnvironment: {
             immediate: true,
-            handler: function (value) {
+            handler(value) {
                 this.form.group_environment_id = value ? value.id : null;
                 if (value !== null) {
                     this.form.environments = value.variables;
@@ -144,9 +175,15 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('sessions.register.config.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.config.store'),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadGroupEnvironmentList(query = '') {
             axios
@@ -157,9 +194,14 @@ export default {
                     this.groupEnvironmentsList = result.data.data;
                 });
         },
-        searchGroupEnvironments(query, callback) {
-            this.loadGroupEnvironmentList(query);
-            callback();
+        inArray(components, array) {
+            let result = false;
+            components.forEach(function (component) {
+                if (array.includes(component.id)) {
+                    result = true;
+                }
+            });
+            return result;
         },
     },
 };

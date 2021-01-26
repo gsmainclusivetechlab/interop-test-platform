@@ -9,7 +9,7 @@
             v-b-modal="`update-test-case-${versions.current.id}`"
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
-            v-b-tooltip.hover
+            v-b-tooltip.hover.top
             title="A newer version of this test case is available. Click to update your session with it."
         >
             update
@@ -61,17 +61,19 @@ export default {
     },
     methods: {
         submit() {
-            this.$inertia
-                .put(
-                    route('sessions.update-test-case', [
-                        this.sessionId,
-                        this.versions.current.id,
-                        this.versions.last.id,
-                    ])
-                )
-                .then(() => {
-                    this.$emit('update', this.versions);
-                });
+            this.$inertia.put(
+                route('sessions.update-test-case', [
+                    this.sessionId,
+                    this.versions.current.id,
+                    this.versions.last.id,
+                ]),
+                {},
+                {
+                    onFinish: () => {
+                        this.$emit('update', this.versions);
+                    },
+                }
+            );
         },
     },
     computed: {

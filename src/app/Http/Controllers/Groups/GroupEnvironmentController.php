@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupEnvironmentResource;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\GroupEnvironment;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -16,14 +19,6 @@ use Inertia\Response;
 
 class GroupEnvironmentController extends Controller
 {
-    /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
-
     /**
      * @param Group $group
      * @return Response
@@ -78,6 +73,14 @@ class GroupEnvironmentController extends Controller
         ]);
         $group->environments()->create($request->input());
 
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_ENVIRONMENT(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
+
         return redirect()
             ->route('groups.environments.index', $group)
             ->with('success', __('Environment created successfully'));
@@ -120,7 +123,7 @@ class GroupEnvironmentController extends Controller
             ->environments()
             ->whereKey($environment->getKey())
             ->firstOrFail();
-        $this->authorize('update', $group);
+        $this->authorize('update', $environment);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'variables' => ['required', 'array'],

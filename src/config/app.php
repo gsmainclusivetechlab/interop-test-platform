@@ -79,7 +79,18 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => env('LOCALE_DEFAULT', 'en'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Locales Configuration
+    |--------------------------------------------------------------------------
+    |
+    | The application supported locales.
+    |
+    */
+
+    'locales' => array_filter(explode('|', env('LOCALE_SUPPORTED', 'en'))),
 
     /*
     |--------------------------------------------------------------------------

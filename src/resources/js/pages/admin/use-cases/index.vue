@@ -3,9 +3,11 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
+                    <div class="page-pretitle">
+                        {{ $t('special-locales.administration') }}
+                    </div>
                     <h2 class="page-title">
-                        <b>Use Cases</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -18,11 +20,11 @@
                 <div class="card-options">
                     <inertia-link
                         :href="route('admin.use-cases.create')"
-                        v-if="$page.auth.user.can.use_cases.create"
+                        v-if="$page.props.auth.user.can.use_cases.create"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
-                        New Use Case
+                        {{ $t('buttons.create') }}
                     </inertia-link>
                 </div>
             </div>
@@ -32,22 +34,25 @@
                 >
                     <thead>
                         <tr>
-                            <th class="text-nowrap">Name</th>
-                            <th class="text-nowrap">Test Cases</th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.name') }}
+                            </th>
+                            <th class="text-nowrap">
+                                {{ $t('table.header.test-cases') }}
+                            </th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="useCase in useCases.data">
+                        <tr
+                            v-for="(useCase, i) in useCases.data"
+                            :key="`use-case-${i}`"
+                        >
                             <td class="text-break">
                                 {{ useCase.name }}
                             </td>
                             <td>
-                                {{
-                                    useCase.testCases
-                                        ? useCase.testCases.length
-                                        : 0
-                                }}
+                                {{ useCase.testCasesCount }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
@@ -73,7 +78,7 @@
                                                 )
                                             "
                                         >
-                                            Edit
+                                            {{ $t('table.menu.edit') }}
                                         </inertia-link>
                                     </li>
                                     <li v-if="useCase.can.delete">
@@ -86,17 +91,28 @@
                                                 )
                                             "
                                             method="delete"
-                                            :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${useCase.name}?`"
+                                            :confirm-title="
+                                                $t(
+                                                    'table.menu.delete.modal.title'
+                                                )
+                                            "
+                                            :confirm-text="
+                                                $t(
+                                                    'table.menu.delete.modal.title',
+                                                    { name: useCase.name }
+                                                )
+                                            "
                                         >
-                                            Delete
+                                            {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
                                     </li>
                                 </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!useCases.data.length">
-                            <td class="text-center" colspan="3">No Results</td>
+                            <td class="text-center" colspan="3">
+                                {{ $t('table.no-results') }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -114,8 +130,8 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Use Cases',
+    metaInfo() {
+        return { title: this.$t('page.title') };
     },
     components: {
         Layout,
@@ -146,3 +162,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/pages/admin/use-cases/index.json"></i18n>

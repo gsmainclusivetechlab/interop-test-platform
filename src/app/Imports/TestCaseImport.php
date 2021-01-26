@@ -2,13 +2,17 @@
 
 namespace App\Imports;
 
-use App\Models\ApiSpec;
-use App\Models\Component;
-use App\Models\TestCase;
-use App\Models\TestScript;
-use App\Models\TestSetup;
-use App\Models\TestStep;
-use App\Models\UseCase;
+use App\Http\Client\Request;
+use App\Http\Client\Response;
+use App\Models\{
+    ApiSpec,
+    Component,
+    TestCase,
+    TestScript,
+    TestSetup,
+    TestStep,
+    UseCase
+};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -52,11 +56,11 @@ class TestCaseImport implements Importable
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
-                $testCase
-                    ->components()
-                    ->attach(
-                        Component::whereIn('name', $componentRows)->pluck('id')
-                    );
+                $testCase->components()->attach(
+                    Component::whereIn('name', $componentRows)
+                        ->orWhereIn('slug', $componentRows)
+                        ->pluck('id')
+                );
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
@@ -72,19 +76,37 @@ class TestCaseImport implements Importable
                                 TestStep::make()->getFillable()
                             )
                         );
+
+                    $request = Arr::get($testStepRow, 'request');
+                    $response = Arr::get($testStepRow, 'response');
+
+                    if (!Arr::exists($request, 'body')) {
+                        $request['body'] = Request::EMPTY_BODY;
+                    }
+                    $testStep->request = $this->checkHeaders($request);
+
+                    if (!Arr::exists($response, 'body')) {
+                        $response['body'] = Response::EMPTY_BODY;
+                    }
+                    $testStep->response = $this->checkHeaders($response);
+
                     $testStep->setAttribute(
                         'source_id',
                         Component::where(
                             'name',
                             Arr::get($testStepRow, 'source')
-                        )->value('id')
+                        )
+                            ->orWhere('slug', Arr::get($testStepRow, 'source'))
+                            ->value('id')
                     );
                     $testStep->setAttribute(
                         'target_id',
                         Component::where(
                             'name',
                             Arr::get($testStepRow, 'target')
-                        )->value('id')
+                        )
+                            ->orWhere('slug', Arr::get($testStepRow, 'target'))
+                            ->value('id')
                     );
                     $testStep->setAttribute(
                         'api_spec_id',
@@ -121,6 +143,22 @@ class TestCaseImport implements Importable
 
             return $testCase;
         });
+    }
+
+    /**
+     * @param array $input
+     * @return array
+     */
+    protected function checkHeaders($input)
+    {
+        if (
+            Arr::exists($input, 'headers') &&
+            (!is_array($input['headers']) || empty($input['headers']))
+        ) {
+            $input = Arr::except($input, 'headers');
+        }
+
+        return $input;
     }
 
     /**

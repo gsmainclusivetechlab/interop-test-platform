@@ -60,8 +60,8 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: '${SP_BASE_URI}/callback'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-callback-url: '{{ env.SP_BASE_URI }}/callback'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         amount: '20.01'
         currency: 'USD'
@@ -77,7 +77,7 @@ test_steps:
       status: 202
       headers:
         content-type: 'application/json'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
         status: 'pending'
@@ -117,7 +117,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -174,7 +174,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -225,7 +225,7 @@ test_steps:
       uri: /transactionRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -263,7 +263,7 @@ test_steps:
       uri: /transactionRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -311,7 +311,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -381,7 +381,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -439,7 +439,7 @@ test_steps:
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -479,7 +479,7 @@ test_steps:
       uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -516,7 +516,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
         content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
 
@@ -546,7 +546,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
         content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
 
@@ -578,9 +578,9 @@ test_steps:
       uri: /accounts/msisdn/33555123456/authorisationcodes
       headers:
         content-type: 'application/json'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
       body:
-        requestDate: '${CURRENT_TIMESTAMP_ISO8601}'
+        requestDate: '{{ new_date_iso8601() }}'
         amount: '20.01'
         currency: 'USD'
 
@@ -588,7 +588,7 @@ test_steps:
       status: 201
       headers:
         content-type: 'application/json'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         authorisationCode: '12345'
         codeState: 'active'
@@ -621,7 +621,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
         content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -661,7 +661,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.authorizations+json;version=1.0'
         content-type: 'application/vnd.interoperability.authorizations+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
@@ -708,7 +708,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transfers+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        date: '{{ new_date_rfc7231() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -760,7 +760,7 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transfers+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        date: '{{ new_date_rfc7231() }}'
         fspiop-source: 'mmo2fsp'
         fspiop-destination: 'mmo1fsp'
       body:
@@ -804,10 +804,10 @@ test_steps:
 
     request:
       method: 'PUT'
-      uri: '${SP_BASE_URI}/callback'
+      uri: '{{ env.SP_BASE_URI }}/callback'
       headers:
         content-type: 'application/json'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         amount: '20.01'
         currency: 'USD'
@@ -859,11 +859,11 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        date: '{{ new_date_rfc7231() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
-        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        completedTimestamp: '{{ new_date_iso8601_zulu() }}'
         fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
         transferState: 'COMMITTED'
 
@@ -905,11 +905,11 @@ test_steps:
       uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        date: '{{ new_date_rfc7231() }}'
         fspiop-source: 'mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
-        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        completedTimestamp: '{{ new_date_iso8601_zulu() }}'
         fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
         transferState: 'COMMITTED'
 

@@ -2,8 +2,9 @@
 
 namespace App\Http\Client;
 
+use App\Models\Session;
 use App\Models\TestSetup;
-use App\Utils\TokenSubstitution;
+use App\Utils\TwigSubstitution;
 use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
@@ -11,34 +12,34 @@ use Psr\Http\Message\RequestInterface;
 
 class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
-    /**
-     * @return string
-     */
-    public function path()
+    const EMPTY_BODY = 'empty_body';
+
+    public function urlForResolver()
     {
-        return (string) $this->request->getUri();
+        return $this->host() ? $this->url() : ltrim($this->path(), '/');
     }
 
-    /**
-     * @return array
-     */
-    public function json()
+    public function path(): string
     {
-        return parent::json() ?? [];
+        return $this->request->getUri()->getPath();
     }
 
-    /**
-     * @return RequestInterface
-     */
-    public function toPsrRequest()
+    public function host(): string
+    {
+        return $this->request->getUri()->getHost();
+    }
+
+    public function query(): string
+    {
+        return $this->request->getUri()->getQuery();
+    }
+
+    public function toPsrRequest(): RequestInterface
     {
         return $this->request;
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'method' => $this->method(),
@@ -72,20 +73,17 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     }
 
     /**
-     * @param array|null $tokens
+     * @param $testResults
+     * @param Session $session
      * @return $this
      */
-    public function withSubstitutions(array $tokens = [])
+    public function withSubstitutions($testResults, $session)
     {
         $data = $this->toArray();
-        $data['uri'] = urldecode($data['uri']);
+        $data['uri'] = rawurldecode($data['uri']);
 
-        $substitution = new TokenSubstitution($tokens);
-        array_walk_recursive($data, function (&$value) use ($substitution) {
-            if (is_string($value)) {
-                $value = $substitution->replace($value);
-            }
-        });
+        $substitution = new TwigSubstitution($testResults, $session);
+        $data = $substitution->replaceRecursive($data);
 
         return new self(
             new ServerRequest(
@@ -95,5 +93,13 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 json_encode($data['body'])
             )
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmptyBody(): bool
+    {
+        return static::EMPTY_BODY === $this->json();
     }
 }

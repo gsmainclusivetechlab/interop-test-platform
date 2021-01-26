@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
+use App\Utils\AuditLogUtil;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +46,14 @@ class PasswordController extends Controller
         $user->password = Hash::make($request->input('password'));
         $user->setRememberToken(Str::random(60));
         $user->save();
+
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::PASSWORD_RESET(),
+            AuditTypeEnum::NO_TYPE,
+            0,
+            null
+        );
 
         return redirect()
             ->back()

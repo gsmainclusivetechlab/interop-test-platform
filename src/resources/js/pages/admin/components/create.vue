@@ -18,15 +18,15 @@
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.name }}
+                                        {{ $page.props.errors.name }}
                                     </strong>
                                 </span>
                             </div>
@@ -38,53 +38,56 @@
                                     class="form-control"
                                     v-model="form.base_url"
                                     :class="{
-                                        'is-invalid': $page.errors.base_url,
+                                        'is-invalid':
+                                            $page.props.errors.base_url,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.base_url"
+                                    v-if="$page.props.errors.base_url"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.base_url }}
+                                        {{ $page.props.errors.base_url }}
                                     </strong>
                                 </span>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Connections </label>
-                                <selectize
-                                    v-model="connections"
+                                <v-select
+                                    v-model="connections.selected"
+                                    :options="connections.list"
                                     multiple
-                                    class="form-select"
                                     placeholder="Select connections..."
+                                    label="name"
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(
+                                                option,
+                                                connections.selected
+                                            )
+                                    "
+                                    class="form-control d-flex p-0"
                                     :class="{
                                         'is-invalid':
-                                            $page.errors.connections_id,
+                                            $page.props.errors.connections_id,
                                     }"
-                                    label="name"
-                                    :keys="['name']"
-                                    :options="connectionsList"
-                                    :createItem="false"
-                                    :searchFn="searchConnections"
+                                    @input="setConnections"
                                 >
-                                    <template
-                                        slot="option"
-                                        slot-scope="{ option }"
-                                    >
+                                    <template #option="option">
                                         <div>{{ option.name }}</div>
                                         <div class="text-muted small">
                                             {{ option.base_url }}
                                         </div>
                                     </template>
-                                </selectize>
+                                </v-select>
                                 <span
-                                    v-if="$page.errors.groups_id"
+                                    v-if="$page.props.errors.groups_id"
                                     class="invalid-feedback"
                                 >
                                     <strong>
                                         {{
                                             collect(
-                                                $page.errors.groups_id
+                                                $page.props.errors.groups_id
                                             ).implode(' ')
                                         }}
                                     </strong>
@@ -98,15 +101,16 @@
                                     rows="5"
                                     v-model="form.description"
                                     :class="{
-                                        'is-invalid': $page.errors.description,
+                                        'is-invalid':
+                                            $page.props.errors.description,
                                     }"
                                 ></textarea>
                                 <span
-                                    v-if="$page.errors.description"
+                                    v-if="$page.props.errors.description"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.description }}
+                                        {{ $page.props.errors.description }}
                                     </strong>
                                 </span>
                             </div>
@@ -122,11 +126,11 @@
                                     >
                                 </label>
                                 <span
-                                    v-if="$page.errors.sutable"
+                                    v-if="$page.props.errors.sutable"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.sutable }}
+                                        {{ $page.props.errors.sutable }}
                                     </strong>
                                 </span>
                             </div>
@@ -155,6 +159,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     metaInfo: {
@@ -163,11 +168,14 @@ export default {
     components: {
         Layout,
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
-            connections: [],
-            connectionsList: [],
+            connections: {
+                list: [],
+                selected: [],
+            },
             form: {
                 name: null,
                 sutable: true,
@@ -177,27 +185,17 @@ export default {
             },
         };
     },
-    watch: {
-        connections: {
-            immediate: true,
-            handler: function (value) {
-                this.form.connections_id = value
-                    ? collect(value)
-                          .map((item) => item.id)
-                          .all()
-                    : [];
-            },
-        },
-    },
     mounted() {
         this.loadConnectionsList();
     },
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.components.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.components.store'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
         loadConnectionsList(query = '') {
             axios
@@ -205,14 +203,13 @@ export default {
                     params: { q: query },
                 })
                 .then((result) => {
-                    this.connectionsList = collect(result.data.data)
-                        .whereNotIn('id', this.form.connections_id)
-                        .all();
+                    this.connections.list = result.data.data;
                 });
         },
-        searchConnections(query, callback) {
-            this.loadConnectionsList(query);
-            callback();
+        setConnections() {
+            this.form.connections_id = this.connections.selected.map(
+                (item) => item.id
+            );
         },
     },
 };

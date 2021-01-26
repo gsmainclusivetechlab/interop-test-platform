@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  selenium:
+    image: selenium/standalone-chrome:85.0
+    links:
+      - app:sdnet.test
+    # this allows selenium to use the host's shared memory
+    volumes:
+      - /dev/shm:/dev/shm
+
+  # N.B. We are overloading queue for simplicity here, to avoid creating another duplicate definition.
+  # Just need an execution container that's not `app` to avoid circular dependencies
+  queue:
+    depends_on:
+      - mysqldb
+      - selenium
+      - mailhog

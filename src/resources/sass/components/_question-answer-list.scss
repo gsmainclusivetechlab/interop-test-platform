@@ -1,11 +1,12 @@
 .q-a-list {
-  padding-left: 10px;
+  --marker-size: 1.25em;
+  padding-left: var(--marker-size);
   dt,
   dd {
     position: relative;
     &:before {
       position: absolute;
-      left: -20px;
+      left: calc(-1 * var(--marker-size));
       color: $red;
       font-weight: 400;
     }

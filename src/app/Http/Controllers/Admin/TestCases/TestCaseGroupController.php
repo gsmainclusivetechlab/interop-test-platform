@@ -23,9 +23,6 @@ class TestCaseGroupController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->middleware('test-case.latest')->only(['index']);
-        $this->authorizeResource(Group::class, 'group', [
-            'only' => ['index', 'store', 'destroy'],
-        ]);
     }
 
     /**

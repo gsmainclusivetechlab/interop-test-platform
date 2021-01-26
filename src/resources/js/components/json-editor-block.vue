@@ -2,23 +2,26 @@
     <div class="json-editor-block row mt-2">
         <div class="col-6">
             <json-editor
-                class="json-editor"
                 :data-input="jsonData"
                 @data-output="(data) => (jsonData = data)"
             >
                 <template #icon-add>
-                    <icon name="plus" v-b-tooltip.hover title="Add" />
+                    <icon name="plus" v-b-tooltip.hover.top title="Add" />
                 </template>
                 <template #icon-delete>
-                    <icon name="trash" v-b-tooltip.hover title="Delete" />
+                    <icon name="trash" v-b-tooltip.hover.top title="Delete" />
                 </template>
                 <template #icon-drag>
-                    <icon name="arrows-sort" v-b-tooltip.hover title="Move" />
+                    <icon
+                        name="arrows-sort"
+                        v-b-tooltip.hover.top
+                        title="Move"
+                    />
                 </template>
                 <template #icon-collapse>
                     <icon
                         name="chevron-up"
-                        v-b-tooltip.hover
+                        v-b-tooltip.hover.top
                         title="Collapse"
                     />
                 </template>

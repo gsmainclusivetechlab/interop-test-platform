@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueMeta from 'vue-meta';
-import { InertiaApp } from '@inertiajs/inertia-vue';
+import { App, plugin } from '@inertiajs/inertia-vue';
 import {
     NavPlugin,
     NavbarPlugin,
@@ -13,6 +13,10 @@ import {
     PopoverPlugin,
     TabsPlugin,
 } from 'bootstrap-vue';
+import VueI18n from 'vue-i18n';
+import { InertiaProgress } from '@inertiajs/progress';
+
+InertiaProgress.init();
 
 window.string = require('string');
 window.collect = require('collect.js');
@@ -20,7 +24,8 @@ window.axios = require('axios');
 window.axios.defaults.withCredentials = true;
 
 Vue.use(VueMeta);
-Vue.use(InertiaApp);
+Vue.use(VueI18n);
+Vue.use(plugin);
 
 [
     NavPlugin,
@@ -61,8 +66,8 @@ Vue.component('input-search', () =>
         /* webpackChunkName: "input-search" */ '@/components/input-search.vue'
     )
 );
-Vue.component('selectize', () =>
-    import(/* webpackChunkName: "selectize" */ '@isneezy/vue-selectize')
+Vue.component('v-select', () =>
+    import(/* webpackChunkName: "v-select" */ 'vue-select')
 );
 Vue.component('confirm-link', () =>
     import(
@@ -85,12 +90,17 @@ Vue.component('clipboard-json-to-curl', () =>
 Vue.component('text-editor', () =>
     import(/* webpackChunkName: "text-editor" */ '@/components/text-editor.vue')
 );
+const i18n = new VueI18n({
+    silentFallbackWarn: true,
+    messages: {},
+});
 
 let app = document.getElementById('app');
 
 new Vue({
+    i18n,
     render: (h) =>
-        h(InertiaApp, {
+        h(App, {
             props: {
                 initialPage: JSON.parse(app.dataset.page),
                 resolveComponent: (name) =>

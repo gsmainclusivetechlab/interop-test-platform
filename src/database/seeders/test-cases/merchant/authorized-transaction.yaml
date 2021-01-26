@@ -10,11 +10,11 @@ precondition: |
   - Payee and Payer MMOs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Configuration for MMO1 as SUT:
-    - fspiop-source: 'mmo1fsp'.
+    - fspiop-source: mmo1fsp'.
     - fspiop-destination: 'mmo2fsp'.
   - Configuration for MMO2 as SUT:
     - fspiop-source: 'mmo2fsp'.
-    - fspiop-destination: 'mmo1fsp'.
+    - fspiop-destination: mmo1fsp'.
   - Required Parameters for Execution:
     - Amount should be the value "5".
 components:
@@ -57,8 +57,8 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: '${SP_BASE_URI}/callback'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-callback-url: '{{ env.SP_BASE_URI }}/callback'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         amount: '5'
         currency: 'USD'
@@ -73,9 +73,9 @@ test_steps:
       status: 202
       headers:
         content-type: 'application/json'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
       body:
-        serverCorrelationId: 'be77f48f-2433-4bfa-8cdd-aaf058a400de'
+        serverCorrelationId: '{{ uuidv4() }}'
         status: 'pending'
         notificationMethod: 'callback'
   - path: /transactionRequests
@@ -109,11 +109,11 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo1fsp'
+        date: '{{ new_date_rfc2822() }}'
+        fspiop-source: mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
-        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
+        transactionRequestId: '{{ uuidv4() }}'
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
@@ -161,25 +161,11 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo1fsp'
+        date: '{{ new_date_rfc2822() }}'
+        fspiop-source: mmo1fsp'
         fspiop-destination: 'mmo2fsp'
-      body:
-        transactionRequestId: '950b88b3-cbcc-4f5d-92e7-46666529a7b6'
-        payee:
-          partyIdInfo:
-            partyIdType: 'MSISDN'
-            partyIdentifier: '+33555789123'
-        payer:
-          partyIdType: 'MSISDN'
-          partyIdentifier: '+33555123456'
-        amount:
-          amount: '5'
-          currency: 'USD'
-        transactionType:
-          scenario: 'PAYMENT'
-          initiator: 'PAYEE'
-          initiatorType: 'BUSINESS'
+      body: '{{ steps.2.request.body|json_encode() }}'
+
     response:
       status: 202
   - path: /transactionRequests/{ID}
@@ -202,15 +188,15 @@ test_steps:
           status: 'required|in:200'
     request:
       method: PUT
-      uri: /transactionRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      uri: /transactionRequests/{{ steps.2.request.body.transactionRequestId }}
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-destination: mmo1fsp'
       body:
         transactionRequestState: 'RECEIVED'
-        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        transactionId: '{{ uuidv4() }}'
     response:
       status: 200
   - path: /transactionRequests/{ID}
@@ -233,15 +219,14 @@ test_steps:
           status: 'required|in:200'
     request:
       method: PUT
-      uri: /transactionRequests/950b88b3-cbcc-4f5d-92e7-46666529a7b6
+      uri: /transactionRequests/{{ steps.2.request.body.transactionRequestId }}
       headers:
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
-      body:
-        transactionRequestState: 'RECEIVED'
-        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        fspiop-destination: mmo1fsp'
+      body: '{{ steps.4.request.body|json_encode() }}'
+
     response:
       status: 200
   - path: /quotes
@@ -279,12 +264,12 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-destination: mmo1fsp'
       body:
-        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
-        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
+        quoteId: '{{ uuidv4() }}'
+        transactionId: '{{ steps.4.request.body.transactionId }}'
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'
@@ -344,34 +329,11 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.quotes+json;version=1.0'
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
+        date: '{{ new_date_rfc2822() }}'
         fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
-      body:
-        quoteId: 'ba2a764f-41d0-4b47-a774-dfe51012b04a'
-        transactionId: 'ea1ae93f-d5b7-4f36-96c6-7fb164e1f23e'
-        payee:
-          partyIdInfo:
-            partyIdType: 'MSISDN'
-            partyIdentifier: '+33555789123'
-        payer:
-          partyIdInfo:
-            partyIdType: 'MSISDN'
-            partyIdentifier: '+33555123456'
-          personalInfo:
-            complexName:
-              firstName: 'John'
-              middleName: 'Jane'
-              lastName: 'Doe'
-            dateOfBirth: '2000-01-01'
-        amountType: 'SEND'
-        amount:
-          currency: 'USD'
-          amount: '5'
-        transactionType:
-          scenario: 'PAYMENT'
-          initiator: 'PAYEE'
-          initiatorType: 'BUSINESS'
+        fspiop-destination: mmo1fsp'
+      body: '{{ steps.6.request.body|json_encode() }}'
+
     response:
       status: 202
   - path: /quotes/{ID}
@@ -393,19 +355,22 @@ test_steps:
           status: 'required|in:200'
     request:
       method: 'PUT'
-      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      uri: /quotes/{{ steps.6.request.body.quoteId }}
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo1fsp'
+        date: '{{ new_date_rfc2822() }}'
+        fspiop-source: mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
         transferAmount:
           currency: 'USD'
           amount: '5'
-        expiration: '2021-01-01T00:00:00.000Z'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+        expiration: '{{ "+1 day" | date("Y-m-d\\TH:i:s.vP") }}'
+        ilpPacket:
+          '{{ ilpPacket(199, "+1 day",
+          ilpCondition(ilpFulfilment()),"g.gh.msisdn.447584248916", "") |
+          base64url_encode }}'
+        condition: '{{ ilpCondition(ilpFulfilment()) | base64url_encode}}'
     response:
       status: 200
   - path: /quotes/{ID}
@@ -427,19 +392,14 @@ test_steps:
           status: 'required|in:200'
     request:
       method: 'PUT'
-      uri: /quotes/ba2a764f-41d0-4b47-a774-dfe51012b04a
+      uri: /quotes/{{ steps.6.request.body.quoteId }}
       headers:
         content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC2822}'
-        fspiop-source: 'mmo1fsp'
+        date: '{{ new_date_rfc2822() }}'
+        fspiop-source: mmo1fsp'
         fspiop-destination: 'mmo2fsp'
-      body:
-        transferAmount:
-          currency: 'USD'
-          amount: '5'
-        expiration: '2021-01-01T00:00:00.000Z'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
+      body: '{{ steps.8.request.body|json_encode() }}'
+
     response:
       status: 200
   - path: /transfers
@@ -474,12 +434,12 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transfers+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        date: '{{ new_date_rfc7231() }}'
         fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
+        fspiop-destination: mmo1fsp'
       body:
-        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'mmo1fsp'
+        transferId: '{{ uuidv4() }}'
+        payeeFsp: mmo1fsp'
         payerFsp: 'mmo2fsp'
         amount:
           currency: 'USD'
@@ -521,19 +481,11 @@ test_steps:
       headers:
         accept: 'application/vnd.interoperability.transfers+json;version=1.0'
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
+        date: '{{ new_date_rfc7231() }}'
         fspiop-source: 'mmo2fsp'
-        fspiop-destination: 'mmo1fsp'
-      body:
-        transferId: '4fa69731-e626-4fcf-a67b-9394684fe402'
-        payeeFsp: 'mmo1fsp'
-        payerFsp: 'mmo2fsp'
-        amount:
-          currency: 'USD'
-          amount: '5'
-        ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
-        condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
-        expiration: '2021-01-01T00:00:00.000Z'
+        fspiop-destination: mmo1fsp'
+      body: '{{ steps.10.request.body|json_encode() }}'
+
     response:
       status: 202
   - path: '{X-Callback-URL}'
@@ -559,10 +511,10 @@ test_steps:
           status: 'required|in:204'
     request:
       method: 'PUT'
-      uri: '${SP_BASE_URI}/callback'
+      uri: '{{ env.SP_BASE_URI }}/callback'
       headers:
         content-type: 'application/json'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         amount: '5'
         currency: 'USD'
@@ -604,15 +556,15 @@ test_steps:
           status: 'required|in:200'
     request:
       method: 'PUT'
-      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+      uri: /transfers/{{ steps.10.request.body.transferId }}
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
-        fspiop-source: 'mmo1fsp'
+        date: '{{ new_date_rfc7231() }}'
+        fspiop-source: mmo1fsp'
         fspiop-destination: 'mmo2fsp'
       body:
         transferState: 'COMMITTED'
-        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
+        completedTimestamp: '{{ new_date_iso8601_zulu() }}'
         fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
     response:
       status: 200
@@ -643,15 +595,13 @@ test_steps:
           status: 'required|in:200'
     request:
       method: 'PUT'
-      uri: /transfers/4fa69731-e626-4fcf-a67b-9394684fe402
+      uri: /transfers/{{ steps.10.request.body.transferId }}
       headers:
         content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
-        date: '${CURRENT_TIMESTAMP_RFC7231}'
-        fspiop-source: 'mmo1fsp'
+        date: '{{ new_date_rfc7231() }}'
+        fspiop-source: mmo1fsp'
         fspiop-destination: 'mmo2fsp'
-      body:
-        transferState: 'COMMITTED'
-        completedTimestamp: '${CURRENT_TIMESTAMP_ISO8601_ZULU}'
-        fulfilment: 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
+      body: '{{ steps.13.request.body|json_encode() }}'
+
     response:
       status: 200

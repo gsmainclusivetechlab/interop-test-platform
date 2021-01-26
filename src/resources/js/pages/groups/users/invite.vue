@@ -11,32 +11,32 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <label class="form-label">User</label>
-                            <selectize
+                            <v-select
                                 v-model.trim="user"
-                                class="form-select"
-                                placeholder="Select user..."
-                                :class="{
-                                    'is-invalid': $page.errors.user_id,
-                                }"
-                                label="name"
-                                :keys="['name', 'email']"
                                 :options="userList"
-                                :createItem="false"
-                                :searchFn="searchUser"
+                                :selectable="
+                                    (option) => isSelectable(option, user)
+                                "
+                                label="name"
+                                placeholder="Select user..."
+                                class="form-control d-flex p-0 mb-3"
+                                :class="{
+                                    'is-invalid': $page.props.errors.user_id,
+                                }"
                             >
-                                <template #option="{ option }">
+                                <template #option="option">
                                     <div>{{ option.name }}</div>
                                     <div class="text-muted small">
                                         {{ option.company }}
                                     </div>
                                 </template>
-                            </selectize>
+                            </v-select>
                             <span
-                                v-if="$page.errors.user_id"
+                                v-if="$page.props.errors.user_id"
                                 class="invalid-feedback"
                             >
                                 <strong>
-                                    {{ $page.errors.user_id }}
+                                    {{ $page.props.errors.user_id }}
                                 </strong>
                             </span>
                             <p class="mt-3 text-muted small" v-once>
@@ -83,6 +83,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     metaInfo() {
@@ -99,6 +100,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             user: null,
@@ -113,11 +115,17 @@ export default {
         submit() {
             this.sending = true;
 
-            this.$inertia
-                .post(route('groups.users.store', this.group), {
+            this.$inertia.post(
+                route('groups.users.store', this.group),
+                {
                     user_id: this.user?.id,
-                })
-                .then(() => (this.sending = false));
+                },
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         loadUserList(query = '') {
             axios
@@ -127,10 +135,6 @@ export default {
                 .then((result) => {
                     this.userList = result.data.data;
                 });
-        },
-        searchUser(query, callback) {
-            this.loadUserList(query);
-            callback();
         },
     },
 };

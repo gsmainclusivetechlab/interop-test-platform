@@ -1,0 +1,18 @@
+{
+    "en": {
+        "card": {
+            "title": "Flow of {name}"
+        },
+        "buttons": {
+            "diagram-editor": "Diagram Editor"
+        }
+    },
+    "ru": {
+        "card": {
+            "title": "Поток для {name}"
+        },
+        "buttons": {
+            "diagram-editor": "Редактор Диаграмм"
+        }
+    }
+}

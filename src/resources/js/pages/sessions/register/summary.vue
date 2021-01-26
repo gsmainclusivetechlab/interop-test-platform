@@ -9,7 +9,8 @@
                     <dl
                         v-for="(question, i) in section.questions"
                         :key="i"
-                        :hidden="isHidden(section.id, question)"
+                        v-show="!isHidden(section.id, question)"
+                        class="q-a-list"
                     >
                         <dt>{{ question.question }}</dt>
                         <dd

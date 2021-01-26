@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AuditLog;
 use App\Models\Component;
 use App\Models\Group;
 use App\Models\QuestionnaireSection;
@@ -46,6 +47,11 @@ class InertiaServiceProvider extends ServiceProvider
                 return [
                     'debug' => env('APP_DEBUG'),
                     'dark_mode' => request()->cookie('dark_mode'),
+                    'locales' => [
+                        'default' => config('app.locale'),
+                        'selected' => app()->getLocale(),
+                        'supported' => config('app.locales'),
+                    ],
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
                     'available_session_modes_count' => collect(
                         config('service_session.available_modes')
@@ -130,6 +136,11 @@ class InertiaServiceProvider extends ServiceProvider
                                             'create',
                                             QuestionnaireSection::class
                                         ),
+                                ],
+                                'audit_log' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', AuditLog::class),
                                 ],
                             ],
                         ]

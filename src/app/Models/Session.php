@@ -3,14 +3,21 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Pivots\SessionComponent;
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Str;
 
 /**
- * @mixin \Eloquent
+ * @mixin Eloquent
  *
  * @property int $id
  * @property string $name
@@ -59,6 +66,7 @@ class Session extends Model
         'status',
         'reason',
         'description',
+        'use_encryption',
         'group_environment_id',
         'environments',
         'completed_at',
@@ -77,7 +85,7 @@ class Session extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function owner()
     {
@@ -85,7 +93,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function groupEnvironment()
     {
@@ -96,7 +104,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function components()
     {
@@ -105,11 +113,13 @@ class Session extends Model
             'session_components',
             'session_id',
             'component_id'
-        )->withPivot(['base_url']);
+        )
+            ->using(SessionComponent::class)
+            ->withPivot(['base_url', 'use_encryption', 'certificate_id']);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function testRuns()
     {
@@ -117,7 +127,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
     public function testResults()
     {
@@ -130,7 +140,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function messageLog()
     {
@@ -148,7 +158,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function testCases()
     {
@@ -163,7 +173,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function testCasesWithSoftDeletes()
     {
@@ -176,7 +186,7 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function testSteps()
     {
@@ -191,48 +201,35 @@ class Session extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function questionnaireAnswers()
     {
         return $this->hasMany(QuestionnaireAnswer::class);
     }
 
-    /**
-     * @return array
-     */
-    public function environments()
+    public function environments(): array
     {
-        $defaultUrl = config('app.url');
-
         return array_merge($this->environments ?? [], [
-            'SP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Service Provider')->firstOrFail(),
-                $defaultUrl
+            'SP_BASE_URI' => $this->getBaseUriForEnvironment(
+                'service-provider'
             ),
-            'MMO1_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where(
-                    'name',
-                    'Mobile Money Operator 1'
-                )->firstOrFail(),
-                $defaultUrl
-            ),
-            'MOJALOOP_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where('name', 'Mojaloop')->firstOrFail(),
-                $defaultUrl
-            ),
-            'MMO2_BASE_URI' => $this->getBaseUriOfComponent(
-                Component::where(
-                    'name',
-                    'Mobile Money Operator 2'
-                )->firstOrFail(),
-                $defaultUrl
-            ),
-            'CURRENT_TIMESTAMP_ISO8601' => now()->toIso8601String(),
-            'CURRENT_TIMESTAMP_ISO8601_ZULU' => now()->toIso8601ZuluString('m'),
-            'CURRENT_TIMESTAMP_RFC2822' => now()->toRfc2822String(),
-            'CURRENT_TIMESTAMP_RFC7231' => now()->toRfc7231String(),
+            'MMO1_BASE_URI' => $this->getBaseUriForEnvironment('mmo-1'),
+            'MOJALOOP_BASE_URI' => $this->getBaseUriForEnvironment('mojaloop'),
+            'MMO2_BASE_URI' => $this->getBaseUriForEnvironment('mmo-2'),
         ]);
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return string|null
+     */
+    public function getBaseUriForEnvironment(string $slug)
+    {
+        return $this->getBaseUriOfComponent(
+            Component::where('slug', $slug)->first()
+        );
     }
 
     /**
@@ -250,18 +247,26 @@ class Session extends Model
     /**
      * @param Component $component
      * @param string|null $default
+     * @param bool $forResolver
      *
      * @return string
      */
-    public function getBaseUriOfComponent(Component $component, $default = null)
-    {
-        return Arr::get(
-            $this->components()
-                ->whereKey($component->getKey())
-                ->first(),
+    public function getBaseUriOfComponent(
+        Component $component = null,
+        $default = null,
+        $forResolver = false
+    ) {
+        $url = Arr::get(
+            $component
+                ? $this->components()
+                    ->whereKey($component->getKey())
+                    ->first()
+                : [],
             'pivot.base_url',
             $default
         );
+
+        return $url && $forResolver ? Str::finish($url, '/') : $url;
     }
 
     /**
