@@ -102,5 +102,8 @@ workflows:
   build:
     jobs:
       - build:
+          filters:
+            tags:
+              only: /^v.*/
           context:
             - docker-hub
