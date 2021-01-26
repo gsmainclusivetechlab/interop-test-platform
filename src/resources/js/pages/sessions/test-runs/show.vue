@@ -20,9 +20,46 @@
                     >
                         <icon name="corner-down-left"></icon>
                     </inertia-link>
-                    <b>{{ `Run ID: #${testRun.id}` }}</b>
+                    <b class="mr-2">{{ `Run ID: #${testRun.id} - ` }}</b>
+                    <span
+                        class="mr-2"
+                        :class="{
+                            'text-success': testRun.completed_at,
+                        }"
+                    >
+                        {{ `${testRun.duration} ms` }}
+                    </span>
+                    <div v-if="!testRun.completed_at">
+                        <span class="spinner-border spinner-border-sm"></span>
+                        <span class="ml-1">Processing</span>
+                    </div>
+                    <template v-else>
+                        <span
+                            class="text-success d-flex align-items-center"
+                            v-if="testRun.successful"
+                        >
+                            <icon
+                                name="circle-check"
+                                class="icon-md mr-1"
+                            ></icon>
+                            Pass
+                        </span>
+                        <span
+                            class="text-danger d-flex align-items-center"
+                            v-else
+                        >
+                            <icon
+                                name="alert-circle"
+                                class="icon-md mr-1"
+                            ></icon>
+                            Fail
+                        </span>
+                    </template>
                 </h2>
                 <div class="card-options">
+                    <b v-if="testRun.passed || testRun.failures" class="mr-2"
+                        >Steps:</b
+                    >
                     <span
                         class="text-success mr-2 align-items-center d-flex"
                         v-if="testRun.passed"
@@ -31,7 +68,7 @@
                         {{ `${testRun.passed} Pass` }}
                     </span>
                     <span
-                        class="text-danger mr-2 align-items-center d-flex"
+                        class="text-danger align-items-center d-flex"
                         v-if="testRun.failures"
                     >
                         <icon name="alert-circle" class="icon-md mr-1"></icon>
@@ -87,21 +124,14 @@
                                         .data"
                                 >
                                     <li
-                                        v-if="
-                                            (testResultStep = collect(
-                                                testRun.testResults.data
-                                            ).firstWhere(
-                                                'testStep.id',
+                                        v-if="testResultSteps.has(testStep.id)"
+                                        :class="{
+                                            'active': testResultSteps.has(
                                                 testStep.id
-                                            ))
-                                        "
-                                        v-bind:class="{
-                                            'active':
-                                                testResult.testStep.data.id ===
-                                                testStep.id,
-                                            'list-group-item-action':
-                                                testResult.testStep.data.id !==
-                                                testStep.id,
+                                            ),
+                                            'list-group-item-action': !testResultSteps.has(
+                                                testStep.id
+                                            ),
                                         }"
                                         class="list-group-item p-0 rounded-0 border-0"
                                         :key="`step-${i}`"
@@ -129,56 +159,75 @@
                                                 <div
                                                     class="d-flex align-items-baseline text-truncate"
                                                     v-if="
-                                                        testResultStep.request
+                                                        testResultSteps.get(
+                                                            testStep.id
+                                                        ).request
                                                     "
                                                 >
                                                     <span
                                                         class="font-weight-bold"
-                                                        v-bind:class="{
+                                                        :class="{
                                                             'text-orange':
-                                                                testResultStep
-                                                                    .request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'POST',
                                                             'text-blue':
-                                                                testResultStep
-                                                                    .request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'PUT',
                                                             'text-red':
-                                                                testResultStep
-                                                                    .request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'DELETE',
                                                             'text-mint':
-                                                                testResultStep
-                                                                    .request
+                                                                testResultSteps.get(
+                                                                    testStep.id
+                                                                ).request
                                                                     .method ===
                                                                 'GET',
                                                         }"
                                                     >
                                                         {{
-                                                            testResultStep
-                                                                .request.method
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.method
                                                         }}
                                                     </span>
                                                     <span
                                                         class="d-inline-block ml-1 text-truncate"
-                                                        :title="`${testResultStep.request.method} ${testResultStep.request.path}`"
+                                                        :title="`${
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.method
+                                                        } ${
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.path
+                                                        }`"
                                                     >
                                                         {{
-                                                            testResultStep
-                                                                .request.path
+                                                            testResultSteps.get(
+                                                                testStep.id
+                                                            ).request.path
                                                         }}
                                                     </span>
                                                 </div>
                                             </div>
                                             <span
                                                 class="flex-shrink-0 badge mr-0"
-                                                v-bind:class="{
-                                                    'bg-success':
-                                                        testResultStep.successful,
-                                                    'bg-danger': !testResultStep.successful,
+                                                :class="{
+                                                    'bg-success': testResultSteps.get(
+                                                        testStep.id
+                                                    ).successful,
+                                                    'bg-danger': !testResultSteps.get(
+                                                        testStep.id
+                                                    ).successful,
                                                 }"
                                             >
                                             </span>
@@ -252,7 +301,7 @@
                             </div>
                             <div
                                 class="lead mb-2 py-3 px-4"
-                                v-bind:class="{
+                                :class="{
                                     'alert-success': testResult.successful,
                                     'alert-danger': !testResult.successful,
                                 }"
@@ -283,7 +332,7 @@
                                         <div class="d-flex align-items-center">
                                             <span
                                                 class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-4 w-5 mr-2 text-uppercase"
-                                                v-bind:class="{
+                                                :class="{
                                                     'bg-success':
                                                         testExecution.successful,
                                                     'bg-danger': !testExecution.successful,
@@ -296,7 +345,9 @@
                                                 }}
                                             </span>
                                             <button
-                                                :id="`test-execution-${testExecution.id}`"
+                                                v-b-modal="
+                                                    `test-execution-${testExecution.id}`
+                                                "
                                                 class="btn btn-link p-0 font-weight-normal"
                                                 type="button"
                                                 v-if="
@@ -311,10 +362,12 @@
                                                 {{ testExecution.name }}
                                             </span>
                                         </div>
-                                        <b-popover
-                                            :target="`test-execution-${testExecution.id}`"
-                                            triggers="click blur"
-                                            placement="bottom"
+                                        <b-modal
+                                            :id="`test-execution-${testExecution.id}`"
+                                            size="lg"
+                                            centered
+                                            hide-footer
+                                            :title="testExecution.name"
                                             v-if="
                                                 testExecution.actual ||
                                                 testExecution.expected ||
@@ -387,7 +440,7 @@
                                                     }}
                                                 </p>
                                             </div>
-                                        </b-popover>
+                                        </b-modal>
                                     </li>
                                 </ul>
                             </div>
@@ -793,7 +846,25 @@ export default {
             required: true,
         },
     },
+    watch: {
+        testRun: {
+            deep: true,
+            immediate: true,
+            handler() {
+                if (!this.testRun.completed_at) {
+                    setTimeout(() => {
+                        this.$inertia.reload(['testRun', 'testResult']);
+                    }, 2000);
+                }
+            },
+        },
+    },
     computed: {
+        testResultSteps() {
+            return new Map(
+                this.testRun.testResults.data.map((el) => [el.testStep.id, el])
+            );
+        },
         testResultRequestSetups() {
             let data = collect();
             collect(this.testResult.testStep.data.testSetups)
