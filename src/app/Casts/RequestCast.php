@@ -33,7 +33,7 @@ class RequestCast implements CastsAttributes
                 Arr::get($value, 'headers', []),
                 json_encode(Arr::get($value, 'body'))
             ),
-            Arr::get($value, 'delay', 0),
+            Arr::get($value, 'delay'),
         );
     }
 

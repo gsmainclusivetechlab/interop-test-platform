@@ -71,16 +71,18 @@ class SendingFulfilledHandler
             ($nextTestStep = $this->testResult->testStep->getNext()) &&
             !$this->session->getBaseUriOfComponent($nextTestStep->source)
         ) {
+            $delay = $nextTestStep->request->withSubstitutions(
+                $this->testResult->testRun->testResults,
+                $this->session
+            )->delay;
+
             ExecuteTestStepJob::dispatch(
                 $this->session,
                 $nextTestStep,
                 $this->testResult->testRun
             )->delay(
                 now()->addSeconds(
-                    $nextTestStep->request->withSubstitutions(
-                        $this->testResult->testRun->testResults,
-                        $this->session
-                    )->delay
+                    is_numeric($delay) ? $delay : 0
                 )
             );
         }
