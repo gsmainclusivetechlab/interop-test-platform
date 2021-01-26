@@ -13,14 +13,16 @@
                     @input="updateEnvironmentKey(index, $event.target.value)"
                     v-model="environment.key"
                 />
-                <!--                <input-->
-                <!--                    type="text"-->
-                <!--                    placeholder="Value"-->
-                <!--                    class="form-control"-->
-                <!--                    @input="updateEnvironmentValue(index, $event.target.value)"-->
-                <!--                    v-model="environment.value"-->
-                <!--                />-->
+                <input
+                    v-if="environment.file_name"
+                    type="text"
+                    placeholder="Value"
+                    class="form-control"
+                    v-model="environment.file_name"
+                    readonly
+                />
                 <b-form-file
+                    v-else
                     class="form-control"
                     placeholder="Choose file..."
                     @input="updateEnvironmentValue(index, $event)"
@@ -81,7 +83,11 @@ export default {
         syncEnvironments(value) {
             this.environments = [];
             for (let key in value) {
-                this.environments.push({ key: key, value: value[key] });
+                this.environments.push({
+                    key: value[key].name,
+                    value: value[key].id,
+                    file_name: value[key].file_name,
+                });
             }
         },
         addEnvironment() {

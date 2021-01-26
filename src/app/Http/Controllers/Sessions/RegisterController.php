@@ -18,6 +18,7 @@ use App\Http\Resources\{
 use App\Models\{
     Certificate,
     Component,
+    FileEnvironment,
     GroupEnvironment,
     QuestionnaireQuestions,
     QuestionnaireSection,
@@ -466,6 +467,11 @@ class RegisterController extends Controller
                             ])
                             ->all()
                     );
+
+                FileEnvironment::syncEnvironments(
+                    $session,
+                    Arr::get($request->all(), 'fileEnvironments')
+                );
 
                 if ($session->isComplianceSession()) {
                     $session->updateStatus(Session::STATUS_READY);

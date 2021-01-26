@@ -63,13 +63,7 @@ class GroupController extends Controller
                                 ->orWhere('name', 'like', "%{$q}%");
                         });
                     })
-                    ->with([
-                        'owner',
-                        'testCases' => function ($query) {
-                            return $query->with(['lastTestRun']);
-                        },
-                        'lastTestRun',
-                    ])
+                    ->with(['owner', 'lastTestRun'])
                     ->latest()
                     ->paginate()
             ),

@@ -16,6 +16,7 @@ use App\Http\Resources\{
 use App\Models\{
     Certificate,
     Component,
+    FileEnvironment,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
@@ -30,6 +31,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -160,6 +162,7 @@ class SessionController extends Controller
                 ]);
             },
             'groupEnvironment',
+            'fileEnvironments',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
         $sessionTestCasesGroupIds = $session->testCases->pluck(
@@ -345,6 +348,11 @@ class SessionController extends Controller
                             'environments',
                         ])
                         : $data
+                );
+
+                FileEnvironment::syncEnvironments(
+                    $session,
+                    Arr::get($request->all(), 'fileEnvironments')
                 );
 
                 $session->components->each(function (Component $component) use (

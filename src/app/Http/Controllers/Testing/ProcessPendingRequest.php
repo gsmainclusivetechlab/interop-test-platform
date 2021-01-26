@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Http\Controllers\Testing\Handlers\AttachJwsHeader;
 use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
 use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
 use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
@@ -61,6 +62,7 @@ class ProcessPendingRequest
         $options = $this->getRequestOptions();
 
         return (new PendingRequest($this->getResponse()))
+            ->mapRequest(new AttachJwsHeader($this->testResult))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
             ->transfer($this->request, $options)

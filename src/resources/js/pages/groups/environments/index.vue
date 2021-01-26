@@ -33,7 +33,10 @@
                                 {{ environment.name }}
                             </td>
                             <td class="text-break">
-                                {{ Object.keys(environment.variables).length }}
+                                {{
+                                    Object.keys(environment.variables).length +
+                                    Object.keys(environment.files).length
+                                }}
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

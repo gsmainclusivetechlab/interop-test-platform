@@ -34,20 +34,10 @@
                                 {{ session.owner.name }}
                             </td>
                             <td>
-                                {{
-                                    session.testCases
-                                        ? collect(session.testCases)
-                                              .unique('use_case_id')
-                                              .count()
-                                        : 0
-                                }}
+                                {{ session.useCasesCount }}
                             </td>
                             <td>
-                                {{
-                                    session.testCases
-                                        ? session.testCases.length
-                                        : 0
-                                }}
+                                {{ session.testCasesCount }}
                             </td>
                             <td>
                                 <session-progress :session="session" />

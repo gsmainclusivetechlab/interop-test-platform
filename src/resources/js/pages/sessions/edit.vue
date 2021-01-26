@@ -374,6 +374,23 @@
                                     }}</strong>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label class="col-sm-3">
+                                    <b>File environments</b>
+                                </label>
+                                <file-environments
+                                    v-model="form.fileEnvironments"
+                                    ref="fileEnvironments"
+                                />
+                                <div
+                                    class="text-danger small mt-2"
+                                    v-if="$page.props.errors.fileEnvironments"
+                                >
+                                    <strong>{{
+                                        $page.props.errors.fileEnvironments
+                                    }}</strong>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
@@ -423,6 +440,7 @@
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
+import FileEnvironments from '@/components/file-environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 import mixinVSelect from '@/components/v-select/mixin';
 
@@ -430,6 +448,7 @@ export default {
     components: {
         Layout,
         Environments,
+        FileEnvironments,
         TestCaseCheckboxes,
     },
     props: {
@@ -473,6 +492,7 @@ export default {
                     ? this.session.groupEnvironment.data.id
                     : null,
                 environments: this.session.environments,
+                fileEnvironments: this.session.fileEnvironments,
                 components: collect(this.components.data)
                     .map((component) => {
                         return collect(component)

@@ -4,13 +4,18 @@ namespace App\Models;
 
 use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
+use App\Http\Client\Request;
+use App\Http\Client\Response;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
  *
  * @property TestStep $testStep
+ * @property TestRun $testRun
  * @property Session $session
+ * @property Request $request
+ * @property Response $response
  */
 class TestResult extends Model
 {

@@ -14,6 +14,16 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
     const EMPTY_BODY = 'empty_body';
 
+    /** @var array */
+    protected $jws;
+
+    public function __construct($request, $jws = null)
+    {
+        parent::__construct($request);
+
+        $this->jws = $jws;
+    }
+
     public function urlForResolver()
     {
         return $this->host() ? $this->url() : ltrim($this->path(), '/');
@@ -22,6 +32,11 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function path(): string
     {
         return $this->request->getUri()->getPath();
+    }
+
+    public function jws()
+    {
+        return $this->jws;
     }
 
     public function host(): string
@@ -47,6 +62,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             'path' => $this->path(),
             'headers' => $this->headers(),
             'body' => $this->json(),
+            'jws' => $this->jws(),
         ];
     }
 
@@ -68,7 +84,8 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 $data['uri'],
                 $data['headers'],
                 json_encode($data['body'])
-            )
+            ),
+            $data['jws']
         );
     }
 
@@ -91,7 +108,8 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 $data['uri'],
                 $data['headers'],
                 json_encode($data['body'])
-            )
+            ),
+            $data['jws']
         );
     }
 

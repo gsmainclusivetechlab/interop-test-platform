@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Str;
@@ -37,6 +38,7 @@ use Str;
  * @property User $owner
  * @property TestCase[]|Collection $testCases
  * @property Component[]|Collection $components
+ * @property FileEnvironment[]|Collection $fileEnvironments
  */
 class Session extends Model
 {
@@ -208,16 +210,27 @@ class Session extends Model
         return $this->hasMany(QuestionnaireAnswer::class);
     }
 
+    public function fileEnvironments(): MorphMany
+    {
+        return $this->morphMany(FileEnvironment::class, 'environmentable');
+    }
+
     public function environments(): array
     {
-        return array_merge($this->environments ?? [], [
-            'SP_BASE_URI' => $this->getBaseUriForEnvironment(
-                'service-provider'
-            ),
-            'MMO1_BASE_URI' => $this->getBaseUriForEnvironment('mmo-1'),
-            'MOJALOOP_BASE_URI' => $this->getBaseUriForEnvironment('mojaloop'),
-            'MMO2_BASE_URI' => $this->getBaseUriForEnvironment('mmo-2'),
-        ]);
+        return array_merge(
+            $this->environments ?? [],
+            $this->fileEnvironments->pluck('path', 'name')->all(),
+            [
+                'SP_BASE_URI' => $this->getBaseUriForEnvironment(
+                    'service-provider'
+                ),
+                'MMO1_BASE_URI' => $this->getBaseUriForEnvironment('mmo-1'),
+                'MOJALOOP_BASE_URI' => $this->getBaseUriForEnvironment(
+                    'mojaloop'
+                ),
+                'MMO2_BASE_URI' => $this->getBaseUriForEnvironment('mmo-2'),
+            ]
+        );
     }
 
     /**

@@ -2,10 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\TestResult;
-use App\Models\TestRun;
-use App\Observers\TestResultObserver;
-use App\Observers\TestRunObserver;
+use App\Models\{GroupEnvironment, Session, TestResult, TestRun};
+use App\Observers\{TestResultObserver, TestRunObserver};
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +15,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerObservers();
+
+        Relation::morphMap([
+            'group_environment' => GroupEnvironment::class,
+            'session' => Session::class,
+        ]);
     }
 
     /**

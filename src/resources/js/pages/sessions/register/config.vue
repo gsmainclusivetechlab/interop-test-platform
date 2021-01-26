@@ -92,7 +92,10 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label"> File Environments </label>
-                        <file-environments v-model="form.fileEnvironments" />
+                        <file-environments
+                            v-model="form.fileEnvironments"
+                            ref="fileEnvironments"
+                        />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.props.errors.fileEnvironments"
@@ -180,6 +183,11 @@ export default {
                     this.form.environments = value.variables;
                     this.$refs.environments.syncEnvironments(
                         this.form.environments
+                    );
+
+                    this.form.fileEnvironments = value.files;
+                    this.$refs.fileEnvironments.syncEnvironments(
+                        this.form.fileEnvironments
                     );
                 }
             },

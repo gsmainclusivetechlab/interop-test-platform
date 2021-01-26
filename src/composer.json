@@ -6,10 +6,11 @@
     "require": {
         "php": "^7.3.0",
         "ext-json": "*",
-        "ext-zip": "*",
         "ext-openssl": "*",
+        "ext-zip": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
+        "gamegos/jws": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "inertiajs/inertia-laravel": "^0.3.4",
         "laravel/framework": "^8.0",

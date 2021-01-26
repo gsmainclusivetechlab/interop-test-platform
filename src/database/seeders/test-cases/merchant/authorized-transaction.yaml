@@ -54,6 +54,13 @@ test_steps:
     request:
       method: POST
       uri: /transactions
+      jws:
+        alg: RS256
+        key: '{{ env.CERTIFICATE_PATH }}'
+        protectedHeaders:
+          - x-callback-url
+          - x-date
+        header: FSPIOP-Signature
       headers:
         accept: 'application/json'
         content-type: 'application/json'
@@ -70,6 +77,9 @@ test_steps:
           - key: 'msisdn'
             value: '+33555789123'
     response:
+      jws:
+        key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
+        header: FSPIOP-Signature
       status: 202
       headers:
         content-type: 'application/json'
@@ -106,14 +116,28 @@ test_steps:
     request:
       method: POST
       uri: /transactionRequests
+      jws:
+        alg: RS256
+        key: '{{ env.CERTIFICATE_PATH }}'
+        protectedHeaders:
+          - FSPIOP-URI
+          - FSPIOP-HTTP-Method
+          - FSPIOP-Source
+          - FSPIOP-Destination
+          - Date
+        header: FSPIOP-Signature
+        transform: mojaloop
       headers:
         accept: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
         content-type: 'application/vnd.interoperability.transactionRequests+json;version=1.0'
-        date: '{{ new_date_rfc2822() }}'
-        fspiop-source: mmo1fsp'
-        fspiop-destination: 'mmo2fsp'
+        date: '{{ new_date_rfc7231() }}'
+        FSPIOP-Source: mmo1fsp
+        FSPIOP-Destination: mmo2fsp
+        FSPIOP-HTTP-Method: POST
+        FSPIOP-URI: /transactionRequests
       body:
         transactionRequestId: '{{ uuidv4() }}'
+        expiration: '2021-01-01T00:00:00.000Z'
         payee:
           partyIdInfo:
             partyIdType: 'MSISDN'

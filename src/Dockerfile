@@ -45,6 +45,15 @@ RUN if [ "${APP_ENV}" = "development" ]; then \
         php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer; \
     fi;
 
+COPY build/docker-bootstrap.sh /usr/local/bin/start
+
+# Use custom user to ensure correct permissions
+ARG HOST_UID=www-data:www-data
+RUN chmod +x /wait /usr/local/bin/start && \
+    mkdir -p /etc/nginx/ssl/default-certs && \
+    mkdir -p /etc/nginx/ssl/letsencrypt && \
+    chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx /run
+
 USER ${HOST_UID}
 
 WORKDIR /var/www/html
@@ -98,15 +107,6 @@ RUN if [ "${APP_ENV}" = "development" ]; then \
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
-
-COPY build/docker-bootstrap.sh /usr/local/bin/start
-
-# Use custom user to ensure correct permissions
-ARG HOST_UID=www-data:www-data
-RUN chmod +x /wait /usr/local/bin/start && \
-    mkdir -p /etc/nginx/ssl/default-certs && \
-    mkdir -p /etc/nginx/ssl/letsencrypt && \
-    chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx /run
 
 CMD ["/usr/local/bin/start"]
 
