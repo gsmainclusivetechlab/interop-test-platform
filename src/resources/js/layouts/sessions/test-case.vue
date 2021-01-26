@@ -27,13 +27,16 @@
                     <ul class="list-unstyled">
                         <li
                             v-if="
-                                session.components.data.length &&
-                                inArray(
-                                    session.components.data,
-                                    collect(testSteps.data)
-                                        .map((value) => value.source.id)
-                                        .unique()
-                                        .toArray()
+                                session.components.data &&
+                                session.components.data.length > 0 &&
+                                session.components.data.some((compEl) =>
+                                    Array.from(
+                                        new Set(
+                                            testSteps.data.map(
+                                                (stepEl) => stepEl.source.id
+                                            )
+                                        )
+                                    ).includes(compEl.id)
                                 )
                             "
                         >
@@ -52,83 +55,216 @@
                                     Download certificates
                                 </a>
                             </div>
-                            <div
-                                v-for="(component, i) in session.components
-                                    .data"
-                                :key="i"
+                            <template
+                                v-if="
+                                    $page.props.auth.user.groups &&
+                                    $page.props.auth.user.groups.length > 0 &&
+                                    $page.props.auth.user.groups.some(
+                                        (el) =>
+                                            el.default_session_id === session.id
+                                    )
+                                "
                             >
-                                <div
-                                    v-if="
-                                        inArray(
-                                            [component],
-                                            collect(testSteps.data)
-                                                .map((value) => value.source.id)
-                                                .unique()
-                                                .toArray()
-                                        )
-                                    "
+                                <button
+                                    type="button"
+                                    class="btn btn-link card-title dropdown-toggle px-0"
+                                    v-b-toggle="`by-groups`"
                                 >
-                                    <h3>{{ component.name }}</h3>
-                                    <div
-                                        class="mb-3"
-                                        v-for="(
-                                            connection, i
-                                        ) in component.connections"
-                                        :key="i"
+                                    By groups
+                                </button>
+                                <b-collapse id="by-groups">
+                                    <template
+                                        v-for="(group, i) in $page.props.auth
+                                            .user.groups"
                                     >
                                         <div
                                             v-if="
-                                                inArray(
-                                                    [connection],
-                                                    collect(testSteps.data)
-                                                        .map(
-                                                            (value) =>
-                                                                value.target.id
-                                                        )
-                                                        .unique()
-                                                        .toArray()
-                                                )
+                                                group.default_session_id ===
+                                                session.id
                                             "
+                                            :key="`group-${i}`"
                                         >
-                                            <label>
-                                                {{ connection.name }}
-                                            </label>
-                                            <div class="input-group">
-                                                <input
-                                                    :id="`testing-${component.id}-${connection.id}`"
-                                                    type="text"
-                                                    :value="
-                                                        component.use_encryption
-                                                            ? route(
-                                                                  'testing.sut',
-                                                                  [
-                                                                      session.uuid,
-                                                                      component.uuid,
-                                                                      connection.uuid,
-                                                                  ]
-                                                              )
-                                                            : route(
-                                                                  'testing-insecure.sut',
-                                                                  [
-                                                                      session.uuid,
-                                                                      component.uuid,
-                                                                      connection.uuid,
-                                                                  ]
-                                                              )
+                                            <h3 class="text-secondary">
+                                                {{ group.name }}
+                                            </h3>
+                                            <template
+                                                v-for="(component, j) in session
+                                                    .components.data"
+                                            >
+                                                <div
+                                                    v-if="
+                                                        Array.from(
+                                                            new Set(
+                                                                testSteps.data.map(
+                                                                    (el) =>
+                                                                        el
+                                                                            .source
+                                                                            .id
+                                                                )
+                                                            )
+                                                        ).includes(component.id)
                                                     "
-                                                    class="form-control"
-                                                    readonly
-                                                />
-                                                <clipboard-copy-btn
-                                                    :target="`#testing-${component.id}-${connection.id}`"
-                                                    title="Copy"
-                                                ></clipboard-copy-btn>
-                                            </div>
+                                                    :key="`component-${j}`"
+                                                >
+                                                    <h3>
+                                                        {{ component.name }}
+                                                    </h3>
+                                                    <div
+                                                        class="mb-3"
+                                                        v-for="(
+                                                            connection, k
+                                                        ) in component.connections"
+                                                        :key="`connection-${k}`"
+                                                    >
+                                                        <div
+                                                            v-if="
+                                                                Array.from(
+                                                                    new Set(
+                                                                        testSteps.data.map(
+                                                                            (
+                                                                                el
+                                                                            ) =>
+                                                                                el
+                                                                                    .target
+                                                                                    .id
+                                                                        )
+                                                                    )
+                                                                ).includes(
+                                                                    connection.id
+                                                                )
+                                                            "
+                                                        >
+                                                            <label>
+                                                                {{
+                                                                    connection.name
+                                                                }}
+                                                            </label>
+                                                            <div
+                                                                class="input-group"
+                                                            >
+                                                                <input
+                                                                    :id="`testing-${group.id}-${component.id}-${connection.id}`"
+                                                                    type="text"
+                                                                    :value="
+                                                                        component.use_encryption
+                                                                            ? route(
+                                                                                  'testing-group.sut',
+                                                                                  [
+                                                                                      group.id,
+                                                                                      component.uuid,
+                                                                                      connection.uuid,
+                                                                                  ]
+                                                                              )
+                                                                            : route(
+                                                                                  'testing-insecure-group.sut',
+                                                                                  [
+                                                                                      group.id,
+                                                                                      component.uuid,
+                                                                                      connection.uuid,
+                                                                                  ]
+                                                                              )
+                                                                    "
+                                                                    class="form-control"
+                                                                    readonly
+                                                                />
+                                                                <clipboard-copy-btn
+                                                                    :target="`#testing-${group.id}-${component.id}-${connection.id}`"
+                                                                    title="Copy"
+                                                                ></clipboard-copy-btn>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <hr />
                                         </div>
+                                    </template>
+                                </b-collapse>
+                            </template>
+                            <button
+                                type="button"
+                                class="btn btn-link card-title dropdown-toggle px-0"
+                                v-b-toggle="`by-session`"
+                            >
+                                By session
+                            </button>
+                            <b-collapse id="by-session">
+                                <template
+                                    v-for="(component, i) in session.components
+                                        .data"
+                                >
+                                    <div
+                                        v-if="
+                                            Array.from(
+                                                new Set(
+                                                    testSteps.data.map(
+                                                        (el) => el.source.id
+                                                    )
+                                                )
+                                            ).includes(component.id)
+                                        "
+                                        :key="`component-${i}`"
+                                    >
+                                        <h3>{{ component.name }}</h3>
+                                        <template
+                                            v-for="(
+                                                connection, j
+                                            ) in component.connections"
+                                        >
+                                            <div
+                                                v-if="
+                                                    Array.from(
+                                                        new Set(
+                                                            testSteps.data.map(
+                                                                (el) =>
+                                                                    el.target.id
+                                                            )
+                                                        )
+                                                    ).includes(connection.id)
+                                                "
+                                                class="mb-3"
+                                                :key="`connection-${j}`"
+                                            >
+                                                <label>
+                                                    {{ connection.name }}
+                                                </label>
+                                                <div class="input-group">
+                                                    <input
+                                                        :id="`testing-${component.id}-${connection.id}`"
+                                                        type="text"
+                                                        :value="
+                                                            component.use_encryption
+                                                                ? route(
+                                                                      'testing.sut',
+                                                                      [
+                                                                          session.uuid,
+                                                                          component.uuid,
+                                                                          connection.uuid,
+                                                                      ]
+                                                                  )
+                                                                : route(
+                                                                      'testing-insecure.sut',
+                                                                      [
+                                                                          session.uuid,
+                                                                          component.uuid,
+                                                                          connection.uuid,
+                                                                      ]
+                                                                  )
+                                                        "
+                                                        class="form-control"
+                                                        readonly
+                                                    />
+                                                    <clipboard-copy-btn
+                                                        :target="`#testing-${component.id}-${connection.id}`"
+                                                        title="Copy"
+                                                    ></clipboard-copy-btn>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <hr />
                                     </div>
-                                    <hr />
-                                </div>
-                            </div>
+                                </template>
+                            </b-collapse>
                         </li>
                         <li v-if="testCase.description">
                             <p>
@@ -294,21 +430,10 @@ export default {
     data() {
         return {
             hasEncrypted:
-                collect(this.session.components.data)
-                    .filter((component) => component.use_encryption)
-                    .count() > 0,
+                this.session.components.data?.filter(
+                    (component) => component.use_encryption
+                )?.length > 0,
         };
-    },
-    methods: {
-        inArray(components, array) {
-            let result = false;
-            components.forEach(function (component) {
-                if (array.includes(component.id)) {
-                    result = true;
-                }
-            });
-            return result;
-        },
     },
 };
 </script>

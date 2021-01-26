@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Group extends Model
 {
@@ -20,10 +22,15 @@ class Group extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'domain', 'description'];
+    protected $fillable = [
+        'name',
+        'domain',
+        'description',
+        'default_session_id',
+    ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users()
     {
@@ -38,7 +45,7 @@ class Group extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function environments()
     {
@@ -46,7 +53,7 @@ class Group extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function userInvitations()
     {
@@ -54,7 +61,7 @@ class Group extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function sessions()
     {
@@ -69,7 +76,17 @@ class Group extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return null | Session
+     */
+    public function getDefaultSessionAttribute()
+    {
+        return $this->sessions()
+            ->whereKey($this->default_session_id)
+            ->first();
+    }
+
+    /**
+     * @return BelongsToMany
      */
     public function testCases()
     {

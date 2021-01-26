@@ -449,6 +449,8 @@ class RegisterController extends Controller
                 'exists:group_environments,id',
             ],
             'environments' => ['nullable', 'array'],
+            'groupsDefault' => ['nullable', 'array'],
+            'groupsDefault.*.id' => ['required', 'exists:groups,id'],
         ]);
 
         try {
@@ -519,6 +521,18 @@ class RegisterController extends Controller
                             ])
                         );
                 });
+
+                if ($groupsDefault = $request->input('groupsDefault')) {
+                    auth()->user()
+                        ->groups()
+                        ->whereKey(Arr::pluck($groupsDefault, 'id'))
+                        ->wherePivot('admin', true)
+                        ->each(function ($group) use ($session) {
+                            $group->update([
+                                'default_session_id' => $session->id
+                            ]);
+                        });
+                }
 
                 return $session;
             });

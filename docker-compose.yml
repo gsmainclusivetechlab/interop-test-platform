@@ -70,7 +70,6 @@ services:
     env_file: ${ENV_FILE:-.env}
     environment:
       PROJECT_DOMAIN: ${PROJECT_DOMAIN}
-    container_name: certbot
     image: certbot/certbot
     restart: unless-stopped #+++
     volumes:
