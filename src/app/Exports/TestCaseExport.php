@@ -73,6 +73,7 @@ class TestCaseExport implements Exportable
                 'method' => $testStep->method,
                 'source' => $testStep->source->name,
                 'target' => $testStep->target->name,
+                'mtls' => $testStep->mtls,
                 'api_spec' => $testStep->apiSpec()->exists()
                     ? $testStep->apiSpec->name
                     : null,

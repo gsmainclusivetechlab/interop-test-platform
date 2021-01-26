@@ -1,0 +1,73 @@
+{
+    "en": {
+        "page": {
+            "title": "Test Case Create"
+        },
+        "inputs": {
+            "name": {
+                "label": "Name"
+            },
+            "slug": {
+                "label": "Slug"
+            },
+            "behavior": {
+                "label": "Behavior",
+                "placeholder": "Select behavior"
+            },
+            "use-case": {
+                "label": "Use Case",
+                "placeholder": "Select use case"
+            },
+            "precondition": {
+                "label": "Precondition"
+            },
+            "description": {
+                "label": "Description"
+            },
+            "components": {
+                "label": "Components",
+                "placeholder": "Select components"
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "create": "Create"
+        }
+    },
+
+    "ru": {
+        "page": {
+            "title": "Создать Тестовый Образец"
+        },
+        "inputs": {
+            "name": {
+                "label": "Имя"
+            },
+            "slug": {
+                "label": "Слаг"
+            },
+            "behavior": {
+                "label": "Состояние",
+                "placeholder": "Выберите состояние"
+            },
+            "use-case": {
+                "label": "Образец использования",
+                "placeholder": "Выберите образец использования"
+            },
+            "precondition": {
+                "label": "Условие"
+            },
+            "description": {
+                "label": "Описание"
+            },
+            "components": {
+                "label": "Компоненты",
+                "placeholder": "Выберите компонеты"
+            }
+        },
+        "buttons": {
+            "cancel": "Отмена",
+            "create": "Создать"
+        }
+    }
+}

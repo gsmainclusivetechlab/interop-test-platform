@@ -1,0 +1,56 @@
+{
+    "en": {
+        "page": {
+            "title": "Groups"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "email-filter": "Email Filter",
+                "users": "Users",
+                "sessions": "Sessions"
+            },
+            "menu": {
+                "edit": "Edit",
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete {name}?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        },
+        "buttons": {
+            "new-group": "New Group"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Группы"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "email-filter": "Email Фильтер",
+                "users": "Пользователи",
+                "sessions": "Сессии"
+            },
+            "menu": {
+                "edit": "Редактировать",
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены что хотите удалить {name}?"
+                    }
+                }
+            },
+            "no-results": "Результатов нет"
+        },
+        "buttons": {
+            "new-group": "Новая Группа"
+        }
+    }
+}

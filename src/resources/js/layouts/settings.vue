@@ -5,10 +5,10 @@
                 <div class="col-md-3">
                     <div class="page-header">
                         <h2 class="page-title">
-                            <b>Settings</b>
+                            <b>{{ $t('page.title') }}</b>
                         </h2>
                     </div>
-                    <div class="subheader mb-2">General</div>
+                    <div class="subheader mb-2">{{ $t('page.sub-title') }}</div>
                     <div class="list-group list-group-transparent">
                         <inertia-link
                             :href="route('settings.profile')"
@@ -17,7 +17,7 @@
                                 active: route().current('settings.profile'),
                             }"
                         >
-                            Profile
+                            {{ $t('tabs[0]') }}
                         </inertia-link>
                         <inertia-link
                             :href="route('settings.password')"
@@ -26,7 +26,7 @@
                                 active: route().current('settings.password'),
                             }"
                         >
-                            Change password
+                            {{ $t('tabs[1]') }}
                         </inertia-link>
                     </div>
                 </div>
@@ -45,8 +45,11 @@ export default {
     components: {
         Layout,
     },
-    metaInfo: {
-        title: 'Settings',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
 };
 </script>
+<i18n src="@locales/layout/settings.json"></i18n>

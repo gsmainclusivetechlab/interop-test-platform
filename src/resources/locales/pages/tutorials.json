@@ -1,0 +1,211 @@
+{
+    "en": {
+        "page": {
+            "title": "Tutorials"
+        },
+        "panel": [
+            {
+                "title": "How do I create a new session?",
+                "comment": "Click here to be directed to an interactive demo showing you the steps to create a new session."
+            },
+            {
+                "title": "How do I execute a session as a Service Provider?",
+                "comment": "Click here to learn more about Postman and links to collections you can use to simulate a Service Provider."
+            },
+            {
+                "title": "How do I execute a session as a Mobile Money Operator?",
+                "comment": "Click here to learn more about how you can execute test cases as a Mobile Money Operator."
+            },
+            {
+                "title": "Postman Collections",
+                "comment": "Click here to be taken to a list of Postman collections you can use on the test platform."
+            },
+            {
+                "title": "Learn more about Mojaloop",
+                "comment": "Click here to learn more about Mojaloop with links to documentations and specifications"
+            },
+            {
+                "title": "Learn more about Mobile Money API",
+                "comment": "Click here to learn more about the Mobile Money API with links to documentations and specifications"
+            }
+        ],
+        "drop-panel": [
+            {
+                "title": "How do I create a new session?",
+                "comment": "To start the interactive demo, simply press the \"Start interactive demo\" below and follow the red circle which will indicate where to click and give you additional information.",
+                "demo-steps": [
+                    "Start by creating a new session",
+                    "Select the System Under Test",
+                    "Let's select Service Provider, and enter our URL",
+                    "Press Next",
+                    "Add a name and select test cases by ticking the corresponding box",
+                    "Select test cases by ticking the corresponding box",
+                    "Select test cases by ticking the corresponding box",
+                    "Press Next when you are finished",
+                    "Configure your System Under Test using this data and press Confirm",
+                    "Your session has now been created and test cases can be accessed on the left. Click \"Reset Demo\" to start the demo again"
+                ]
+            },
+            {
+                "title": "How do I execute a session as a Service Provider?",
+                "comment": [
+                    "To start the interactive demo, simply press the \"Start interactive demo\" below and follow the red circle which will indicate where to click and give you additional information.",
+                    "You can find a Postman collection ready to use by clicking"
+                ],
+                "links": ["here"],
+                "demo-steps": [
+                    "First, select the session you would like to execute",
+                    "On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test",
+                    "This page details the test case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test",
+                    "Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs",
+                    "Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press \"Send\"",
+                    "You should now see your test run. Click to be taken to the test run page",
+                    "On this page are all the details about the test run. Clicking on any particular test will give you more information",
+                    "You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click \"Reset Demo\""
+                ]
+            },
+            {
+                "title": "How do I execute a session as a Mobile Money Operator?",
+                "comment": "To start the interactive demo, simply press the \"Start interactive demo\" below and follow the red circle which will indicate where to click and give you additional information.",
+                "demo-steps": [
+                    "First, select the session you would like to execute",
+                    "On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test",
+                    "This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test",
+                    "Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs",
+                    "In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run",
+                    "We should now be able to see the test run by returning to the test run page",
+                    "Click the test run to see more details",
+                    "Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results",
+                    "You can also see the request and response data and validation for each step of the use case flow. To start the demo again press \"Reset Demo\""
+                ]
+            },
+            {
+                "title": "Postman Collections",
+                "comment": "Below is an updated list of Postman Collections you can use in the test platform:",
+                "links": ["Service Provider Simulator"]
+            },
+            {
+                "title": "Learn more about Mojaloop",
+                "comment": "To learn more about Mojaloop, you can follow the links below:",
+                "links": ["Mojaloop documentation", "Mojaloop specification"]
+            },
+            {
+                "title": "Learn more about Mobile Money API",
+                "comment": "To learn more about the GSMA Mobile Money API, you can follow the links below:",
+                "links": [
+                    "GSMA Mobile Money API website",
+                    "GSMA Mobile Money API developer portal"
+                ]
+            }
+        ],
+        "buttons": {
+            "start-demo": "Start interactive demo",
+            "reset-demo": "Reset Demo"
+        }
+    },
+
+    "ru": {
+        "page": {
+            "title": "Руководство"
+        },
+        "panel": [
+            {
+                "title": "Как создать новую сессию?",
+                "comment": "Нажмите кнопку ниже, чтобы создать свой первый сессию."
+            },
+            {
+                "title": "Как мне выполнить сессию в качестве поставщика услуг?",
+                "comment": "Нажмите здесь, чтобы узнать больше о Postman и ссылках на коллекции, которые можно использовать для моделирования поставщика услуг."
+            },
+            {
+                "title": "Как мне выполнить сессию в качестве оператора мобильных денег?",
+                "comment": "Нажмите здесь, чтобы узнать больше о том, как выполнять тесты в качестве оператора мобильных денег"
+            },
+            {
+                "title": "Postman коллекции",
+                "comment": "Нажмите здесь, чтобы перейти к списку коллекций Postman, которые вы можете использовать на тестовой платформе"
+            },
+            {
+                "title": "Узнать больше о Mojaloop",
+                "comment": "Нажмите здесь, чтобы узнать больше о Mojaloop со ссылками на документацию и спецификации"
+            },
+            {
+                "title": "Узнать больше об Mobile Money API",
+                "comment": "Нажмите здесь, чтобы узнать больше об API мобильных денег со ссылками на документацию и спецификации"
+            }
+        ],
+        "drop-panel": [
+            {
+                "title": "Как мне создать новую сессию?",
+                "comment": "Чтобы запустить интерактивную демонстрацию, просто нажмите \"Начать интерактивную демонстрацию\" ниже и следуйте за красным кружком, который укажет, где нажать, и предоставит вам дополнительную информацию.",
+                "demo-steps": [
+                    "Начните с создания нового сессии",
+                    "Выберите тестируемую систему",
+                    "Выберем поставщика услуг и введем наш URL",
+                    "Нажмите Далее",
+                    "Добавьте имя и выберите тестовые случаи, отметив соответствующее поле",
+                    "Выберите тестовые случаи, отметив соответствующее поле",
+                    "Выберите тестовые случаи, отметив соответствующее поле",
+                    "Когда закончите, нажмите Далее",
+                    "Настройте тестируемую систему, используя эти данные, и нажмите Подтвердить",
+                    "Ваш сеанс создан, и тестовые примеры доступны слева. Нажмите \"Сбросить демо\", чтобы снова запустить демо"
+                ]
+            },
+            {
+                "title": "Как мне выполнить сеанс в качестве поставщика услуг?",
+                "comment": [
+                    "Чтобы запустить интерактивную демонстрацию, просто нажмите \"Начать интерактивную демонстрацию\" ниже и следуйте за красным кружком, который укажет где нажать и предоставит вам дополнительную информацию",
+                    "Вы можете найти готовую к использованию коллекцию Postman, нажав"
+                ],
+                "links": ["здесь"],
+                "demo-steps": [
+                    "Сначала выберите сеанс, который вы хотите выполнить",
+                    "На левой панели отображаются все выбранные вами тестовые примеры с информацией о предыдущих запусках. Выберите тот, который хотите протестировать",
+                    "На этой странице подробно описаны тестовый пример и тестовые прогоны. Вы также можете просмотреть поток вариантов использования и пример тестовых данных. Щелкните здесь, чтобы просмотреть ход этого теста",
+                    "Здесь показаны настройки конфигурации. Убедитесь, что ваша система правильно настроена для отправки и получения сообщений с этих URL-адресов",
+                    "Здесь мы используем Postman вместо настоящего SUT. Коллекции можно найти на странице руководств. Как только вся информация верна, нажмите \"Отправить\"",
+                    "Теперь вы должны увидеть свой тестовый запуск. Щелкните, чтобы перейти на страницу тестового запуска",
+                    "На этой странице представлена вся подробная информация о тестовом запуске. Нажав на любой конкретный тест, вы получите дополнительную информацию",
+                    "Вы также можете увидеть данные запроса и ответа и проверки тестов для каждого шага потока вариантов использования. Чтобы снова запустить демо, нажмите \"Сбросить демо\""
+                ]
+            },
+            {
+                "title": "Как мне выполнить сеанс в качестве оператора мобильных денег?",
+                "comment": "Чтобы запустить интерактивную демонстрацию, просто нажмите \"Начать интерактивную демонстрацию\" ниже и следуйте за красным кружком, который укажет, где щелкнуть, и предоставит вам дополнительную информацию.",
+                "demo-steps": [
+                    "Сначала выберите сеанс, который вы хотите выполнить",
+                    "На левой панели отображаются все выбранные вами тестовые примеры с информацией о предыдущих запусках. Выберите тот, который хотите протестировать",
+                    "На этой странице подробно описан вариант использования и тестовые запуски. Вы также можете просмотреть поток вариантов использования и пример тестовых данных. Щелкните здесь, чтобы просмотреть ход этого теста",
+                    "Здесь показаны настройки конфигурации. Убедитесь, что ваша система правильно настроена для отправки и получения сообщений с этих URL-адресов",
+                    "В этом тестовом примере мы видим, что поставщик услуг выполняет первый шаг. Щелкните Run Test Case, чтобы начать тестовый запуск",
+                    "Теперь мы должны увидеть тестовый запуск, вернувшись на страницу тестового запуска",
+                    "Щелкните тестовый запуск, чтобы увидеть более подробную информацию",
+                    "Здесь мы можем просмотреть все подробности о тестовом запуске для каждого отдельного шага. Нажав на выполненный тест, вы увидите ожидаемые и фактические результаты",
+                    "Вы также можете увидеть данные запроса и ответа и проверку для каждого шага потока вариантов использования. Чтобы снова запустить демонстрацию, нажмите \"Сбросить Демонстрацию\""
+                ]
+            },
+            {
+                "title": "Postman Коллекции",
+                "comment": "Ниже приведен обновленный список коллекций почтальонов, которые вы можете использовать на тестовой платформе:",
+                "links": ["Симулятор поставщика услуг"]
+            },
+            {
+                "title": "Узнать больше о Mojaloop",
+                "comment": "Чтобы узнать больше о Mojaloop, вы можете перейти по ссылкам ниже:",
+                "links": ["Документация Mojaloop", "Спецификация Mojaloop"]
+            },
+            {
+                "title": "Узнать больше об Mobile Money API",
+                "comment": "Чтобы узнать больше о GSMA Mobile Money API, вы можете перейти по ссылкам ниже:",
+                "links": [
+                    "GSMA Mobile Money API web сайт",
+                    "GSMA Mobile Money API портал разработчиков"
+                ]
+            }
+        ],
+        "buttons": {
+            "start-demo": "Начать интерактивную демонстрацию",
+            "reset-demo": "Сбросить демонстрацию"
+        }
+    }
+}

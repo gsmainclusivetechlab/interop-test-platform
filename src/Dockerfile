@@ -32,8 +32,6 @@ ARG APP_ENV=prod
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
 
-COPY build/docker-bootstrap.sh /usr/local/bin/start
-
 # Download phpredis sources to a dir that docker-php-ext-install will look in and make it aware it's there.
 RUN mkdir -p /usr/src/php/ext/redis && \
     curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 && \
@@ -46,11 +44,6 @@ RUN mkdir -p /usr/src/php/ext/redis && \
 RUN if [ "${APP_ENV}" = "development" ]; then \
         php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer; \
     fi;
-
-# Use custom user to ensure correct permissions
-ARG HOST_UID=www-data:www-data
-RUN chmod +x /wait /usr/local/bin/start && \
-    chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx  /run
 
 USER ${HOST_UID}
 
@@ -66,7 +59,7 @@ COPY --from=composer --chown=${HOST_UID} /app /var/www/html
 COPY --from=frontend --chown=${HOST_UID} /usr/src/app/public/assets /var/www/html/public/assets
 
 # Configure nginx to use the custom user
-RUN echo -e "user ${HOST_UID};\n\n$(cat /etc/nginx/nginx.conf)" > /etc/nginx/nginx.conf
+RUN echo -e "user www-data;\n\n$(cat /etc/nginx/nginx.conf)" > /etc/nginx/nginx.conf
 
 # Setup IDE helpers
 RUN if [ "${APP_ENV}" = "development" ]; then \
@@ -78,8 +71,42 @@ RUN chmod +x artisan && \
     php artisan dusk:chrome-driver 81 && \
     chmod -R 777 storage bootstrap/cache
 
+COPY build/client-CA-nginx-renew.sh /etc/periodic/hourly/client-CA-nginx-renew.sh
+COPY build/certbot-cert-nginx-reload.sh /etc/periodic/hourly/certbot-cert-nginx-reload.sh
+COPY build/nginx-includes /etc/nginx/includes
+
+USER root
+
+RUN chmod +x /etc/periodic/hourly/client-CA-nginx-renew.sh && \
+    chmod +x /etc/periodic/hourly/certbot-cert-nginx-reload.sh
+
+# Apply certbot SSL config if HTTPS_SSL_CERT=certbot
+ARG HTTPS_SSL_CERT=selfsigned
+ARG PROJECT_DOMAIN=itp-test-control.test
+
+RUN if [ "${HTTPS_SSL_CERT}" = 'certbot' ]; then \
+        sed 's?include /etc/nginx/includes/selfsigned-https.conf;?include /etc/nginx/includes/certbot-https.conf;?' -i /etc/nginx/nginx.conf; \
+        sed 's?example\.com?'${PROJECT_DOMAIN}'?' -i /etc/nginx/includes/certbot-https.conf; \
+        sed 's?.*server_name.*?server_name '${PROJECT_DOMAIN}';?' -i /etc/nginx/nginx.conf; \
+    fi;
+
+# Remove recidect drom http to https in dev mode
+RUN if [ "${APP_ENV}" = "development" ]; then \
+        sed 's?include /etc/nginx/includes/http-to-http-redirect.conf;??g' -i /etc/nginx/nginx.conf; \
+    fi;
+
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
+
+COPY build/docker-bootstrap.sh /usr/local/bin/start
+
+# Use custom user to ensure correct permissions
+ARG HOST_UID=www-data:www-data
+RUN chmod +x /wait /usr/local/bin/start && \
+    mkdir -p /etc/nginx/ssl/default-certs && \
+    mkdir -p /etc/nginx/ssl/letsencrypt && \
+    chown -R ${HOST_UID} /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx /run
 
 CMD ["/usr/local/bin/start"]
 

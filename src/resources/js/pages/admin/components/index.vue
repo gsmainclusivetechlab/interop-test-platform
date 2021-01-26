@@ -18,7 +18,7 @@
                 <div class="card-options">
                     <inertia-link
                         :href="route('admin.components.create')"
-                        v-if="$page.auth.user.can.components.create"
+                        v-if="$page.props.auth.user.can.components.create"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
@@ -34,19 +34,31 @@
                         <tr>
                             <th class="text-nowrap">#</th>
                             <th class="text-nowrap">Name</th>
+                            <th class="text-nowrap">Slug</th>
+                            <th class="text-nowrap">UUID</th>
                             <th class="text-nowrap">Base URL</th>
                             <th class="text-nowrap">Can be SUT</th>
                             <th class="text-nowrap">Connections</th>
+                            <th class="text-nowrap">Connected with</th>
                             <th class="text-nowrap w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="component in components.data">
+                        <tr
+                            v-for="(component, i) in components.data"
+                            :key="`component-${i}`"
+                        >
                             <td class="text-break">
                                 {{ component.position }}
                             </td>
                             <td class="text-break">
                                 {{ component.name }}
+                            </td>
+                            <td class="text-break">
+                                {{ component.slug }}
+                            </td>
+                            <td class="text-break">
+                                {{ component.uuid }}
                             </td>
                             <td class="text-break">
                                 {{ component.base_url }}
@@ -60,6 +72,13 @@
                                         ? component.connections.length
                                         : 0
                                 }}
+                            </td>
+                            <td>
+                                <span
+                                    v-for="connection in component.connections"
+                                >
+                                    {{ connection.name }}<br />
+                                </span>
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown

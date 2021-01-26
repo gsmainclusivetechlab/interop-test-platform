@@ -1,7 +1,7 @@
 <template>
     <b-progress
         class="w-100 h-3 rounded-0 progress"
-        v-b-tooltip.hover
+        v-b-tooltip.hover.top
         :title="title"
     >
         <b-progress-bar
@@ -16,27 +16,15 @@
 <script>
 export default {
     props: {
-        testCases: {
-            type: Array,
+        session: {
+            type: Object,
             required: false,
         },
     },
     data() {
-        let total = this.testCases ? this.testCases.length : 0;
-        let passed = this.testCases
-            ? collect(this.testCases)
-                  .flatMap((value) =>
-                      value.lastTestRun && value.lastTestRun.successful ? 1 : 0
-                  )
-                  .sum()
-            : 0;
-        let failures = this.testCases
-            ? collect(this.testCases)
-                  .flatMap((value) =>
-                      value.lastTestRun && !value.lastTestRun.successful ? 1 : 0
-                  )
-                  .sum()
-            : 0;
+        let total = this.session?.testCasesCount || 0;
+        let passed = this.session?.progress.passed || 0;
+        let failures = this.session?.progress.failures || 0;
         let unexecuted = total - passed - failures;
         let titles = [
             { name: `${passed} Pass`, total: passed },

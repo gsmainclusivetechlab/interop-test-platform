@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Import test case</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -12,20 +12,26 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <div class="mb-3">
-                                    <label class="form-label"> File </label>
+                                    <label class="form-label">{{
+                                        $t('inputs.file.label')
+                                    }}</label>
                                     <b-form-file
                                         v-model="form.file"
-                                        placeholder="Choose file..."
-                                        v-bind:class="{
-                                            'is-invalid': $page.errors.file,
+                                        :placeholder="
+                                            $t('inputs.file.placeholder')
+                                        "
+                                        :browse-text="$t('inputs.file.browse')"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.props.errors.file,
                                         }"
                                     />
                                     <span
-                                        v-if="$page.errors.file"
+                                        v-if="$page.props.errors.file"
                                         class="invalid-feedback"
                                     >
                                         <strong>
-                                            {{ $page.errors.file }}
+                                            {{ $page.props.errors.file }}
                                         </strong>
                                     </span>
                                 </div>
@@ -36,7 +42,7 @@
                                 :href="route('admin.test-cases.index')"
                                 class="btn btn-link"
                             >
-                                Cancel
+                                {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button
                                 type="submit"
@@ -47,7 +53,7 @@
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Import
+                                {{ $t('buttons.import') }}
                             </button>
                         </div>
                     </form>
@@ -61,8 +67,10 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Import test case',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -80,10 +88,13 @@ export default {
             this.sending = true;
             let data = new FormData();
             data.append('file', this.form.file);
-            this.$inertia
-                .post(route('admin.test-cases.import.confirm'), data)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.test-cases.import.confirm'), data, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/import.json"></i18n>

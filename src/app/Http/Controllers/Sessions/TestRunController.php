@@ -8,6 +8,7 @@ use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestResultResource;
 use App\Http\Resources\TestRunResource;
+use App\Http\Resources\TestStepResource;
 use App\Models\Component;
 use App\Models\TestCase;
 use App\Models\Session;
@@ -53,8 +54,13 @@ class TestRunController extends Controller
             'session' => (new SessionResource(
                 $session->load([
                     'components.connections',
-                    'testCases' => function ($query) {
-                        return $query->with(['useCase', 'lastTestRun']);
+                    'testCases' => function ($query) use ($session) {
+                        return $query->with([
+                            'useCase',
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                        ]);
                     },
                 ])
             ))->resolve(),
@@ -120,6 +126,12 @@ class TestRunController extends Controller
                     ])
                     ->firstOrFail()
             ))->resolve(),
+            'testSteps' => TestStepResource::collection(
+                $testCase
+                    ->testSteps()
+                    ->with(['source', 'target'])
+                    ->get()
+            ),
         ]);
     }
 }

@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Update group</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -11,65 +11,78 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label"> Name </label>
+                                <label class="form-label">{{
+                                    $t('inputs.name')
+                                }}</label>
                                 <input
                                     name="name"
                                     type="text"
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.name }}
+                                        {{ $page.props.errors.name }}
                                     </strong>
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Email Filter </label>
-                                <selectize
+                                <label class="form-label">{{
+                                    $t('inputs.email-filter.label')
+                                }}</label>
+                                <v-select
                                     v-model="domains"
                                     multiple
-                                    class="form-select"
+                                    taggable
+                                    push-tags
+                                    :selectable="
+                                        (option) =>
+                                            isSelectable(option, domains)
+                                    "
+                                    class="form-control d-flex p-0"
                                     :class="{
-                                        'is-invalid': $page.errors.domain,
+                                        'is-invalid': $page.props.errors.domain,
                                     }"
+                                    @input="setDomain"
                                 />
                                 <span
-                                    v-if="$page.errors.domain"
+                                    v-if="$page.props.errors.domain"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.domain }}
+                                        {{ $page.props.errors.domain }}
                                     </strong>
                                 </span>
                                 <div class="mt-1 text-muted small">
-                                    Only users whose email matches these filters
-                                    will be eligible to join the group
+                                    {{ $t('inputs.email-filter.comment') }}
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Description </label>
+                                <label class="form-label">{{
+                                    $t('inputs.description')
+                                }}</label>
                                 <textarea
                                     name="description"
                                     class="form-control"
                                     rows="5"
                                     v-model="form.description"
                                     :class="{
-                                        'is-invalid': $page.errors.description,
+                                        'is-invalid':
+                                            $page.props.errors.description,
                                     }"
                                 ></textarea>
                                 <span
-                                    v-if="$page.errors.description"
+                                    v-if="$page.props.errors.description"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.description }}
+                                        {{ $page.props.errors.description }}
                                     </strong>
                                 </span>
                             </div>
@@ -79,14 +92,14 @@
                                 :href="route('admin.groups.index')"
                                 class="btn btn-link"
                             >
-                                Cancel
+                                {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Update
+                                {{ $t('buttons.update') }}
                             </button>
                         </div>
                     </form>
@@ -98,10 +111,13 @@
 
 <script>
 import Layout from '@/layouts/main';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
-    metaInfo: {
-        title: 'Update group',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -112,32 +128,36 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
             domains: this.group.domain.split(', '),
             form: {
                 name: this.group.name,
-                domain: null,
+                domain: this.group.domain,
                 description: this.group.description,
             },
         };
     },
-    watch: {
-        domains: {
-            immediate: true,
-            handler: function (value) {
-                this.form.domain = value ? collect(value).implode(', ') : null;
-            },
-        },
-    },
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .put(route('admin.groups.update', this.group.id), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('admin.groups.update', this.group.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
+        },
+        setDomain(items) {
+            this.form.domain = items.length > 0 ? items.join(', ') : null;
         },
     },
 };
 </script>
+<i18n src="@locales/pages/admin/groups/create.json"></i18n>
+<i18n src="@locales/pages/admin/groups/edit.json"></i18n>

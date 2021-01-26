@@ -22,19 +22,6 @@ test_steps:
     api_spec: MM v1.1.2
     trigger:
       amount: '19'
-    test_response_setups:
-      - name: Override response
-        values:
-          status: 503
-          body:
-            errorCode: 'genericError'
-            errorCategory: 'internal'
-            errorDateTime: '2000-01-01T00:00:00.000Z'
-            errorDescription:
-              'The service is not currently available. This could be due to
-              network issues, issues with individual components or complete
-              systems outages. Regardless of the cause, the result means that
-              the request cannot be performed.'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
@@ -59,8 +46,8 @@ test_steps:
       headers:
         accept: 'application/json'
         content-type: 'application/json'
-        x-callback-url: '${SP_BASE_URI}/callback'
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-callback-url: '{{ env.SP_BASE_URI }}/callback'
+        x-date: '{{ new_date_iso8601() }}'
       body:
         amount: '19'
         currency: 'USD'
@@ -74,12 +61,12 @@ test_steps:
     response:
       status: 503
       headers:
-        x-date: '${CURRENT_TIMESTAMP_ISO8601}'
+        x-date: '{{ new_date_iso8601() }}'
         content-type: 'application/json'
       body:
         errorCode: 'genericError'
         errorCategory: 'internal'
-        errorDateTime: '2000-01-01T00:00:00.000Z'
+        errorDateTime: '{{ new_date_iso8601_zulu() }}'
         errorDescription:
           'The service is not currently available. This could be due to network
           issues, issues with individual components or complete systems outages.

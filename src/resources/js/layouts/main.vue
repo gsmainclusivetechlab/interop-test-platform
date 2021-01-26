@@ -29,11 +29,11 @@
                             class="sr-only toggle-input"
                             type="checkbox"
                             @change.prevent="$inertia.post(route('dark-mode'))"
-                            :checked="$page.app.dark_mode"
+                            :checked="$page.props.app.dark_mode"
                         />
                         <span
                             class="toggle-switch d-flex justify-content-between align-items-center rounded-pill"
-                            :class="{ enabled: $page.app.dark_mode }"
+                            :class="{ enabled: $page.props.app.dark_mode }"
                         >
                             <span class="toggle-switch-icon">
                                 <icon name="sun" />
@@ -43,108 +43,143 @@
                             </span>
                         </span>
                     </label>
+                    <locale-changer class="align-self-center mr-2" />
                     <b-navbar-nav class="flex-row">
                         <b-nav-item-dropdown
                             right
                             no-caret
                             menu-class="dropdown-menu-arrow"
                             toggle-class="align-items-center"
-                            class="admin-settings-dropdown"
+                            class="admin-settings-dropdown mr-2"
                             v-if="
-                                $page.auth.user.can.users.viewAny ||
-                                $page.auth.user.can.groups.viewAny ||
-                                $page.auth.user.can.sessions.viewAny ||
-                                $page.auth.user.can.api_specs.viewAny ||
-                                $page.auth.user.can.components.viewAny ||
-                                $page.auth.user.can.use_cases.viewAny ||
-                                $page.auth.user.can.message_log.viewAny ||
-                                $page.auth.user.can.test_cases.viewAny
+                                $page.props.auth.user.can.users.viewAny ||
+                                $page.props.auth.user.can.groups.viewAny ||
+                                $page.props.auth.user.can.sessions.viewAny ||
+                                $page.props.auth.user.can.api_specs.viewAny ||
+                                $page.props.auth.user.can.components.viewAny ||
+                                $page.props.auth.user.can.use_cases.viewAny ||
+                                $page.props.auth.user.can.message_log.viewAny ||
+                                $page.props.auth.user.can.test_cases.viewAny
                             "
                         >
                             <template v-slot:button-content>
                                 <icon name="settings" />
                             </template>
 
-                            <li v-if="$page.auth.user.can.users.viewAny">
+                            <li v-if="$page.props.auth.user.can.users.viewAny">
                                 <inertia-link
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Users
+                                    {{ $t('menu.users') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.groups.viewAny">
+                            <li v-if="$page.props.auth.user.can.groups.viewAny">
                                 <inertia-link
                                     :href="route('admin.groups.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Groups
+                                    {{ $t('menu.groups') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.sessions.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.sessions.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Sessions
+                                    {{ $t('menu.sessions') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.sessions.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.sessions.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="
                                         route('admin.compliance-sessions.index')
                                     "
                                     class="text-reset dropdown-item"
                                 >
-                                    Certification Sessions
+                                    {{ $t('menu.cert-sessions') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.api_specs.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.api_specs.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.api-specs.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Api Specs
+                                    {{ $t('menu.api-specs') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.components.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.components.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.components.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Components
+                                    {{ $t('menu.components') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.use_cases.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.use_cases.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.use-cases.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Use Cases
+                                    {{ $t('menu.use-cases') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.test_cases.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.test_cases.viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.test-cases.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Test Cases
+                                    {{ $t('menu.test-cases') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.message_log.viewAny">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.message_log
+                                        .viewAny
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.message-log')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Message Log
+                                    {{ $t('menu.message-log') }}
                                 </inertia-link>
                             </li>
-                            <li v-if="$page.auth.user.can.questionnaire.create">
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.questionnaire
+                                        .create
+                                "
+                            >
                                 <inertia-link
                                     :href="route('admin.questionnaire.import')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Import Questionnaire Definition
+                                    {{ $t('menu.import-question-def') }}
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -166,7 +201,7 @@
                                     <span class="text-default">
                                         {{
                                             string(
-                                                $page.auth.user.name
+                                                $page.props.auth.user.name
                                             ).truncate(30)
                                         }}
                                     </span>
@@ -177,7 +212,7 @@
                                     :href="route('settings.profile')"
                                     class="text-reset dropdown-item"
                                 >
-                                    Settings
+                                    {{ $t('user-menu.settings') }}
                                 </inertia-link>
                             </li>
                             <b-dropdown-divider></b-dropdown-divider>
@@ -187,7 +222,7 @@
                                     method="post"
                                     class="text-reset dropdown-item"
                                 >
-                                    Logout
+                                    {{ $t('user-menu.logout') }}
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -213,7 +248,9 @@
                                 >
                                     <icon name="activity" />
                                 </span>
-                                <span class="nav-link-title"> Dashboard </span>
+                                <span class="nav-link-title">
+                                    {{ $t('main-nav.dashboard') }}
+                                </span>
                             </inertia-link>
                         </li>
                         <li
@@ -231,7 +268,9 @@
                                 >
                                     <icon name="box" />
                                 </span>
-                                <span class="nav-link-title"> Sessions </span>
+                                <span class="nav-link-title">
+                                    {{ $t('main-nav.sessions') }}
+                                </span>
                             </inertia-link>
                         </li>
                         <li
@@ -249,7 +288,9 @@
                                 >
                                     <icon name="users" />
                                 </span>
-                                <span class="nav-link-title"> Groups </span>
+                                <span class="nav-link-title">
+                                    {{ $t('main-nav.groups') }}
+                                </span>
                             </inertia-link>
                         </li>
                         <li
@@ -267,7 +308,9 @@
                                 >
                                     <icon name="help" />
                                 </span>
-                                <span class="nav-link-title"> Tutorials </span>
+                                <span class="nav-link-title">
+                                    {{ $t('main-nav.tutorials') }}
+                                </span>
                             </inertia-link>
                         </li>
                         <li class="nav-item">
@@ -282,7 +325,7 @@
                                     <icon name="book" />
                                 </span>
                                 <span class="nav-link-title">
-                                    Documentation
+                                    {{ $t('main-nav.doc') }}
                                 </span>
                             </a>
                         </li>
@@ -297,18 +340,20 @@
                                 >
                                     <icon name="link" />
                                 </span>
-                                <span class="nav-link-title"> The Lab </span>
+                                <span class="nav-link-title">{{
+                                    $t('main-nav.lab')
+                                }}</span>
                             </a>
                         </li>
                     </b-navbar-nav>
 
                     <inertia-link
                         :href="route('sessions.register.type')"
-                        v-if="$page.app.available_session_modes_count > 0"
+                        v-if="$page.props.app.available_session_modes_count > 0"
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />
-                        New Session
+                        {{ $t('buttons.new-session') }}
                     </inertia-link>
                 </div>
             </b-collapse>
@@ -363,10 +408,14 @@
 
 <script>
 import Layout from '@/layouts/app';
+import LocaleChanger from '@/components/locale-changer';
 
 export default {
     components: {
         Layout,
+        LocaleChanger,
     },
 };
 </script>
+<i18n src="@locales/special-locales.json"></i18n>
+<i18n src="@locales/layout/main.json"></i18n>

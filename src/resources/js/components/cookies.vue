@@ -34,7 +34,9 @@ export default {
     data() {
         return {
             sending: false,
-            accepted: this.$page.app.cookies_accepted || !this.$page.auth.guest,
+            accepted:
+                this.$page.props.app.cookies_accepted ||
+                !this.$page.props.auth.guest,
         };
     },
     methods: {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
+use App\Http\Client\Request;
 use App\Http\Client\Response;
 use App\Models\Concerns\HasPosition;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  *
  * @property string $uuid
+ * @property int $source_id
+ * @property int $target_id
+ * @property bool $mtls
+ * @property Request $request
  * @property Response $response
+ *
+ * @property Component $source
+ * @property Component $target
  */
 class TestStep extends Model
 {
@@ -33,6 +41,7 @@ class TestStep extends Model
         'trigger',
         'request',
         'response',
+        'mtls',
     ];
 
     /**

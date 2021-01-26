@@ -1,0 +1,23 @@
+{
+    "en": {
+        "breadcrumb": {
+            "test-cases": "Test Cases",
+            "info": "Info",
+            "test-steps": "Test steps",
+            "test-flow": "Test Flow",
+            "groups": "Groups",
+            "versions": "Versions"
+        }
+    },
+
+    "ru": {
+        "breadcrumb": {
+            "test-cases": "Тестовые образцы",
+            "info": "Информация",
+            "test-steps": "Тестовые шаги",
+            "test-flow": "Тестовый поток",
+            "groups": "Группы",
+            "versions": "Версии"
+        }
+    }
+}

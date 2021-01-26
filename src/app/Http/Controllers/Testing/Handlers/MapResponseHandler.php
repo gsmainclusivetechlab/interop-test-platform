@@ -44,10 +44,28 @@ class MapResponseHandler
             }
         }*/
 
-        $testResponse = $testResponse->withSubstitutions(
-            $this->testResult->session->environments()
-        );
+        if (
+            !$this->testResult->session->hasComponent(
+                $this->testResult->testStep->target
+            )
+        ) {
+            $testResponse = $testResponse->withSubstitutions(
+                $this->testResult->testRun->testResults,
+                $this->testResult->session
+            );
+        }
         $this->testResult->update(['response' => $testResponse]);
+
+        if ($testResponse->isEmptyBody()) {
+            $data = $testResponse->toArray();
+            $testResponse = new Response(
+                new \GuzzleHttp\Psr7\Response(
+                    $data['status'],
+                    $data['headers'],
+                    null
+                )
+            );
+        }
 
         return $testResponse->toPsrResponse();
     }

@@ -1,0 +1,125 @@
+{
+    "en": {
+        "card": {
+            "title": "Edit"
+        },
+        "inputs": {
+            "method": {
+                "label": "Method",
+                "placeholder": "Select method"
+            },
+            "path": "Path",
+            "pattern": "Pattern",
+            "source": {
+                "label": "Source",
+                "placeholder": "Select source"
+            },
+            "target": {
+                "label": "Target",
+                "placeholder": "Select target"
+            },
+            "api-spec": {
+                "label": "API specification",
+                "placeholder": "Select API specification"
+            },
+            "trigger": "Trigger",
+            "test-scripts": {
+                "request": "Test Request Scripts",
+                "response": "Test Response Scripts",
+                "form": {
+                    "inputs": {
+                        "name": "Name",
+                        "rules": "Rules"
+                    },
+                    "modal": {
+                        "title": "Are you sure?",
+                        "text": "This test scripts will be deleted."
+                    },
+                    "buttons": {
+                        "delete": "Delete",
+                        "add-script": "Add New Script"
+                    }
+                }
+            },
+            "request": {
+                "headers": "Request Headers",
+                "body": "Request Body",
+                "uri": "Request URI"
+            },
+            "response": {
+                "headers": "Response Headers",
+                "body": "Response Body",
+                "status": {
+                    "label": "Response Status",
+                    "placeholder": "Select status"
+                }
+            }
+        },
+        "buttons": {
+            "update": "Update",
+            "cancel": "Cancel"
+        }
+    },
+
+    "ru": {
+        "card": {
+            "title": "Редактировать"
+        },
+        "inputs": {
+            "method": {
+                "label": "Метод",
+                "placeholder": "Выберите метод"
+            },
+            "path": "Путь",
+            "pattern": "Шаблон",
+            "source": {
+                "label": "Источник",
+                "placeholder": "Выберите источник"
+            },
+            "target": {
+                "label": "Цель",
+                "placeholder": "Выберите цель"
+            },
+            "api-spec": {
+                "label": "API спецификации",
+                "placeholder": "Выберите API спецификации"
+            },
+            "trigger": "Триггер",
+            "test-scripts": {
+                "request": "Скрипты Тестового Запроса",
+                "response": "Скрипты Тестового Ответа",
+                "form": {
+                    "inputs": {
+                        "name": "Имя",
+                        "rules": "Правила"
+                    },
+                    "modal": {
+                        "title": "Вы уверены?",
+                        "text": "Этот скрипт будет удален."
+                    },
+                    "buttons": {
+                        "delete": "Удалить",
+                        "add-script": "Добавить Новый Скрипт"
+                    }
+                }
+            },
+            "request": {
+                "headers": "Заголовки Запроса",
+                "body": "Тело Запроса",
+                "uri": "URI Запроса"
+            },
+            "response": {
+                "headers": "Заголовки Ответа",
+                "body": "Тело Ответа",
+                "status": {
+                    "label": "Статус Ответа",
+                    "placeholder": "Выберите статус"
+                }
+            }
+        },
+        "buttons": {
+            "update": "Обновить",
+            "cancel": "Отмена"
+        }
+    }
+}

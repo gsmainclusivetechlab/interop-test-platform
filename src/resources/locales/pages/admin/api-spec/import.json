@@ -1,0 +1,40 @@
+{
+    "en": {
+        "page": {
+            "title": "API Specs"
+        },
+        "inputs": {
+            "name": {
+                "label": "Name"
+            },
+            "file": {
+                "label": "File",
+                "placeholder": "Choose file ...",
+                "browse": "Browse"
+            }
+        },
+        "buttons": {
+            "import": "Import",
+            "cancel": "Cancel"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "API спецификации"
+        },
+        "inputs": {
+            "name": {
+                "label": "Имя"
+            },
+            "file": {
+                "label": "Файл",
+                "placeholder": "Выберите файл ...",
+                "browse": "Выбрать"
+            }
+        },
+        "buttons": {
+            "import": "Импорт",
+            "cancel": "Отмена"
+        }
+    }
+}

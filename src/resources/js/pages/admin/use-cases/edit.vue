@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>Update use case</b>
+                    <b>{{ $t('page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -11,42 +11,47 @@
                     <form class="card" @submit.prevent="submit">
                         <div class="card-body">
                             <div class="mb-3">
-                                <label class="form-label"> Name </label>
+                                <label class="form-label">{{
+                                    $t('inputs.name.label')
+                                }}</label>
                                 <input
                                     name="name"
                                     type="text"
                                     class="form-control"
                                     v-model="form.name"
                                     :class="{
-                                        'is-invalid': $page.errors.name,
+                                        'is-invalid': $page.props.errors.name,
                                     }"
                                 />
                                 <span
-                                    v-if="$page.errors.name"
+                                    v-if="$page.props.errors.name"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.name }}
+                                        {{ $page.props.errors.name }}
                                     </strong>
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label"> Description </label>
+                                <label class="form-label">{{
+                                    $t('inputs.description.label')
+                                }}</label>
                                 <textarea
                                     name="description"
                                     class="form-control"
                                     rows="5"
                                     v-model="form.description"
                                     :class="{
-                                        'is-invalid': $page.errors.description,
+                                        'is-invalid':
+                                            $page.props.errors.description,
                                     }"
                                 ></textarea>
                                 <span
-                                    v-if="$page.errors.description"
+                                    v-if="$page.props.errors.description"
                                     class="invalid-feedback"
                                 >
                                     <strong>
-                                        {{ $page.errors.description }}
+                                        {{ $page.props.errors.description }}
                                     </strong>
                                 </span>
                             </div>
@@ -56,14 +61,14 @@
                                 :href="route('admin.use-cases.index')"
                                 class="btn btn-link"
                             >
-                                Cancel
+                                {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button type="submit" class="btn btn-primary">
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Update
+                                {{ $t('buttons.update') }}
                             </button>
                         </div>
                     </form>
@@ -77,8 +82,8 @@
 import Layout from '@/layouts/main';
 
 export default {
-    metaInfo: {
-        title: 'Update use case',
+    metaInfo() {
+        return { title: this.$t('page.title') };
     },
     components: {
         Layout,
@@ -101,13 +106,18 @@ export default {
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .put(
-                    route('admin.use-cases.update', this.useCase.id),
-                    this.form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.put(
+                route('admin.use-cases.update', this.useCase.id),
+                this.form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
     },
 };
 </script>
+<i18n src="@locales/pages/admin/use-cases/create.json"></i18n>
+<i18n src="@locales/pages/admin/use-cases/edit.json"></i18n>

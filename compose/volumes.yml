@@ -10,6 +10,7 @@ services:
       - ./src/build/php-fpm.conf:/etc/php7/php-fpm.d/www.conf
       - ./src/build/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
       - ./src:/var/www/html
+      - ./src/build/client-CA-nginx-renew.sh:/etc/periodic/15min/client-CA-nginx-renew.sh
 
   mysqldb:
     volumes:

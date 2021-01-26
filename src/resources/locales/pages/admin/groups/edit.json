@@ -1,0 +1,18 @@
+{
+    "en": {
+        "page": {
+            "title": "Update group"
+        },
+        "buttons": {
+            "update": "Update"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Обновить группу"
+        },
+        "buttons": {
+            "update": "Обновить"
+        }
+    }
+}

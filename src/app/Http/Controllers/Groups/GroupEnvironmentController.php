@@ -17,14 +17,6 @@ use Inertia\Response;
 class GroupEnvironmentController extends Controller
 {
     /**
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(['auth', 'verified']);
-    }
-
-    /**
      * @param Group $group
      * @return Response
      * @throws AuthorizationException
@@ -120,7 +112,7 @@ class GroupEnvironmentController extends Controller
             ->environments()
             ->whereKey($environment->getKey())
             ->firstOrFail();
-        $this->authorize('update', $group);
+        $this->authorize('update', $environment);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'variables' => ['required', 'array'],

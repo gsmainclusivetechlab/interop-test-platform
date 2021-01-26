@@ -1,5 +1,8 @@
 <template>
-    <div class="page" v-bind:class="{ 'theme-dark': $page.app.dark_mode }">
+    <div
+        class="page"
+        v-bind:class="{ 'theme-dark': $page.props.app.dark_mode }"
+    >
         <slot />
         <cookies />
     </div>
@@ -28,7 +31,7 @@ export default {
                     href: '/assets/images/favicon/apple-touch-icon.png',
                 },
             ],
-            script: this.$page.app.debug
+            script: this.$page.props.app.debug
                 ? []
                 : [
                       {
@@ -56,7 +59,7 @@ export default {
     },
     methods: {
         showNotifications() {
-            collect(this.$page.messages).each((text, type) => {
+            collect(this.$page.props.messages).each((text, type) => {
                 new Noty({
                     type: type,
                     text: text,
@@ -67,7 +70,7 @@ export default {
         },
     },
     watch: {
-        '$page.messages': {
+        '$page.props.messages': {
             handler() {
                 this.showNotifications();
             },

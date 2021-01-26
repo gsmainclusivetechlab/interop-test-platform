@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-5" v-show="!isQuestionnaireStep">
+                <div class="row mb-5" v-if="!isQuestionnaireStep">
                     <div class="col">
                         <diagram>
                             graph LR;
@@ -70,9 +70,7 @@
                                     component.name
                                 }})<template
                                     v-if="
-                                        collect(session.sut)
-                                            .get('component_ids', [])
-                                            .includes(component.id)
+                                        session.sut && session.sut[component.id]
                                     "
                                     >:::is-active</template
                                 ><template v-else></template>;

@@ -1,0 +1,17 @@
+{
+    "en": {
+        "comment": ["Showing", "to", "of", "entry | entries"],
+        "buttons": {
+            "prev": "Prev",
+            "next": "Next"
+        }
+    },
+
+    "ru": {
+        "comment": ["Показано с", "по", "из", "записи | записей"],
+        "buttons": {
+            "prev": "Назад",
+            "next": "Вперед"
+        }
+    }
+}

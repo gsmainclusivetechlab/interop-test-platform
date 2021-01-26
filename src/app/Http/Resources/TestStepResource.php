@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Client\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TestStepResource extends JsonResource
@@ -18,9 +19,17 @@ class TestStepResource extends JsonResource
             'method' => $this->method,
             'pattern' => $this->pattern,
             'trigger' => $this->trigger,
-            'request' => optional($this->request)->toArray(),
+            'request' => optional(
+                optional($this->request)->toArray(),
+                function ($request) {
+                    $request['uri'] = rawurldecode($request['uri']);
+
+                    return $request;
+                }
+            ),
             'response' => optional($this->response)->toArray(),
             'position' => $this->position,
+            'mtls' => $this->mtls,
             'source' => new ComponentResource($this->whenLoaded('source')),
             'target' => new ComponentResource($this->whenLoaded('target')),
             'apiSpec' => new ApiSpecResource($this->whenLoaded('apiSpec')),

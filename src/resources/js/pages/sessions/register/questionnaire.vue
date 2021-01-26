@@ -13,35 +13,40 @@
                     <div
                         class="mb-3"
                         v-for="(question, i) in questions.data"
-                        :hidden="hidden[question.name]"
+                        v-show="!hidden[question.name]"
                         :key="i"
                     >
                         <label class="form-label">{{
                             question.question
                         }}</label>
-                        <selectize
-                            v-model="answers[question.name]"
-                            :class="{
-                                'is-invalid': $page.errors[question.name],
-                            }"
-                            :options="question.values"
+                        <v-select
+                            :value="answers[question.name]"
                             :multiple="question.type === 'multiselect'"
-                            :createItem="false"
-                            class="form-select"
+                            :options="question.values"
+                            label="label"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(option, answers[question.name])
+                            "
                             placeholder="Select answer..."
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors[question.name],
+                            }"
+                            @input="(value) => setAnswer(value, question.name)"
                         />
                         <span
-                            v-if="$page.errors[question.name]"
+                            v-if="$page.props.errors[question.name]"
                             class="invalid-feedback"
                         >
-                            {{ $page.errors[question.name] }}
+                            {{ $page.props.errors[question.name] }}
                         </span>
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    v-if="$page.app.available_session_modes_count > 1"
+                    v-if="$page.props.app.available_session_modes_count > 1"
                     :href="
                         section !== firstSection
                             ? route(
@@ -68,6 +73,7 @@
 
 <script>
 import Layout from '@/layouts/sessions/register';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
@@ -99,6 +105,7 @@ export default {
             required: true,
         },
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
@@ -110,65 +117,79 @@ export default {
             sectionDescription: collect(this.sections.data)
                 .where('id', parseInt(route().params.section))
                 .first().description,
-            form: {},
             answers: {},
+            hidden: {},
         };
-    },
-    mounted() {
-        this.updateAnswers();
     },
     methods: {
         submit() {
+            const form = Object.fromEntries(
+                Object.entries(this.answers)
+                    .filter(([key, value]) => value ?? false)
+                    .map(([key, value]) => [
+                        key,
+                        Array.isArray(value)
+                            ? Object.values(value).map((val) => val.id)
+                            : value.id,
+                    ])
+            );
+
             this.sending = true;
-            this.$inertia
-                .post(
-                    route(
-                        'sessions.register.questionnaire.store',
-                        this.section
-                    ),
-                    this.form
-                )
-                .then(() => (this.sending = false));
+            this.$inertia.post(
+                route('sessions.register.questionnaire.store', this.section),
+                form,
+                {
+                    onFinish: () => {
+                        this.sending = false;
+                    },
+                }
+            );
         },
         updateAnswers() {
-            if (
-                this.session &&
-                this.session.questionnaire &&
-                this.session.questionnaire[this.section]
-            ) {
-                const sessionAnswers = this.session.questionnaire[this.section];
-                const answers = {};
+            if (!this?.session?.questionnaire?.[this.section]) return;
 
-                Object.keys(sessionAnswers).forEach((name) => {
-                    const question = collect(this.questions.data)
-                        .where('name', name)
-                        .first();
+            const sessionAnswers = this.session.questionnaire[this.section];
 
-                    if (question.type === 'multiselect') {
-                        answers[name] = [];
+            Object.keys(sessionAnswers).forEach((name) => {
+                const question = collect(this.questions.data)
+                    .where('name', name)
+                    .first();
 
-                        Object.values(sessionAnswers[name]).forEach(
-                            (answer) => {
-                                answers[name].push(
-                                    this.getValue(question, answer)
-                                );
-                            }
-                        );
-                    } else {
-                        answers[name] = this.getValue(
-                            question,
-                            sessionAnswers[name]
-                        );
-                    }
-                });
-
-                this.answers = answers;
-            }
+                if (question.type === 'multiselect') {
+                    this.answers[name] = Object.values(
+                        sessionAnswers[name]
+                    ).map((answer) => this.getValue(question, answer));
+                } else {
+                    this.answers[name] = this.getValue(
+                        question,
+                        sessionAnswers[name]
+                    );
+                }
+            });
         },
-        availablePreconditions: function (question) {
-            const preconditions = question.preconditions;
+        setAnswer(values, name) {
+            Object.values(this.questions.data).forEach((question) => {
+                const hide =
+                    Object.keys(question.preconditions).length > 0 &&
+                    !this.availablePreconditions(question);
 
+                if (this.hidden[question.name] !== hide) {
+                    this.hidden[question.name] = hide;
+                    this.answers[question.name] = null;
+                }
+
+                if (
+                    JSON.stringify(this.answers[name]) !==
+                    JSON.stringify(values)
+                ) {
+                    this.answers[name] = values;
+                }
+            });
+        },
+        availablePreconditions(question) {
+            const preconditions = question.preconditions;
             let result = false;
+
             Object.keys(preconditions).forEach((attribute) => {
                 if (this.answers[attribute]) {
                     const answers = Array.isArray(this.answers[attribute])
@@ -197,42 +218,7 @@ export default {
             return collect(question.values).where('id', name).first();
         },
     },
-    computed: {
-        hidden() {
-            let result = {};
-            Object.values(this.questions.data).forEach((question) => {
-                result[question.name] =
-                    Object.keys(question.preconditions).length > 0 &&
-                    !this.availablePreconditions(question);
-            });
-
-            return result;
-        },
-    },
     watch: {
-        answers: {
-            deep: true,
-            immediate: true,
-            handler(answers) {
-                Object.values(this.questions.data).forEach((question) => {
-                    const name = question.name;
-
-                    if (answers[name]) {
-                        if (Array.isArray(answers[name])) {
-                            this.form[name] = [];
-
-                            Object.values(answers[name]).forEach((value) => {
-                                this.form[name].push(value.id);
-                            });
-                        } else {
-                            this.form[name] = answers[name].id;
-                        }
-                    } else {
-                        this.form[name] = null;
-                    }
-                });
-            },
-        },
         questions: {
             immediate: true,
             handler() {
@@ -244,7 +230,24 @@ export default {
                     .where('id', parseInt(route().params.section))
                     .first().description;
 
-                if (this.$page.errors?.length === 0) this.updateAnswers();
+                if (Object.keys(this.$page.props.errors).length === 0) {
+                    this.answers = Object.fromEntries(
+                        Object.values(this.questions.data).map((q) => [
+                            q.name,
+                            null,
+                        ])
+                    );
+
+                    this.updateAnswers();
+
+                    this.hidden = Object.fromEntries(
+                        Object.values(this.questions.data).map((q) => [
+                            q.name,
+                            Object.keys(q.preconditions).length > 0 &&
+                                !this.availablePreconditions(q),
+                        ])
+                    );
+                }
             },
         },
     },

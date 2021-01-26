@@ -74,7 +74,7 @@
                         <template
                             v-else-if="session.status === 'in_verification'"
                         >
-                            <template v-if="$page.auth.user.is_admin">
+                            <template v-if="$page.props.auth.user.is_admin">
                                 <span
                                     ><i
                                         >Please review the test results, and
@@ -175,8 +175,9 @@
                                 >
                                     <dt>{{ question.question }}</dt>
                                     <dd
-                                        v-for="(answer,
-                                        i) in question.answersNames"
+                                        v-for="(
+                                            answer, i
+                                        ) in question.answersNames"
                                         :key="i"
                                     >
                                         {{ answer }}

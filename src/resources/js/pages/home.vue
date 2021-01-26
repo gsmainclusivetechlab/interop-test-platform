@@ -3,15 +3,15 @@
         <div
             class="alert alert-danger text-center"
             role="alert"
-            v-if="$page.app.available_session_modes_count === 0"
+            v-if="$page.props.app.available_session_modes_count === 0"
         >
-            No test modes are enabled in the environment
+            {{ $t('alerts.no-modes') }}
         </div>
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        <b>Latest sessions</b>
+                        <b>{{ $t('page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -23,30 +23,29 @@
                         <div class="row">
                             <div class="col-10 mx-auto">
                                 <p class="empty-title h3 mb-3">
-                                    You have no sessions
+                                    {{ $t('content.title') }}
                                 </p>
                                 <p
                                     class="empty-subtitle text-muted mb-0"
                                     v-if="
-                                        $page.app
+                                        $page.props.app
                                             .available_session_modes_count > 0
                                     "
                                 >
-                                    Click the button below to create your first
-                                    session.
+                                    {{ $t('content.comment') }}
                                 </p>
                                 <div class="empty-action">
                                     <inertia-link
                                         :href="route('sessions.register.type')"
                                         v-if="
-                                            $page.app
+                                            $page.props.app
                                                 .available_session_modes_count >
                                             0
                                         "
                                         class="btn btn-primary"
                                     >
                                         <icon name="plus" />
-                                        New Session
+                                        {{ $t('buttons.new-session') }}
                                     </inertia-link>
                                 </div>
                             </div>
@@ -65,7 +64,7 @@
                         class="card-header flex-column align-items-start h-100 border-bottom py-4"
                     >
                         <div class="d-flex align-items-center w-100 mb-2">
-                            <session-progress :testCases="session.testCases" />
+                            <session-progress :session="session" />
                         </div>
                         <h2 class="card-title w-100 text-truncate">
                             <inertia-link
@@ -85,7 +84,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="briefcase"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Use Case"
                                 />
                                 <span>
@@ -106,7 +105,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="file-text"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Test Case"
                                 />
                                 <span>{{
@@ -119,7 +118,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="clock"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Last Run"
                                 />
                                 <span>{{
@@ -130,7 +129,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="user"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Owner"
                                 />
                                 <span>{{ session.owner.name }}</span>
@@ -139,7 +138,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="chart-candle"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Type"
                                 />
                                 <span>{{ session.typeName }}</span>
@@ -148,7 +147,7 @@
                                 <icon
                                     class="icon_dashboard-session mr-1"
                                     name="list-check"
-                                    v-b-tooltip.hover
+                                    v-b-tooltip.hover.top
                                     title="Status"
                                 />
                                 <span>{{ session.statusName }}</span>
@@ -166,8 +165,10 @@ import Layout from '@/layouts/main';
 import SessionProgress from '@/components/sessions/progress';
 
 export default {
-    metaInfo: {
-        title: 'Dashboard',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
@@ -181,3 +182,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/home.json"></i18n>

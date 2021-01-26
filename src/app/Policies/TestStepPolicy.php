@@ -16,7 +16,7 @@ class TestStepPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -26,7 +26,7 @@ class TestStepPolicy
      */
     public function view(User $user, TestStep $model)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -35,7 +35,7 @@ class TestStepPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -45,7 +45,7 @@ class TestStepPolicy
      */
     public function update(User $user, TestStep $model)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 
     /**
@@ -55,6 +55,6 @@ class TestStepPolicy
      */
     public function delete(User $user, TestStep $model)
     {
-        return $user->isAdmin();
+        return $user->isTestCaseCreator();
     }
 }

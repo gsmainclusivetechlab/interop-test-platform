@@ -2,98 +2,117 @@
     <layout>
         <form class="card" @submit.prevent="submit">
             <div class="card-header">
-                <h2 class="card-title">Create</h2>
+                <h2 class="card-title">{{ $t('page.title') }}</h2>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <label class="form-label">Name</label>
+                        <label class="form-label">{{
+                            $t('inputs.name.label')
+                        }}</label>
                         <input
                             name="name"
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.name,
+                                'is-invalid': $page.props.errors.name,
                             }"
                             v-model="name"
                         />
-                        <span v-if="$page.errors.name" class="invalid-feedback">
+                        <span
+                            v-if="$page.props.errors.name"
+                            class="invalid-feedback"
+                        >
                             <strong>
-                                {{ $page.errors.name }}
+                                {{ $page.props.errors.name }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Slug</label>
+                        <label class="form-label">{{
+                            $t('inputs.slug.label')
+                        }}</label>
                         <input
                             name="slug"
                             type="text"
                             class="form-control"
                             :class="{
-                                'is-invalid': $page.errors.slug,
+                                'is-invalid': $page.props.errors.slug,
                             }"
                             v-model="slug"
                         />
-                        <span v-if="$page.errors.slug" class="invalid-feedback">
+                        <span
+                            v-if="$page.props.errors.slug"
+                            class="invalid-feedback"
+                        >
                             <strong>
-                                {{ $page.errors.slug }}
+                                {{ $page.props.errors.slug }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Behavior</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors.behavior,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.behavior.label')
+                        }}</label>
+                        <v-select
                             v-model="behavior"
-                            placeholder="Select behavior"
                             :options="
                                 collect(
-                                    $page.enums.test_case_behaviors
+                                    $page.props.enums.test_case_behaviors
                                 ).toArray()
                             "
-                            :disableSearch="false"
-                            :createItem="false"
+                            :selectable="
+                                (option) => isSelectable(option, behavior)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.behavior.placeholder')"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.behavior,
+                            }"
                         />
                         <span
-                            v-if="$page.errors.behavior"
+                            v-if="$page.props.errors.behavior"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.behavior }}
+                                {{ $page.props.errors.behavior }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Use Case</label>
-                        <selectize
-                            class="form-select"
-                            :class="{
-                                'is-invalid': $page.errors.use_case_id,
-                            }"
+                        <label class="form-label">{{
+                            $t('inputs.use-case.label')
+                        }}</label>
+                        <v-select
                             v-model="useCase"
+                            :options="$page.props.useCases"
+                            :selectable="
+                                (option) => isSelectable(option, useCase)
+                            "
                             label="name"
-                            placeholder="Select use case"
-                            :options="$page.useCases"
-                            :disableSearch="false"
-                            :createItem="false"
+                            :placeholder="$t('inputs.use-case.placeholder')"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.use_case_id,
+                            }"
                         />
                         <span
-                            v-if="$page.errors.use_case_id"
+                            v-if="$page.props.errors.use_case_id"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.use_case_id }}
+                                {{ $page.props.errors.use_case_id }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Precondition</label>
+                        <label class="form-label">{{
+                            $t('inputs.precondition.label')
+                        }}</label>
                         <text-editor
                             :class="{
-                                'is-invalid': $page.errors.precondition,
+                                'is-invalid': $page.props.errors.precondition,
                             }"
                             :menu-items="[
                                 'bold',
@@ -110,19 +129,21 @@
                             @output-html="(content) => (precondition = content)"
                         />
                         <span
-                            v-if="$page.errors.precondition"
+                            v-if="$page.props.errors.precondition"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.precondition }}
+                                {{ $page.props.errors.precondition }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Description</label>
+                        <label class="form-label">{{
+                            $t('inputs.description.label')
+                        }}</label>
                         <text-editor
                             :class="{
-                                'is-invalid': $page.errors.description,
+                                'is-invalid': $page.props.errors.description,
                             }"
                             :menu-items="[
                                 'bold',
@@ -139,38 +160,41 @@
                             @output-html="(content) => (description = content)"
                         />
                         <span
-                            v-if="$page.errors.description"
+                            v-if="$page.props.errors.description"
                             class="invalid-feedback"
                         >
                             <strong>
-                                {{ $page.errors.description }}
+                                {{ $page.props.errors.description }}
                             </strong>
                         </span>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label">Components</label>
-                        <selectize
+                        <label class="form-label">{{
+                            $t('inputs.components.label')
+                        }}</label>
+                        <v-select
                             v-model="components"
+                            :options="$page.props.components"
                             multiple
-                            class="form-select"
-                            placeholder="Select components"
-                            :class="{
-                                'is-invalid': $page.errors.components_id,
-                            }"
+                            :selectable="
+                                (option) => isSelectable(option, components)
+                            "
                             label="name"
-                            :options="$page.components"
-                            :createItem="false"
-                            :disableSearch="true"
+                            :placeholder="$t('inputs.components.placeholder')"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.components_id,
+                            }"
                         />
                         <span
-                            v-if="$page.errors.components_id"
+                            v-if="$page.props.errors.components_id"
                             class="invalid-feedback"
                         >
                             <strong>
                                 {{
-                                    collect($page.errors.components_id).implode(
-                                        ' '
-                                    )
+                                    collect(
+                                        $page.props.errors.components_id
+                                    ).implode(' ')
                                 }}
                             </strong>
                         </span>
@@ -182,14 +206,14 @@
                     :href="route('admin.test-cases.index')"
                     class="btn btn-link"
                 >
-                    Cancel
+                    {{ $t('buttons.cancel') }}
                 </inertia-link>
                 <button type="submit" class="btn btn-primary">
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
                     ></span>
-                    Create
+                    {{ $t('buttons.create') }}
                 </button>
             </div>
         </form>
@@ -198,32 +222,38 @@
 
 <script>
 import Layout from '@/layouts/main';
+import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
-    metaInfo: {
-        title: 'Test Case Create',
+    metaInfo() {
+        return {
+            title: this.$t('page.title'),
+        };
     },
     components: {
         Layout,
     },
+    mixins: [mixinVSelect],
     data() {
         return {
             sending: false,
-            name: '',
-            slug: '',
-            behavior: '',
-            useCase: {},
-            description: '',
-            precondition: '',
+            name: null,
+            slug: null,
+            behavior: null,
+            useCase: null,
+            description: null,
+            precondition: null,
             components: [],
         };
     },
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia
-                .post(route('admin.test-cases.store'), this.form)
-                .then(() => (this.sending = false));
+            this.$inertia.post(route('admin.test-cases.store'), this.form, {
+                onFinish: () => {
+                    this.sending = false;
+                },
+            });
         },
     },
     computed: {
@@ -231,10 +261,10 @@ export default {
             const form = {
                 name: this.name,
                 slug: this.slug,
-                behavior: collect(this.$page.enums.test_case_behaviors)
+                behavior: collect(this.$page.props.enums.test_case_behaviors)
                     .flip()
-                    .all()[this.behavior],
-                use_case_id: this.useCase?.id,
+                    .all()[this?.behavior],
+                use_case_id: this.useCase?.id ?? null,
                 components_id: this.components?.map((el) => el.id),
                 description: this.description,
                 precondition: this.precondition,
@@ -245,3 +275,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/create.json"></i18n>

@@ -44,13 +44,7 @@ class HomeController extends Controller
                             });
                         });
                 })
-                    ->with([
-                        'owner',
-                        'testCases' => function ($query) {
-                            return $query->with(['useCase', 'lastTestRun']);
-                        },
-                        'lastTestRun',
-                    ])
+                    ->with(['owner', 'lastTestRun'])
                     ->latest()
                     ->limit(12)
                     ->get()
