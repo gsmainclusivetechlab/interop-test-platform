@@ -76,8 +76,11 @@ jobs:
             docker-compose -f docker-compose.ci.yml down -v
       # - publish_tag:
       #     img_tag: << pipeline.git.revision >>
-      - publish_tag:
-          img_tag: << pipeline.git.branch >>
+      - when:
+          condition: << pipeline.git.branch >>
+          steps:
+            - publish_tag:
+                img_tag: << pipeline.git.branch >>
       - when:
           condition: << pipeline.git.tag >>
           steps:
