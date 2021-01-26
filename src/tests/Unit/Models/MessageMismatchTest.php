@@ -16,7 +16,7 @@ class MessageMismatchTest extends TestCase
     {
         $messageMismatch = factory(MessageMismatch::class)->make();
         $this->assertValidationPasses($messageMismatch->getAttributes(), [
-            'request' => ['required', 'string', 'max:255'],
+            'request' => ['required'],
             'exception' => ['string'],
         ]);
         $this->assertTrue($messageMismatch->save());

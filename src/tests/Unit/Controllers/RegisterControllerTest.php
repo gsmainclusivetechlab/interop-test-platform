@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Component;
 use App\Models\GroupEnvironment;
+use App\Models\Session;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -98,6 +99,7 @@ class RegisterControllerTest extends TestCase
         $group = factory(GroupEnvironment::class)->create()->getKey();
         $testcase = factory(\App\Models\TestCase::class)->create()->getKey();
         $component = factory(Component::class)->create()->getKey();
+        $session = factory(Session::class)->create();
         $this->assertIsInt($group);
         $user = factory(User::class)->create(['role' => User::ROLE_USER]);
         $response = $this->actingAs($user)
@@ -115,12 +117,12 @@ class RegisterControllerTest extends TestCase
                              ]
                          ])
                          ->post(route('sessions.register.config.store'), [
-            'group_environment_id' => $user,
-            'environments' => ["environment1", "environment2"],
+            'group_environment_id' => $group,
         ]);
 
+        $response->assertSessionHasNoErrors();
         $response->assertStatus(302);
-        $response->assertRedirect(route('sessions.show'));
+        $response->assertRedirect(route('sessions.show', $session));
     }
 
 }
