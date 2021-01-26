@@ -75,7 +75,14 @@ class SendingFulfilledHandler
                 $this->session,
                 $nextTestStep,
                 $this->testResult->testRun
-            )->delay(now()->addSeconds($nextTestStep->request->delay));
+            )->delay(
+                now()->addSeconds(
+                    $nextTestStep->request->withSubstitutions(
+                        $this->testResult->testRun->testResults,
+                        $this->session
+                    )->delay
+                )
+            );
         }
 
         if ($this->testResult->testStep->isLastPosition()) {
