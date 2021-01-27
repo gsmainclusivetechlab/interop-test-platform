@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -87,6 +90,14 @@ class GroupUserController extends Controller
         $group->users()->attach($request->input('user_id'), [
             'admin' => !$group->users()->exists(),
         ]);
+
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_INVITE(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.users.index', $group)

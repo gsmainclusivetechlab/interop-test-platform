@@ -1,0 +1,23 @@
+Create user group on host machine with a fixed ID 1024:
+
+Mac:
+```sh
+dscl . -create /Groups/interop-devs
+dscl . -create /Groups/interop-devs name interop-devs
+dscl . -create /Groups/interop-devs passwd "*"
+dscl . -create /Groups/interop-devs gid 33
+dscl . -create /Groups/interop-devs GroupMembership clittle
+```
+
+Linux:
+```sh
+adduser clittle interop-devs
+```
+
+Ensure that the source code is owned and editable by this group
+```sh
+chown -R :1024 src/
+chmod -R 775 src/
+chmod -R g+s src/
+```
+

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserInvitationResource;
 use App\Models\Group;
 use App\Models\GroupUserInvitation;
 use App\Http\Controllers\Controller;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -99,6 +102,14 @@ class GroupUserInvitationController extends Controller
             'expired_at' => env('INVITATION_LIFETIME', 432000),
         ]);
         $userInvitation->sendEmailInvitationNotification();
+
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_INVITE(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.user-invitations.index', $group)

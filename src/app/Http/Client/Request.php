@@ -14,11 +14,16 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
     const EMPTY_BODY = 'empty_body';
 
-    public $delay;
+    /** @var array */
+    protected $jws;
 
-    public function __construct($request, $delay = 0)
+    protected $delay;
+
+    public function __construct($request, $jws = null, $delay = 0)
     {
         parent::__construct($request);
+
+        $this->jws = $jws;
         $this->delay = $delay;
     }
 
@@ -30,6 +35,16 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function path(): string
     {
         return $this->request->getUri()->getPath();
+    }
+
+    public function jws()
+    {
+        return $this->jws;
+    }
+
+    public function delay()
+    {
+        return $this->delay;
     }
 
     public function host(): string
@@ -55,7 +70,8 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             'path' => $this->path(),
             'headers' => $this->headers(),
             'body' => $this->json(),
-            'delay' => $this->delay,
+            'jws' => $this->jws(),
+            'delay' => $this->delay(),
         ];
     }
 
@@ -78,6 +94,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 $data['headers'],
                 json_encode($data['body'])
             ),
+            $data['jws'],
             $data['delay'],
         );
     }
@@ -102,6 +119,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 $data['headers'],
                 json_encode($data['body'])
             ),
+            $data['jws'],
             $data['delay'],
         );
     }

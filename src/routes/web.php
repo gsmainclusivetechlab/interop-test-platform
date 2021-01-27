@@ -31,6 +31,10 @@ Route::namespace('Groups')
     ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::resource('groups', 'GroupController')->only(['index', 'show']);
+        Route::put(
+            'groups/{group}/toggle-default-session/{session}',
+            'GroupController@toggleDefaultSession'
+        )->name('groups.toggle-default-session');
         Route::resource('groups.users', 'GroupUserController')->only([
             'index',
             'create',
@@ -200,7 +204,7 @@ Route::name('testing-insecure.')
     ->group(function () {
         Route::any(
             '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
-            'SutController'
+            'SutController@testingSession'
         )
             ->name('sut')
             ->where('path', '.*');
@@ -212,7 +216,7 @@ Route::name('testing.')
     ->group(function () {
         Route::any(
             '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
-            'SutController'
+            'SutController@testingSession'
         )
             ->name('sut')
             ->where('path', '.*');
@@ -221,6 +225,30 @@ Route::name('testing.')
             'SimulatorController'
         )
             ->name('simulator')
+            ->where('path', '.*');
+    });
+
+Route::name('testing-insecure-group.')
+    ->prefix('testing-insecure-group')
+    ->namespace('Testing')
+    ->group(function () {
+        Route::any(
+            '{group}/{componentId}/{connectionId}/sut/{path?}',
+            'SutController@testingGroup'
+        )
+            ->name('sut')
+            ->where('path', '.*');
+    });
+
+Route::name('testing-group.')
+    ->prefix('testing-group')
+    ->namespace('Testing')
+    ->group(function () {
+        Route::any(
+            '{group}/{componentId}/{connectionId}/sut/{path?}',
+            'SutController@testingGroup'
+        )
+            ->name('sut')
             ->where('path', '.*');
     });
 
@@ -259,6 +287,10 @@ Route::name('admin.')
             'message-log',
             '\App\Http\Controllers\MessageLogController@admin'
         )->name('message-log');
+        Route::get(
+            'audit-log',
+            '\App\Http\Controllers\AuditLogController@admin'
+        )->name('audit-log');
         Route::resource('sessions', 'SessionController')->only(['index']);
         Route::name('compliance-sessions.')
             ->prefix('compliance-sessions')

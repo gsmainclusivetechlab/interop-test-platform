@@ -1,0 +1,45 @@
+# N.B. this docker-compose file is only designed for use in development,
+# testing and building. For production use, see the interop-release-config
+# repository (TODO)
+version: '3.7'
+
+x-php-defaults: &php-defaults
+
+services:
+  app:
+    image: gsmainclusivetechlab/interop-test-platform:latest
+    build:
+      context: src
+      dockerfile: $PWD/Dockerfiles/production.Dockerfile
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    env_file: service.env
+    depends_on:
+      - mysqldb
+    environment:
+      CONTAINER_ROLE: app
+      PROJECT_DOMAIN: www.example.com
+      HTTPS_SSL_CERT: selfsigned
+      WAIT_HOSTS: mysqldb:3306
+      WAIT_SLEEP_INTERVAL: 5
+      WAIT_HOSTS_TIMEOUT: 100
+      QUEUE_CONNECTION: sync
+
+  mysqldb:
+    image: gsmainclusivetechlab/interop-test-platform/mysqldb:latest
+    build:
+      context: mysqldb
+    env_file: service.env
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  mysqldata:
+  redisdata:
+  storage:

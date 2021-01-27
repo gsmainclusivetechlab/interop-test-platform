@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Testing;
 
+use App\Http\Controllers\Testing\Handlers\AttachJwsHeader;
 use App\Http\Controllers\Testing\Handlers\{
     MapRequestHandler,
     MapResponseHandler,
@@ -63,6 +64,7 @@ class ProcessPendingRequest
         $options = $this->getRequestOptions();
 
         $result = (new PendingRequest($this->getResponse()))
+            ->mapRequest(new AttachJwsHeader($this->testResult))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
             ->transfer($this->request, $options)
@@ -76,7 +78,7 @@ class ProcessPendingRequest
             $delay = $this->testResult->testStep->response->withSubstitutions(
                 $this->testResult->testRun->testResults,
                 $this->session
-            )->delay;
+            )->delay();
 
             sleep(is_numeric($delay) ? (int) $delay : 0);
         }

@@ -6,11 +6,11 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Models\Component;
+use App\Models\Group;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\ServerRequestInterface;
-use Str;
 
 class SutController extends Controller
 {
@@ -23,7 +23,65 @@ class SutController extends Controller
      *
      * @return mixed
      */
-    public function __invoke(
+    public function testingSession(
+        Session $session,
+        string $componentId,
+        string $connectionId,
+        string $path,
+        ServerRequestInterface $request
+    ) {
+        return $this->testing(
+            $session,
+            $componentId,
+            $connectionId,
+            $path,
+            $request
+        );
+    }
+
+    /**
+     * @param Group $group
+     * @param string $componentId
+     * @param string $connectionId
+     * @param string $path
+     * @param ServerRequestInterface $request
+     *
+     * @return mixed
+     */
+    public function testingGroup(
+        Group $group,
+        string $componentId,
+        string $connectionId,
+        string $path,
+        ServerRequestInterface $request
+    ) {
+        abort_if(
+            !($session = $group->defaultSession),
+            404,
+            __(
+                'No default session has been configured for the specified group.'
+            )
+        );
+
+        return $this->testing(
+            $session,
+            $componentId,
+            $connectionId,
+            $path,
+            $request
+        );
+    }
+
+    /**
+     * @param Session $session
+     * @param string $componentId
+     * @param string $connectionId
+     * @param string $path
+     * @param ServerRequestInterface $request
+     *
+     * @return mixed
+     */
+    protected function testing(
         Session $session,
         string $componentId,
         string $connectionId,

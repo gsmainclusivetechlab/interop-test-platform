@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers\Groups;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\GroupEnvironmentResource;
 use App\Http\Resources\GroupResource;
+use App\Models\FileEnvironment;
 use App\Models\Group;
 use App\Http\Controllers\Controller;
 use App\Models\GroupEnvironment;
+use Arr;
+use Exception;
+use App\Utils\AuditLogUtil;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -66,9 +73,26 @@ class GroupEnvironmentController extends Controller
         $this->authorize('admin', $group);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'variables' => ['required', 'array'],
+            'variables' => [
+                Rule::requiredIf($request->get('variables')),
+                'array',
+            ],
+            'files' => ['nullable', 'array'],
         ]);
-        $group->environments()->create($request->input());
+        $environment = $group->environments()->create($request->input());
+
+        FileEnvironment::syncEnvironments(
+            $environment,
+            $request->file('files')
+        );
+
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::GROUP_ENVIRONMENT(),
+            AuditTypeEnum::GROUP_TYPE,
+            $group->id,
+            $request->toArray()
+        );
 
         return redirect()
             ->route('groups.environments.index', $group)
@@ -115,9 +139,18 @@ class GroupEnvironmentController extends Controller
         $this->authorize('update', $environment);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'variables' => ['required', 'array'],
+            'variables' => [
+                Rule::requiredIf($request->get('variables')),
+                'array',
+            ],
+            'files' => ['nullable', 'array'],
         ]);
         $environment->update($request->input());
+
+        FileEnvironment::syncEnvironments(
+            $environment,
+            Arr::get($request->all(), 'files')
+        );
 
         return redirect()
             ->route('groups.environments.index', $group)
@@ -129,7 +162,7 @@ class GroupEnvironmentController extends Controller
      * @param GroupEnvironment $environment
      * @return RedirectResponse
      * @throws AuthorizationException
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Group $group, GroupEnvironment $environment)
     {
@@ -138,6 +171,13 @@ class GroupEnvironmentController extends Controller
             ->whereKey($environment->getKey())
             ->firstOrFail();
         $this->authorize('delete', $environment);
+
+        $environment
+            ->fileEnvironments()
+            ->each(function (FileEnvironment $fileEnvironment) {
+                $fileEnvironment->delete();
+            });
+
         $environment->delete();
 
         return redirect()

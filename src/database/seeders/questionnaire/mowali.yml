@@ -1,0 +1,29 @@
+name: Mowali Questionnaire
+questions:
+  section-usecase:
+    name: 'Use Cases'
+    description:
+      'First, we need to know what use cases you would like to be tested for.'
+    questions:
+      - property: p2p-supported
+        question: Does your engine support P2P Transfers?
+        type: select
+        values:
+          'yes': Yes, it does
+          'no': No, it doesn't
+      - property: setup-callbacks
+        question:
+          Would you like MPOP to update the Mojaloop callback URLs to point at
+          the MPOP proxy?
+        type: select
+        values:
+          'yes': Yes please
+          'no': No, I will do it myself
+
+test_cases:
+  mowali-setup-callbacks:
+    setup-callbacks: 'in:yes'
+  mowali-p2p-send-rejected:
+    p2p-supported: 'in:yes'
+  mowali-p2p-send:
+    p2p-supported: 'in:yes'

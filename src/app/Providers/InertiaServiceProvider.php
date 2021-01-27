@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\GroupUserResource;
+use App\Models\AuditLog;
 use App\Models\Component;
 use App\Models\Group;
 use App\Models\QuestionnaireSection;
@@ -11,6 +13,7 @@ use App\Models\TestCase;
 use App\Models\UseCase;
 use App\Models\MessageLog;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\ViewErrorBag;
 use Inertia\Inertia;
@@ -72,6 +75,15 @@ class InertiaServiceProvider extends ServiceProvider
                             'is_admin' => auth()
                                 ->user()
                                 ->isAdmin(),
+                            'groups' => auth()
+                                ->user()
+                                ->groups->map(function ($group) {
+                                    return Arr::add(
+                                        $group,
+                                        'isAdmin',
+                                        $group->hasAdminUser(auth()->user())
+                                    );
+                                }),
                             'can' => [
                                 'users' => [
                                     'viewAny' => auth()
@@ -135,6 +147,11 @@ class InertiaServiceProvider extends ServiceProvider
                                             'create',
                                             QuestionnaireSection::class
                                         ),
+                                ],
+                                'audit_log' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', AuditLog::class),
                                 ],
                             ],
                         ]

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Exceptions\MessageMismatchException;
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Http\Requests\SessionSutRequest;
@@ -18,6 +20,7 @@ use App\Http\Resources\{
 use App\Models\{
     Certificate,
     Component,
+    FileEnvironment,
     GroupEnvironment,
     QuestionnaireQuestions,
     QuestionnaireSection,
@@ -28,6 +31,7 @@ use App\Models\{
     UseCase
 };
 use Arr;
+use App\Utils\AuditLogUtil;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -84,7 +88,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|Res/snse
      */
     public function showTypeForm()
     {
@@ -449,6 +453,9 @@ class RegisterController extends Controller
                 'exists:group_environments,id',
             ],
             'environments' => ['nullable', 'array'],
+            'fileEnvironments' => ['nullable', 'array'],
+            'groupsDefault' => ['nullable', 'array'],
+            'groupsDefault.*.id' => ['required', 'exists:groups,id'],
         ]);
 
         try {
@@ -465,6 +472,11 @@ class RegisterController extends Controller
                             ])
                             ->all()
                     );
+
+                FileEnvironment::syncEnvironments(
+                    $session,
+                    Arr::get($request->all(), 'fileEnvironments')
+                );
 
                 if ($session->isComplianceSession()) {
                     $session->updateStatus(Session::STATUS_READY);
@@ -520,8 +532,29 @@ class RegisterController extends Controller
                         );
                 });
 
+                if ($groupsDefault = $request->input('groupsDefault')) {
+                    auth()
+                        ->user()
+                        ->groups()
+                        ->whereKey(Arr::pluck($groupsDefault, 'id'))
+                        ->wherePivot('admin', true)
+                        ->each(function ($group) use ($session) {
+                            $group->update([
+                                'default_session_id' => $session->id,
+                            ]);
+                        });
+                }
+
                 return $session;
             });
+            // log session creation
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_CREATED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
             $request->session()->remove('session');
 
             return redirect()

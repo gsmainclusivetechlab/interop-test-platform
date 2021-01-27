@@ -7,6 +7,7 @@ use App\Models\Session;
 use App\Models\TestResult;
 use App\Testing\TestExecutionListener;
 use App\Testing\Tests\RequestMtlsValidationTest;
+use App\Testing\Tests\ResponseJwsValidationTest;
 use App\Testing\TestScriptLoader;
 use App\Testing\TestSpecLoader;
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
@@ -55,6 +56,19 @@ class SendingFulfilledHandler
         $testSuite->addTestSuite(
             (new TestScriptLoader())->load($this->testResult)
         );
+        if ($this->testResult->testStep->response->jws()) {
+            $testSuite->addTest(
+                new ResponseJwsValidationTest(
+                    $this->testResult,
+                    $this->testResult->testStep->response
+                        ->withSubstitutions(
+                            $this->testResult->testRun->testResults,
+                            $this->testResult->session
+                        )
+                        ->jws()
+                )
+            );
+        }
         $testSuiteResult = new TestSuiteResult();
         $testSuiteResult->addListener(
             new TestExecutionListener($this->testResult)
@@ -74,7 +88,7 @@ class SendingFulfilledHandler
             $delay = $nextTestStep->request->withSubstitutions(
                 $this->testResult->testRun->testResults,
                 $this->session
-            )->delay;
+            )->delay();
 
             ExecuteTestStepJob::dispatch(
                 $this->session,

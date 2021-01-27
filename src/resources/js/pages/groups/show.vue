@@ -13,6 +13,7 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap w-25">Name</th>
+                            <th class="text-nowrap w-auto"></th>
                             <th class="text-nowrap w-auto">Owner</th>
                             <th class="text-nowrap w-auto">Use Cases</th>
                             <th class="text-nowrap w-auto">Test Cases</th>
@@ -22,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="session in sessions.data">
+                        <tr v-for="(session, i) in sessions.data" :key="i">
                             <td class="text-break">
                                 <inertia-link
                                     :href="route('sessions.show', session.id)"
@@ -31,23 +32,40 @@
                                 </inertia-link>
                             </td>
                             <td class="text-break">
+                                <button
+                                    v-if="
+                                        group.defaultSession &&
+                                        group.defaultSession.id === session.id
+                                    "
+                                    class="btn btn-sm btn-primary"
+                                    disabled
+                                >
+                                    Default Session
+                                </button>
+                                <confirm-link
+                                    v-else
+                                    :href="
+                                        route('groups.toggle-default-session', [
+                                            group.id,
+                                            session.id,
+                                        ])
+                                    "
+                                    method="put"
+                                    :confirm-title="'Confirm change'"
+                                    :confirm-text="`Are you sure you want to make default session - '${session.name}'?`"
+                                    class="btn btn-sm btn-outline-primary"
+                                >
+                                    Make Default
+                                </confirm-link>
+                            </td>
+                            <td class="text-break">
                                 {{ session.owner.name }}
                             </td>
                             <td>
-                                {{
-                                    session.testCases
-                                        ? collect(session.testCases)
-                                              .unique('use_case_id')
-                                              .count()
-                                        : 0
-                                }}
+                                {{ session.useCasesCount }}
                             </td>
                             <td>
-                                {{
-                                    session.testCases
-                                        ? session.testCases.length
-                                        : 0
-                                }}
+                                {{ session.testCasesCount }}
                             </td>
                             <td>
                                 <session-progress :session="session" />
@@ -68,7 +86,7 @@
                                     variant="link"
                                     boundary="window"
                                 >
-                                    <template v-slot:button-content>
+                                    <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
                                     <li v-if="session.can.delete">
@@ -82,7 +100,7 @@
                                             "
                                             method="delete"
                                             :confirm-title="'Confirm delete'"
-                                            :confirm-text="`Are you sure you want to delete ${session.name}?`"
+                                            :confirm-text="`Are you sure you want to delete session - '${session.name}'?`"
                                         >
                                             Delete
                                         </confirm-link>

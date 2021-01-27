@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Sessions;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Exports\ComplianceSessionExport;
 use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
+use App\Utils\AuditLogUtil;
 use App\Http\Resources\{
     ComponentResource,
     SectionResource,
@@ -16,6 +19,7 @@ use App\Http\Resources\{
 use App\Models\{
     Certificate,
     Component,
+    FileEnvironment,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
@@ -160,6 +164,7 @@ class SessionController extends Controller
                 ]);
             },
             'groupEnvironment',
+            'fileEnvironments',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
         $sessionTestCasesGroupIds = $session->testCases->pluck(
@@ -347,6 +352,11 @@ class SessionController extends Controller
                         : $data
                 );
 
+                FileEnvironment::syncEnvironments(
+                    $session,
+                    Arr::get($request->all(), 'fileEnvironments')
+                );
+
                 $session->components->each(function (Component $component) use (
                     $data,
                     $session
@@ -410,6 +420,13 @@ class SessionController extends Controller
 
                 return $session;
             });
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_EDITED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
 
             return redirect()
                 ->route('sessions.show', $session)

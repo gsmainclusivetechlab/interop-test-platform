@@ -1,18 +1,4 @@
-# Interop Test Platform CircleCI
-
 version: 2.1
-
-x_filter_develop: &develop_filter
-  filters:
-    branches:
-      only: /develop/
-
-x_filter_deploy_sta: &deploy_sta_filter
-  filters:
-    branches:
-      ignore: /.*/
-    tags:
-      only: /^staging$/
 
 x_filter_release: &release_filter
   filters:
@@ -21,62 +7,6 @@ x_filter_release: &release_filter
     tags:
       only: /^v\d+\.\d+\.\d+/
 
-commands:
-  setup_docker_host:
-    description: 'Connect to a GSMA docker host via SSH'
-    parameters:
-      host:
-        type: string
-      user:
-        type: string
-        default: circleci
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - 'a8:10:b9:85:49:e6:b9:d3:09:2c:83:76:4b:4d:0a:a9'
-      - run:
-          name: Update Docker Compose
-          command: |
-            set -x
-            curl -L https://github.com/docker/compose/releases/download/1.26.0/docker-compose-`uname -s`-`uname -m` > docker-compose
-            sudo mv docker-compose /usr/local/bin/docker-compose
-            chmod +x /usr/local/bin/docker-compose
-      - run:
-          name: Add Bastion SSH config
-          command: |
-            mkdir -p ~/.ssh
-
-            echo "Host bastion
-              HostName 35.177.12.169
-              User << parameters.user >>
-
-            Host << parameters.host >>
-              User << parameters.user >>
-              StrictHostKeyChecking no
-              ProxyCommand ssh bastion -W %h:%p" >> ~/.ssh/config;
-
-            echo '35.177.12.169 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOY9bFCp+EEYgca6hsbnl+Bn1t0ye1pbpJboZZV0C7Ju/Fs/Q16JhdsZEYLxlEprWu/r6zINjg2eTz17Y5GaYjOoWUMo0OB0TJSlQ2WDVAk60gYTC0yaVaVBoI+mWXPt3YPN7YzVOs+CTEp4S19Al3T8X964/YdR/IL/FntmXPb2/0c+lWqFoVNAwS5gyfFAbEhj/TcK9V55gy4Rw9+mWtxE3CV739XeRxgW60uNsKwdzPPLLBcoxErr61I558aZw1P3VBIoOdq8w/dk96Yaz0jDnjBK2oIE9XASRcw/JKfBBR8Yxu8FESRj35VZgvmJbw3u4ggr5sh8XojDiBA+HN
-            ' >> ~/.ssh/known_hosts
-      - run:
-          name: Create docker context
-          command: |
-            docker context create remote --docker "host=ssh://<< parameters.host >>";
-            docker context use remote;
-  setup_dependencies:
-    description: 'Set up dependencies and build node'
-    parameters:
-      node:
-        type: boolean
-        default: false
-    steps:
-      - checkout
-      - run:
-          name: Install gettext for envsubst
-          command: sudo apt-get update && sudo apt-get install gettext-base
-      - run:
-          name: Copy configuration files
-          command: 'envsubst < service.example.env > service.env'
-
 orbs:
   coverage-reporter: codacy/coverage-reporter@10.0.3
   node: circleci/node@3.0.0
@@ -84,47 +14,76 @@ orbs:
 executors:
   standard:
     docker:
-      # Must be Ubuntu 18.04 or SSH clashes with servers
       - image: 'cimg/node:12.18.0'
+
+commands:
+  publish_tag:
+    description: 'Publish the built image under a new tag'
+    parameters:
+      img_tag:
+        type: string
+        default: ''
+    steps:
+      - run:
+          name: Re-tag image with << parameters.img_tag >>
+          command: |
+            TAG=`echo << parameters.img_tag >> | tr '/' '_'`;
+            docker tag gsmainclusivetechlab/interop-test-platform gsmainclusivetechlab/interop-test-platform:$TAG;
+            docker push gsmainclusivetechlab/interop-test-platform:$TAG;
 
 jobs:
   build:
     executor: standard
-    parameters:
-      host:
-        type: string
-        default: ''
+
+    # These variables aren't really used but they need to be present for docker-compose to parse the file
+    # TODO: don't use docker-compose for building, but call docker build directly
+    environment:
+      HOST_WEB_PORT: 80
+      HOST_HTTPS_WEB_PORT: 443
+      PROJECT_DOMAIN: www.example.com
+      HOST_MAILHOG_PORT: 8080
+      HOST_PHPMYADMIN_PORT: 8081
+      DB_DATABASE: itp-test
+      DB_USERNAME: itp-test-user
+      DB_PASSWORD: itp-test-pw
     steps:
-      - when:
-          condition: << parameters.host >>
-          steps:
-            - setup_docker_host:
-                host: << parameters.host >>
-                user: circleci
-      - unless:
-          condition: << parameters.host >>
-          steps:
-            - setup_remote_docker:
-                # docker_layer_caching: true
-                version: 19.03.12
+      - setup_remote_docker:
+          # docker_layer_caching: true
+          version: 19.03.12
       - run:
           name: Login to Docker Hub
           command:
             echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USERNAME
             --password-stdin
-      - setup_dependencies
+      - checkout
+      - run:
+          name: Install gettext for envsubst
+          command: sudo apt-get update && sudo apt-get install gettext-base
+      - run:
+          name: Copy configuration files
+          command: 'envsubst < service.example.env > service.env'
       - run:
           name: Build Images
           command: |
-            echo "Building Docker Image"
-            docker-compose build app
-            docker-compose build mysqldb
-            docker-compose pull
+            echo "Building Docker Images"
+            yarn prepare:docker
+            docker-compose -f docker-compose.ci.yml build app
       - run:
           name: Run Tests and get coverage
           command: |
-            npm run test
-            docker-compose down -v
+            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit"
+            docker cp `docker ps -alq`:/var/www/results .
+            docker-compose -f docker-compose.ci.yml down -v
+      # - publish_tag:
+      #     img_tag: << pipeline.git.revision >>
+      - publish_tag:
+          img_tag: << pipeline.git.branch >>
+      - when:
+          condition: << pipeline.git.tag >>
+          steps:
+            - publish_tag:
+                img_tag: << pipeline.git.tag >>
+      # TODO: fix browser testing and include screenshots
       # - coverage-reporter/send_report:
       #     coverage-reports: ./results/coverage-report-clover/clover.xml
       #     project-token: $CODACY_PROJECT_TOKEN
@@ -135,175 +94,16 @@ jobs:
       #     path: ./results
       # - store_artifacts:
       #     path: ./results
-      - run:
-          name: Publish Docker image
-          command: docker-compose push app
-      # TODO: fix browser testing and include screenshots
       # - store_artifacts:
       #   path: src/tests/Browser/screenshots
 
-  check_build:
-    executor: standard
-    parameters:
-      repo:
-        type: string
-        default: gsmainclusivetechlab/interop-test-platform
-      tag:
-        type: string
-        default: $CIRCLE_SHA1
-    steps:
-      - run:
-          name: Checking current commit has been built
-          command:
-            curl -f
-            https://index.docker.io/v1/repositories/<<parameters.repo>>/tags/<<parameters.tag>>
-
-  publish:
-    executor: standard
-    parameters:
-      repo:
-        type: string
-        default: gsmainclusivetechlab/interop-test-platform
-      release_tag:
-        type: string
-        default: $CIRCLE_TAG
-      tag:
-        type: string
-        default: $CIRCLE_SHA1
-    steps:
-      - setup_remote_docker:
-          version: 19.03.12
-      - run:
-          name: Login to Docker Hub
-          command:
-            echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USERNAME
-            --password-stdin
-      - run:
-          name: Download previously built image
-          command:
-            docker image prune -af --filter="until=24h" && docker pull
-            <<parameters.repo>>:<<parameters.tag>>
-      - run:
-          name: Re-tag pre-built image
-          command: |
-            docker tag << parameters.repo >>:<< parameters.tag >> \
-              << parameters.repo >>:<< parameters.release_tag >>
-      - run:
-          name: Publish image as << parameters.release_tag >>
-          command:
-            docker push << parameters.repo >>:<< parameters.release_tag >>
-
-  deploy:
-    executor: standard
-    parameters:
-      host:
-        type: string
-      mailhog:
-        type: boolean
-        default: false
-    steps:
-      - setup_dependencies
-      - setup_docker_host:
-          host: << parameters.host >>
-          user: circleci
-      - run:
-          name: Login to Docker Hub
-          command:
-            echo $DOCKERHUB_ACCESS_TOKEN | docker login -u $DOCKERHUB_USERNAME
-            --password-stdin
-      - run:
-          name: Build mysqldb image
-          command: docker-compose build mysqldb
-      - run:
-          name: Backup current mysql database
-          command: |
-            (npm run --silent has-db \
-              && (echo "Backing up DB" && npm run --silent backup > ./backup.sql)) \
-              || (echo "No DB to back up" && touch ./backup.sql)
-      - run:
-          name: Store backup
-          command:
-            scp ./backup.sql "<< parameters.host >>:/var/backups/circleci/`date
-            +"%b%d-%Y-%H%M%S"`.backup.sql"
-      - run:
-          name: Run migrations
-          command: |
-            (npm run --silent has-db \
-              && (echo "Migrating DB" && npm run --silent migrate)) \
-              || (echo "Seeding DB" && npm run --silent seed)
-      - run:
-          name: Run docker-compose up
-          command: npm run prod
-      - when:
-          condition: << parameters.mailhog >>
-          steps:
-            - run:
-                npm run docker-base -- -f compose/mailhog.yml up
-                --force-recreate -d mailhog
-
 workflows:
   version: 2
-  build_and_deploy:
+  build:
     jobs:
       - build:
-          context:
-            - GSMA-itp
-            - docker-hub
-      - approve_sta_deploy:
-          <<: *develop_filter
-          type: approval
-      - deploy:
-          <<: *develop_filter
+          filters:
+            tags:
+              only: /^v.*/
           context:
             - docker-hub
-            - GSMA-itp
-          host: staging.interop.gsmainclusivetechlab.io
-          mailhog: true
-          requires:
-            - approve_sta_deploy
-            - build
-
-  deploy_sta:
-    jobs:
-      - check_build:
-          context:
-            - docker-hub
-          <<: *deploy_sta_filter
-      - deploy:
-          <<: *deploy_sta_filter
-          context:
-            - docker-hub
-            - GSMA-itp
-          host: staging.interop.gsmainclusivetechlab.io
-          mailhog: true
-          requires:
-            - check_build
-
-  publish_release:
-    jobs:
-      - check_build:
-          context:
-            - docker-hub
-          <<: *release_filter
-      - approve_release:
-          <<: *release_filter
-          type: approval
-          requires:
-            - check_build
-      - deploy:
-          <<: *release_filter
-          context:
-            - docker-hub
-            - GSMA-itp-prod
-          host: interop.gsmainclusivetechlab.io
-          requires:
-            - check_build
-            - approve_release
-      - publish:
-          <<: *release_filter
-          context:
-            - docker-hub
-          requires:
-            - check_build
-            - approve_release
-            - deploy
