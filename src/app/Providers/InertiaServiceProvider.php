@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Http\Resources\GroupUserResource;
 use App\Models\AuditLog;
 use App\Models\Component;
 use App\Models\Group;
@@ -55,6 +54,12 @@ class InertiaServiceProvider extends ServiceProvider
                         'supported' => config('app.locales'),
                     ],
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
+                    'http_base_url' =>
+                        'http://' .
+                        parse_url(env('APP_URL'), PHP_URL_HOST) .
+                        (($port = env('HOST_WEB_PORT', 80)) == 80
+                            ? ''
+                            : ":$port"),
                     'available_session_modes_count' => collect(
                         config('service_session.available_modes')
                     )
