@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Testing;
 
 use App\Http\Controllers\Testing\Handlers\AttachJwsHeader;
-use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
-use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
+use App\Http\Controllers\Testing\Handlers\{
+    MapRequestHandler,
+    MapResponseHandler,
+    SendingFulfilledHandler,
+    SendingRejectedHandler,
+};
 use App\Models\Certificate;
 use App\Models\Session;
 use App\Models\TestResult;
@@ -61,7 +63,7 @@ class ProcessPendingRequest
     {
         $options = $this->getRequestOptions();
 
-        return (new PendingRequest($this->getResponse()))
+        $result = (new PendingRequest($this->getResponse()))
             ->mapRequest(new AttachJwsHeader($this->testResult))
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
@@ -71,6 +73,17 @@ class ProcessPendingRequest
             )
             ->otherwise(new SendingRejectedHandler($this->testResult))
             ->wait();
+
+        if ($this->simulateRequest) {
+            $delay = $this->testResult->testStep->response->withSubstitutions(
+                $this->testResult->testRun->testResults,
+                $this->session
+            )->delay();
+
+            sleep(is_numeric($delay) ? (int) $delay : 0);
+        }
+
+        return $result;
     }
 
     protected function getRequestOptions(): array

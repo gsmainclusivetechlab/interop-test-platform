@@ -43,8 +43,8 @@ if [ "$role" = "app" ]; then
     fi
 
     if [ "$APP_ENV" = "development" ]; then
-        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
         /usr/local/bin/npm run watch &
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
     else
         exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
     fi;
