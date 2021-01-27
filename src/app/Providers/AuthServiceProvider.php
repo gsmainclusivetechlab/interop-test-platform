@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\ApiSpec;
+use App\Models\AuditLog;
 use App\Models\Component;
 use App\Models\Group;
 use App\Models\GroupEnvironment;
@@ -15,6 +16,7 @@ use App\Models\TestStep;
 use App\Models\UseCase;
 use App\Models\User;
 use App\Policies\ApiSpecPolicy;
+use App\Policies\AuditLogPolicy;
 use App\Policies\ComponentPolicy;
 use App\Policies\GroupEnvironmentPolicy;
 use App\Policies\GroupUserPolicy;
@@ -46,6 +48,7 @@ class AuthServiceProvider extends ServiceProvider
         UseCase::class => UseCasePolicy::class,
         MessageLog::class => MessageLogPolicy::class,
         QuestionnaireSection::class => QuestionnairePolicy::class,
+        AuditLog::class => AuditLogPolicy::class,
     ];
 
     /**

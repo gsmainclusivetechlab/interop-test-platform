@@ -28,7 +28,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="environment in environments.data">
+                        <tr
+                            v-for="(environment, i) in environments.data"
+                            :key="i"
+                        >
                             <td class="text-break">
                                 {{ environment.name }}
                             </td>

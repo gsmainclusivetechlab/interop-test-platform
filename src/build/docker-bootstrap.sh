@@ -42,7 +42,12 @@ if [ "$role" = "app" ]; then
         cp RootCA.crt ClientCA.pem
     fi
 
-	exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
+    if [ "$APP_ENV" = "development" ]; then
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
+        /usr/local/bin/npm run watch &
+    else
+        exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
+    fi;
 
 elif [ "$role" = "queue" ]; then
     php /var/www/html/artisan queue:work --verbose --tries=3 --timeout=90

@@ -44,10 +44,7 @@ class ExecuteTestRunJob implements ShouldQueue
         /** @var Session $session */
         $session = $this->testRun->session;
         /** @var TestStep $testStep */
-        $testStep = $this->testRun
-            ->testCase
-            ->testSteps()
-            ->firstOrFail();
+        $testStep = $this->testRun->testCase->testSteps()->firstOrFail();
         $testRun = $this->testRun;
         $testResult = $testRun
             ->testResults()

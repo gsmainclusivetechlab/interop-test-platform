@@ -246,6 +246,18 @@ class Session extends Model
     }
 
     /**
+     * @param string $slug
+     *
+     * @return string|null
+     */
+    public function getBaseUriForEnvironment(string $slug)
+    {
+        return $this->getBaseUriOfComponent(
+            Component::where('slug', $slug)->first()
+        );
+    }
+
+    /**
      * @param Component $component
      *
      * @return bool

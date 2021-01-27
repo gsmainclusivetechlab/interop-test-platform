@@ -3,6 +3,10 @@
 /service.env
 /!.env.example
 
+# Generated files
+/Dockerfiles/development.Dockerfile
+/Dockerfiles/production.Dockerfile
+
 # IDE config
 /src/.idea
 /src/Homestead.json
