@@ -197,24 +197,32 @@ class TwigSubstitution
             ) {
                 $connectionUrls = [];
                 foreach ($item->connections as $connection) {
-                    $urls = [
-                        'sut' => route($route . '.sut', [
+                    $connectionUrls[$item->slug][$connection->slug] = route(
+                        $route . '.sut',
+                        [
                             $session->uuid,
                             $item->uuid,
                             $connection->uuid,
-                        ]),
-                    ];
-                    if ($withSimulators) {
-                        $urls = Arr::add(
-                            $urls,
-                            'simulator',
-                            route($route . '.simulator', [
-                                $item->uuid,
-                                $connection->uuid,
-                            ])
-                        );
-                    }
-                    $connectionUrls[$item->slug][$connection->slug] = $urls;
+                        ]
+                    );
+//                    $urls = [
+//                        'sut' => route($route . '.sut', [
+//                            $session->uuid,
+//                            $item->uuid,
+//                            $connection->uuid,
+//                        ]),
+//                    ];
+//                    if ($withSimulators) {
+//                        $urls = Arr::add(
+//                            $urls,
+//                            'simulator',
+//                            route($route . '.simulator', [
+//                                $item->uuid,
+//                                $connection->uuid,
+//                            ])
+//                        );
+//                    }
+//                    $connectionUrls[$item->slug][$connection->slug] = $urls;
                 }
 
                 return $connectionUrls;
