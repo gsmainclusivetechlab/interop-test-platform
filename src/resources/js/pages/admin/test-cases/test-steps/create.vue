@@ -782,13 +782,13 @@ export default {
             },
             example: {
                 request: {
-                    delay: 0,
+                    delay: null,
                     uri: '',
                     headers: {},
                     body: 'empty_body',
                 },
                 response: {
-                    delay: 0,
+                    delay: null,
                     status: {
                         selected: null,
                     },
