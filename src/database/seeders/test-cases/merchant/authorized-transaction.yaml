@@ -57,6 +57,7 @@ test_steps:
       jws:
         alg: RS256
         key: '{{ env.CERTIFICATE_PATH }}'
+        public_key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
         protectedHeaders:
           - x-callback-url
           - x-date
@@ -78,8 +79,11 @@ test_steps:
             value: '+33555789123'
     response:
       jws:
-        key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
+        key: '{{ env.CERTIFICATE_PATH }}'
+        public_key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
         header: FSPIOP-Signature
+        protectedHeaders:
+          - x-date
       status: 202
       headers:
         content-type: 'application/json'
@@ -119,6 +123,7 @@ test_steps:
       jws:
         alg: RS256
         key: '{{ env.CERTIFICATE_PATH }}'
+        public_key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
         protectedHeaders:
           - FSPIOP-URI
           - FSPIOP-HTTP-Method
