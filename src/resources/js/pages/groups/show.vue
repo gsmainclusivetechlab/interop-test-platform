@@ -43,7 +43,7 @@
                                     Default Session
                                 </button>
                                 <confirm-link
-                                    v-else
+                                    v-else-if="group.can.admin"
                                     :href="
                                         route('groups.toggle-default-session', [
                                             group.id,
