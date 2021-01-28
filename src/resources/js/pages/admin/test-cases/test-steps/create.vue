@@ -595,6 +595,26 @@
                             />
                         </b-collapse>
                     </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-jws-examples'"
+                        >
+                            {{ $t('inputs.request.jws') }}
+                        </button>
+                        <b-collapse id="request-jws-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.request.jws"
+                                @output-json="
+                                    (data) => {
+                                        example.request.jws = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">
                             {{ $t('inputs.response.status.label') }}
@@ -713,6 +733,26 @@
                             />
                         </b-collapse>
                     </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'response-jws-examples'"
+                        >
+                            {{ $t('inputs.response.jws') }}
+                        </button>
+                        <b-collapse id="response-jws-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.response.jws"
+                                @output-json="
+                                    (data) => {
+                                        example.response.jws = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
                 </div>
             </div>
             <div class="card-footer text-right">
@@ -783,12 +823,14 @@ export default {
             example: {
                 request: {
                     delay: null,
+                    jws: null,
                     uri: '',
                     headers: {},
                     body: 'empty_body',
                 },
                 response: {
                     delay: null,
+                    jws: null,
                     status: {
                         selected: null,
                     },

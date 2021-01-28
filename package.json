@@ -10,6 +10,7 @@
         "build:prod": "yarn prepare:docker && ENV=production yarn dc build",
         "deps": "yarn dc run app sh -c \"npm i && composer update\"",
         "dev": "yarn dc up",
+        "dev:deploy": "yarn build && yarn deps && yarn dc run app sh -c \"npm run prod\" && yarn migrate && yarn dev -d",
         "down": "yarn dc down --remove-orphans",
         "has-db": "yarn docker-ops run has-db",
         "backup": "yarn docker-ops run backup",

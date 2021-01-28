@@ -26,6 +26,7 @@ x-php-defaults: &php-defaults
     - ./src/build/nginx-includes:/etc/nginx/includes
     - ./src/build/docker-bootstrap.sh:/usr/local/bin/start
     - ./src:/var/www/html
+    - ca_certs:/etc/nginx/ssl/default-certs
     - certbot_certs:/etc/nginx/ssl/letsencrypt
     - certbot_www:/var/www/certbot
     - storage:/var/www/html/storage/app
@@ -103,6 +104,7 @@ services:
 volumes:
   mysqldata:
   redisdata:
+  ca_certs:
   certbot_certs:
   certbot_www:
   storage:
