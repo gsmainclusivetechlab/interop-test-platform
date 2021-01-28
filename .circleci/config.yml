@@ -77,6 +77,7 @@ jobs:
       - coverage-reporter/send_report:
           coverage-reports: ./results/clover.xml
           project-token: $CODACY_PROJECT_TOKEN
+          tool_version: ''
       - store_test_results:
           path: ./results
       - store_artifacts:
