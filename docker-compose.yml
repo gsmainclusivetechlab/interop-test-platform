@@ -43,11 +43,10 @@ services:
       WAIT_HOSTS: mysqldb:3306
       WAIT_SLEEP_INTERVAL: 5
       WAIT_HOSTS_TIMEOUT: 100
+      HOST_WEB_PORT: ${HOST_WEB_PORT}
 
   queue:
     <<: *php-defaults
-    volumes:
-      - storage:/var/www/html/storage/app
     environment:
       CONTAINER_ROLE: queue
 
@@ -74,7 +73,6 @@ services:
   certbot:
     environment:
       PROJECT_DOMAIN: ${PROJECT_DOMAIN}
-    container_name: certbot
     image: certbot/certbot
     restart: unless-stopped #+++
     volumes:

@@ -82,25 +82,17 @@
                                                     :id="`testing-${connection.id}`"
                                                     type="text"
                                                     :value="
-                                                        session.sut[sut.id]
-                                                            .use_encryption ===
-                                                        '1'
-                                                            ? route(
-                                                                  'testing-group.sut',
-                                                                  [
-                                                                      group.id,
-                                                                      sut.uuid,
-                                                                      connection.uuid,
-                                                                  ]
-                                                              )
-                                                            : route(
-                                                                  'testing-insecure-group.sut',
-                                                                  [
-                                                                      group.id,
-                                                                      sut.uuid,
-                                                                      connection.uuid,
-                                                                  ]
-                                                              )
+                                                        getRoute(
+                                                            session.sut[sut.id]
+                                                                .use_encryption ===
+                                                                '1',
+                                                            [
+                                                                group.id,
+                                                                sut.uuid,
+                                                                connection.uuid,
+                                                            ],
+                                                            true
+                                                        )
                                                     "
                                                     class="form-control"
                                                     readonly
@@ -148,21 +140,15 @@
                                         :id="`testing-${connection.id}`"
                                         type="text"
                                         :value="
-                                            session.sut[sut.id]
-                                                .use_encryption === '1'
-                                                ? route('testing.sut', [
-                                                      session.info.uuid,
-                                                      sut.uuid,
-                                                      connection.uuid,
-                                                  ])
-                                                : route(
-                                                      'testing-insecure.sut',
-                                                      [
-                                                          session.info.uuid,
-                                                          sut.uuid,
-                                                          connection.uuid,
-                                                      ]
-                                                  )
+                                            getRoute(
+                                                session.sut[sut.id]
+                                                    .use_encryption === '1',
+                                                [
+                                                    session.info.uuid,
+                                                    sut.uuid,
+                                                    connection.uuid,
+                                                ]
+                                            )
                                         "
                                         class="form-control"
                                         readonly
@@ -277,7 +263,11 @@ export default {
     },
     mixins: [mixinVSelect],
     data() {
+        const ziggyConf = { ...this.route().ziggy };
+        ziggyConf.baseUrl = this.$page.props.app.http_base_url;
+
         return {
+            ziggyConf,
             sending: false,
             groupEnvironment: null,
             groupEnvironmentsList: [],
@@ -335,6 +325,20 @@ export default {
                 .then((result) => {
                     this.groupEnvironmentsList = result.data.data;
                 });
+        },
+        getRoute(useEncryption, data, isForGroup = false) {
+            const group = isForGroup ? '-group' : '';
+
+            if (useEncryption) {
+                return this.route('testing' + group + '.sut', data);
+            }
+
+            return this.route(
+                'testing-insecure' + group + '.sut',
+                data,
+                undefined,
+                this.ziggyConf
+            );
         },
     },
 };
