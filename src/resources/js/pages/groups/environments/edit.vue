@@ -82,8 +82,8 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
-import Environments from '@/components/environments';
-import FileEnvironments from '@/components/file-environments';
+import Environments from '@/components/environments/environments';
+import FileEnvironments from '@/components/environments/file-environments';
 
 export default {
     metaInfo() {
