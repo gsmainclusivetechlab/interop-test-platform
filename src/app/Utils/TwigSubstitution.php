@@ -5,6 +5,7 @@ namespace App\Utils;
 use App\Models\Component;
 use App\Models\Session;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\URL;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
@@ -161,20 +162,7 @@ class TwigSubstitution
                     ];
                 })
                 ->toArray(),
-            'mapped_urls' => [
-                'testing' => $this->mapUrls(
-                    $components,
-                    $session,
-                    'testing',
-                    true
-                ),
-                'testing-insecure' => $this->mapUrls(
-                    $components,
-                    $session,
-                    'testing-insecure',
-                    false
-                ),
-            ],
+            'mapped_urls' => $this->mapUrls($components, $session),
             'session_uuid' => $session->uuid,
             'app_url' => route('home'),
         ];
@@ -183,38 +171,36 @@ class TwigSubstitution
     /**
      * @param $components
      * @param $session
-     * @param string $route
-     * @param bool $withSimulators
      * @return array
      */
-    protected function mapUrls($components, $session, $route, $withSimulators)
+    protected function mapUrls($components, $session)
     {
+        $useEncryptionComponentIds = $session->components()
+            ->withPivotValue('use_encryption', true)
+            ->pluck('id')
+            ->toArray();
+
         return $components
-            ->mapWithKeys(function (Component $item) use (
+            ->mapWithKeys(function (Component $component) use (
                 $session,
-                $route,
-                $withSimulators
+                $useEncryptionComponentIds
             ) {
                 $connectionUrls = [];
-                foreach ($item->connections as $connection) {
-                    $urls = [
-                        'sut' => route($route . '.sut', [
+                $secure = in_array($component->id, $useEncryptionComponentIds);
+
+                foreach ($component->connections as $connection) {
+                    $urn = route(
+                        $secure ? 'testing.sut' : 'testing-insecure.sut',
+                        [
                             $session->uuid,
-                            $item->uuid,
+                            $component->uuid,
                             $connection->uuid,
-                        ]),
-                    ];
-                    if ($withSimulators) {
-                        $urls = Arr::add(
-                            $urls,
-                            'simulator',
-                            route($route . '.simulator', [
-                                $item->uuid,
-                                $connection->uuid,
-                            ])
-                        );
-                    }
-                    $connectionUrls[$item->slug][$connection->slug] = $urls;
+                        ],
+                        false
+                    );
+                    $connectionUrls[$component->slug][$connection->slug] = $secure
+                        ? route('home') . $urn
+                        : config('app.http_base_url') . $urn;
                 }
 
                 return $connectionUrls;

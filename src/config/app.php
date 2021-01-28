@@ -53,6 +53,13 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'http_base_url' =>
+        'http://' .
+        parse_url(env('APP_URL'), PHP_URL_HOST) .
+        (($port = env('HOST_WEB_PORT', 80)) == 80
+            ? ''
+            : ":$port"),
+
     'asset_url' => env('ASSET_URL', null),
 
     /*

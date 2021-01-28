@@ -54,12 +54,7 @@ class InertiaServiceProvider extends ServiceProvider
                         'supported' => config('app.locales'),
                     ],
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
-                    'http_base_url' =>
-                        'http://' .
-                        parse_url(env('APP_URL'), PHP_URL_HOST) .
-                        (($port = env('HOST_WEB_PORT', 80)) == 80
-                            ? ''
-                            : ":$port"),
+                    'http_base_url' => config('app.http_base_url'),
                     'available_session_modes_count' => collect(
                         config('service_session.available_modes')
                     )
