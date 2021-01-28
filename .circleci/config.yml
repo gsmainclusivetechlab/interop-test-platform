@@ -71,11 +71,19 @@ jobs:
       - run:
           name: Run Tests and get coverage
           command: |
-            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit"
+            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit --coverage-clover=results/clover.xml"
             docker cp `docker ps -alq`:/var/www/results .
             docker-compose -f docker-compose.ci.yml down -v
-      # - publish_tag:
-      #     img_tag: << pipeline.git.revision >>
+      - coverage-reporter/send_report:
+          coverage-reports: ./results/clover.xml
+          project-token: $CODACY_PROJECT_TOKEN
+      - store_test_results:
+          path: ./results
+      - store_artifacts:
+          path: ./results
+      # TODO: fix browser testing and include screenshots
+      # - store_artifacts:
+      #   path: src/tests/Browser/screenshots
       - when:
           condition: << pipeline.git.branch >>
           steps:
@@ -86,19 +94,6 @@ jobs:
           steps:
             - publish_tag:
                 img_tag: << pipeline.git.tag >>
-      # TODO: fix browser testing and include screenshots
-      # - coverage-reporter/send_report:
-      #     coverage-reports: ./results/coverage-report-clover/clover.xml
-      #     project-token: $CODACY_PROJECT_TOKEN
-      # - run:
-      #     name: Copy codacy json report to artifact
-      #     command: sudo cp /var/tmp/codacy-coverage-*.json ./results/
-      # - store_test_results:
-      #     path: ./results
-      # - store_artifacts:
-      #     path: ./results
-      # - store_artifacts:
-      #   path: src/tests/Browser/screenshots
 
 workflows:
   version: 2
