@@ -2,6 +2,9 @@
     <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Configure components</h3>
+                </div>
                 <template v-if="groupsDefaultList.length > 0">
                     <div class="card-header">
                         <h3 class="card-title">
@@ -28,9 +31,6 @@
                             "
                             class="form-control d-flex p-0 mb-3"
                         />
-                    </div>
-                    <div class="card-header">
-                        <h3 class="card-title">Configure components</h3>
                     </div>
                     <template
                         v-if="
@@ -243,8 +243,8 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
-import Environments from '@/components/environments';
-import FileEnvironments from '@/components/file-environments';
+import Environments from '@/components/environments/environments';
+import FileEnvironments from '@/components/environments/file-environments';
 import mixinVSelect from '@/components/v-select/mixin';
 
 export default {

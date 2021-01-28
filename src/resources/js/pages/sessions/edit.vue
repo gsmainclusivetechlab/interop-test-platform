@@ -457,8 +457,8 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
-import Environments from '@/components/environments';
-import FileEnvironments from '@/components/file-environments';
+import Environments from '@/components/environments/environments';
+import FileEnvironments from '@/components/environments/file-environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 import mixinVSelect from '@/components/v-select/mixin';
 
