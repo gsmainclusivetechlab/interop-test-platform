@@ -2,66 +2,88 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
+use App\Http\Client\Request;
 use App\Models\TestResult;
 use Arr;
 use File;
 use Gamegos\JWS\JWS;
 use Gamegos\JWS\Util\Base64Url;
 use Gamegos\JWS\Util\Json;
-use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\MessageInterface;
 
 class AttachJwsHeader
 {
     /** @var TestResult */
     protected $testResult;
 
-    public function __construct(TestResult $testResult)
+    /** @var Request|Response */
+    protected $jwsSource;
+
+    public function __construct(TestResult $testResult, $jwsSource)
     {
         $this->testResult = $testResult;
+        $this->jwsSource = $jwsSource;
     }
 
-    public function __invoke(ServerRequest $request): ServerRequest
+    public function __invoke(MessageInterface $requestOrResponse)
     {
-        if ($this->testResult->testStep->request->jws()) {
-            $jws = $this->testResult->testStep->request
+        if ($this->jwsSource->jws()) {
+            $jws = $this->jwsSource
                 ->withSubstitutions(
                     $this->testResult->testRun->testResults,
                     $this->testResult->session
                 )
                 ->jws();
 
-            $key = File::exists($filePath = Arr::get($jws, 'key'))
-                ? File::get($filePath)
-                : $filePath;
+            $headerName = Arr::get($jws, 'header', 'FSPIOP-Signature');
+            $filePath = Arr::get($jws, 'key');
 
-            $headers = collect(Arr::get($jws, 'protectedHeaders'))
-                ->mapWithKeys(function ($header) use ($request) {
-                    return [$header => $request->getHeaderLine($header)];
-                })
-                ->prepend(Arr::get($jws, 'alg', 'RS256'), 'alg')
-                ->all();
+            if (
+                !$requestOrResponse->hasHeader($headerName) &&
+                !is_null($filePath)
+            ) {
+                $key = File::exists($filePath)
+                    ? File::get($filePath)
+                    : $filePath;
 
-            $body = json_decode((string) $request->getBody(), true);
+                $headers = collect(Arr::get($jws, 'protectedHeaders'))
+                    ->mapWithKeys(function ($header) use ($requestOrResponse) {
+                        return [
+                            $header => $requestOrResponse->getHeaderLine(
+                                $header
+                            ),
+                        ];
+                    })
+                    ->prepend(Arr::get($jws, 'alg', 'RS256'), 'alg')
+                    ->all();
 
-            $jwsEncoder = new JWS();
-            $signature = $jwsEncoder->encode($headers, $body, $key);
+                $body = json_decode(
+                    (string) $requestOrResponse->getBody(),
+                    true
+                );
 
-            if (Arr::get($jws, 'transform') === 'mojaloop') {
-                $signature = Json::encode([
-                    'signature' =>
-                        substr($signature, strrpos($signature, '.') + 1) ?: '',
-                    'protectedHeader' => Base64Url::encode(
-                        Json::encode($headers)
-                    ),
-                ]);
+                $jwsEncoder = new JWS();
+                $signature = $jwsEncoder->encode($headers, $body, $key);
+
+                if (Arr::get($jws, 'transform') === 'mojaloop') {
+                    $signature = Json::encode([
+                        'signature' =>
+                            substr($signature, strrpos($signature, '.') + 1) ?:
+                            '',
+                        'protectedHeader' => Base64Url::encode(
+                            Json::encode($headers)
+                        ),
+                    ]);
+                }
+
+                $requestOrResponse = $requestOrResponse->withHeader(
+                    $headerName,
+                    $signature
+                );
             }
-
-            $request = $request->withHeader(
-                Arr::get($jws, 'header', 'FSPIOP-Signature'),
-                $signature
-            );
         }
 
-        return $request;
+        return $requestOrResponse;
     }
 }
