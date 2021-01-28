@@ -71,7 +71,7 @@ jobs:
       - run:
           name: Run Tests and get coverage
           command: |
-            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit --coverage-clover=results/clover.xml"
+            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit --coverage-clover=results/clover.xml --log-junit results/results.xml"
             docker cp `docker ps -alq`:/var/www/results .
             docker-compose -f docker-compose.ci.yml down -v
       - coverage-reporter/send_report:
