@@ -78,6 +78,9 @@ jobs:
           coverage-reports: ./results/clover.xml
           project-token: $CODACY_PROJECT_TOKEN
           tool_version: ''
+      - run:
+          name: Upload coverage to Codecov
+          command: bash <(curl -s https://codecov.io/bash)
       - store_test_results:
           path: ./results
       - store_artifacts:
