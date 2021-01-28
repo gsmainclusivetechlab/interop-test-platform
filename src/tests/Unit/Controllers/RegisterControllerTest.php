@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit\Controllers;
 
 use App\Models\Component;
 use App\Models\GroupEnvironment;
@@ -100,7 +100,6 @@ class RegisterControllerTest extends TestCase
         $testcase = factory(\App\Models\TestCase::class)->create()->getKey();
         $component = factory(Component::class)->create()->getKey();
         $session = factory(Session::class)->create();
-        $this->assertIsInt($group);
         $user = factory(User::class)->create(['role' => User::ROLE_USER]);
         $response = $this->actingAs($user)
                          ->withSession([
