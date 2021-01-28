@@ -146,23 +146,15 @@
                                                                     :id="`testing-${group.id}-${component.id}-${connection.id}`"
                                                                     type="text"
                                                                     :value="
-                                                                        component.use_encryption
-                                                                            ? route(
-                                                                                  'testing-group.sut',
-                                                                                  [
-                                                                                      group.id,
-                                                                                      component.uuid,
-                                                                                      connection.uuid,
-                                                                                  ]
-                                                                              )
-                                                                            : route(
-                                                                                  'testing-insecure-group.sut',
-                                                                                  [
-                                                                                      group.id,
-                                                                                      component.uuid,
-                                                                                      connection.uuid,
-                                                                                  ]
-                                                                              )
+                                                                        getRoute(
+                                                                            component.use_encryption,
+                                                                            [
+                                                                                group.id,
+                                                                                component.uuid,
+                                                                                connection.uuid,
+                                                                            ],
+                                                                            true
+                                                                        )
                                                                     "
                                                                     class="form-control"
                                                                     readonly
@@ -233,23 +225,14 @@
                                                         :id="`testing-${component.id}-${connection.id}`"
                                                         type="text"
                                                         :value="
-                                                            component.use_encryption
-                                                                ? route(
-                                                                      'testing.sut',
-                                                                      [
-                                                                          session.uuid,
-                                                                          component.uuid,
-                                                                          connection.uuid,
-                                                                      ]
-                                                                  )
-                                                                : route(
-                                                                      'testing-insecure.sut',
-                                                                      [
-                                                                          session.uuid,
-                                                                          component.uuid,
-                                                                          connection.uuid,
-                                                                      ]
-                                                                  )
+                                                            getRoute(
+                                                                component.use_encryption,
+                                                                [
+                                                                    session.uuid,
+                                                                    component.uuid,
+                                                                    connection.uuid,
+                                                                ]
+                                                            )
                                                         "
                                                         class="form-control"
                                                         readonly
@@ -426,12 +409,32 @@ export default {
         },
     },
     data() {
+        const ziggyConf = { ...this.route().ziggy };
+        ziggyConf.baseUrl = this.$page.props.app.http_base_url;
+
         return {
+            ziggyConf,
             hasEncrypted:
                 this.session.components.data?.filter(
                     (component) => component.use_encryption
                 )?.length > 0,
         };
+    },
+    methods: {
+        getRoute(useEncryption, data, isForGroup = false) {
+            const group = isForGroup ? '-group' : '';
+
+            if (useEncryption) {
+                return this.route('testing' + group + '.sut', data);
+            }
+
+            return this.route(
+                'testing-insecure' + group + '.sut',
+                data,
+                undefined,
+                this.ziggyConf
+            );
+        },
     },
 };
 </script>

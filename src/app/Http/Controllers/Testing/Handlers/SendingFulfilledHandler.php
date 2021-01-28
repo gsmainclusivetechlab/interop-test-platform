@@ -28,13 +28,23 @@ class SendingFulfilledHandler
     protected $session;
 
     /**
+     * @var bool
+     */
+    protected $simulateRequest;
+
+    /**
      * @param TestResult $testResult
      * @param Session $session
      */
-    public function __construct(TestResult $testResult, Session $session)
+    public function __construct(
+        TestResult $testResult,
+        Session $session,
+        $simulateRequest
+    )
     {
         $this->testResult = $testResult;
         $this->session = $session;
+        $this->simulateRequest = $simulateRequest;
     }
 
     /**
@@ -79,6 +89,15 @@ class SendingFulfilledHandler
             $this->testResult->pass();
         } else {
             $this->testResult->fail();
+        }
+
+        if ($this->simulateRequest) {
+            $delay = $this->testResult->testStep->response->withSubstitutions(
+                $this->testResult->testRun->testResults,
+                $this->session
+            )->delay();
+
+            sleep(is_numeric($delay) ? (int) $delay : 0);
         }
 
         if (
