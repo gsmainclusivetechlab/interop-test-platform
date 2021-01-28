@@ -69,19 +69,14 @@ class ProcessPendingRequest
             ->mapResponse(new MapResponseHandler($this->testResult))
             ->transfer($this->request, $options)
             ->then(
-                new SendingFulfilledHandler($this->testResult, $this->session)
+                new SendingFulfilledHandler(
+                    $this->testResult,
+                    $this->session,
+                    $this->simulateRequest
+                )
             )
             ->otherwise(new SendingRejectedHandler($this->testResult))
             ->wait();
-
-        if ($this->simulateRequest) {
-            $delay = $this->testResult->testStep->response->withSubstitutions(
-                $this->testResult->testRun->testResults,
-                $this->session
-            )->delay();
-
-            sleep(is_numeric($delay) ? (int) $delay : 0);
-        }
 
         return $result;
     }
