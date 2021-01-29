@@ -36,6 +36,8 @@ class GroupControllerTest extends TestCase
         );
 
         $response->assertStatus(302);
-        $response->assertRedirect(route('admin.groups.index'), ['success']);
+        $response->assertRedirect(route('admin.groups.index'), [
+            'success' => 'Group updated successfully',
+        ]);
     }
 }
