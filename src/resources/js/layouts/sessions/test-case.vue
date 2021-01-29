@@ -107,6 +107,7 @@
                                                             )
                                                         ).includes(component.id)
                                                     "
+                                                    class="mb-3"
                                                     :key="`component-${j}`"
                                                 >
                                                     <h4>
@@ -119,7 +120,7 @@
                                                         ) in component.connections"
                                                         :key="`connection-${k}`"
                                                     >
-                                                        <div
+                                                        <template
                                                             v-if="
                                                                 Array.from(
                                                                     new Set(
@@ -136,6 +137,7 @@
                                                                     connection.id
                                                                 )
                                                             "
+                                                            class="mb-3"
                                                         >
                                                             <label>
                                                                 {{
@@ -167,7 +169,7 @@
                                                                     title="Copy"
                                                                 ></clipboard-copy-btn>
                                                             </div>
-                                                        </div>
+                                                        </template>
                                                     </div>
                                                 </div>
                                             </template>
@@ -189,7 +191,7 @@
                                     v-for="(component, i) in session.components
                                         .data"
                                 >
-                                    <template
+                                    <div
                                         v-if="
                                             Array.from(
                                                 new Set(
@@ -199,8 +201,10 @@
                                                 )
                                             ).includes(component.id)
                                         "
+                                        class="mb-3"
+                                        :key="`component-${i}`"
                                     >
-                                        <h4 :key="`component-${i}`">
+                                        <h4>
                                             {{ component.name }}
                                         </h4>
                                         <template
@@ -208,7 +212,7 @@
                                                 connection, j
                                             ) in component.connections"
                                         >
-                                            <template
+                                            <div
                                                 v-if="
                                                     Array.from(
                                                         new Set(
@@ -220,16 +224,12 @@
                                                     ).includes(connection.id)
                                                 "
                                                 class="mb-3"
+                                                :key="`connection-${j}`"
                                             >
-                                                <label
-                                                    :key="`connection-name-${j}`"
-                                                >
+                                                <label>
                                                     {{ connection.name }}
                                                 </label>
-                                                <div
-                                                    class="input-group"
-                                                    :key="`connection-${j}`"
-                                                >
+                                                <div class="input-group">
                                                     <input
                                                         :id="`testing-${component.id}-${connection.id}`"
                                                         type="text"
@@ -251,9 +251,9 @@
                                                         title="Copy"
                                                     ></clipboard-copy-btn>
                                                 </div>
-                                            </template>
+                                            </div>
                                         </template>
-                                    </template>
+                                    </div>
                                 </template>
                             </b-collapse>
                         </li>
