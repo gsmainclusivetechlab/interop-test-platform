@@ -67,12 +67,6 @@ class TestStepController extends Controller
                     ->testSteps()
                     ->with(['source', 'target'])
                     ->paginate()
-//                    ->map(function ($testStep) use ($simulatedTestResults) {
-//                        $testStep->request = $simulatedTestResults[$testStep->id]->request;
-//                        $testStep->response = $simulatedTestResults[$testStep->id]->response;
-//
-//                        return $testStep;
-//                    })
             ),
             'simulatedTestResults' => $testCase->simulateTestResults($session),
         ]);

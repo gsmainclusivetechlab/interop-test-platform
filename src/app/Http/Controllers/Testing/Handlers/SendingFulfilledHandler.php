@@ -97,7 +97,7 @@ class SendingFulfilledHandler
                 $this->session
             )->delay();
 
-            sleep(is_numeric($delay) ? (int) $delay : 0);
+            sleep(abs(is_numeric($delay) ? (int) $delay : 0));
         }
 
         if (
@@ -115,7 +115,7 @@ class SendingFulfilledHandler
                 $this->testResult->testRun
             )->delay(
                 now()->addSeconds(
-                    is_numeric($delay) ? $delay : 0
+                    abs(is_numeric($delay) ? (int) $delay : 0)
                 )
             );
         }
