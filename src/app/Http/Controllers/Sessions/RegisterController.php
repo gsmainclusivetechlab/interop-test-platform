@@ -383,11 +383,18 @@ class RegisterController extends Controller
      */
     public function storeInfo(Request $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['string', 'nullable'],
-            'test_cases' => ['required', 'array', 'exists:test_cases,id'],
-        ]);
+        $validated = $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'description' => ['string', 'nullable'],
+                'test_cases' => ['required', 'array', 'exists:test_cases,id'],
+            ],
+            [
+                'test_cases.required' => __(
+                    'Please select at least 1 test case.'
+                ),
+            ]
+        );
         $request->session()->put(
             'session.info',
             array_merge($validated, [

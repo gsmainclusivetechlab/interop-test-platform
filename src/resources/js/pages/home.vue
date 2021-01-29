@@ -88,17 +88,7 @@
                                     title="Use Case"
                                 />
                                 <span>
-                                    {{
-                                        session.testCases
-                                            ? collect(session.testCases)
-                                                  .map(
-                                                      (value) =>
-                                                          value.useCase.id
-                                                  )
-                                                  .unique()
-                                                  .count()
-                                            : 0
-                                    }}
+                                    {{ session.useCasesCount }}
                                 </span>
                             </li>
                             <li>
@@ -108,11 +98,7 @@
                                     v-b-tooltip.hover.top
                                     title="Test Case"
                                 />
-                                <span>{{
-                                    session.testCases
-                                        ? session.testCases.length
-                                        : 0
-                                }}</span>
+                                <span>{{ session.testCasesCount }}</span>
                             </li>
                             <li v-if="session.lastTestRun">
                                 <icon
