@@ -19,46 +19,51 @@ class GroupEnvironmentControllerTest extends TestCase
     public function testGroupEnvironmentControllerStore()
     {
         $user = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
-        $group = factory(Group::class)->create()->getKey();
+        $group = factory(Group::class)
+            ->create()
+            ->getKey();
         $response = $this->actingAs($user)
             ->withSession([
                 'group' => $group,
             ])
-            ->post(route('groups.environments.store', [
-                'group' => $group
-            ]), [
-            'name' => 'Environment name',
-            'variables' => [
-                'test_variable' => 'test_value'
-            ]
-        ]);
+            ->post(
+                route('groups.environments.store', [
+                    'group' => $group,
+                ]),
+                [
+                    'name' => 'Environment name',
+                    'variables' => [
+                        'test_variable' => 'test_value',
+                    ],
+                ]
+            );
 
-        $response->assertStatus(302);
         $response->assertSessionHasNoErrors();
+        $response->assertStatus(302);
         $response->assertRedirect(route('groups.environments.index', $group));
     }
 
     public function testGroupEnvironmentControllerUpdate()
     {
         $user = factory(User::class)->create(['role' => User::ROLE_ADMIN]);
-        $group = factory(Group::class)->create()->getKey();
+        $group = factory(Group::class)
+            ->create()
+            ->getKey();
         $environment = factory(GroupEnvironment::class)->create();
-        $response = $this->actingAs($user)
-            ->withSession([
+        $response = $this->actingAs($user)->put(
+            route('groups.environments.update', [
                 'group' => $group,
-                'environment' => $environment
-            ])
-            ->post(route('groups.environments.update', [
-                'group' => $group
-            ]), [
+                'environment' => $environment,
+            ]),
+            [
                 'name' => 'Environment name',
                 'variables' => [
-                    'test_variable' => 'test_value'
-                ]
-            ]);
+                    'test_variable' => 'test_value',
+                ],
+            ]
+        );
 
-        $response->assertStatus(302);
+        $response->assertSuccessful();
         $response->assertSessionHasNoErrors();
-        $response->assertRedirect(route('groups.environments.index', $group));
     }
 }
