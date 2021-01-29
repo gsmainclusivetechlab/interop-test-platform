@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
-use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestCaseResource;
-use App\Http\Resources\TestStepResource;
+use App\Http\Resources\{
+    ComponentResource,
+    SessionResource,
+    TestCaseResource,
+    TestStepResource,
+};
 use App\Models\Session;
 use App\Models\TestCase;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -65,7 +67,14 @@ class TestStepController extends Controller
                     ->testSteps()
                     ->with(['source', 'target'])
                     ->paginate()
+//                    ->map(function ($testStep) use ($simulatedTestResults) {
+//                        $testStep->request = $simulatedTestResults[$testStep->id]->request;
+//                        $testStep->response = $simulatedTestResults[$testStep->id]->response;
+//
+//                        return $testStep;
+//                    })
             ),
+            'simulatedTestResults' => $testCase->simulateTestResults($session),
         ]);
     }
 

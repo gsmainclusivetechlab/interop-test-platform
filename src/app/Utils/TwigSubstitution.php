@@ -5,7 +5,6 @@ namespace App\Utils;
 use App\Models\Component;
 use App\Models\Session;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\URL;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
