@@ -20,15 +20,22 @@ class AttachJwsHeader
     /** @var Request|Response */
     protected $jwsSource;
 
-    public function __construct(TestResult $testResult, $jwsSource)
-    {
+    /** @var bool */
+    protected $attachHeader;
+
+    public function __construct(
+        TestResult $testResult,
+        $jwsSource,
+        bool $attachHeader
+    ) {
         $this->testResult = $testResult;
         $this->jwsSource = $jwsSource;
+        $this->attachHeader = $attachHeader;
     }
 
     public function __invoke(MessageInterface $requestOrResponse)
     {
-        if ($this->jwsSource->jws()) {
+        if ($this->attachHeader && $this->jwsSource->jws()) {
             $jws = $this->jwsSource
                 ->withSubstitutions(
                     $this->testResult->testRun->testResults,

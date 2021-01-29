@@ -67,7 +67,10 @@ class ProcessPendingRequest
             ->mapRequest(
                 new AttachJwsHeader(
                     $this->testResult,
-                    $this->testResult->testStep->request
+                    $this->testResult->testStep->request,
+                    !$this->session->getBaseUriOfComponent(
+                        $this->testResult->testStep->source
+                    )
                 )
             )
             ->mapRequest(new MapRequestHandler($this->testResult))
@@ -75,7 +78,10 @@ class ProcessPendingRequest
             ->mapResponse(
                 new AttachJwsHeader(
                     $this->testResult,
-                    $this->testResult->testStep->response
+                    $this->testResult->testStep->response,
+                    !$this->session->getBaseUriOfComponent(
+                        $this->testResult->testStep->target
+                    )
                 )
             )
             ->transfer($this->request, $options)
