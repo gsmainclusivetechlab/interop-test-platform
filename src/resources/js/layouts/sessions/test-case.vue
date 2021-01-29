@@ -39,18 +39,19 @@
                                     ).includes(compEl.id)
                                 )
                             "
+                            class="mb-3"
                         >
-                            <p>
+                            <h3>
                                 <strong>Configuration</strong>
-                            </p>
+                            </h3>
                             <div v-if="hasEncrypted" class="mb-3">
-                                <h3>Encrypted connection</h3>
+                                <h4>Encrypted connection</h4>
 
                                 <a
                                     :href="
                                         route('sessions.certificates.download')
                                     "
-                                    class="btn btn-outline-primary"
+                                    class="btn btn-sm btn-block btn-outline-primary"
                                 >
                                     Download certificates
                                 </a>
@@ -65,13 +66,15 @@
                                     )
                                 "
                             >
-                                <button
-                                    type="button"
-                                    class="btn btn-link card-title dropdown-toggle px-0"
-                                    v-b-toggle="`by-groups`"
-                                >
-                                    By groups
-                                </button>
+                                <div>
+                                    <button
+                                        type="button"
+                                        class="btn btn-link dropdown-toggle px-0 mb-0"
+                                        v-b-toggle="`by-groups`"
+                                    >
+                                        By groups
+                                    </button>
+                                </div>
                                 <b-collapse id="by-groups">
                                     <template
                                         v-for="(group, i) in $page.props.auth
@@ -84,9 +87,9 @@
                                             "
                                             :key="`group-${i}`"
                                         >
-                                            <h3 class="text-secondary">
+                                            <h4 class="text-secondary">
                                                 {{ group.name }}
-                                            </h3>
+                                            </h4>
                                             <template
                                                 v-for="(component, j) in session
                                                     .components.data"
@@ -106,9 +109,9 @@
                                                     "
                                                     :key="`component-${j}`"
                                                 >
-                                                    <h3>
+                                                    <h4>
                                                         {{ component.name }}
-                                                    </h3>
+                                                    </h4>
                                                     <div
                                                         class="mb-3"
                                                         v-for="(
@@ -168,24 +171,25 @@
                                                     </div>
                                                 </div>
                                             </template>
-                                            <hr />
                                         </div>
                                     </template>
                                 </b-collapse>
                             </template>
-                            <button
-                                type="button"
-                                class="btn btn-link card-title dropdown-toggle px-0"
-                                v-b-toggle="`by-session`"
-                            >
-                                By session
-                            </button>
+                            <div>
+                                <button
+                                    type="button"
+                                    class="btn btn-link dropdown-toggle px-0 mb-0"
+                                    v-b-toggle="`by-session`"
+                                >
+                                    By session
+                                </button>
+                            </div>
                             <b-collapse id="by-session">
                                 <template
                                     v-for="(component, i) in session.components
                                         .data"
                                 >
-                                    <div
+                                    <template
                                         v-if="
                                             Array.from(
                                                 new Set(
@@ -195,15 +199,16 @@
                                                 )
                                             ).includes(component.id)
                                         "
-                                        :key="`component-${i}`"
                                     >
-                                        <h3>{{ component.name }}</h3>
+                                        <h4 :key="`component-${i}`">
+                                            {{ component.name }}
+                                        </h4>
                                         <template
                                             v-for="(
                                                 connection, j
                                             ) in component.connections"
                                         >
-                                            <div
+                                            <template
                                                 v-if="
                                                     Array.from(
                                                         new Set(
@@ -215,12 +220,16 @@
                                                     ).includes(connection.id)
                                                 "
                                                 class="mb-3"
-                                                :key="`connection-${j}`"
                                             >
-                                                <label>
+                                                <label
+                                                    :key="`connection-name-${j}`"
+                                                >
                                                     {{ connection.name }}
                                                 </label>
-                                                <div class="input-group">
+                                                <div
+                                                    class="input-group"
+                                                    :key="`connection-${j}`"
+                                                >
                                                     <input
                                                         :id="`testing-${component.id}-${connection.id}`"
                                                         type="text"
@@ -242,23 +251,22 @@
                                                         title="Copy"
                                                     ></clipboard-copy-btn>
                                                 </div>
-                                            </div>
+                                            </template>
                                         </template>
-                                        <hr />
-                                    </div>
+                                    </template>
                                 </template>
                             </b-collapse>
                         </li>
-                        <li v-if="testCase.description">
-                            <p>
+                        <li v-if="testCase.description" class="mb-3">
+                            <h3>
                                 <strong>Description</strong>
-                            </p>
+                            </h3>
                             <div v-html="testCase.description"></div>
                         </li>
-                        <li v-if="testCase.precondition">
-                            <p>
+                        <li v-if="testCase.precondition" class="mb-3">
+                            <h3>
                                 <strong>Precondition</strong>
-                            </p>
+                            </h3>
                             <div v-html="testCase.precondition"></div>
                         </li>
                     </ul>
