@@ -14,6 +14,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        if (request()->header('Accept') == '*/*') {
+            request()->headers->set('Accept', 'application/json');
+        }
+    }
+
     /**
      * @param Session $session
      * @param string $componentId
