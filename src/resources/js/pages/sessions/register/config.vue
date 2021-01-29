@@ -1,47 +1,53 @@
 <template>
     <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
+            <div class="card mb-3" v-if="groupsDefaultList.length > 0">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Make this session default for groups
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Set groups</label>
+                    <v-select
+                        v-model="form.groupsDefault"
+                        :options="groupsDefaultList"
+                        multiple
+                        label="name"
+                        placeholder="Groups"
+                        :selectable="
+                            (option) =>
+                                isSelectable(option, form.groupsDefault) &&
+                                isSelectable(
+                                    option,
+                                    groupsDefaultList.filter(
+                                        (group) => !group.isAdmin
+                                    )
+                                )
+                        "
+                        class="form-control d-flex p-0 mb-3"
+                    />
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Configure components</h3>
                 </div>
-                <template v-if="groupsDefaultList.length > 0">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            Make this session default for groups
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <label class="form-label">Set groups</label>
-                        <v-select
-                            v-model="form.groupsDefault"
-                            :options="groupsDefaultList"
-                            multiple
-                            label="name"
-                            placeholder="Groups"
-                            :selectable="
-                                (option) =>
-                                    isSelectable(option, form.groupsDefault) &&
-                                    isSelectable(
-                                        option,
-                                        groupsDefaultList.filter(
-                                            (group) => !group.isAdmin
-                                        )
-                                    )
-                            "
-                            class="form-control d-flex p-0 mb-3"
-                        />
-                    </div>
-                    <template
-                        v-if="
-                            form.groupsDefault && form.groupsDefault.length > 0
-                        "
+                <template
+                    v-if="form.groupsDefault && form.groupsDefault.length > 0"
+                >
+                    <div
+                        class="card-body"
+                        v-if="suts.data && suts.data.length > 0"
                     >
-                        <div
-                            class="card-body"
-                            v-if="suts.data && suts.data.length > 0"
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0 mb-0"
+                            v-b-toggle="'config-by-groups'"
                         >
-                            <h3 class="text-primary mb-3">By groups</h3>
+                            By groups
+                        </button>
+                        <b-collapse id="config-by-groups" visible>
                             <template v-for="(group, k) in form.groupsDefault">
                                 <h3
                                     class="text-secondary mb-3"
@@ -106,61 +112,66 @@
                                     </template>
                                 </div>
                             </template>
-                        </div>
-                    </template>
+                        </b-collapse>
+                    </div>
                 </template>
                 <div class="card-body" v-if="suts.data && suts.data.length > 0">
-                    <h3 class="text-primary mb-3">By session</h3>
-                    <div
-                        class="mb-3"
-                        v-for="(sut, i) in suts.data"
-                        :key="`sut-${i}`"
+                    <button
+                        type="button"
+                        class="btn btn-link card-title dropdown-toggle px-0 mb-0"
+                        v-b-toggle="'config-by-session'"
                     >
-                        <h3>{{ sut.name }}</h3>
-
-                        <template v-for="(connection, i) in sut.connections">
-                            <div
-                                class="mb-3"
-                                :key="`connection-${i}`"
-                                v-if="
-                                    Array.from(
-                                        new Set(
-                                            testSteps.data.map(
-                                                (el) => el.target.id
-                                            )
-                                        )
-                                    ).includes(connection.id)
-                                "
+                        By session
+                    </button>
+                    <b-collapse id="config-by-session" visible>
+                        <template v-for="(sut, i) in suts.data">
+                            <h3 :key="`sut-${i}`">{{ sut.name }}</h3>
+                            <template
+                                v-for="(connection, j) in sut.connections"
                             >
-                                <label class="form-label">
-                                    {{ connection.name }}
-                                </label>
-                                <div class="input-group">
-                                    <input
-                                        :id="`testing-${connection.id}`"
-                                        type="text"
-                                        :value="
-                                            getRoute(
-                                                session.sut[sut.id]
-                                                    .use_encryption === '1',
-                                                [
-                                                    session.info.uuid,
-                                                    sut.uuid,
-                                                    connection.uuid,
-                                                ]
+                                <div
+                                    class="mb-3"
+                                    :key="`connection-${j}`"
+                                    v-if="
+                                        Array.from(
+                                            new Set(
+                                                testSteps.data.map(
+                                                    (el) => el.target.id
+                                                )
                                             )
-                                        "
-                                        class="form-control"
-                                        readonly
-                                    />
-                                    <clipboard-copy-btn
-                                        :target="`#testing-${connection.id}`"
-                                        title="Copy"
-                                    ></clipboard-copy-btn>
+                                        ).includes(connection.id)
+                                    "
+                                >
+                                    <label class="form-label">
+                                        {{ connection.name }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input
+                                            :id="`testing-${connection.id}`"
+                                            type="text"
+                                            :value="
+                                                getRoute(
+                                                    session.sut[sut.id]
+                                                        .use_encryption === '1',
+                                                    [
+                                                        session.info.uuid,
+                                                        sut.uuid,
+                                                        connection.uuid,
+                                                    ]
+                                                )
+                                            "
+                                            class="form-control"
+                                            readonly
+                                        />
+                                        <clipboard-copy-btn
+                                            :target="`#testing-${connection.id}`"
+                                            title="Copy"
+                                        ></clipboard-copy-btn>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </template>
-                    </div>
+                    </b-collapse>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">

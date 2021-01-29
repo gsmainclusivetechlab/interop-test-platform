@@ -10,7 +10,7 @@
         "build:prod": "yarn prepare:docker && ENV=production yarn dc build",
         "deps": "yarn dc run app sh -c \"npm i && composer update\"",
         "dev": "yarn dc up",
-        "dev:deploy": "yarn build && yarn deps && yarn dc run app sh -c \"npm run prod\" && yarn migrate && yarn dev -d",
+        "dev:deploy": "yarn build && yarn deps && yarn dc run app sh -c \"npm run prod\" && yarn migrate && yarn down && yarn dev -d",
         "down": "yarn dc down --remove-orphans",
         "has-db": "yarn docker-ops run has-db",
         "backup": "yarn docker-ops run backup",
@@ -20,7 +20,7 @@
         "rundusk": "yarn dc -f ./compose/dusk.yml run queue sh -c \"/wait && php artisan dusk\"",
         "test": "yarn runtest && docker cp `docker ps -alq`:/var/www/results .",
         "dusk": "yarn rundusk && docker cp `docker ps -alq`:/var/www/html/tests/Browser/screenshots ./results/screenshots",
-        "mtls:renew": "yarn dc exec app sh -c 'php artisan certificates:generate-ca' && yarn dc exec -u root app sh -c '/etc/periodic/hourly/client-CA-nginx-renew.sh'"
+        "mtls:renew": "yarn dc exec app sh -c 'php artisan certificates:generate-ca' && yarn dc exec -u root app sh -c '/etc/periodic/15min/client-CA-nginx-renew.sh'"
     },
     "devDependencies": {
         "@prettier/plugin-php": "^0.16.1",

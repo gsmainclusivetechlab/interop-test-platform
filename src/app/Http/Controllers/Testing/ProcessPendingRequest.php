@@ -7,7 +7,7 @@ use App\Http\Controllers\Testing\Handlers\{
     MapRequestHandler,
     MapResponseHandler,
     SendingFulfilledHandler,
-    SendingRejectedHandler,
+    SendingRejectedHandler
 };
 use App\Models\Certificate;
 use App\Models\Session;
@@ -63,10 +63,27 @@ class ProcessPendingRequest
     {
         $options = $this->getRequestOptions();
 
-        $result = (new PendingRequest($this->getResponse()))
-            ->mapRequest(new AttachJwsHeader($this->testResult))
+        return (new PendingRequest($this->getResponse()))
+            ->mapRequest(
+                new AttachJwsHeader(
+                    $this->testResult,
+                    $this->testResult->testStep->request,
+                    !$this->session->getBaseUriOfComponent(
+                        $this->testResult->testStep->source
+                    )
+                )
+            )
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
+            ->mapResponse(
+                new AttachJwsHeader(
+                    $this->testResult,
+                    $this->testResult->testStep->response,
+                    !$this->session->getBaseUriOfComponent(
+                        $this->testResult->testStep->target
+                    )
+                )
+            )
             ->transfer($this->request, $options)
             ->then(
                 new SendingFulfilledHandler(
@@ -77,8 +94,6 @@ class ProcessPendingRequest
             )
             ->otherwise(new SendingRejectedHandler($this->testResult))
             ->wait();
-
-        return $result;
     }
 
     protected function getRequestOptions(): array

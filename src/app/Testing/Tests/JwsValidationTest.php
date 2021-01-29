@@ -2,7 +2,8 @@
 
 namespace App\Testing\Tests;
 
-use App\Models\TestResult;
+use App\Http\Client\Request;
+use App\Http\Client\Response;
 use App\Testing\TestCase;
 use Arr;
 use File;
@@ -10,10 +11,10 @@ use Gamegos\JWS\JWS;
 use Gamegos\JWS\Util\Base64Url;
 use Gamegos\JWS\Util\Json;
 
-class ResponseJwsValidationTest extends TestCase
+class JwsValidationTest extends TestCase
 {
-    /** @var TestResult */
-    protected $testResult;
+    /** @var Request|Response */
+    protected $requestOrResponse;
 
     /** @var array */
     protected $jwsData;
@@ -21,16 +22,27 @@ class ResponseJwsValidationTest extends TestCase
     /** @var JWS */
     protected $jws;
 
-    public function __construct(TestResult $testResult, $jws)
+    /** @var string */
+    protected $title;
+
+    /**
+     * JwsValidationTest constructor.
+     *
+     * @param Request|Response $requestOrResponse
+     * @param array $jwsData
+     * @param string $title
+     */
+    public function __construct($requestOrResponse, $jwsData, string $title)
     {
-        $this->testResult = $testResult;
-        $this->jwsData = $jws;
+        $this->requestOrResponse = $requestOrResponse;
+        $this->jwsData = $jwsData;
         $this->jws = new JWS();
+        $this->title = $title;
     }
 
     public function getName(): string
     {
-        return 'Response: JWS Signature';
+        return $this->title;
     }
 
     public function getActual(): array
@@ -58,13 +70,12 @@ class ResponseJwsValidationTest extends TestCase
 
         if ($this->isMojaloop()) {
             $header = Json::decode($token);
+            $data = Arr::get($this->requestOrResponse->toArray(), 'body');
 
             $token = sprintf(
                 '%s.%s.%s',
                 Arr::get($header, 'protectedHeader'),
-                Base64Url::encode(
-                    Json::encode($this->testResult->request->data())
-                ),
+                Base64Url::encode(Json::encode($data)),
                 Arr::get($header, 'signature')
             );
         }
@@ -74,7 +85,17 @@ class ResponseJwsValidationTest extends TestCase
 
     protected function getHeader(): string
     {
-        return $this->testResult->response->header($this->getHeaderName());
+        $neededHeader = strtolower($this->getHeaderName());
+
+        $result = collect($this->requestOrResponse->headers())->first(function (
+            $header,
+            $headerName
+        ) use ($neededHeader) {
+            return $neededHeader == strtolower($headerName);
+        },
+        '');
+
+        return is_array($result) ? $result[0] : $result;
     }
 
     protected function getHeaderName(): string
@@ -84,7 +105,7 @@ class ResponseJwsValidationTest extends TestCase
 
     protected function getKey(): string
     {
-        return File::exists($filePath = Arr::get($this->jwsData, 'key'))
+        return File::exists($filePath = Arr::get($this->jwsData, 'public_key'))
             ? File::get($filePath)
             : $filePath;
     }
