@@ -93,6 +93,17 @@ class SendingFulfilledHandler
             $this->testResult->fail();
         }
 
+        if ($this->simulateRequest) {
+            $delay = $this->testResult->testStep->response
+                ->withSubstitutions(
+                    $this->testResult->testRun->testResults,
+                    $this->session
+                )
+                ->delay();
+
+            sleep(abs(is_numeric($delay) ? (int) $delay : 0));
+        }
+
         if (
             ($nextTestStep = $this->testResult->testStep->getNext()) &&
             !$this->session->getBaseUriOfComponent($nextTestStep->source)
