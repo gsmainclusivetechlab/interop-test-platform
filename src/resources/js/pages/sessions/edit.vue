@@ -102,11 +102,20 @@
                                 <div class="d-flex mb-3">
                                     <label class="form-check form-switch">
                                         <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            v-model="
+                                            :checked="
                                                 form.components[component.id]
-                                                    .use_encryption
+                                                    .use_encryption === 1
+                                            "
+                                            type="checkbox"
+                                            class="form-check-input"
+                                            @input="
+                                                (e) =>
+                                                    (form.components[
+                                                        component.id
+                                                    ].use_encryption = e.target
+                                                        .checked
+                                                        ? 1
+                                                        : 0)
                                             "
                                         />
                                         <span class="form-check-label"
@@ -144,12 +153,7 @@
                                             >Certificate</label
                                         >
                                         <v-select
-                                            v-model="
-                                                selectedCertificates[
-                                                    component.id
-                                                ]
-                                            "
-                                            placeholder="Select group certificate..."
+                                            placeholder="Select certificate..."
                                             label="name"
                                             :options="groupCertificatesList"
                                             :selectable="
@@ -168,6 +172,12 @@
                                                         `components.${component.id}.certificate_id`
                                                     ],
                                             }"
+                                            @input="
+                                                (e) =>
+                                                    (selectedCertificates[
+                                                        component.id
+                                                    ] = e)
+                                            "
                                         />
                                         <span
                                             v-if="
@@ -195,7 +205,7 @@
                                     >
                                         or
                                     </div>
-                                    <template
+                                    <!-- <template
                                         v-if="
                                             !selectedCertificates[component.id]
                                         "
@@ -340,7 +350,7 @@
                                                 </strong>
                                             </span>
                                         </div>
-                                    </template>
+                                    </template> -->
                                 </div>
                             </div>
                             <div
@@ -363,7 +373,7 @@
                             </div>
                             <div class="mb-3">
                                 <label>
-                                    <b>Environments</b>
+                                    <b>Groups environments</b>
                                 </label>
                                 <v-select
                                     v-if="hasGroupEnvironments"
@@ -377,8 +387,13 @@
                                             )
                                     "
                                     label="name"
+                                    placeholder="Select environments patter"
                                     class="form-control d-flex p-0 mb-3"
+                                    @input="selectGroupsEnvironments"
                                 />
+                                <label>
+                                    <b>Environments</b>
+                                </label>
                                 <environments
                                     v-model="form.environments"
                                     ref="environments"
@@ -496,19 +511,14 @@ export default {
         return {
             sending: false,
             isCompliance: this.session.type === 'compliance',
-            groupEnvironment: this.session.groupEnvironment
-                ? this.session.groupEnvironment.data
-                : null,
+            groupEnvironment: this.session.groupEnvironment?.data ?? null,
             groupEnvironmentsList: [],
             groupCertificatesList: [],
-            selectedCertificates: [],
+            selectedCertificates: {},
             form: {
                 _method: 'PUT',
                 name: this.session.name,
                 description: this.session.description,
-                group_environment_id: this.session.groupEnvironment
-                    ? this.session.groupEnvironment.data.id
-                    : null,
                 environments: this.session.environments,
                 fileEnvironments: this.session.fileEnvironments,
                 components: collect(this.components.data)
@@ -524,31 +534,17 @@ export default {
                     })
                     .keyBy('id')
                     .all(),
-                certificates: collect(this.components.data)
-                    .keyBy('id')
-                    .map(() => {
-                        return {};
-                    })
-                    .all(),
-                test_cases: collect(this.session.testCases.data)
-                    .pluck('id')
-                    .all(),
+                certificates: Object.fromEntries(
+                    this.components?.data?.map((el) => [
+                        el.id,
+                        el.certificate_id,
+                    ]) ?? []
+                ),
+                test_cases: this.session.testCases.data?.map((el) => el.id),
             },
         };
     },
     watch: {
-        groupEnvironment: {
-            immediate: false,
-            handler(value) {
-                this.form.group_environment_id = value ? value.id : null;
-                if (value !== null) {
-                    this.form.environments = value.variables;
-                    this.$refs.environments.syncEnvironments(
-                        this.form.environments
-                    );
-                }
-            },
-        },
         selectedCertificates: {
             immediate: false,
             handler(values) {
@@ -597,10 +593,6 @@ export default {
                     this.groupEnvironmentsList = result.data.data;
                 });
         },
-        searchGroupEnvironments(query, callback) {
-            this.loadGroupEnvironmentList(query);
-            callback();
-        },
         loadGroupCertificateList(query = '') {
             axios
                 .get(route('sessions.register.group-certificate-candidates'), {
@@ -623,6 +615,16 @@ export default {
                             .first();
                     });
                 });
+        },
+        selectGroupsEnvironments(value) {
+            if (value === null) return;
+
+            this.form.environments = Object.assign(
+                {},
+                value.variables,
+                this.form.environments
+            );
+            this.$refs.environments.syncEnvironments(this.form.environments);
         },
     },
 };
