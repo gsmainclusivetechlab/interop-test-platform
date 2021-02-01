@@ -382,7 +382,7 @@ Route::name('admin.')
                         Route::resource(
                             'test-steps',
                             'TestCaseTestStepController'
-                        )->except(['show']);
+                        );
                         Route::resource(
                             'versions',
                             'TestCaseVersionController'
