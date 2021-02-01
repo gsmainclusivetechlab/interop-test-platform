@@ -43,6 +43,7 @@ class SessionResource extends JsonResource
             'description' => $this->description,
             'use_encryption' => $this->use_encryption,
             'environments' => $this->environments,
+            'fileEnvironments' => $this->whenLoaded('fileEnvironments'),
             'owner' => new UserResource($this->whenLoaded('owner')),
             'testCasesCount' => $testCases->count(),
             'useCasesCount' => $testCases

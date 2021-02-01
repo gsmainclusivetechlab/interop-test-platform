@@ -26,6 +26,7 @@ x-php-defaults: &php-defaults
     - ./src/build/nginx-includes:/etc/nginx/includes
     - ./src/build/docker-bootstrap.sh:/usr/local/bin/start
     - ./src:/var/www/html
+    - ca_certs:/etc/nginx/ssl/default-certs
     - certbot_certs:/etc/nginx/ssl/letsencrypt
     - certbot_www:/var/www/certbot
     - storage:/var/www/html/storage/app
@@ -43,6 +44,7 @@ services:
       WAIT_HOSTS: mysqldb:3306
       WAIT_SLEEP_INTERVAL: 5
       WAIT_HOSTS_TIMEOUT: 100
+      HOST_WEB_PORT: ${HOST_WEB_PORT}
 
   queue:
     <<: *php-defaults
@@ -72,7 +74,6 @@ services:
   certbot:
     environment:
       PROJECT_DOMAIN: ${PROJECT_DOMAIN}
-    container_name: certbot
     image: certbot/certbot
     restart: unless-stopped #+++
     volumes:
@@ -92,7 +93,6 @@ services:
     depends_on:
       - mysqldb
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
     environment:
       - PMA_HOST=mysqldb
     ports:
@@ -103,6 +103,7 @@ services:
 volumes:
   mysqldata:
   redisdata:
+  ca_certs:
   certbot_certs:
   certbot_www:
   storage:

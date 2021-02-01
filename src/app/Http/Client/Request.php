@@ -14,6 +14,19 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
 {
     const EMPTY_BODY = 'empty_body';
 
+    /** @var array */
+    protected $jws;
+
+    protected $delay;
+
+    public function __construct($request, $jws = null, $delay = 0)
+    {
+        parent::__construct($request);
+
+        $this->jws = $jws;
+        $this->delay = $delay;
+    }
+
     public function urlForResolver()
     {
         return $this->host() ? $this->url() : ltrim($this->path(), '/');
@@ -22,6 +35,16 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     public function path(): string
     {
         return $this->request->getUri()->getPath();
+    }
+
+    public function jws()
+    {
+        return $this->jws;
+    }
+
+    public function delay()
+    {
+        return $this->delay;
     }
 
     public function host(): string
@@ -47,6 +70,8 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
             'path' => $this->path(),
             'headers' => $this->headers(),
             'body' => $this->json(),
+            'jws' => $this->jws(),
+            'delay' => $this->delay(),
         ];
     }
 
@@ -68,7 +93,9 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 $data['uri'],
                 $data['headers'],
                 json_encode($data['body'])
-            )
+            ),
+            $data['jws'],
+            $data['delay'],
         );
     }
 
@@ -91,7 +118,9 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 $data['uri'],
                 $data['headers'],
                 json_encode($data['body'])
-            )
+            ),
+            $data['jws'],
+            $data['delay'],
         );
     }
 

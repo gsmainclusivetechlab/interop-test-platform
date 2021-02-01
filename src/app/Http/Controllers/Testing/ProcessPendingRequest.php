@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Http\Controllers\Testing\Handlers\MapRequestHandler;
-use App\Http\Controllers\Testing\Handlers\MapResponseHandler;
-use App\Http\Controllers\Testing\Handlers\SendingFulfilledHandler;
-use App\Http\Controllers\Testing\Handlers\SendingRejectedHandler;
+use App\Http\Controllers\Testing\Handlers\AttachJwsHeader;
+use App\Http\Controllers\Testing\Handlers\{
+    MapRequestHandler,
+    MapResponseHandler,
+    SendingFulfilledHandler,
+    SendingRejectedHandler
+};
 use App\Models\Certificate;
 use App\Models\Session;
 use App\Models\TestResult;
@@ -61,11 +64,33 @@ class ProcessPendingRequest
         $options = $this->getRequestOptions();
 
         return (new PendingRequest($this->getResponse()))
+            ->mapRequest(
+                new AttachJwsHeader(
+                    $this->testResult,
+                    $this->testResult->testStep->request,
+                    !$this->session->getBaseUriOfComponent(
+                        $this->testResult->testStep->source
+                    )
+                )
+            )
             ->mapRequest(new MapRequestHandler($this->testResult))
             ->mapResponse(new MapResponseHandler($this->testResult))
+            ->mapResponse(
+                new AttachJwsHeader(
+                    $this->testResult,
+                    $this->testResult->testStep->response,
+                    !$this->session->getBaseUriOfComponent(
+                        $this->testResult->testStep->target
+                    )
+                )
+            )
             ->transfer($this->request, $options)
             ->then(
-                new SendingFulfilledHandler($this->testResult, $this->session)
+                new SendingFulfilledHandler(
+                    $this->testResult,
+                    $this->session,
+                    $this->simulateRequest
+                )
             )
             ->otherwise(new SendingRejectedHandler($this->testResult))
             ->wait();

@@ -21,7 +21,7 @@ repeats the folder `src/resources/js` structure.
 
 The file `src/resources/locales/special-locales.json` contains special
 localization words, which contains in other locales files.  
-For example - word `compliance` localising like`certification`.
+For example - word `compliance` localising like `certification`.
 
 ### Configuration
 

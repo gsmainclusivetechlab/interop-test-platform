@@ -16,6 +16,7 @@ class GroupEnvironmentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'variables' => $this->variables,
+            'files' => $this->fileEnvironments,
             'can' => [
                 'update' => auth()
                     ->user()

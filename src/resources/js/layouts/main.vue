@@ -59,7 +59,6 @@
                                 $page.props.auth.user.can.components.viewAny ||
                                 $page.props.auth.user.can.use_cases.viewAny ||
                                 $page.props.auth.user.can.message_log.viewAny ||
-                                $page.props.auth.user.can.audit_log.viewAny ||
                                 $page.props.auth.user.can.test_cases.viewAny
                             "
                         >
@@ -183,18 +182,6 @@
                                     {{ $t('menu.import-question-def') }}
                                 </inertia-link>
                             </li>
-                            <li
-                                v-if="
-                                    $page.props.auth.user.can.audit_log.viewAny
-                                "
-                            >
-                                <inertia-link
-                                    :href="route('admin.audit-log')"
-                                    class="text-reset dropdown-item"
-                                >
-                                    Audit Log
-                                </inertia-link>
-                            </li>
                         </b-nav-item-dropdown>
 
                         <b-nav-item-dropdown
@@ -234,6 +221,7 @@
                                     :href="route('logout')"
                                     method="post"
                                     class="text-reset dropdown-item"
+                                    as="button"
                                 >
                                     {{ $t('user-menu.logout') }}
                                 </inertia-link>

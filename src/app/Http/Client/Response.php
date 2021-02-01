@@ -12,6 +12,29 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
 {
     const EMPTY_BODY = 'empty_body';
 
+    /** @var array */
+    protected $jws;
+
+    protected $delay;
+
+    public function __construct($request, $jws = null, $delay = 0)
+    {
+        parent::__construct($request);
+
+        $this->jws = $jws;
+        $this->delay = $delay;
+    }
+
+    public function jws()
+    {
+        return $this->jws;
+    }
+
+    public function delay()
+    {
+        return $this->delay;
+    }
+
     /**
      * @return array
      */
@@ -21,6 +44,8 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
             'status' => $this->status(),
             'headers' => $this->headers(),
             'body' => $this->json(),
+            'jws' => $this->jws(),
+            'delay' => $this->delay(),
         ];
     }
 
@@ -41,7 +66,9 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
                 $data['status'],
                 $data['headers'],
                 json_encode($data['body'])
-            )
+            ),
+            $data['jws'],
+            $data['delay'],
         );
     }
 
@@ -61,7 +88,9 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
                 $data['status'],
                 $data['headers'],
                 json_encode($data['body'])
-            )
+            ),
+            $data['jws'],
+            $data['delay'],
         );
     }
 

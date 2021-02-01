@@ -41,18 +41,23 @@
                     }
                 }
             },
+            "empty-body": "Empty body",
             "request": {
                 "headers": "Request Headers",
                 "body": "Request Body",
-                "uri": "Request URI"
+                "jws": "Request Jws",
+                "uri": "Request URI",
+                "delay": "Request Delay"
             },
             "response": {
                 "headers": "Response Headers",
                 "body": "Response Body",
+                "jws": "Response Jws",
                 "status": {
                     "label": "Response Status",
                     "placeholder": "Select status"
-                }
+                },
+                "delay": "Response Delay"
             }
         },
         "buttons": {
@@ -103,18 +108,23 @@
                     }
                 }
             },
+            "empty-body": "Пустое Тело",
             "request": {
                 "headers": "Заголовки Запроса",
                 "body": "Тело Запроса",
-                "uri": "URI Запроса"
+                "jws": "JWS Запроса",
+                "uri": "URI Запроса",
+                "delay": "Задержка Запроса"
             },
             "response": {
                 "headers": "Заголовки Ответа",
                 "body": "Тело Ответа",
+                "jws": "JWS Ответа",
                 "status": {
                     "label": "Статус Ответа",
                     "placeholder": "Выберите статус"
-                }
+                },
+                "delay": "Задержка Ответа"
             }
         },
         "buttons": {

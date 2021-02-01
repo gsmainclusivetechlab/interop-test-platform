@@ -76,7 +76,7 @@
                         </div>
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
-                                style="max-height: 320px;"
+                                style="max-height: 320px"
                                 :session="session"
                                 :useCases="useCases"
                                 :isCompliance="isCompliance"

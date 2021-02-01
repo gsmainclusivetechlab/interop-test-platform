@@ -1,70 +1,181 @@
 <template>
     <layout :components="components" :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
-            <div class="card">
-                <div class="card-header border-0">
-                    <h3 class="card-title">Configure components</h3>
+            <div class="card mb-3" v-if="groupsDefaultList.length > 0">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Make this session default for groups
+                    </h3>
                 </div>
                 <div class="card-body">
-                    <div
-                        class="mb-3"
-                        v-for="(sut, i) in suts.data"
-                        :key="`sut-${i}`"
-                    >
-                        <h3>{{ sut.name }}</h3>
-
-                        <template v-for="(connection, i) in sut.connections">
-                            <div
-                                class="mb-3"
-                                :key="`connection-${i}`"
-                                v-if="
-                                    inArray(
-                                        [connection],
-                                        collect(testSteps.data)
-                                            .map((value) => value.target.id)
-                                            .unique()
-                                            .toArray()
+                    <label class="form-label">Set groups</label>
+                    <v-select
+                        v-model="form.groupsDefault"
+                        :options="groupsDefaultList"
+                        multiple
+                        label="name"
+                        placeholder="Groups"
+                        :selectable="
+                            (option) =>
+                                isSelectable(option, form.groupsDefault) &&
+                                isSelectable(
+                                    option,
+                                    groupsDefaultList.filter(
+                                        (group) => !group.isAdmin
                                     )
-                                "
-                            >
-                                <label class="form-label">
-                                    {{ connection.name }}
-                                </label>
-                                <div class="input-group">
-                                    <input
-                                        :id="`testing-${connection.id}`"
-                                        type="text"
-                                        :value="
-                                            session.sut[sut.id]
-                                                .use_encryption === '1'
-                                                ? route('testing.sut', [
-                                                      session.info.uuid,
-                                                      sut.uuid,
-                                                      connection.uuid,
-                                                  ])
-                                                : route(
-                                                      'testing-insecure.sut',
-                                                      [
-                                                          session.info.uuid,
-                                                          sut.uuid,
-                                                          connection.uuid,
-                                                      ]
-                                                  )
-                                        "
-                                        class="form-control"
-                                        readonly
-                                    />
-                                    <clipboard-copy-btn
-                                        :target="`#testing-${connection.id}`"
-                                        title="Copy"
-                                    ></clipboard-copy-btn>
+                                )
+                        "
+                        class="form-control d-flex p-0 mb-3"
+                    />
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Configure components</h3>
+                </div>
+                <template
+                    v-if="form.groupsDefault && form.groupsDefault.length > 0"
+                >
+                    <div
+                        class="card-body"
+                        v-if="suts.data && suts.data.length > 0"
+                    >
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0 mb-0"
+                            v-b-toggle="'config-by-groups'"
+                        >
+                            By groups
+                        </button>
+                        <b-collapse id="config-by-groups" visible>
+                            <template v-for="(group, k) in form.groupsDefault">
+                                <h3
+                                    class="text-secondary mb-3"
+                                    :key="`name-${k}`"
+                                >
+                                    {{ group.name }}
+                                </h3>
+                                <div
+                                    class="mb-3"
+                                    v-for="(sut, i) in suts.data"
+                                    :key="`sut-${i}-${k}`"
+                                >
+                                    <h3>{{ sut.name }}</h3>
+
+                                    <template
+                                        v-for="(
+                                            connection, j
+                                        ) in sut.connections"
+                                    >
+                                        <div
+                                            class="mb-3"
+                                            :key="`connection-${j}`"
+                                            v-if="
+                                                Array.from(
+                                                    new Set(
+                                                        testSteps.data.map(
+                                                            (el) => el.target.id
+                                                        )
+                                                    )
+                                                ).includes(connection.id)
+                                            "
+                                        >
+                                            <label class="form-label">
+                                                {{ connection.name }}
+                                            </label>
+                                            <div class="input-group">
+                                                <input
+                                                    :id="`testing-${connection.id}`"
+                                                    type="text"
+                                                    :value="
+                                                        getRoute(
+                                                            session.sut[sut.id]
+                                                                .use_encryption ===
+                                                                '1',
+                                                            [
+                                                                group.id,
+                                                                sut.uuid,
+                                                                connection.uuid,
+                                                            ],
+                                                            true
+                                                        )
+                                                    "
+                                                    class="form-control"
+                                                    readonly
+                                                />
+                                                <clipboard-copy-btn
+                                                    :target="`#testing-${connection.id}`"
+                                                    title="Copy"
+                                                ></clipboard-copy-btn>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
-                            </div>
-                        </template>
-                        <hr />
+                            </template>
+                        </b-collapse>
                     </div>
+                </template>
+                <div class="card-body" v-if="suts.data && suts.data.length > 0">
+                    <button
+                        type="button"
+                        class="btn btn-link card-title dropdown-toggle px-0 mb-0"
+                        v-b-toggle="'config-by-session'"
+                    >
+                        By session
+                    </button>
+                    <b-collapse id="config-by-session" visible>
+                        <template v-for="(sut, i) in suts.data">
+                            <h3 :key="`sut-${i}`">{{ sut.name }}</h3>
+                            <template
+                                v-for="(connection, j) in sut.connections"
+                            >
+                                <div
+                                    class="mb-3"
+                                    :key="`connection-${j}`"
+                                    v-if="
+                                        Array.from(
+                                            new Set(
+                                                testSteps.data.map(
+                                                    (el) => el.target.id
+                                                )
+                                            )
+                                        ).includes(connection.id)
+                                    "
+                                >
+                                    <label class="form-label">
+                                        {{ connection.name }}
+                                    </label>
+                                    <div class="input-group">
+                                        <input
+                                            :id="`testing-${connection.id}`"
+                                            type="text"
+                                            :value="
+                                                getRoute(
+                                                    session.sut[sut.id]
+                                                        .use_encryption === '1',
+                                                    [
+                                                        session.info.uuid,
+                                                        sut.uuid,
+                                                        connection.uuid,
+                                                    ]
+                                                )
+                                            "
+                                            class="form-control"
+                                            readonly
+                                        />
+                                        <clipboard-copy-btn
+                                            :target="`#testing-${connection.id}`"
+                                            title="Copy"
+                                        ></clipboard-copy-btn>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </b-collapse>
+                </div>
+                <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label"> Environments </label>
+                        <label class="form-label">Environments</label>
                         <v-select
                             v-if="hasGroupEnvironments"
                             v-model="groupEnvironment"
@@ -90,6 +201,21 @@
                             }}</strong>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label"> File Environments </label>
+                        <file-environments
+                            v-model="form.fileEnvironments"
+                            ref="fileEnvironments"
+                        />
+                        <div
+                            class="text-danger small mt-2"
+                            v-if="$page.props.errors.fileEnvironments"
+                        >
+                            <strong>{{
+                                $page.props.errors.fileEnvironments
+                            }}</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -112,14 +238,17 @@
 </template>
 
 <script>
+import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
-import Environments from '@/components/environments';
+import Environments from '@/components/environments/environments';
+import FileEnvironments from '@/components/environments/file-environments';
 import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
         Layout,
         Environments,
+        FileEnvironments,
     },
     props: {
         session: {
@@ -145,13 +274,20 @@ export default {
     },
     mixins: [mixinVSelect],
     data() {
+        const ziggyConf = { ...this.route().ziggy };
+        ziggyConf.baseUrl = this.$page.props.app.http_base_url;
+
         return {
+            ziggyConf,
             sending: false,
             groupEnvironment: null,
             groupEnvironmentsList: [],
+            groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 group_environment_id: null,
                 environments: null,
+                groupsDefault: null,
+                fileEnvironments: null,
             },
         };
     },
@@ -159,11 +295,16 @@ export default {
         groupEnvironment: {
             immediate: true,
             handler(value) {
-                this.form.group_environment_id = value ? value.id : null;
+                this.form.group_environment_id = value?.id ?? null;
                 if (value !== null) {
                     this.form.environments = value.variables;
                     this.$refs.environments.syncEnvironments(
                         this.form.environments
+                    );
+
+                    this.form.fileEnvironments = value.files;
+                    this.$refs.fileEnvironments.syncEnvironments(
+                        this.form.fileEnvironments
                     );
                 }
             },
@@ -177,7 +318,9 @@ export default {
             this.sending = true;
             this.$inertia.post(
                 route('sessions.register.config.store'),
-                this.form,
+                serialize(this.form, {
+                    indices: true,
+                }),
                 {
                     onFinish: () => {
                         this.sending = false;
@@ -194,14 +337,19 @@ export default {
                     this.groupEnvironmentsList = result.data.data;
                 });
         },
-        inArray(components, array) {
-            let result = false;
-            components.forEach(function (component) {
-                if (array.includes(component.id)) {
-                    result = true;
-                }
-            });
-            return result;
+        getRoute(useEncryption, data, isForGroup = false) {
+            const group = isForGroup ? '-group' : '';
+
+            if (useEncryption) {
+                return this.route('testing' + group + '.sut', data);
+            }
+
+            return this.route(
+                'testing-insecure' + group + '.sut',
+                data,
+                undefined,
+                this.ziggyConf
+            );
         },
     },
 };

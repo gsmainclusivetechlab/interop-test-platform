@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
-use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestCaseResource;
-use App\Http\Resources\TestResultResource;
-use App\Http\Resources\TestRunResource;
-use App\Http\Resources\TestStepResource;
-use App\Models\Component;
-use App\Models\TestCase;
-use App\Models\Session;
-use App\Models\TestRun;
+use App\Http\Resources\{
+    ComponentResource,
+    SessionResource,
+    TestCaseResource,
+    TestResultResource,
+    TestRunResource,
+    TestStepResource
+};
+use App\Models\{Component, TestCase, Session, TestRun};
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;

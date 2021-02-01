@@ -12,6 +12,7 @@ use App\Models\TestCase;
 use App\Models\UseCase;
 use App\Models\MessageLog;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\ViewErrorBag;
 use Inertia\Inertia;
@@ -53,6 +54,7 @@ class InertiaServiceProvider extends ServiceProvider
                         'supported' => config('app.locales'),
                     ],
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
+                    'http_base_url' => config('app.http_base_url'),
                     'available_session_modes_count' => collect(
                         config('service_session.available_modes')
                     )
@@ -73,6 +75,15 @@ class InertiaServiceProvider extends ServiceProvider
                             'is_admin' => auth()
                                 ->user()
                                 ->isAdmin(),
+                            'groups' => auth()
+                                ->user()
+                                ->groups->map(function ($group) {
+                                    return Arr::add(
+                                        $group,
+                                        'isAdmin',
+                                        $group->hasAdminUser(auth()->user())
+                                    );
+                                }),
                             'can' => [
                                 'users' => [
                                     'viewAny' => auth()

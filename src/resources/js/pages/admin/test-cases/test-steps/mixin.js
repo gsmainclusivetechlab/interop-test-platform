@@ -61,6 +61,8 @@ export default {
                 trigger: this.trigger,
                 request: this.example.request,
                 response: {
+                    delay: this.example.response.delay,
+                    jws: this.example.response.jws,
                     status: collect(this.$page.props.statuses)
                         .flip()
                         .get(this.example.response.status.selected),

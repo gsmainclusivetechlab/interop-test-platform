@@ -20,6 +20,7 @@ use App\Http\Resources\{
 use App\Models\{
     Certificate,
     Component,
+    FileEnvironment,
     GroupEnvironment,
     QuestionnaireQuestions,
     QuestionnaireSection,
@@ -382,11 +383,18 @@ class RegisterController extends Controller
      */
     public function storeInfo(Request $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['string', 'nullable'],
-            'test_cases' => ['required', 'array', 'exists:test_cases,id'],
-        ]);
+        $validated = $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'description' => ['string', 'nullable'],
+                'test_cases' => ['required', 'array', 'exists:test_cases,id'],
+            ],
+            [
+                'test_cases.required' => __(
+                    'Please select at least 1 test case.'
+                ),
+            ]
+        );
         $request->session()->put(
             'session.info',
             array_merge($validated, [
@@ -452,6 +460,9 @@ class RegisterController extends Controller
                 'exists:group_environments,id',
             ],
             'environments' => ['nullable', 'array'],
+            'fileEnvironments' => ['nullable', 'array'],
+            'groupsDefault' => ['nullable', 'array'],
+            'groupsDefault.*.id' => ['required', 'exists:groups,id'],
         ]);
 
         try {
@@ -468,6 +479,11 @@ class RegisterController extends Controller
                             ])
                             ->all()
                     );
+
+                FileEnvironment::syncEnvironments(
+                    $session,
+                    Arr::get($request->all(), 'fileEnvironments')
+                );
 
                 if ($session->isComplianceSession()) {
                     $session->updateStatus(Session::STATUS_READY);
@@ -522,6 +538,19 @@ class RegisterController extends Controller
                             ])
                         );
                 });
+
+                if ($groupsDefault = $request->input('groupsDefault')) {
+                    auth()
+                        ->user()
+                        ->groups()
+                        ->whereKey(Arr::pluck($groupsDefault, 'id'))
+                        ->wherePivot('admin', true)
+                        ->each(function ($group) use ($session) {
+                            $group->update([
+                                'default_session_id' => $session->id,
+                            ]);
+                        });
+                }
 
                 return $session;
             });

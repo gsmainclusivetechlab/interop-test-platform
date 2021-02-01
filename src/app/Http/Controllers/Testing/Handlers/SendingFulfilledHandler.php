@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Testing\Handlers;
 
+use App\Http\Client\Request;
+use App\Http\Client\Response;
 use App\Jobs\ExecuteTestStepJob;
 use App\Models\Session;
 use App\Models\TestResult;
 use App\Testing\TestExecutionListener;
 use App\Testing\Tests\RequestMtlsValidationTest;
+use App\Testing\Tests\JwsValidationTest;
 use App\Testing\TestScriptLoader;
 use App\Testing\TestSpecLoader;
+use Arr;
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use PHPUnit\Framework\TestResult as TestSuiteResult;
 use PHPUnit\Framework\TestSuite;
@@ -27,13 +31,23 @@ class SendingFulfilledHandler
     protected $session;
 
     /**
+     * @var bool
+     */
+    protected $simulateRequest;
+
+    /**
      * @param TestResult $testResult
      * @param Session $session
+     * @param bool $simulateRequest
      */
-    public function __construct(TestResult $testResult, Session $session)
-    {
+    public function __construct(
+        TestResult $testResult,
+        Session $session,
+        $simulateRequest
+    ) {
         $this->testResult = $testResult;
         $this->session = $session;
+        $this->simulateRequest = $simulateRequest;
     }
 
     /**
@@ -49,11 +63,23 @@ class SendingFulfilledHandler
                 new RequestMtlsValidationTest($this->testResult)
             );
         }
+        $this->attachJWSValidation(
+            $testSuite,
+            $this->testResult->request,
+            $this->testResult->testStep->request,
+            'Request: JWS Signature'
+        );
         $testSuite->addTestSuite(
             (new TestSpecLoader())->load($this->testResult)
         );
         $testSuite->addTestSuite(
             (new TestScriptLoader())->load($this->testResult)
+        );
+        $this->attachJWSValidation(
+            $testSuite,
+            $this->testResult->response,
+            $this->testResult->testStep->response,
+            'Response: JWS Signature'
         );
         $testSuiteResult = new TestSuiteResult();
         $testSuiteResult->addListener(
@@ -67,15 +93,33 @@ class SendingFulfilledHandler
             $this->testResult->fail();
         }
 
+        if ($this->simulateRequest) {
+            $delay = $this->testResult->testStep->response
+                ->withSubstitutions(
+                    $this->testResult->testRun->testResults,
+                    $this->session
+                )
+                ->delay();
+
+            sleep(is_numeric($delay) ? (int) $delay : 0);
+        }
+
         if (
             ($nextTestStep = $this->testResult->testStep->getNext()) &&
             !$this->session->getBaseUriOfComponent($nextTestStep->source)
         ) {
+            $delay = $nextTestStep->request
+                ->withSubstitutions(
+                    $this->testResult->testRun->testResults,
+                    $this->session
+                )
+                ->delay();
+
             ExecuteTestStepJob::dispatch(
                 $this->session,
                 $nextTestStep,
                 $this->testResult->testRun
-            );
+            )->delay(now()->addSeconds(is_numeric($delay) ? $delay : 0));
         }
 
         if ($this->testResult->testStep->isLastPosition()) {
@@ -83,5 +127,35 @@ class SendingFulfilledHandler
         }
 
         return $response;
+    }
+
+    /**
+     * @param TestSuite $testSuite
+     * @param Request|Response $requestOrResponse
+     * @param string $title
+     */
+    protected function attachJWSValidation(
+        TestSuite $testSuite,
+        $requestOrResponse,
+        $testStepRequestOrResponse,
+        $title
+    ) {
+        if (
+            ($jws = $testStepRequestOrResponse->jws()) &&
+            !is_null(Arr::get($jws, 'public_key'))
+        ) {
+            $testSuite->addTest(
+                new JwsValidationTest(
+                    $requestOrResponse,
+                    $testStepRequestOrResponse
+                        ->withSubstitutions(
+                            $this->testResult->testRun->testResults,
+                            $this->testResult->session
+                        )
+                        ->jws(),
+                    $title
+                )
+            );
+        }
     }
 }

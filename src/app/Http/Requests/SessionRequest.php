@@ -71,6 +71,7 @@ class SessionRequest extends FormRequest
                 'exists:group_environments,id',
             ],
             'environments' => ['nullable', 'array'],
+            'fileEnvironments' => ['nullable', 'array'],
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
         ] + $urlRules;
     }

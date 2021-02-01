@@ -32,7 +32,21 @@ class CompleteTestRunJob implements ShouldQueue
     public function handle()
     {
         if (!$this->testRun->completed_at) {
-            $this->testRun->complete();
+            $latestTestResult = $this->testRun
+                ->testResults()
+                ->latest()
+                ->first();
+
+            if (
+                !$latestTestResult ||
+                $latestTestResult->created_at->diffInSeconds() >= 30
+            ) {
+                $this->testRun->complete();
+            } else {
+                CompleteTestRunJob::dispatch($this->testRun)->delay(
+                    now()->addSeconds(30)
+                );
+            }
         }
     }
 }

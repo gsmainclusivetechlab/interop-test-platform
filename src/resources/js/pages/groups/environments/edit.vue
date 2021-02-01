@@ -42,6 +42,18 @@
                                     }}</strong>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label"> Files </label>
+                                <file-environments v-model="form.files" />
+                                <div
+                                    class="text-danger small mt-2"
+                                    v-if="$page.props.errors.files"
+                                >
+                                    <strong>{{
+                                        $page.props.errors.files
+                                    }}</strong>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -68,8 +80,10 @@
 </template>
 
 <script>
+import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
-import Environments from '@/components/environments';
+import Environments from '@/components/environments/environments';
+import FileEnvironments from '@/components/environments/file-environments';
 
 export default {
     metaInfo() {
@@ -80,6 +94,7 @@ export default {
     components: {
         Layout,
         Environments,
+        FileEnvironments,
     },
     props: {
         group: {
@@ -95,20 +110,24 @@ export default {
         return {
             sending: false,
             form: {
+                _method: 'PUT',
                 name: this.environment.name,
                 variables: this.environment.variables,
+                files: this.environment.files,
             },
         };
     },
     methods: {
         submit() {
             this.sending = true;
-            this.$inertia.put(
+            this.$inertia.post(
                 route('groups.environments.update', [
                     this.group,
                     this.environment,
                 ]),
-                this.form,
+                serialize(this.form, {
+                    indices: true,
+                }),
                 {
                     onFinish: () => {
                         this.sending = false;

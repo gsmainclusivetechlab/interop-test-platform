@@ -42,6 +42,18 @@
                                     }}</strong>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label"> Files </label>
+                                <file-environments v-model="form.files" />
+                                <div
+                                    class="text-danger small mt-2"
+                                    v-if="$page.props.errors.files"
+                                >
+                                    <strong>{{
+                                        $page.props.errors.files
+                                    }}</strong>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -68,8 +80,10 @@
 </template>
 
 <script>
+import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
-import Environments from '@/components/environments';
+import Environments from '@/components/environments/environments';
+import FileEnvironments from '@/components/environments/file-environments';
 
 export default {
     metaInfo() {
@@ -80,6 +94,7 @@ export default {
     components: {
         Layout,
         Environments,
+        FileEnvironments,
     },
     props: {
         group: {
@@ -93,6 +108,7 @@ export default {
             form: {
                 name: null,
                 variables: null,
+                files: null,
             },
         };
     },
@@ -101,7 +117,9 @@ export default {
             this.sending = true;
             this.$inertia.post(
                 route('groups.environments.store', this.group),
-                this.form,
+                serialize(this.form, {
+                    indices: true,
+                }),
                 {
                     onFinish: () => {
                         this.sending = false;

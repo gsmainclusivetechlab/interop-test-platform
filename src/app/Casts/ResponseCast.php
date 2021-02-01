@@ -31,7 +31,9 @@ class ResponseCast implements CastsAttributes
                 Arr::get($value, 'status'),
                 Arr::get($value, 'headers', []),
                 json_encode(Arr::get($value, 'body'))
-            )
+            ),
+            Arr::get($value, 'jws'),
+            Arr::get($value, 'delay'),
         );
     }
 

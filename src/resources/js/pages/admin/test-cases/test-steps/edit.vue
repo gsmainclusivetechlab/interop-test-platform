@@ -509,6 +509,28 @@
                             </strong>
                         </span>
                     </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.delay') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['request.delay'],
+                            }"
+                            v-model="example.request.delay"
+                        />
+                        <span
+                            v-if="$page.props.errors['request.delay']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['request.delay'] }}
+                            </strong>
+                        </span>
+                    </div>
                     <div class="col-12 mb-3">
                         <button
                             type="button"
@@ -555,9 +577,9 @@
                                                     ))
                                             "
                                         />
-                                        <span class="form-check-label"
-                                            >Empty body</span
-                                        >
+                                        <span class="form-check-label">{{
+                                            $t('inputs.empty-body')
+                                        }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -567,6 +589,26 @@
                                 @output-json="
                                     (data) => {
                                         example.request.body = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-jws-examples'"
+                        >
+                            {{ $t('inputs.request.jws') }}
+                        </button>
+                        <b-collapse id="request-jws-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.request.jws"
+                                @output-json="
+                                    (data) => {
+                                        example.request.jws = data;
                                     }
                                 "
                                 class="card-body"
@@ -602,6 +644,28 @@
                         >
                             <strong>
                                 {{ $page.props.errors['response.status'] }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.response.delay') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['response.delay'],
+                            }"
+                            v-model="example.response.delay"
+                        />
+                        <span
+                            v-if="$page.props.errors['response.delay']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['response.delay'] }}
                             </strong>
                         </span>
                     </div>
@@ -651,9 +715,9 @@
                                                     ))
                                             "
                                         />
-                                        <span class="form-check-label"
-                                            >Empty body</span
-                                        >
+                                        <span class="form-check-label">{{
+                                            $t('inputs.empty-body')
+                                        }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -663,6 +727,26 @@
                                 @output-json="
                                     (data) => {
                                         example.response.body = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'response-jws-examples'"
+                        >
+                            {{ $t('inputs.response.jws') }}
+                        </button>
+                        <b-collapse id="response-jws-examples" class="card">
+                            <json-editor-block
+                                :input-json="example.response.jws"
+                                @output-json="
+                                    (data) => {
+                                        example.response.jws = data;
                                     }
                                 "
                                 class="card-body"
@@ -748,11 +832,15 @@ export default {
             },
             example: {
                 request: {
+                    delay: this.testStep.request.delay,
                     uri: this.testStep.request.uri,
+                    jws: this.testStep.request.jws,
                     headers: this.testStep.request.headers,
                     body: this.testStep.request.body,
                 },
                 response: {
+                    delay: this.testStep.response.delay,
+                    jws: this.testStep.response.jws,
                     status: {
                         selected: this.$page.props.statuses[
                             this.testStep.response.status
@@ -783,4 +871,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/test-steps/create.json"></i18n>
 <i18n src="@locales/pages/admin/test-cases/test-steps/edit.json"></i18n>

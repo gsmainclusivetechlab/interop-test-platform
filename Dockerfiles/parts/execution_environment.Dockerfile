@@ -16,7 +16,7 @@ RUN mkdir -p /usr/src/php/ext/redis && \
 
 # Use custom user to ensure correct permissions
 RUN addgroup --gid 1024 interopdevs
-RUN adduser --disabled-password --gecos "" --ingroup interopdevs interopdev 
+RUN adduser --disabled-password --gecos "" --ingroup interopdevs interopdev
 
 RUN mkdir /var/www/logs
 
@@ -24,7 +24,8 @@ RUN mkdir /var/www/logs
 RUN chmod +x /wait && \
     mkdir -p /etc/nginx/ssl/default-certs && \
     mkdir -p /etc/nginx/ssl/letsencrypt && \
-    chown -R interopdev /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx /run
+    chown -R interopdev /var/www /var/lib/nginx /var/log/ /var/log/ /etc/nginx /run && \
+    chmod -R 777 /var/lib/nginx
 
 # Expose the port nginx is reachable on
 EXPOSE 8080

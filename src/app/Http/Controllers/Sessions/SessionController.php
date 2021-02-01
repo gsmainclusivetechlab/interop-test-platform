@@ -19,6 +19,7 @@ use App\Http\Resources\{
 use App\Models\{
     Certificate,
     Component,
+    FileEnvironment,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
@@ -163,6 +164,7 @@ class SessionController extends Controller
                 ]);
             },
             'groupEnvironment',
+            'fileEnvironments',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
         $sessionTestCasesGroupIds = $session->testCases->pluck(
@@ -348,6 +350,11 @@ class SessionController extends Controller
                             'environments',
                         ])
                         : $data
+                );
+
+                FileEnvironment::syncEnvironments(
+                    $session,
+                    Arr::get($request->all(), 'fileEnvironments')
                 );
 
                 $session->components->each(function (Component $component) use (

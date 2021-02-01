@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Groups;
 
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\SessionResource;
-use App\Models\Group;
 use App\Http\Controllers\Controller;
+use App\Models\Group;
+use App\Models\Session;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Inertia\Inertia;
@@ -63,13 +64,7 @@ class GroupController extends Controller
                                 ->orWhere('name', 'like', "%{$q}%");
                         });
                     })
-                    ->with([
-                        'owner',
-                        'testCases' => function ($query) {
-                            return $query->with(['lastTestRun']);
-                        },
-                        'lastTestRun',
-                    ])
+                    ->with(['owner', 'lastTestRun'])
                     ->latest()
                     ->paginate()
             ),
@@ -77,5 +72,27 @@ class GroupController extends Controller
                 'q' => request('q'),
             ],
         ]);
+    }
+
+    /**
+     * @param Group $group
+     * @param Session $session
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function toggleDefaultSession(Group $group, Session $session)
+    {
+        $this->authorize('admin', $group);
+
+        $session = $group
+            ->sessions()
+            ->whereKey($session->getKey())
+            ->firstOrFail();
+
+        $group->update([
+            'default_session_id' => $session->id,
+        ]);
+
+        return redirect()->back();
     }
 }
