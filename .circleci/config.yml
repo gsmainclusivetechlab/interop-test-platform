@@ -8,7 +8,7 @@ x_filter_release: &release_filter
       only: /^v\d+\.\d+\.\d+/
 
 orbs:
-  coverage-reporter: codacy/coverage-reporter@10.0.3
+  coverage-reporter: codacy/coverage-reporter@11.9.0
   node: circleci/node@3.0.0
 
 executors:
@@ -71,31 +71,33 @@ jobs:
       - run:
           name: Run Tests and get coverage
           command: |
-            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit"
-            docker cp `docker ps -alq`:/var/www/results .
+            docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit --coverage-clover=results/clover.xml --log-junit results/results.xml"
+            docker cp `docker ps -alq`:/var/www/src/results .
             docker-compose -f docker-compose.ci.yml down -v
-      # - publish_tag:
-      #     img_tag: << pipeline.git.revision >>
-      - publish_tag:
-          img_tag: << pipeline.git.branch >>
+      - coverage-reporter/send_report:
+          coverage-reports: ./results/clover.xml
+          project-token: $CODACY_PROJECT_TOKEN
+          tool_version: ''
+      - run:
+          name: Upload coverage to Codecov
+          command: bash <(curl -s https://codecov.io/bash)
+      - store_test_results:
+          path: ./results
+      - store_artifacts:
+          path: ./results
+      # TODO: fix browser testing and include screenshots
+      # - store_artifacts:
+      #   path: src/tests/Browser/screenshots
+      - when:
+          condition: << pipeline.git.branch >>
+          steps:
+            - publish_tag:
+                img_tag: << pipeline.git.branch >>
       - when:
           condition: << pipeline.git.tag >>
           steps:
             - publish_tag:
                 img_tag: << pipeline.git.tag >>
-      # TODO: fix browser testing and include screenshots
-      # - coverage-reporter/send_report:
-      #     coverage-reports: ./results/coverage-report-clover/clover.xml
-      #     project-token: $CODACY_PROJECT_TOKEN
-      # - run:
-      #     name: Copy codacy json report to artifact
-      #     command: sudo cp /var/tmp/codacy-coverage-*.json ./results/
-      # - store_test_results:
-      #     path: ./results
-      # - store_artifacts:
-      #     path: ./results
-      # - store_artifacts:
-      #   path: src/tests/Browser/screenshots
 
 workflows:
   version: 2

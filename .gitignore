@@ -54,7 +54,8 @@ Thumbs.db
 # testing assets
 /src/tests/Browser/console
 /src/tests/Browser/screenshots
-/src/tests/results
+/src/tests/_reports
+/src/results
 /src/.phpunit.result.cache
 /results
 

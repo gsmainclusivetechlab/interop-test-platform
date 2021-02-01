@@ -16,7 +16,7 @@
         "backup": "yarn docker-ops run backup",
         "seed": "yarn dc run app sh -c \"/wait && php artisan migrate:fresh --seed\"",
         "migrate": "yarn dc run app sh -c \"/wait && php artisan migrate --force\"",
-        "runtest": "yarn dc run app sh -c \"/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit\"",
+        "runtest": "yarn dc run app sh -c \"/wait && mkdir -p ../results && phpdbg -qrr vendor/bin/phpunit --coverage-html=results\"",
         "rundusk": "yarn dc -f ./compose/dusk.yml run queue sh -c \"/wait && php artisan dusk\"",
         "test": "yarn runtest && docker cp `docker ps -alq`:/var/www/results .",
         "dusk": "yarn rundusk && docker cp `docker ps -alq`:/var/www/html/tests/Browser/screenshots ./results/screenshots",
