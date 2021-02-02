@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Utils\AuditLogUtil;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
@@ -139,6 +142,14 @@ class UserController extends Controller
             ],
         ])->validate();
         $user->update(['role' => $role]);
+
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::USER_ROLE_CHANGED(),
+            AuditTypeEnum::NO_TYPE,
+            null,
+            $request->toArray()
+        );
 
         return redirect()->back();
     }

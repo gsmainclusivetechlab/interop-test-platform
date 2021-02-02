@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\AuditActionEnum;
+use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Models\GroupUserInvitation;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Utils\AuditLogUtil;
 use Arr;
 use Exception;
 use Illuminate\Auth\Events\Registered;
@@ -152,6 +155,14 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
+        new AuditLogUtil(
+            $request,
+            AuditActionEnum::USER_CREATED(),
+            AuditTypeEnum::NO_TYPE,
+            null,
+            $request->toArray()
+        );
+
         $invitations = GroupUserInvitation::where('email', $user->email)->get();
 
         foreach ($invitations as $invitation) {
