@@ -51,14 +51,14 @@
                             <template v-for="(group, k) in form.groupsDefault">
                                 <h3
                                     class="text-secondary mb-3"
-                                    :key="`name-${k}`"
+                                    :key="`groups-name-${k}`"
                                 >
                                     {{ group.name }}
                                 </h3>
                                 <div
                                     class="mb-3"
                                     v-for="(sut, i) in suts.data"
-                                    :key="`sut-${i}-${k}`"
+                                    :key="`groups-sut-${k}-${i}`"
                                 >
                                     <h3>{{ sut.name }}</h3>
 
@@ -69,7 +69,7 @@
                                     >
                                         <div
                                             class="mb-3"
-                                            :key="`connection-${j}`"
+                                            :key="`groups-connection-${i}-${j}`"
                                             v-if="
                                                 Array.from(
                                                     new Set(
@@ -125,13 +125,13 @@
                     </button>
                     <b-collapse id="config-by-session" visible>
                         <template v-for="(sut, i) in suts.data">
-                            <h3 :key="`sut-${i}`">{{ sut.name }}</h3>
+                            <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
                             <template
                                 v-for="(connection, j) in sut.connections"
                             >
                                 <div
                                     class="mb-3"
-                                    :key="`connection-${j}`"
+                                    :key="`session-connection-${i}-${j}`"
                                     v-if="
                                         Array.from(
                                             new Set(
