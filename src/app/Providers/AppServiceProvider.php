@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Extensions\Twig\IlpPacket;
 use App\Models\{GroupEnvironment, Session, TestResult, TestRun};
 use App\Observers\{TestResultObserver, TestRunObserver};
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,15 @@ class AppServiceProvider extends ServiceProvider
             'group_environment' => GroupEnvironment::class,
             'session' => Session::class,
         ]);
+
+        Validator::extend('ilpPacket', function (
+            $attribute,
+            $value,
+            $parameters,
+            $validator
+        ) {
+            return (new IlpPacket())->validateIlpPacket($value);
+        });
     }
 
     /**

@@ -7,12 +7,12 @@ use Twig\TwigFilter;
 
 class Base64 extends AbstractExtension
 {
-    public function base64url_encode($data)
+    public static function base64url_encode($data)
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    public function base64url_decode($data)
+    public static function base64url_decode($data)
     {
         return base64_decode(
             strtr($data, '-_', '+/') .

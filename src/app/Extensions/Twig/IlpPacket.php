@@ -2,15 +2,21 @@
 
 namespace App\Extensions\Twig;
 
+use Exception;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class IlpPacket extends AbstractExtension
 {
+    const TYPE_ILP_PAYMENT = 1;
+    const TYPE_ILP_PREPARE = 12;
+    const TYPE_ILP_FULFILL = 13;
+    const TYPE_ILP_REJECT = 14;
+
     /**
      * Get functions.
      *
-     * @return \Twig\TwigFunction[]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {
@@ -81,8 +87,56 @@ class IlpPacket extends AbstractExtension
         );
 
         // magic number 12 corresponds to ILP "Prepare" type packet
-        $typeB = pack('C', 12);
-        $envelopeB = $typeB . $contentB;
-        return $envelopeB;
+        $typeB = pack('C', static::TYPE_ILP_PREPARE);
+
+        return $typeB . $contentB;
+    }
+
+    public function validateIlpPacket($ilpPacket)
+    {
+        //        dd(
+        //            rtrim(strtr(base64_encode(
+        //                $this->ilpPacket(199, "+1 day", $this->ilpCondition($this->ilpFulfilment()),"g.gh.msisdn.447584248916", "")
+        //            ), '+/', '-_'), '=')
+        //        );
+        dd(static::getTransactionObject($ilpPacket));
+        return false;
+    }
+
+    protected function getTransactionObject($inputIlpPacket)
+    {
+        $jsonPacket = static::decodeIlpPacket($inputIlpPacket);
+    }
+
+    protected function decodeIlpPacket($inputIlpPacket)
+    {
+        $binaryPacket = Base64::base64url_decode($inputIlpPacket);
+
+        $jsonPacket = static::deserializeIlpPayment($binaryPacket);
+    }
+
+    protected function deserializeIlpPacket($binaryPacket)
+    {
+        $type = unpack('C', $binaryPacket[0]);
+
+        switch ($type) {
+            case static::TYPE_ILP_PAYMENT:
+                $packet = static::deserializeIlpPayment($binaryPacket);
+                $typeString = 'ilp_payment';
+        }
+    }
+
+    protected static function deserializeIlpPayment($binaryPacket)
+    {
+        $contents = static::readString(substr($binaryPacket, 1));
+
+        return [];
+    }
+
+    protected static function readString($string)
+    {
+        $length = unpack('C', $string[0])[1];
+
+        return substr($string, 1, $length);
     }
 }
