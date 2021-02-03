@@ -40,27 +40,19 @@ The API simulator is built using microservices, coordinated using
 
 ### First run
 
-1. Build new docker images:
-    ```bash
-    $ yarn build
-    ```
-2. Copy dependencies to your local dev environment[\*](#1)
-    ```bash
-    $ yarn prepare:dev
-    ```
-3. Set up the database using Laravel's migration tool
-    ```bash
-    $ yarn seed
-    ```
-4. Launch containers using the new images:
-    ```bash
-    $ yarn prod
-    ```
-5. Get valid SSL certificates for domain in production mode for valid domain:
-   `bash $ yarn certbot` <span id="1">\*</span>This is required to populate
-   dependencies on the host (useful for IDEs) and when using volumes to
-   synchronise source code (otherwise the empty host dependency directories will
-   overwrite those inside the container).
+```bash
+# build docker images
+$ yarn build
+
+# install app dependencies inside container (synced to host with docker volumes)
+$ yarn deps
+
+# Set up the database using Laravel's migration tool
+$ yarn seed
+
+# launch containers
+$ yarn dev
+```
 
 ### Updates
 
@@ -69,79 +61,27 @@ the same steps as the first run. The only difference is the migration service to
 run, which should not seed the database with initial contents:
 
 ```bash
-# rebuild all images to include the new code
+# build docker images
 $ yarn build
 
-# run the default migration script, which updates but does not seed the database
+# install app dependencies inside container (synced to host with docker volumes)
+$ yarn deps
+
+# Update up the database using Laravel's migration tool
 $ yarn migrate
 
-# stop and destroy existing containers, then recreate using the new images
-$ yarn prod
+# launch containers
+$ yarn dev
 ```
 
-## mTLS
+### mTLS
 
 Client CA certificates renews every one hour. To renew CA certificates manually
-please run: `bash $ yarn mtls:renew`
+please run:
 
-## Local development
-
-When running in different environments, we may want our services to operate in a
-slightly different way. In particular, it is annoying to continually rebuild
-images for every small change. Additional configuration files have been set up
-to cover some such cases:
-
--   [`compose/ops.yml`](./compose/ops.yml): Defines short-lived services
-    `migrate`, `seed` and `backup` to update, setup or backup the database
-    respectively, and `test`, `dusk` and `selenium` to run tests.
--   [`compose/volumes.yml`](./compose/volumes.yml): Set up shared volumes
-    between your local files and the files inside the running containers, which
-    allows your local changes to immediately be reflected in the running
-    containers without rebuilding.
--   [`compose/ops-volumes.yml`](./compose/ops-volumes.yml): Does the same things
-    as `compose/volumes.yml` but targetting the services defined in `ops`.
-    Useful for running new migrations or tests.
--   [`compose/network.yml`](./compose/network.yml): Set up a shared external
-    docker network. This is useful when you also have other test components
-    (e.g. simulators) running locally, as it will allow all services to
-    communicate across the same docker network.
--   [`compose/expose-web.yml`](./compose/expose-web.yml): Allow the test
-    platform to be accessed on your local machine under port 8084 (or whatever
-    is configured as `HOST_WEB_PORT` in [.env](./.example.env)).
--   [`compose/production.yml`](./compose/production.yml): Configure all services
-    to restart automatically when they crash (or the server restarts).
--   [`compose/mailhog.yml`](./compose/mailhog.yml): Set up a mailhog service,
-    allowing emails to be tested without a real SMTP server.
--   [`compose/phpmyadmin.yml`](./compose/phpmyadmin.yml): Add an additional
-    service running [PHPMyAdmin](https://www.phpmyadmin.net/) for inspecting the
-    test platform database. To use these configurations, select the config files
-    when running any `docker-compose` command:
--   [`compose/webpack.yml`](./compose/webpack.yml): Add an additional service
-    running Webpack, which will watch for changes to the front-end javascript
-    assets (e.g. Vue templates) and recompile them automatically. This must be
-    used in conjunction with the `compose/volumes.yml` config, otherwise the
-    changes will not be reflected inside running container.
-
-To use these configurations, select the config files when running any
-`docker-compose` command:
-
+```bash
+$ yarn mtls:renew
 ```
-$ docker-compose -f ./docker-compose.yml \
-                 -f ./compose/expose-web.yml \
-                 -f ./compose/network.yml \
-                 -f ./compose/volumes.yml \
-                 up -d
-```
-
-These configuration files can be used in any combination, however several preset
-combinations have been added to the top-level package.json file to allow
-shortcuts for common use-cases:
-
--   `yarn dev`: includes `expose-web`, `mailhog`, `network`, `phpmyadmin`,
-    `volumes` and `webpack`.
--   `yarn dev:run`: includes the same services as `yarn dev` but uses
-    `docker-compose run` for one-time operations instead of `docker-compose up`.
--   `yarn prod`: includes `expose-web` and `production.yml`
 
 ### Inspecting Running Containers
 
@@ -154,30 +94,52 @@ following command, where `{service}` can be any of the services listed above.
 $ docker-compose exec {service} sh
 ```
 
-### Installing dependencies
+### Permissions Issues
 
-It's possible to install new dependencies like so:
+The default development image uses volumes to synchronise app code and
+dependencies with the host machine. This may result in file ownership problems,
+since the files must be read/writable by users both inside the container and the
+host machine.
 
-```bash
-# Composer
-$ yarn dev:run app composer require {package}
-# NPM
-$ yarn dev:run webpack npm install {package} --save-dev
+The user inside the container runs in a user group with id 1024. To ensure that
+there are no permissions issues, you should ensure that your host machine also
+has a user group with id 1024.
+
+Mac:
+
+```sh
+dscl . -create /Groups/interop-devs
+dscl . -create /Groups/interop-devs name interop-devs
+dscl . -create /Groups/interop-devs passwd "*"
+dscl . -create /Groups/interop-devs gid 1024
+dscl . -create /Groups/interop-devs GroupMembership ${your-username}
 ```
 
-Remember to run `yarn dev:prepare` to copy dependencies from the containers onto
-the host. If you don't do this, mounting any shared volumes will overwrite the
-dependency directory within the running containers with the empty one from the
-host. Adding dependencies with `dev:run` as above will actually add the
-dependency to the host via a mounted volume. To permanently add the dependency
-to the running container so that it is present in production mode, the image
-will need to be rebuilt with `yarn build`.
+Linux:
 
-It's also important to set `HOST_UID` in the `.env` file to correspond to your
-user ID on the host machine (run `id -u` to get this). This allows the
-containers to write to files on the volume which are owned by your user (e.g. to
-update package.json). This needs to be set _before_ the app images are built, as
-files are created inside the container assuming this same ID.
+```sh
+groupadd -g 1024 interop-devs
+adduser ${your-username} interop-devs
+```
+
+Once the group is created, you may need to ensure that the source code is owned
+and editable by this group:
+
+```sh
+chown -R :1024 src/
+chmod -R 775 src/
+chmod -R g+s src/
+```
+
+### Production builds
+
+Using volumes for code synchronisation is convenient in development, but no good
+for repeatable builds required in production. To build a production image, which
+contains the app code and dependencies embedded inside the container image, run:
+
+```bash
+$ yarn build:prod
+```
 
 ### Running Tests
 
@@ -193,7 +155,7 @@ will be launched to run an externally-controllable Selenium Chrome browser.
 
 ### Site access
 
-If you have used the `./compose/expose-web.yml` config, you can access the app
-at http://localhost:8080 and the mail catcher at http://localhost:8086.
+You can access the app at http://localhost:8080 and the mail catcher at
+http://localhost:8086.
 
 Default superadmin login: superadmin@gsma.com / qzRBHEzStdG8XWhy
