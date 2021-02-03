@@ -16,7 +16,7 @@
             {{ $tc('comment[3]', meta.total) }}
         </p>
         <ul v-if="meta.total > meta.per_page" class="pagination m-0 ml-auto">
-            <li v-if="links.prev" class="page-item">
+            <li v-if="links.prev !== null" class="page-item">
                 <inertia-link class="page-link" :href="links.prev">
                     <icon name="arrow-left"></icon>
                     {{ $t('buttons.prev') }}
@@ -28,21 +28,65 @@
                     {{ $t('buttons.prev') }}
                 </span>
             </li>
-            <li
-                v-for="(n, i) in meta.last_page"
-                class="page-item"
-                :class="{ active: meta.current_page === n }"
-                :key="i"
-            >
-                <inertia-link
-                    class="page-link"
-                    :href="route().url()"
-                    :data="{ page: n }"
+            <template v-for="(n, i) in meta.last_page">
+                <li
+                    v-if="
+                        meta.last_page <= navigation.limit ||
+                        sideLimitPages.some((val) => val === n)
+                    "
+                    class="page-item"
+                    :class="{ active: meta.current_page === n }"
+                    :key="i"
                 >
-                    {{ n }}
-                </inertia-link>
-            </li>
-            <li v-if="links.next" class="page-item">
+                    <inertia-link
+                        class="page-link"
+                        :href="route().url()"
+                        :data="{ page: n }"
+                    >
+                        {{ n }}
+                    </inertia-link>
+                </li>
+                <li
+                    v-else-if="
+                        [
+                            meta.last_page - (navigation.sideLimit + 2),
+                            meta.last_page - navigation.sideLimit,
+                        ].some((val) => val === n)
+                    "
+                    :key="i"
+                >
+                    <span class="page-link text-center">...</span>
+                </li>
+                <li
+                    v-else-if="
+                        meta.last_page - (navigation.sideLimit + 1) === n
+                    "
+                    :key="i"
+                >
+                    <form
+                        class="input-group pagination__navigation"
+                        @submit.prevent="
+                            $inertia.visit(route().url(), {
+                                method: 'get',
+                                data: {
+                                    page: navigation.page.current,
+                                },
+                            })
+                        "
+                    >
+                        <input
+                            v-model="navigation.page.current"
+                            type="number"
+                            class="form-control"
+                        />
+                        <button type="submit" class="btn btn-outline-primary">
+                            Go
+                        </button>
+                    </form>
+                </li>
+            </template>
+
+            <li v-if="links.next !== null" class="page-item">
                 <inertia-link class="page-link" :href="links.next">
                     {{ $t('buttons.next') }}
                     <icon name="arrow-right"></icon>
@@ -68,6 +112,28 @@ export default {
         links: {
             type: Object,
             required: true,
+        },
+    },
+    data() {
+        return {
+            navigation: {
+                page: {
+                    current: this.meta.current_page,
+                },
+                limit: 10,
+                sideLimit: 2,
+            },
+        };
+    },
+    computed: {
+        sideLimitPages() {
+            const arr = [...Array(this.navigation.sideLimit).keys()];
+            const arrStart = arr.map((val) => val + 1);
+            const arrFinish = arr
+                .reverse()
+                .map((val) => this.meta.last_page - val);
+
+            return [...arrStart, ...arrFinish];
         },
     },
 };
