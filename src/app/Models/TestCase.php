@@ -331,9 +331,9 @@ class TestCase extends Model
     {
         $simulatedTestResults = [];
         foreach ($this->testSteps as $testStep) {
-            $simulatedTestResultsCollection = !empty($simulatedTestResults)
-                ? (new TestResult())->newCollection($simulatedTestResults)
-                : (new TestResult())->newCollection([$testStep->testResults()->make()]);
+            $simulatedTestResultsCollection = (new TestResult())->newCollection(
+                $simulatedTestResults ?: [$testStep->testResults()->make()]
+            );
 
             $simulatedTestResults[$testStep->id] = $testStep->testResults()->make([
                 'request' => $testStep->request
