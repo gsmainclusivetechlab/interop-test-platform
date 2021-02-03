@@ -24,8 +24,6 @@ The API simulator is built using microservices, coordinated using
     off-the-shelf mailhog image.
 -   `phpmyadmin`: Optionally provides a DB administration interface, useful for
     local debugging.
--   `webpack`: Optionally provides a file watcher which recompiles front-end
-    assets as soon as they change. Useful for local development.
 
 ## Project setup
 
