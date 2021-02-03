@@ -110,12 +110,13 @@
                                             class="form-check-input"
                                             @input="
                                                 (e) =>
-                                                    (form.components[
-                                                        component.id
-                                                    ].use_encryption = e.target
-                                                        .checked
-                                                        ? 1
-                                                        : 0)
+                                                    $set(
+                                                        form.components[
+                                                            component.id
+                                                        ],
+                                                        'use_encryption',
+                                                        e.target.checked ? 1 : 0
+                                                    )
                                             "
                                         />
                                         <span class="form-check-label"
@@ -142,7 +143,7 @@
                                 <div
                                     v-if="
                                         form.components[component.id]
-                                            .use_encryption
+                                            .use_encryption === 1
                                     "
                                 >
                                     <div
@@ -153,6 +154,11 @@
                                             >Certificate</label
                                         >
                                         <v-select
+                                            v-model="
+                                                selectedCertificates[
+                                                    component.id
+                                                ]
+                                            "
                                             placeholder="Select certificate..."
                                             label="name"
                                             :options="groupCertificatesList"
@@ -172,12 +178,6 @@
                                                         `components.${component.id}.certificate_id`
                                                     ],
                                             }"
-                                            @input="
-                                                (e) =>
-                                                    (selectedCertificates[
-                                                        component.id
-                                                    ] = e)
-                                            "
                                         />
                                         <span
                                             v-if="
@@ -205,7 +205,7 @@
                                     >
                                         or
                                     </div>
-                                    <!-- <template
+                                    <template
                                         v-if="
                                             !selectedCertificates[component.id]
                                         "
@@ -350,7 +350,7 @@
                                                 </strong>
                                             </span>
                                         </div>
-                                    </template> -->
+                                    </template>
                                 </div>
                             </div>
                             <div
@@ -371,12 +371,11 @@
                                     disabled
                                 />
                             </div>
-                            <div class="mb-3">
+                            <div v-if="hasGroupEnvironments" class="mb-3">
                                 <label>
                                     <b>Groups environments</b>
                                 </label>
                                 <v-select
-                                    v-if="hasGroupEnvironments"
                                     v-model="groupEnvironment"
                                     :options="groupEnvironmentsList"
                                     :selectable="
@@ -391,6 +390,8 @@
                                     class="form-control d-flex p-0 mb-3"
                                     @input="selectGroupsEnvironments"
                                 />
+                            </div>
+                            <div class="mb-3">
                                 <label>
                                     <b>Environments</b>
                                 </label>
@@ -521,24 +522,15 @@ export default {
                 description: this.session.description,
                 environments: this.session.environments,
                 fileEnvironments: this.session.fileEnvironments,
-                components: collect(this.components.data)
-                    .map((component) => {
-                        return collect(component)
-                            .only([
-                                'id',
-                                'base_url',
-                                'use_encryption',
-                                'certificate_id',
-                            ])
-                            .all();
-                    })
-                    .keyBy('id')
-                    .all(),
+                components:
+                    Object.fromEntries(
+                        this.components.data?.map((el) => [el.id, el])
+                    ) ?? {},
                 certificates: Object.fromEntries(
-                    this.components?.data?.map((el) => [
+                    this.components.data?.map((el) => [
                         el.id,
                         el.certificate_id,
-                    ]) ?? []
+                    ]) ?? {}
                 ),
                 test_cases: this.session.testCases.data?.map((el) => el.id),
             },
@@ -559,6 +551,10 @@ export default {
     mounted() {
         this.loadGroupEnvironmentList();
         this.loadGroupCertificateList();
+
+        this.components.data?.forEach((el) =>
+            this.$set(this.form.components, `${el.id}`, el)
+        );
     },
     methods: {
         submit() {
@@ -578,10 +574,10 @@ export default {
         },
         showGroupCertificates(component) {
             return (
-                this.hasGroupCertificates &&
-                !this.form.certificates[component.id].ca_crt &&
-                !this.form.certificates[component.id].client_crt &&
-                !this.form.certificates[component.id].client_key
+                this.hasGroupCertificates ||
+                (!this.form.certificates[component.id]?.ca_crt &&
+                    !this.form.certificates[component.id]?.client_crt &&
+                    !this.form.certificates[component.id]?.client_key)
             );
         },
         loadGroupEnvironmentList(query = '') {
@@ -610,9 +606,11 @@ export default {
                         .all();
 
                     Object.keys(ids).forEach((key) => {
-                        this.selectedCertificates[key] = collection
-                            .where('id', parseInt(ids[key]))
-                            .first();
+                        this.$set(
+                            this.selectedCertificates,
+                            `${key}`,
+                            collection.where('id', parseInt(ids[key])).first()
+                        );
                     });
                 });
         },
