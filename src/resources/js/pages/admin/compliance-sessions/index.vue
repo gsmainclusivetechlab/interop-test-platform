@@ -104,9 +104,35 @@
                                     variant="link"
                                     boundary="window"
                                 >
-                                    <template v-slot:button-content>
+                                    <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
+                                    <li>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.message-log.index',
+                                                    session.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            {{ $t('table.menu.log') }}
+                                        </inertia-link>
+                                    </li>
+                                    <li v-if="session.can.update">
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.edit',
+                                                    session.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            {{ $t('table.menu.edit') }}
+                                        </inertia-link>
+                                    </li>
                                     <li v-if="session.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
