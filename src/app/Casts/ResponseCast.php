@@ -33,7 +33,7 @@ class ResponseCast implements CastsAttributes
                 json_encode(Arr::get($value, 'body'))
             ),
             Arr::get($value, 'jws'),
-            Arr::get($value, 'delay'),
+            Arr::get($value, 'delay')
         );
     }
 
