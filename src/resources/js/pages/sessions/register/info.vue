@@ -64,8 +64,8 @@
                             </h3>
                             <button
                                 v-if="
-                                    (session.withQuestions &&
-                                        hasDifferentAnswers) ||
+                                    session.withQuestions &&
+                                    hasDifferentAnswers &&
                                     checkTestCasesDefault
                                 "
                                 type="button"
@@ -185,7 +185,7 @@ export default {
             );
         },
         resetTestCases() {
-            if (this.session.info) return;
+            if (!this.session.info) return;
 
             this.form.test_cases.splice(
                 0,
