@@ -20,9 +20,9 @@
                 <table class="table table-striped table-hover card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap">URL</th>
-                            <th class="text-nowrap w-50">Matched Step</th>
-                            <th class="text-nowrap">Exсeption</th>
+                            <th class="text-nowrap w-25">URL</th>
+                            <th class="text-nowrap">Matched Step</th>
+                            <th class="text-nowrap w-25">Exсeption</th>
                             <th class="text-center text-nowrap w-0">Date</th>
                             <th class="text-center text-nowrap w-0">Data</th>
                         </tr>
