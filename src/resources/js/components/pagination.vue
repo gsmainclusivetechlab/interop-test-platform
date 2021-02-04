@@ -62,7 +62,7 @@
                     v-else-if="
                         meta.last_page - (navigation.sideLimit + 1) === n
                     "
-                    class="page-item active pagination__navigation"
+                    class="pagination__navigation"
                     :key="i"
                 >
                     <form
@@ -91,7 +91,8 @@
                                 (val) => val !== meta.current_page
                             )
                         "
-                        class="badge badge-primary"
+                        class="badge"
+                        v-b-tooltip.hover.top="'Current page'"
                         >{{ meta.current_page }}</span
                     >
                 </li>

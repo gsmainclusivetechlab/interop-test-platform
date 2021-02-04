@@ -1,10 +1,11 @@
 .pagination {
   &__navigation {
     position: relative;
-    .form-control {
-      position: relative;
-      width: 5rem;
+    .input-group {
       z-index: 1;
+    }
+    .form-control {
+      width: 5rem;
     }
     .badge {
       position: absolute;
