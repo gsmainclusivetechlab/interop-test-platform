@@ -337,14 +337,7 @@
                                 </inertia-link>
                             </li>
                         </ul>
-                        <div
-                            class="ml-auto"
-                            v-if="
-                                !collect(session.components.data)
-                                    .where('id', testStepFirstSource.id)
-                                    .count()
-                            "
-                        >
+                        <div class="ml-auto">
                             <confirm-link
                                 v-if="isAvailableRun"
                                 :href="
@@ -400,10 +393,6 @@ export default {
             required: true,
         },
         testSteps: {
-            type: Object,
-            required: true,
-        },
-        testStepFirstSource: {
             type: Object,
             required: true,
         },
