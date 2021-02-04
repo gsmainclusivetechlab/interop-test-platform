@@ -351,7 +351,7 @@
                                 "
                             >
                                 <label>
-                                    <b>Session default for groups</b>
+                                    <b>Default session for groups</b>
                                 </label>
                                 <v-select
                                     :value="$page.props.auth.user.groups"
