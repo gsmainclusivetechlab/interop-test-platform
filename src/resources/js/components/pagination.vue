@@ -53,18 +53,20 @@
                             meta.last_page - navigation.sideLimit,
                         ].some((val) => val === n)
                     "
+                    class="page-item"
                     :key="i"
                 >
-                    <span class="page-link text-center">...</span>
+                    <span class="page-link">...</span>
                 </li>
                 <li
                     v-else-if="
                         meta.last_page - (navigation.sideLimit + 1) === n
                     "
+                    class="page-item active pagination__navigation"
                     :key="i"
                 >
                     <form
-                        class="input-group pagination__navigation"
+                        class="input-group"
                         @submit.prevent="
                             $inertia.visit(route().url(), {
                                 method: 'get',
@@ -83,9 +85,17 @@
                             Go
                         </button>
                     </form>
+                    <span
+                        v-if="
+                            sideLimitPages.every(
+                                (val) => val !== meta.current_page
+                            )
+                        "
+                        class="badge badge-primary"
+                        >{{ meta.current_page }}</span
+                    >
                 </li>
             </template>
-
             <li v-if="links.next !== null" class="page-item">
                 <inertia-link class="page-link" :href="links.next">
                     {{ $t('buttons.next') }}
