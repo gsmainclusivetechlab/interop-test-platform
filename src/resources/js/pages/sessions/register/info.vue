@@ -65,8 +65,8 @@
                             <button
                                 v-if="
                                     session.withQuestions &&
-                                    hasDifferentAnswers &&
-                                    checkTestCasesDefault
+                                    (hasDifferentAnswers ||
+                                        checkTestCasesDefault)
                                 "
                                 type="button"
                                 class="btn btn-outline-primary btn-sm"
@@ -187,11 +187,17 @@ export default {
         resetTestCases() {
             if (!this.session.info) return;
 
-            this.form.test_cases.splice(
-                0,
-                this.form.test_cases.length,
-                ...this.session.info.test_cases
-            );
+            if (this.hasDifferentAnswers) {
+                this.$inertia.visit(
+                    route('sessions.register.reset-test-cases')
+                );
+            } else {
+                this.form.test_cases.splice(
+                    0,
+                    this.form.test_cases.length,
+                    ...this.session.info.test_cases
+                );
+            }
         },
     },
     computed: {
