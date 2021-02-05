@@ -99,7 +99,7 @@ class ComplianceSessionExport
         $table->addCell(1500)->addText(__('Attempts'), $style);
 
         foreach ($session->testCases as $testCase) {
-            $status = __('Incompleted');
+            $status = __('Incomplete');
 
             /** @var TestRun $lastTestRun */
             $lastTestRun = $testCase

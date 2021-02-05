@@ -40,7 +40,6 @@ class TestCaseController extends Controller
             ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-cases/show', [
             'session' => (new SessionResource(
@@ -59,9 +58,6 @@ class TestCaseController extends Controller
                 ])
             ))->resolve(),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
-            'testStepFirstSource' => (new ComponentResource(
-                $testStepFirstSource
-            ))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testRunAttempts' => config(
                 'service_session.compliance_session_execution_limit'
@@ -103,7 +99,15 @@ class TestCaseController extends Controller
         $testRun = $session
             ->testRuns()
             ->create(['test_case_id' => $testCase->id]);
-        ExecuteTestRunJob::dispatch($testRun)->afterResponse();
+
+        $firstSourceId = $testCase->testSteps()->firstOrFail()->source->id;
+        $firstSUT = $session
+            ->components()
+            ->where('components.id', '=', $firstSourceId)
+            ->first();
+        if (!$firstSUT) {
+            ExecuteTestRunJob::dispatch($testRun)->afterResponse();
+        }
 
         return redirect()
             ->route('sessions.test-cases.test-runs.show', [
