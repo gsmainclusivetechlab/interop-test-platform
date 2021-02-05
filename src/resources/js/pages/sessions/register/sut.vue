@@ -6,6 +6,12 @@
                     <h3 class="card-title">SUT selection</h3>
                 </div>
                 <div class="card-body">
+                    <div
+                        class="alert alert-danger"
+                        role="alert"
+                        v-for="versionConflict in versionConflicts"
+                        v-html="versionConflict"
+                    ></div>
                     <div class="mb-3">
                         <label class="form-label">SUTs</label>
                         <v-select
@@ -33,12 +39,56 @@
                         </span>
                     </div>
                     <div class="list-group">
-                        <template v-for="(sut, i) in suts.data">
+                        <template v-for="(sut, i) in components.data">
                             <div
                                 v-if="form.components[sut.id]"
                                 class="list-group-item"
                                 :key="i"
                             >
+                                <div
+                                    class="mb-3"
+                                    v-if="typeof versions[sut.id] === 'object'"
+                                >
+                                    <label class="form-label"
+                                        >{{ sut.name }} version</label
+                                    >
+                                    <v-select
+                                        v-model="componentsData.version[sut.id]"
+                                        :options="versions[sut.id]"
+                                        label="name"
+                                        placeholder="Select version..."
+                                        :selectable="
+                                            (option) =>
+                                                isSelectable(
+                                                    option,
+                                                    componentsData.version[
+                                                        sut.id
+                                                    ]
+                                                )
+                                        "
+                                        class="form-control d-flex p-0"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.props.errors[
+                                                    `components.${sut.id}.version`
+                                                ],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="
+                                            $page.props.errors[
+                                                `components.${sut.id}.version`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        {{
+                                            $page.props.errors[
+                                                `components.${sut.id}.version`
+                                            ]
+                                        }}
+                                    </span>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label"
                                         >{{ sut.name }} URL</label
@@ -319,23 +369,16 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    v-if="
-                        $page.props.available_session_modes_count > 1 ||
-                        isCompliance ||
-                        session.withQuestions
-                    "
-                    :href="
-                        route(
-                            isCompliance || session.withQuestions
-                                ? 'sessions.register.questionnaire.summary'
-                                : 'sessions.register.type'
-                        )
-                    "
+                    :href="route('sessions.register.info')"
                     class="btn btn-outline-primary"
                 >
                     Back
                 </inertia-link>
-                <button type="submit" class="btn btn-primary ml-auto">
+                <button
+                    type="submit"
+                    class="btn btn-primary ml-auto"
+                    v-if="!Object.values(versionConflicts).length"
+                >
                     <span
                         v-if="sending"
                         class="spinner-border spinner-border-sm mr-2"
@@ -348,6 +391,7 @@
 </template>
 
 <script>
+import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
 import mixinVSelect from '@/components/v-select/mixin';
 
@@ -360,12 +404,12 @@ export default {
             type: Object,
             required: false,
         },
-        suts: {
+        components: {
             type: Object,
             required: true,
         },
-        components: {
-            type: Object,
+        versions: {
+            type: Object | Array,
             required: true,
         },
         hasGroupCertificates: {
@@ -376,7 +420,7 @@ export default {
     mixins: [mixinVSelect],
     data() {
         const isCompliance = this.session.type === 'compliance';
-        const selectedSut = isCompliance && this.suts.data.length === 1;
+        const selectedSut = isCompliance && this.components.data.length === 1;
         const sessionData = this.session?.sut ?? [];
 
         return {
@@ -384,9 +428,17 @@ export default {
             isCompliance,
             selectedSut,
             groupCertificatesList: [],
+            versionConflicts: collect(this.versions)
+                .filter((v) => {
+                    return typeof v === 'string';
+                })
+                .all(),
             componentsData: {
                 base_url: collect(sessionData)
                     .mapWithKeys((s) => [s.id, s.base_url])
+                    .all(),
+                version: collect(sessionData)
+                    .mapWithKeys((s) => [s.id, s.version])
                     .all(),
                 use_encryption: collect(sessionData)
                     .mapWithKeys((s) => [
@@ -401,9 +453,9 @@ export default {
                 passphrase: [],
             },
             currentSuts: {
-                list: this.suts.data,
+                list: this.components.data,
                 selected: this?.session?.sut
-                    ? collect(this.suts.data)
+                    ? collect(this.components.data)
                           .whereIn(
                               'id',
                               Object.keys(this.session.sut).map((key) =>
@@ -412,7 +464,7 @@ export default {
                           )
                           .all()
                     : this.selectedSut
-                    ? [collect(this.suts.data).first()]
+                    ? [collect(this.components.data).first()]
                     : [],
             },
             form: {
@@ -438,6 +490,7 @@ export default {
                     this.form.components[id] = {
                         id,
                         base_url: c.base_url[c.id],
+                        version: c.version[c.id],
                         use_encryption: c.use_encryption[c.id],
                         certificate_id: c.certificate_id[c.id]
                             ? c.certificate_id[c.id].id
@@ -463,7 +516,10 @@ export default {
 
             this.$inertia.post(
                 route('sessions.register.sut.store'),
-                this.jsonToFormData(this.form),
+                serialize(this.form, {
+                    indices: true,
+                    booleansAsIntegers: true,
+                }),
                 {
                     onFinish: () => {
                         this.sending = false;
@@ -474,6 +530,7 @@ export default {
         setForm(values) {
             this.form.components.forEach((c) => {
                 c.base_url = values.base_url[c.id];
+                c.version = values.version[c.id];
                 c.use_encryption = values.use_encryption[c.id];
                 c.certificate_id = values.certificate_id[c.id]
                     ? values.certificate_id[c.id].id
@@ -512,37 +569,6 @@ export default {
                         this.form.components[key].certificate_id = ids[key];
                     });
                 });
-        },
-        buildFormData(formData, data, parentKey) {
-            if (
-                data &&
-                typeof data === 'object' &&
-                !(data instanceof Date) &&
-                !(data instanceof File)
-            ) {
-                Object.keys(data).forEach((key) => {
-                    this.buildFormData(
-                        formData,
-                        data[key],
-                        parentKey ? `${parentKey}[${key}]` : key
-                    );
-                });
-            } else {
-                let value = data == null ? '' : data;
-
-                if ('boolean' === typeof value) {
-                    value = Number(value);
-                }
-
-                formData.append(parentKey, value);
-            }
-        },
-        jsonToFormData(data) {
-            const formData = new FormData();
-
-            this.buildFormData(formData, data);
-
-            return formData;
         },
         setComponents(items) {
             this.form.component_ids = items?.map((item) => item.id) ?? [];

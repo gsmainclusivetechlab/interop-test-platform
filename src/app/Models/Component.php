@@ -2,83 +2,70 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasSlug;
-use App\Models\Concerns\HasUuid;
-use Illuminate\Database\Eloquent\Model;
+use Eloquent;
+use Illuminate\Database\Eloquent\{
+    Collection,
+    Model,
+    Relations\BelongsToMany,
+    Relations\HasMany
+};
 
 /**
- * @mixin \Eloquent
+ * @mixin Eloquent
  *
  * @property int $id
+ * @property string $slug
  * @property string $name
- * @property string $base_url
+ *
+ * @property TestCase[]|Collection $testCases
+ * @property TestStep[]|Collection $sourceTestSteps
+ * @property TestStep[]|Collection $targetTestSteps
+ * @property Component[]|Collection $connections
  */
 class Component extends Model
 {
-    use HasUuid;
-    use HasPosition;
     use HasSlug;
 
-    /**
-     * @var string
-     */
-    protected $table = 'components';
+    const UPDATED_AT = null;
+    const CREATED_AT = null;
 
-    protected $attributes = [
-        'sutable' => true,
-    ];
+    /** @var array */
+    protected $fillable = ['slug'];
 
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'base_url',
-        'description',
-        'sutable',
-        'slug',
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function testCases()
+    public function testCases(): BelongsToMany
     {
         return $this->belongsToMany(
             TestCase::class,
             'test_case_components',
             'component_id',
             'test_case_id'
-        );
+        )->withPivot(['component_name', 'component_versions']);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function sourceTestSteps()
+    public function sourceTestSteps(): HasMany
     {
         return $this->hasMany(TestStep::class, 'source_id', 'id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function targetTestSteps()
+    public function targetTestSteps(): HasMany
     {
         return $this->hasMany(TestStep::class, 'target_id', 'id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function connections()
+    public function connections(): BelongsToMany
     {
         return $this->belongsToMany(
             static::class,
-            'component_connections',
+            'test_steps',
             'source_id',
             'target_id'
-        );
+        )->distinct();
+    }
+
+    public function getNameAttribute(): string
+    {
+        return $this->testCases->first()->pivot->component_name .
+            (isset($this->pivot->version) ? " {$this->pivot->version}" : '');
     }
 }

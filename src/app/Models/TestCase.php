@@ -289,15 +289,35 @@ class TestCase extends Model
 
     /**
      * @param Builder $query
-     * @param array $ids
+     * @param Session $session
      *
      * @return Builder
      */
-    public function scopeWithComponents($query, array $ids)
+    public function scopeWithVersions($query, Session $session)
     {
-        return $query->when($ids, function ($query, $ids) {
-            $query->whereHas('components', function ($query) use ($ids) {
-                $query->whereIn('id', $ids);
+        return $query->when($session->components, function (
+            Builder $query,
+            $components
+        ) {
+            $query->whereDoesntHave('components', function (
+                Builder $query
+            ) use ($components) {
+                $components->each(function (Component $component, $key) use (
+                    $query
+                ) {
+                    $function = $key ? 'orWhere' : 'where';
+
+                    $query->$function(function (Builder $query) use (
+                        $component
+                    ) {
+                        $query
+                            ->where('id', $component->id)
+                            ->whereJsonDoesntContain(
+                                'component_versions',
+                                $component->pivot->version
+                            );
+                    });
+                });
             });
         });
     }

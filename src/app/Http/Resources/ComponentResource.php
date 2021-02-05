@@ -14,15 +14,13 @@ class ComponentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'uuid' => $this->uuid,
             'name' => $this->name,
             'slug' => $this->slug,
             'base_url' => $this->whenPivotLoaded(
                 'session_components',
                 function () {
                     return $this->pivot->base_url;
-                },
-                $this->base_url
+                }
             ),
             'use_encryption' => $this->whenPivotLoaded(
                 'session_components',
@@ -30,8 +28,6 @@ class ComponentResource extends JsonResource
                     return $this->pivot->use_encryption;
                 }
             ),
-            'position' => $this->position,
-            'sutable' => $this->sutable,
             'certificate_id' => $this->whenPivotLoaded(
                 'session_components',
                 function () {
@@ -41,14 +37,6 @@ class ComponentResource extends JsonResource
             'connections' => static::collection(
                 $this->whenLoaded('connections')
             ),
-            'can' => [
-                'update' => auth()
-                    ->user()
-                    ->can('update', $this->resource),
-                'delete' => auth()
-                    ->user()
-                    ->can('delete', $this->resource),
-            ],
         ];
     }
 }
