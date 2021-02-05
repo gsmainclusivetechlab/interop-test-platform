@@ -6,6 +6,9 @@
     }
     .form-control {
       width: 5rem;
+      &.is-invalid {
+        padding-right: 0.75rem;
+      }
     }
     .badge {
       position: absolute;

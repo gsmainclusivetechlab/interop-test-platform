@@ -31,8 +31,8 @@
             <template v-for="(n, i) in meta.last_page">
                 <li
                     v-if="
-                        meta.last_page <= navigation.limit ||
-                        sideLimitPages.some((val) => val === n)
+                        meta.last_page <= navigationLimit.pages ||
+                        listPageBySides.some((val) => val === n)
                     "
                     class="page-item"
                     :class="{ active: meta.current_page === n }"
@@ -49,8 +49,8 @@
                 <li
                     v-else-if="
                         [
-                            meta.last_page - (navigation.sideLimit + 2),
-                            meta.last_page - navigation.sideLimit,
+                            meta.last_page - (navigationLimit.pageBySides + 2),
+                            meta.last_page - navigationLimit.pageBySides,
                         ].some((val) => val === n)
                     "
                     class="page-item"
@@ -60,26 +60,19 @@
                 </li>
                 <li
                     v-else-if="
-                        meta.last_page - (navigation.sideLimit + 1) === n
+                        meta.last_page - (navigationLimit.pageBySides + 1) === n
                     "
                     class="pagination__navigation"
                     :key="i"
                 >
-                    <form
-                        class="input-group"
-                        @submit.prevent="
-                            $inertia.visit(route().url(), {
-                                method: 'get',
-                                data: {
-                                    page: navigation.page.current,
-                                },
-                            })
-                        "
-                    >
+                    <form class="input-group" @submit.prevent="navigateToPage">
                         <input
-                            v-model="navigation.page.current"
+                            v-model="navigation.pageTo"
                             type="number"
                             class="form-control"
+                            :class="{
+                                'is-invalid': !checkPageTo,
+                            }"
                         />
                         <button type="submit" class="btn btn-outline-primary">
                             Go
@@ -87,7 +80,7 @@
                     </form>
                     <span
                         v-if="
-                            sideLimitPages.every(
+                            listPageBySides.every(
                                 (val) => val !== meta.current_page
                             )
                         "
@@ -124,27 +117,51 @@ export default {
             type: Object,
             required: true,
         },
+        navigationLimit: {
+            type: Object,
+            required: false,
+            default() {
+                return {
+                    pages: 10,
+                    pageBySides: 2,
+                };
+            },
+        },
     },
     data() {
         return {
             navigation: {
-                page: {
-                    current: this.meta.current_page,
-                },
-                limit: 10,
-                sideLimit: 2,
+                pageTo: this.meta.current_page,
             },
         };
     },
+    methods: {
+        navigateToPage() {
+            if (!this.checkPageTo) return;
+
+            this.$inertia.visit(route().url(), {
+                method: 'get',
+                data: {
+                    page: this.navigation.pageTo,
+                },
+            });
+        },
+    },
     computed: {
-        sideLimitPages() {
-            const arr = [...Array(this.navigation.sideLimit).keys()];
-            const arrStart = arr.map((val) => val + 1);
-            const arrFinish = arr
+        listPageBySides() {
+            const arr = [...Array(this.navigationLimit.pageBySides).keys()];
+            const arrBefore = arr.map((val) => val + 1);
+            const arrAfter = arr
                 .reverse()
                 .map((val) => this.meta.last_page - val);
 
-            return [...arrStart, ...arrFinish];
+            return [...arrBefore, ...arrAfter];
+        },
+        checkPageTo() {
+            return (
+                this.navigation.pageTo > 0 &&
+                this.navigation.pageTo <= this.meta.last_page
+            );
         },
     },
 };
