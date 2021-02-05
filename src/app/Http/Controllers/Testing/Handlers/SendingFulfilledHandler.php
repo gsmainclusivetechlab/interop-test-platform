@@ -79,7 +79,7 @@ class SendingFulfilledHandler
                 )
                 ->delay();
 
-            sleep(is_numeric($delay) ? (int) $delay : 0);
+            sleep(abs(is_numeric($delay) ? (int) $delay : 0));
         }
 
         $nextTestStep = $isRepeat
@@ -100,7 +100,11 @@ class SendingFulfilledHandler
                 $this->session,
                 $nextTestStep,
                 $this->testResult->testRun
-            )->delay(now()->addSeconds(is_numeric($delay) ? $delay : 0));
+            )->delay(
+                now()->addSeconds(
+                    abs(is_numeric($delay) ? (int) $delay : 0)
+                )
+            );
         }
 
         if ($this->testResult->testStep->isLastPosition()) {

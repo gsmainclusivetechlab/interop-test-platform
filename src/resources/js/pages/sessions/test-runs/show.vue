@@ -4,7 +4,6 @@
         :testCase="testCase"
         :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
-        :testStepFirstSource="testStepFirstSource"
     >
         <div class="card">
             <div class="card-header">
@@ -97,6 +96,7 @@
                                 -->
                                 <template
                                     v-if="
+                                        testResult.testStep &&
                                         component.id ==
                                             testResult.testStep.data.source
                                                 .id &&
@@ -257,7 +257,10 @@
                             </ul>
                         </div>
                         <div class="col-9 pl-0 pb-4 border-left">
-                            <div class="lead py-3 px-4">
+                            <div
+                                class="lead py-3 px-4"
+                                v-if="testResult.testStep"
+                            >
                                 <div class="d-flex justigy-content-between">
                                     <b class="text-nowrap">
                                         {{
@@ -303,17 +306,33 @@
                                 class="lead mb-2 py-3 px-4"
                                 :class="{
                                     'alert-success': testResult.successful,
-                                    'alert-danger': !testResult.successful,
+                                    'alert-secondary':
+                                        !testResult.testExecutions ||
+                                        !testResult.testExecutions.data.length,
+                                    'alert-danger':
+                                        testResult.testExecutions &&
+                                        testResult.testExecutions.data.length &&
+                                        testResult.successful === false,
                                 }"
                             >
-                                {{ testResult.successful ? 'Pass' : 'Fail' }}
+                                {{
+                                    !testResult.testExecutions ||
+                                    !testResult.testExecutions.data.length
+                                        ? 'Pending'
+                                        : testResult.successful
+                                        ? 'Pass'
+                                        : 'Fail'
+                                }}
                                 <div v-if="testResult.exception">
                                     {{ testResult.exception }}
                                 </div>
                             </div>
                             <div
                                 class="py-2 px-4"
-                                v-if="testResult.testExecutions.data.length"
+                                v-if="
+                                    testResult.testExecutions &&
+                                    testResult.testExecutions.data.length
+                                "
                             >
                                 <div class="d-flex mb-2">
                                     <strong
@@ -837,10 +856,6 @@ export default {
             type: Object,
             required: true,
         },
-        testStepFirstSource: {
-            type: Object,
-            required: true,
-        },
         isAvailableRun: {
             type: Boolean,
             required: true,
@@ -867,6 +882,7 @@ export default {
         },
         testResultRequestSetups() {
             let data = collect();
+            if (!this.testResult.id) return data;
             collect(this.testResult.testStep.data.testSetups)
                 .where('type', 'request')
                 .each((item) => {
@@ -876,6 +892,7 @@ export default {
         },
         testResultResponseSetups() {
             let data = collect();
+            if (!this.testResult.id) return data;
             collect(this.testResult.testStep.data.testSetups)
                 .where('type', 'response')
                 .each((item) => {

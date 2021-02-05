@@ -50,7 +50,7 @@
                             <th class="text-nowrap text-center">
                                 {{ $t('table.header.expected-data') }}
                             </th>
-                            <th class="w-1"></th>
+                            <th class="w-0"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,7 +100,6 @@
                             </td>
                             <td class="text-center">
                                 <b-dropdown
-                                    v-if="testCase.draft"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -114,6 +113,19 @@
                                         <inertia-link
                                             :href="
                                                 route(
+                                                    'admin.test-cases.test-steps.show',
+                                                    [testCase.id, testStep.id]
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            {{ $t('table.menu.view') }}
+                                        </inertia-link>
+                                    </li>
+                                    <li v-if="testCase.draft">
+                                        <inertia-link
+                                            :href="
+                                                route(
                                                     'admin.test-cases.test-steps.edit',
                                                     [testCase.id, testStep.id]
                                                 )
@@ -123,7 +135,7 @@
                                             {{ $t('table.menu.edit') }}
                                         </inertia-link>
                                     </li>
-                                    <li>
+                                    <li v-if="testCase.draft">
                                         <confirm-link
                                             :href="
                                                 route(
@@ -150,8 +162,8 @@
                                 </b-dropdown>
                             </td>
                         </tr>
-                        <tr v-if="!testSteps.data.length">
-                            <td class="text-center" colspan="6">
+                        <tr v-if="testSteps.data.length === 0">
+                            <td class="text-center" colspan="7">
                                 {{ $t('table.no-results') }}
                             </td>
                         </tr>
@@ -165,7 +177,6 @@
                 size="lg"
                 centered
                 hide-footer
-                hide-header-close
                 :title="$t('modals.request.title')"
                 :key="`modal-request-${testStep.id}`"
             >
@@ -256,7 +267,6 @@
                 size="lg"
                 centered
                 hide-footer
-                hide-header-close
                 :title="$t('modals.response.title')"
                 :key="`modal-response-${testStep.id}`"
             >

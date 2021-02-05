@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
-use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestCaseResource;
-use App\Http\Resources\TestStepResource;
+use App\Http\Resources\{
+    ComponentResource,
+    SessionResource,
+    TestCaseResource,
+    TestStepResource,
+};
 use App\Models\Session;
 use App\Models\TestCase;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -37,7 +39,6 @@ class TestStepController extends Controller
             ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-steps/index', [
             'session' => (new SessionResource(
@@ -57,15 +58,13 @@ class TestStepController extends Controller
             ))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
-            'testStepFirstSource' => (new ComponentResource(
-                $testStepFirstSource
-            ))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()
                     ->with(['source', 'target'])
                     ->paginate()
             ),
+            'simulatedTestResults' => $testCase->simulateTestResults($session),
         ]);
     }
 
@@ -80,7 +79,6 @@ class TestStepController extends Controller
             ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-steps/flow', [
             'session' => (new SessionResource(
@@ -100,9 +98,6 @@ class TestStepController extends Controller
             ))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
-            'testStepFirstSource' => (new ComponentResource(
-                $testStepFirstSource
-            ))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()

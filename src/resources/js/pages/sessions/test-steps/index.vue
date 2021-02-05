@@ -4,7 +4,6 @@
         :testCase="testCase"
         :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
-        :testStepFirstSource="testStepFirstSource"
     >
         <div class="card">
             <div class="card-header">
@@ -49,7 +48,7 @@
                                 <div class="btn-group">
                                     <button
                                         class="btn btn-secondary"
-                                        v-if="testStep.request"
+                                        v-if="simulatedTestResults[testStep.id].request"
                                         v-b-modal="
                                             `modal-request-${testStep.id}`
                                         "
@@ -58,7 +57,7 @@
                                     </button>
                                     <button
                                         class="btn btn-secondary"
-                                        v-if="testStep.response"
+                                        v-if="simulatedTestResults[testStep.id].response"
                                         v-b-modal="
                                             `modal-response-${testStep.id}`
                                         "
@@ -75,15 +74,15 @@
                                     title="Request"
                                 >
                                     <clipboard-json-to-curl
-                                        :request="testStep.request"
+                                        :request="simulatedTestResults[testStep.id].request"
                                     >
                                     </clipboard-json-to-curl>
                                     <div class="border">
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.request &&
-                                                testStep.request.uri
+                                                simulatedTestResults[testStep.id].request &&
+                                                simulatedTestResults[testStep.id].request.uri
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -91,15 +90,15 @@
                                             </div>
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
-                                                    {{ testStep.request.uri }}
+                                                    {{ simulatedTestResults[testStep.id].request.uri }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.request &&
-                                                testStep.request.method
+                                                simulatedTestResults[testStep.id].request &&
+                                                simulatedTestResults[testStep.id].request.method
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -108,7 +107,7 @@
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
                                                     {{
-                                                        testStep.request.method
+                                                    simulatedTestResults[testStep.id].request.method
                                                     }}
                                                 </div>
                                             </div>
@@ -116,8 +115,8 @@
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.request &&
-                                                testStep.request.headers !==
+                                                simulatedTestResults[testStep.id].request &&
+                                                simulatedTestResults[testStep.id].request.headers !==
                                                     undefined
                                             "
                                         >
@@ -128,7 +127,7 @@
                                                 <div class="mb-0 p-0">
                                                     <json-tree
                                                         :data="
-                                                            testStep.request
+                                                            simulatedTestResults[testStep.id].request
                                                                 .headers
                                                         "
                                                         :deep="1"
@@ -141,10 +140,10 @@
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.request &&
-                                                testStep.request.body !==
+                                                simulatedTestResults[testStep.id].request &&
+                                                simulatedTestResults[testStep.id].request.body !==
                                                     undefined &&
-                                                testStep.request.body !==
+                                                simulatedTestResults[testStep.id].request.body !==
                                                     'empty_body'
                                             "
                                         >
@@ -155,7 +154,7 @@
                                                 <div class="mb-0 p-0">
                                                     <json-tree
                                                         :data="
-                                                            testStep.request
+                                                            simulatedTestResults[testStep.id].request
                                                                 .body
                                                         "
                                                         :deep="1"
@@ -179,8 +178,8 @@
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.response &&
-                                                testStep.response.status
+                                                simulatedTestResults[testStep.id].response &&
+                                                simulatedTestResults[testStep.id].response.status
                                             "
                                         >
                                             <div class="w-25 px-4 py-2 border">
@@ -189,7 +188,7 @@
                                             <div class="w-75 px-4 py-2 border">
                                                 <div class="mb-0 p-0">
                                                     {{
-                                                        testStep.response.status
+                                                    simulatedTestResults[testStep.id].response.status
                                                     }}
                                                 </div>
                                             </div>
@@ -197,8 +196,8 @@
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.response &&
-                                                testStep.response.headers !==
+                                                simulatedTestResults[testStep.id].response &&
+                                                simulatedTestResults[testStep.id].response.headers !==
                                                     undefined
                                             "
                                         >
@@ -209,7 +208,7 @@
                                                 <div class="mb-0 p-0">
                                                     <json-tree
                                                         :data="
-                                                            testStep.response
+                                                            simulatedTestResults[testStep.id].response
                                                                 .headers
                                                         "
                                                         :deep="1"
@@ -222,10 +221,10 @@
                                         <div
                                             class="d-flex"
                                             v-if="
-                                                testStep.response &&
-                                                testStep.response.body !==
+                                                simulatedTestResults[testStep.id].response &&
+                                                simulatedTestResults[testStep.id].response.body !==
                                                     undefined &&
-                                                testStep.response.body !==
+                                                simulatedTestResults[testStep.id].response.body !==
                                                     'empty_body'
                                             "
                                         >
@@ -236,7 +235,7 @@
                                                 <div class="mb-0 p-0">
                                                     <json-tree
                                                         :data="
-                                                            testStep.response
+                                                            simulatedTestResults[testStep.id].response
                                                                 .body
                                                         "
                                                         :deep="1"
@@ -285,7 +284,7 @@ export default {
             type: Object,
             required: true,
         },
-        testStepFirstSource: {
+        simulatedTestResults: {
             type: Object,
             required: true,
         },
