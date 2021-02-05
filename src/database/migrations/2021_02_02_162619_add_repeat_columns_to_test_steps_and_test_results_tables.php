@@ -14,12 +14,15 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
     public function up()
     {
         Schema::table('test_steps', function (Blueprint $table) {
-            $table->unsignedTinyInteger('max_repeats')->default(1)->after('test_step_id');
-            $table->timestamp('updated_at')->after('created_at');
+            $table->unsignedTinyInteger('repeat_max')->default(0)->after('response');
+            $table->unsignedTinyInteger('repeat_count')->default(0)->after('repeat_max');
+            $table->json('repeat_condition')->nullable()->after('repeat_count');
+            $table->json('repeat_response')->nullable()->after('repeat_condition');
         });
 
         Schema::table('test_results', function (Blueprint $table) {
-            $table->unsignedTinyInteger('repeats')->default(1)->after('test_step_id');
+            $table->boolean('completed')->default(true)->after('test_step_id');
+            $table->unsignedTinyInteger('iteration')->default(0)->after('completed');
             $table->timestamp('updated_at')->after('created_at');
         });
     }
@@ -32,11 +35,20 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
     public function down()
     {
         Schema::table('test_steps', function (Blueprint $table) {
-            $table->dropColumn(['repeats', 'updated_at']);
+            $table->dropColumn([
+                'repeat_max',
+                'repeat_count',
+                'repeat_condition',
+                'repeat_response'
+            ]);
         });
 
         Schema::table('test_results', function (Blueprint $table) {
-            $table->dropColumn(['repeats', 'updated_at']);
+            $table->dropColumn([
+                'completed',
+                'iteration',
+                'updated_at'
+            ]);
         });
     }
 }

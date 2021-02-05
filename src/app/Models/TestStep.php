@@ -51,6 +51,7 @@ class TestStep extends Model
         'trigger' => 'array',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
+        'repeat_response' => ResponseCast::class,
     ];
 
     /**

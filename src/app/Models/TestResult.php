@@ -19,8 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestResult extends Model
 {
-    const UPDATED_AT = null;
-
     const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_PASS = 'pass';
     const STATUS_FAIL = 'fail';
@@ -36,7 +34,13 @@ class TestResult extends Model
     /**
      * @var array
      */
-    protected $fillable = ['test_step_id', 'request', 'response'];
+    protected $fillable = [
+        'test_step_id',
+        'iteration',
+        'completed',
+        'request',
+        'response'
+    ];
 
     /**
      * @var array
