@@ -14,7 +14,10 @@ class AddLocaleColumnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('locale')->nullable()->after('role');
+            $table
+                ->string('locale')
+                ->nullable()
+                ->after('role');
         });
     }
 

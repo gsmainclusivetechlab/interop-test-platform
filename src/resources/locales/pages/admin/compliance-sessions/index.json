@@ -14,6 +14,8 @@
                 "session-status": "Session Status"
             },
             "menu": {
+                "log": "Log",
+                "edit": "Edit",
                 "delete": {
                     "title": "Delete",
                     "modal": {
@@ -40,6 +42,8 @@
                 "session-status": "Статус Сессии"
             },
             "menu": {
+                "log": "Лог",
+                "edit": "Редактировать",
                 "delete": {
                     "title": "Удалить",
                     "modal": {

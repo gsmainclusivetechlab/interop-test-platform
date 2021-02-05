@@ -4,7 +4,6 @@
         :testCase="testCase"
         :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
-        :testStepFirstSource="testStepFirstSource"
     >
         <div class="card mb-0">
             <div class="card-header">
@@ -53,10 +52,6 @@ export default {
             required: true,
         },
         testSteps: {
-            type: Object,
-            required: true,
-        },
-        testStepFirstSource: {
             type: Object,
             required: true,
         },
