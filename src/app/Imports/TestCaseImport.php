@@ -56,11 +56,37 @@ class TestCaseImport implements Importable
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
-                $testCase->components()->attach(
-                    Component::whereIn('name', $componentRows)
-                        ->orWhereIn('slug', $componentRows)
-                        ->pluck('id')
-                );
+                $componentRows = collect($componentRows)->keyBy('slug');
+                $components = Component::whereIn(
+                    'slug',
+                    $componentRows->keys()
+                )->pluck('id', 'slug');
+
+                $componentRows
+                    ->diffKeys($components)
+                    ->each(function ($componentRow, $slug) use ($components) {
+                        $component = Component::create(['slug' => $slug]);
+
+                        $components->put($slug, $component->id);
+                    });
+
+                $components->each(function ($id, $slug) use (
+                    $testCase,
+                    $componentRows
+                ) {
+                    $componentRow = $componentRows->get($slug);
+                    $versions = ($versions = Arr::get(
+                        $componentRow,
+                        'versions'
+                    ))
+                        ? json_encode((array) $versions)
+                        : null;
+
+                    $testCase->components()->attach($id, [
+                        'component_name' => Arr::get($componentRow, 'name'),
+                        'component_versions' => $versions,
+                    ]);
+                });
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
@@ -93,20 +119,16 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute(
                         'source_id',
                         Component::where(
-                            'name',
+                            'slug',
                             Arr::get($testStepRow, 'source')
-                        )
-                            ->orWhere('slug', Arr::get($testStepRow, 'source'))
-                            ->value('id')
+                        )->value('id')
                     );
                     $testStep->setAttribute(
                         'target_id',
                         Component::where(
-                            'name',
+                            'slug',
                             Arr::get($testStepRow, 'target')
-                        )
-                            ->orWhere('slug', Arr::get($testStepRow, 'target'))
-                            ->value('id')
+                        )->value('id')
                     );
                     $testStep->setAttribute(
                         'api_spec_id',

@@ -1,5 +1,5 @@
 <template>
-    <layout :components="components" :session="session">
+    <layout :session="session">
         <form @submit.prevent="submit" class="col-12">
             <div class="card">
                 <div class="row">
@@ -96,14 +96,25 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="route('sessions.register.sut')"
+                    v-if="
+                        $page.props.app.available_session_modes_count > 1 ||
+                        isCompliance ||
+                        session.withQuestions
+                    "
+                    :href="
+                        route(
+                            isCompliance || session.withQuestions
+                                ? 'sessions.register.questionnaire.summary'
+                                : 'sessions.register.type'
+                        )
+                    "
                     class="btn btn-outline-primary"
                 >
                     Back
                 </inertia-link>
                 <button
                     type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-primary ml-auto"
                     v-if="useCases.data.length"
                 >
                     <span
@@ -128,10 +139,6 @@ export default {
     },
     props: {
         session: {
-            type: Object,
-            required: true,
-        },
-        components: {
             type: Object,
             required: true,
         },

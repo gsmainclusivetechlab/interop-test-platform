@@ -26,24 +26,24 @@
                                 class="step-item"
                                 :class="{
                                     active: route().current(
-                                        'sessions.register.sut'
-                                    ),
-                                }"
-                            >
-                                <span class="d-inline-block mt-2">
-                                    Select Sut
-                                </span>
-                            </span>
-                            <span
-                                class="step-item"
-                                :class="{
-                                    active: route().current(
                                         'sessions.register.info'
                                     ),
                                 }"
                             >
                                 <span class="d-inline-block mt-2">
                                     Session info
+                                </span>
+                            </span>
+                            <span
+                                class="step-item"
+                                :class="{
+                                    active: route().current(
+                                        'sessions.register.sut'
+                                    ),
+                                }"
+                            >
+                                <span class="d-inline-block mt-2">
+                                    Select Sut
                                 </span>
                             </span>
                             <span
@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-5" v-if="!isQuestionnaireStep">
+                <div class="row mb-5" v-if="components">
                     <div class="col">
                         <diagram>
                             graph LR;
@@ -106,7 +106,7 @@ export default {
     props: {
         components: {
             type: Object,
-            required: true,
+            required: false,
         },
         session: {
             type: Object,

@@ -25,24 +25,24 @@ class SutController extends Controller
 
     /**
      * @param Session $session
-     * @param string $componentId
-     * @param string $connectionId
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      *
      * @return mixed
      */
     public function testingSession(
+        string $componentSlug,
+        string $connectionSlug,
         Session $session,
-        string $componentId,
-        string $connectionId,
         string $path,
         ServerRequestInterface $request
     ) {
         return $this->testing(
             $session,
-            $componentId,
-            $connectionId,
+            $componentSlug,
+            $connectionSlug,
             $path,
             $request
         );
@@ -50,17 +50,17 @@ class SutController extends Controller
 
     /**
      * @param Group $group
-     * @param string $componentId
-     * @param string $connectionId
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      *
      * @return mixed
      */
     public function testingGroup(
+        string $componentSlug,
+        string $connectionSlug,
         Group $group,
-        string $componentId,
-        string $connectionId,
         string $path,
         ServerRequestInterface $request
     ) {
@@ -74,8 +74,8 @@ class SutController extends Controller
 
         return $this->testing(
             $session,
-            $componentId,
-            $connectionId,
+            $componentSlug,
+            $connectionSlug,
             $path,
             $request
         );
@@ -83,8 +83,8 @@ class SutController extends Controller
 
     /**
      * @param Session $session
-     * @param string $componentId
-     * @param string $connectionId
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      *
@@ -92,13 +92,13 @@ class SutController extends Controller
      */
     protected function testing(
         Session $session,
-        string $componentId,
-        string $connectionId,
+        string $componentSlug,
+        string $connectionSlug,
         string $path,
         ServerRequestInterface $request
     ) {
-        $component = $this->getComponent($componentId, $session);
-        $connection = $this->getComponent($connectionId, $session);
+        $component = $this->getComponent($componentSlug, $session);
+        $connection = $this->getComponent($connectionSlug, $session);
 
         $testStep = $session
             ->testSteps()
@@ -216,21 +216,21 @@ class SutController extends Controller
     }
 
     /**
-     * @param string $componentId
+     * @param string $componentSlug
      * @param Session $session
      *
      * @return Component
      */
-    protected function getComponent(string $componentId, Session $session)
+    protected function getComponent(string $componentSlug, Session $session)
     {
         if (
-            ($component = Component::where('uuid', $componentId)->first()) ==
+            ($component = Component::where('slug', $componentSlug)->first()) ==
             null
         ) {
             throw new MessageMismatchException(
                 $session,
                 404,
-                "Unable to find test component with id $componentId. Please check the request base URL"
+                "Unable to find test component with id $componentSlug. Please check the request base URL"
             );
         }
 

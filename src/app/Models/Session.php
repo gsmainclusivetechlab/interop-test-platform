@@ -117,7 +117,12 @@ class Session extends Model
             'component_id'
         )
             ->using(SessionComponent::class)
-            ->withPivot(['base_url', 'use_encryption', 'certificate_id']);
+            ->withPivot([
+                'base_url',
+                'use_encryption',
+                'certificate_id',
+                'version',
+            ]);
     }
 
     /**
