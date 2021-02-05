@@ -39,7 +39,6 @@ class TestStepController extends Controller
             ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-steps/index', [
             'session' => (new SessionResource(
@@ -59,9 +58,6 @@ class TestStepController extends Controller
             ))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
-            'testStepFirstSource' => (new ComponentResource(
-                $testStepFirstSource
-            ))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()
@@ -83,7 +79,6 @@ class TestStepController extends Controller
             ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
 
         return Inertia::render('sessions/test-steps/flow', [
             'session' => (new SessionResource(
@@ -103,9 +98,6 @@ class TestStepController extends Controller
             ))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
-            'testStepFirstSource' => (new ComponentResource(
-                $testStepFirstSource
-            ))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()

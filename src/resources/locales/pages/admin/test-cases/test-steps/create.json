@@ -45,14 +45,14 @@
             "request": {
                 "headers": "Request Headers",
                 "body": "Request Body",
-                "jws": "Request Jws",
+                "jws": "Request JWS",
                 "uri": "Request URI",
                 "delay": "Request Delay"
             },
             "response": {
                 "headers": "Response Headers",
                 "body": "Response Body",
-                "jws": "Response Jws",
+                "jws": "Response JWS",
                 "status": {
                     "label": "Response Status",
                     "placeholder": "Select status"
@@ -108,7 +108,7 @@
                     }
                 }
             },
-            "empty-body": "Пустое Тело",
+            "empty-body": "Отсутствует",
             "request": {
                 "headers": "Заголовки Запроса",
                 "body": "Тело Запроса",

@@ -3,7 +3,6 @@
         :session="session"
         :test-case="testCase"
         :testSteps="testSteps"
-        :testStepFirstSource="testStepFirstSource"
         :isAvailableRun="isAvailableRun"
         :testRunAttempts="testRunAttempts"
     >
@@ -143,10 +142,6 @@ export default {
             required: true,
         },
         testRuns: {
-            type: Object,
-            required: true,
-        },
-        testStepFirstSource: {
             type: Object,
             required: true,
         },
