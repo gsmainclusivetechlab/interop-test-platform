@@ -37,14 +37,6 @@ class ComponentResource extends JsonResource
             'connections' => static::collection(
                 $this->whenLoaded('connections')
             ),
-            'can' => [
-                'update' => auth()
-                    ->user()
-                    ->can('update', $this->resource),
-                'delete' => auth()
-                    ->user()
-                    ->can('delete', $this->resource),
-            ],
         ];
     }
 }
