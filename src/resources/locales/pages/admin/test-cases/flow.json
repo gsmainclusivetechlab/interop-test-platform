@@ -9,7 +9,7 @@
     },
     "ru": {
         "card": {
-            "title": "Поток для {name}"
+            "title": "Схема для {name}"
         },
         "buttons": {
             "diagram-editor": "Редактор Диаграмм"

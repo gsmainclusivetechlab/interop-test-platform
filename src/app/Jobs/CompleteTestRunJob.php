@@ -37,15 +37,34 @@ class CompleteTestRunJob implements ShouldQueue
                 ->latest()
                 ->first();
 
-            if (
-                !$latestTestResult ||
-                $latestTestResult->created_at->diffInSeconds() >= 30
-            ) {
-                $this->testRun->complete();
+            if ($latestTestResult) {
+                if (
+                    $latestTestResult->created_at->diffInSeconds() >=
+                    env(
+                        'TESTRUN_STEP_TIMEOUT',
+                        env('TESTRUN_TIMEOUT_FREQUENCY', 30)
+                    )
+                ) {
+                    $this->testRun->complete();
+                } else {
+                    CompleteTestRunJob::dispatch($this->testRun)->delay(
+                        now()->addSeconds(env('TESTRUN_TIMEOUT_FREQUENCY', 30))
+                    );
+                }
             } else {
-                CompleteTestRunJob::dispatch($this->testRun)->delay(
-                    now()->addSeconds(30)
-                );
+                if (
+                    $this->testRun->created_at->diffInSeconds() >=
+                    env(
+                        'TESTRUN_INITIAL_TIMEOUT',
+                        env('TESTRUN_TIMEOUT_FREQUENCY', 30)
+                    )
+                ) {
+                    $this->testRun->complete();
+                } else {
+                    CompleteTestRunJob::dispatch($this->testRun)->delay(
+                        now()->addSeconds(env('TESTRUN_TIMEOUT_FREQUENCY', 30))
+                    );
+                }
             }
         }
     }
