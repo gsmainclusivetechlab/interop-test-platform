@@ -39,13 +39,14 @@ class CompleteTestRunJob implements ShouldQueue
 
             if ($latestTestResult) {
                 if (
-                    $latestTestResult->created_at->diffInSeconds() >=
+                    $latestTestResult->updated_at->diffInSeconds() >=
                     env(
                         'TESTRUN_STEP_TIMEOUT',
                         env('TESTRUN_TIMEOUT_FREQUENCY', 30)
                     )
                 ) {
                     $this->testRun->complete();
+                    $latestTestResult->complete();
                 } else {
                     CompleteTestRunJob::dispatch($this->testRun)->delay(
                         now()->addSeconds(env('TESTRUN_TIMEOUT_FREQUENCY', 30))

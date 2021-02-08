@@ -115,6 +115,8 @@ class TestCaseImport implements Importable
                             Arr::get($testStepRow, 'api_spec')
                         )->value('id')
                     );
+                    $repeat = Arr::get($testStepRow, 'repeat', []);
+                    $testStep = $this->setRepeat($testStep, $repeat);
                     $testStep->saveOrFail();
 
                     $this->importTestSetups(
@@ -137,6 +139,11 @@ class TestCaseImport implements Importable
                         $testStep,
                         TestScript::TYPE_RESPONSE,
                         Arr::get($testStepRow, 'test_response_scripts', [])
+                    );
+                    $this->importTestScripts(
+                        $testStep,
+                        TestScript::TYPE_REPEAT_RESPONSE,
+                        Arr::get($repeat, 'test_response_scripts', [])
                     );
                 }
             }
@@ -199,5 +206,28 @@ class TestCaseImport implements Importable
             $testScript->type = $type;
             $testScript->saveOrFail();
         }
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param array $repeat
+     * @return TestStep
+     * @throws \Throwable
+     */
+    protected function setRepeat(TestStep $testStep, $repeat)
+    {
+        $response = Arr::get($repeat, 'response');
+        if ($response) {
+            if (!Arr::exists($response, 'body')) {
+                $response['body'] = Response::EMPTY_BODY;
+            }
+            $response = $this->checkHeaders($response);
+        }
+        $testStep->setAttribute('repeat_max', Arr::get($repeat, 'max', 0));
+        $testStep->setAttribute('repeat_count', Arr::get($repeat, 'count', 0));
+        $testStep->setAttribute('repeat_condition', Arr::get($repeat, 'condition'));
+        $testStep->setAttribute('repeat_response', $response);
+
+        return $testStep;
     }
 }

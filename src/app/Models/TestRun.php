@@ -211,8 +211,7 @@ class TestRun extends Model
         $testResult = $testResult ?? $this->testResults()
             ->create([
                 'test_step_id' => $testStep->id,
-                'iteration' => 0,
-                'completed' => false,
+                'iteration' => 0
             ]);
 
         return $testResult;

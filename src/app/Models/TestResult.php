@@ -6,11 +6,13 @@ use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
 use App\Http\Client\Request;
 use App\Http\Client\Response;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
  *
+ * @property Carbon $completed_at
  * @property TestStep $testStep
  * @property TestRun $testRun
  * @property Session $session
@@ -37,7 +39,6 @@ class TestResult extends Model
     protected $fillable = [
         'test_step_id',
         'iteration',
-        'completed',
         'request',
         'response'
     ];
@@ -46,6 +47,7 @@ class TestResult extends Model
      * @var array
      */
     protected $casts = [
+        'completed_at' => 'datetime',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
     ];
@@ -103,6 +105,24 @@ class TestResult extends Model
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereNotNull('completed_at');
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIncompleted($query)
+    {
+        return $query->whereNull('completed_at');
+    }
+
+    /**
      * @return bool
      */
     public function getSuccessfulAttribute()
@@ -144,10 +164,27 @@ class TestResult extends Model
         return $this;
     }
 
+    /**
+     * @return int
+     */
     protected function getDuration(): int
     {
         $startTime = $this->jobStart ?? LARAVEL_START;
 
         return (int) floor((microtime(true) - $startTime) * 1000);
+    }
+
+    /**
+     * @return $this|bool
+     */
+    public function complete()
+    {
+        $this->completed_at = $this->completed_at ?? now();
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        return $this;
     }
 }

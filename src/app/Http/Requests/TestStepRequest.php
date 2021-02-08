@@ -53,6 +53,15 @@ class TestStepRequest extends FormRequest
             'test.setups.response' => ['nullable', 'array'],
             'test.setups.response.*.name' => ['required', 'string', 'max:255'],
             'test.setups.response.*.values' => ['required', 'array'],*/
+            'repeat' => ['required', 'array'],
+            'repeat.max' => ['required', 'integer', 'min:0'],
+            'repeat.count' => ['required', 'integer', 'min:0'],
+            'repeat.condition' => ['nullable', 'array'],
+            'repeat.response' => ['nullable', 'array'],
+//            'repeat.response.status' => ['required'],
+            'test.scripts.repeat.response' => ['nullable', 'array'],
+            'test.scripts.repeat.response.*.name' => ['required', 'string', 'max:255'],
+            'test.scripts.repeat.response.*.rules' => ['required', 'array'],
         ];
     }
 
@@ -108,6 +117,11 @@ class TestStepRequest extends FormRequest
                 TestScript::TYPE_RESPONSE,
                 Arr::get($this->input('test.scripts'), 'response', [])
             );
+            $this->createTestScripts(
+                $testStep,
+                TestScript::TYPE_REPEAT_RESPONSE,
+                Arr::get($this->input('test.scripts.repeat'), 'response', [])
+            );
         });
     }
 
@@ -143,6 +157,11 @@ class TestStepRequest extends FormRequest
                 TestScript::TYPE_RESPONSE,
                 Arr::get($this->input('test.scripts'), 'response', [])
             );
+            $this->updateTestScripts(
+                $testStep,
+                TestScript::TYPE_REPEAT_RESPONSE,
+                Arr::get($this->input('test.scripts.repeat'), 'response', [])
+            );
         });
     }
 
@@ -169,6 +188,10 @@ class TestStepRequest extends FormRequest
             [
                 'request' => $this->mapTestStepRequest(),
                 'response' => $this->mapTestStepResponse(),
+                'repeat_max' => $this->input('repeat.max', 0),
+                'repeat_count' => $this->input('repeat.count', 0),
+                'repeat_condition' => $this->input('repeat.condition'),
+                'repeat_response' => $this->mapTestStepResponse('repeat.'),
             ]
         );
     }
@@ -185,11 +208,12 @@ class TestStepRequest extends FormRequest
     }
 
     /**
+     * @param string $tag
      * @return array|mixed
      */
-    protected function mapTestStepResponse()
+    protected function mapTestStepResponse($tag = '')
     {
-        $response = $this->input('response');
+        $response = $this->input($tag . 'response');
 
         return $this->checkHeaders($response);
     }

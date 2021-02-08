@@ -65,12 +65,6 @@ class SendingFulfilledHandler
                 ])->exists();
         $testSuiteResult = $this->getTestSuiteResult($isRepeat);
 
-        if ($testSuiteResult->wasSuccessful()) {
-            $this->testResult->pass();
-        } else {
-            $this->testResult->fail();
-        }
-
         if ($this->simulateRequest) {
             $delay = $this->testResult->testStep->response
                 ->withSubstitutions(
@@ -80,6 +74,22 @@ class SendingFulfilledHandler
                 ->delay();
 
             sleep(abs(is_numeric($delay) ? (int) $delay : 0));
+        }
+
+        if ($testSuiteResult->wasSuccessful()) {
+            if (!$isRepeat) {
+                $this->testResult->pass();
+                $this->testResult->complete();
+            }
+        } else {
+            $this->testResult->fail();
+
+            if ($isRepeat) {
+                $this->testResult->complete();
+                $this->testResult->testRun->complete();
+
+                return $response;
+            }
         }
 
         $nextTestStep = $isRepeat
