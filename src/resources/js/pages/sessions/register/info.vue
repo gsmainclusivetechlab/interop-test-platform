@@ -62,17 +62,18 @@
                                         : 'Select use cases'
                                 }}
                             </h3>
-                            <a
-                                :href="
-                                    route('sessions.register.reset-test-cases')
-                                "
+                            <button
                                 v-if="
-                                    session.withQuestions && hasDifferentAnswers
+                                    session.withQuestions &&
+                                    (hasDifferentAnswers ||
+                                        checkTestCasesDefault)
                                 "
+                                type="button"
                                 class="btn btn-outline-primary btn-sm"
+                                @click="resetTestCases"
                             >
                                 Reset
-                            </a>
+                            </button>
                         </div>
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
@@ -167,14 +168,14 @@ export default {
         };
     },
     created() {
-        let form = this.form;
+        if (this.isCompliance) {
+            this.form.test_cases.splice(0, this.form.test_cases.length);
 
-        if (this.isCompliance && !this.session.info) {
-            this.useCases.data.forEach(function (useCase) {
-                useCase.testCases.forEach(function (testCase) {
-                    form.test_cases.push(testCase.id);
-                });
-            });
+            this.useCases.data?.forEach((useCase) =>
+                useCase.testCases?.forEach((testCase) =>
+                    this.form.test_cases.push(testCase.id)
+                )
+            );
         }
     },
     methods: {
@@ -188,6 +189,34 @@ export default {
                         this.sending = false;
                     },
                 }
+            );
+        },
+        resetTestCases() {
+            if (!this.session.info) return;
+
+            if (this.hasDifferentAnswers) {
+                this.$inertia.visit(
+                    route('sessions.register.reset-test-cases')
+                );
+            } else {
+                this.form.test_cases.splice(
+                    0,
+                    this.form.test_cases.length,
+                    ...this.session.info.test_cases
+                );
+            }
+        },
+    },
+    computed: {
+        checkTestCasesDefault() {
+            if (!this.session.info) return false;
+
+            return !(
+                this.form.test_cases.length ===
+                    this.session.info.test_cases.length &&
+                this.form.test_cases
+                    .map((val) => this.session.info.test_cases.includes(val))
+                    .every((val) => val)
             );
         },
     },
