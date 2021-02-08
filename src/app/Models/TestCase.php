@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
+use App\Models\Pivots\TestCaseComponents;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -13,8 +14,11 @@ use Illuminate\Support\Collection;
 /**
  * @mixin \Eloquent
  *
+ * @property int $id
+ *
  * @property TestRun $lastTestRun
  * @property TestRun[]|Collection $testRuns
+ * @property Component[]|Collection $components
  */
 class TestCase extends Model
 {
@@ -127,7 +131,9 @@ class TestCase extends Model
             'test_case_components',
             'test_case_id',
             'component_id'
-        );
+        )
+            ->using(TestCaseComponents::class)
+            ->withPivot(['component_name', 'component_versions']);
     }
 
     /**

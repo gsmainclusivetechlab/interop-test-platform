@@ -109,6 +109,13 @@ export default {
                         'admin.test-cases.versions.index'
                     ),
                 },
+                {
+                    title: this.$t('breadcrumb.components'),
+                    route: 'admin.test-cases.components.index',
+                    condition: route().current(
+                        'admin.test-cases.components.index'
+                    ),
+                },
             ];
         },
     },

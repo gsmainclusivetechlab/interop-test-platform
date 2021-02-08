@@ -27,6 +27,7 @@
                             <th class="text-nowrap">Connected with</th>
                         </tr>
                     </thead>
+                    index.vue
                     <tbody>
                         <tr
                             v-for="(component, i) in components.data"

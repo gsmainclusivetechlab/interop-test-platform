@@ -21,9 +21,6 @@
             },
             "description": {
                 "label": "Description"
-            },
-            "components": {
-                "label": "Components"
             }
         },
         "buttons": {
@@ -58,9 +55,6 @@
             },
             "description": {
                 "label": "Описание"
-            },
-            "components": {
-                "label": "Компоненты"
             }
         },
         "buttons": {
