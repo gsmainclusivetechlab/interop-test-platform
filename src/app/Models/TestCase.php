@@ -348,4 +348,33 @@ class TestCase extends Model
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
     }
+
+    /**
+     * @param Session $session
+     * @return array
+     */
+    public function simulateTestResults(Session $session)
+    {
+        $simulatedTestResults = [];
+        foreach ($this->testSteps as $testStep) {
+            $simulatedTestResultsCollection = (new TestResult())->newCollection(
+                $simulatedTestResults ?: [$testStep->testResults()->make()]
+            );
+
+            $simulatedTestResults[
+                $testStep->id
+            ] = $testStep->testResults()->make([
+                'request' => $testStep->request->withSubstitutions(
+                    $simulatedTestResultsCollection,
+                    $session
+                ),
+                'response' => $testStep->response->withSubstitutions(
+                    $simulatedTestResultsCollection,
+                    $session
+                ),
+            ]);
+        }
+
+        return $simulatedTestResults;
+    }
 }

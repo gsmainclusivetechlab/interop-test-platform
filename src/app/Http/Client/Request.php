@@ -95,7 +95,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 json_encode($data['body'])
             ),
             $data['jws'],
-            $data['delay'],
+            $data['delay']
         );
     }
 
@@ -120,7 +120,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
                 json_encode($data['body'])
             ),
             $data['jws'],
-            $data['delay'],
+            $data['delay']
         );
     }
 

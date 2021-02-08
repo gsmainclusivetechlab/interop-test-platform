@@ -175,7 +175,8 @@ class TwigSubstitution
      */
     protected function mapUrls($components, $session)
     {
-        $useEncryptionComponentIds = $session->components()
+        $useEncryptionComponentIds = $session
+            ->components()
             ->withPivotValue('use_encryption', true)
             ->pluck('id')
             ->toArray();
@@ -191,14 +192,12 @@ class TwigSubstitution
                 foreach ($component->connections as $connection) {
                     $urn = route(
                         $secure ? 'testing.sut' : 'testing-insecure.sut',
-                        [
-                            $session->uuid,
-                            $component->uuid,
-                            $connection->uuid,
-                        ],
+                        [$session->uuid, $component->uuid, $connection->uuid],
                         false
                     );
-                    $connectionUrls[$component->slug][$connection->slug] = $secure
+                    $connectionUrls[$component->slug][
+                        $connection->slug
+                    ] = $secure
                         ? route('home') . $urn
                         : config('app.http_base_url') . $urn;
                 }
