@@ -57,7 +57,7 @@ class UpdateComponentsTable extends Migration
         Schema::dropIfExists('component_connections');
 
         Schema::table('session_components', function (Blueprint $table) {
-            $table->string('version');
+            $table->string('version')->nullable();
         });
     }
 
