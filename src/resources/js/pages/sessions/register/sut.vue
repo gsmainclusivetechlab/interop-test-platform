@@ -7,10 +7,11 @@
                 </div>
                 <div class="card-body">
                     <div
+                        v-for="(versionConflict, i) in versionConflicts"
+                        v-html="versionConflict"
                         class="alert alert-danger"
                         role="alert"
-                        v-for="versionConflict in versionConflicts"
-                        v-html="versionConflict"
+                        :key="i"
                     ></div>
                     <div class="mb-3">
                         <label class="form-label">SUTs</label>
