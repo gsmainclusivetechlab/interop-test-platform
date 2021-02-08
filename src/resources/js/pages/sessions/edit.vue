@@ -347,14 +347,23 @@
                                 class="mb-3"
                                 v-if="
                                     $page.props.auth.user.groups &&
-                                    $page.props.auth.user.groups.length > 0
+                                    $page.props.auth.user.groups.filter(
+                                        (g) =>
+                                            g.default_session_id === session.id
+                                    ).length
                                 "
                             >
                                 <label>
-                                    <b>Session default for groups</b>
+                                    <b>Default session for groups</b>
                                 </label>
                                 <v-select
-                                    :value="$page.props.auth.user.groups"
+                                    :value="
+                                        $page.props.auth.user.groups.filter(
+                                            (g) =>
+                                                g.default_session_id ===
+                                                session.id
+                                        )
+                                    "
                                     label="name"
                                     multiple
                                     class="form-control d-flex p-0"
