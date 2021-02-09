@@ -29,8 +29,8 @@ test_steps:
   - path: /quotes
     pattern: 'quotes$'
     method: POST
-    source: Mobile Money Operator 1
-    target: Mojaloop
+    source: mmo-1
+    target: mojaloop
     # TODO: when this request is simulated, the relative uri fails to match against the api spec path
     # api_spec: Mojaloop v1.0
     trigger:
@@ -108,8 +108,8 @@ test_steps:
   - path: /quotes
     pattern: 'quotes$'
     method: POST
-    source: Mojaloop
-    target: Mobile Money Operator 2
+    source: ojaloop
+    target: mmo-2
     # TODO: when this request is simulated, the relative uri fails to match against the api spec path
     # api_spec: Mojaloop v1.0
     trigger:
@@ -188,8 +188,8 @@ test_steps:
     # TODO: match exact ID from previous step variables
     pattern: 'quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
     method: PUT
-    source: Mobile Money Operator 2
-    target: Mojaloop
+    source: mmo-2
+    target: mojaloop
     # TODO: when this request is simulated, the relative uri fails to match against the api spec path
     # api_spec: Mojaloop v1.0
     trigger:
@@ -240,8 +240,8 @@ test_steps:
     # TODO: match exact ID from previous step variables
     pattern: 'quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
     method: PUT
-    source: Mojaloop
-    target: Mobile Money Operator 1
+    source: mojaloop
+    target: mmo-1
     # TODO: when this request is simulated, the relative uri fails to match against the api spec path
     # api_spec: Mojaloop v1.0
     trigger:
