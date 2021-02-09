@@ -23,9 +23,12 @@ precondition: |
     - Transfer Amount: 109.
     - PartyIdType: MSISDN
 components:
-  - Mobile Money Operator 1
-  - Mojaloop
-  - Mobile Money Operator 2
+  - name: Mobile Money Operator 1
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: Mobile Money Operator 2
+    slug: mmo-2
 
 test_steps:
   ## POST/Quotes: MMO1 -> Mojaloop ##
