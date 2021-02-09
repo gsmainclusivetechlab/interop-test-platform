@@ -23,7 +23,7 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
         Schema::table('test_results', function (Blueprint $table) {
             $table->unsignedTinyInteger('iteration')->default(0)->after('test_step_id');
             $table->timestamp('updated_at');
-            $table->boolean('completed_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
         });
     }
 
