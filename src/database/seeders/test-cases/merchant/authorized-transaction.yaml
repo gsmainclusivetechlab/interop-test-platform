@@ -19,22 +19,22 @@ precondition: |
     - Amount should be the value "5".
 components:
   - name: Service Provider
-    slug: sp
+    slug: service-provider
     versions:
       - v1
       - v2
   - name: Mobile Money Operator 1
-    slug: mmo1
+    slug: mmo-1
   - name: Mojaloop
     slug: mojaloop
   - name: Mobile Money Operator 2
-    slug: mmo2
+    slug: mmo-2
 test_steps:
   - path: /transactions
     pattern: '^transactions$'
     method: POST
-    source: sp
-    target: mmo1
+    source: service-provider
+    target: mmo-1
     api_spec: MM v1.1.2
     trigger:
       amount: '5'
@@ -102,7 +102,7 @@ test_steps:
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
-    source: mmo1
+    source: mmo-1
     target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
@@ -170,7 +170,7 @@ test_steps:
     pattern: '^transactionRequests$'
     method: POST
     source: mojaloop
-    target: mmo2
+    target: mmo-2
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -207,7 +207,7 @@ test_steps:
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: mmo2
+    source: mmo-2
     target: mojaloop
     api_spec: Mojaloop v1.0
     test_request_scripts:
@@ -239,7 +239,7 @@ test_steps:
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: mojaloop
-    target: mmo1
+    target: mmo-1
     api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
@@ -268,7 +268,7 @@ test_steps:
   - path: /quotes
     pattern: '^quotes$'
     method: POST
-    source: mmo2
+    source: mmo-2
     target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
@@ -334,7 +334,7 @@ test_steps:
     pattern: '^quotes$'
     method: POST
     source: mojaloop
-    target: mmo1
+    target: mmo-1
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -375,7 +375,7 @@ test_steps:
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: mmo1
+    source: mmo-1
     target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
@@ -413,7 +413,7 @@ test_steps:
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: mojaloop
-    target: mmo2
+    target: mmo-2
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
@@ -441,7 +441,7 @@ test_steps:
   - path: /transfers
     pattern: '^transfers$'
     method: POST
-    source: mmo2
+    source: mmo-2
     target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
@@ -489,7 +489,7 @@ test_steps:
     pattern: '^transfers$'
     method: POST
     source: mojaloop
-    target: mmo1
+    target: mmo-1
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -527,8 +527,8 @@ test_steps:
   - path: '{X-Callback-URL}'
     pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     method: PUT
-    source: mmo1
-    target: sp
+    source: mmo-1
+    target: service-provider
     trigger:
       amount: '5'
     test_request_scripts:
@@ -568,7 +568,7 @@ test_steps:
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: mmo1
+    source: mmo-1
     target: mojaloop
     api_spec: Mojaloop v1.0
     test_request_scripts:
@@ -608,7 +608,7 @@ test_steps:
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
     source: mojaloop
-    target: mmo2
+    target: mmo-2
     api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid

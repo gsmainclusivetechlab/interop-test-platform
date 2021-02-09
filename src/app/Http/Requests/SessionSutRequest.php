@@ -63,9 +63,10 @@ class SessionSutRequest extends FormRequest
                 ],
                 'components.*.id' => [
                     'required',
-                    Rule::exists('components', 'id')->where('sutable', true),
+                    Rule::exists('components', 'id'),
                 ],
                 'components.*.base_url' => ['required', 'url', 'max:255'],
+                'components.*.version' => ['nullable', 'string'],
                 'components.*.use_encryption' => ['nullable', 'boolean'],
             ])
             ->all();

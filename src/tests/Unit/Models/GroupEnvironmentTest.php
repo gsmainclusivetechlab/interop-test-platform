@@ -17,7 +17,7 @@ class GroupEnvironmentTest extends TestCase
         $groupEnvironment = factory(GroupEnvironment::class)->make();
         $this->assertValidationPasses($groupEnvironment->getAttributes(), [
             'name' => ['required', 'string', 'max:255'],
-            'variables' => ['required']
+            'variables' => ['required'],
         ]);
         $this->assertTrue($groupEnvironment->save());
     }
