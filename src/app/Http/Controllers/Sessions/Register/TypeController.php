@@ -49,8 +49,7 @@ class TypeController extends Controller
         return Inertia::render('sessions/register/type', [
             'session' => session('session'),
             'testRunAttempts' => config(
-                'service_session.compliance_session_execution_limit',
-                5
+                'service_session.compliance_session_execution_limit'
             ),
             'availableModes' => $availableModes,
         ]);
