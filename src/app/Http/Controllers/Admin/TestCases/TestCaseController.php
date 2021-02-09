@@ -327,9 +327,10 @@ class TestCaseController extends Controller
      */
     public function environmentCandidates(Request $request)
     {
-        $testCases = TestCase::whereKey([
+        $testCases = TestCase::whereIn(
+            'id',
             $request->input('testCasesIds', [])
-        ]);
+        )->get();
         $environments = [];
         /** @var TestCase $testCase */
         foreach ($testCases as $testCase) {
@@ -349,12 +350,11 @@ class TestCaseController extends Controller
             'MOJALOOP_BASE_URI',
             'MMO2_BASE_URI',
         ];
-        $environments = array_filter(
-            $environments,
-            function ($value) use ($baseEnvironments) {
-                return !in_array($value, $baseEnvironments);
-            }
-        );
+        $environments = array_filter($environments, function ($value) use (
+            $baseEnvironments
+        ) {
+            return !in_array($value, $baseEnvironments);
+        });
 
         return array_values($environments);
     }

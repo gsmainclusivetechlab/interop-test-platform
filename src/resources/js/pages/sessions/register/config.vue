@@ -4,8 +4,16 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Configure components</h3>
+                    <div class="card-options">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="getTestCaseEnv"
+                        >
+                            Get Test Cases Env
+                        </button>
+                    </div>
                 </div>
-
                 <div class="card-body" v-if="groupsDefaultList.length">
                     <label class="form-label">Group Default Sessions</label>
                     <p>
@@ -292,6 +300,13 @@ export default {
         this.loadGroupEnvironmentList();
     },
     methods: {
+        getTestCaseEnv() {
+            axios
+                .post(route('admin.test-cases.environment-candidates'), {
+                    testCasesIds: this.$page.props.session.info.test_cases,
+                })
+                .then((data) => console.log(data.data));
+        },
         submit() {
             this.sending = true;
             this.$inertia.post(
