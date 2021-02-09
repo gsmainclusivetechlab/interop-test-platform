@@ -562,4 +562,30 @@ class SessionController extends Controller
 
         return $data;
     }
+
+    /**
+     * @param Session $session
+     * @return array
+     * @throws AuthorizationException
+     */
+    public function sessionEnvironmentCandidates(Session $session)
+    {
+        $this->authorize('view', $session);
+
+        $environments = [];
+        foreach ($session->testSteps as $testStep) {
+            $environments = array_merge($environments, $testStep->getEnvironments());
+        }
+
+        $environments = array_unique($environments);
+        $baseEnvironments = array_keys($session->baseEnvironments());
+        $environments = array_filter(
+            $environments,
+            function ($value) use ($baseEnvironments) {
+                return !in_array($value, $baseEnvironments);
+            }
+        );
+
+        return array_values($environments);
+    }
 }
