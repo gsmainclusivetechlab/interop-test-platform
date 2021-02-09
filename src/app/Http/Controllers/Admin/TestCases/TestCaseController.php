@@ -11,7 +11,7 @@ use App\Http\Resources\{
     UseCaseResource
 };
 use App\Imports\TestCaseImport;
-use App\Models\{Component, Group, TestCase, UseCase};
+use App\Models\{Component, Group, TestCase, TestStep, UseCase};
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -319,5 +319,43 @@ class TestCaseController extends Controller
                 ->latest()
                 ->paginate()
         );
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function environmentCandidates(Request $request)
+    {
+        $testCases = TestCase::whereKey([
+            $request->input('testCasesIds', [])
+        ]);
+        $environments = [];
+        /** @var TestCase $testCase */
+        foreach ($testCases as $testCase) {
+            /** @var TestStep $testStep */
+            foreach ($testCase->testSteps as $testStep) {
+                $environments = array_merge(
+                    $environments,
+                    $testStep->getEnvironments()
+                );
+            }
+        }
+
+        $environments = array_unique($environments);
+        $baseEnvironments = [
+            'SP_BASE_URI',
+            'MMO1_BASE_URI',
+            'MOJALOOP_BASE_URI',
+            'MMO2_BASE_URI',
+        ];
+        $environments = array_filter(
+            $environments,
+            function ($value) use ($baseEnvironments) {
+                return !in_array($value, $baseEnvironments);
+            }
+        );
+
+        return array_values($environments);
     }
 }
