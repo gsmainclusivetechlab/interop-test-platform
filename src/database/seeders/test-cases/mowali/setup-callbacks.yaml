@@ -13,8 +13,10 @@ precondition: |
     - ADMIN_OAUTH_TOKEN
 
 components:
-  - 'Mowali Central Admin'
-  - MPOP
+  - name: Mowali Central Admin
+    slug: mca
+  - name: MPOP
+    slug: mpop
 
 test_steps:
   - path: participants/{FSPIOP}/endpoints

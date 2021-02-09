@@ -64,28 +64,25 @@ class TestCaseImport implements Importable
 
                 $componentRows
                     ->diffKeys($components)
-                    ->each(function ($componentRow, $slug) use ($components) {
-                        $component = Component::create(['slug' => $slug]);
-
-                        $components->put($slug, $component->id);
+                    ->each(function ($componentRow, $slug) use ($testCase) {
+                        $testCase
+                            ->components()
+                            ->create(
+                                ['slug' => $slug],
+                                $this->parseComponentRow($componentRow)
+                            );
                     });
 
                 $components->each(function ($id, $slug) use (
                     $testCase,
                     $componentRows
                 ) {
-                    $componentRow = $componentRows->get($slug);
-                    $versions = ($versions = Arr::get(
-                        $componentRow,
-                        'versions'
-                    ))
-                        ? json_encode((array) $versions)
-                        : null;
-
-                    $testCase->components()->attach($id, [
-                        'component_name' => Arr::get($componentRow, 'name'),
-                        'component_versions' => $versions,
-                    ]);
+                    $testCase
+                        ->components()
+                        ->attach(
+                            $id,
+                            $this->parseComponentRow($componentRows->get($slug))
+                        );
                 });
             }
 
@@ -118,17 +115,17 @@ class TestCaseImport implements Importable
 
                     $testStep->setAttribute(
                         'source_id',
-                        Component::where(
+                        $testCase->components->firstWhere(
                             'slug',
                             Arr::get($testStepRow, 'source')
-                        )->value('id')
+                        )->id
                     );
                     $testStep->setAttribute(
                         'target_id',
-                        Component::where(
+                        $testCase->components->firstWhere(
                             'slug',
                             Arr::get($testStepRow, 'target')
-                        )->value('id')
+                        )->id
                     );
                     $testStep->setAttribute(
                         'api_spec_id',
@@ -165,6 +162,19 @@ class TestCaseImport implements Importable
 
             return $testCase;
         });
+    }
+
+    protected function parseComponentRow($componentRow): array
+    {
+        return [
+            'component_name' => Arr::get($componentRow, 'name'),
+            'component_versions' => ($versions = Arr::get(
+                $componentRow,
+                'versions'
+            ))
+                ? (array) $versions
+                : [],
+        ];
     }
 
     /**
