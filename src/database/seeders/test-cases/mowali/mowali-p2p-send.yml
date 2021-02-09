@@ -18,9 +18,12 @@ precondition: |
   - Required Parameters for Execution:
     - Transfer Amount: 199 GHS
 components:
-  - Mobile Money Operator 2
-  - Mobile Money Operator 1
-  - Mojaloop
+  - name: Mobile Money Operator 1
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: Mobile Money Operator 2
+    slug: mmo-2
 test_steps:
   ## 1 ------------------------------GET /parties: MMO1 -> Mojaloop ------------------------------##
   - path: /parties/{Type}/{ID}
