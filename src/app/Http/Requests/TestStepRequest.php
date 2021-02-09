@@ -58,10 +58,14 @@ class TestStepRequest extends FormRequest
             'repeat.count' => ['required', 'integer', 'min:0'],
             'repeat.condition' => ['nullable', 'array'],
             'repeat.response' => ['nullable', 'array'],
-//            'repeat.response.status' => ['required'],
-            'test.scripts.repeat.response' => ['nullable', 'array'],
-            'test.scripts.repeat.response.*.name' => ['required', 'string', 'max:255'],
-            'test.scripts.repeat.response.*.rules' => ['required', 'array'],
+            //            'repeat.response.status' => ['required'],
+            'test.scripts.repeat_response' => ['nullable', 'array'],
+            'test.scripts.repeat_response.*.name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'test.scripts.repeat_response.*.rules' => ['required', 'array'],
         ];
     }
 
@@ -120,7 +124,7 @@ class TestStepRequest extends FormRequest
             $this->createTestScripts(
                 $testStep,
                 TestScript::TYPE_REPEAT_RESPONSE,
-                Arr::get($this->input('test.scripts.repeat'), 'response', [])
+                Arr::get($this->input('test.scripts'), 'repeat_response', [])
             );
         });
     }
@@ -160,7 +164,7 @@ class TestStepRequest extends FormRequest
             $this->updateTestScripts(
                 $testStep,
                 TestScript::TYPE_REPEAT_RESPONSE,
-                Arr::get($this->input('test.scripts.repeat'), 'response', [])
+                Arr::get($this->input('test.scripts'), 'repeat_response', [])
             );
         });
     }
