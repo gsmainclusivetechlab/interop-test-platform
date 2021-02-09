@@ -18,10 +18,14 @@ precondition: |
   - Required Parameters for Execution:
     - Amount should be the value "10.01".
 components:
-  - Service Provider
-  - Mobile Money Operator 1
-  - Mojaloop
-  - Mobile Money Operator 2
+  - name: Service Provider
+    slug: service-provider
+  - name: Mobile Money Operator 1
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: Mobile Money Operator 2
+    slug: mmo-2
 test_steps:
   - path: /transactions
     pattern: '^transactions$'
