@@ -17,7 +17,7 @@ class GroupUserInvitationTest extends TestCase
         $groupUserInvitation = factory(GroupUserInvitation::class)->make();
         $this->assertValidationPasses($groupUserInvitation->getAttributes(), [
             'email' => ['required', 'string', 'max:255'],
-            'expired_at' => ['required', 'date']
+            'expired_at' => ['required', 'date'],
         ]);
         $this->assertTrue($groupUserInvitation->save());
     }

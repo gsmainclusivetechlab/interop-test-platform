@@ -13,15 +13,17 @@ precondition: |
     - ADMIN_OAUTH_TOKEN
 
 components:
-  - 'Mowali Central Admin'
-  - MPOP
+  - name: Mowali Central Admin
+    slug: mca
+  - name: MPOP
+    slug: mpop
 
 test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -50,8 +52,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -79,8 +81,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -108,8 +110,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -137,8 +139,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -166,8 +168,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -195,8 +197,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -225,8 +227,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -255,8 +257,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -285,8 +287,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -315,8 +317,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -345,8 +347,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -374,8 +376,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -404,8 +406,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: GET
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Status is 200
         rules:
@@ -454,8 +456,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -483,8 +485,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -512,8 +514,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -541,8 +543,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -570,8 +572,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -599,8 +601,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -628,8 +630,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -658,8 +660,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -688,8 +690,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -718,8 +720,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -748,8 +750,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -778,8 +780,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -807,8 +809,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: POST
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
@@ -837,8 +839,8 @@ test_steps:
   - path: participants/{FSPIOP}/endpoints
     pattern: 'participants/[^/]+/endpoints$'
     method: GET
-    source: MPOP
-    target: Mowali Central Admin
+    source: mpop
+    target: mca
     test_response_scripts:
       - name: Status is 200
         rules:

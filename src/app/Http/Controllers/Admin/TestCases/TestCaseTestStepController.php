@@ -102,7 +102,7 @@ class TestCaseTestStepController extends Controller
                 $testCase->load(['testSteps'])
             ))->resolve(),
             'components' => ComponentResource::collection(
-                Component::with('connections')->get()
+                $testCase->components
             )->resolve(),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
@@ -169,7 +169,7 @@ class TestCaseTestStepController extends Controller
                 ])
             ))->resolve(),
             'components' => ComponentResource::collection(
-                Component::with('connections')->get()
+                $testCase->components
             )->resolve(),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()

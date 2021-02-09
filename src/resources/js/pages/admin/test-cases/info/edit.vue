@@ -168,37 +168,6 @@
                             </strong>
                         </span>
                     </div>
-                    <div class="col-12 mb-3">
-                        <label class="form-label">{{
-                            this.$t('inputs.components.label')
-                        }}</label>
-                        <v-select
-                            v-model="components"
-                            :options="$page.props.components"
-                            multiple
-                            :selectable="
-                                (option) => isSelectable(option, components)
-                            "
-                            label="name"
-                            :placeholder="$t('inputs.components.placeholder')"
-                            class="form-control d-flex p-0"
-                            :class="{
-                                'is-invalid': $page.props.errors.components_id,
-                            }"
-                        />
-                        <span
-                            v-if="$page.props.errors.components_id"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{
-                                    collect(
-                                        $page.props.errors.components_id
-                                    ).implode(' ')
-                                }}
-                            </strong>
-                        </span>
-                    </div>
                 </div>
             </div>
             <div class="card-footer text-right">
@@ -253,7 +222,6 @@ export default {
             )[0],
             description: this.testCase.description,
             precondition: this.testCase.precondition,
-            components: this.testCase.components.data,
         };
     },
     methods: {
@@ -267,7 +235,6 @@ export default {
                 use_case_id: this.useCase?.id,
                 description: this.description,
                 precondition: this.precondition,
-                components_id: this.components.map((item) => item.id),
             };
 
             this.sending = true;
