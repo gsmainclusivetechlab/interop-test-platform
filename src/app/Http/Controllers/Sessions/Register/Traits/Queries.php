@@ -98,10 +98,6 @@ trait Queries
                 return [];
             }
 
-            $versions = $versions->map(function ($versions) {
-                return json_decode($versions, true);
-            });
-
             if ($versions->count() > 1) {
                 $availableVersions = collect(
                     array_intersect(...$versions->all())

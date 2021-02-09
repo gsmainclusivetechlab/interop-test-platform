@@ -34,6 +34,12 @@ class ComponentResource extends JsonResource
                     return $this->pivot->certificate_id;
                 }
             ),
+            'versions' => $this->whenPivotLoaded(
+                'test_case_components',
+                function () {
+                    return $this->pivot->component_versions;
+                }
+            ),
             'connections' => static::collection(
                 $this->whenLoaded('connections')
             ),

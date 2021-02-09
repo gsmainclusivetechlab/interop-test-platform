@@ -387,6 +387,10 @@ Route::name('admin.')
                                 )->name('update');
                             });
                         Route::resource(
+                            'components',
+                            'ComponentsController'
+                        )->except('show');
+                        Route::resource(
                             'groups',
                             'TestCaseGroupController'
                         )->only(['index', 'store', 'destroy']);

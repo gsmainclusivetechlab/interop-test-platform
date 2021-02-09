@@ -15,14 +15,14 @@ export default {
             sending: false,
             component: {
                 list: this.$page.props.components.map((el) => el.name),
-                connections: new Map(
-                    this.$page.props.components.map((el) => [
-                        el.name,
-                        el.connections.data.map(
-                            (connection) => connection.name
-                        ),
-                    ])
-                ),
+                // connections: new Map(
+                //     this.$page.props.components.map((el) => [
+                //         el.name,
+                //         el.connections.data.map(
+                //             (connection) => connection.name
+                //         ),
+                //     ])
+                // ),
             },
             method: {
                 list: collect(this.$page.props.methods).toArray(),
@@ -93,16 +93,16 @@ export default {
     },
     computed: {
         sourceList() {
-            const list = this.component.connections.get(this.target);
-
-            if (list) return list;
+            // const list = this.component.connections.get(this.target);
+            //
+            // if (list) return list;
 
             return this.component.list;
         },
         targetList() {
-            const list = this.component.connections.get(this.source);
-
-            if (list) return list;
+            // const list = this.component.connections.get(this.source);
+            //
+            // if (list) return list;
 
             return this.component.list;
         },

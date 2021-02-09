@@ -79,9 +79,9 @@
                                                             .use_encryption ===
                                                             '1',
                                                         [
+                                                            sut.slug,
+                                                            connection.slug,
                                                             group.id,
-                                                            sut.uuid,
-                                                            connection.uuid,
                                                         ],
                                                         true
                                                     )

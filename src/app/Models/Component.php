@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
+use App\Models\Pivots\TestCaseComponents;
 use Eloquent;
 use Illuminate\Database\Eloquent\{
     Collection,
@@ -40,7 +41,9 @@ class Component extends Model
             'test_case_components',
             'component_id',
             'test_case_id'
-        )->withPivot(['component_name', 'component_versions']);
+        )
+            ->using(TestCaseComponents::class)
+            ->withPivot(['component_name', 'component_versions']);
     }
 
     public function sourceTestSteps(): HasMany
@@ -65,7 +68,22 @@ class Component extends Model
 
     public function getNameAttribute(): string
     {
-        return $this->testCases->first()->pivot->component_name .
+        if (isset($this->pivot->component_name)) {
+            return $this->pivot->component_name;
+        }
+
+        if (!($testCase = $this->testCases->first())) {
+            return '';
+        }
+
+        return $testCase->pivot->component_name .
             (isset($this->pivot->version) ? " {$this->pivot->version}" : '');
+    }
+
+    public function deleteWithoutTestCases()
+    {
+        if ($this->testCases()->doesntExist()) {
+            $this->delete();
+        }
     }
 }
