@@ -26,9 +26,12 @@ precondition: |
     - Payer Identifier value: +33555123456.
     - Payee Identifier value: +2000008888.
 components:
-  - Mobile Money Operator 1
-  - Mojaloop
-  - Mobile Money Operator 2
+  - name: Mobile Money Operator 1
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: Mobile Money Operator 2
+    slug: mmo-2
 
 test_steps:
   ## GET/Participants: MMO1 -> Mojaloop ##
