@@ -18,8 +18,8 @@ test_steps:
   - path: /transactions
     pattern: '^transactions$'
     method: POST
-    source: Service Provider
-    target: Mobile Money Operator 1
+    source: service-provider
+    target: mmo-1
     api_spec: MM v1.1.2
     trigger:
       amount: '17'
