@@ -79,13 +79,11 @@ class SendingFulfilledHandler
         if ($testSuiteResult->wasSuccessful()) {
             if (!$isRepeat) {
                 $this->testResult->pass();
-                $this->testResult->complete();
             }
         } else {
             $this->testResult->fail();
 
             if ($isRepeat) {
-                $this->testResult->complete();
                 $this->testResult->testRun->complete();
 
                 return $response;

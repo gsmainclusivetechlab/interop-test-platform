@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TestResult extends Model
 {
+    const UPDATED_AT = null;
+
     const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_PASS = 'pass';
     const STATUS_FAIL = 'fail';
@@ -39,6 +41,7 @@ class TestResult extends Model
     protected $fillable = [
         'test_step_id',
         'iteration',
+        'is_repeat',
         'request',
         'response'
     ];
@@ -48,6 +51,7 @@ class TestResult extends Model
      */
     protected $casts = [
         'completed_at' => 'datetime',
+        'is_repeat' => 'boolean',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
     ];
@@ -172,19 +176,5 @@ class TestResult extends Model
         $startTime = $this->jobStart ?? LARAVEL_START;
 
         return (int) floor((microtime(true) - $startTime) * 1000);
-    }
-
-    /**
-     * @return $this|bool
-     */
-    public function complete()
-    {
-        $this->completed_at = $this->completed_at ?? now();
-
-        if (!$this->save()) {
-            return false;
-        }
-
-        return $this;
     }
 }
