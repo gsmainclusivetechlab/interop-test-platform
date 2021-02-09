@@ -42,14 +42,6 @@
                         }}</label>
                         <div v-html="description"></div>
                     </div>
-                    <div class="col-12 mb-3">
-                        <label class="form-label">{{
-                            $t('inputs.components.label')
-                        }}</label>
-                        <div>
-                            {{ collect(components).implode('name', ', ') }}
-                        </div>
-                    </div>
                 </div>
             </div>
             <div v-if="testCase.can.update" class="card-footer text-right">
@@ -103,7 +95,6 @@ export default {
             useCase: this.testCase.useCase.data.name,
             description: this.testCase.description,
             precondition: this.testCase.precondition,
-            components: this.testCase.components.data,
         };
     },
 };

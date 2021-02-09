@@ -21,6 +21,7 @@ use Str;
  * @mixin Eloquent
  *
  * @property int $id
+ * @property string $uuid
  * @property string $name
  * @property string $description
  * @property string $type
@@ -117,7 +118,12 @@ class Session extends Model
             'component_id'
         )
             ->using(SessionComponent::class)
-            ->withPivot(['base_url', 'use_encryption', 'certificate_id']);
+            ->withPivot([
+                'base_url',
+                'use_encryption',
+                'certificate_id',
+                'version',
+            ]);
     }
 
     /**
