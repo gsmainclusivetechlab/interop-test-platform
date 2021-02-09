@@ -108,7 +108,7 @@ test_steps:
   - path: /quotes
     pattern: 'quotes$'
     method: POST
-    source: ojaloop
+    source: mojaloop
     target: mmo-2
     # TODO: when this request is simulated, the relative uri fails to match against the api spec path
     # api_spec: Mojaloop v1.0
