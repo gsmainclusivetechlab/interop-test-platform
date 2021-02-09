@@ -21,6 +21,7 @@ use Str;
  * @mixin Eloquent
  *
  * @property int $id
+ * @property string $uuid
  * @property string $name
  * @property string $description
  * @property string $type
