@@ -115,17 +115,17 @@ class TestCaseImport implements Importable
 
                     $testStep->setAttribute(
                         'source_id',
-                        $testCase->components->firstWhere(
+                        Component::where(
                             'slug',
                             Arr::get($testStepRow, 'source')
-                        )->id
+                        )->value('id')
                     );
                     $testStep->setAttribute(
                         'target_id',
-                        $testCase->components->firstWhere(
+                        Component::where(
                             'slug',
                             Arr::get($testStepRow, 'target')
-                        )->id
+                        )->value('id')
                     );
                     $testStep->setAttribute(
                         'api_spec_id',
