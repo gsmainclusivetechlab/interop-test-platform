@@ -1,6 +1,6 @@
 <template>
     <layout :test-case="testCase">
-        <form class="card">
+        <div class="card">
             <div class="card-header">
                 <h2 class="card-title">{{ $t('card.title') }}</h2>
             </div>
@@ -314,7 +314,30 @@
                     </div>
                 </div>
             </div>
-        </form>
+            <div class="card-footer text-right">
+                <inertia-link
+                    v-if="testCase.draft"
+                    :href="
+                        route('admin.test-cases.test-steps.edit', [
+                            testCase.id,
+                            testStep.id,
+                        ])
+                    "
+                    class="btn btn-primary"
+                >
+                    {{ $t('buttons.edit') }}
+                </inertia-link>
+                <confirm-link
+                    v-else
+                    :href="route('admin.test-cases.info.edit', testCase.id)"
+                    :confirm-text="$t('buttons.make-draft.modal.text')"
+                    class="btn btn-primary"
+                >
+                    <icon name="refresh" />
+                    <span>{{ $t('buttons.make-draft.title') }}</span>
+                </confirm-link>
+            </div>
+        </div>
     </layout>
 </template>
 
