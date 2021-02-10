@@ -79,9 +79,9 @@
                                                             .use_encryption ===
                                                             '1',
                                                         [
+                                                            sut.slug,
+                                                            connection.slug,
                                                             group.id,
-                                                            sut.uuid,
-                                                            connection.uuid,
                                                         ],
                                                         true
                                                     )
@@ -132,9 +132,9 @@
                                                     session.sut[sut.id]
                                                         .use_encryption === '1',
                                                     [
+                                                        sut.slug,
+                                                        connection.slug,
                                                         session.info.uuid,
-                                                        sut.uuid,
-                                                        connection.uuid,
                                                     ]
                                                 )
                                             "
@@ -198,7 +198,7 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="route('sessions.register.info')"
+                    :href="route('sessions.register.sut')"
                     class="btn btn-outline-primary"
                 >
                     Back

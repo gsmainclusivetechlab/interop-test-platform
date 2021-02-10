@@ -110,9 +110,7 @@ class SendingFulfilledHandler
                 $nextTestStep,
                 $this->testResult->testRun
             )->delay(
-                now()->addSeconds(
-                    abs(is_numeric($delay) ? (int) $delay : 0)
-                )
+                now()->addSeconds(abs(is_numeric($delay) ? (int) $delay : 0))
             );
         }
 

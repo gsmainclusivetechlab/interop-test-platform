@@ -18,16 +18,20 @@ precondition: |
   - Required Parameters for Execution:
     - Amount should be the value "14".
 components:
-  - Service Provider
-  - Mobile Money Operator 1
-  - Mojaloop
-  - Mobile Money Operator 2
+  - name: Service Provider
+    slug: service-provider
+  - name: Mobile Money Operator 1
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: Mobile Money Operator 2
+    slug: mmo-2
 test_steps:
   - path: /transactions
     pattern: '^transactions$'
     method: POST
-    source: Service Provider
-    target: Mobile Money Operator 1
+    source: service-provider
+    target: mmo-1
     api_spec: MM v1.1.2
     trigger:
       amount: '14'
@@ -81,8 +85,8 @@ test_steps:
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
-    source: Mobile Money Operator 1
-    target: Mojaloop
+    source: mmo-1
+    target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -133,8 +137,8 @@ test_steps:
   - path: /transactionRequests
     pattern: '^transactionRequests$'
     method: POST
-    source: Mojaloop
-    target: Mobile Money Operator 2
+    source: mojaloop
+    target: mmo-2
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -185,8 +189,8 @@ test_steps:
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: Mobile Money Operator 2
-    target: Mojaloop
+    source: mmo-2
+    target: mojaloop
     api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
@@ -216,8 +220,8 @@ test_steps:
   - path: /transactionRequests/{ID}
     pattern: '^transactionRequests/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: Mojaloop
-    target: Mobile Money Operator 1
+    source: mojaloop
+    target: mmo-1
     api_spec: Mojaloop v1.0
     test_request_scripts:
       - name: ID is Valid
@@ -247,8 +251,8 @@ test_steps:
   - path: '{X-Callback-URL}'
     pattern: '(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})'
     method: PUT
-    source: Mobile Money Operator 1
-    target: Service Provider
+    source: mmo-1
+    target: service-provider
     test_request_scripts:
       - name: Error category is valid
         rules:

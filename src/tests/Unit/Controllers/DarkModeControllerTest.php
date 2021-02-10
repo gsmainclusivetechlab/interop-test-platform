@@ -18,7 +18,6 @@ class DarkModeControllerTest extends TestCase
      */
     public function testDarkModeController()
     {
-
         $response = $this->post('/dark-mode');
         $response->assertCookie('dark_mode', true);
         $response->assertStatus(302);

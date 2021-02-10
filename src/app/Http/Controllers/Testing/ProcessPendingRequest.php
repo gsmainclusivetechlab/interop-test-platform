@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Testing;
 
-use App\Http\Controllers\Testing\Handlers\AttachJwsHeader;
 use App\Http\Controllers\Testing\Handlers\{
+    AttachJwsHeader,
     MapRequestHandler,
     MapResponseHandler,
     SendingFulfilledHandler,
     SendingRejectedHandler
 };
-use App\Models\Certificate;
-use App\Models\Session;
-use App\Models\TestResult;
+use App\Models\{Certificate, Session, TestResult};
+use Exception;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
 use Storage;
@@ -106,7 +105,16 @@ class ProcessPendingRequest
 
             if ($targetComponent && $targetComponent->pivot->use_encryption) {
                 /** @var Certificate $certificate */
-                $certificate = $targetComponent->pivot->certificate;
+                if (!($certificate = $targetComponent->pivot->certificate)) {
+                    (new SendingRejectedHandler($this->testResult))(
+                        new Exception(
+                            __(
+                                'mTLS certificates not found. Please configure it in session settings.'
+                            )
+                        )
+                    );
+                }
+
                 $this->request = $this->request->withUri(
                     $this->request->getUri()->withScheme('https')
                 );

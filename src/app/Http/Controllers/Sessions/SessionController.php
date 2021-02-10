@@ -170,7 +170,6 @@ class SessionController extends Controller
         $sessionTestCasesGroupIds = $session->testCases->pluck(
             'test_case_group_id'
         );
-        $componentIds = $session->components->pluck('id')->all();
 
         return Inertia::render('sessions/edit', [
             'session' => (new SessionResource($session))->resolve(),
@@ -180,18 +179,17 @@ class SessionController extends Controller
                 UseCase::with([
                     'testCases' => function ($query) use (
                         $session,
-                        $componentIds,
                         $sessionTestCasesIds,
                         $sessionTestCasesGroupIds
                     ) {
                         $query
                             ->where(function ($query) use (
-                                $componentIds,
+                                $session,
                                 $sessionTestCasesIds,
                                 $sessionTestCasesGroupIds
                             ) {
                                 $query
-                                    ->withComponents($componentIds)
+                                    ->withVersions($session)
                                     ->available()
                                     ->lastPerGroup(
                                         false,
@@ -209,10 +207,8 @@ class SessionController extends Controller
                             });
                     },
                 ])
-                    ->whereHas('testCases', function ($query) use (
-                        $componentIds
-                    ) {
-                        $query->withComponents($componentIds)->when(
+                    ->whereHas('testCases', function ($query) {
+                        $query->when(
                             !auth()
                                 ->user()
                                 ->can('viewAny', TestCase::class),

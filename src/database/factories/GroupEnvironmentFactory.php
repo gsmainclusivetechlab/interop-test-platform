@@ -26,6 +26,5 @@ $factory->define(GroupEnvironment::class, function (Faker $faker) {
         },
         'name' => $faker->text,
         'variables' => $faker->randomElements(),
-
     ];
 });

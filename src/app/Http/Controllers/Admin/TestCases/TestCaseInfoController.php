@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin\TestCases;
 
 use App\Exports\TestCaseExport;
-use App\Http\Resources\{ComponentResource, TestCaseResource, UseCaseResource};
+use App\Http\Resources\{TestCaseResource, UseCaseResource};
 use App\Imports\TestCaseImport;
-use App\Models\{Component, TestCase, UseCase};
+use App\Models\{TestCase, UseCase};
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -35,7 +35,7 @@ class TestCaseInfoController extends Controller
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/info/show', [
             'testCase' => (new TestCaseResource(
-                $testCase->load(['useCase', 'components'])
+                $testCase->load(['useCase'])
             ))->resolve(),
         ]);
     }
@@ -49,7 +49,7 @@ class TestCaseInfoController extends Controller
     {
         $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
-            $testCase->load(['groups', 'useCase', 'testSteps', 'components'])
+            $testCase->load(['groups', 'useCase', 'testSteps'])
         ))->resolve();
 
         if (!$testCase->draft) {
@@ -95,9 +95,6 @@ class TestCaseInfoController extends Controller
 
         return Inertia::render('admin/test-cases/info/edit', [
             'testCase' => $testCaseResource,
-            'components' => ComponentResource::collection(
-                Component::get()
-            )->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::get()
             )->resolve(),
@@ -127,10 +124,8 @@ class TestCaseInfoController extends Controller
             'behavior' => ['required', 'string', 'max:255'],
             'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
-            'components_id.*' => ['integer', 'exists:components,id'],
         ]);
         $testCase->update($request->input());
-        $testCase->components()->sync($request->input('components_id'));
         $testCase->groups()->sync($request->input('groups_id'));
 
         return redirect()
