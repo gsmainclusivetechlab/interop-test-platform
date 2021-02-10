@@ -32,7 +32,7 @@ class ComponentController extends Controller
                 Component::when(request('q'), function (Builder $query, $q) {
                     $query->where('name', 'like', "%{$q}%");
                 })
-                    ->with(['connections'])
+                    ->with(['connections', 'testCases'])
                     ->paginate()
             ),
             'filter' => [

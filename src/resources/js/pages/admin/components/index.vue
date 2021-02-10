@@ -25,9 +25,9 @@
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap">Slug</th>
                             <th class="text-nowrap">Connected with</th>
+                            <th class="text-nowrap">Versions</th>
                         </tr>
                     </thead>
-                    index.vue
                     <tbody>
                         <tr
                             v-for="(component, i) in components.data"
@@ -45,6 +45,9 @@
                                 >
                                     {{ connection.name }}<br />
                                 </span>
+                            </td>
+                            <td class="text-break">
+                                {{ component.versions.join(', ') }}
                             </td>
                         </tr>
                         <tr v-if="!components.data.length">
