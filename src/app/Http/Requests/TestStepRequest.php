@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use App\Models\{TestCase, TestScript, TestSetup, TestStep};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
@@ -54,17 +55,43 @@ class TestStepRequest extends FormRequest
             'test.setups.response.*.name' => ['required', 'string', 'max:255'],
             'test.setups.response.*.values' => ['required', 'array'],*/
             'repeat' => ['required', 'array'],
-            'repeat.max' => ['required', 'integer', 'min:0'],
-            'repeat.count' => ['required', 'integer', 'min:0'],
-            'repeat.condition' => ['nullable', 'array'],
-            'repeat.response' => ['nullable', 'array'],
-            //            'repeat.response.status' => ['required'],
-            'test.scripts.repeat_response' => ['nullable', 'array'],
-            'test.scripts.repeat_response.*.name' => [
+            'repeat.max' => [
                 'required',
-                'string',
-                'max:255',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    $count = $this->input('repeat.count', 0);
+                    if ($count != 0 &&  $count >= $value) {
+                        $fail(__("Must be greater than $count."));
+                    }
+                },
             ],
+            'repeat.count' => [
+                'required',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    $max = $this->input('repeat.max', 0);
+                    if ($value != 0 &&  $max <= $value) {
+                        $fail(__("May not be greater than $max."));
+                    }
+                },
+            ],
+            'repeat.condition' => [
+                'nullable',
+                'array',
+                Rule::requiredIf(function () {
+                    return $this->input('repeat.max', 0) > 0;
+                })
+            ],
+            'repeat.response' => ['nullable', 'array'],
+            'repeat.response.status' => [
+                Rule::requiredIf(function () {
+                    return $this->input('repeat.count', 0) > 0;
+                })
+            ],
+            'test.scripts.repeat_response' => ['nullable', 'array'],
+            'test.scripts.repeat_response.*.name' => ['required', 'string', 'max:255'],
             'test.scripts.repeat_response.*.rules' => ['required', 'array'],
         ];
     }
@@ -78,6 +105,9 @@ class TestStepRequest extends FormRequest
             '*.required' => __('Field is required.'),
             'request.uri.required' => __('Field is required.'),
             'response.status.required' => __('Field is required.'),
+            'repeat.*.min' => __('Must be at least 0.'),
+            'repeat.condition.required' => __('Field is required.'),
+            'repeat.response.status.required' => __('Field is required.'),
             'test.*.*.*.*.required' => __('Field is required.'),
             'test.*.*.*.name.max' => __(
                 'The name may not be greater than 255 characters.'

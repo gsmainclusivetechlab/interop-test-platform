@@ -114,7 +114,9 @@ class TestResult extends Model
      */
     public function scopeCompleted($query)
     {
-        return $query->whereNotNull('completed_at');
+        return $query->whereExists(function ($query) {
+            $query->where(['is_repeat' => false]);
+        });
     }
 
     /**
@@ -123,7 +125,9 @@ class TestResult extends Model
      */
     public function scopeIncompleted($query)
     {
-        return $query->whereNull('completed_at');
+        return $query->whereNotExists(function ($query) {
+            $query->where(['is_repeat' => false]);
+        });
     }
 
     /**

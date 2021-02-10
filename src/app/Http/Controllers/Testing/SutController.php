@@ -222,8 +222,7 @@ class SutController extends Controller
                 }
             });
 
-        $testResult = $testRun->getTestResultOrCreate($testStep);
-        $testResult->increment('iteration');
+        $testResult = $testRun->createTestResult($testStep);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);

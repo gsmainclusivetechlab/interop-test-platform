@@ -18,6 +18,8 @@ class TestResultResource extends JsonResource
             'response' => optional($this->response)->toArray(),
             'exception' => $this->exception,
             'successful' => $this->successful,
+            'iteration' => $this->iteration,
+            'isRepeat' => $this->is_repeat,
             'duration' => $this->duration,
             'testRun' => new TestResultResource($this->whenLoaded('testRun')),
             'testStep' => new TestStepResource($this->whenLoaded('testStep')),

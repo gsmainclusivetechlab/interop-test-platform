@@ -58,11 +58,14 @@ class SendingFulfilledHandler
      */
     public function __invoke(ResponseInterface $response)
     {
-        $isRepeat = $this->testResult->iterarion < $this->testResult->testStep->repeat_max
+        $isRepeat = $this->testResult->iteration < $this->testResult->testStep->repeat_max
             && TestStep::whereKey($this->testResult->testStep->id)
                 ->whereRaw('JSON_CONTAINS(?, repeat_condition)', [
                     json_encode($this->testResult->response->toArray())
                 ])->exists();
+        $this->testResult->update([
+            'is_repeat' => $isRepeat
+        ]);
         $testSuiteResult = $this->getTestSuiteResult($isRepeat);
 
         if ($this->simulateRequest) {
@@ -77,9 +80,7 @@ class SendingFulfilledHandler
         }
 
         if ($testSuiteResult->wasSuccessful()) {
-            if (!$isRepeat) {
-                $this->testResult->pass();
-            }
+            $this->testResult->pass();
         } else {
             $this->testResult->fail();
 

@@ -12,7 +12,9 @@ class TestResultObserver
      */
     public function pass(TestResult $testResult)
     {
-        $testResult->testRun()->increment('passed');
+        if (!$testResult->is_repeat) {
+            $testResult->testRun()->increment('passed');
+        }
         $testResult->testRun()->increment('duration', $testResult->duration);
     }
 

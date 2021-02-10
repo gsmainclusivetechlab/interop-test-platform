@@ -203,17 +203,19 @@ class TestRun extends Model
      * @param TestStep $testStep
      * @return TestResult
      */
-    public function getTestResultOrCreate($testStep): TestResult
+    public function createTestResult($testStep): TestResult
     {
         $testResult = $this->testResults()
             ->where(['test_step_id' => $testStep->id])
+            ->orderByDesc('iteration')
             ->first();
-        $testResult = $testResult ?? $this->testResults()
+
+        return $this->testResults()
             ->create([
                 'test_step_id' => $testStep->id,
-                'iteration' => 0
+                'iteration' => !empty($testResult) ?
+                    ++$testResult->iteration :
+                    1,
             ]);
-
-        return $testResult;
     }
 }

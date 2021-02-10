@@ -119,9 +119,29 @@ class TestRunController extends Controller
                             },
                             'testExecutions',
                         ])
+                        ->orderByDesc('iteration')
                         ->first()
                 )
             ))->resolve(),
+            'testResults' => TestResultResource::collection($testRun
+                ->testResults()
+                ->whereHas('testStep', function (Builder $query) use (
+                    $position
+                ) {
+                    $query->where('position', $position);
+                })
+                ->with([
+                    'testStep' => function ($query) {
+                        return $query->with([
+                            'source',
+                            'target',
+                            'testSetups',
+                        ]);
+                    },
+                    'testExecutions',
+                ])
+                ->get()
+            )->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()
