@@ -221,6 +221,7 @@ class TestCaseImport implements Importable
             if (!Arr::exists($response, 'body')) {
                 $response['body'] = Response::EMPTY_BODY;
             }
+            $response['status'] = $response['status'] ?? $testStep->response->status();
             $response = $this->checkHeaders($response);
         }
         $testStep->setAttribute('repeat_max', Arr::get($repeat, 'max', 0));
