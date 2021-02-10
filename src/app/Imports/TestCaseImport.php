@@ -253,13 +253,14 @@ class TestCaseImport implements Importable
             if (!Arr::exists($response, 'body')) {
                 $response['body'] = Response::EMPTY_BODY;
             }
-            $response['status'] = $response['status'] ?? $testStep->response->status();
             $response = $this->checkHeaders($response);
         }
-        $testStep->setAttribute('repeat_max', Arr::get($repeat, 'max', 0));
-        $testStep->setAttribute('repeat_count', Arr::get($repeat, 'count', 0));
-        $testStep->setAttribute('repeat_condition', Arr::get($repeat, 'condition'));
-        $testStep->setAttribute('repeat_response', $response);
+        $testStep->fill([
+            'repeat_max' => Arr::get($repeat, 'max', 0),
+            'repeat_count' => Arr::get($repeat, 'count', 0),
+            'repeat_condition' => Arr::get($repeat, 'condition'),
+            'repeat_response' => $response
+        ]);
 
         return $testStep;
     }
