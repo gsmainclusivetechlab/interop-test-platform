@@ -5,8 +5,8 @@ namespace App\Models;
 use App\Models\Concerns\HasSlug;
 use App\Models\Pivots\TestCaseComponents;
 use Eloquent;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\{
-    Collection,
     Model,
     Relations\BelongsToMany,
     Relations\HasMany
@@ -85,5 +85,15 @@ class Component extends Model
         if ($this->testCases()->doesntExist()) {
             $this->delete();
         }
+    }
+
+    public function getExistingVersions(): Collection
+    {
+        return $this->testCases
+            ->pluck('pivot.component_versions')
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->values();
     }
 }

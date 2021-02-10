@@ -38,7 +38,14 @@ class ComponentResource extends JsonResource
                 'test_case_components',
                 function () {
                     return $this->pivot->component_versions;
-                }
+                },
+                $this->whenLoaded(
+                    'testCases',
+                    function () {
+                        return $this->getExistingVersions();
+                    },
+                    []
+                )
             ),
             'connections' => static::collection(
                 $this->whenLoaded('connections')

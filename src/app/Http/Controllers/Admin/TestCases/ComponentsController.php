@@ -73,8 +73,11 @@ class ComponentsController extends Controller
         return Inertia::render('admin/test-cases/components/edit', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),
             'component' => (new ComponentResource(
-                $testCase->components()->findOrFail($component->id)
+                ($component = $testCase
+                    ->components()
+                    ->findOrFail($component->id))
             ))->resolve(),
+            'versionCandidates' => $component->getExistingVersions(),
         ]);
     }
 
