@@ -23,8 +23,8 @@ class Base64 extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('base64_urlencode', [$this, 'base64url_encode']),
-            new TwigFilter('base64_urldecode', [$this, 'base64url_decode']),
+            new TwigFilter('base64url_encode', [$this, 'base64url_encode']),
+            new TwigFilter('base64url_decode', [$this, 'base64url_decode']),
         ];
     }
 }

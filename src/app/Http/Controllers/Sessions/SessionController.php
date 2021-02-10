@@ -207,15 +207,17 @@ class SessionController extends Controller
                             });
                     },
                 ])
-                    ->whereHas('testCases', function ($query) {
-                        $query->when(
-                            !auth()
-                                ->user()
-                                ->can('viewAny', TestCase::class),
-                            function ($query) {
-                                $query->where('public', true);
-                            }
-                        );
+                    ->whereHas('testCases', function ($query) use ($session) {
+                        $query
+                            ->when(
+                                !auth()
+                                    ->user()
+                                    ->can('viewAny', TestCase::class),
+                                function ($query) {
+                                    $query->where('public', true);
+                                }
+                            )
+                            ->withVersions($session);
                     })
                     ->get()
             ),

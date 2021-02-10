@@ -29,7 +29,11 @@ class AppServiceProvider extends ServiceProvider
             $parameters,
             $validator
         ) {
-            return (new IlpPacket())->validateIlpPacket($value);
+            return IlpPacket::validateIlpPacket(
+                $value,
+                $parameters,
+                $validator->getData()
+            );
         });
     }
 

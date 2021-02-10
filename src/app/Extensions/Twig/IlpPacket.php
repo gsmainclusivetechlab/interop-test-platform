@@ -2,23 +2,25 @@
 
 namespace App\Extensions\Twig;
 
+use App\Utils\StringReader;
+use Arr;
+use Carbon\Carbon;
 use Exception;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class IlpPacket extends AbstractExtension
 {
-    const TYPE_ILP_PAYMENT = 1;
     const TYPE_ILP_PREPARE = 12;
-    const TYPE_ILP_FULFILL = 13;
-    const TYPE_ILP_REJECT = 14;
+
+    const INTERLEDGER_TIME_LENGTH = 17;
 
     /**
      * Get functions.
      *
      * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('ilpFulfilment', [$this, 'ilpFulfilment']),
@@ -92,51 +94,77 @@ class IlpPacket extends AbstractExtension
         return $typeB . $contentB;
     }
 
-    public function validateIlpPacket($ilpPacket)
-    {
-        //        dd(
-        //            rtrim(strtr(base64_encode(
-        //                $this->ilpPacket(199, "+1 day", $this->ilpCondition($this->ilpFulfilment()),"g.gh.msisdn.447584248916", "")
-        //            ), '+/', '-_'), '=')
-        //        );
-        dd(static::getTransactionObject($ilpPacket));
-        return false;
+    public static function validateIlpPacket(
+        string $ilpPacket,
+        array $parameters,
+        array $requestData
+    ): bool {
+        $transactionObject = static::decodeIlpPacket($ilpPacket);
+
+        $amountKey = 'body.' . Arr::get($parameters, 0, 'amount.amount');
+
+        if (
+            Arr::get($requestData, $amountKey) !=
+            Arr::get($transactionObject, 'packet.amount')
+        ) {
+            throw new Exception(__('Amounts not equal'));
+        }
+
+        return true;
     }
 
-    protected function getTransactionObject($inputIlpPacket)
-    {
-        $jsonPacket = static::decodeIlpPacket($inputIlpPacket);
-    }
-
-    protected function decodeIlpPacket($inputIlpPacket)
+    protected static function decodeIlpPacket(string $inputIlpPacket): array
     {
         $binaryPacket = Base64::base64url_decode($inputIlpPacket);
 
-        $jsonPacket = static::deserializeIlpPayment($binaryPacket);
+        return static::deserializeIlpPacket($binaryPacket);
     }
 
-    protected function deserializeIlpPacket($binaryPacket)
+    protected static function deserializeIlpPacket(string $binaryPacket): array
     {
-        $type = unpack('C', $binaryPacket[0]);
+        $reader = StringReader::from($binaryPacket);
+        $type = $reader->readUInt8Number();
+        $contents = $reader->readVarOctetString();
 
         switch ($type) {
-            case static::TYPE_ILP_PAYMENT:
-                $packet = static::deserializeIlpPayment($binaryPacket);
-                $typeString = 'ilp_payment';
+            case static::TYPE_ILP_PREPARE:
+                $packet = static::deserializeIlpPrepare($contents);
+                $typeString = 'ilp_prepare';
+                break;
+            default:
+                throw new Exception(
+                    __('Validation supports only ILP Prepare packets')
+                );
         }
+
+        return [
+            'type' => $type,
+            'packet' => $packet,
+            'typeString' => $typeString,
+        ];
     }
 
-    protected static function deserializeIlpPayment($binaryPacket)
+    protected static function deserializeIlpPrepare(string $contents): array
     {
-        $contents = static::readString(substr($binaryPacket, 1));
+        $reader = StringReader::from($contents);
 
-        return [];
+        return [
+            'amount' => $reader->readUInt64(),
+            'expiresAt' => static::interledgerTimeToDate(
+                $reader->read(self::INTERLEDGER_TIME_LENGTH)
+            ),
+            'condition' => $reader->read(32),
+            'destination' => $reader->readVarOctetString(),
+            'data' => $reader->readVarOctetString(),
+        ];
     }
 
-    protected static function readString($string)
-    {
-        $length = unpack('C', $string[0])[1];
-
-        return substr($string, 1, $length);
+    protected static function interledgerTimeToDate(
+        string $interledgerTime
+    ): Carbon {
+        return Carbon::createFromFormat(
+            'YmdHis',
+            substr($interledgerTime, 0, 14)
+        )->addMilliseconds(substr($interledgerTime, 14, 17));
     }
 }
