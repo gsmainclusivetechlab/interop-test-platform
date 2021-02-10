@@ -137,7 +137,7 @@ class TestStep extends Model
      */
     public function getEnvironments()
     {
-        $pattern = '/env[.]([\w]*)/';
+        $pattern = '/[^file_]env[.]([\w]*)|file_env[.]([\w]*)/';
         $subject = '';
 
         $subject .= json_encode($this->request->toArray()) ?: '';
@@ -147,6 +147,9 @@ class TestStep extends Model
         }
         preg_match_all($pattern, $subject, $matches);
 
-        return $matches[1];
+        return [
+            'env' => $matches[1],
+            'file_env' => $matches[2]
+        ];
     }
 }

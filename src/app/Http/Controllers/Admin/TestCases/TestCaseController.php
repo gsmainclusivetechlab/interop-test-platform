@@ -330,32 +330,29 @@ class TestCaseController extends Controller
         $testCases = TestCase::whereKey([
             $request->input('testCasesIds', [])
         ]);
-        $environments = [];
+        $env = [];
+        $file_env = [];
         /** @var TestCase $testCase */
         foreach ($testCases as $testCase) {
             /** @var TestStep $testStep */
             foreach ($testCase->testSteps as $testStep) {
-                $environments = array_merge(
-                    $environments,
-                    $testStep->getEnvironments()
+                $testStepEnvironments = $testStep->getEnvironments();
+
+                $env = array_merge(
+                    $env,
+                    $testStepEnvironments['env']
+                );
+                $file_env = array_merge(
+                    $file_env,
+                    $testStepEnvironments['file_env']
                 );
             }
         }
-
-        $environments = array_unique($environments);
-        $baseEnvironments = [
-            'SP_BASE_URI',
-            'MMO1_BASE_URI',
-            'MOJALOOP_BASE_URI',
-            'MMO2_BASE_URI',
+        $environments = [
+            'env' => array_unique($env),
+            'file_env' => array_unique($file_env)
         ];
-        $environments = array_filter(
-            $environments,
-            function ($value) use ($baseEnvironments) {
-                return !in_array($value, $baseEnvironments);
-            }
-        );
 
-        return array_values($environments);
+        return $environments;
     }
 }
