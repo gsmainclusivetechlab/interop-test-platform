@@ -327,9 +327,10 @@ class TestCaseController extends Controller
      */
     public function environmentCandidates(Request $request)
     {
-        $testCases = TestCase::whereKey([
+        $testCases = TestCase::whereIn(
+            'id',
             $request->input('testCasesIds', [])
-        ]);
+        )->get();
         $env = [];
         $file_env = [];
         /** @var TestCase $testCase */
