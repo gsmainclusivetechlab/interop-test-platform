@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class ComponentResource extends JsonResource
 {
@@ -63,7 +64,8 @@ class ComponentResource extends JsonResource
                             ->pluck('pivot.component_versions')
                             ->filter()
                             ->flatten()
-                            ->unique();
+                            ->unique()
+                            ->values();
                     },
                     []
                 )
