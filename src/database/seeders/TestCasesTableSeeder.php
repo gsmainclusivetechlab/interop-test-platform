@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Imports\TestCaseImport;
-use Illuminate\Database\QueryException;
 use Illuminate\Database\Seeder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use Throwable;
 
 class TestCasesTableSeeder extends Seeder
 {
@@ -22,14 +22,20 @@ class TestCasesTableSeeder extends Seeder
             ->in(database_path('seeders/test-cases'));
 
         foreach ($finder as $file) {
+            echo "Uploading: {$file->getFilename()}" . PHP_EOL;
+
             try {
                 $testCase = (new TestCaseImport())->import(
                     Yaml::parse($file->getContents())
                 );
                 $testCase->update(['public' => true]);
-            } catch (QueryException $e) {
-                echo "Can't upload {$file->getPath()}: {$e->getMessage()}\n";
+            } catch (Throwable $e) {
+                echo "Can't upload {$file->getRealPath()}: {$e->getMessage()}\n";
             }
+
+            echo "Uploaded: {$file->getFilename()}" . PHP_EOL;
         }
+
+        echo 'Finished!' . PHP_EOL;
     }
 }

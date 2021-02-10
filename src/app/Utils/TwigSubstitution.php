@@ -114,14 +114,13 @@ class TwigSubstitution
     /**
      * @param $testResults
      * @param Session $session
+     *
      * @return mixed
      */
-    protected function mapInto($testResults, $session)
+    protected function mapInto($testResults, Session $session): array
     {
-        $components = Component::all()->load('connections');
-        $sutBaseUrls = $session->components
-            ->pluck('pivot.base_url', 'id')
-            ->toArray();
+        $components = Component::with('connections')->get();
+        $sutBaseUrls = $session->components->pluck('pivot.base_url', 'id');
         return [
             'steps' => $testResults
                 ->load('testStep')
@@ -140,22 +139,12 @@ class TwigSubstitution
                 ->toArray(),
             'env' => $session->environments(),
             'components' => $components
-                ->mapWithKeys(function ($item) use ($sutBaseUrls) {
+                ->mapWithKeys(function (Component $item) use ($sutBaseUrls) {
                     return [
                         $item->slug => array_merge(
-                            Arr::only($item->toArray(), [
-                                'uuid',
-                                'name',
-                                'description',
-                                'slug',
-                            ]),
+                            $item->only(['name', 'slug']),
                             [
-                                'base_url' => in_array(
-                                    $item->id,
-                                    array_keys($sutBaseUrls)
-                                )
-                                    ? $sutBaseUrls[$item->id]
-                                    : $item->base_url,
+                                'base_url' => $sutBaseUrls->get($item->id),
                             ]
                         ),
                     ];
@@ -191,7 +180,7 @@ class TwigSubstitution
                 foreach ($component->connections as $connection) {
                     $urn = route(
                         $secure ? 'testing.sut' : 'testing-insecure.sut',
-                        [$session->uuid, $component->uuid, $connection->uuid],
+                        [$component->slug, $connection->slug, $session->uuid],
                         false
                     );
                     $connectionUrls[$component->slug][

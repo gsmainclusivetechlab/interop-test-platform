@@ -64,7 +64,7 @@ class SendingFulfilledHandler
                     json_encode($this->testResult->response->toArray())
                 ])->exists();
         $this->testResult->update([
-            'is_repeat' => $isRepeat
+            'repeat' => $isRepeat
         ]);
         $testSuiteResult = $this->getTestSuiteResult($isRepeat);
 
@@ -110,9 +110,7 @@ class SendingFulfilledHandler
                 $nextTestStep,
                 $this->testResult->testRun
             )->delay(
-                now()->addSeconds(
-                    abs(is_numeric($delay) ? (int) $delay : 0)
-                )
+                now()->addSeconds(abs(is_numeric($delay) ? (int) $delay : 0))
             );
         }
 

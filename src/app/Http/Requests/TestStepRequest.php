@@ -85,11 +85,7 @@ class TestStepRequest extends FormRequest
                 })
             ],
             'repeat.response' => ['nullable', 'array'],
-            'repeat.response.status' => [
-                Rule::requiredIf(function () {
-                    return $this->input('repeat.count', 0) > 0;
-                })
-            ],
+            'repeat.response.status' => ['required'],
             'test.scripts.repeat_response' => ['nullable', 'array'],
             'test.scripts.repeat_response.*.name' => ['required', 'string', 'max:255'],
             'test.scripts.repeat_response.*.rules' => ['required', 'array'],

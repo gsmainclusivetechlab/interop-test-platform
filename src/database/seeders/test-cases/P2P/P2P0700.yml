@@ -26,17 +26,20 @@ precondition: |
     - Payer Identifier value: +33555123456.
     - Payee Identifier value: +2000028888.
 components:
-  - Mobile Money Operator 1
-  - Mojaloop
-  - Mobile Money Operator 2
+  - name: Mobile Money Operator 1
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: Mobile Money Operator 2
+    slug: mmo-2
 
 test_steps:
   ## GET/Participants: MMO1 -> Mojaloop ##
   - path: /participants/{Type}/{ID}
     pattern: '^participants/MSISDN/[+]2000028888$'
     method: GET
-    source: Mobile Money Operator 1
-    target: Mojaloop
+    source: mmo-1
+    target: mojaloop
     api_spec: Mojaloop v1.0
 
     test_request_scripts:
@@ -66,8 +69,8 @@ test_steps:
   - path: /participants/{Type}/{ID}
     pattern: '^participants/MSISDN/[+]2000028888$'
     method: PUT
-    source: Mojaloop
-    target: Mobile Money Operator 1
+    source: mojaloop
+    target: mmo-1
     api_spec: Mojaloop v1.0
 
     test_request_scripts:
@@ -98,8 +101,8 @@ test_steps:
   - path: /quotes
     pattern: '^quotes$'
     method: POST
-    source: Mobile Money Operator 1
-    target: Mojaloop
+    source: mmo-1
+    target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -181,8 +184,8 @@ test_steps:
   - path: /quotes
     pattern: '^quotes$'
     method: POST
-    source: Mojaloop
-    target: Mobile Money Operator 2
+    source: mojaloop
+    target: mmo-2
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -264,8 +267,8 @@ test_steps:
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: Mobile Money Operator 2
-    target: Mojaloop
+    source: mmo-2
+    target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
@@ -315,8 +318,8 @@ test_steps:
   - path: /quotes/{ID}
     pattern: '^quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: Mojaloop
-    target: Mobile Money Operator 1
+    source: mojaloop
+    target: mmo-1
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
@@ -366,8 +369,8 @@ test_steps:
   - path: /transfers
     pattern: '^transfers$'
     method: POST
-    source: Mobile Money Operator 1
-    target: Mojaloop
+    source: mmo-1
+    target: mojaloop
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -431,8 +434,8 @@ test_steps:
   - path: /transfers
     pattern: '^transfers$'
     method: POST
-    source: Mojaloop
-    target: Mobile Money Operator 2
+    source: mojaloop
+    target: mmo-2
     api_spec: Mojaloop v1.0
     trigger:
       amount:
@@ -496,8 +499,8 @@ test_steps:
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: Mobile Money Operator 2
-    target: Mojaloop
+    source: mmo-2
+    target: mojaloop
     api_spec: Mojaloop v1.0
 
     test_request_scripts:
@@ -541,8 +544,8 @@ test_steps:
   - path: /transfers/{ID}
     pattern: '^transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     method: PUT
-    source: Mojaloop
-    target: Mobile Money Operator 1
+    source: mojaloop
+    target: mmo-1
     api_spec: Mojaloop v1.0
 
     test_request_scripts:

@@ -41,7 +41,7 @@ class TestResult extends Model
     protected $fillable = [
         'test_step_id',
         'iteration',
-        'is_repeat',
+        'repeat',
         'request',
         'response'
     ];
@@ -51,7 +51,7 @@ class TestResult extends Model
      */
     protected $casts = [
         'completed_at' => 'datetime',
-        'is_repeat' => 'boolean',
+        'repeat' => 'boolean',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
     ];
@@ -115,7 +115,7 @@ class TestResult extends Model
     public function scopeCompleted($query)
     {
         return $query->whereExists(function ($query) {
-            $query->where(['is_repeat' => false]);
+            $query->where(['repeat' => false]);
         });
     }
 
@@ -126,7 +126,7 @@ class TestResult extends Model
     public function scopeIncompleted($query)
     {
         return $query->whereNotExists(function ($query) {
-            $query->where(['is_repeat' => false]);
+            $query->where(['repeat' => false]);
         });
     }
 

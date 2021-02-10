@@ -131,9 +131,9 @@
                                                                     getRoute(
                                                                         component.use_encryption,
                                                                         [
+                                                                            component.slug,
+                                                                            connection.slug,
                                                                             group.id,
-                                                                            component.uuid,
-                                                                            connection.uuid,
                                                                         ],
                                                                         true
                                                                     )
@@ -204,9 +204,9 @@
                                                             getRoute(
                                                                 component.use_encryption,
                                                                 [
+                                                                    component.slug,
+                                                                    connection.slug,
                                                                     session.uuid,
-                                                                    component.uuid,
-                                                                    connection.uuid,
                                                                 ]
                                                             )
                                                         "

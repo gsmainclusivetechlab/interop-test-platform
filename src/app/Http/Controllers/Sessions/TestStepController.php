@@ -7,7 +7,7 @@ use App\Http\Resources\{
     ComponentResource,
     SessionResource,
     TestCaseResource,
-    TestStepResource,
+    TestStepResource
 };
 use App\Models\Session;
 use App\Models\TestCase;

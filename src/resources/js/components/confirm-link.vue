@@ -1,5 +1,11 @@
 <template>
-    <inertia-link :href="href" :data="data" :method="method" @click="confirm">
+    <inertia-link
+        :href="href"
+        :data="data"
+        :method="method"
+        @click="confirm"
+        as="button"
+    >
         <slot></slot>
     </inertia-link>
 </template>
