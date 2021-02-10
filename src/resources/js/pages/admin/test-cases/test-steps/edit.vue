@@ -645,11 +645,13 @@
                                         example.response.status.selected
                                     )
                             "
+                            :clearable="false"
                             class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid':
                                     $page.props.errors['response.status'],
                             }"
+                            @option:selected="setRepeatResponseStatus"
                         />
                         <span
                             v-if="$page.props.errors['response.status']"
@@ -1028,6 +1030,7 @@
                                         example.repeat.response.status.selected
                                     )
                             "
+                            :clearable="false"
                             class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid':

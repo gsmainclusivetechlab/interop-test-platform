@@ -103,6 +103,10 @@ export default {
                 return null;
             }
         },
+        setRepeatResponseStatus(option) {
+            this.example.repeat.response.status.selected =
+                this.example.repeat.response.status.selected ?? option;
+        },
     },
     computed: {
         sourceList() {
