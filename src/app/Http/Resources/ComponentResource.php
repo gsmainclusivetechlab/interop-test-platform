@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 
 class ComponentResource extends JsonResource
 {
@@ -13,23 +12,6 @@ class ComponentResource extends JsonResource
      */
     public function toArray($request)
     {
-        //        dd($this->whenPivotLoaded(
-        //            'test_case_components',
-        //            function () {
-        //                return $this->pivot->component_versions;
-        //            },
-        //            $this->whenLoaded(
-        //                'testCases',
-        //                function () {
-        //                    return $this->testCases
-        //                        ->pluck('pivot.component_versions')
-        //                        ->filter()
-        //                        ->values()
-        //                        ->all();
-        //                },
-        //                []
-        //            )
-        //        ));
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -60,12 +42,7 @@ class ComponentResource extends JsonResource
                 $this->whenLoaded(
                     'testCases',
                     function () {
-                        return $this->testCases
-                            ->pluck('pivot.component_versions')
-                            ->filter()
-                            ->flatten()
-                            ->unique()
-                            ->values();
+                        return $this->getExistingVersions();
                     },
                     []
                 )
