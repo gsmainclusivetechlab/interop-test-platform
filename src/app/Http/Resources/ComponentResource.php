@@ -12,23 +12,6 @@ class ComponentResource extends JsonResource
      */
     public function toArray($request)
     {
-        //        dd($this->whenPivotLoaded(
-        //            'test_case_components',
-        //            function () {
-        //                return $this->pivot->component_versions;
-        //            },
-        //            $this->whenLoaded(
-        //                'testCases',
-        //                function () {
-        //                    return $this->testCases
-        //                        ->pluck('pivot.component_versions')
-        //                        ->filter()
-        //                        ->values()
-        //                        ->all();
-        //                },
-        //                []
-        //            )
-        //        ));
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -59,11 +42,7 @@ class ComponentResource extends JsonResource
                 $this->whenLoaded(
                     'testCases',
                     function () {
-                        return $this->testCases
-                            ->pluck('pivot.component_versions')
-                            ->filter()
-                            ->flatten()
-                            ->unique();
+                        return $this->getExistingVersions();
                     },
                     []
                 )
