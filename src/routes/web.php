@@ -222,12 +222,6 @@ Route::name('testing.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{component:uuid}/{connection:uuid}/simulator/{path?}',
-            'SimulatorController'
-        )
-            ->name('simulator')
-            ->where('path', '.*');
-        Route::any(
             '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
         )
