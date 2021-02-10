@@ -2,9 +2,10 @@
 
 namespace App\Utils;
 
+use App\Extensions\Twig\{Base64, Datetime, IlpPacket, Uuid};
 use App\Models\Component;
 use App\Models\Session;
-use Illuminate\Support\Arr;
+use Exception;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
@@ -23,10 +24,10 @@ class TwigSubstitution
      * @var array
      */
     protected $twigExtensions = [
-        \App\Extensions\Twig\Uuid::class,
-        \App\Extensions\Twig\Datetime::class,
-        \App\Extensions\Twig\Base64::class,
-        \App\Extensions\Twig\IlpPacket::class,
+        Uuid::class,
+        Datetime::class,
+        Base64::class,
+        IlpPacket::class,
     ];
 
     /**
@@ -34,22 +35,14 @@ class TwigSubstitution
      */
     protected $data = [];
 
-    /**
-     * @param $testResults
-     * @param Session $session
-     */
-    public function __construct($testResults, $session)
+    public function __construct($testResults, Session $session)
     {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
         $this->data = $this->mapInto($testResults, $session);
     }
 
-    /**
-     * @param array $input
-     * @return array
-     */
-    public function replaceRecursive(array $input = [])
+    public function replaceRecursive(array $input = []): array
     {
         $result = [];
         foreach ($input as $key => $value) {
@@ -78,7 +71,7 @@ class TwigSubstitution
      * @param mixed $input
      * @return bool
      */
-    protected function isJsonSubstitution($input)
+    protected function isJsonSubstitution($input): bool
     {
         return is_string($input) &&
             !is_numeric($input) &&
@@ -86,17 +79,13 @@ class TwigSubstitution
             json_last_error() == JSON_ERROR_NONE;
     }
 
-    /**
-     * @param string $content
-     * @return string
-     */
-    public function replace(string $content)
+    public function replace(string $content): string
     {
         try {
             $template = $this->twig->createTemplate($content);
 
             return htmlspecialchars_decode($template->render($this->data));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $content;
         }
     }
@@ -156,12 +145,7 @@ class TwigSubstitution
         ];
     }
 
-    /**
-     * @param $components
-     * @param $session
-     * @return array
-     */
-    protected function mapUrls($components, $session)
+    protected function mapUrls($components, $session): array
     {
         $useEncryptionComponentIds = $session
             ->components()
