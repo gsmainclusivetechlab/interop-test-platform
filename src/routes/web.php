@@ -210,7 +210,7 @@ Route::name('testing-insecure.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{componentSlug}/{connectionSlug}/{session:uuid}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
         )
             ->name('sut')
@@ -222,16 +222,10 @@ Route::name('testing.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{componentSlug}/{connectionSlug}/{session:uuid}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
         )
             ->name('sut')
-            ->where('path', '.*');
-        Route::any(
-            '{component:uuid}/{connection:uuid}/simulator/{path?}',
-            'SimulatorController'
-        )
-            ->name('simulator')
             ->where('path', '.*');
     });
 
@@ -240,7 +234,7 @@ Route::name('testing-insecure-group.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{componentSlug}/{connectionSlug}/{group}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{group}/{path?}',
             'SutController@testingGroup'
         )
             ->name('sut')
@@ -252,7 +246,7 @@ Route::name('testing-group.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{componentSlug}/{connectionSlug}/{group}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{group}/{path?}',
             'SutController@testingGroup'
         )
             ->name('sut')

@@ -293,18 +293,13 @@ class TestCase extends Model
             ->where('draft', false);
     }
 
-    /**
-     * @param Builder $query
-     * @param Session $session
-     *
-     * @return Builder
-     */
-    public function scopeWithVersions($query, Session $session)
+    public function scopeWithVersions(Builder $query, Session $session): Builder
     {
-        return $query->when($session->components, function (
-            Builder $query,
-            $components
-        ) {
+        $components = $session->components->where('pivot.version');
+
+        return $query->when($components->count(), function (
+            Builder $query
+        ) use ($components) {
             $query->whereDoesntHave('components', function (
                 Builder $query
             ) use ($components) {
