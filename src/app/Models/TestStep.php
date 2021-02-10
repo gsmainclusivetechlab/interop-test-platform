@@ -148,8 +148,8 @@ class TestStep extends Model
         preg_match_all($pattern, $subject, $matches);
 
         return [
-            'env' => $matches[1],
-            'file_env' => $matches[2]
+            'env' => array_filter($matches[1]),
+            'file_env' => array_filter($matches[2])
         ];
     }
 }
