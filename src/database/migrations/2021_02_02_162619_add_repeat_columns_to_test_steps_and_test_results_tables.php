@@ -22,7 +22,7 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
 
         Schema::table('test_results', function (Blueprint $table) {
             $table->unsignedTinyInteger('iteration')->default(1)->after('test_step_id');
-            $table->boolean('is_repeat')->default(false)->after('iteration');
+            $table->boolean('repeat')->default(false)->after('iteration');
         });
     }
 
@@ -45,7 +45,7 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
         Schema::table('test_results', function (Blueprint $table) {
             $table->dropColumn([
                 'iteration',
-                'is_repeat'
+                'repeat'
             ]);
         });
     }

@@ -64,7 +64,7 @@ class SendingFulfilledHandler
                     json_encode($this->testResult->response->toArray())
                 ])->exists();
         $this->testResult->update([
-            'is_repeat' => $isRepeat
+            'repeat' => $isRepeat
         ]);
         $testSuiteResult = $this->getTestSuiteResult($isRepeat);
 
