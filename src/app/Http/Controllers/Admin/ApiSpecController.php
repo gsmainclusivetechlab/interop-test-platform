@@ -67,8 +67,8 @@ class ApiSpecController extends Controller
         try {
             ApiSpec::create([
                 'name' => $request->input('name'),
-                'openapi' => Reader::readFromYaml(
-                    $request->file('file')->get()
+                'openapi' => Reader::readFromYamlFile(
+                    $request->file('file')->path()
                 ),
             ]);
 
