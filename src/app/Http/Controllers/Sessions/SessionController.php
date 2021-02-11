@@ -313,7 +313,12 @@ class SessionController extends Controller
 
         try {
             $session = DB::transaction(function () use ($session, $request) {
-                $data = $request->validated();
+                $data = array_merge(
+                    [
+                        'environments' => [],
+                    ],
+                    $request->validated()
+                );
                 collect($request->file('certificates'))->each(function (
                     $certificate,
                     $componentId
@@ -341,10 +346,7 @@ class SessionController extends Controller
                     ])->id;
                 });
 
-                $data = array_merge(
-                    [
-                        'environments' => [],
-                    ],
+                $session->update(
                     $session->isComplianceSession()
                         ? Arr::only($data, [
                             'group_environment_id',
@@ -352,8 +354,6 @@ class SessionController extends Controller
                         ])
                         : $data
                 );
-
-                $session->update($data);
 
                 FileEnvironment::syncEnvironments(
                     $session,
