@@ -46,9 +46,7 @@ class ExecuteTestRunJob implements ShouldQueue
         /** @var TestStep $testStep */
         $testStep = $this->testRun->testCase->testSteps()->firstOrFail();
         $testRun = $this->testRun;
-        $testResult = $testRun
-            ->testResults()
-            ->create(['test_step_id' => $testStep->id]);
+        $testResult = $testRun->createTestResult($testStep);
 
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
