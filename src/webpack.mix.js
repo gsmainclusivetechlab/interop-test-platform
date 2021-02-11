@@ -39,6 +39,6 @@ mix.setPublicPath('public/assets')
     .copyDirectory('resources/fonts', 'public/assets/fonts')
     .copyDirectory('resources/images', 'public/assets/images')
     .copy(
-        'node_modules/tabler-icons/tabler-sprite.svg',
+        'node_modules/@tabler/icons/tabler-sprite.svg',
         'public/assets/images/icons.svg'
     );
