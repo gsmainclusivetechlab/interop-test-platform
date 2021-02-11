@@ -9,7 +9,6 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\Reader;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 
 class ApiSpecController extends Controller
