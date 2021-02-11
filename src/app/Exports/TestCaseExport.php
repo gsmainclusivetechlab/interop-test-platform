@@ -53,9 +53,16 @@ class TestCaseExport implements Exportable
                 ->components()
                 ->get()
                 ->map(function (Component $component) {
-                    return array_merge($component->only(['name', 'slug']), [
-                        'versions' => $component->pivot->component_versions,
-                    ]);
+                    $versions = $component->pivot->component_versions
+                        ? [
+                            'versions' => $component->pivot->component_versions,
+                        ]
+                        : [];
+
+                    return array_merge(
+                        $component->only(['name', 'slug']),
+                        $versions
+                    );
                 })
                 ->toArray(),
             'test_steps' => $this->mapTestSteps($testCase->testSteps),

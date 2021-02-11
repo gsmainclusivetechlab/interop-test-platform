@@ -152,6 +152,12 @@ class TestCaseController extends Controller
             $testCase->delete();
         });
 
+        Component::whereDoesntHave('testCases')->each(function (
+            Component $component
+        ) {
+            $component->delete();
+        });
+
         return redirect()
             ->back()
             ->with('success', __('Test case deleted successfully'));
