@@ -103,9 +103,8 @@
                                         connection.id == testStep.target.id
                                     "
                                 >
-                                    |{{
-                                        `Step ${testResults[0].testStep.data.position}`
-                                    }}| {{ connection.id }};
+                                    |{{ `Step ${testStep.position}` }}|
+                                    {{ connection.id }};
                                 </template>
                                 <template v-else>
                                     {{ connection.id }};
@@ -987,7 +986,7 @@ export default {
         },
         testResultRequestSetups() {
             let data = collect();
-            if (!this.testResults[0].id) return data;
+            if (!this.testResults.length > 0) return data;
             collect(this.testStep.testSetups)
                 .where('type', 'request')
                 .each((item) => {
@@ -997,7 +996,7 @@ export default {
         },
         testResultResponseSetups() {
             let data = collect();
-            if (!this.testResults[0].id) return data;
+            if (!this.testResults.length > 0) return data;
             collect(this.testStep.testSetups)
                 .where('type', 'response')
                 .each((item) => {
