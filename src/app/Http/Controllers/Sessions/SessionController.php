@@ -341,7 +341,10 @@ class SessionController extends Controller
                     ])->id;
                 });
 
-                $session->update(
+                $data = array_merge(
+                    [
+                        'environments' => [],
+                    ],
                     $session->isComplianceSession()
                         ? Arr::only($data, [
                             'group_environment_id',
@@ -349,6 +352,8 @@ class SessionController extends Controller
                         ])
                         : $data
                 );
+
+                $session->update($data);
 
                 FileEnvironment::syncEnvironments(
                     $session,
