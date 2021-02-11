@@ -13,15 +13,17 @@
   }
   .vs__selected {
     line-height: 1;
+    color: inherit;
+    background-color: inherit;
   }
   .vs__dropdown-option {
     padding: 3px 8px;
+    background-color: inherit;
+    color: inherit;
     &--highlight {
       background-color: $list-group-active-bg;
-      color: $list-group-active-color;
     }
     &--disabled {
-      background-color: $white;
       color: $input-placeholder-color;
       cursor: not-allowed;
     }
@@ -45,6 +47,8 @@
     }
   }
   .vs__search {
+    color: inherit;
+    background-color: inherit;
     &::placeholder {
       color: $input-placeholder-color;
     }
