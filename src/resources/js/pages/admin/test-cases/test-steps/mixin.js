@@ -69,10 +69,23 @@ export default {
                     headers: this.example.response.headers,
                     body: this.example.response.body,
                 },
+                repeat: {
+                    condition: this.example.repeat.condition,
+                    count: this.example.repeat.count,
+                    max: this.example.repeat.max,
+                    response: {
+                        status: collect(this.$page.props.statuses)
+                            .flip()
+                            .get(this.example.repeat.response.status.selected),
+                        headers: this.example.repeat.response.headers,
+                        body: this.example.repeat.response.body,
+                    },
+                },
                 test: {
                     scripts: {
                         request: this.test.scripts.request.list,
                         response: this.test.scripts.response.list,
+                        repeat_response: this.test.scripts.repeat.response.list,
                     },
                 },
             };
@@ -89,6 +102,10 @@ export default {
             } else {
                 return null;
             }
+        },
+        setRepeatResponseStatus(option) {
+            this.example.repeat.response.status.selected =
+                this.example.repeat.response.status.selected ?? option;
         },
     },
     computed: {

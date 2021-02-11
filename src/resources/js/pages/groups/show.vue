@@ -89,6 +89,32 @@
                                     <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
+                                    <li>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.message-log.index',
+                                                    session.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Log
+                                        </inertia-link>
+                                    </li>
+                                    <li v-if="session.can.update">
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.edit',
+                                                    session.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Edit
+                                        </inertia-link>
+                                    </li>
                                     <li v-if="session.can.delete">
                                         <confirm-link
                                             class="dropdown-item"

@@ -28,6 +28,12 @@ class TestStepResource extends JsonResource
                 }
             ),
             'response' => optional($this->response)->toArray(),
+            'repeat' => [
+                'max' => $this->repeat_max,
+                'count' => $this->repeat_count,
+                'condition' => $this->repeat_condition,
+                'response' => optional($this->repeat_response)->toArray(),
+            ],
             'position' => $this->position,
             'mtls' => $this->mtls,
             'source' => new ComponentResource($this->whenLoaded('source')),

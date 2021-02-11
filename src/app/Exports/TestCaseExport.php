@@ -114,8 +114,33 @@ class TestCaseExport implements Exportable
                     $testStep->getRawOriginal('response'),
                     true
                 ),
+                'repeat' => $this->mapRepeat($testStep),
             ]);
         }
+
+        return $this->arrayFilter($result);
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @return array|null
+     */
+    protected function mapRepeat($testStep)
+    {
+        $result = [
+            'max' => $testStep->repeat_max,
+            'count' => $testStep->repeat_count,
+            'condition' => $testStep->repeat_condition,
+            'response' => json_decode(
+                $testStep->getRawOriginal('repeat_response'),
+                true
+            ),
+            'test_response_scripts' => $this->mapTestScripts(
+                $testStep->testScripts,
+                TestScript::TYPE_REPEAT_RESPONSE
+            ),
+        ];
+
 
         return $this->arrayFilter($result);
     }
