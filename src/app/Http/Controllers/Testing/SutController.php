@@ -6,7 +6,6 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Models\Component;
-use App\Models\TestRun;
 use App\Models\Group;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
@@ -18,6 +17,10 @@ class SutController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        if (class_exists('\Debugbar')) {
+            \Debugbar::disable();
+        }
 
         if (request()->header('Accept') == '*/*') {
             request()->headers->set('Accept', 'application/json');
@@ -146,11 +149,12 @@ class SutController extends Controller
                                 ->whereDoesntHave('testResults', function (
                                     $query
                                 ) {
-                                    $query->whereColumn(
-                                        'test_step_id',
-                                        'test_steps.id'
-                                    )
-                                    ->completed();
+                                    $query
+                                        ->whereColumn(
+                                            'test_step_id',
+                                            'test_steps.id'
+                                        )
+                                        ->completed();
                                 });
                         });
                     });

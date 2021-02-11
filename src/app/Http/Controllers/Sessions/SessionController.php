@@ -313,7 +313,12 @@ class SessionController extends Controller
 
         try {
             $session = DB::transaction(function () use ($session, $request) {
-                $data = $request->validated();
+                $data = array_merge(
+                    [
+                        'environments' => [],
+                    ],
+                    $request->validated()
+                );
                 collect($request->file('certificates'))->each(function (
                     $certificate,
                     $componentId
