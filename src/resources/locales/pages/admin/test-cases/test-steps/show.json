@@ -2,12 +2,30 @@
     "en": {
         "card": {
             "title": "View"
+        },
+        "buttons": {
+            "make-draft": {
+                "title": "Make Test Case Draft",
+                "modal": {
+                    "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
+                }
+            },
+            "edit": "Edit"
         }
     },
 
     "ru": {
         "card": {
             "title": "Просмотр"
+        },
+        "buttons": {
+            "make-draft": {
+                "title": "Сделать Черновиком",
+                "modal": {
+                    "text": "Опубликована последняя версия этого тестового примера, поэтому будет создана новая черновая версия для хранения ваших изменений. Вы можете опубликовать или отказаться от него в любое время."
+                }
+            },
+            "edit": "Редактировать"
         }
     }
 }
