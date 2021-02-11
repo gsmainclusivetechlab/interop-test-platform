@@ -14,6 +14,7 @@ class TestScript extends Model
 
     const TYPE_REQUEST = 'request';
     const TYPE_RESPONSE = 'response';
+    const TYPE_REPEAT_RESPONSE = 'repeat_response';
 
     /**
      * @var string

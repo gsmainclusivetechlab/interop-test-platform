@@ -61,7 +61,7 @@
                         >
                             {{ $t('inputs.trigger') }}
                         </button>
-                        <b-collapse id="trigger" class="card">
+                        <b-collapse id="trigger" class="card mb-0">
                             <json-tree
                                 :data="trigger"
                                 :deep="2"
@@ -70,15 +70,17 @@
                             ></json-tree>
                         </b-collapse>
                     </div>
+                    <hr />
                     <div class="col-12 mb-3">
                         <button
                             type="button"
                             class="btn btn-link card-title dropdown-toggle px-0"
                             v-b-toggle="'test-request-scripts'"
+                            :disabled="test.scripts.request.list.length === 0"
                         >
                             {{ $t('inputs.test-scripts.request') }}
                         </button>
-                        <b-collapse id="test-request-scripts" class="card">
+                        <b-collapse id="test-request-scripts" class="card mb-0">
                             <div
                                 v-for="(request, i) in test.scripts.request
                                     .list"
@@ -107,45 +109,6 @@
                             </div>
                         </b-collapse>
                     </div>
-                    <div class="col-12 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-link card-title dropdown-toggle px-0"
-                            v-b-toggle="'test-response-scripts'"
-                        >
-                            {{ $t('inputs.test-scripts.response') }}
-                        </button>
-                        <b-collapse id="test-response-scripts" class="card">
-                            <div
-                                v-for="(response, i) in test.scripts.response
-                                    .list"
-                                class="card-body"
-                                :key="`test-response-scripts-${i}`"
-                            >
-                                <div class="card-header px-0 pt-0">
-                                    <span class="text-muted text-break mr-2"
-                                        >{{ i + 1 }}. {{ response.name }}</span
-                                    >
-                                </div>
-                                <div
-                                    class="card-body px-0 pb-0"
-                                    :key="`test-response-scripts-form-${i}`"
-                                >
-                                    <label class="form-label mb-3">{{
-                                        $t(
-                                            'inputs.test-scripts.form.inputs.rules'
-                                        )
-                                    }}</label>
-                                    <json-tree
-                                        :data="response.rules"
-                                        :deep="2"
-                                        :show-line="false"
-                                        class="p-2"
-                                    ></json-tree>
-                                </div>
-                            </div>
-                        </b-collapse>
-                    </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">
                             {{ $t('inputs.request.uri') }}
@@ -166,7 +129,10 @@
                         >
                             {{ $t('inputs.request.headers') }}
                         </button>
-                        <b-collapse id="request-headers-examples" class="card">
+                        <b-collapse
+                            id="request-headers-examples"
+                            class="card mb-0"
+                        >
                             <json-tree
                                 :data="example.request.headers"
                                 :deep="2"
@@ -183,7 +149,10 @@
                         >
                             {{ $t('inputs.request.body') }}
                         </button>
-                        <b-collapse id="request-body-examples" class="card">
+                        <b-collapse
+                            id="request-body-examples"
+                            class="card mb-0"
+                        >
                             <div class="card-header">
                                 <div class="card-options">
                                     <label class="form-check form-switch">
@@ -219,13 +188,57 @@
                         >
                             {{ $t('inputs.request.jws') }}
                         </button>
-                        <b-collapse id="request-jws-examples" class="card">
+                        <b-collapse id="request-jws-examples" class="card mb-0">
                             <json-tree
                                 :data="example.request.jws"
                                 :deep="2"
                                 :show-line="false"
                                 class="p-2"
                             ></json-tree>
+                        </b-collapse>
+                    </div>
+                    <hr />
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'test-response-scripts'"
+                            :disabled="test.scripts.response.list.length === 0"
+                        >
+                            {{ $t('inputs.test-scripts.response') }}
+                        </button>
+                        <b-collapse
+                            id="test-response-scripts"
+                            class="card mb-0"
+                        >
+                            <div
+                                v-for="(response, i) in test.scripts.response
+                                    .list"
+                                class="card-body"
+                                :key="`test-response-scripts-${i}`"
+                            >
+                                <div class="card-header px-0 pt-0">
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ response.name }}</span
+                                    >
+                                </div>
+                                <div
+                                    class="card-body px-0 pb-0"
+                                    :key="`test-response-scripts-form-${i}`"
+                                >
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
+                                    <json-tree
+                                        :data="response.rules"
+                                        :deep="2"
+                                        :show-line="false"
+                                        class="p-2"
+                                    ></json-tree>
+                                </div>
+                            </div>
                         </b-collapse>
                     </div>
                     <div class="col-6 mb-3">
@@ -250,7 +263,10 @@
                         >
                             {{ $t('inputs.response.headers') }}
                         </button>
-                        <b-collapse id="response-headers-examples" class="card">
+                        <b-collapse
+                            id="response-headers-examples"
+                            class="card mb-0"
+                        >
                             <json-tree
                                 :data="example.response.headers"
                                 :deep="2"
@@ -267,7 +283,10 @@
                         >
                             {{ $t('inputs.response.body') }}
                         </button>
-                        <b-collapse id="response-body-examples" class="card">
+                        <b-collapse
+                            id="response-body-examples"
+                            class="card mb-0"
+                        >
                             <div class="card-header">
                                 <div class="card-options">
                                     <label class="form-check form-switch">
@@ -303,7 +322,10 @@
                         >
                             {{ $t('inputs.response.jws') }}
                         </button>
-                        <b-collapse id="response-jws-examples" class="card">
+                        <b-collapse
+                            id="response-jws-examples"
+                            class="card mb-0"
+                        >
                             <json-tree
                                 :data="example.response.jws"
                                 :deep="2"
@@ -312,6 +334,155 @@
                             ></json-tree>
                         </b-collapse>
                     </div>
+                    <hr />
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'test-repeat-response-scripts'"
+                            :disabled="
+                                test.scripts.repeat.response.list.length === 0
+                            "
+                        >
+                            {{ $t('inputs.test-scripts.repeat.response') }}
+                        </button>
+                        <b-collapse
+                            id="test-repeat-response-scripts"
+                            class="card mb-0"
+                        >
+                            <div
+                                v-for="(response, i) in test.scripts.repeat
+                                    .response.list"
+                                class="card-body"
+                                :key="`test-repeat-response-scripts-${i}`"
+                            >
+                                <div class="card-header px-0 pt-0">
+                                    <span class="text-muted text-break mr-2"
+                                        >{{ i + 1 }}. {{ response.name }}</span
+                                    >
+                                </div>
+                                <div
+                                    class="card-body px-0 pb-0"
+                                    :key="`test-repeat-response-scripts-form-${i}`"
+                                >
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
+                                    <json-tree
+                                        :data="response.rules"
+                                        :deep="2"
+                                        :show-line="false"
+                                        class="p-2"
+                                    ></json-tree>
+                                </div>
+                            </div>
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'repeat-condition'"
+                        >
+                            {{ $t('inputs.repeat.condition') }}
+                        </button>
+                        <b-collapse id="repeat-condition" class="card mb-0">
+                            <json-tree
+                                :data="example.repeat.condition"
+                                :deep="2"
+                                :show-line="false"
+                                class="p-2"
+                            ></json-tree>
+                        </b-collapse>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.repeat.count') }}
+                        </h2>
+                        <p class="form-control">
+                            {{ example.repeat.count }}
+                        </p>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.repeat.max') }}
+                        </h2>
+                        <p class="form-control">{{ example.repeat.max }}</p>
+                    </div>
+                    <template v-if="testStep.repeat.response">
+                        <div class="col-6 mb-3">
+                            <h2 class="card-title">
+                                {{ $t('inputs.repeat.response.status.label') }}
+                            </h2>
+                            <p class="form-control">
+                                {{ example.repeat.response.status.selected }}
+                            </p>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <button
+                                type="button"
+                                class="btn btn-link card-title dropdown-toggle px-0"
+                                v-b-toggle="'repeat-response-headers-examples'"
+                            >
+                                {{ $t('inputs.repeat.response.headers') }}
+                            </button>
+                            <b-collapse
+                                id="repeat-response-headers-examples"
+                                class="card mb-0"
+                            >
+                                <json-tree
+                                    :data="example.repeat.response.headers"
+                                    :deep="2"
+                                    :show-line="false"
+                                    class="p-2"
+                                ></json-tree>
+                            </b-collapse>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <button
+                                type="button"
+                                class="btn btn-link card-title dropdown-toggle px-0"
+                                v-b-toggle="'repeat-response-body-examples'"
+                            >
+                                {{ $t('inputs.repeat.response.body') }}
+                            </button>
+                            <b-collapse
+                                id="repeat-response-body-examples"
+                                class="card mb-0"
+                            >
+                                <div class="card-header">
+                                    <div class="card-options">
+                                        <label class="form-check form-switch">
+                                            <input
+                                                :checked="
+                                                    example.repeat.response
+                                                        .body === 'empty_body'
+                                                "
+                                                type="checkbox"
+                                                class="form-check-input"
+                                                disabled
+                                            />
+                                            <span class="form-check-label">{{
+                                                $t('inputs.empty-body')
+                                            }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <json-tree
+                                    v-if="
+                                        example.repeat.response.body !==
+                                        'empty_body'
+                                    "
+                                    :data="example.repeat.response.body"
+                                    :deep="2"
+                                    :show-line="false"
+                                    class="p-2"
+                                ></json-tree>
+                            </b-collapse>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div class="card-footer text-right">
@@ -393,6 +564,13 @@ export default {
                             (el) => el.type === 'response'
                         ),
                     },
+                    repeat: {
+                        response: {
+                            list: this.testStep.testScripts?.data?.filter(
+                                (el) => el.type === 'repeat_response'
+                            ),
+                        },
+                    },
                 },
             },
             example: {
@@ -411,6 +589,18 @@ export default {
                     },
                     headers: this.testStep.response?.headers,
                     body: this.testStep.response?.body,
+                },
+                repeat: {
+                    condition: this.testStep.repeat.condition,
+                    count: this.testStep.repeat.count,
+                    max: this.testStep.repeat.max,
+                    response: {
+                        status: {
+                            selected: this.testStep.repeat.response?.status,
+                        },
+                        headers: this.testStep.repeat.response?.headers,
+                        body: this.testStep.repeat.response?.body,
+                    },
                 },
             },
         };
