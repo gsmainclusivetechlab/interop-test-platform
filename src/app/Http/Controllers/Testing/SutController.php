@@ -117,7 +117,8 @@ class SutController extends Controller
                         ->selectRaw('1')
                         ->from('test_results')
                         ->where('test_run_id', '=', $currentRun->id)
-                        ->whereColumn('test_step_id', '=', 'test_steps.id');
+                        ->whereColumn('test_step_id', '=', 'test_steps.id')
+                        ->completed();
                 });
         } else {
             // otherwise any step from any test is fair game
@@ -139,7 +140,6 @@ class SutController extends Controller
                         });
                     })
                     ->orWhere(function ($query) {
-                        $query->where('position', '!=', 1);
                         $query->whereHas('testRuns', function ($query) {
                             $query
                                 ->incompleted()
@@ -149,7 +149,8 @@ class SutController extends Controller
                                     $query->whereColumn(
                                         'test_step_id',
                                         'test_steps.id'
-                                    );
+                                    )
+                                    ->completed();
                                 });
                         });
                     });
@@ -221,9 +222,7 @@ class SutController extends Controller
                 }
             });
 
-        $testResult = $testRun
-            ->testResults()
-            ->create(['test_step_id' => $testStep->id]);
+        $testResult = $testRun->createTestResult($testStep);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
