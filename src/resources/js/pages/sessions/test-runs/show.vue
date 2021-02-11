@@ -98,13 +98,9 @@
                                 -->
                                 <template
                                     v-if="
-                                        testResults[0].testStep &&
-                                        component.id ==
-                                            testResults[0].testStep.data.source
-                                                .id &&
-                                        connection.id ==
-                                            testResults[0].testStep.data.target
-                                                .id
+                                        testStep &&
+                                        component.id == testStep.source.id &&
+                                        connection.id == testStep.target.id
                                     "
                                 >
                                     |{{
@@ -156,24 +152,6 @@
                                                         `Step ${testStep.position}`
                                                     }}
                                                 </span>
-                                                <div
-                                                    v-if="
-                                                        testStep.repeat.count >
-                                                        0
-                                                    "
-                                                    class="text-muted"
-                                                >
-                                                    Iterations
-                                                    <span
-                                                        class="badge badge-secondary"
-                                                        >{{
-                                                            `${
-                                                                testStep.repeat
-                                                                    .count + 1
-                                                            }`
-                                                        }}</span
-                                                    >
-                                                </div>
                                                 <div
                                                     v-if="
                                                         testResultSteps.get(
@@ -263,21 +241,6 @@
                                                 }}
                                             </span>
                                             <div
-                                                v-if="testStep.repeat.count > 0"
-                                                class="text-muted"
-                                            >
-                                                Iterations
-                                                <span
-                                                    class="badge badge-secondary"
-                                                    >{{
-                                                        `${
-                                                            testStep.repeat
-                                                                .count + 1
-                                                        }`
-                                                    }}</span
-                                                >
-                                            </div>
-                                            <div
                                                 class="text-truncate"
                                                 :title="`${testStep.method} ${testStep.path}`"
                                             >
@@ -307,16 +270,13 @@
                                     title-link-class="justify-content-center py-1 text-nowrap rounded-0"
                                     :key="`result-${i}`"
                                 >
-                                    <div
-                                        v-if="result.testStep"
-                                        class="lead py-3 px-4"
-                                    >
+                                    <div v-if="testStep" class="lead py-3 px-4">
                                         <div
                                             class="d-flex justigy-content-between"
                                         >
                                             <b class="text-nowrap">
                                                 {{
-                                                    `Step ${result.testStep.data.position}`
+                                                    `Step ${testStep.position}`
                                                 }}
                                             </b>
                                             <div class="d-inline-block ml-auto">
@@ -696,8 +656,7 @@
                                                     )
                                                         .where(
                                                             'id',
-                                                            result.testStep.data
-                                                                .source.id
+                                                            testStep.source.id
                                                         )
                                                         .count() &&
                                                     testResultRequestSetups.count()
@@ -901,8 +860,7 @@
                                                     )
                                                         .where(
                                                             'id',
-                                                            result.testStep.data
-                                                                .target.id
+                                                            testStep.target.id
                                                         )
                                                         .count() &&
                                                     testResultResponseSetups.count()
@@ -987,6 +945,10 @@ export default {
             type: Object,
             required: true,
         },
+        testStep: {
+            type: Object,
+            required: true,
+        },
         testSteps: {
             type: Object,
             required: true,
@@ -1026,7 +988,7 @@ export default {
         testResultRequestSetups() {
             let data = collect();
             if (!this.testResults[0].id) return data;
-            collect(this.testResults[0].testStep.data.testSetups)
+            collect(this.testStep.testSetups)
                 .where('type', 'request')
                 .each((item) => {
                     data = data.mergeRecursive(item.values);
@@ -1036,7 +998,7 @@ export default {
         testResultResponseSetups() {
             let data = collect();
             if (!this.testResults[0].id) return data;
-            collect(this.testResults[0].testStep.data.testSetups)
+            collect(this.testStep.testSetups)
                 .where('type', 'response')
                 .each((item) => {
                     data = data.mergeRecursive(item.values);
