@@ -53,7 +53,7 @@ class SutController extends Controller
                     !Arr::get($sut, 'certificate_id')
                 ) {
                     $sut['certificate_id'] = Certificate::create([
-                        'passphrase' => $sut['passphrase'],
+                        'passphrase' => Arr::get($sut, 'passphrase'),
                         'name' => Component::find($sut['id'])->name,
                         'ca_crt_path' => Certificate::storeFile(
                             $request,
