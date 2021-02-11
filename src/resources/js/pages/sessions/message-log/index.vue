@@ -10,34 +10,37 @@
                 <table class="table table-striped table-hover card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap w-20">URL</th>
-                            <th class="text-nowrap w-auto">Matched Step</th>
-                            <th class="text-nowrap w-15">Date</th>
-                            <th class="text-nowrap w-15">Data</th>
+                            <th class="text-nowrap w-25">URL</th>
+                            <th class="text-nowrap">Matched Step</th>
+                            <th class="text-nowrap w-25">Exсeption</th>
+                            <th class="text-center text-nowrap w-0">Date</th>
+                            <th class="text-center text-nowrap w-0">Data</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr
                             v-for="message in logItems.data"
-                            v-bind:key="message.type + message.id"
+                            :key="message.type + message.id"
                         >
-                            <td>
-                                <div
-                                    class="d-flex align-items-center"
-                                    v-if="message.request"
-                                >
-                                    {{ message.request.method }}
-                                    {{
-                                        message.type === 'MISMATCH'
-                                            ? processMismatchPath(
-                                                  message.request.path
-                                              ).truncated
-                                            : message.request.path
-                                    }}
-                                </div>
+                            <td v-if="message.request" class="text-break">
+                                {{ message.request.method }}
+                                {{
+                                    message.type === 'MISMATCH'
+                                        ? processMismatchPath(
+                                              message.request.path
+                                          ).truncated
+                                        : message.request.path
+                                }}
                             </td>
+                            <td v-else>-</td>
 
-                            <td v-if="message.type === 'RESULT'">
+                            <td
+                                v-if="
+                                    message.type === 'RESULT' &&
+                                    message.test_case &&
+                                    message.test_step
+                                "
+                            >
                                 <inertia-link
                                     v-if="message.test_run"
                                     :href="
@@ -62,21 +65,28 @@
                             </td>
                             <td v-else>-</td>
 
-                            <td>
+                            <td
+                                v-if="message.exception !== null"
+                                class="text-danger"
+                            >
+                                {{ message.exception }}
+                            </td>
+                            <td v-else>-</td>
+
+                            <td class="text-center text-nowrap">
                                 {{ message.created_at }}
                             </td>
-                            <td>
-                                <template v-if="message.request">
-                                    <mismatch-modal
-                                        :message="message"
-                                        :path="
-                                            processMismatchPath(
-                                                message.request.path
-                                            )
-                                        "
-                                    ></mismatch-modal>
-                                </template>
+                            <td v-if="message.request" class="text-center">
+                                <mismatch-modal
+                                    :message="message"
+                                    :path="
+                                        processMismatchPath(
+                                            message.request.path
+                                        )
+                                    "
+                                ></mismatch-modal>
                             </td>
+                            <td v-else class="text-center">-</td>
                         </tr>
                         <tr v-if="!logItems.data.length">
                             <td class="text-center" colspan="5">No Results</td>
@@ -118,13 +128,13 @@ export default {
         },
     },
     methods: {
-        processMismatchPath: function (path) {
+        processMismatchPath(path) {
             const match = path.match(
-                /\/testing\/([^\/]+)\/([^\/]+)\/([^\/]+)\/sut(.+)/
+                /\/testing.*\/([^\/]+)\/([^\/]+)\/([^\/]+)\/sut(.*)/
             );
-            const session = match && match[1];
-            const source = match && match[2];
-            const target = match && match[3];
+            const session = match && match[3];
+            const source = match && match[1];
+            const target = match && match[2];
             const destPath = match && match[4];
             return {
                 original: path,

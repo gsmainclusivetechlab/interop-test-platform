@@ -107,18 +107,16 @@ class TestRunController extends Controller
                 ) {
                     $query->where('position', $position);
                 })
-                ->with([
-                    'testStep' => function ($query) {
-                        return $query->with([
-                            'source',
-                            'target',
-                            'testSetups',
-                        ]);
-                    },
-                    'testExecutions',
-                ])
+                ->with(['testExecutions'])
                 ->get()
             )->resolve(),
+            'testStep' => (new TestStepResource(
+                $testCase
+                    ->testSteps()
+                    ->where('position', $position)
+                    ->with(['source', 'target', 'testSetups'])
+                    ->first()
+            ))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()
