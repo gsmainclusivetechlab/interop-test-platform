@@ -130,7 +130,7 @@ export default {
     methods: {
         processMismatchPath(path) {
             const match = path.match(
-                /\/testing.*\/([^\/]+)\/([^\/]+)\/([^\/]+)\/sut(.*)/
+                /\/testing.*\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.*)/
             );
             const session = match && match[3];
             const source = match && match[1];
