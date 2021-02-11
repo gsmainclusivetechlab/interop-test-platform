@@ -1,4 +1,20 @@
 .theme-dark {
+  .v-select {
+    color: $dark-mode-text;
+    background-color: $dark;
+    border-color: $dark-mode-text;
+    .vs__selected {
+      border-color: $dark-mode-text;
+    }
+    .vs__dropdown-menu {
+      background-color: inherit;
+    }
+    .vs__dropdown-option {
+      &--highlight {
+        background-color: $dark-mode-darken;
+      }
+    }
+  }
   .nav-tabs {
     .nav-link {
       color: $gray-300;
