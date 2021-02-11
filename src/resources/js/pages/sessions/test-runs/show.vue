@@ -99,12 +99,11 @@
                                 <template
                                     v-if="
                                         testStep &&
-                                        component.id == testStep.source.id &&
-                                        connection.id == testStep.target.id
+                                        component.id == testStep.source.data.id &&
+                                        connection.id == testStep.target.data.id
                                     "
                                 >
-                                    |{{ `Step ${testStep.position}` }}|
-                                    {{ connection.id }};
+                                    {{`|Step ${testStep.position}| ${connection.id};`}}
                                 </template>
                                 <template v-else>
                                     {{ connection.id }};
@@ -655,7 +654,7 @@
                                                     )
                                                         .where(
                                                             'id',
-                                                            testStep.source.id
+                                                            testStep.source.data.id
                                                         )
                                                         .count() &&
                                                     testResultRequestSetups.count()
@@ -859,7 +858,7 @@
                                                     )
                                                         .where(
                                                             'id',
-                                                            testStep.target.id
+                                                            testStep.target.data.id
                                                         )
                                                         .count() &&
                                                     testResultResponseSetups.count()
