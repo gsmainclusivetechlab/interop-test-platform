@@ -9,6 +9,7 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\Reader;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 
 class ApiSpecController extends Controller
@@ -67,8 +68,8 @@ class ApiSpecController extends Controller
         try {
             ApiSpec::create([
                 'name' => $request->input('name'),
-                'openapi' => Reader::readFromYaml(
-                    $request->file('file')->get()
+                'openapi' => Reader::readFromYamlFile(
+                    $request->file('file')->path()
                 ),
             ]);
 
