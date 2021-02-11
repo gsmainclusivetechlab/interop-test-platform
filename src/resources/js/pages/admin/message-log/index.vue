@@ -131,9 +131,9 @@ export default {
             const match = path.match(
                 /\/testing.*\/([^\/]+)\/([^\/]+)\/([^\/]+)\/sut(.*)/
             );
-            const session = match && match[1];
-            const source = match && match[2];
-            const target = match && match[3];
+            const session = match && match[3];
+            const source = match && match[1];
+            const target = match && match[2];
             const destPath = match && match[4];
             return {
                 original: path,
