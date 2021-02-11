@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
+use App\Models\Pivots\TestCaseComponents;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -13,8 +14,11 @@ use Illuminate\Support\Collection;
 /**
  * @mixin \Eloquent
  *
+ * @property int $id
+ *
  * @property TestRun $lastTestRun
  * @property TestRun[]|Collection $testRuns
+ * @property Component[]|Collection $components
  */
 class TestCase extends Model
 {
@@ -127,7 +131,9 @@ class TestCase extends Model
             'test_case_components',
             'test_case_id',
             'component_id'
-        );
+        )
+            ->using(TestCaseComponents::class)
+            ->withPivot(['component_name', 'component_versions']);
     }
 
     /**
@@ -287,17 +293,32 @@ class TestCase extends Model
             ->where('draft', false);
     }
 
-    /**
-     * @param Builder $query
-     * @param array $ids
-     *
-     * @return Builder
-     */
-    public function scopeWithComponents($query, array $ids)
+    public function scopeWithVersions(Builder $query, Session $session): Builder
     {
-        return $query->when($ids, function ($query, $ids) {
-            $query->whereHas('components', function ($query) use ($ids) {
-                $query->whereIn('id', $ids);
+        $components = $session->components->where('pivot.version');
+
+        return $query->when($components->count(), function (
+            Builder $query
+        ) use ($components) {
+            $query->whereDoesntHave('components', function (
+                Builder $query
+            ) use ($components) {
+                $components->each(function (Component $component, $key) use (
+                    $query
+                ) {
+                    $function = $key ? 'orWhere' : 'where';
+
+                    $query->$function(function (Builder $query) use (
+                        $component
+                    ) {
+                        $query
+                            ->where('id', $component->id)
+                            ->whereJsonDoesntContain(
+                                'component_versions',
+                                $component->pivot->version
+                            );
+                    });
+                });
             });
         });
     }
@@ -321,5 +342,34 @@ class TestCase extends Model
         return static::lastPerGroup()
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
+    }
+
+    /**
+     * @param Session $session
+     * @return array
+     */
+    public function simulateTestResults(Session $session)
+    {
+        $simulatedTestResults = [];
+        foreach ($this->testSteps as $testStep) {
+            $simulatedTestResultsCollection = (new TestResult())->newCollection(
+                $simulatedTestResults ?: [$testStep->testResults()->make()]
+            );
+
+            $simulatedTestResults[
+                $testStep->id
+            ] = $testStep->testResults()->make([
+                'request' => $testStep->request->withSubstitutions(
+                    $simulatedTestResultsCollection,
+                    $session
+                ),
+                'response' => $testStep->response->withSubstitutions(
+                    $simulatedTestResultsCollection,
+                    $session
+                ),
+            ]);
+        }
+
+        return $simulatedTestResults;
     }
 }

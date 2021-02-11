@@ -1,5 +1,5 @@
 <template>
-    <layout :components="components" :session="session">
+    <layout :session="session">
         <form @submit.prevent="submit" class="col-12">
             <div class="card">
                 <div class="row">
@@ -62,17 +62,18 @@
                                         : 'Select use cases'
                                 }}
                             </h3>
-                            <a
-                                :href="
-                                    route('sessions.register.reset-test-cases')
-                                "
+                            <button
                                 v-if="
-                                    session.withQuestions && hasDifferentAnswers
+                                    session.withQuestions &&
+                                    (hasDifferentAnswers ||
+                                        checkTestCasesDefault)
                                 "
+                                type="button"
                                 class="btn btn-outline-primary btn-sm"
+                                @click="resetTestCases"
                             >
                                 Reset
-                            </a>
+                            </button>
                         </div>
                         <div class="card-body pt-0 pl-0">
                             <test-case-checkboxes
@@ -96,14 +97,25 @@
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
-                    :href="route('sessions.register.sut')"
+                    v-if="
+                        $page.props.app.available_session_modes_count > 1 ||
+                        isCompliance ||
+                        session.withQuestions
+                    "
+                    :href="
+                        route(
+                            isCompliance || session.withQuestions
+                                ? 'sessions.register.questionnaire.summary'
+                                : 'sessions.register.type'
+                        )
+                    "
                     class="btn btn-outline-primary"
                 >
                     Back
                 </inertia-link>
                 <button
                     type="submit"
-                    class="btn btn-primary"
+                    class="btn btn-primary ml-auto"
                     v-if="useCases.data.length"
                 >
                     <span
@@ -128,10 +140,6 @@ export default {
     },
     props: {
         session: {
-            type: Object,
-            required: true,
-        },
-        components: {
             type: Object,
             required: true,
         },
@@ -160,14 +168,14 @@ export default {
         };
     },
     created() {
-        let form = this.form;
+        if (this.isCompliance) {
+            this.form.test_cases.splice(0, this.form.test_cases.length);
 
-        if (this.isCompliance && !this.session.info) {
-            this.useCases.data.forEach(function (useCase) {
-                useCase.testCases.forEach(function (testCase) {
-                    form.test_cases.push(testCase.id);
-                });
-            });
+            this.useCases.data?.forEach((useCase) =>
+                useCase.testCases?.forEach((testCase) =>
+                    this.form.test_cases.push(testCase.id)
+                )
+            );
         }
     },
     methods: {
@@ -181,6 +189,34 @@ export default {
                         this.sending = false;
                     },
                 }
+            );
+        },
+        resetTestCases() {
+            if (!this.session.info) return;
+
+            if (this.hasDifferentAnswers) {
+                this.$inertia.visit(
+                    route('sessions.register.reset-test-cases')
+                );
+            } else {
+                this.form.test_cases.splice(
+                    0,
+                    this.form.test_cases.length,
+                    ...this.session.info.test_cases
+                );
+            }
+        },
+    },
+    computed: {
+        checkTestCasesDefault() {
+            if (!this.session.info) return false;
+
+            return !(
+                this.form.test_cases.length ===
+                    this.session.info.test_cases.length &&
+                this.form.test_cases
+                    .map((val) => this.session.info.test_cases.includes(val))
+                    .every((val) => val)
             );
         },
     },

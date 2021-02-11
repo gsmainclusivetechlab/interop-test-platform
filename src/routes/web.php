@@ -11,6 +11,14 @@
 |
 */
 
+use App\Http\Controllers\Sessions\Register\{
+    ConfigController,
+    InfoController,
+    QuestionnaireController,
+    SutController,
+    TypeController
+};
+
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController')->name('home');
 Route::get('/tutorials', 'TutorialController')->name('tutorials');
@@ -121,56 +129,55 @@ Route::name('sessions.')
         )->name('test-cases.test-steps.flow');
         Route::name('register.')
             ->prefix('register')
+            ->middleware(['auth', 'verified'])
             ->group(function () {
-                Route::get('type', 'RegisterController@showTypeForm')->name(
+                Route::get('type', [TypeController::class, 'index'])->name(
                     'type'
                 );
-                Route::get(
-                    'reset-test-cases',
-                    'RegisterController@resetTestCases'
-                )->name('reset-test-cases');
-                Route::post(
-                    'type/{type}',
-                    'RegisterController@storeType'
-                )->name('type.store');
-                Route::get('sut', 'RegisterController@showSutForm')->name(
-                    'sut'
-                );
-                Route::post('sut', 'RegisterController@storeSut')->name(
+                Route::get('reset-test-cases', [
+                    InfoController::class,
+                    'resetTestCases',
+                ])->name('reset-test-cases');
+                Route::post('type/{type}', [
+                    TypeController::class,
+                    'store',
+                ])->name('type.store');
+                Route::get('sut', [SutController::class, 'index'])->name('sut');
+                Route::post('sut', [SutController::class, 'store'])->name(
                     'sut.store'
                 );
-                Route::get(
-                    'questionnaire/summary',
-                    'RegisterController@questionnaireSummary'
-                )->name('questionnaire.summary');
-                Route::get(
-                    'questionnaire/{section}',
-                    'RegisterController@showQuestionnaireForm'
-                )->name('questionnaire');
-                Route::post(
-                    'questionaire/{section}',
-                    'RegisterController@storeQuestionnaire'
-                )->name('questionnaire.store');
-                Route::get('info', 'RegisterController@showInfoForm')->name(
+                Route::get('questionnaire/summary', [
+                    QuestionnaireController::class,
+                    'summary',
+                ])->name('questionnaire.summary');
+                Route::get('questionnaire/{section}', [
+                    QuestionnaireController::class,
+                    'index',
+                ])->name('questionnaire');
+                Route::post('questionaire/{section}', [
+                    QuestionnaireController::class,
+                    'store',
+                ])->name('questionnaire.store');
+                Route::get('info', [InfoController::class, 'index'])->name(
                     'info'
                 );
-                Route::post('info', 'RegisterController@storeInfo')->name(
+                Route::post('info', [InfoController::class, 'store'])->name(
                     'info.store'
                 );
-                Route::get('config', 'RegisterController@showConfigForm')->name(
+                Route::get('config', [ConfigController::class, 'index'])->name(
                     'config'
                 );
-                Route::post('config', 'RegisterController@storeConfig')->name(
+                Route::post('config', [ConfigController::class, 'store'])->name(
                     'config.store'
                 );
-                Route::get(
-                    'environment-candidates',
-                    'RegisterController@groupEnvironmentCandidates'
-                )->name('group-environment-candidates');
-                Route::get(
-                    'certificate-candidates',
-                    'RegisterController@groupCertificateCandidates'
-                )->name('group-certificate-candidates');
+                Route::get('environment-candidates', [
+                    ConfigController::class,
+                    'groupEnvironmentCandidates',
+                ])->name('group-environment-candidates');
+                Route::get('certificate-candidates', [
+                    ConfigController::class,
+                    'groupCertificateCandidates',
+                ])->name('group-certificate-candidates');
             });
     });
 
@@ -203,7 +210,7 @@ Route::name('testing-insecure.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
         )
             ->name('sut')
@@ -215,16 +222,10 @@ Route::name('testing.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{session:uuid}/{componentId}/{connectionId}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
         )
             ->name('sut')
-            ->where('path', '.*');
-        Route::any(
-            '{component:uuid}/{connection:uuid}/simulator/{path?}',
-            'SimulatorController'
-        )
-            ->name('simulator')
             ->where('path', '.*');
     });
 
@@ -233,7 +234,7 @@ Route::name('testing-insecure-group.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{group}/{componentId}/{connectionId}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{group}/{path?}',
             'SutController@testingGroup'
         )
             ->name('sut')
@@ -245,7 +246,7 @@ Route::name('testing-group.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
-            '{group}/{componentId}/{connectionId}/sut/{path?}',
+            '{componentSlug}/{connectionSlug}/{group}/{path?}',
             'SutController@testingGroup'
         )
             ->name('sut')
@@ -376,13 +377,17 @@ Route::name('admin.')
                                 )->name('update');
                             });
                         Route::resource(
+                            'components',
+                            'ComponentsController'
+                        )->except('show');
+                        Route::resource(
                             'groups',
                             'TestCaseGroupController'
                         )->only(['index', 'store', 'destroy']);
                         Route::resource(
                             'test-steps',
                             'TestCaseTestStepController'
-                        )->except(['show']);
+                        );
                         Route::resource(
                             'versions',
                             'TestCaseVersionController'

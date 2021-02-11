@@ -1,5 +1,5 @@
 <template>
-    <layout :components="components" :session="session">
+    <layout :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card">
                 <div class="card-header border-0">
@@ -98,10 +98,6 @@ export default {
         },
         page: {
             type: Number,
-            required: true,
-        },
-        components: {
-            type: Object,
             required: true,
         },
     },

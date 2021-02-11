@@ -6,6 +6,7 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Models\Component;
+use App\Models\TestRun;
 use App\Models\Group;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
@@ -25,24 +26,24 @@ class SutController extends Controller
 
     /**
      * @param Session $session
-     * @param string $componentId
-     * @param string $connectionId
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      *
      * @return mixed
      */
     public function testingSession(
+        string $componentSlug,
+        string $connectionSlug,
         Session $session,
-        string $componentId,
-        string $connectionId,
         string $path,
         ServerRequestInterface $request
     ) {
         return $this->testing(
             $session,
-            $componentId,
-            $connectionId,
+            $componentSlug,
+            $connectionSlug,
             $path,
             $request
         );
@@ -50,17 +51,17 @@ class SutController extends Controller
 
     /**
      * @param Group $group
-     * @param string $componentId
-     * @param string $connectionId
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      *
      * @return mixed
      */
     public function testingGroup(
+        string $componentSlug,
+        string $connectionSlug,
         Group $group,
-        string $componentId,
-        string $connectionId,
         string $path,
         ServerRequestInterface $request
     ) {
@@ -74,8 +75,8 @@ class SutController extends Controller
 
         return $this->testing(
             $session,
-            $componentId,
-            $connectionId,
+            $componentSlug,
+            $connectionSlug,
             $path,
             $request
         );
@@ -83,8 +84,8 @@ class SutController extends Controller
 
     /**
      * @param Session $session
-     * @param string $componentId
-     * @param string $connectionId
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      *
@@ -92,31 +93,36 @@ class SutController extends Controller
      */
     protected function testing(
         Session $session,
-        string $componentId,
-        string $connectionId,
+        string $componentSlug,
+        string $connectionSlug,
         string $path,
         ServerRequestInterface $request
     ) {
-        $component = $this->getComponent($componentId, $session);
-        $connection = $this->getComponent($connectionId, $session);
+        $component = $this->getComponent($componentSlug, $session);
+        $connection = $this->getComponent($connectionSlug, $session);
 
-        $testStep = $session
-            ->testSteps()
-            ->where('method', $request->getMethod())
-            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
-            ->where(function ($query) use ($request) {
-                $query->whereNull('test_steps.trigger');
-                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [
-                    json_encode($request->getParsedBody()),
-                ]);
-            })
-            ->whereHas('source', function ($query) use ($component) {
-                $query->whereKey($component->getKey());
-            })
-            ->whereHas('target', function ($query) use ($connection) {
-                $query->whereKey($connection->getKey());
-            })
-            ->where(function ($query) {
+        // see if there is a test run currently in progress
+        $currentRun = $session
+            ->testRuns()
+            ->incompleted()
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($currentRun && env('FORCE_SEQUENTIAL_TESTS', false)) {
+            // if there is an ongoing test run, limit the matching to (incomplete) steps inside that run
+            $candidateSteps = $currentRun
+                ->testSteps()
+                ->whereNotExists(function ($query) use ($currentRun) {
+                    $query
+                        ->selectRaw('1')
+                        ->from('test_results')
+                        ->where('test_run_id', '=', $currentRun->id)
+                        ->whereColumn('test_step_id', '=', 'test_steps.id')
+                        ->completed();
+                });
+        } else {
+            // otherwise any step from any test is fair game
+            $candidateSteps = $session->testSteps()->where(function ($query) {
                 $query
                     ->where(function ($query) {
                         $query->where('position', '=', 1);
@@ -134,7 +140,6 @@ class SutController extends Controller
                         });
                     })
                     ->orWhere(function ($query) {
-                        $query->where('position', '!=', 1);
                         $query->whereHas('testRuns', function ($query) {
                             $query
                                 ->incompleted()
@@ -144,11 +149,30 @@ class SutController extends Controller
                                     $query->whereColumn(
                                         'test_step_id',
                                         'test_steps.id'
-                                    );
+                                    )
+                                    ->completed();
                                 });
                         });
                     });
+            });
+        }
+
+        $testStep = $candidateSteps
+            ->where('method', $request->getMethod())
+            ->whereRaw('REGEXP_LIKE(?, pattern)', [$path])
+            ->where(function ($query) use ($request) {
+                $query->whereNull('test_steps.trigger');
+                $query->orWhereRaw('JSON_CONTAINS(?, test_steps.trigger)', [
+                    json_encode($request->getParsedBody()),
+                ]);
             })
+            ->whereHas('source', function ($query) use ($component) {
+                $query->whereKey($component->getKey());
+            })
+            ->whereHas('target', function ($query) use ($connection) {
+                $query->whereKey($connection->getKey());
+            })
+            ->orderBy('position', 'asc')
             ->first();
 
         if (!$testStep) {
@@ -184,10 +208,21 @@ class SutController extends Controller
             ->testRuns()
             ->incompleted()
             ->where('test_case_id', $testStep->test_case_id)
-            ->firstOrCreate(['test_case_id' => $testStep->test_case_id]);
-        $testResult = $testRun
-            ->testResults()
-            ->create(['test_step_id' => $testStep->id]);
+            ->firstOr(function () use ($session, $testStep) {
+                if (env('CREATE_TESTRUN_ON_MATCH', false)) {
+                    return $session->testRuns()->create([
+                        'test_case_id' => $testStep->test_case_id,
+                    ]);
+                } else {
+                    throw new MessageMismatchException(
+                        $session,
+                        404,
+                        'No test runs are currently in progress for this session. Please initiate a test run by clicking on the "Run Test Case" button, then try again.'
+                    );
+                }
+            });
+
+        $testResult = $testRun->createTestResult($testStep);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
@@ -216,21 +251,21 @@ class SutController extends Controller
     }
 
     /**
-     * @param string $componentId
+     * @param string $componentSlug
      * @param Session $session
      *
      * @return Component
      */
-    protected function getComponent(string $componentId, Session $session)
+    protected function getComponent(string $componentSlug, Session $session)
     {
         if (
-            ($component = Component::where('uuid', $componentId)->first()) ==
+            ($component = Component::where('slug', $componentSlug)->first()) ==
             null
         ) {
             throw new MessageMismatchException(
                 $session,
                 404,
-                "Unable to find test component with id $componentId. Please check the request base URL"
+                "Unable to find test component with id $componentSlug. Please check the request base URL"
             );
         }
 

@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\{TestCase, TestScript, TestSetup, TestStep};
+use App\Models\{Component, TestCase, TestScript, TestSetup, TestStep};
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Yaml\Yaml;
@@ -51,7 +51,12 @@ class TestCaseExport implements Exportable
             'precondition' => $testCase->precondition,
             'components' => $testCase
                 ->components()
-                ->pluck('name')
+                ->get()
+                ->map(function (Component $component) {
+                    return array_merge($component->only(['name', 'slug']), [
+                        'versions' => $component->pivot->component_versions,
+                    ]);
+                })
                 ->toArray(),
             'test_steps' => $this->mapTestSteps($testCase->testSteps),
         ];
@@ -71,8 +76,8 @@ class TestCaseExport implements Exportable
                 'path' => $testStep->path,
                 'pattern' => $testStep->pattern,
                 'method' => $testStep->method,
-                'source' => $testStep->source->name,
-                'target' => $testStep->target->name,
+                'source' => $testStep->source->slug,
+                'target' => $testStep->target->slug,
                 'mtls' => $testStep->mtls,
                 'api_spec' => $testStep->apiSpec()->exists()
                     ? $testStep->apiSpec->name
@@ -102,8 +107,33 @@ class TestCaseExport implements Exportable
                     $testStep->getRawOriginal('response'),
                     true
                 ),
+                'repeat' => $this->mapRepeat($testStep),
             ]);
         }
+
+        return $this->arrayFilter($result);
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @return array|null
+     */
+    protected function mapRepeat($testStep)
+    {
+        $result = [
+            'max' => $testStep->repeat_max,
+            'count' => $testStep->repeat_count,
+            'condition' => $testStep->repeat_condition,
+            'response' => json_decode(
+                $testStep->getRawOriginal('repeat_response'),
+                true
+            ),
+            'test_response_scripts' => $this->mapTestScripts(
+                $testStep->testScripts,
+                TestScript::TYPE_REPEAT_RESPONSE
+            ),
+        ];
+
 
         return $this->arrayFilter($result);
     }

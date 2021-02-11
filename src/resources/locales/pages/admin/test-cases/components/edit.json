@@ -1,0 +1,31 @@
+{
+    "en": {
+        "card": {
+            "title": "Edit"
+        },
+        "inputs": {
+            "name": "Name",
+            "slug": "Slug",
+            "versions": "Versions"
+        },
+        "buttons": {
+            "create": "Update",
+            "cancel": "Cancel"
+        }
+    },
+
+    "ru": {
+        "card": {
+            "title": "Редактировать"
+        },
+        "inputs": {
+            "name": "Имя",
+            "slug": "Slug",
+            "versions": "Версии"
+        },
+        "buttons": {
+            "create": "Обновить",
+            "cancel": "Отмена"
+        }
+    }
+}

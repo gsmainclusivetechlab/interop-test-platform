@@ -47,8 +47,6 @@ class TestRunController extends Controller
             ->testCases()
             ->where('test_case_id', $testCase->id)
             ->firstOrFail();
-        $testStepFirstSource = $testCase->testSteps()->firstOrFail()->source;
-
         return Inertia::render('sessions/test-runs/show', [
             'session' => (new SessionResource(
                 $session->load([
@@ -95,9 +93,6 @@ class TestRunController extends Controller
             'testCase' => (new TestCaseResource(
                 $testCase->load(['testSteps'])
             ))->resolve(),
-            'testStepFirstSource' => (new ComponentResource(
-                $testStepFirstSource
-            ))->resolve(),
             'testRun' => (new TestRunResource(
                 $testRun->load([
                     'testResults' => function ($query) {
@@ -105,26 +100,25 @@ class TestRunController extends Controller
                     },
                 ])
             ))->resolve(),
-            'testResult' => (new TestResultResource(
-                $testRun
-                    ->testResults()
-                    ->whereHas('testStep', function (Builder $query) use (
-                        $position
-                    ) {
-                        $query->where('position', $position);
-                    })
-                    ->with([
-                        'testStep' => function ($query) {
-                            return $query->with([
-                                'source',
-                                'target',
-                                'testSetups',
-                            ]);
-                        },
-                        'testExecutions',
-                    ])
-                    ->firstOrFail()
-            ))->resolve(),
+            'testResults' => TestResultResource::collection($testRun
+                ->testResults()
+                ->whereHas('testStep', function (Builder $query) use (
+                    $position
+                ) {
+                    $query->where('position', $position);
+                })
+                ->with([
+                    'testStep' => function ($query) {
+                        return $query->with([
+                            'source',
+                            'target',
+                            'testSetups',
+                        ]);
+                    },
+                    'testExecutions',
+                ])
+                ->get()
+            )->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase
                     ->testSteps()

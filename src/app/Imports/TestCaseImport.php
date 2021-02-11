@@ -56,11 +56,34 @@ class TestCaseImport implements Importable
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
-                $testCase->components()->attach(
-                    Component::whereIn('name', $componentRows)
-                        ->orWhereIn('slug', $componentRows)
-                        ->pluck('id')
-                );
+                $componentRows = collect($componentRows)->keyBy('slug');
+                $components = Component::whereIn(
+                    'slug',
+                    $componentRows->keys()
+                )->pluck('id', 'slug');
+
+                $componentRows
+                    ->diffKeys($components)
+                    ->each(function ($componentRow, $slug) use ($testCase) {
+                        $testCase
+                            ->components()
+                            ->create(
+                                ['slug' => $slug],
+                                $this->parseComponentRow($componentRow)
+                            );
+                    });
+
+                $components->each(function ($id, $slug) use (
+                    $testCase,
+                    $componentRows
+                ) {
+                    $testCase
+                        ->components()
+                        ->attach(
+                            $id,
+                            $this->parseComponentRow($componentRows->get($slug))
+                        );
+                });
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
@@ -93,20 +116,16 @@ class TestCaseImport implements Importable
                     $testStep->setAttribute(
                         'source_id',
                         Component::where(
-                            'name',
+                            'slug',
                             Arr::get($testStepRow, 'source')
-                        )
-                            ->orWhere('slug', Arr::get($testStepRow, 'source'))
-                            ->value('id')
+                        )->value('id')
                     );
                     $testStep->setAttribute(
                         'target_id',
                         Component::where(
-                            'name',
+                            'slug',
                             Arr::get($testStepRow, 'target')
-                        )
-                            ->orWhere('slug', Arr::get($testStepRow, 'target'))
-                            ->value('id')
+                        )->value('id')
                     );
                     $testStep->setAttribute(
                         'api_spec_id',
@@ -115,6 +134,8 @@ class TestCaseImport implements Importable
                             Arr::get($testStepRow, 'api_spec')
                         )->value('id')
                     );
+                    $repeat = Arr::get($testStepRow, 'repeat', []);
+                    $testStep = $this->setRepeat($testStep, $repeat);
                     $testStep->saveOrFail();
 
                     $this->importTestSetups(
@@ -138,11 +159,29 @@ class TestCaseImport implements Importable
                         TestScript::TYPE_RESPONSE,
                         Arr::get($testStepRow, 'test_response_scripts', [])
                     );
+                    $this->importTestScripts(
+                        $testStep,
+                        TestScript::TYPE_REPEAT_RESPONSE,
+                        Arr::get($repeat, 'test_response_scripts', [])
+                    );
                 }
             }
 
             return $testCase;
         });
+    }
+
+    protected function parseComponentRow($componentRow): array
+    {
+        return [
+            'component_name' => Arr::get($componentRow, 'name'),
+            'component_versions' => ($versions = Arr::get(
+                $componentRow,
+                'versions'
+            ))
+                ? (array) $versions
+                : [],
+        ];
     }
 
     /**
@@ -199,5 +238,30 @@ class TestCaseImport implements Importable
             $testScript->type = $type;
             $testScript->saveOrFail();
         }
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param array $repeat
+     * @return TestStep
+     * @throws \Throwable
+     */
+    protected function setRepeat(TestStep $testStep, $repeat)
+    {
+        $response = Arr::get($repeat, 'response');
+        if ($response) {
+            if (!Arr::exists($response, 'body')) {
+                $response['body'] = Response::EMPTY_BODY;
+            }
+            $response = $this->checkHeaders($response);
+        }
+        $testStep->fill([
+            'repeat_max' => Arr::get($repeat, 'max', 0),
+            'repeat_count' => Arr::get($repeat, 'count', 0),
+            'repeat_condition' => Arr::get($repeat, 'condition'),
+            'repeat_response' => $response
+        ]);
+
+        return $testStep;
     }
 }

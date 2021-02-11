@@ -145,14 +145,16 @@
                         />
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="form-check form-switch">
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                v-model="mtls"
-                            />
-                            <span class="form-check-label">mTLS</span>
-                        </label>
+                        <div class="d-flex">
+                            <label class="form-check form-switch">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    v-model="mtls"
+                                />
+                                <span class="form-check-label">mTLS</span>
+                            </label>
+                        </div>
                         <span
                             v-if="$page.props.errors.mtls"
                             class="invalid-feedback"
@@ -170,7 +172,7 @@
                         >
                             {{ $t('inputs.trigger') }}
                         </button>
-                        <b-collapse id="trigger" class="card">
+                        <b-collapse id="trigger" class="card mb-0">
                             <json-editor-block
                                 :input-json="trigger"
                                 @output-json="
@@ -182,6 +184,7 @@
                             />
                         </b-collapse>
                     </div>
+                    <hr />
                     <div class="col-12 mb-3">
                         <button
                             type="button"
@@ -190,7 +193,7 @@
                         >
                             {{ $t('inputs.test-scripts.request') }}
                         </button>
-                        <b-collapse id="test-request-scripts" class="card">
+                        <b-collapse id="test-request-scripts" class="card mb-0">
                             <div
                                 v-for="(request, i) in test.scripts.request
                                     .list"
@@ -332,6 +335,140 @@
                             </div>
                         </b-collapse>
                     </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.uri') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.props.errors['request.uri'],
+                            }"
+                            v-model="example.request.uri"
+                        />
+                        <span
+                            v-if="$page.props.errors['request.uri']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['request.uri'] }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.request.delay') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['request.delay'],
+                            }"
+                            v-model="example.request.delay"
+                        />
+                        <span
+                            v-if="$page.props.errors['request.delay']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['request.delay'] }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-headers-examples'"
+                        >
+                            {{ $t('inputs.request.headers') }}
+                        </button>
+                        <b-collapse
+                            id="request-headers-examples"
+                            class="card mb-0"
+                        >
+                            <json-editor-block
+                                :input-json="example.request.headers"
+                                @output-json="
+                                    (data) => {
+                                        example.request.headers = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-body-examples'"
+                        >
+                            {{ $t('inputs.request.body') }}
+                        </button>
+                        <b-collapse
+                            id="request-body-examples"
+                            class="card mb-0"
+                        >
+                            <div class="card-header">
+                                <div class="card-options">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            :checked="
+                                                example.request.body ===
+                                                'empty_body'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (example.request.body = toggleEmptyBody(
+                                                        e
+                                                    ))
+                                            "
+                                        />
+                                        <span class="form-check-label">{{
+                                            $t('inputs.empty-body')
+                                        }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <json-editor-block
+                                v-if="example.request.body !== 'empty_body'"
+                                :input-json="example.request.body"
+                                @output-json="
+                                    (data) => {
+                                        example.request.body = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'request-jws-examples'"
+                        >
+                            {{ $t('inputs.request.jws') }}
+                        </button>
+                        <b-collapse id="request-jws-examples" class="card mb-0">
+                            <json-editor-block
+                                :input-json="example.request.jws"
+                                @output-json="
+                                    (data) => {
+                                        example.request.jws = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <hr />
                     <div class="col-12 mb-3">
                         <button
                             type="button"
@@ -340,7 +477,10 @@
                         >
                             {{ $t('inputs.test-scripts.response') }}
                         </button>
-                        <b-collapse id="test-response-scripts" class="card">
+                        <b-collapse
+                            id="test-response-scripts"
+                            class="card mb-0"
+                        >
                             <div
                                 v-for="(response, i) in test.scripts.response
                                     .list"
@@ -490,133 +630,6 @@
                     </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">
-                            {{ $t('inputs.request.uri') }}
-                        </h2>
-                        <input
-                            type="text"
-                            class="form-control"
-                            :class="{
-                                'is-invalid': $page.props.errors['request.uri'],
-                            }"
-                            v-model="example.request.uri"
-                        />
-                        <span
-                            v-if="$page.props.errors['request.uri']"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.props.errors['request.uri'] }}
-                            </strong>
-                        </span>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h2 class="card-title">
-                            {{ $t('inputs.request.delay') }}
-                        </h2>
-                        <input
-                            type="text"
-                            class="form-control"
-                            :class="{
-                                'is-invalid':
-                                    $page.props.errors['request.delay'],
-                            }"
-                            v-model="example.request.delay"
-                        />
-                        <span
-                            v-if="$page.props.errors['request.delay']"
-                            class="invalid-feedback"
-                        >
-                            <strong>
-                                {{ $page.props.errors['request.delay'] }}
-                            </strong>
-                        </span>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-link card-title dropdown-toggle px-0"
-                            v-b-toggle="'request-headers-examples'"
-                        >
-                            {{ $t('inputs.request.headers') }}
-                        </button>
-                        <b-collapse id="request-headers-examples" class="card">
-                            <json-editor-block
-                                :input-json="example.request.headers"
-                                @output-json="
-                                    (data) => {
-                                        example.request.headers = data;
-                                    }
-                                "
-                                class="card-body"
-                            />
-                        </b-collapse>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-link card-title dropdown-toggle px-0"
-                            v-b-toggle="'request-body-examples'"
-                        >
-                            {{ $t('inputs.request.body') }}
-                        </button>
-                        <b-collapse id="request-body-examples" class="card">
-                            <div class="card-header">
-                                <div class="card-options">
-                                    <label class="form-check form-switch">
-                                        <input
-                                            :checked="
-                                                example.request.body ===
-                                                'empty_body'
-                                            "
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            @input="
-                                                (e) =>
-                                                    (example.request.body = toggleEmptyBody(
-                                                        e
-                                                    ))
-                                            "
-                                        />
-                                        <span class="form-check-label">{{
-                                            $t('inputs.empty-body')
-                                        }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <json-editor-block
-                                v-if="example.request.body !== 'empty_body'"
-                                :input-json="example.request.body"
-                                @output-json="
-                                    (data) => {
-                                        example.request.body = data;
-                                    }
-                                "
-                                class="card-body"
-                            />
-                        </b-collapse>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <button
-                            type="button"
-                            class="btn btn-link card-title dropdown-toggle px-0"
-                            v-b-toggle="'request-jws-examples'"
-                        >
-                            {{ $t('inputs.request.jws') }}
-                        </button>
-                        <b-collapse id="request-jws-examples" class="card">
-                            <json-editor-block
-                                :input-json="example.request.jws"
-                                @output-json="
-                                    (data) => {
-                                        example.request.jws = data;
-                                    }
-                                "
-                                class="card-body"
-                            />
-                        </b-collapse>
-                    </div>
-                    <div class="col-6 mb-3">
-                        <h2 class="card-title">
                             {{ $t('inputs.response.status.label') }}
                         </h2>
                         <v-select
@@ -632,11 +645,13 @@
                                         example.response.status.selected
                                     )
                             "
+                            :clearable="false"
                             class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid':
                                     $page.props.errors['response.status'],
                             }"
+                            @option:selected="setRepeatResponseStatus"
                         />
                         <span
                             v-if="$page.props.errors['response.status']"
@@ -677,7 +692,10 @@
                         >
                             {{ $t('inputs.response.headers') }}
                         </button>
-                        <b-collapse id="response-headers-examples" class="card">
+                        <b-collapse
+                            id="response-headers-examples"
+                            class="card mb-0"
+                        >
                             <json-editor-block
                                 :input-json="example.response.headers"
                                 @output-json="
@@ -697,7 +715,10 @@
                         >
                             {{ $t('inputs.response.body') }}
                         </button>
-                        <b-collapse id="response-body-examples" class="card">
+                        <b-collapse
+                            id="response-body-examples"
+                            class="card mb-0"
+                        >
                             <div class="card-header">
                                 <div class="card-options">
                                     <label class="form-check form-switch">
@@ -741,12 +762,361 @@
                         >
                             {{ $t('inputs.response.jws') }}
                         </button>
-                        <b-collapse id="response-jws-examples" class="card">
+                        <b-collapse
+                            id="response-jws-examples"
+                            class="card mb-0"
+                        >
                             <json-editor-block
                                 :input-json="example.response.jws"
                                 @output-json="
                                     (data) => {
                                         example.response.jws = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <hr />
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'repeat-test-response-scripts'"
+                        >
+                            {{ $t('inputs.test-scripts.repeat.response') }}
+                        </button>
+                        <b-collapse
+                            id="repeat-test-response-scripts"
+                            class="card mb-0"
+                        >
+                            <div
+                                v-for="(response, i) in test.scripts.repeat
+                                    .response.list"
+                                class="card-body"
+                                :key="`repeat-test-response-scripts-${i}`"
+                            >
+                                <div class="card-header px-0 pt-0">
+                                    <span class="text-break mr-2"
+                                        ><b>{{ i + 1 }}.</b>
+                                        {{ response.name }}</span
+                                    >
+                                    <div class="card-options">
+                                        <button
+                                            type="button"
+                                            class="btn btn-link p-0"
+                                            v-b-tooltip.hover.top
+                                            :title="
+                                                $t(
+                                                    'inputs.test-scripts.form.buttons.delete'
+                                                )
+                                            "
+                                            v-b-modal="
+                                                `repeat-test-response-scripts-modal-${i}`
+                                            "
+                                        >
+                                            <icon name="trash" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pb-0">
+                                    <label class="form-label">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.name'
+                                        )
+                                    }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control mb-2"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.props.errors[
+                                                    `test.scripts.repeat.response.${i}.name`
+                                                ],
+                                        }"
+                                        v-model="response.name"
+                                    />
+                                    <span
+                                        v-if="
+                                            $page.props.errors[
+                                                `test.scripts.repeat.response.${i}.name`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.props.errors[
+                                                    `test.scripts.repeat.response.${i}.name`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
+                                    <label class="form-label mb-3">{{
+                                        $t(
+                                            'inputs.test-scripts.form.inputs.rules'
+                                        )
+                                    }}</label>
+                                    <json-editor-block
+                                        :input-json="response.rules"
+                                        @output-json="
+                                            (data) => (response.rules = data)
+                                        "
+                                        :class="{
+                                            'form-control is-invalid p-0':
+                                                $page.props.errors[
+                                                    `test.scripts.repeat.response.${i}.rules`
+                                                ],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="
+                                            $page.props.errors[
+                                                `test.scripts.repeat.response.${i}.rules`
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.props.errors[
+                                                    `test.scripts.repeat.response.${i}.rules`
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <b-modal
+                                    :id="`repeat-test-response-scripts-modal-${i}`"
+                                    :title="
+                                        $t(
+                                            'inputs.test-scripts.form.modal.title'
+                                        )
+                                    "
+                                    @ok="
+                                        deleteFormItem(
+                                            test.scripts.repeat.response.list,
+                                            i
+                                        )
+                                    "
+                                    centered
+                                    :key="`repeat-test-response-scripts-modal-${i}`"
+                                >
+                                    <p>
+                                        {{
+                                            $t(
+                                                'inputs.test-scripts.form.modal.text'
+                                            )
+                                        }}
+                                    </p>
+                                </b-modal>
+                            </div>
+                            <div class="card-footer text-right">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    @click="
+                                        addFormItem(
+                                            test.scripts.repeat.response.list,
+                                            {
+                                                ...test.scripts.repeat.response
+                                                    .pattern,
+                                            }
+                                        )
+                                    "
+                                >
+                                    <icon name="plus" />
+                                    <span>{{
+                                        $t(
+                                            'inputs.test-scripts.form.buttons.add-script'
+                                        )
+                                    }}</span>
+                                </button>
+                            </div>
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'repeat-condition'"
+                        >
+                            {{ $t('inputs.repeat.condition') }}
+                        </button>
+                        <b-collapse
+                            id="repeat-condition"
+                            class="card mb-0"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['repeat.condition'],
+                            }"
+                        >
+                            <json-editor-block
+                                :input-json="example.repeat.condition"
+                                @output-json="
+                                    (data) => {
+                                        example.repeat.condition = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                        <span
+                            v-if="$page.props.errors['repeat.condition']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['repeat.condition'] }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.repeat.count') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors['repeat.count'],
+                            }"
+                            v-model="example.repeat.count"
+                        />
+                        <span
+                            v-if="$page.props.errors['repeat.count']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['repeat.count'] }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.repeat.max') }}
+                        </h2>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'is-invalid': $page.props.errors['repeat.max'],
+                            }"
+                            v-model="example.repeat.max"
+                        />
+                        <span
+                            v-if="$page.props.errors['repeat.max']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors['repeat.max'] }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h2 class="card-title">
+                            {{ $t('inputs.repeat.response.status.label') }}
+                        </h2>
+                        <v-select
+                            v-model="example.repeat.response.status.selected"
+                            :placeholder="
+                                $t('inputs.response.status.placeholder')
+                            "
+                            :options="example.response.status.list"
+                            :selectable="
+                                (option) =>
+                                    isSelectable(
+                                        option,
+                                        example.repeat.response.status.selected
+                                    )
+                            "
+                            :clearable="false"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid':
+                                    $page.props.errors[
+                                        'repeat.response.status'
+                                    ],
+                            }"
+                        />
+                        <span
+                            v-if="$page.props.errors['repeat.response.status']"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{
+                                    $page.props.errors['repeat.response.status']
+                                }}
+                            </strong>
+                        </span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'repeat-response-headers-examples'"
+                        >
+                            {{ $t('inputs.repeat.response.headers') }}
+                        </button>
+                        <b-collapse
+                            id="repeat-response-headers-examples"
+                            class="card mb-0"
+                        >
+                            <json-editor-block
+                                :input-json="example.repeat.response.headers"
+                                @output-json="
+                                    (data) => {
+                                        example.repeat.response.headers = data;
+                                    }
+                                "
+                                class="card-body"
+                            />
+                        </b-collapse>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'repeat-response-body-examples'"
+                        >
+                            {{ $t('inputs.repeat.response.body') }}
+                        </button>
+                        <b-collapse
+                            id="repeat-response-body-examples"
+                            class="card mb-0"
+                        >
+                            <div class="card-header">
+                                <div class="card-options">
+                                    <label class="form-check form-switch">
+                                        <input
+                                            :checked="
+                                                example.repeat.response.body ===
+                                                'empty_body'
+                                            "
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            @input="
+                                                (e) =>
+                                                    (example.repeat.response.body = toggleEmptyBody(
+                                                        e
+                                                    ))
+                                            "
+                                        />
+                                        <span class="form-check-label">{{
+                                            $t('inputs.empty-body')
+                                        }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <json-editor-block
+                                v-if="
+                                    example.repeat.response.body !==
+                                    'empty_body'
+                                "
+                                :input-json="example.repeat.response.body"
+                                @output-json="
+                                    (data) => {
+                                        example.repeat.response.body = data;
                                     }
                                 "
                                 class="card-body"
@@ -818,6 +1188,15 @@ export default {
                             rules: {},
                         },
                     },
+                    repeat: {
+                        response: {
+                            list: [],
+                            pattern: {
+                                name: '',
+                                rules: {},
+                            },
+                        },
+                    },
                 },
             },
             example: {
@@ -836,6 +1215,18 @@ export default {
                     },
                     headers: {},
                     body: 'empty_body',
+                },
+                repeat: {
+                    condition: null,
+                    count: 0,
+                    max: 0,
+                    response: {
+                        status: {
+                            selected: null,
+                        },
+                        headers: {},
+                        body: 'empty_body',
+                    },
                 },
             },
         };

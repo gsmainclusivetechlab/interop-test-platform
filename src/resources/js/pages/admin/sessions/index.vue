@@ -32,7 +32,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="session in sessions.data">
+                        <tr
+                            v-for="(session, i) in sessions.data"
+                            :key="`session-${i}`"
+                        >
                             <td class="text-break">
                                 <inertia-link
                                     :href="route('sessions.show', session.id)"
@@ -81,9 +84,35 @@
                                     variant="link"
                                     boundary="window"
                                 >
-                                    <template v-slot:button-content>
+                                    <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
+                                    <li>
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.message-log.index',
+                                                    session.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Log
+                                        </inertia-link>
+                                    </li>
+                                    <li v-if="session.can.update">
+                                        <inertia-link
+                                            :href="
+                                                route(
+                                                    'sessions.edit',
+                                                    session.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            Edit
+                                        </inertia-link>
+                                    </li>
                                     <li v-if="session.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
