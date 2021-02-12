@@ -13,7 +13,7 @@
                         "
                         class="btn btn-primary ml-2"
                     >
-                        <icon name="upload" />
+                        <icon name="file-import" />
                         {{ $t('buttons.import') }}
                     </inertia-link>
                 </div>
