@@ -5,8 +5,11 @@ export default {
         };
     },
     watch: {
-        environments(value) {
-            this.emitEnvironments(value);
+        environments: {
+            deep: true,
+            handler(value) {
+                this.emitEnvironments(value);
+            },
         },
     },
     mounted() {
@@ -14,27 +17,33 @@ export default {
     },
     methods: {
         emitEnvironments(values) {
-            this.$emit(
-                'input',
-                collect(values)
-                    .filter((item) => item.key)
-                    .mapWithKeys((item) => [item.key, item.value])
-                    .all()
+            const emitValue = Object.fromEntries(
+                values
+                    .filter((el) => el.error === null)
+                    .map((el) => [el.key, el.value])
             );
+
+            this.$emit('input', emitValue);
         },
         addEnvironment() {
-            this.environments.push([]);
+            this.environments.push({ key: null, value: null, error: null });
         },
         deleteEnvironment(index) {
             this.environments.splice(index, 1);
         },
-        updateEnvironmentKey(index, value) {
-            this.environments[index].key = value;
-            this.emitEnvironments(this.environments);
+        setKey(val, environment, index) {
+            if (environment.error) environment.error = null;
+
+            if (this.checkKey(val, index)) {
+                environment.key = val;
+            } else {
+                environment.error = 'Duplicated key';
+            }
         },
-        updateEnvironmentValue(index, value) {
-            this.environments[index].value = value;
-            this.emitEnvironments(this.environments);
+        checkKey(key, index) {
+            return !this.environments.some(
+                (el, i) => el.key === key && index !== i
+            );
         },
     },
 };

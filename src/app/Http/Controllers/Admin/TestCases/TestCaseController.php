@@ -353,8 +353,8 @@ class TestCaseController extends Controller
             }
         }
         $environments = [
-            'env' => array_unique($env),
-            'file_env' => array_unique($file_env),
+            'env' => array_values(array_unique($env)),
+            'file_env' => array_values(array_unique($file_env)),
         ];
 
         return $environments;

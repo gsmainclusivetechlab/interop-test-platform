@@ -1,33 +1,53 @@
 <template>
     <ul class="list-group">
         <li
+            v-for="(environment, i) in environments"
             class="list-group-item"
-            v-bind:key="index"
-            v-for="(environment, index) in environments"
+            :key="i"
         >
-            <div class="input-group">
+            <div
+                class="input-group"
+                :class="{
+                    'is-invalid': environment.error,
+                }"
+            >
                 <input
                     type="text"
                     placeholder="Key"
-                    class="form-control"
-                    @input="updateEnvironmentKey(index, $event.target.value)"
-                    v-model="environment.key"
+                    class="form-control px-2"
+                    :class="{
+                        'is-invalid': environment.error,
+                    }"
+                    @input.prevent="
+                        (e) => setKey(e.target.value, environment, i)
+                    "
                 />
                 <input
+                    v-model="environment.value"
                     type="text"
                     placeholder="Value"
-                    class="form-control"
-                    @input="updateEnvironmentValue(index, $event.target.value)"
-                    v-model="environment.value"
+                    class="form-control px-2"
+                    :class="{
+                        'is-invalid': environment.error,
+                    }"
                 />
                 <button
                     type="button"
-                    class="btn btn-secondary btn-icon"
-                    @click="deleteEnvironment(index)"
+                    class="btn btn-icon"
+                    :class="{
+                        'btn-secondary': !environment.error,
+                        'btn-outline-primary': environment.error,
+                    }"
+                    @click="deleteEnvironment(i)"
                 >
                     <icon name="trash" />
                 </button>
             </div>
+            <span v-if="environment.error" class="invalid-feedback">
+                <strong>
+                    {{ environment.error }}
+                </strong>
+            </span>
         </li>
         <li class="list-group-item">
             <button
@@ -36,7 +56,7 @@
                 @click="addEnvironment"
             >
                 <icon name="plus" />
-                Add New
+                <span>Add New</span>
             </button>
         </li>
     </ul>
@@ -54,9 +74,13 @@ export default {
     mixins: [mixin],
     methods: {
         syncEnvironments(value) {
-            this.environments = [];
+            // filter new list of envs
+            const newEnvs = value;
             for (let key in value) {
-                this.environments.push({ key: key, value: value[key] });
+                this.environments.push({
+                    key: key,
+                    value: value[key],
+                });
             }
         },
     },

@@ -266,6 +266,10 @@ export default {
         return {
             ziggyConf,
             sending: false,
+            testCaseEnv: {
+                env: [],
+                fileEnv: [],
+            },
             groupEnvironment: null,
             groupEnvironmentsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
@@ -305,7 +309,37 @@ export default {
                 .post(route('admin.test-cases.environment-candidates'), {
                     testCasesIds: this.$page.props.session.info.test_cases,
                 })
-                .then((data) => console.log(data.data));
+                .then((data) => {
+                    console.log(data.data);
+                    if (data.data?.env?.length) {
+                        this.testCaseEnv.env = data.data.env;
+                        this.form.environments = Object.assign(
+                            {},
+                            Object.fromEntries(
+                                data.data.env.map((param) => [param, null])
+                            ),
+                            this.form.environments
+                        );
+                        this.$refs.environments.syncEnvironments(
+                            this.form.environments
+                        );
+                    }
+                    if (data.data?.file_env?.length) {
+                        this.testCaseEnv.fileEnv = data.data.file_env;
+                        this.form.fileEnvironments = Object.assign(
+                            {},
+                            this.testCaseEnv.fileEnv.map((param) => ({
+                                name: param,
+                                id: null,
+                                value: null,
+                            })),
+                            this.form.fileEnvironments
+                        );
+                        this.$refs.fileEnvironments.syncEnvironments(
+                            this.form.fileEnvironments
+                        );
+                    }
+                });
         },
         submit() {
             this.sending = true;
