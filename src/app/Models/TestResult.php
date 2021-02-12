@@ -6,11 +6,13 @@ use App\Casts\RequestCast;
 use App\Casts\ResponseCast;
 use App\Http\Client\Request;
 use App\Http\Client\Response;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
  *
+ * @property Carbon $completed_at
  * @property TestStep $testStep
  * @property TestRun $testRun
  * @property Session $session
@@ -36,12 +38,20 @@ class TestResult extends Model
     /**
      * @var array
      */
-    protected $fillable = ['test_step_id', 'request', 'response'];
+    protected $fillable = [
+        'test_step_id',
+        'iteration',
+        'repeat',
+        'request',
+        'response',
+    ];
 
     /**
      * @var array
      */
     protected $casts = [
+        'completed_at' => 'datetime',
+        'repeat' => 'boolean',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
     ];
@@ -99,6 +109,28 @@ class TestResult extends Model
     }
 
     /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereExists(function ($query) {
+            $query->where(['repeat' => false]);
+        });
+    }
+
+    /**
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeIncompleted($query)
+    {
+        return $query->whereNotExists(function ($query) {
+            $query->where(['repeat' => false]);
+        });
+    }
+
+    /**
      * @return bool
      */
     public function getSuccessfulAttribute()
@@ -140,6 +172,9 @@ class TestResult extends Model
         return $this;
     }
 
+    /**
+     * @return int
+     */
     protected function getDuration(): int
     {
         $startTime = $this->jobStart ?? LARAVEL_START;

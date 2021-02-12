@@ -100,27 +100,23 @@ class TestRunController extends Controller
                     },
                 ])
             ))->resolve(),
-            'testResult' => (new TestResultResource(
-                optional(
-                    $testRun
-                        ->testResults()
-                        ->whereHas('testStep', function (Builder $query) use (
-                            $position
-                        ) {
-                            $query->where('position', $position);
-                        })
-                        ->with([
-                            'testStep' => function ($query) {
-                                return $query->with([
-                                    'source',
-                                    'target',
-                                    'testSetups',
-                                ]);
-                            },
-                            'testExecutions',
-                        ])
-                        ->first()
-                )
+            'testResults' => TestResultResource::collection(
+                $testRun
+                    ->testResults()
+                    ->whereHas('testStep', function (Builder $query) use (
+                        $position
+                    ) {
+                        $query->where('position', $position);
+                    })
+                    ->with(['testExecutions'])
+                    ->get()
+            )->resolve(),
+            'testStep' => (new TestStepResource(
+                $testCase
+                    ->testSteps()
+                    ->where('position', $position)
+                    ->with(['source', 'target', 'testSetups'])
+                    ->first()
             ))->resolve(),
             'testSteps' => TestStepResource::collection(
                 $testCase

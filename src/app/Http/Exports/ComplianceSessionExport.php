@@ -73,6 +73,7 @@ class ComplianceSessionExport
             );
 
             foreach ($questionnaireSection->questions as $key => $question) {
+                $key += 1;
                 $this->line($section, "Q{$key}", $question->question);
                 $this->line(
                     $section,

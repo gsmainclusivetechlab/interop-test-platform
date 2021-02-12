@@ -42,6 +42,10 @@ class TestStep extends Model
         'request',
         'response',
         'mtls',
+        'repeat_max',
+        'repeat_count',
+        'repeat_condition',
+        'repeat_response',
     ];
 
     /**
@@ -49,8 +53,10 @@ class TestStep extends Model
      */
     protected $casts = [
         'trigger' => 'array',
+        'repeat_condition' => 'array',
         'request' => RequestCast::class,
         'response' => ResponseCast::class,
+        'repeat_response' => ResponseCast::class,
     ];
 
     /**
@@ -149,7 +155,7 @@ class TestStep extends Model
 
         return [
             'env' => array_filter($matches[1]),
-            'file_env' => array_filter($matches[2])
+            'file_env' => array_filter($matches[2]),
         ];
     }
 }

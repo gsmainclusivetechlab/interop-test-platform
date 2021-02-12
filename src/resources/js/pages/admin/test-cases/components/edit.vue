@@ -62,6 +62,7 @@
                             :selectable="
                                 (option) => isSelectable(option, form.versions)
                             "
+                            :options="versionCandidates"
                             class="form-control d-flex p-0"
                             :class="{
                                 'is-invalid': $page.props.errors.versions,
@@ -114,6 +115,10 @@ export default {
         },
         component: {
             type: Object,
+            required: true,
+        },
+        versionCandidates: {
+            type: Array,
             required: true,
         },
     },

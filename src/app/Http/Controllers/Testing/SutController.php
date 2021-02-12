@@ -6,7 +6,6 @@ use App\Exceptions\MessageMismatchException;
 use App\Http\Headers\TraceparentHeader;
 use App\Http\Headers\TracestateHeader;
 use App\Models\Component;
-use App\Models\TestRun;
 use App\Models\Group;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
@@ -18,6 +17,10 @@ class SutController extends Controller
     public function __construct()
     {
         parent::__construct();
+
+        if (class_exists('\Debugbar')) {
+            \Debugbar::disable();
+        }
 
         if (request()->header('Accept') == '*/*') {
             request()->headers->set('Accept', 'application/json');
@@ -117,7 +120,8 @@ class SutController extends Controller
                         ->selectRaw('1')
                         ->from('test_results')
                         ->where('test_run_id', '=', $currentRun->id)
-                        ->whereColumn('test_step_id', '=', 'test_steps.id');
+                        ->whereColumn('test_step_id', '=', 'test_steps.id')
+                        ->completed();
                 });
         } else {
             // otherwise any step from any test is fair game
@@ -139,17 +143,18 @@ class SutController extends Controller
                         });
                     })
                     ->orWhere(function ($query) {
-                        $query->where('position', '!=', 1);
                         $query->whereHas('testRuns', function ($query) {
                             $query
                                 ->incompleted()
                                 ->whereDoesntHave('testResults', function (
                                     $query
                                 ) {
-                                    $query->whereColumn(
-                                        'test_step_id',
-                                        'test_steps.id'
-                                    );
+                                    $query
+                                        ->whereColumn(
+                                            'test_step_id',
+                                            'test_steps.id'
+                                        )
+                                        ->completed();
                                 });
                         });
                     });
@@ -221,9 +226,7 @@ class SutController extends Controller
                 }
             });
 
-        $testResult = $testRun
-            ->testResults()
-            ->create(['test_step_id' => $testStep->id]);
+        $testResult = $testRun->createTestResult($testStep);
         $traceparent = (new TraceparentHeader())
             ->withTraceId($testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);

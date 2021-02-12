@@ -53,9 +53,16 @@ class TestCaseExport implements Exportable
                 ->components()
                 ->get()
                 ->map(function (Component $component) {
-                    return array_merge($component->only(['name', 'slug']), [
-                        'versions' => $component->pivot->component_versions,
-                    ]);
+                    $versions = $component->pivot->component_versions
+                        ? [
+                            'versions' => $component->pivot->component_versions,
+                        ]
+                        : [];
+
+                    return array_merge(
+                        $component->only(['name', 'slug']),
+                        $versions
+                    );
                 })
                 ->toArray(),
             'test_steps' => $this->mapTestSteps($testCase->testSteps),
@@ -107,8 +114,32 @@ class TestCaseExport implements Exportable
                     $testStep->getRawOriginal('response'),
                     true
                 ),
+                'repeat' => $this->mapRepeat($testStep),
             ]);
         }
+
+        return $this->arrayFilter($result);
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @return array|null
+     */
+    protected function mapRepeat($testStep)
+    {
+        $result = [
+            'max' => $testStep->repeat_max,
+            'count' => $testStep->repeat_count,
+            'condition' => $testStep->repeat_condition,
+            'response' => json_decode(
+                $testStep->getRawOriginal('repeat_response'),
+                true
+            ),
+            'test_response_scripts' => $this->mapTestScripts(
+                $testStep->testScripts,
+                TestScript::TYPE_REPEAT_RESPONSE
+            ),
+        ];
 
         return $this->arrayFilter($result);
     }

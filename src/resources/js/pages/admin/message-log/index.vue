@@ -20,9 +20,9 @@
                 <table class="table table-striped table-hover card-table">
                     <thead>
                         <tr>
-                            <th class="text-nowrap">URL</th>
-                            <th class="text-nowrap w-50">Matched Step</th>
-                            <th class="text-nowrap">Exсeption</th>
+                            <th class="text-nowrap w-25">URL</th>
+                            <th class="text-nowrap">Matched Step</th>
+                            <th class="text-nowrap w-25">Exсeption</th>
                             <th class="text-center text-nowrap w-0">Date</th>
                             <th class="text-center text-nowrap w-0">Data</th>
                         </tr>
@@ -129,11 +129,11 @@ export default {
     methods: {
         processMismatchPath(path) {
             const match = path.match(
-                /\/testing\/([^\/]+)\/([^\/]+)\/([^\/]+)\/sut(.+)/
+                /\/testing.*\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.*)/
             );
-            const session = match && match[1];
-            const source = match && match[2];
-            const target = match && match[3];
+            const session = match && match[3];
+            const source = match && match[1];
+            const target = match && match[2];
             const destPath = match && match[4];
             return {
                 original: path,

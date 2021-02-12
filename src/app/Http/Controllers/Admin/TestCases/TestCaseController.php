@@ -152,6 +152,12 @@ class TestCaseController extends Controller
             $testCase->delete();
         });
 
+        Component::whereDoesntHave('testCases')->each(function (
+            Component $component
+        ) {
+            $component->delete();
+        });
+
         return redirect()
             ->back()
             ->with('success', __('Test case deleted successfully'));
@@ -248,7 +254,7 @@ class TestCaseController extends Controller
     public function export(TestCase $testCase)
     {
         $data = (new TestCaseExport())->export($testCase);
-        $fileName = "TestCase-{$testCase->name}";
+        $fileName = 'TestCase-' . substr($testCase->name, 0, 50);
 
         header('Content-Type: application/yaml');
         header(
@@ -339,10 +345,7 @@ class TestCaseController extends Controller
             foreach ($testCase->testSteps as $testStep) {
                 $testStepEnvironments = $testStep->getEnvironments();
 
-                $env = array_merge(
-                    $env,
-                    $testStepEnvironments['env']
-                );
+                $env = array_merge($env, $testStepEnvironments['env']);
                 $file_env = array_merge(
                     $file_env,
                     $testStepEnvironments['file_env']
@@ -351,7 +354,7 @@ class TestCaseController extends Controller
         }
         $environments = [
             'env' => array_unique($env),
-            'file_env' => array_unique($file_env)
+            'file_env' => array_unique($file_env),
         ];
 
         return $environments;

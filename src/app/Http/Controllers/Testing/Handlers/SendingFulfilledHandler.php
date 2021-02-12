@@ -7,6 +7,7 @@ use App\Http\Client\Response;
 use App\Jobs\ExecuteTestStepJob;
 use App\Models\Session;
 use App\Models\TestResult;
+use App\Models\TestStep;
 use App\Testing\TestExecutionListener;
 use App\Testing\Tests\RequestMtlsValidationTest;
 use App\Testing\Tests\JwsValidationTest;
@@ -57,41 +58,18 @@ class SendingFulfilledHandler
      */
     public function __invoke(ResponseInterface $response)
     {
-        $testSuite = new TestSuite();
-        if ($this->testResult->testStep->mtls) {
-            $testSuite->addTest(
-                new RequestMtlsValidationTest($this->testResult)
-            );
-        }
-        $this->attachJWSValidation(
-            $testSuite,
-            $this->testResult->request,
-            $this->testResult->testStep->request,
-            'Request: JWS Signature'
-        );
-        $testSuite->addTestSuite(
-            (new TestSpecLoader())->load($this->testResult)
-        );
-        $testSuite->addTestSuite(
-            (new TestScriptLoader())->load($this->testResult)
-        );
-        $this->attachJWSValidation(
-            $testSuite,
-            $this->testResult->response,
-            $this->testResult->testStep->response,
-            'Response: JWS Signature'
-        );
-        $testSuiteResult = new TestSuiteResult();
-        $testSuiteResult->addListener(
-            new TestExecutionListener($this->testResult)
-        );
-        $testSuiteResult = $testSuite->run($testSuiteResult);
-
-        if ($testSuiteResult->wasSuccessful()) {
-            $this->testResult->pass();
-        } else {
-            $this->testResult->fail();
-        }
+        $isRepeat =
+            $this->testResult->iteration <
+                $this->testResult->testStep->repeat_max &&
+            TestStep::whereKey($this->testResult->testStep->id)
+                ->whereRaw('JSON_CONTAINS(?, repeat_condition)', [
+                    json_encode($this->testResult->response->toArray()),
+                ])
+                ->exists();
+        $this->testResult->update([
+            'repeat' => $isRepeat,
+        ]);
+        $testSuiteResult = $this->getTestSuiteResult($isRepeat);
 
         if ($this->simulateRequest) {
             $delay = $this->testResult->testStep->response
@@ -104,8 +82,23 @@ class SendingFulfilledHandler
             sleep(abs(is_numeric($delay) ? (int) $delay : 0));
         }
 
+        if ($testSuiteResult->wasSuccessful()) {
+            $this->testResult->pass();
+        } else {
+            $this->testResult->fail();
+
+            if ($isRepeat) {
+                $this->testResult->testRun->complete();
+
+                return $response;
+            }
+        }
+
+        $nextTestStep = $isRepeat
+            ? $this->testResult->testStep
+            : $this->testResult->testStep->getNext();
         if (
-            ($nextTestStep = $this->testResult->testStep->getNext()) &&
+            $nextTestStep &&
             !$this->session->getBaseUriOfComponent($nextTestStep->source)
         ) {
             $delay = $nextTestStep->request
@@ -129,6 +122,44 @@ class SendingFulfilledHandler
         }
 
         return $response;
+    }
+
+    /**
+     * @return \PHPUnit\Framework\TestResult
+     * @throws NoPath
+     */
+    protected function getTestSuiteResult($isRepeat)
+    {
+        $testSuite = new TestSuite();
+        if ($this->testResult->testStep->mtls) {
+            $testSuite->addTest(
+                new RequestMtlsValidationTest($this->testResult)
+            );
+        }
+        $this->attachJWSValidation(
+            $testSuite,
+            $this->testResult->request,
+            $this->testResult->testStep->request,
+            'Request: JWS Signature'
+        );
+        $testSuite->addTestSuite(
+            (new TestSpecLoader())->load($this->testResult)
+        );
+        $testSuite->addTestSuite(
+            (new TestScriptLoader())->load($this->testResult, $isRepeat)
+        );
+        $this->attachJWSValidation(
+            $testSuite,
+            $this->testResult->response,
+            $this->testResult->testStep->response,
+            'Response: JWS Signature'
+        );
+        $testSuiteResult = new TestSuiteResult();
+        $testSuiteResult->addListener(
+            new TestExecutionListener($this->testResult)
+        );
+
+        return $testSuite->run($testSuiteResult);
     }
 
     /**

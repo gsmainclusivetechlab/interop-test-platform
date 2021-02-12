@@ -106,20 +106,22 @@ trait Queries
                 if (count($availableVersions) == 0) {
                     return [
                         $component->id => __(
-                            '<b>The test cases you have selected are incompatible in :component component:</b><br>:testCases',
+                            '<b>Test cases that you selected are incompatible.</b><br>:testCases',
                             [
-                                'component' => $component->name,
                                 'testCases' => $versions
                                     ->map(function (
                                         $versions,
                                         $testCaseId
                                     ) use ($component) {
-                                        return $component->testCases->firstWhere(
-                                            'id',
-                                            $testCaseId
-                                        )->name .
-                                            ' has versions: ' .
-                                            implode(', ', $versions);
+                                        return sprintf(
+                                            '"%s" requires version(s) "%s" of "%s"',
+                                            $component->testCases->firstWhere(
+                                                'id',
+                                                $testCaseId
+                                            )->name,
+                                            implode(', ', $versions),
+                                            $component->name
+                                        );
                                     })
                                     ->implode('<br>'),
                             ]

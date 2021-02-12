@@ -198,4 +198,21 @@ class TestRun extends Model
         $this->fireModelEvent('complete');
         return $this;
     }
+
+    /**
+     * @param TestStep $testStep
+     * @return TestResult
+     */
+    public function createTestResult($testStep): TestResult
+    {
+        $testResult = $this->testResults()
+            ->where(['test_step_id' => $testStep->id])
+            ->orderByDesc('iteration')
+            ->first();
+
+        return $this->testResults()->create([
+            'test_step_id' => $testStep->id,
+            'iteration' => !empty($testResult) ? ++$testResult->iteration : 1,
+        ]);
+    }
 }
