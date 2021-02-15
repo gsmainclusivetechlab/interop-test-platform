@@ -16,9 +16,7 @@ class ComponentTest extends TestCase
     {
         $component = factory(Component::class)->make();
         $this->assertValidationPasses($component->getAttributes(), [
-            'name' => ['required', 'string', 'max:255'],
-            'base_url' => ['required', 'url'],
-            'description' => ['required', 'string'],
+            'slug' => ['required', 'string', 'max:255'],
         ]);
         $this->assertTrue($component->save());
     }
