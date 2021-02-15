@@ -16,34 +16,45 @@ export default {
         this.syncEnvironments(this.value);
     },
     methods: {
-        emitEnvironments(values) {
-            const emitValue = Object.fromEntries(
-                values
-                    .filter((el) => el.error === null)
-                    .map((el) => [el.key, el.value])
-            );
+        emitEnvironments(value) {
+            if (value.find((el) => el.error !== null)) return;
 
-            this.$emit('input', emitValue);
+            // const emitValue = Object.fromEntries(
+            //     value.map((el) => [el.key, el.value])
+            // );
+
+            this.$emit('input', value);
         },
         addEnvironment() {
-            this.environments.push({ key: null, value: null, error: null });
+            this.environments.push({ key: '', value: null, error: null });
         },
         deleteEnvironment(index) {
             this.environments.splice(index, 1);
         },
         setKey(val, environment, index) {
             if (environment.error) environment.error = null;
+            environment.key = val;
 
-            if (this.checkKey(val, index)) {
-                environment.key = val;
-            } else {
-                environment.error = 'Duplicated key';
+            switch (this.checkKey(val, index)) {
+                case 'duplicated':
+                    environment.error = 'Duplicated key';
+                    break;
+                case 'empty':
+                    environment.error = 'Empty key';
+                    break;
+                default:
+                    break;
             }
         },
         checkKey(key, index) {
-            return !this.environments.some(
-                (el, i) => el.key === key && index !== i
-            );
+            if (
+                this.environments.some((el, i) => el.key === key && index !== i)
+            ) {
+                return 'duplicated';
+            }
+            if (key === null || key === undefined || key === '') {
+                return 'empty';
+            }
         },
     },
 };

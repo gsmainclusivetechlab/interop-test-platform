@@ -275,7 +275,7 @@ export default {
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 group_environment_id: null,
-                environments: null,
+                environments: [],
                 groupsDefault: null,
                 fileEnvironments: null,
             },
@@ -304,25 +304,33 @@ export default {
         this.loadGroupEnvironmentList();
     },
     methods: {
+        log(val) {
+            console.log(val);
+        },
         getTestCaseEnv() {
             axios
                 .post(route('admin.test-cases.environment-candidates'), {
                     testCasesIds: this.$page.props.session.info.test_cases,
                 })
                 .then((data) => {
-                    console.log(data.data);
                     if (data.data?.env?.length) {
-                        this.testCaseEnv.env = data.data.env;
-                        this.form.environments = Object.assign(
-                            {},
-                            Object.fromEntries(
-                                data.data.env.map((param) => [param, null])
-                            ),
-                            this.form.environments
+                        console.log(
+                            typeof data.data.env,
+                            Array.isArray(data.data.env)
                         );
-                        this.$refs.environments.syncEnvironments(
-                            this.form.environments
-                        );
+                        data.data.env
+                            .filter(
+                                (param) =>
+                                    !this.form.environments.some(
+                                        (el) => el.key === param
+                                    )
+                            )
+                            .forEach((param) =>
+                                this.form.environments.push({
+                                    key: param,
+                                    value: null,
+                                })
+                            );
                     }
                     if (data.data?.file_env?.length) {
                         this.testCaseEnv.fileEnv = data.data.file_env;

@@ -11,7 +11,6 @@
                     type="text"
                     placeholder="Key"
                     class="form-control"
-                    @input="updateEnvironmentKey(i, $event.target.value)"
                 />
                 <input
                     v-if="environment.file_name"
@@ -25,7 +24,6 @@
                     v-else
                     placeholder="Choose file..."
                     class="form-control border-0"
-                    @input="updateEnvironmentValue(i, $event)"
                 />
                 <button
                     type="button"
@@ -61,7 +59,7 @@ export default {
     mixins: [mixin],
     methods: {
         syncEnvironments(value) {
-            console.log('file-sync: ', value);
+            // console.log('file-sync: ', value);
             this.environments = [];
             for (let key in value) {
                 this.environments.push({

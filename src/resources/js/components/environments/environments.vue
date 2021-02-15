@@ -12,6 +12,7 @@
                 }"
             >
                 <input
+                    :value="environment.key"
                     type="text"
                     placeholder="Key"
                     class="form-control px-2"
@@ -74,14 +75,14 @@ export default {
     mixins: [mixin],
     methods: {
         syncEnvironments(value) {
-            // filter new list of envs
-            const newEnvs = value;
-            for (let key in value) {
-                this.environments.push({
-                    key: key,
-                    value: value[key],
-                });
-            }
+            this.environments.splice(0, this.environments.length, ...value);
+
+            // for (let key in value) {
+            //     this.environments.push({
+            //         key: key,
+            //         value: value[key],
+            //     });
+            // }
         },
     },
 };
