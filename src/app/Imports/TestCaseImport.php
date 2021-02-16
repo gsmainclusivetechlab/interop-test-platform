@@ -29,18 +29,20 @@ class TestCaseImport implements Importable
     public function import(array $rows): Model
     {
         return DB::transaction(function () use ($rows) {
-            $useCase = UseCase::firstOrCreate([
-                'name' => Arr::get($rows, 'use_case'),
-            ]);
-            $testCaseData = Arr::only($rows, TestCase::make()->getFillable());
             Validator::validate(
-                $testCaseData,
+                $rows,
                 [
+                    'name' => ['required', 'string', 'max:255'],
+                    'use_case' => ['required', 'string', 'max:255'],
+                    'behavior' => ['required', 'string', 'max:255'],
                     'slug' => [
+                        'required',
+                        'string',
+                        'max:255',
                         Rule::unique('test_cases')->ignore(
                             Arr::get($rows, 'test_case_group_id'),
                             'test_case_group_id'
-                        ),
+                        )
                     ],
                 ],
                 [
@@ -49,10 +51,14 @@ class TestCaseImport implements Importable
                 ]
             );
 
+            $useCase = UseCase::firstOrCreate([
+                'name' => Arr::get($rows, 'use_case'),
+            ]);
             /**
              * @var TestCase $testCase
              */
-            $testCase = $useCase->testCases()->make($testCaseData);
+            $testCase = $useCase->testCases()
+                ->make(Arr::only($rows, TestCase::make()->getFillable()));
             $testCase->saveOrFail();
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
@@ -263,5 +269,10 @@ class TestCaseImport implements Importable
         ]);
 
         return $testStep;
+    }
+
+    protected function rules()
+    {
+        return [];
     }
 }
