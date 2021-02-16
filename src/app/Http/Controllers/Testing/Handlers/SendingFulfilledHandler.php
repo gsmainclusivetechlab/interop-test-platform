@@ -114,7 +114,7 @@ class SendingFulfilledHandler
             );
         }
 
-        if ($this->testResult->testStep->isLastPosition()) {
+        if ($this->testResult->testStep->isLastPosition() && !$isRepeat) {
             $this->testResult->testRun->complete();
         }
 
