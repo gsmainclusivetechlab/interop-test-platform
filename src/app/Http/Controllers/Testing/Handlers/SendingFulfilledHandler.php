@@ -7,6 +7,7 @@ use App\Http\Client\Response;
 use App\Jobs\ExecuteTestStepJob;
 use App\Models\Session;
 use App\Models\TestResult;
+use App\Models\TestStep;
 use App\Testing\TestExecutionListener;
 use App\Testing\Tests\RequestMtlsValidationTest;
 use App\Testing\Tests\JwsValidationTest;
@@ -57,6 +58,75 @@ class SendingFulfilledHandler
      */
     public function __invoke(ResponseInterface $response)
     {
+        $isRepeat = $this->testResult->iteration < $this->testResult->testStep->repeat_max
+            && TestStep::whereKey($this->testResult->testStep->id)
+                ->whereRaw('JSON_CONTAINS(?, repeat_condition)', [
+                    json_encode($this->testResult->response->toArray())
+                ])->exists();
+        $this->testResult->update([
+            'repeat' => $isRepeat
+        ]);
+        $testSuiteResult = $this->getTestSuiteResult($isRepeat);
+
+        if ($this->simulateRequest) {
+            $delay = $this->testResult->testStep->response
+                ->withSubstitutions(
+                    $this->testResult->testRun->testResults,
+                    $this->session
+                )
+                ->delay();
+
+            sleep(abs(is_numeric($delay) ? (int) $delay : 0));
+        }
+
+        if ($testSuiteResult->wasSuccessful()) {
+            $this->testResult->pass();
+        } else {
+            $this->testResult->fail();
+
+            if ($isRepeat) {
+                $this->testResult->testRun->complete();
+
+                return $response;
+            }
+        }
+
+        $nextTestStep = $isRepeat
+            ? $this->testResult->testStep
+            : $this->testResult->testStep->getNext();
+        if (
+            $nextTestStep &&
+            !$this->session->getBaseUriOfComponent($nextTestStep->source)
+        ) {
+            $delay = $nextTestStep->request
+                ->withSubstitutions(
+                    $this->testResult->testRun->testResults,
+                    $this->session
+                )
+                ->delay();
+
+            ExecuteTestStepJob::dispatch(
+                $this->session,
+                $nextTestStep,
+                $this->testResult->testRun
+            )->delay(
+                now()->addSeconds(abs(is_numeric($delay) ? (int) $delay : 0))
+            );
+        }
+
+        if ($this->testResult->testStep->isLastPosition()) {
+            $this->testResult->testRun->complete();
+        }
+
+        return $response;
+    }
+
+    /**
+     * @return \PHPUnit\Framework\TestResult
+     * @throws NoPath
+     */
+    protected function getTestSuiteResult($isRepeat)
+    {
         $testSuite = new TestSuite();
         if ($this->testResult->testStep->mtls) {
             $testSuite->addTest(
@@ -73,7 +143,7 @@ class SendingFulfilledHandler
             (new TestSpecLoader())->load($this->testResult)
         );
         $testSuite->addTestSuite(
-            (new TestScriptLoader())->load($this->testResult)
+            (new TestScriptLoader())->load($this->testResult, $isRepeat)
         );
         $this->attachJWSValidation(
             $testSuite,
@@ -85,48 +155,8 @@ class SendingFulfilledHandler
         $testSuiteResult->addListener(
             new TestExecutionListener($this->testResult)
         );
-        $testSuiteResult = $testSuite->run($testSuiteResult);
 
-        if ($testSuiteResult->wasSuccessful()) {
-            $this->testResult->pass();
-        } else {
-            $this->testResult->fail();
-        }
-
-        if ($this->simulateRequest) {
-            $delay = $this->testResult->testStep->response
-                ->withSubstitutions(
-                    $this->testResult->testRun->testResults,
-                    $this->session
-                )
-                ->delay();
-
-            sleep(is_numeric($delay) ? (int) $delay : 0);
-        }
-
-        if (
-            ($nextTestStep = $this->testResult->testStep->getNext()) &&
-            !$this->session->getBaseUriOfComponent($nextTestStep->source)
-        ) {
-            $delay = $nextTestStep->request
-                ->withSubstitutions(
-                    $this->testResult->testRun->testResults,
-                    $this->session
-                )
-                ->delay();
-
-            ExecuteTestStepJob::dispatch(
-                $this->session,
-                $nextTestStep,
-                $this->testResult->testRun
-            )->delay(now()->addSeconds(is_numeric($delay) ? $delay : 0));
-        }
-
-        if ($this->testResult->testStep->isLastPosition()) {
-            $this->testResult->testRun->complete();
-        }
-
-        return $response;
+        return $testSuite->run($testSuiteResult);
     }
 
     /**

@@ -73,6 +73,7 @@ class ComplianceSessionExport
             );
 
             foreach ($questionnaireSection->questions as $key => $question) {
+                $key += 1;
                 $this->line($section, "Q{$key}", $question->question);
                 $this->line(
                     $section,
@@ -99,7 +100,7 @@ class ComplianceSessionExport
         $table->addCell(1500)->addText(__('Attempts'), $style);
 
         foreach ($session->testCases as $testCase) {
-            $status = __('Incompleted');
+            $status = __('Incomplete');
 
             /** @var TestRun $lastTestRun */
             $lastTestRun = $testCase

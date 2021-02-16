@@ -6,7 +6,8 @@
             "test-steps": "Test steps",
             "test-flow": "Test Flow",
             "groups": "Groups",
-            "versions": "Versions"
+            "versions": "Versions",
+            "components": "Components"
         }
     },
 
@@ -15,9 +16,10 @@
             "test-cases": "Тестовые образцы",
             "info": "Информация",
             "test-steps": "Тестовые шаги",
-            "test-flow": "Тестовый поток",
+            "test-flow": "Тестовая схема",
             "groups": "Группы",
-            "versions": "Версии"
+            "versions": "Версии",
+            "components": "Компоненты"
         }
     }
 }

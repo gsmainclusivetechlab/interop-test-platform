@@ -1,5 +1,5 @@
 <template>
-    <layout
+    <app-layout
         :session="session"
         :breadcrumbs="[
             { name: 'Sessions', url: route('sessions.index') },
@@ -56,137 +56,104 @@
                                     Download certificates
                                 </a>
                             </div>
-                            <template
-                                v-if="
-                                    $page.props.auth.user.groups &&
-                                    $page.props.auth.user.groups.length > 0 &&
-                                    $page.props.auth.user.groups.some(
-                                        (el) =>
-                                            el.default_session_id === session.id
-                                    )
-                                "
-                            >
-                                <div>
-                                    <button
-                                        type="button"
-                                        class="btn btn-link dropdown-toggle px-0 mb-0"
-                                        v-b-toggle="`by-groups`"
-                                    >
-                                        By groups
-                                    </button>
-                                </div>
-                                <b-collapse id="by-groups">
-                                    <template
-                                        v-for="(group, i) in $page.props.auth
-                                            .user.groups"
-                                    >
-                                        <div
-                                            v-if="
-                                                group.default_session_id ===
-                                                session.id
-                                            "
-                                            :key="`group-${i}`"
-                                        >
-                                            <h4 class="text-secondary">
-                                                {{ group.name }}
-                                            </h4>
-                                            <template
-                                                v-for="(component, j) in session
-                                                    .components.data"
-                                            >
-                                                <div
-                                                    v-if="
-                                                        Array.from(
-                                                            new Set(
-                                                                testSteps.data.map(
-                                                                    (el) =>
-                                                                        el
-                                                                            .source
-                                                                            .id
-                                                                )
-                                                            )
-                                                        ).includes(component.id)
-                                                    "
-                                                    class="mb-3"
-                                                    :key="`component-${j}`"
-                                                >
-                                                    <h4>
-                                                        {{ component.name }}
-                                                    </h4>
-                                                    <div
-                                                        class="mb-3"
-                                                        v-for="(
-                                                            connection, k
-                                                        ) in component.connections"
-                                                        :key="`connection-${k}`"
-                                                    >
-                                                        <template
-                                                            v-if="
-                                                                Array.from(
-                                                                    new Set(
-                                                                        testSteps.data.map(
-                                                                            (
-                                                                                el
-                                                                            ) =>
-                                                                                el
-                                                                                    .target
-                                                                                    .id
-                                                                        )
-                                                                    )
-                                                                ).includes(
-                                                                    connection.id
-                                                                )
-                                                            "
-                                                            class="mb-3"
-                                                        >
-                                                            <label>
-                                                                {{
-                                                                    connection.name
-                                                                }}
-                                                            </label>
-                                                            <div
-                                                                class="input-group"
-                                                            >
-                                                                <input
-                                                                    :id="`testing-${group.id}-${component.id}-${connection.id}`"
-                                                                    type="text"
-                                                                    :value="
-                                                                        getRoute(
-                                                                            component.use_encryption,
-                                                                            [
-                                                                                group.id,
-                                                                                component.uuid,
-                                                                                connection.uuid,
-                                                                            ],
-                                                                            true
-                                                                        )
-                                                                    "
-                                                                    class="form-control"
-                                                                    readonly
-                                                                />
-                                                                <clipboard-copy-btn
-                                                                    :target="`#testing-${group.id}-${component.id}-${connection.id}`"
-                                                                    title="Copy"
-                                                                ></clipboard-copy-btn>
-                                                            </div>
-                                                        </template>
-                                                    </div>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </b-collapse>
-                            </template>
-                            <div>
-                                <button
-                                    type="button"
-                                    class="btn btn-link dropdown-toggle px-0 mb-0"
-                                    v-b-toggle="`by-session`"
+                            <div id="by-groups" v-if="hasGroupUrls">
+                                <template
+                                    v-for="(group, i) in $page.props.auth.user
+                                        .groups"
                                 >
-                                    By session
-                                </button>
+                                    <div
+                                        v-if="
+                                            group.default_session_id ===
+                                            session.id
+                                        "
+                                        :key="`group-${i}`"
+                                    >
+                                        <h4 class="text-secondary">
+                                            {{ group.name }} URLs:
+                                        </h4>
+                                        <template
+                                            v-for="(component, j) in session
+                                                .components.data"
+                                        >
+                                            <div
+                                                v-if="
+                                                    Array.from(
+                                                        new Set(
+                                                            testSteps.data.map(
+                                                                (el) =>
+                                                                    el.source.id
+                                                            )
+                                                        )
+                                                    ).includes(component.id)
+                                                "
+                                                class="mb-3"
+                                                :key="`component-${j}`"
+                                            >
+                                                <h4>
+                                                    {{ component.name }}
+                                                </h4>
+                                                <div
+                                                    class="mb-3"
+                                                    v-for="(
+                                                        connection, k
+                                                    ) in component.connections"
+                                                    :key="`connection-${k}`"
+                                                >
+                                                    <template
+                                                        v-if="
+                                                            Array.from(
+                                                                new Set(
+                                                                    testSteps.data.map(
+                                                                        (el) =>
+                                                                            el
+                                                                                .target
+                                                                                .id
+                                                                    )
+                                                                )
+                                                            ).includes(
+                                                                connection.id
+                                                            )
+                                                        "
+                                                        class="mb-3"
+                                                    >
+                                                        <label>
+                                                            {{
+                                                                connection.name
+                                                            }}
+                                                        </label>
+                                                        <div
+                                                            class="input-group"
+                                                        >
+                                                            <input
+                                                                :id="`testing-${group.id}-${component.id}-${connection.id}`"
+                                                                type="text"
+                                                                :value="
+                                                                    getRoute(
+                                                                        component.use_encryption,
+                                                                        [
+                                                                            component.slug,
+                                                                            connection.slug,
+                                                                            group.id,
+                                                                        ],
+                                                                        true
+                                                                    )
+                                                                "
+                                                                class="form-control"
+                                                                readonly
+                                                            />
+                                                            <clipboard-copy-btn
+                                                                :target="`#testing-${group.id}-${component.id}-${connection.id}`"
+                                                                title="Copy"
+                                                            ></clipboard-copy-btn>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
                             </div>
-                            <b-collapse id="by-session">
+                            <template id="by-session" v-if="!hasGroupUrls">
                                 <template
                                     v-for="(component, i) in session.components
                                         .data"
@@ -237,9 +204,9 @@
                                                             getRoute(
                                                                 component.use_encryption,
                                                                 [
+                                                                    component.slug,
+                                                                    connection.slug,
                                                                     session.uuid,
-                                                                    component.uuid,
-                                                                    connection.uuid,
                                                                 ]
                                                             )
                                                         "
@@ -255,7 +222,7 @@
                                         </template>
                                     </div>
                                 </template>
-                            </b-collapse>
+                            </template>
                         </li>
                         <li v-if="testCase.description" class="mb-3">
                             <h3>
@@ -337,14 +304,7 @@
                                 </inertia-link>
                             </li>
                         </ul>
-                        <div
-                            class="ml-auto"
-                            v-if="
-                                !collect(session.components.data)
-                                    .where('id', testStepFirstSource.id)
-                                    .count()
-                            "
-                        >
+                        <div class="ml-auto">
                             <confirm-link
                                 v-if="isAvailableRun"
                                 :href="
@@ -380,15 +340,15 @@
                 </div>
             </div>
         </div>
-    </layout>
+    </app-layout>
 </template>
 
 <script>
-import Layout from '@/layouts/sessions/app';
+import AppLayout from '@/layouts/sessions/app';
 
 export default {
     components: {
-        Layout,
+        AppLayout,
     },
     props: {
         session: {
@@ -400,10 +360,6 @@ export default {
             required: true,
         },
         testSteps: {
-            type: Object,
-            required: true,
-        },
-        testStepFirstSource: {
             type: Object,
             required: true,
         },
@@ -426,6 +382,12 @@ export default {
                 this.session.components.data?.filter(
                     (component) => component.use_encryption
                 )?.length > 0,
+            hasGroupUrls:
+                this.$page.props.auth.user.groups &&
+                this.$page.props.auth.user.groups.length > 0 &&
+                this.$page.props.auth.user.groups.some(
+                    (el) => el.default_session_id === this.session.id
+                ),
         };
     },
     methods: {

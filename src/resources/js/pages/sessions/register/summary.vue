@@ -1,5 +1,5 @@
 <template>
-    <layout :components="components" :session="session">
+    <layout :session="session">
         <form @submit.prevent="submit" class="col-8 m-auto">
             <div class="card" v-for="(section, i) in sections.data" :key="i">
                 <div class="card-header border-0">
@@ -35,7 +35,7 @@
                     Back
                 </inertia-link>
                 <inertia-link
-                    :href="route('sessions.register.sut')"
+                    :href="route('sessions.register.info')"
                     class="btn btn-outline-primary"
                 >
                     Confirm
@@ -58,10 +58,6 @@ export default {
             required: false,
         },
         sections: {
-            type: Object,
-            required: true,
-        },
-        components: {
             type: Object,
             required: true,
         },

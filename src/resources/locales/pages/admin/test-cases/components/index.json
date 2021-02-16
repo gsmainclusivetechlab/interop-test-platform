@@ -1,0 +1,67 @@
+{
+    "en": {
+        "card": {
+            "title": "Components"
+        },
+        "table": {
+            "header": {
+                "name": "Name",
+                "slug": "Slug",
+                "versions": "Versions"
+            },
+            "menu": {
+                "edit": "Edit",
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure, you want to delete this component?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        },
+        "buttons": {
+            "create": "Create Component",
+            "make-draft": {
+                "title": "Make Test Case Draft",
+                "modal": {
+                    "text": "The latest version of this test case published, so a new draft version will be created to store your changes. You may publish or discard it anytime."
+                }
+            }
+        }
+    },
+
+    "ru": {
+        "card": {
+            "title": "Компоненты"
+        },
+        "table": {
+            "header": {
+                "name": "Имя",
+                "slug": "Slug",
+                "versions": "Версии"
+            },
+            "menu": {
+                "edit": "Редактировать",
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены, что хотите удалить этот компонент?"
+                    }
+                }
+            },
+            "no-results": "Результатов нет"
+        },
+        "buttons": {
+            "create": "Создать",
+            "make-draft": {
+                "title": "Сделать Черновиком",
+                "modal": {
+                    "text": "Опубликована последняя версия этого тестового примера, поэтому будет создана новая черновая версия для хранения ваших изменений. Вы можете опубликовать или отказаться от него в любое время."
+                }
+            }
+        }
+    }
+}

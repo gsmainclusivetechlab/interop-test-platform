@@ -2,10 +2,10 @@
 
 namespace App\Utils;
 
+use App\Extensions\Twig\{Base64, Datetime, IlpPacket, Uuid};
 use App\Models\Component;
 use App\Models\Session;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\URL;
+use Exception;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
@@ -24,10 +24,10 @@ class TwigSubstitution
      * @var array
      */
     protected $twigExtensions = [
-        \App\Extensions\Twig\Uuid::class,
-        \App\Extensions\Twig\Datetime::class,
-        \App\Extensions\Twig\Base64::class,
-        \App\Extensions\Twig\IlpPacket::class,
+        Uuid::class,
+        Datetime::class,
+        Base64::class,
+        IlpPacket::class,
     ];
 
     /**
@@ -35,22 +35,14 @@ class TwigSubstitution
      */
     protected $data = [];
 
-    /**
-     * @param $testResults
-     * @param Session $session
-     */
-    public function __construct($testResults, $session)
+    public function __construct($testResults, Session $session)
     {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
         $this->data = $this->mapInto($testResults, $session);
     }
 
-    /**
-     * @param array $input
-     * @return array
-     */
-    public function replaceRecursive(array $input = [])
+    public function replaceRecursive(array $input = []): array
     {
         $result = [];
         foreach ($input as $key => $value) {
@@ -79,7 +71,7 @@ class TwigSubstitution
      * @param mixed $input
      * @return bool
      */
-    protected function isJsonSubstitution($input)
+    protected function isJsonSubstitution($input): bool
     {
         return is_string($input) &&
             !is_numeric($input) &&
@@ -87,17 +79,13 @@ class TwigSubstitution
             json_last_error() == JSON_ERROR_NONE;
     }
 
-    /**
-     * @param string $content
-     * @return string
-     */
-    public function replace(string $content)
+    public function replace(string $content): string
     {
         try {
             $template = $this->twig->createTemplate($content);
 
             return htmlspecialchars_decode($template->render($this->data));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $content;
         }
     }
@@ -115,14 +103,13 @@ class TwigSubstitution
     /**
      * @param $testResults
      * @param Session $session
+     *
      * @return mixed
      */
-    protected function mapInto($testResults, $session)
+    protected function mapInto($testResults, Session $session): array
     {
-        $components = Component::all()->load('connections');
-        $sutBaseUrls = $session->components
-            ->pluck('pivot.base_url', 'id')
-            ->toArray();
+        $components = Component::with('connections')->get();
+        $sutBaseUrls = $session->components->pluck('pivot.base_url', 'id');
         return [
             'steps' => $testResults
                 ->load('testStep')
@@ -141,22 +128,12 @@ class TwigSubstitution
                 ->toArray(),
             'env' => $session->environments(),
             'components' => $components
-                ->mapWithKeys(function ($item) use ($sutBaseUrls) {
+                ->mapWithKeys(function (Component $item) use ($sutBaseUrls) {
                     return [
                         $item->slug => array_merge(
-                            Arr::only($item->toArray(), [
-                                'uuid',
-                                'name',
-                                'description',
-                                'slug',
-                            ]),
+                            $item->only(['name', 'slug']),
                             [
-                                'base_url' => in_array(
-                                    $item->id,
-                                    array_keys($sutBaseUrls)
-                                )
-                                    ? $sutBaseUrls[$item->id]
-                                    : $item->base_url,
+                                'base_url' => $sutBaseUrls->get($item->id),
                             ]
                         ),
                     ];
@@ -168,14 +145,10 @@ class TwigSubstitution
         ];
     }
 
-    /**
-     * @param $components
-     * @param $session
-     * @return array
-     */
-    protected function mapUrls($components, $session)
+    protected function mapUrls($components, $session): array
     {
-        $useEncryptionComponentIds = $session->components()
+        $useEncryptionComponentIds = $session
+            ->components()
             ->withPivotValue('use_encryption', true)
             ->pluck('id')
             ->toArray();
@@ -191,14 +164,12 @@ class TwigSubstitution
                 foreach ($component->connections as $connection) {
                     $urn = route(
                         $secure ? 'testing.sut' : 'testing-insecure.sut',
-                        [
-                            $session->uuid,
-                            $component->uuid,
-                            $connection->uuid,
-                        ],
+                        [$component->slug, $connection->slug, $session->uuid],
                         false
                     );
-                    $connectionUrls[$component->slug][$connection->slug] = $secure
+                    $connectionUrls[$component->slug][
+                        $connection->slug
+                    ] = $secure
                         ? route('home') . $urn
                         : config('app.http_base_url') . $urn;
                 }

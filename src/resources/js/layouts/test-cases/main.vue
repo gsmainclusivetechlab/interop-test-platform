@@ -87,6 +87,7 @@ export default {
                     route: 'admin.test-cases.test-steps.index',
                     condition:
                         route().current('admin.test-cases.test-steps.index') ||
+                        route().current('admin.test-cases.test-steps.show') ||
                         route().current('admin.test-cases.test-steps.create') ||
                         route().current('admin.test-cases.test-steps.edit'),
                 },
@@ -107,6 +108,13 @@ export default {
                     route: 'admin.test-cases.versions.index',
                     condition: route().current(
                         'admin.test-cases.versions.index'
+                    ),
+                },
+                {
+                    title: this.$t('breadcrumb.components'),
+                    route: 'admin.test-cases.components.index',
+                    condition: route().current(
+                        'admin.test-cases.components.index'
                     ),
                 },
             ];

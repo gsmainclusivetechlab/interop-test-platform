@@ -28,9 +28,7 @@ class TestCaseTestStepController extends Controller
     {
         $this->middleware(['auth', 'verified']);
         $this->middleware('test-case.latest')->only(['index', 'create']);
-        $this->authorizeResource(TestStep::class, 'test_step', [
-            'except' => ['show'],
-        ]);
+        $this->authorizeResource(TestStep::class, 'test_step');
     }
 
     /**
@@ -57,6 +55,42 @@ class TestCaseTestStepController extends Controller
 
     /**
      * @param TestCase $testCase
+     * @param TestStep $testStep
+     * @return RedirectResponse|Response
+     * @throws AuthorizationException
+     */
+    public function show(TestCase $testCase, TestStep $testStep)
+    {
+        if (!$testCase->isLastPosition()) {
+            return redirect()->route(
+                'admin.test-cases.test-steps.index',
+                $testCase->last_version->id
+            );
+        }
+        $this->authorize('update', $testCase);
+        $testStep = $testCase
+            ->testSteps()
+            ->whereKey($testStep->getKey())
+            ->firstOrFail();
+
+        return Inertia::render('admin/test-cases/test-steps/show', [
+            'testCase' => (new TestCaseResource(
+                $testCase->load(['testSteps'])
+            ))->resolve(),
+            'testStep' => (new TestStepResource(
+                $testStep->load([
+                    'source',
+                    'target',
+                    'apiSpec',
+                    'testSetups',
+                    'testScripts',
+                ])
+            ))->resolve(),
+        ]);
+    }
+
+    /**
+     * @param TestCase $testCase
      * @return RedirectResponse|Response
      * @throws AuthorizationException
      */
@@ -68,7 +102,7 @@ class TestCaseTestStepController extends Controller
                 $testCase->load(['testSteps'])
             ))->resolve(),
             'components' => ComponentResource::collection(
-                Component::with('connections')->get()
+                $testCase->components
             )->resolve(),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()
@@ -135,7 +169,7 @@ class TestCaseTestStepController extends Controller
                 ])
             ))->resolve(),
             'components' => ComponentResource::collection(
-                Component::with('connections')->get()
+                $testCase->components
             )->resolve(),
             'apiSpecs' => ApiSpecResource::collection(
                 ApiSpec::get()

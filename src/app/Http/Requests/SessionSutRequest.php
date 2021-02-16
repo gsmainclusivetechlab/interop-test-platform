@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Controllers\Sessions\Register\Traits\Queries;
 use App\Models\Session;
 use App\Rules\SslCertificate;
 use App\Rules\SslKey;
@@ -12,12 +13,17 @@ use Illuminate\Validation\Rule;
 
 class SessionSutRequest extends FormRequest
 {
+    use Queries;
+
     public function rules(): array
     {
         $isCompliance = Session::isCompliance(session('session.type'));
 
+        $components = $this->getComponents();
+        $versions = $this->getVersions($components);
+
         return $this->components()
-            ->mapWithKeys(function ($component, $id) {
+            ->mapWithKeys(function ($component, $id) use ($versions) {
                 $useEncription = (int) Arr::get($component, 'use_encryption');
                 $filesRequired = Rule::requiredIf(
                     $useEncription && !Arr::get($component, 'certificate_id')
@@ -53,6 +59,11 @@ class SessionSutRequest extends FormRequest
                         ),
                     ],
                     "components.{$id}.passphrase" => ['nullable', 'string'],
+                    "components.{$id}.version" => [
+                        Rule::requiredIf(is_array($versions->get($id))),
+                        'nullable',
+                        'string',
+                    ],
                 ];
             })
             ->merge([
@@ -63,7 +74,7 @@ class SessionSutRequest extends FormRequest
                 ],
                 'components.*.id' => [
                     'required',
-                    Rule::exists('components', 'id')->where('sutable', true),
+                    Rule::exists('components', 'id'),
                 ],
                 'components.*.base_url' => ['required', 'url', 'max:255'],
                 'components.*.use_encryption' => ['nullable', 'boolean'],
@@ -81,6 +92,7 @@ class SessionSutRequest extends FormRequest
                     "components.{$id}.client_crt" => __('Client certificate'),
                     "components.{$id}.client_key" => __('Client key'),
                     "components.{$id}.passphrase" => __('Pass phrase'),
+                    "components.{$id}.version" => __('Version'),
                 ];
             })
             ->merge([

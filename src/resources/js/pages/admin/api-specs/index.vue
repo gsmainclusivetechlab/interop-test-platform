@@ -23,7 +23,7 @@
                         v-if="$page.props.auth.user.can.api_specs.create"
                         class="btn btn-primary"
                     >
-                        <icon name="upload" />
+                        <icon name="file-import" />
                         {{ $t('buttons.import') }}
                     </inertia-link>
                 </div>

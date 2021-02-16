@@ -152,6 +152,12 @@ class TestCaseController extends Controller
             $testCase->delete();
         });
 
+        Component::whereDoesntHave('testCases')->each(function (
+            Component $component
+        ) {
+            $component->delete();
+        });
+
         return redirect()
             ->back()
             ->with('success', __('Test case deleted successfully'));
@@ -248,7 +254,7 @@ class TestCaseController extends Controller
     public function export(TestCase $testCase)
     {
         $data = (new TestCaseExport())->export($testCase);
-        $fileName = "TestCase-{$testCase->name}";
+        $fileName = 'TestCase-' . substr($testCase->name, 0, 50);
 
         header('Content-Type: application/yaml');
         header(

@@ -4,7 +4,6 @@
         :testCase="testCase"
         :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
-        :testStepFirstSource="testStepFirstSource"
     >
         <div class="card">
             <div class="card-header">
@@ -35,8 +34,8 @@
                     </div>
                     <template v-else>
                         <span
-                            class="text-success d-flex align-items-center"
                             v-if="testRun.successful"
+                            class="text-success d-flex align-items-center"
                         >
                             <icon
                                 name="circle-check"
@@ -45,8 +44,8 @@
                             Pass
                         </span>
                         <span
-                            class="text-danger d-flex align-items-center"
                             v-else
+                            class="text-danger d-flex align-items-center"
                         >
                             <icon
                                 name="alert-circle"
@@ -57,19 +56,21 @@
                     </template>
                 </h2>
                 <div class="card-options">
-                    <b v-if="testRun.passed || testRun.failures" class="mr-2"
-                        >Steps:</b
+                    <span
+                        v-if="testRun.passed || testRun.failures"
+                        class="font-weight-bold mr-2"
+                        >Steps:</span
                     >
                     <span
-                        class="text-success mr-2 align-items-center d-flex"
                         v-if="testRun.passed"
+                        class="text-success mr-2 align-items-center d-flex"
                     >
                         <icon name="circle-check" class="icon-md mr-1"></icon>
                         {{ `${testRun.passed} Pass` }}
                     </span>
                     <span
-                        class="text-danger align-items-center d-flex"
                         v-if="testRun.failures"
+                        class="text-danger align-items-center d-flex"
                     >
                         <icon name="alert-circle" class="icon-md mr-1"></icon>
                         {{ `${testRun.failures} Fail` }}
@@ -78,39 +79,28 @@
             </div>
             <div class="card-body p-0">
                 <div class="p-4">
-                    <diagram>
-                        graph LR;
+                    <diagram :key="testStep.id">
+                        {{ `graph LR;` }}
                         <template v-for="component in components.data">
-                            {{ component.id }}({{ component.name }})<template
-                                v-if="
-                                    collect(session.components.data).contains(
-                                        'id',
-                                        component.id
-                                    )
-                                "
-                                >:::is-active</template
-                            ><template v-else></template>;
+                            {{
+                                `${component.id}(${component.name})` +
+                                (collect(session.components.data).contains(
+                                    'id',
+                                    component.id
+                                )
+                                    ? ':::is-active;'
+                                    : ';')
+                            }}
                             <template
                                 v-for="connection in component.connections"
                             >
-                                {{ component.id }}
-                                -->
-                                <template
-                                    v-if="
-                                        component.id ==
-                                            testResult.testStep.data.source
-                                                .id &&
-                                        connection.id ==
-                                            testResult.testStep.data.target.id
-                                    "
-                                >
-                                    |{{
-                                        `Step ${testResult.testStep.data.position}`
-                                    }}| {{ connection.id }};
-                                </template>
-                                <template v-else>
-                                    {{ connection.id }};
-                                </template>
+                                {{
+                                    `${component.id} --> ` +
+                                    (component.id == testStep.source.data.id &&
+                                    connection.id == testStep.target.data.id
+                                        ? `|Step ${testStep.position}| ${connection.id};`
+                                        : `${connection.id};`)
+                                }}
                             </template>
                         </template>
                     </diagram>
@@ -126,10 +116,7 @@
                                     <li
                                         v-if="testResultSteps.has(testStep.id)"
                                         :class="{
-                                            'active': testResultSteps.has(
-                                                testStep.id
-                                            ),
-                                            'list-group-item-action': !testResultSteps.has(
+                                            'list-group-item-action': testResultSteps.has(
                                                 testStep.id
                                             ),
                                         }"
@@ -148,21 +135,21 @@
                                                     ]
                                                 )
                                             "
-                                            class="d-flex justify-content-between align-items-center py-2 px-4 text-reset text-decoration-none"
+                                            class="d-flex justify-content-between align-items-center py-2 px-4 text-reset"
                                         >
                                             <div class="mr-1 text-truncate">
-                                                <b>
+                                                <span class="font-weight-bold">
                                                     {{
                                                         `Step ${testStep.position}`
                                                     }}
-                                                </b>
+                                                </span>
                                                 <div
-                                                    class="d-flex align-items-baseline text-truncate"
                                                     v-if="
                                                         testResultSteps.get(
                                                             testStep.id
                                                         ).request
                                                     "
+                                                    class="d-flex align-items-baseline"
                                                 >
                                                     <span
                                                         class="font-weight-bold"
@@ -239,11 +226,11 @@
                                         :key="`step-${i}`"
                                     >
                                         <div class="text-truncate">
-                                            <b>
+                                            <span class="font-weight-bold">
                                                 {{
                                                     `Step ${testStep.position}`
                                                 }}
-                                            </b>
+                                            </span>
                                             <div
                                                 class="text-truncate"
                                                 :title="`${testStep.method} ${testStep.path}`"
@@ -257,544 +244,670 @@
                             </ul>
                         </div>
                         <div class="col-9 pl-0 pb-4 border-left">
-                            <div class="lead py-3 px-4">
-                                <div class="d-flex justigy-content-between">
-                                    <b class="text-nowrap">
-                                        {{
-                                            `Step ${testResult.testStep.data.position}`
-                                        }}
-                                    </b>
-                                    <div class="d-inline-block ml-auto">
-                                        <small
-                                            class="d-inline-block ml-2"
-                                            v-if="testResult.response"
-                                        >
-                                            Status:
-                                            <span class="text-success">
-                                                {{
-                                                    `HTTP ${testResult.response.status}`
-                                                }}
-                                            </span>
-                                        </small>
-                                        <small
-                                            class="d-inline-block ml-2"
-                                            v-if="testResult.duration"
-                                        >
-                                            Duration:
-                                            <span class="text-success">
-                                                {{
-                                                    `${testResult.duration} ms`
-                                                }}
-                                            </span>
-                                        </small>
-                                    </div>
-                                </div>
-                                <div
-                                    class="text-truncate"
-                                    v-if="testResult.request"
-                                >
-                                    <u class="mr-2"
-                                        >{{ testResult.request.method }}
-                                        {{ testResult.request.path }}</u
-                                    >
-                                </div>
-                            </div>
-                            <div
-                                class="lead mb-2 py-3 px-4"
-                                :class="{
-                                    'alert-success': testResult.successful,
-                                    'alert-danger': !testResult.successful,
+                            <h4
+                                v-if="testResults.length > 1"
+                                class="px-3 py-2 mb-0"
+                            >
+                                Iterations:
+                            </h4>
+                            <b-tabs
+                                :nav-class="{
+                                    'd-none': testResults.length === 1,
                                 }"
                             >
-                                {{ testResult.successful ? 'Pass' : 'Fail' }}
-                                <div v-if="testResult.exception">
-                                    {{ testResult.exception }}
-                                </div>
-                            </div>
-                            <div
-                                class="py-2 px-4"
-                                v-if="testResult.testExecutions.data.length"
-                            >
-                                <div class="d-flex mb-2">
-                                    <strong
-                                        class="lead d-block mr-auto font-weight-bold"
-                                    >
-                                        Performed tests
-                                    </strong>
-                                </div>
-                                <ul class="m-0 p-0">
-                                    <li
-                                        class="d-flex flex-wrap py-2"
-                                        v-for="(testExecution, i) in testResult
-                                            .testExecutions.data"
-                                        :key="`execution-${i}`"
-                                    >
-                                        <div class="d-flex align-items-center">
-                                            <span
-                                                class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-4 w-5 mr-2 text-uppercase"
-                                                :class="{
-                                                    'bg-success':
-                                                        testExecution.successful,
-                                                    'bg-danger': !testExecution.successful,
-                                                }"
-                                            >
-                                                {{
-                                                    testExecution.successful
-                                                        ? 'Pass'
-                                                        : 'Fail'
-                                                }}
-                                            </span>
-                                            <button
-                                                v-b-modal="
-                                                    `test-execution-${testExecution.id}`
-                                                "
-                                                class="btn btn-link p-0 font-weight-normal"
-                                                type="button"
-                                                v-if="
-                                                    testExecution.actual ||
-                                                    testExecution.expected ||
-                                                    testExecution.exception
-                                                "
-                                            >
-                                                {{ testExecution.name }}
-                                            </button>
-                                            <span v-else>
-                                                {{ testExecution.name }}
-                                            </span>
-                                        </div>
-                                        <b-modal
-                                            :id="`test-execution-${testExecution.id}`"
-                                            size="lg"
-                                            centered
-                                            hide-footer
-                                            :title="testExecution.name"
-                                            v-if="
-                                                testExecution.actual ||
-                                                testExecution.expected ||
-                                                testExecution.exception
-                                            "
+                                <b-tab
+                                    v-for="(result, i) in testResults"
+                                    :title="`№ ${result.iteration}`"
+                                    title-link-class="justify-content-center py-1 text-nowrap rounded-0"
+                                    :key="`result-${i}`"
+                                >
+                                    <div v-if="testStep" class="lead py-3 px-4">
+                                        <div
+                                            class="d-flex justigy-content-between"
                                         >
-                                            <b-tabs
-                                                nav-class="flex-nowrap"
-                                                content-class="mt-2"
-                                                justified
-                                                v-if="
-                                                    testExecution.actual ||
-                                                    testExecution.expected
-                                                "
+                                            <b class="text-nowrap">
+                                                {{
+                                                    `Step ${testStep.position}`
+                                                }}
+                                            </b>
+                                            <div class="d-inline-block ml-auto">
+                                                <small
+                                                    class="d-inline-block ml-2"
+                                                    v-if="result.response"
+                                                >
+                                                    Status:
+                                                    <span class="text-success">
+                                                        {{
+                                                            `HTTP ${result.response.status}`
+                                                        }}
+                                                    </span>
+                                                </small>
+                                                <small
+                                                    class="d-inline-block ml-2"
+                                                    v-if="result.duration"
+                                                >
+                                                    Duration:
+                                                    <span class="text-success">
+                                                        {{
+                                                            `${result.duration} ms`
+                                                        }}
+                                                    </span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="text-truncate"
+                                            v-if="result.request"
+                                        >
+                                            <u class="mr-2"
+                                                >{{ result.request.method }}
+                                                {{ result.request.path }}</u
                                             >
-                                                <b-tab
-                                                    title="Actual"
-                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
-                                                    v-if="testExecution.actual"
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="lead mb-2 py-3 px-4"
+                                        :class="{
+                                            'alert-success': result.successful,
+                                            'alert-secondary':
+                                                !result.testExecutions ||
+                                                !result.testExecutions.data
+                                                    .length,
+                                            'alert-danger':
+                                                result.testExecutions &&
+                                                result.testExecutions.data
+                                                    .length &&
+                                                result.successful === false,
+                                        }"
+                                    >
+                                        {{
+                                            !result.testExecutions ||
+                                            !result.testExecutions.data.length
+                                                ? 'Pending'
+                                                : result.successful
+                                                ? 'Pass'
+                                                : 'Fail'
+                                        }}
+                                        <div v-if="result.exception">
+                                            {{ result.exception }}
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="py-2 px-4"
+                                        v-if="
+                                            result.testExecutions &&
+                                            result.testExecutions.data.length
+                                        "
+                                    >
+                                        <div class="d-flex mb-2">
+                                            <strong
+                                                class="lead d-block mr-auto font-weight-bold"
+                                            >
+                                                Performed tests
+                                            </strong>
+                                        </div>
+                                        <ul class="m-0 p-0">
+                                            <li
+                                                class="d-flex flex-wrap py-2"
+                                                v-for="(
+                                                    testExecution, j
+                                                ) in result.testExecutions.data"
+                                                :key="`execution-${j}`"
+                                            >
+                                                <div
+                                                    class="d-flex align-items-center"
                                                 >
-                                                    <json-tree
-                                                        :data="
-                                                            testExecution.actual
+                                                    <span
+                                                        class="badge d-flex align-items-center justify-content-center flex-shrink-0 h-4 w-5 mr-2 text-uppercase"
+                                                        :class="{
+                                                            'bg-success':
+                                                                testExecution.successful,
+                                                            'bg-danger': !testExecution.successful,
+                                                        }"
+                                                    >
+                                                        {{
+                                                            testExecution.successful
+                                                                ? 'Pass'
+                                                                : 'Fail'
+                                                        }}
+                                                    </span>
+                                                    <button
+                                                        v-b-modal="
+                                                            `test-execution-${testExecution.id}-${j}`
                                                         "
-                                                        :show-copy-btn="false"
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
-                                                </b-tab>
-                                                <b-tab
-                                                    title="Expected"
-                                                    title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                        class="btn btn-link p-0 font-weight-normal"
+                                                        type="button"
+                                                        v-if="
+                                                            testExecution.actual ||
+                                                            testExecution.expected ||
+                                                            testExecution.exception
+                                                        "
+                                                    >
+                                                        {{ testExecution.name }}
+                                                    </button>
+                                                    <span v-else>
+                                                        {{ testExecution.name }}
+                                                    </span>
+                                                </div>
+                                                <b-modal
                                                     v-if="
-                                                        testExecution.expected
+                                                        testExecution.actual ||
+                                                        testExecution.expected ||
+                                                        testExecution.exception
                                                     "
+                                                    :id="`test-execution-${testExecution.id}-${j}`"
+                                                    size="lg"
+                                                    centered
+                                                    hide-footer
+                                                    :title="testExecution.name"
                                                 >
-                                                    <json-tree
-                                                        :data="
+                                                    <b-tabs
+                                                        v-if="
+                                                            testExecution.actual ||
                                                             testExecution.expected
                                                         "
-                                                        :show-copy-btn="false"
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
-                                                </b-tab>
-                                                <div
-                                                    v-if="
-                                                        testExecution.exception
-                                                    "
-                                                    class="p-2 alert-danger"
-                                                >
-                                                    <p class="mb-0">
-                                                        {{
+                                                        nav-class="flex-nowrap"
+                                                        content-class="mt-2"
+                                                        justified
+                                                    >
+                                                        <b-tab
+                                                            v-if="
+                                                                testExecution.actual
+                                                            "
+                                                            title="Actual"
+                                                            title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                        >
+                                                            <json-tree
+                                                                :data="
+                                                                    testExecution.actual
+                                                                "
+                                                                :show-copy-btn="
+                                                                    false
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </b-tab>
+                                                        <b-tab
+                                                            title="Expected"
+                                                            title-link-class="justify-content-center pt-0 pb-1 text-nowrap rounded-0"
+                                                            v-if="
+                                                                testExecution.expected
+                                                            "
+                                                        >
+                                                            <json-tree
+                                                                :data="
+                                                                    testExecution.expected
+                                                                "
+                                                                :show-copy-btn="
+                                                                    false
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </b-tab>
+                                                        <div
+                                                            v-if="
+                                                                testExecution.exception
+                                                            "
+                                                            class="p-2 alert-danger"
+                                                        >
+                                                            <p class="mb-0">
+                                                                {{
+                                                                    testExecution.exception
+                                                                }}
+                                                            </p>
+                                                        </div>
+                                                    </b-tabs>
+                                                    <div
+                                                        v-else-if="
                                                             testExecution.exception
-                                                        }}
-                                                    </p>
-                                                </div>
-                                            </b-tabs>
-                                            <div
-                                                v-else-if="
-                                                    testExecution.exception
-                                                "
-                                                class="p-2 alert-danger"
+                                                        "
+                                                        class="p-2 alert-danger"
+                                                    >
+                                                        <p class="mb-0">
+                                                            {{
+                                                                testExecution.exception
+                                                            }}
+                                                        </p>
+                                                    </div>
+                                                </b-modal>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div
+                                        class="py-2 px-4"
+                                        v-if="result.request"
+                                    >
+                                        <div class="d-flex mb-2">
+                                            <strong
+                                                class="lead d-block mr-auto mt-auto font-weight-bold"
                                             >
-                                                <p class="mb-0">
+                                                Request
+                                            </strong>
+                                            <clipboard-json-to-curl
+                                                :request="result.request"
+                                            ></clipboard-json-to-curl>
+                                        </div>
+                                        <div class="border">
+                                            <div class="d-flex">
+                                                <div
+                                                    class="w-25 px-4 py-2 border"
+                                                >
+                                                    <strong>URL</strong>
+                                                </div>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{ result.request.uri }}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div
+                                                    class="w-25 px-4 py-2 border"
+                                                >
+                                                    <strong>Method</strong>
+                                                </div>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{ result.request.method }}
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="d-flex"
+                                                v-if="
+                                                    result.request.headers !==
+                                                    undefined
+                                                "
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    v-b-toggle="
+                                                        `request-headers-${result.id}`
+                                                    "
+                                                >
+                                                    <strong>Headers</strong>
+                                                </button>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
                                                     {{
-                                                        testExecution.exception
+                                                        `(${collect(
+                                                            result.request
+                                                                .headers
+                                                        ).count()}) params`
                                                     }}
-                                                </p>
+                                                </div>
                                             </div>
-                                        </b-modal>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="py-2 px-4" v-if="testResult.request">
-                                <div class="d-flex mb-2">
-                                    <strong
-                                        class="lead d-block mr-auto mt-auto font-weight-bold"
-                                    >
-                                        Request
-                                    </strong>
-                                    <clipboard-json-to-curl
-                                        :request="testResult.request"
-                                    ></clipboard-json-to-curl>
-                                </div>
-                                <div class="border">
-                                    <div class="d-flex">
-                                        <div class="w-25 px-4 py-2 border">
-                                            <strong>URL</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{ testResult.request.uri }}
-                                        </div>
-                                    </div>
-                                    <div class="d-flex">
-                                        <div class="w-25 px-4 py-2 border">
-                                            <strong>Method</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{ testResult.request.method }}
+                                            <b-collapse
+                                                :id="`request-headers-${result.id}`"
+                                                v-if="
+                                                    result.request.headers !==
+                                                    undefined
+                                                "
+                                            >
+                                                <div class="d-flex">
+                                                    <div
+                                                        class="w-25 px-4 py-2 border"
+                                                    ></div>
+                                                    <div
+                                                        class="w-75 px-4 py-2 border"
+                                                    >
+                                                        <div class="mb-0 p-0">
+                                                            <json-tree
+                                                                :data="
+                                                                    result
+                                                                        .request
+                                                                        .headers
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </b-collapse>
+                                            <div
+                                                class="d-flex"
+                                                v-if="
+                                                    result.request.body !==
+                                                        undefined &&
+                                                    result.request.body !==
+                                                        'empty_body'
+                                                "
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    v-b-toggle="
+                                                        `request-body-${result.id}`
+                                                    "
+                                                >
+                                                    <strong>Body</strong>
+                                                </button>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{
+                                                        `(${collect(
+                                                            result.request.body
+                                                        ).count()}) params`
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <b-collapse
+                                                :id="`request-body-${result.id}`"
+                                                v-if="
+                                                    result.request.body !==
+                                                        undefined &&
+                                                    result.request.body !==
+                                                        'empty_body'
+                                                "
+                                            >
+                                                <div class="d-flex">
+                                                    <div
+                                                        class="w-25 px-4 py-2 border"
+                                                    ></div>
+                                                    <div
+                                                        class="w-75 px-4 py-2 border"
+                                                    >
+                                                        <div class="mb-0 p-0">
+                                                            <json-tree
+                                                                :data="
+                                                                    result
+                                                                        .request
+                                                                        .body
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </b-collapse>
+                                            <div
+                                                class="d-flex"
+                                                v-if="
+                                                    !collect(
+                                                        session.components.data
+                                                    )
+                                                        .where(
+                                                            'id',
+                                                            testStep.source.data
+                                                                .id
+                                                        )
+                                                        .count() &&
+                                                    testResultRequestSetups.count()
+                                                "
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    v-b-toggle="
+                                                        `request-overridden-${result.id}`
+                                                    "
+                                                >
+                                                    <strong>Overridden</strong>
+                                                </button>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{
+                                                        `(${testResultRequestSetups.count()}) params`
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <b-collapse
+                                                :id="`request-overridden-${result.id}`"
+                                                v-if="
+                                                    testResultRequestSetups.count()
+                                                "
+                                            >
+                                                <div class="d-flex">
+                                                    <div
+                                                        class="w-25 px-4 py-2 border"
+                                                    ></div>
+                                                    <div
+                                                        class="w-75 px-4 py-2 border"
+                                                    >
+                                                        <div class="mb-0 p-0">
+                                                            <json-tree
+                                                                :data="
+                                                                    testResultRequestSetups.all()
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </b-collapse>
                                         </div>
                                     </div>
                                     <div
-                                        class="d-flex"
-                                        v-if="
-                                            testResult.request.headers !==
-                                            undefined
-                                        "
+                                        class="py-2 px-4"
+                                        v-if="result.response"
                                     >
-                                        <div
-                                            class="w-25 px-4 py-2 border dropdown-toggle"
-                                            v-b-toggle="
-                                                `request-headers-${testResult.id}`
-                                            "
-                                        >
-                                            <strong>Headers</strong>
+                                        <div class="d-flex mb-2">
+                                            <strong
+                                                class="lead d-block mr-auto font-weight-bold"
+                                            >
+                                                Response
+                                            </strong>
                                         </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{
-                                                `(${collect(
-                                                    testResult.request.headers
-                                                ).count()}) params`
-                                            }}
-                                        </div>
-                                    </div>
-                                    <b-collapse
-                                        :id="`request-headers-${testResult.id}`"
-                                        v-if="
-                                            testResult.request.headers !==
-                                            undefined
-                                        "
-                                    >
-                                        <div class="d-flex">
+                                        <div class="border">
+                                            <div class="d-flex">
+                                                <div
+                                                    class="w-25 px-4 py-2 border"
+                                                >
+                                                    <strong>Status</strong>
+                                                </div>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{ result.response.status }}
+                                                </div>
+                                            </div>
                                             <div
-                                                class="w-25 px-4 py-2 border"
-                                            ></div>
-                                            <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0">
-                                                    <json-tree
-                                                        :data="
-                                                            testResult.request
+                                                class="d-flex"
+                                                v-if="
+                                                    result.response.headers !==
+                                                    undefined
+                                                "
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    v-b-toggle="
+                                                        `response-headers-${result.id}`
+                                                    "
+                                                >
+                                                    <strong>Headers</strong>
+                                                </button>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{
+                                                        `(${collect(
+                                                            result.response
                                                                 .headers
-                                                        "
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
+                                                        ).count()}) params`
+                                                    }}
                                                 </div>
                                             </div>
-                                        </div>
-                                    </b-collapse>
-                                    <div
-                                        class="d-flex"
-                                        v-if="
-                                            testResult.request.body !==
-                                                undefined &&
-                                            testResult.request.body !==
-                                                'empty_body'
-                                        "
-                                    >
-                                        <div
-                                            class="w-25 px-4 py-2 border dropdown-toggle"
-                                            v-b-toggle="
-                                                `request-body-${testResult.id}`
-                                            "
-                                        >
-                                            <strong>Body</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{
-                                                `(${collect(
-                                                    testResult.request.body
-                                                ).count()}) params`
-                                            }}
-                                        </div>
-                                    </div>
-                                    <b-collapse
-                                        :id="`request-body-${testResult.id}`"
-                                        v-if="
-                                            testResult.request.body !==
-                                                undefined &&
-                                            testResult.request.body !==
-                                                'empty_body'
-                                        "
-                                    >
-                                        <div class="d-flex">
+                                            <b-collapse
+                                                :id="`response-headers-${result.id}`"
+                                                v-if="
+                                                    result.response.headers !==
+                                                    undefined
+                                                "
+                                            >
+                                                <div class="d-flex">
+                                                    <div
+                                                        class="w-25 px-4 py-2 border"
+                                                    ></div>
+                                                    <div
+                                                        class="w-75 px-4 py-2 border"
+                                                    >
+                                                        <div class="mb-0 p-0">
+                                                            <json-tree
+                                                                :data="
+                                                                    result
+                                                                        .response
+                                                                        .headers
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </b-collapse>
                                             <div
-                                                class="w-25 px-4 py-2 border"
-                                            ></div>
-                                            <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0">
-                                                    <json-tree
-                                                        :data="
-                                                            testResult.request
-                                                                .body
-                                                        "
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
+                                                class="d-flex"
+                                                v-if="
+                                                    result.response.body !==
+                                                        undefined &&
+                                                    result.response.body !==
+                                                        'empty_body'
+                                                "
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    v-b-toggle="
+                                                        `response-body-${result.id}`
+                                                    "
+                                                >
+                                                    <strong>Body</strong>
+                                                </button>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{
+                                                        `(${collect(
+                                                            result.response.body
+                                                        ).count()}) params`
+                                                    }}
                                                 </div>
                                             </div>
-                                        </div>
-                                    </b-collapse>
-                                    <div
-                                        class="d-flex"
-                                        v-if="
-                                            !collect(session.components.data)
-                                                .where(
-                                                    'id',
-                                                    testResult.testStep.data
-                                                        .source.id
-                                                )
-                                                .count() &&
-                                            testResultRequestSetups.count()
-                                        "
-                                    >
-                                        <div
-                                            class="w-25 px-4 py-2 border dropdown-toggle"
-                                            v-b-toggle="
-                                                `request-overridden-${testResult.id}`
-                                            "
-                                        >
-                                            <strong>Overridden</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{
-                                                `(${testResultRequestSetups.count()}) params`
-                                            }}
-                                        </div>
-                                    </div>
-                                    <b-collapse
-                                        :id="`request-overridden-${testResult.id}`"
-                                        v-if="testResultRequestSetups.count()"
-                                    >
-                                        <div class="d-flex">
+                                            <b-collapse
+                                                :id="`response-body-${result.id}`"
+                                                v-if="
+                                                    result.response.body !==
+                                                        undefined &&
+                                                    result.response.body !==
+                                                        'empty_body'
+                                                "
+                                            >
+                                                <div class="d-flex">
+                                                    <div
+                                                        class="w-25 px-4 py-2 border"
+                                                    ></div>
+                                                    <div
+                                                        class="w-75 px-4 py-2 border"
+                                                    >
+                                                        <div class="mb-0 p-0">
+                                                            <json-tree
+                                                                :data="
+                                                                    result
+                                                                        .response
+                                                                        .body
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </b-collapse>
                                             <div
-                                                class="w-25 px-4 py-2 border"
-                                            ></div>
-                                            <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0">
-                                                    <json-tree
-                                                        :data="
-                                                            testResultRequestSetups.all()
-                                                        "
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
+                                                class="d-flex"
+                                                v-if="
+                                                    !collect(
+                                                        session.components.data
+                                                    )
+                                                        .where(
+                                                            'id',
+                                                            testStep.target.data
+                                                                .id
+                                                        )
+                                                        .count() &&
+                                                    testResultResponseSetups.count()
+                                                "
+                                            >
+                                                <button
+                                                    type="button"
+                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    v-b-toggle="
+                                                        `response-overridden-${result.id}`
+                                                    "
+                                                >
+                                                    <strong>Overridden</strong>
+                                                </button>
+                                                <div
+                                                    class="w-75 px-4 py-2 border"
+                                                >
+                                                    {{
+                                                        `(${testResultResponseSetups.count()}) params`
+                                                    }}
                                                 </div>
                                             </div>
-                                        </div>
-                                    </b-collapse>
-                                </div>
-                            </div>
-                            <div class="py-2 px-4" v-if="testResult.response">
-                                <div class="d-flex mb-2">
-                                    <strong
-                                        class="lead d-block mr-auto font-weight-bold"
-                                    >
-                                        Response
-                                    </strong>
-                                </div>
-                                <div class="border">
-                                    <div class="d-flex">
-                                        <div class="w-25 px-4 py-2 border">
-                                            <strong>Status</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{ testResult.response.status }}
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex"
-                                        v-if="
-                                            testResult.response.headers !==
-                                            undefined
-                                        "
-                                    >
-                                        <div
-                                            class="w-25 px-4 py-2 border dropdown-toggle"
-                                            v-b-toggle="
-                                                `response-headers-${testResult.id}`
-                                            "
-                                        >
-                                            <strong>Headers</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{
-                                                `(${collect(
-                                                    testResult.response.headers
-                                                ).count()}) params`
-                                            }}
-                                        </div>
-                                    </div>
-                                    <b-collapse
-                                        :id="`response-headers-${testResult.id}`"
-                                        v-if="
-                                            testResult.response.headers !==
-                                            undefined
-                                        "
-                                    >
-                                        <div class="d-flex">
-                                            <div
-                                                class="w-25 px-4 py-2 border"
-                                            ></div>
-                                            <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0">
-                                                    <json-tree
-                                                        :data="
-                                                            testResult.response
-                                                                .headers
-                                                        "
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
+                                            <b-collapse
+                                                :id="`response-overridden-${result.id}`"
+                                                v-if="
+                                                    testResultResponseSetups.count()
+                                                "
+                                            >
+                                                <div class="d-flex">
+                                                    <div
+                                                        class="w-25 px-4 py-2 border"
+                                                    ></div>
+                                                    <div
+                                                        class="w-75 px-4 py-2 border"
+                                                    >
+                                                        <div class="mb-0 p-0">
+                                                            <json-tree
+                                                                :data="
+                                                                    testResultResponseSetups.all()
+                                                                "
+                                                                :deep="1"
+                                                                :show-line="
+                                                                    false
+                                                                "
+                                                                class="p-2"
+                                                            ></json-tree>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </b-collapse>
-                                    <div
-                                        class="d-flex"
-                                        v-if="
-                                            testResult.response.body !==
-                                                undefined &&
-                                            testResult.response.body !==
-                                                'empty_body'
-                                        "
-                                    >
-                                        <div
-                                            class="w-25 px-4 py-2 border dropdown-toggle"
-                                            v-b-toggle="
-                                                `response-body-${testResult.id}`
-                                            "
-                                        >
-                                            <strong>Body</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{
-                                                `(${collect(
-                                                    testResult.response.body
-                                                ).count()}) params`
-                                            }}
+                                            </b-collapse>
                                         </div>
                                     </div>
-                                    <b-collapse
-                                        :id="`response-body-${testResult.id}`"
-                                        v-if="
-                                            testResult.response.body !==
-                                                undefined &&
-                                            testResult.response.body !==
-                                                'empty_body'
-                                        "
-                                    >
-                                        <div class="d-flex">
-                                            <div
-                                                class="w-25 px-4 py-2 border"
-                                            ></div>
-                                            <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0">
-                                                    <json-tree
-                                                        :data="
-                                                            testResult.response
-                                                                .body
-                                                        "
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </b-collapse>
-                                    <div
-                                        class="d-flex"
-                                        v-if="
-                                            !collect(session.components.data)
-                                                .where(
-                                                    'id',
-                                                    testResult.testStep.data
-                                                        .target.id
-                                                )
-                                                .count() &&
-                                            testResultResponseSetups.count()
-                                        "
-                                    >
-                                        <div
-                                            class="w-25 px-4 py-2 border dropdown-toggle"
-                                            v-b-toggle="
-                                                `response-overridden-${testResult.id}`
-                                            "
-                                        >
-                                            <strong>Overridden</strong>
-                                        </div>
-                                        <div class="w-75 px-4 py-2 border">
-                                            {{
-                                                `(${testResultResponseSetups.count()}) params`
-                                            }}
-                                        </div>
-                                    </div>
-                                    <b-collapse
-                                        :id="`response-overridden-${testResult.id}`"
-                                        v-if="testResultResponseSetups.count()"
-                                    >
-                                        <div class="d-flex">
-                                            <div
-                                                class="w-25 px-4 py-2 border"
-                                            ></div>
-                                            <div class="w-75 px-4 py-2 border">
-                                                <div class="mb-0 p-0">
-                                                    <json-tree
-                                                        :data="
-                                                            testResultResponseSetups.all()
-                                                        "
-                                                        :deep="1"
-                                                        :show-line="false"
-                                                        class="p-2"
-                                                    ></json-tree>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </b-collapse>
-                                </div>
-                            </div>
+                                </b-tab>
+                            </b-tabs>
                         </div>
                     </div>
                 </div>
@@ -825,6 +938,10 @@ export default {
             type: Object,
             required: true,
         },
+        testStep: {
+            type: Object,
+            required: true,
+        },
         testSteps: {
             type: Object,
             required: true,
@@ -833,12 +950,8 @@ export default {
             type: Object,
             required: true,
         },
-        testResult: {
-            type: Object,
-            required: true,
-        },
-        testStepFirstSource: {
-            type: Object,
+        testResults: {
+            type: Array,
             required: true,
         },
         isAvailableRun: {
@@ -853,7 +966,7 @@ export default {
             handler() {
                 if (!this.testRun.completed_at) {
                     setTimeout(() => {
-                        this.$inertia.reload(['testRun', 'testResult']);
+                        this.$inertia.reload(['testRun', 'testResults']);
                     }, 2000);
                 }
             },
@@ -867,7 +980,8 @@ export default {
         },
         testResultRequestSetups() {
             let data = collect();
-            collect(this.testResult.testStep.data.testSetups)
+            if (!this.testResults.length > 0) return data;
+            collect(this.testStep.testSetups)
                 .where('type', 'request')
                 .each((item) => {
                     data = data.mergeRecursive(item.values);
@@ -876,7 +990,8 @@ export default {
         },
         testResultResponseSetups() {
             let data = collect();
-            collect(this.testResult.testStep.data.testSetups)
+            if (!this.testResults.length > 0) return data;
+            collect(this.testStep.testSetups)
                 .where('type', 'response')
                 .each((item) => {
                     data = data.mergeRecursive(item.values);

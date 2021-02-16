@@ -26,6 +26,9 @@
             "test-scripts": {
                 "request": "Test Request Scripts",
                 "response": "Test Response Scripts",
+                "repeat": {
+                    "response": "Repeat Test Response Scripts"
+                },
                 "form": {
                     "inputs": {
                         "name": "Name",
@@ -45,19 +48,32 @@
             "request": {
                 "headers": "Request Headers",
                 "body": "Request Body",
-                "jws": "Request Jws",
+                "jws": "Request JWS",
                 "uri": "Request URI",
                 "delay": "Request Delay"
             },
             "response": {
                 "headers": "Response Headers",
                 "body": "Response Body",
-                "jws": "Response Jws",
+                "jws": "Response JWS",
                 "status": {
                     "label": "Response Status",
                     "placeholder": "Select status"
                 },
                 "delay": "Response Delay"
+            },
+            "repeat": {
+                "condition": "Repeat Condition",
+                "count": "Repeat Count",
+                "max": "Repeat Max Count",
+                "response": {
+                    "headers": "Repeat Response Headers",
+                    "body": "Repeat Response Body",
+                    "status": {
+                        "label": "Repeat Response Status",
+                        "placeholder": "Select status"
+                    }
+                }
             }
         },
         "buttons": {
@@ -65,7 +81,6 @@
             "cancel": "Cancel"
         }
     },
-
     "ru": {
         "card": {
             "title": "Создать"
@@ -93,6 +108,9 @@
             "test-scripts": {
                 "request": "Скрипты Тестового Запроса",
                 "response": "Скрипты Тестового Ответа",
+                "repeat": {
+                    "response": "Повторение Скриптов Тестового Ответа"
+                },
                 "form": {
                     "inputs": {
                         "name": "Имя",
@@ -108,7 +126,7 @@
                     }
                 }
             },
-            "empty-body": "Пустое Тело",
+            "empty-body": "Отсутствует",
             "request": {
                 "headers": "Заголовки Запроса",
                 "body": "Тело Запроса",
@@ -125,6 +143,19 @@
                     "placeholder": "Выберите статус"
                 },
                 "delay": "Задержка Ответа"
+            },
+            "repeat": {
+                "condition": "Условие Повторений",
+                "count": "Количество Повторений",
+                "max": "Максимальное Количество Повторений",
+                "response": {
+                    "headers": "Заголовки Ответа Повторений",
+                    "body": "Тело Ответа Повторений",
+                    "status": {
+                        "label": "Статус Ответа Повторений",
+                        "placeholder": "Выберите статус"
+                    }
+                }
             }
         },
         "buttons": {

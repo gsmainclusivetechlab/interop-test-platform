@@ -1,0 +1,22 @@
+.pagination {
+  &__navigation {
+    position: relative;
+    .input-group {
+      z-index: 1;
+    }
+    .form-control {
+      width: 5rem;
+      &.is-invalid {
+        padding-right: 0.75rem;
+      }
+    }
+    .badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: $primary;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+  }
+}

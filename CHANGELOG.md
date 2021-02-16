@@ -1,3 +1,24 @@
+## v1.5
+
+-   Task: Show Reset Button as soon as default test case selection is changed
+    [@dsymonov-jc]
+-   Task: Update psr7-validator to the newest version [@jc-skushnir]
+-   Task: Message log -> pagination looks broken if too many pages there
+    [@dsymonov-jc]
+-   Task: Message log no longer identifies session/component IDs [@dsymonov-jc]
+-   Task: Edit in the 3 dots options for a session [@dsymonov-jc]
+-   Task: Twig template is not being resolved on UI examples [@jc-skushnir]
+-   Task: Allow Deleting or Replacing Certificates [@KolyaSirik]
+-   Task: Remove platform Component definitions [@KolyaSirik]
+-   Task: Component Versioning [@KolyaSirik]
+-   Task: Allow variable numbers of requests in a test case [@jc-skushnir]
+-   Task: Verify ILP Packet [@KolyaSirik]
+-   Task: Uploading an API Spec breaks compared to seeding it at install time
+    [@jc-skushnir]
+-   Task: HTML code in ITP-simulated responses [@KolyaSirik]
+-   Task: Allow Viewing Read-only Test Steps without creating draft
+    [@jc-skushnir,@dsymonov-jc]
+
 ## v1.4
 
 -   Task: Control Available Session Modes [@KolyaSirik,@Kassaila]

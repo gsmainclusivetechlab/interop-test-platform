@@ -68,7 +68,7 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
                 json_encode($data['body'])
             ),
             $data['jws'],
-            $data['delay'],
+            $data['delay']
         );
     }
 
@@ -90,7 +90,7 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
                 json_encode($data['body'])
             ),
             $data['jws'],
-            $data['delay'],
+            $data['delay']
         );
     }
 

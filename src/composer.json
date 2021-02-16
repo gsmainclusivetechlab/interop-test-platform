@@ -17,7 +17,7 @@
         "laravel/legacy-factories": "^1.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
-        "league/openapi-psr7-validator": "^0.7.0",
+        "league/openapi-psr7-validator": "^0.15.2",
         "nyholm/psr7": "^1.2",
         "phpoffice/phpword": "^0.17.0",
         "phpunit/phpunit": "^9.1",
