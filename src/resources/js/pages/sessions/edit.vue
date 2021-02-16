@@ -404,10 +404,7 @@
                                 <label>
                                     <b>Environments</b>
                                 </label>
-                                <environments
-                                    v-model="form.environments"
-                                    ref="environments"
-                                />
+                                <environments v-model="form.environments" />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.environments"
@@ -421,9 +418,9 @@
                                 <label class="col-sm-3">
                                     <b>File environments</b>
                                 </label>
-                                <file-environments
+                                <environments
                                     v-model="form.fileEnvironments"
-                                    ref="fileEnvironments"
+                                    envs-type="file"
                                 />
                                 <div
                                     class="text-danger small mt-2"
@@ -482,8 +479,7 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/app';
-import Environments from '@/components/environments/environments';
-import FileEnvironments from '@/components/environments/file-environments';
+import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 import mixinVSelect from '@/components/v-select/mixin';
 
@@ -491,7 +487,6 @@ export default {
     components: {
         Layout,
         Environments,
-        FileEnvironments,
         TestCaseCheckboxes,
     },
     props: {
@@ -526,11 +521,16 @@ export default {
             groupCertificatesList: [],
             selectedCertificates: {},
             form: {
-                _method: 'PUT',
                 name: this.session.name,
                 description: this.session.description,
-                environments: this.session.environments,
-                fileEnvironments: this.session.fileEnvironments,
+                environments: Object.entries(
+                    this.session.environments
+                )?.map(([key, value]) => ({ key: key, value: value })),
+                fileEnvironments: this.session.fileEnvironments?.map((el) => ({
+                    key: el.name,
+                    value: el.id,
+                    file_name: el.file_name,
+                })),
                 components:
                     Object.fromEntries(
                         this.components.data?.map((el) => [el.id, el])
@@ -567,10 +567,21 @@ export default {
     },
     methods: {
         submit() {
+            const form = {
+                _method: 'PUT',
+                name: this.form.name,
+                description: this.form.description,
+                environments: this.session.environments,
+                fileEnvironments: this.session.fileEnvironments,
+                components: this.form.components,
+                certificates: this.form.certificates,
+                test_cases: this.form.test_cases,
+            };
+
             this.sending = true;
             this.$inertia.post(
                 route('sessions.update', this.session.id),
-                serialize(this.form, {
+                serialize(form, {
                     indices: true,
                     booleansAsIntegers: true,
                 }),
@@ -631,7 +642,6 @@ export default {
                 value.variables,
                 this.form.environments
             );
-            this.$refs.environments.syncEnvironments(this.form.environments);
         },
     },
 };

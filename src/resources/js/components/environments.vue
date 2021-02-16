@@ -24,6 +24,7 @@
                     "
                 />
                 <input
+                    v-if="envsType === 'text'"
                     v-model="environment.value"
                     type="text"
                     placeholder="Value"
@@ -32,6 +33,22 @@
                         'is-invalid': environment.error,
                     }"
                 />
+                <template v-else-if="envsType === 'file'">
+                    <input
+                        v-if="environment.file_name"
+                        v-model="environment.file_name"
+                        type="text"
+                        placeholder="Value"
+                        readonly
+                        class="form-control"
+                    />
+                    <b-form-file
+                        v-else
+                        v-model="environment.value"
+                        placeholder="Choose file..."
+                        class="form-control border-0"
+                    />
+                </template>
                 <button
                     type="button"
                     class="btn btn-icon"
@@ -64,25 +81,72 @@
 </template>
 
 <script>
-import mixin from '@/components/environments/mixin';
 export default {
     props: {
         value: {
-            type: Object | Array,
+            type: Array,
             required: false,
+            default: [],
+        },
+        envsType: {
+            type: String,
+            required: false,
+            default: 'text',
         },
     },
-    mixins: [mixin],
+    data() {
+        return {
+            environments: this.value,
+        };
+    },
+    watch: {
+        environments: {
+            deep: true,
+            handler(value) {
+                this.emitEnvironments(value);
+            },
+        },
+    },
     methods: {
         syncEnvironments(value) {
             this.environments.splice(0, this.environments.length, ...value);
+        },
+        emitEnvironments(value) {
+            if (value.find((el) => el.error !== null)) return;
 
-            // for (let key in value) {
-            //     this.environments.push({
-            //         key: key,
-            //         value: value[key],
-            //     });
-            // }
+            this.$emit('input', value);
+        },
+        addEnvironment() {
+            this.environments.push({ key: '', value: null, error: null });
+        },
+        deleteEnvironment(index) {
+            this.environments.splice(index, 1);
+        },
+        setKey(val, environment, index) {
+            if (environment.error) environment.error = null;
+
+            environment.key = val;
+
+            switch (this.checkKey(val, index)) {
+                case 'duplicated':
+                    environment.error = 'Duplicated key';
+                    break;
+                case 'empty':
+                    environment.error = 'Empty key';
+                    break;
+                default:
+                    break;
+            }
+        },
+        checkKey(key, index) {
+            if (
+                this.environments.some((el, i) => el.key === key && index !== i)
+            ) {
+                return 'duplicated';
+            }
+            if (key === null || key === undefined || key === '') {
+                return 'empty';
+            }
         },
     },
 };

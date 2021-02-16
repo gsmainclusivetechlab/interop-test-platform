@@ -8,9 +8,9 @@
                         <button
                             type="button"
                             class="btn btn-primary"
-                            @click="getTestCaseEnv"
+                            @click="loadTestCaseEnvs"
                         >
-                            Get Test Cases Env
+                            Load environments
                         </button>
                     </div>
                 </div>
@@ -43,9 +43,11 @@
                     />
                 </div>
 
-                <div class="card-body" v-if="suts.data && suts.data.length">
+                <div v-if="suts.data && suts.data.length > 0" class="card-body">
                     <template
-                        v-if="form.groupsDefault && form.groupsDefault.length"
+                        v-if="
+                            form.groupsDefault && form.groupsDefault.length > 0
+                        "
                     >
                         <template v-for="(group, k) in form.groupsDefault">
                             <h3 class="text-secondary mb-3" :key="`name-${k}`">
@@ -108,7 +110,10 @@
                         </template>
                     </template>
                     <template
-                        v-if="!form.groupsDefault || !form.groupsDefault.length"
+                        v-if="
+                            !form.groupsDefault ||
+                            !form.groupsDefault.length > 0
+                        "
                     >
                         <template v-for="(sut, i) in suts.data">
                             <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
@@ -174,10 +179,7 @@
                             "
                             class="form-control d-flex p-0 mb-3"
                         />
-                        <environments
-                            v-model="form.environments"
-                            ref="environments"
-                        />
+                        <environments v-model="form.environments" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.props.errors.environments"
@@ -189,9 +191,9 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label"> File Environments </label>
-                        <file-environments
+                        <environments
                             v-model="form.fileEnvironments"
-                            ref="fileEnvironments"
+                            envs-type="file"
                         />
                         <div
                             class="text-danger small mt-2"
@@ -226,15 +228,13 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
-import Environments from '@/components/environments/environments';
-import FileEnvironments from '@/components/environments/file-environments';
+import Environments from '@/components/environments';
 import mixinVSelect from '@/components/v-select/mixin';
 
 export default {
     components: {
         Layout,
         Environments,
-        FileEnvironments,
     },
     props: {
         session: {
@@ -266,18 +266,13 @@ export default {
         return {
             ziggyConf,
             sending: false,
-            testCaseEnv: {
-                env: [],
-                fileEnv: [],
-            },
             groupEnvironment: null,
             groupEnvironmentsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
-                group_environment_id: null,
                 environments: [],
                 groupsDefault: null,
-                fileEnvironments: null,
+                fileEnvironments: [],
             },
         };
     },
@@ -285,75 +280,38 @@ export default {
         groupEnvironment: {
             immediate: true,
             handler(value) {
-                this.form.group_environment_id = value?.id ?? null;
                 if (value !== null) {
-                    this.form.environments = value.variables;
-                    this.$refs.environments.syncEnvironments(
-                        this.form.environments
-                    );
+                    // this.form.environments = value.variables;
 
-                    this.form.fileEnvironments = value.files;
-                    this.$refs.fileEnvironments.syncEnvironments(
-                        this.form.fileEnvironments
-                    );
+                    // this.form.fileEnvironments = value.files;
+                    console.log(value);
                 }
             },
         },
     },
     mounted() {
         this.loadGroupEnvironmentList();
+        this.loadTestCaseEnvs();
     },
     methods: {
-        log(val) {
-            console.log(val);
-        },
-        getTestCaseEnv() {
-            axios
-                .post(route('admin.test-cases.environment-candidates'), {
-                    testCasesIds: this.$page.props.session.info.test_cases,
-                })
-                .then((data) => {
-                    if (data.data?.env?.length) {
-                        console.log(
-                            typeof data.data.env,
-                            Array.isArray(data.data.env)
-                        );
-                        data.data.env
-                            .filter(
-                                (param) =>
-                                    !this.form.environments.some(
-                                        (el) => el.key === param
-                                    )
-                            )
-                            .forEach((param) =>
-                                this.form.environments.push({
-                                    key: param,
-                                    value: null,
-                                })
-                            );
-                    }
-                    if (data.data?.file_env?.length) {
-                        this.testCaseEnv.fileEnv = data.data.file_env;
-                        this.form.fileEnvironments = Object.assign(
-                            {},
-                            this.testCaseEnv.fileEnv.map((param) => ({
-                                name: param,
-                                id: null,
-                                value: null,
-                            })),
-                            this.form.fileEnvironments
-                        );
-                        this.$refs.fileEnvironments.syncEnvironments(
-                            this.form.fileEnvironments
-                        );
-                    }
-                });
-        },
         submit() {
+            const form = {
+                environments: Object.fromEntries(
+                    this.form.environments.map((el) => [el.key, el.value])
+                ),
+                fileEnvironments: Object.fromEntries(
+                    this.form.fileEnvironments.map((el) => [el.key, el.value])
+                ),
+                group_environment_id: null,
+                groupsDefault: null,
+            };
+
+            // console.log(form);
+
             this.sending = true;
             this.$inertia.post(
                 route('sessions.register.config.store'),
-                serialize(this.form, {
+                serialize(form, {
                     indices: true,
                 }),
                 {
@@ -370,6 +328,45 @@ export default {
                 })
                 .then((result) => {
                     this.groupEnvironmentsList = result.data.data;
+                });
+        },
+        loadTestCaseEnvs() {
+            axios
+                .post(route('admin.test-cases.environment-candidates'), {
+                    testCasesIds: this.$page.props.session.info.test_cases,
+                })
+                .then((data) => {
+                    if (data.data?.env?.length) {
+                        data.data.env
+                            .filter(
+                                (param) =>
+                                    !this.form.environments.some(
+                                        (el) => el.key === param
+                                    )
+                            )
+                            .forEach((param) =>
+                                this.form.environments.push({
+                                    key: param,
+                                    value: null,
+                                })
+                            );
+                    }
+                    if (data.data?.file_env?.length) {
+                        data.data.file_env
+                            .filter(
+                                (param) =>
+                                    !this.form.fileEnvironments.some(
+                                        (el) => el.key === param
+                                    )
+                            )
+                            .forEach((param) =>
+                                this.form.fileEnvironments.push({
+                                    key: param,
+                                    value: null,
+                                    file_name: null,
+                                })
+                            );
+                    }
                 });
         },
         getRoute(useEncryption, data, isForGroup = false) {

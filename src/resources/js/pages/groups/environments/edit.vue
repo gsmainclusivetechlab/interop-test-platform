@@ -44,7 +44,10 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Files </label>
-                                <file-environments v-model="form.files" />
+                                <environments
+                                    v-model="form.files"
+                                    envs-type="file"
+                                />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.files"
@@ -82,8 +85,7 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
-import Environments from '@/components/environments/environments';
-import FileEnvironments from '@/components/environments/file-environments';
+import Environments from '@/components/environments';
 
 export default {
     metaInfo() {
@@ -94,7 +96,6 @@ export default {
     components: {
         Layout,
         Environments,
-        FileEnvironments,
     },
     props: {
         group: {
@@ -110,22 +111,38 @@ export default {
         return {
             sending: false,
             form: {
-                _method: 'PUT',
                 name: this.environment.name,
-                variables: this.environment.variables,
-                files: this.environment.files,
+                variables: Object.entries(
+                    this.environment.variables
+                )?.map(([key, value]) => ({ key: key, value: value })),
+                files: this.environment.files?.map((el) => ({
+                    key: el.name,
+                    value: el.id,
+                    file_name: el.file_name,
+                })),
             },
         };
     },
     methods: {
         submit() {
+            const form = {
+                _method: 'PUT',
+                name: this.form.name,
+                variables: Object.fromEntries(
+                    this.form.variables.map((el) => [el.key, el.value])
+                ),
+                files: Object.fromEntries(
+                    this.form.files.map((el) => [el.key, el.value])
+                ),
+            };
+
             this.sending = true;
             this.$inertia.post(
                 route('groups.environments.update', [
                     this.group,
                     this.environment,
                 ]),
-                serialize(this.form, {
+                serialize(form, {
                     indices: true,
                 }),
                 {
