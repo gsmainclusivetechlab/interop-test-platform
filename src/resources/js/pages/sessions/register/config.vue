@@ -4,15 +4,6 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Configure components</h3>
-                    <div class="card-options">
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            @click="loadTestCaseEnvs"
-                        >
-                            Load environments
-                        </button>
-                    </div>
                 </div>
                 <div class="card-body" v-if="groupsDefaultList.length">
                     <label class="form-label">Group Default Sessions</label>
@@ -43,11 +34,9 @@
                     />
                 </div>
 
-                <div v-if="suts.data && suts.data.length > 0" class="card-body">
+                <div v-if="suts.data && suts.data.length" class="card-body">
                     <template
-                        v-if="
-                            form.groupsDefault && form.groupsDefault.length > 0
-                        "
+                        v-if="form.groupsDefault && form.groupsDefault.length"
                     >
                         <template v-for="(group, k) in form.groupsDefault">
                             <h3 class="text-secondary mb-3" :key="`name-${k}`">
@@ -110,10 +99,7 @@
                         </template>
                     </template>
                     <template
-                        v-if="
-                            !form.groupsDefault ||
-                            !form.groupsDefault.length > 0
-                        "
+                        v-if="!form.groupsDefault || !form.groupsDefault.length"
                     >
                         <template v-for="(sut, i) in suts.data">
                             <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
@@ -164,21 +150,44 @@
                         </template>
                     </template>
                 </div>
+                <div v-if="hasGroupEnvironments" class="card-body">
+                    <label class="form-label">Group environments</label>
+                    <v-select
+                        v-model="groupEnvs"
+                        multiple
+                        :options="groupEnvsList"
+                        label="name"
+                        placeholder="Group environment..."
+                        :selectable="
+                            (option) => isSelectable(option, groupEnvs)
+                        "
+                        class="form-control d-flex p-0 mb-3"
+                    />
+                    <div class="text-right">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="mergeGroupEnvs"
+                        >
+                            Load
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Test cases environments</label>
+                    <div class="text-right">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="loadTestCaseEnvs"
+                        >
+                            Update
+                        </button>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Environments</label>
-                        <v-select
-                            v-if="hasGroupEnvironments"
-                            v-model="groupEnvironment"
-                            :options="groupEnvironmentsList"
-                            label="name"
-                            placeholder="Group environment..."
-                            :selectable="
-                                (option) =>
-                                    isSelectable(option, groupEnvironment)
-                            "
-                            class="form-control d-flex p-0 mb-3"
-                        />
                         <environments v-model="form.environments" />
                         <div
                             class="text-danger small mt-2"
@@ -266,31 +275,22 @@ export default {
         return {
             ziggyConf,
             sending: false,
-            groupEnvironment: null,
-            groupEnvironmentsList: [],
+            testCasesEnvs: {
+                variables: [],
+                files: [],
+            },
+            groupEnvs: null,
+            groupEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 environments: [],
-                groupsDefault: null,
                 fileEnvironments: [],
+                groupsDefault: null,
             },
         };
     },
-    watch: {
-        groupEnvironment: {
-            immediate: true,
-            handler(value) {
-                if (value !== null) {
-                    // this.form.environments = value.variables;
-
-                    // this.form.fileEnvironments = value.files;
-                    console.log(value);
-                }
-            },
-        },
-    },
     mounted() {
-        this.loadGroupEnvironmentList();
+        this.loadGroupEnvsList();
         this.loadTestCaseEnvs();
     },
     methods: {
@@ -302,7 +302,6 @@ export default {
                 fileEnvironments: Object.fromEntries(
                     this.form.fileEnvironments.map((el) => [el.key, el.value])
                 ),
-                group_environment_id: null,
                 groupsDefault: null,
             };
 
@@ -321,13 +320,13 @@ export default {
                 }
             );
         },
-        loadGroupEnvironmentList(query = '') {
+        loadGroupEnvsList(query = '') {
             axios
                 .get(route('sessions.register.group-environment-candidates'), {
                     params: { q: query },
                 })
                 .then((result) => {
-                    this.groupEnvironmentsList = result.data.data;
+                    this.groupEnvsList = result.data.data;
                 });
         },
         loadTestCaseEnvs() {
@@ -337,37 +336,75 @@ export default {
                 })
                 .then((data) => {
                     if (data.data?.env?.length) {
-                        data.data.env
-                            .filter(
-                                (param) =>
-                                    !this.form.environments.some(
-                                        (el) => el.key === param
-                                    )
-                            )
-                            .forEach((param) =>
-                                this.form.environments.push({
-                                    key: param,
-                                    value: null,
-                                })
-                            );
+                        const variables = Object.fromEntries(
+                            data.data.env.map((key) => [key, null])
+                        );
+
+                        this.mergeEnvs(
+                            variables,
+                            this.form.environments,
+                            'text'
+                        );
                     }
                     if (data.data?.file_env?.length) {
-                        data.data.file_env
-                            .filter(
-                                (param) =>
-                                    !this.form.fileEnvironments.some(
-                                        (el) => el.key === param
-                                    )
-                            )
-                            .forEach((param) =>
-                                this.form.fileEnvironments.push({
-                                    key: param,
-                                    value: null,
-                                    file_name: null,
-                                })
-                            );
+                        const files = data.data.file_env.map((key) => ({
+                            name: key,
+                            value: null,
+                            file_name: null,
+                        }));
+
+                        this.mergeEnvs(
+                            files,
+                            this.form.fileEnvironments,
+                            'file'
+                        );
                     }
                 });
+        },
+        mergeGroupEnvs() {
+            if (!this.groupEnvs?.length) return;
+
+            this.groupEnvs.forEach((env) => {
+                this.mergeEnvs(env.variables, this.form.environments, 'text');
+                this.mergeEnvs(env.files, this.form.fileEnvironments, 'file');
+            });
+        },
+        mergeEnvs(incomingEnvs, currentEnvs, envsType) {
+            switch (envsType) {
+                case 'text': {
+                    Object.entries(incomingEnvs)
+                        .filter(
+                            ([key, value]) =>
+                                !currentEnvs.some((el) => el.key === key)
+                        )
+                        .forEach(([key, value]) =>
+                            currentEnvs.push({
+                                key: key,
+                                value: value,
+                            })
+                        );
+                    break;
+                }
+                case 'file': {
+                    incomingEnvs
+                        .filter(
+                            (incom) =>
+                                !currentEnvs.some(
+                                    (current) => current.key === incom.name
+                                )
+                        )
+                        .forEach((incom) =>
+                            currentEnvs.push({
+                                key: incom.name,
+                                value: incom.id,
+                                file_name: incom.file_name,
+                            })
+                        );
+                    break;
+                }
+                default:
+                    break;
+            }
         },
         getRoute(useEncryption, data, isForGroup = false) {
             const group = isForGroup ? '-group' : '';
