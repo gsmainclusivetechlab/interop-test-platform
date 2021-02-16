@@ -24,9 +24,8 @@ use GuzzleHttp\Psr7\Response as PsrResponse;
 */
 
 $factory->define(TestStep::class, function (Faker $faker) {
-    $componentWithConnection = factory(Component::class)
-        ->state('withConnection')
-        ->create();
+    $sourceComponent = factory(Component::class)->create();
+    $targetComponent = factory(Component::class)->create();
 
     return [
         'test_case_id' => function () {
@@ -39,11 +38,8 @@ $factory->define(TestStep::class, function (Faker $faker) {
                 ->create()
                 ->getKey();
         },
-        'source_id' => $componentWithConnection->getKey(),
-        'target_id' => $componentWithConnection
-            ->connections()
-            ->first()
-            ->getKey(),
+        'source_id' => $sourceComponent->getKey(),
+        'target_id' => $targetComponent->getKey(),
         'path' => $faker->text,
         'method' => $faker->text,
         'pattern' => $faker->text,

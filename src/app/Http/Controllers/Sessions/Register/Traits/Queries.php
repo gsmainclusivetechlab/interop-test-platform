@@ -67,7 +67,7 @@ trait Queries
     {
         $testComponentsQuery = function ($query) {
             $query->whereHas('testCases', function (Builder $query) {
-                $query->whereIn('id', session('session.info.test_cases'));
+                $query->whereIn('id', session('session.info.test_cases', [0]));
             });
         };
 

@@ -94,23 +94,99 @@ class IlpPacket extends AbstractExtension
         return $typeB . $contentB;
     }
 
-    public static function validateIlpPacket(
+    public static function validateIlpPacketAmount(
         string $ilpPacket,
         array $parameters,
         array $requestData
     ): bool {
         $transactionObject = static::decodeIlpPacket($ilpPacket);
 
-        $amountKey = 'body.' . Arr::get($parameters, 0, 'amount.amount');
+        $amountKey = Arr::get($parameters, 0, 'body.amount.amount');
+        $amount = Arr::get($requestData, $amountKey, $amountKey);
+        $ilpAmount = Arr::get($transactionObject, 'packet.amount');
 
-        if (
-            Arr::get($requestData, $amountKey) !=
-            Arr::get($transactionObject, 'packet.amount')
-        ) {
-            throw new Exception(__('Amounts not equal'));
+        if ($amount != $ilpAmount) {
+            static::throwException(
+                'Amounts are not equal',
+                $amount,
+                $ilpAmount
+            );
         }
 
         return true;
+    }
+
+    public static function validateIlpPacketDestination(
+        string $ilpPacket,
+        array $parameters
+    ): bool {
+        $transactionObject = static::decodeIlpPacket($ilpPacket);
+
+        $destination = Arr::get($parameters, 0);
+        $ilpDestination = Arr::get($transactionObject, 'packet.destination');
+
+        if ($destination != $ilpDestination) {
+            static::throwException(
+                'Destinations are not equal',
+                $destination,
+                $ilpDestination
+            );
+        }
+
+        return true;
+    }
+
+    public static function validateIlpPacketCondition(
+        string $ilpPacket,
+        array $parameters,
+        array $requestData
+    ): bool {
+        $transactionObject = static::decodeIlpPacket($ilpPacket);
+
+        $conditionKey = Arr::get($parameters, 0, 'body.condition');
+        $condition = Arr::get($requestData, $conditionKey, $conditionKey);
+        $ilpCondition = Arr::get($transactionObject, 'packet.condition');
+
+        if (!hash_equals(Base64::base64url_decode($condition), $ilpCondition)) {
+            static::throwException(
+                'Conditions are not equal',
+                $condition,
+                Base64::base64url_encode($ilpCondition)
+            );
+        }
+
+        return true;
+    }
+
+    public static function validateIlpPacketExpiration(
+        string $ilpPacket,
+        array $parameters,
+        array $requestData
+    ): bool {
+        $transactionObject = static::decodeIlpPacket($ilpPacket);
+
+        $expirationKey = Arr::get($parameters, 0, 'body.expiration');
+        $expiration = Carbon::create(
+            Arr::get($requestData, $expirationKey, $expirationKey)
+        );
+        $ilpExpiration = Arr::get($transactionObject, 'packet.expiresAt');
+
+        if (!$expiration || !$expiration->eq($ilpExpiration)) {
+            static::throwException(
+                'Expirations are not equal',
+                $expiration->toRfc3339String(true),
+                $ilpExpiration->toRfc3339String(true)
+            );
+        }
+
+        return true;
+    }
+
+    protected static function throwException($error, $compared, $ilpValue)
+    {
+        throw new Exception(
+            __("{$error}. Compared value: {$compared}. ILP value: {$ilpValue}")
+        );
     }
 
     protected static function decodeIlpPacket(string $inputIlpPacket): array

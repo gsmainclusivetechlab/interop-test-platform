@@ -11,6 +11,14 @@ use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /** @var string[] */
+    protected $ilpValidatorsMap = [
+        'ilpPacketAmount' => 'validateIlpPacketAmount',
+        'ilpPacketDestination' => 'validateIlpPacketDestination',
+        'ilpPacketCondition' => 'validateIlpPacketCondition',
+        'ilpPacketExpiration' => 'validateIlpPacketExpiration',
+    ];
+
     /**
      * @return void
      */
@@ -23,18 +31,7 @@ class AppServiceProvider extends ServiceProvider
             'session' => Session::class,
         ]);
 
-        Validator::extend('ilpPacket', function (
-            $attribute,
-            $value,
-            $parameters,
-            $validator
-        ) {
-            return IlpPacket::validateIlpPacket(
-                $value,
-                $parameters,
-                $validator->getData()
-            );
-        });
+        $this->registerValidators();
     }
 
     /**
@@ -44,5 +41,23 @@ class AppServiceProvider extends ServiceProvider
     {
         TestRun::observe(TestRunObserver::class);
         TestResult::observe(TestResultObserver::class);
+    }
+
+    protected function registerValidators()
+    {
+        foreach ($this->ilpValidatorsMap as $validatorName => $function) {
+            Validator::extend($validatorName, function (
+                $attribute,
+                $value,
+                $parameters,
+                $validator
+            ) use ($function) {
+                return IlpPacket::$function(
+                    $value,
+                    $parameters,
+                    $validator->getData()
+                );
+            });
+        }
     }
 }
