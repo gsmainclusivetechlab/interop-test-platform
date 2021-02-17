@@ -167,11 +167,10 @@ class TwigSubstitution
                         [$component->slug, $connection->slug, $session->uuid],
                         false
                     );
-                    $connectionUrls[$component->slug][
-                        $connection->slug
-                    ] = $secure
-                        ? route('home') . $urn
-                        : config('app.http_base_url') . $urn;
+                    $connectionUrls[$component->slug][$connection->slug] =
+                        ($secure
+                            ? config('app.testing_url_https')
+                            : config('app.testing_url_http')) . $urn;
                 }
 
                 return $connectionUrls;

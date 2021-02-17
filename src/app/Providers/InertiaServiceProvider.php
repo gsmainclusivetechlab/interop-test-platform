@@ -54,7 +54,8 @@ class InertiaServiceProvider extends ServiceProvider
                         'supported' => config('app.locales'),
                     ],
                     'cookies_accepted' => request()->cookie('cookies_accepted'),
-                    'http_base_url' => config('app.http_base_url'),
+                    'testing_url_http' => config('app.testing_url_http'),
+                    'testing_url_https' => config('app.testing_url_https'),
                     'available_session_modes_count' => collect(
                         config('service_session.available_modes')
                     )
