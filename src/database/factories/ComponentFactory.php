@@ -18,18 +18,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Component::class, function (Faker $faker) {
     return [
-        'name' => $faker->text,
-        'base_url' => $faker->url,
-        'description' => $faker->text,
+        'slug' => $faker->slug,
     ];
-});
-
-$factory->afterCreatingState(Component::class, 'withConnection', function (
-    Component $component
-) {
-    $component->connections()->attach(
-        factory(Component::class)
-            ->create()
-            ->getKey()
-    );
 });

@@ -79,38 +79,28 @@
             </div>
             <div class="card-body p-0">
                 <div class="p-4">
-                    <diagram>
-                        graph LR;
+                    <diagram :key="testStep.id">
+                        {{ `graph LR;` }}
                         <template v-for="component in components.data">
-                            {{ component.id }}({{ component.name }})<template
-                                v-if="
-                                    collect(session.components.data).contains(
-                                        'id',
-                                        component.id
-                                    )
-                                "
-                                >:::is-active</template
-                            ><template v-else></template>;
+                            {{
+                                `${component.id}(${component.name})` +
+                                (collect(session.components.data).contains(
+                                    'id',
+                                    component.id
+                                )
+                                    ? ':::is-active;'
+                                    : ';')
+                            }}
                             <template
                                 v-for="connection in component.connections"
                             >
-                                {{ component.id }}
-                                -->
-                                <template
-                                    v-if="
-                                        testStep &&
-                                        component.id ==
-                                            testStep.source.data.id &&
-                                        connection.id == testStep.target.data.id
-                                    "
-                                >
-                                    {{
-                                        `|Step ${testStep.position}| ${connection.id};`
-                                    }}
-                                </template>
-                                <template v-else>
-                                    {{ connection.id }};
-                                </template>
+                                {{
+                                    `${component.id} --> ` +
+                                    (component.id == testStep.source.data.id &&
+                                    connection.id == testStep.target.data.id
+                                        ? `|Step ${testStep.position}| ${connection.id};`
+                                        : `${connection.id};`)
+                                }}
                             </template>
                         </template>
                     </diagram>

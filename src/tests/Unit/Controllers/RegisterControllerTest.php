@@ -33,36 +33,6 @@ class RegisterControllerTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertSessionHas('session.type');
-        $response->assertRedirect(route('sessions.register.sut'));
-    }
-
-    public function testRegisterControllerShowSutForm()
-    {
-        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
-
-        $response = $this->actingAs($user)->get(route('sessions.register.sut'));
-
-        // TODO - add inertia tests
-        $response->assertStatus(200);
-    }
-
-    public function testRegisterControllerStoreSut()
-    {
-        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
-        $component = factory(Component::class)
-            ->create()
-            ->getKey();
-        $this->assertIsInt($component);
-        $response = $this->actingAs($user)->post(
-            route('sessions.register.sut.store'),
-            [
-                'base_url' => 'http://test.com',
-                'component_id' => $component,
-            ]
-        );
-
-        $response->assertStatus(302);
-        $response->assertSessionHas('session.sut');
         $response->assertRedirect(route('sessions.register.info'));
     }
 
@@ -96,6 +66,36 @@ class RegisterControllerTest extends TestCase
 
         $response->assertStatus(302);
         $response->assertSessionHas('session.info');
+        $response->assertRedirect(route('sessions.register.sut'));
+    }
+
+    public function testRegisterControllerShowSutForm()
+    {
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+
+        $response = $this->actingAs($user)->get(route('sessions.register.sut'));
+
+        // TODO - add inertia tests
+        $response->assertStatus(200);
+    }
+
+    public function testRegisterControllerStoreSut()
+    {
+        $user = factory(User::class)->create(['role' => User::ROLE_USER]);
+        $component = factory(Component::class)
+            ->create()
+            ->getKey();
+        $this->assertIsInt($component);
+        $response = $this->actingAs($user)->post(
+            route('sessions.register.sut.store'),
+            [
+                'base_url' => 'http://test.com',
+                'component_id' => $component,
+            ]
+        );
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('session.sut');
         $response->assertRedirect(route('sessions.register.config'));
     }
 
