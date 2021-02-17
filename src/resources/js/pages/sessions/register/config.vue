@@ -151,37 +151,44 @@
                     </template>
                 </div>
                 <div v-if="hasGroupEnvironments" class="card-body">
-                    <label class="form-label">Group environments</label>
+                    <label class="form-label">Groups environments</label>
                     <v-select
                         v-model="groupEnvs"
                         multiple
                         :options="groupEnvsList"
                         label="name"
-                        placeholder="Group environment..."
+                        placeholder="Select environments"
                         :selectable="
                             (option) => isSelectable(option, groupEnvs)
                         "
-                        class="form-control d-flex p-0 mb-3"
+                        class="form-control d-flex p-0 mb-1"
                     />
+                    <span class="d-block text-muted small"
+                        >Chose groups environments and merge with current</span
+                    >
                     <div class="text-right">
                         <button
                             type="button"
                             class="btn btn-primary"
-                            @click="mergeGroupEnvs"
+                            @click="mergeGroupsEnvs"
                         >
-                            Load
+                            Merge
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
                     <label class="form-label">Test cases environments</label>
+                    <span class="d-block text-muted small"
+                        >Load test cases environments and merge with
+                        current</span
+                    >
                     <div class="text-right">
                         <button
                             type="button"
                             class="btn btn-primary"
-                            @click="loadTestCaseEnvs"
+                            @click="loadTestCasesEnvs"
                         >
-                            Update
+                            Merge
                         </button>
                     </div>
                 </div>
@@ -239,6 +246,7 @@ import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
 import mixinVSelect from '@/components/v-select/mixin';
+import mixinEnvs from '@/components/environments/mixin';
 
 export default {
     components: {
@@ -267,7 +275,7 @@ export default {
             required: true,
         },
     },
-    mixins: [mixinVSelect],
+    mixins: [mixinVSelect, mixinEnvs],
     data() {
         const ziggyConf = { ...this.route().ziggy };
         ziggyConf.baseUrl = this.$page.props.app.http_base_url;
@@ -275,37 +283,35 @@ export default {
         return {
             ziggyConf,
             sending: false,
-            testCasesEnvs: {
-                variables: [],
-                files: [],
-            },
-            groupEnvs: null,
+            groupEnvs: [],
             groupEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 environments: [],
                 fileEnvironments: [],
-                groupsDefault: null,
+                groupsDefault: [],
             },
         };
     },
     mounted() {
-        this.loadGroupEnvsList();
-        this.loadTestCaseEnvs();
+        this.loadGroupsEnvsList();
+        this.loadTestCasesEnvs();
     },
     methods: {
         submit() {
             const form = {
                 environments: Object.fromEntries(
-                    this.form.environments.map((el) => [el.key, el.value])
+                    this.form.environments?.map((el) => [el.key, el.value]) ??
+                        []
                 ),
                 fileEnvironments: Object.fromEntries(
-                    this.form.fileEnvironments.map((el) => [el.key, el.value])
+                    this.form.fileEnvironments?.map((el) => [
+                        el.key,
+                        el.value,
+                    ]) ?? []
                 ),
-                groupsDefault: null,
+                groupsDefault: this.form.groupsDefault,
             };
-
-            // console.log(form);
 
             this.sending = true;
             this.$inertia.post(
@@ -320,7 +326,7 @@ export default {
                 }
             );
         },
-        loadGroupEnvsList(query = '') {
+        loadGroupsEnvsList(query = '') {
             axios
                 .get(route('sessions.register.group-environment-candidates'), {
                     params: { q: query },
@@ -329,7 +335,7 @@ export default {
                     this.groupEnvsList = result.data.data;
                 });
         },
-        loadTestCaseEnvs() {
+        loadTestCasesEnvs() {
             axios
                 .post(route('admin.test-cases.environment-candidates'), {
                     testCasesIds: this.$page.props.session.info.test_cases,
@@ -361,50 +367,13 @@ export default {
                     }
                 });
         },
-        mergeGroupEnvs() {
+        mergeGroupsEnvs() {
             if (!this.groupEnvs?.length) return;
 
             this.groupEnvs.forEach((env) => {
                 this.mergeEnvs(env.variables, this.form.environments, 'text');
                 this.mergeEnvs(env.files, this.form.fileEnvironments, 'file');
             });
-        },
-        mergeEnvs(incomingEnvs, currentEnvs, envsType) {
-            switch (envsType) {
-                case 'text': {
-                    Object.entries(incomingEnvs)
-                        .filter(
-                            ([key, value]) =>
-                                !currentEnvs.some((el) => el.key === key)
-                        )
-                        .forEach(([key, value]) =>
-                            currentEnvs.push({
-                                key: key,
-                                value: value,
-                            })
-                        );
-                    break;
-                }
-                case 'file': {
-                    incomingEnvs
-                        .filter(
-                            (incom) =>
-                                !currentEnvs.some(
-                                    (current) => current.key === incom.name
-                                )
-                        )
-                        .forEach((incom) =>
-                            currentEnvs.push({
-                                key: incom.name,
-                                value: incom.id,
-                                file_name: incom.file_name,
-                            })
-                        );
-                    break;
-                }
-                default:
-                    break;
-            }
         },
         getRoute(useEncryption, data, isForGroup = false) {
             const group = isForGroup ? '-group' : '';

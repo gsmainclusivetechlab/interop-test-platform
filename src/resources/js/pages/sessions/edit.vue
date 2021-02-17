@@ -381,29 +381,58 @@
                                 />
                             </div>
                             <div v-if="hasGroupEnvironments" class="mb-3">
-                                <label>
-                                    <b>Groups environments</b>
-                                </label>
+                                <label class="form-label"
+                                    >Groups environments</label
+                                >
                                 <v-select
-                                    v-model="groupEnvironment"
-                                    :options="groupEnvironmentsList"
+                                    v-model="groupsEnvironments"
+                                    multiple
+                                    :options="groupsEnvironmentsList"
+                                    label="name"
+                                    placeholder="Select environments"
                                     :selectable="
                                         (option) =>
                                             isSelectable(
                                                 option,
-                                                groupEnvironment
+                                                groupsEnvironments
                                             )
                                     "
-                                    label="name"
-                                    placeholder="Select environments patter"
-                                    class="form-control d-flex p-0 mb-3"
-                                    @input="selectGroupsEnvironments"
+                                    class="form-control d-flex p-0 mb-1"
                                 />
+                                <span class="text-muted small"
+                                    >Chose groups environments and merge with
+                                    current</span
+                                >
+                                <div class="text-right">
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        @click="mergeGroupsEnvironments"
+                                    >
+                                        Merge
+                                    </button>
+                                </div>
                             </div>
                             <div class="mb-3">
-                                <label>
-                                    <b>Environments</b>
-                                </label>
+                                <label class="form-label"
+                                    >Test cases environments</label
+                                >
+                                <span class="d-block text-muted small"
+                                    >You can update environments from included
+                                    test cases</span
+                                >
+                                <div class="text-right">
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        @click="loadTestCasesEnvironments"
+                                    >
+                                        Merge
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"> Environments </label>
                                 <environments v-model="form.environments" />
                                 <div
                                     class="text-danger small mt-2"
@@ -482,6 +511,7 @@ import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 import mixinVSelect from '@/components/v-select/mixin';
+import mixinEnvs from '@/components/environments/mixin';
 
 export default {
     components: {
@@ -511,35 +541,34 @@ export default {
             required: true,
         },
     },
-    mixins: [mixinVSelect],
+    mixins: [mixinVSelect, mixinEnvs],
     data() {
         return {
             sending: false,
             isCompliance: this.session.type === 'compliance',
-            groupEnvironment: this.session.groupEnvironment?.data ?? null,
-            groupEnvironmentsList: [],
+            groupsEnvironments: this.session.groupEnvironment?.data ?? [],
+            groupsEnvironmentsList: [],
             groupCertificatesList: [],
             selectedCertificates: {},
             form: {
                 name: this.session.name,
                 description: this.session.description,
                 environments: Object.entries(
-                    this.session.environments
+                    this.session.environments ?? {}
                 )?.map(([key, value]) => ({ key: key, value: value })),
                 fileEnvironments: this.session.fileEnvironments?.map((el) => ({
                     key: el.name,
                     value: el.id,
                     file_name: el.file_name,
                 })),
-                components:
-                    Object.fromEntries(
-                        this.components.data?.map((el) => [el.id, el])
-                    ) ?? {},
+                components: Object.fromEntries(
+                    this.components.data?.map((el) => [el.id, el])
+                ),
                 certificates: Object.fromEntries(
                     this.components.data?.map((el) => [
                         el.id,
                         el.certificate_id,
-                    ]) ?? {}
+                    ])
                 ),
                 test_cases: this.session.testCases.data?.map((el) => el.id),
             },
@@ -571,8 +600,12 @@ export default {
                 _method: 'PUT',
                 name: this.form.name,
                 description: this.form.description,
-                environments: this.session.environments,
-                fileEnvironments: this.session.fileEnvironments,
+                environments: Object.fromEntries(
+                    this.form.environments.map((el) => [el.key, el.value])
+                ),
+                fileEnvironments: Object.fromEntries(
+                    this.form.fileEnvironments.map((el) => [el.key, el.value])
+                ),
                 components: this.form.components,
                 certificates: this.form.certificates,
                 test_cases: this.form.test_cases,
@@ -606,7 +639,39 @@ export default {
                     params: { q: query },
                 })
                 .then((result) => {
-                    this.groupEnvironmentsList = result.data.data;
+                    this.groupsEnvironmentsList = result.data.data;
+                });
+        },
+        loadTestCasesEnvironments() {
+            axios
+                .post(route('admin.test-cases.environment-candidates'), {
+                    testCasesIds: this.form.test_cases,
+                })
+                .then((data) => {
+                    if (data.data?.env?.length) {
+                        const variables = Object.fromEntries(
+                            data.data.env.map((key) => [key, null])
+                        );
+
+                        this.mergeEnvs(
+                            variables,
+                            this.form.environments,
+                            'text'
+                        );
+                    }
+                    if (data.data?.file_env?.length) {
+                        const files = data.data.file_env.map((key) => ({
+                            name: key,
+                            value: null,
+                            file_name: null,
+                        }));
+
+                        this.mergeEnvs(
+                            files,
+                            this.form.fileEnvironments,
+                            'file'
+                        );
+                    }
                 });
         },
         loadGroupCertificateList(query = '') {
@@ -634,14 +699,13 @@ export default {
                     });
                 });
         },
-        selectGroupsEnvironments(value) {
-            if (value === null) return;
+        mergeGroupsEnvironments() {
+            if (!this.groupsEnvironments?.length) return;
 
-            this.form.environments = Object.assign(
-                {},
-                value.variables,
-                this.form.environments
-            );
+            this.groupsEnvironments.forEach((env) => {
+                this.mergeEnvs(env.variables, this.form.environments, 'text');
+                this.mergeEnvs(env.files, this.form.fileEnvironments, 'file');
+            });
         },
     },
 };

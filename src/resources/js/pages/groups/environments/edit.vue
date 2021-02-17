@@ -112,14 +112,17 @@ export default {
             sending: false,
             form: {
                 name: this.environment.name,
-                variables: Object.entries(
-                    this.environment.variables
-                )?.map(([key, value]) => ({ key: key, value: value })),
-                files: this.environment.files?.map((el) => ({
-                    key: el.name,
-                    value: el.id,
-                    file_name: el.file_name,
-                })),
+                variables:
+                    Object.entries(
+                        this.environment.variables ?? {}
+                    )?.map(([key, value]) => ({ key: key, value: value })) ??
+                    [],
+                files:
+                    this.environment.files?.map((el) => ({
+                        key: el.name,
+                        value: el.id,
+                        file_name: el.file_name,
+                    })) ?? [],
             },
         };
     },
@@ -129,10 +132,10 @@ export default {
                 _method: 'PUT',
                 name: this.form.name,
                 variables: Object.fromEntries(
-                    this.form.variables.map((el) => [el.key, el.value])
+                    this.form.variables?.map((el) => [el.key, el.value]) ?? []
                 ),
                 files: Object.fromEntries(
-                    this.form.files.map((el) => [el.key, el.value])
+                    this.form.files?.map((el) => [el.key, el.value]) ?? []
                 ),
             };
 
