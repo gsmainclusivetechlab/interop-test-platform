@@ -9,9 +9,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label>
-                                    <b>Name</b>
-                                </label>
+                                <label class="form-label"> Name </label>
                                 <input
                                     type="text"
                                     v-model="form.name"
@@ -29,9 +27,7 @@
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label>
-                                    <b>Description</b>
-                                </label>
+                                <label class="form-label"> Description </label>
                                 <textarea
                                     class="form-control"
                                     rows="5"
@@ -50,9 +46,7 @@
                                 </span>
                             </div>
                             <div class="mb-3" v-if="components.data">
-                                <label>
-                                    <b>SUTs</b>
-                                </label>
+                                <label class="form-label"> SUTs </label>
                                 <v-select
                                     :value="components.data"
                                     label="name"
@@ -63,19 +57,16 @@
                             </div>
                             <div
                                 class="mb-3"
-                                v-for="(component, i) in components.data"
+                                v-for="(component, i) in form.components"
                                 :key="`component-${i}`"
                             >
                                 <div class="mb-3">
-                                    <label>
-                                        <b>{{ component.name }} URL</b>
+                                    <label class="form-label">
+                                        {{ component.name }} URL
                                     </label>
                                     <input
                                         type="text"
-                                        v-model="
-                                            form.components[component.id]
-                                                .base_url
-                                        "
+                                        v-model="component.base_url"
                                         class="form-control"
                                         :class="{
                                             'is-invalid':
@@ -103,19 +94,16 @@
                                     <label class="form-check form-switch">
                                         <input
                                             :checked="
-                                                form.components[component.id]
-                                                    .use_encryption === 1
+                                                `${component.use_encryption}` ===
+                                                '1'
                                             "
                                             type="checkbox"
                                             class="form-check-input"
                                             @input="
                                                 (e) =>
-                                                    $set(
-                                                        form.components[
-                                                            component.id
-                                                        ],
-                                                        'use_encryption',
-                                                        e.target.checked ? 1 : 0
+                                                    changeEncryption(
+                                                        component,
+                                                        e.target.checked
                                                     )
                                             "
                                         />
@@ -141,10 +129,7 @@
                                     </span>
                                 </div>
                                 <div
-                                    v-if="
-                                        form.components[component.id]
-                                            .use_encryption === 1
-                                    "
+                                    v-if="`${component.use_encryption}` === '1'"
                                 >
                                     <div
                                         class="mb-3"
@@ -155,9 +140,7 @@
                                         >
                                         <v-select
                                             v-model="
-                                                selectedCertificates[
-                                                    component.id
-                                                ]
+                                                component.certificate.serialized
                                             "
                                             placeholder="Select certificate..."
                                             label="name"
@@ -166,9 +149,8 @@
                                                 (option) =>
                                                     isSelectable(
                                                         option,
-                                                        selectedCertificates[
-                                                            component.id
-                                                        ]
+                                                        component.certificate
+                                                            .serialized
                                                     )
                                             "
                                             class="form-control d-flex p-0"
@@ -200,15 +182,13 @@
                                         class="hr-text"
                                         v-if="
                                             showGroupCertificates(component) &&
-                                            !selectedCertificates[component.id]
+                                            !component.certificate.serialized
                                         "
                                     >
                                         or
                                     </div>
                                     <template
-                                        v-if="
-                                            !selectedCertificates[component.id]
-                                        "
+                                        v-if="!component.certificate.serialized"
                                     >
                                         <div class="mb-3">
                                             <label class="form-label"
@@ -216,9 +196,7 @@
                                             >
                                             <b-form-file
                                                 v-model="
-                                                    form.certificates[
-                                                        component.id
-                                                    ].ca_crt
+                                                    component.certificate.ca_crt
                                                 "
                                                 placeholder="Choose file..."
                                                 :class="{
@@ -251,9 +229,8 @@
                                             >
                                             <b-form-file
                                                 v-model="
-                                                    form.certificates[
-                                                        component.id
-                                                    ].client_crt
+                                                    component.certificate
+                                                        .client_crt
                                                 "
                                                 placeholder="Choose file..."
                                                 :class="{
@@ -286,9 +263,8 @@
                                             >
                                             <b-form-file
                                                 v-model="
-                                                    form.certificates[
-                                                        component.id
-                                                    ].client_key
+                                                    component.certificate
+                                                        .client_key
                                                 "
                                                 placeholder="Choose file..."
                                                 :class="{
@@ -321,9 +297,8 @@
                                             >
                                             <input
                                                 v-model="
-                                                    form.certificates[
-                                                        component.id
-                                                    ].passphrase
+                                                    component.certificate
+                                                        .passphrase
                                                 "
                                                 :class="{
                                                     'is-invalid':
@@ -363,8 +338,8 @@
                                     ).length
                                 "
                             >
-                                <label>
-                                    <b>Default session for groups</b>
+                                <label class="form-label">
+                                    Default session for groups
                                 </label>
                                 <v-select
                                     :value="
@@ -444,8 +419,8 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="col-sm-3">
-                                    <b>File environments</b>
+                                <label class="form-label">
+                                    File environments
                                 </label>
                                 <environments
                                     v-model="form.fileEnvironments"
@@ -463,9 +438,7 @@
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
-                                <label>
-                                    <b>Test Cases</b>
-                                </label>
+                                <label class="form-label"> Test Cases </label>
                                 <test-case-checkboxes
                                     style="max-height: 485px"
                                     :session="session"
@@ -549,7 +522,6 @@ export default {
             groupsEnvironments: this.session.groupEnvironment?.data ?? [],
             groupsEnvironmentsList: [],
             groupCertificatesList: [],
-            selectedCertificates: {},
             form: {
                 name: this.session.name,
                 description: this.session.description,
@@ -561,38 +533,23 @@ export default {
                     value: el.id,
                     file_name: el.file_name,
                 })),
-                components: Object.fromEntries(
-                    this.components.data?.map((el) => [el.id, el])
-                ),
-                certificates: Object.fromEntries(
-                    this.components.data?.map((el) => [
-                        el.id,
-                        el.certificate_id,
-                    ])
-                ),
+                components: this.components.data?.map((el) => ({
+                    ...el,
+                    certificate: {
+                        serialized: null,
+                        ca_crt: null,
+                        client_crt: null,
+                        client_key: null,
+                        passphrase: null,
+                    },
+                })),
                 test_cases: this.session.testCases.data?.map((el) => el.id),
             },
         };
     },
-    watch: {
-        selectedCertificates: {
-            immediate: false,
-            handler(values) {
-                Object.keys(values).forEach(
-                    (key) =>
-                        (this.form.components[key].certificate_id =
-                            values[key]?.id)
-                );
-            },
-        },
-    },
     mounted() {
         this.loadGroupEnvironmentList();
         this.loadGroupCertificateList();
-
-        this.components.data?.forEach((el) =>
-            this.$set(this.form.components, `${el.id}`, el)
-        );
     },
     methods: {
         submit() {
@@ -606,8 +563,30 @@ export default {
                 fileEnvironments: Object.fromEntries(
                     this.form.fileEnvironments.map((el) => [el.key, el.value])
                 ),
-                components: this.form.components,
-                certificates: this.form.certificates,
+                components: Object.fromEntries(
+                    this.form.components?.map((el) => [
+                        el.id,
+                        {
+                            id: el.id,
+                            base_url: el.base_url,
+                            use_encryption: el.use_encryption,
+                            certificate_id:
+                                el.certificate.serialized?.id ?? null,
+                        },
+                    ])
+                ),
+                certificates: Object.fromEntries(
+                    this.form.components?.map((el) => {
+                        const crt = el.certificate.serialized?.id ?? {
+                            ca_crt: el.certificate.ca_crt,
+                            client_crt: el.certificate.client_crt,
+                            client_key: el.certificate.client_key,
+                            passphrase: el.certificate.passphrase,
+                        };
+
+                        return [el.id, crt];
+                    })
+                ),
                 test_cases: this.form.test_cases,
             };
 
@@ -628,9 +607,9 @@ export default {
         showGroupCertificates(component) {
             return (
                 this.hasGroupCertificates ||
-                (!this.form.certificates[component.id]?.ca_crt &&
-                    !this.form.certificates[component.id]?.client_crt &&
-                    !this.form.certificates[component.id]?.client_key)
+                (!component.certificate.ca_crt &&
+                    !component.certificate.client_crt &&
+                    !component.certificate.client_key)
             );
         },
         loadGroupEnvironmentList(query = '') {
@@ -685,18 +664,12 @@ export default {
                 .then((result) => {
                     this.groupCertificatesList = result.data.data;
 
-                    const collection = collect(result.data.data);
-                    const ids = collect(this.components.data)
-                        .mapWithKeys((s) => [s.id, s.certificate_id])
-                        .all();
-
-                    Object.keys(ids).forEach((key) => {
-                        this.$set(
-                            this.selectedCertificates,
-                            `${key}`,
-                            collection.where('id', parseInt(ids[key])).first()
-                        );
-                    });
+                    this.form.components.forEach(
+                        (el) =>
+                            (el.certificate.serialized = this.groupCertificatesList?.find(
+                                (crt) => crt.id === el.certificate_id
+                            ))
+                    );
                 });
         },
         mergeGroupsEnvironments() {
@@ -706,6 +679,12 @@ export default {
                 this.mergeEnvs(env.variables, this.form.environments, 'text');
                 this.mergeEnvs(env.files, this.form.fileEnvironments, 'file');
             });
+        },
+        changeEncryption(component, use) {
+            component.use_encryption = use ? 1 : 0;
+            Object.keys(component.certificate).forEach(
+                (crt) => (component.certificate[crt] = null)
+            );
         },
     },
 };
