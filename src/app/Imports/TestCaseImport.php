@@ -31,24 +31,8 @@ class TestCaseImport implements Importable
         return DB::transaction(function () use ($rows) {
             Validator::validate(
                 $rows,
-                [
-                    'name' => ['required', 'string', 'max:255'],
-                    'use_case' => ['required', 'string', 'max:255'],
-                    'behavior' => ['required', 'string', 'max:255'],
-                    'slug' => [
-                        'required',
-                        'string',
-                        'max:255',
-                        Rule::unique('test_cases')->ignore(
-                            Arr::get($rows, 'test_case_group_id'),
-                            'test_case_group_id'
-                        )
-                    ],
-                ],
-                [
-                    'slug.unique' =>
-                        'Slug should be unique for different test cases groups.',
-                ]
+                $this->rules($rows),
+                $this->messages()
             );
 
             $useCase = UseCase::firstOrCreate([
@@ -271,8 +255,104 @@ class TestCaseImport implements Importable
         return $testStep;
     }
 
-    protected function rules()
+    protected function rules($rows): array
     {
-        return [];
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'use_case' => ['required', 'string', 'max:255'],
+            'behavior' => ['required', 'string', 'max:255'],
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('test_cases')->ignore(
+                    Arr::get($rows, 'test_case_group_id'),
+                    'test_case_group_id'
+                )
+            ],
+            'components' => ['nullable', 'array'],
+            'components.*.name' => ['required', 'string', 'max:255'],
+            'components.*.slug' => ['required', 'string', 'max:255'],
+            // test steps rules
+            'test_steps' => ['nullable', 'array'],
+            'test_steps.*.source_id' => ['required', 'exists:components,slug'],
+            'test_steps.*.target_id' => ['required', 'exists:components,slug'],
+            'test_steps.*.api_spec' => ['nullable', 'exists:api_specs,name'],
+            'test_steps.*.path' => ['required', 'string', 'max:255'],
+            'test_steps.*.method' => ['required', 'string', 'max:255'],
+            'test_steps.*.pattern' => ['required', 'string', 'max:255'],
+            'test_steps.*.trigger' => ['nullable', 'array'],
+            'test_steps.*.request' => ['required', 'array'],
+            'test_steps.*.request.uri' => ['required', 'string'],
+            'test_steps.*.response' => ['required', 'array'],
+            'test_steps.*.response.status' => ['required'],
+            'test_steps.*.mtls' => ['required', 'boolean'],
+            // test scripts
+            'test_steps.*.test_request_scripts' => ['nullable', 'array'],
+            'test_steps.*.test_request_scripts.*.name' => ['required', 'string', 'max:255'],
+            'test_steps.*.test_request_scripts.*.rules' => ['required', 'array'],
+            'test_steps.*.test_response_scripts' => ['nullable', 'array'],
+            'test_steps.*.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
+            'test_steps.*.test_response_scripts.*.rules' => ['required', 'array'],
+            //repeats
+            'test_steps.repeat' => ['required', 'array'],
+            'test_steps.*.repeat.max' => [
+                'required',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) use ($rows) {
+                    $compareAttribute = str_replace(
+                        'max',
+                        'count',
+                        $attribute
+                    );
+                    $count = Arr::get($rows, $compareAttribute, 0);
+                    if ($count != 0 &&  $count >= $value) {
+                        $fail(__("Must be greater than $count."));
+                    }
+                },
+            ],
+            'test_steps.*.repeat.count' => [
+                'required',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) use ($rows) {
+                    $compareAttribute = str_replace(
+                        'count',
+                        'max',
+                        $attribute
+                    );
+                    $max = Arr::get($rows, $compareAttribute, 0);
+                    if ($value != 0 &&  $max <= $value) {
+                        $fail(__("May not be greater than $max."));
+                    }
+                },
+            ],
+            'test_steps.*.repeat.condition' => [
+                'nullable',
+                'array',
+                Rule::requiredIf(function ($attribute) use ($rows) {
+                    $compareAttribute = str_replace(
+                        'condition',
+                        'max',
+                        $attribute
+                    );
+                    return Arr::get($rows, $compareAttribute, 0) > 0;
+                })
+            ],
+            'test_steps.*.repeat.response' => ['nullable', 'array'],
+            'test_steps.*.repeat.response.status' => ['required'],
+            'test_steps.*.repeat.test_response_scripts' => ['nullable', 'array'],
+            'test_steps.*.repeat.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
+            'test_steps.*.repeat.test_response_scripts.*.rules' => ['required', 'array'],
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'slug.unique' =>
+                'Slug should be unique for different test cases groups.',
+        ];
     }
 }
