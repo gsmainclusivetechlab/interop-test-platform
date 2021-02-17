@@ -21,9 +21,10 @@ if [ "$role" = "app" ]; then
             chmod +xr /etc/nginx/ssl/default-certs/RootCA.key
         fi
     else
-        FILE_CERT_EXP_DATE=$(cat RootCA.crt  | openssl x509 -noout -dates | grep notAfter | sed -e 's?.*=??g;s?GMT.*??;s? $??g')
-        CURRENT_DATE=$(date +%s)
-        if [ "$CURRENT_DATE" -gt "$FILE_CERT_EXP_DATE" ]; then
+        # check if the certificate will expire in the next month
+        EXP=`openssl x509 -checkend 2592000 -noout -in RootCA.crt;`
+        if [ ! "$EXP" ]; then 
+            echo "Renewing certificates"
             openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.crt -subj "/C=UK/CN=localhost-CA"
             openssl x509 -outform pem -in RootCA.crt -out RootCA.crt &&\
             openssl req -new -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.csr -subj "/C=UK/ST=State/L=City/O=Default-Localhost-Certificates/CN=${PROJECT_DOMAIN}"
