@@ -2,6 +2,8 @@
 
 namespace App\Imports;
 
+use App\Enums\HttpMethod;
+use App\Enums\HttpStatus;
 use App\Http\Client\Request;
 use App\Http\Client\Response;
 use App\Models\{
@@ -31,8 +33,8 @@ class TestCaseImport implements Importable
         return DB::transaction(function () use ($rows) {
             Validator::validate(
                 $rows,
-                $this->rules($rows),
-                $this->messages()
+                $this->testCaseRules($rows),
+                $this->testCaseMessages()
             );
 
             $useCase = UseCase::firstOrCreate([
@@ -77,7 +79,13 @@ class TestCaseImport implements Importable
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
-                foreach ($testStepRows as $testStepRow) {
+                foreach ($testStepRows as $key => $testStepRow) {
+                    Validator::validate(
+                        $testStepRow,
+                        $this->testStepRules($testStepRow, $key),
+                        $this->testStepMessages($key)
+                    );
+
                     /**
                      * @var TestStep $testStep
                      */
@@ -255,7 +263,7 @@ class TestCaseImport implements Importable
         return $testStep;
     }
 
-    protected function rules($rows): array
+    protected function testCaseRules($rows): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -273,86 +281,203 @@ class TestCaseImport implements Importable
             'components' => ['nullable', 'array'],
             'components.*.name' => ['required', 'string', 'max:255'],
             'components.*.slug' => ['required', 'string', 'max:255'],
-            // test steps rules
-            'test_steps' => ['nullable', 'array'],
-            'test_steps.*.source_id' => ['required', 'exists:components,slug'],
-            'test_steps.*.target_id' => ['required', 'exists:components,slug'],
-            'test_steps.*.api_spec' => ['nullable', 'exists:api_specs,name'],
-            'test_steps.*.path' => ['required', 'string', 'max:255'],
-            'test_steps.*.method' => ['required', 'string', 'max:255'],
-            'test_steps.*.pattern' => ['required', 'string', 'max:255'],
-            'test_steps.*.trigger' => ['nullable', 'array'],
-            'test_steps.*.request' => ['required', 'array'],
-            'test_steps.*.request.uri' => ['required', 'string'],
-            'test_steps.*.response' => ['required', 'array'],
-            'test_steps.*.response.status' => ['required'],
-            'test_steps.*.mtls' => ['required', 'boolean'],
-            // test scripts
-            'test_steps.*.test_request_scripts' => ['nullable', 'array'],
-            'test_steps.*.test_request_scripts.*.name' => ['required', 'string', 'max:255'],
-            'test_steps.*.test_request_scripts.*.rules' => ['required', 'array'],
-            'test_steps.*.test_response_scripts' => ['nullable', 'array'],
-            'test_steps.*.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
-            'test_steps.*.test_response_scripts.*.rules' => ['required', 'array'],
-            //repeats
-            'test_steps.repeat' => ['required', 'array'],
-            'test_steps.*.repeat.max' => [
-                'required',
-                'integer',
-                'min:0',
-                function ($attribute, $value, $fail) use ($rows) {
-                    $compareAttribute = str_replace(
-                        'max',
-                        'count',
-                        $attribute
-                    );
-                    $count = Arr::get($rows, $compareAttribute, 0);
-                    if ($count != 0 &&  $count >= $value) {
-                        $fail(__("Must be greater than $count."));
-                    }
-                },
-            ],
-            'test_steps.*.repeat.count' => [
-                'required',
-                'integer',
-                'min:0',
-                function ($attribute, $value, $fail) use ($rows) {
-                    $compareAttribute = str_replace(
-                        'count',
-                        'max',
-                        $attribute
-                    );
-                    $max = Arr::get($rows, $compareAttribute, 0);
-                    if ($value != 0 &&  $max <= $value) {
-                        $fail(__("May not be greater than $max."));
-                    }
-                },
-            ],
-            'test_steps.*.repeat.condition' => [
-                'nullable',
-                'array',
-                Rule::requiredIf(function ($attribute) use ($rows) {
-                    $compareAttribute = str_replace(
-                        'condition',
-                        'max',
-                        $attribute
-                    );
-                    return Arr::get($rows, $compareAttribute, 0) > 0;
-                })
-            ],
-            'test_steps.*.repeat.response' => ['nullable', 'array'],
-            'test_steps.*.repeat.response.status' => ['required'],
-            'test_steps.*.repeat.test_response_scripts' => ['nullable', 'array'],
-            'test_steps.*.repeat.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
-            'test_steps.*.repeat.test_response_scripts.*.rules' => ['required', 'array'],
         ];
     }
 
-    protected function messages(): array
+    /**
+     * @param $rows
+     * @param $step
+     * @return array
+     */
+    protected function testStepRules($rows, $step): array
+    {
+        $step++;
+        return [
+            'source' => ['required', 'exists:components,slug'],
+            'target' => ['required', 'exists:components,slug'],
+            'api_spec' => ['nullable', 'string', 'max:255'],
+            'path' => ['required', 'string', 'max:255'],
+            'method' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::in(array_keys(HttpMethod::list()))
+            ],
+            'pattern' => ['required', 'string', 'max:255'],
+            'trigger' => ['nullable', 'array'],
+            'mtls' => ['nullable', 'boolean'],
+            'request' => ['required', 'array'],
+            'request.uri' => ['required', 'string'],
+            'request.method' => [
+                'required',
+                'string',
+                Rule::in(array_keys(HttpMethod::list()))
+            ],
+            'response' => ['required', 'array'],
+            'response.status' => [
+                'required',
+                Rule::in(array_keys(HttpStatus::list()))
+            ],
+            // test scripts
+            'test_request_scripts' => ['nullable', 'array'],
+            'test_request_scripts.*.name' => ['required', 'string', 'max:255'],
+            'test_request_scripts.*.rules' => ['required', 'array'],
+            'test_response_scripts' => ['nullable', 'array'],
+            'test_response_scripts.*.name' => ['required', 'string', 'max:255'],
+            'test_response_scripts.*.rules' => ['required', 'array'],
+            //repeats
+            'repeat' => ['nullable', 'array'],
+            'repeat.max' => [
+                'nullable',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) use ($rows, $step) {
+                    $count = Arr::get($rows, 'repeat.count', 0);
+                    if ($count != 0 &&  $count >= $value) {
+                        $fail(__(
+                            'The repeat max must be greater than count (:count). On Test Step :step.',
+                            ['count' => $count, 'step' => $step]
+                        ));
+                    }
+                },
+                Rule::requiredIf(function () use ($rows) {
+                    return !empty(Arr::get($rows, 'repeat.count'));
+                })
+            ],
+            'repeat.count' => [
+                'nullable',
+                'integer',
+                'min:0',
+                function ($attribute, $value, $fail) use ($rows, $step) {
+                    $max = Arr::get($rows, 'repeat.max', 0);
+                    if ($value != 0 &&  $max <= $value) {
+                        $fail(__(
+                            'The repeat count may not be greater than max (:max). On Test Step :step.',
+                            ['max' => $max, 'step' => $step]
+                        ));
+                    }
+                }
+            ],
+            'repeat.condition' => [
+                'nullable',
+                'array',
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'repeat.max', 0) > 0;
+                })
+            ],
+            'repeat.response' => [
+                'nullable',
+                'array',
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'repeat.count', 0) > 0;
+                })
+            ],
+            'repeat.response.status' => [
+                'nullable',
+                Rule::in(array_keys(HttpStatus::list())),
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'repeat.count', 0) > 0;
+                })
+            ],
+            'repeat.test_response_scripts' => ['nullable', 'array'],
+            'repeat.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
+            'repeat.test_response_scripts.*.rules' => ['required', 'array'],
+        ];
+    }
+
+    protected function testCaseMessages(): array
     {
         return [
-            'slug.unique' =>
-                'Slug should be unique for different test cases groups.',
+            'slug.unique' => __('Slug should be unique for different test cases groups.'),
+            'components.*.name.required' => __('Component name field is required.'),
+            'components.*.slug.required' => __('Component slug field is required.'),
         ];
+    }
+
+    /**
+     * @param $step
+     * @return array
+     */
+    protected function testStepMessages($step): array
+    {
+        $step++;
+        $messages = [
+            'source.required' => __('Source field is required.'),
+            'target.required' => __('Target field is required.'),
+            'source.exists' => __('Source component does not exists.'),
+            'target.exists' => __('Target component does not exists.'),
+            'api_spec.max' => __('The path may not be greater than 255 characters.'),
+            'path.required' => __('Path is required.'),
+            'path.max' => __('The path may not be greater than 255 characters.'),
+            'method.required' => __('Method is required.'),
+            'method.max' => __('The method may not be greater than 255 characters.'),
+            'method.in' => __(
+                'Request method must be in: :methods.',
+                ['methods' => implode(', ', array_keys(HttpMethod::list()))]
+            ),
+            'pattern.required' => __('Path is required.'),
+            'pattern.max' => __('The pattern may not be greater than 255 characters.'),
+            'mtls.boolean' => __('The mtls field must be true or false.'),
+
+            // request
+            'request.required' => __('Request field is required.'),
+            'request.uri.required' => __('Request uri field is required.'),
+            'request.method.required' => __('Request method field is required.'),
+            'request.method.in' => __(
+                'Request method must be in: :methods.',
+                ['methods' => implode(', ', array_keys(HttpMethod::list()))]
+            ),
+
+            // response
+            'response.required' => __('Response field is required.'),
+            'response.status.required' => __('Response status field is required.'),
+            'response.status.in' => __('The response status is invalid.'),
+
+            // scripts
+            'test_request_scripts.*.name.required' => __(
+                'Test request scripts name field is required.'
+            ),
+            'test_request_scripts.*.name.max' => __(
+                'Test request scripts name may not be greater than 255 characters.'
+            ),
+            'test_request_scripts.*.rules.required' => __(
+                'Test request scripts rules field is required.'
+            ),
+            'test_response_scripts.*.name.required' => __(
+                'Test response scripts name field is required.'
+            ),
+            'test_response_scripts.*.name.max' => __(
+                'Test response scripts name may not be greater than 255 characters.'
+            ),
+            'test_response_scripts.*.rules.required' => __(
+                'Test response scripts rules field is required.'
+            ),
+
+            // repeats
+            'repeat.max.required' => __('The repeat max field is required.'),
+            'repeat.max.integer' => __('The repeat max must be an integer.'),
+            'repeat.max.min' => __('The repeat max must be at least 0.'),
+            'repeat.count.integer' => __('The repeat count must be an integer.'),
+            'repeat.count.min' => __('The repeat count must be at least 0.'),
+            'repeat.condition.required' => __('The repeat condition field is required.'),
+            'repeat.response.required' => __('The repeat response field is required.'),
+            'repeat.response.status.required' => __('The repeat response status field is required.'),
+            'repeat.response.status.in' => __('The repeat response status field is invalid.'),
+            // repeat scripts
+            'repeat.test_response_scripts.*.name.required' => __(
+                'Repeat test response scripts name field is required.'
+            ),
+            'repeat.test_response_scripts.*.name.max' => __(
+                'Repeat test response scripts name may not be greater than 255 characters.'
+            ),
+            'repeat.test_response_scripts.*.rules.required' => __(
+                'Repeat test response scripts rules field is required.'
+            ),
+        ];
+        array_walk($messages, function (&$value) use ($step) {
+            $value .= __(' On Test Step :step.', ['step' => $step]);
+        });
+
+        return $messages;
     }
 }
