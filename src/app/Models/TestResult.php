@@ -43,7 +43,7 @@ class TestResult extends Model
         'iteration',
         'repeat',
         'request',
-        'response'
+        'response',
     ];
 
     /**

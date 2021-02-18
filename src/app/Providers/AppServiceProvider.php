@@ -31,7 +31,18 @@ class AppServiceProvider extends ServiceProvider
             'session' => Session::class,
         ]);
 
-        $this->registerValidators();
+        Validator::extend('ilpPacket', function (
+            $attribute,
+            $value,
+            $parameters,
+            $validator
+        ) {
+            return IlpPacket::validateIlpPacket(
+                $value,
+                $parameters,
+                $validator->getData()
+            );
+        });
     }
 
     /**

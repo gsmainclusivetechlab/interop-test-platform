@@ -137,4 +137,25 @@ class TestStep extends Model
     {
         return ['test_case_id'];
     }
+
+    /**
+     * @return array
+     */
+    public function getEnvironments()
+    {
+        $pattern = '/[^file_]env[.]([\w]*)|file_env[.]([\w]*)/';
+        $subject = '';
+
+        $subject .= json_encode($this->request->toArray()) ?: '';
+        $subject .= json_encode($this->response->toArray()) ?: '';
+        foreach ($this->testScripts as $testScript) {
+            $subject .= json_encode($testScript->rules) ?: '';
+        }
+        preg_match_all($pattern, $subject, $matches);
+
+        return [
+            'env' => array_filter($matches[1]),
+            'file_env' => array_filter($matches[2]),
+        ];
+    }
 }

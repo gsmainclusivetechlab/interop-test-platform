@@ -259,7 +259,7 @@ class TestCaseImport implements Importable
             'repeat_max' => Arr::get($repeat, 'max', 0),
             'repeat_count' => Arr::get($repeat, 'count', 0),
             'repeat_condition' => Arr::get($repeat, 'condition'),
-            'repeat_response' => $response
+            'repeat_response' => $response,
         ]);
 
         return $testStep;
