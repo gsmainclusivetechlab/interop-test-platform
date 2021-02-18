@@ -126,7 +126,10 @@ class TwigSubstitution
                     ];
                 })
                 ->toArray(),
-            'env' => $session->environments(),
+            'env' => $session->environments,
+            'file_env' => $session->fileEnvironments
+                ->pluck('path', 'name')
+                ->all(),
             'components' => $components
                 ->mapWithKeys(function (Component $item) use ($sutBaseUrls) {
                     return [

@@ -9,12 +9,9 @@ class RepeatResponseScriptValidationTest extends ResponseScriptValidationTest
      */
     public function getName(): string
     {
-        return __(
-            'Intermediate Response :response_count: :name',
-            [
-                'response_count' => $this->testResult->iteration,
-                'name' => $this->testScript->name
-            ]
-        );
+        return __('Intermediate Response :response_count: :name', [
+            'response_count' => $this->testResult->iteration,
+            'name' => $this->testScript->name,
+        ]);
     }
 }

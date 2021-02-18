@@ -141,7 +141,6 @@ class TestCaseExport implements Exportable
             ),
         ];
 
-
         return $this->arrayFilter($result);
     }
 
