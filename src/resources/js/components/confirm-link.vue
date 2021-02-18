@@ -39,10 +39,16 @@ export default {
     },
     computed: {
         modalTitle() {
-            return this.confirmTitle ?? this.$t('modal.title');
+            return (
+                this.confirmTitle ??
+                this.$t('components.confirm-link.modal.title')
+            );
         },
         modalText() {
-            return this.confirmText ?? this.$t('modal.text');
+            return (
+                this.confirmText ??
+                this.$t('components.confirm-link.modal.text')
+            );
         },
     },
     methods: {
@@ -62,8 +68,10 @@ export default {
                 this.$bvModal
                     .msgBoxConfirm([messageVNode], {
                         title: this.modalTitle,
-                        okTitle: this.$t('buttons.ok'),
-                        cancelTitle: this.$t('buttons.cancel'),
+                        okTitle: this.$t('components.confirm-link.buttons.ok'),
+                        cancelTitle: this.$t(
+                            'components.confirm-link.buttons.cancel'
+                        ),
                         centered: true,
                     })
                     .then((value) => {
@@ -78,4 +86,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/confirm-link.json"></i18n>

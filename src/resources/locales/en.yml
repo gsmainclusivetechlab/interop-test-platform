@@ -1,0 +1,334 @@
+compliance-sessions:
+  page:
+    title: '@:(special-locales.compliance) session'
+  tabs:
+    all: All
+    in-verification: In verification
+components:
+  confirm-link:
+    buttons:
+      cancel: Cancel
+      ok: Confirm
+    modal:
+      text: You won't be able to revert this!
+      title: Are you sure?
+  input-search:
+    placeholder: Search...
+  form-file:
+    inputs:
+      errors:
+        file: 'Error with file - {fileSrc}'
+  v-select:
+    errors:
+      option-not-add:
+        "'{option}' - option hasn't been added. Please select it to be added."
+  pagination:
+    buttons:
+      next: Next
+      prev: Prev
+    comment:
+      - Showing
+      - to
+      - of
+      - entry | entries
+special-locales:
+  compliance: Certification
+  administration: Administration
+layout:
+  compliance-sessions:
+    page:
+      title: '@:(special-locales.compliance) session'
+    tabs:
+      all: All
+      in-verification: In verification
+  sessions:
+    questionnaire:
+      page:
+        title: '@:(special-locales.compliance) session questionnaire'
+      info:
+        summary: Summary
+  test-cases:
+    breadcrumb:
+      test-cases: Test Cases
+      info: Info
+      test-steps: Test steps
+      test-flow: Test Flow
+      groups: Groups
+      versions: Versions
+      components: Components
+  settings:
+    page:
+      title: Settings
+      sub-title: General
+    tabs:
+      - Profile
+      - Change password
+  main:
+    buttons:
+      new-session: New Session
+    footer:
+      cookies-link: 'https://www.gsma.com/aboutus/legal/cookie-policy'
+      copyright-link: 'https://www.gsma.com'
+      copyright-name: GSMA
+      link: 'https://www.gsma.com/aboutus/legal'
+    main-nav:
+      dashboard: Dashboard
+      doc: Documentation
+      external: The Lab
+      external-link: 'https://www.gsma.com/lab'
+      groups: Groups
+      sessions: Sessions
+      subtitle: Interoperability Test Platform
+      title: Inclusive Tech Lab
+      tutorials: Tutorials
+    menu:
+      api-specs: API Specs
+      cert-sessions: '@:(special-locales.compliance) Sessions'
+      components: Components
+      groups: Groups
+      import-question-def: Import Questionnaire Definition
+      implicit-sut: 'Implicit SUT Rules'
+      message-log: Message Log
+      sessions: Sessions
+      test-cases: Test Cases
+      use-cases: Use Cases
+      users: Users
+    user-menu:
+      logout: Logout
+      settings: Settings
+questionnaire:
+  info:
+    summary: Summary
+  page:
+    title: '@:(special-locales.compliance) session questionnaire'
+settings:
+  page:
+    sub-title: General
+    title: Settings
+  tabs:
+    - Profile
+    - Change password
+test-cases:
+  breadcrumb:
+    components: Components
+    groups: Groups
+    info: Info
+    test-cases: Test Cases
+    test-flow: Test Flow
+    test-steps: Test steps
+    versions: Versions
+tutorials:
+  page:
+    title: Tutorials
+    noTutorials: 'No tutorials available'
+  panel:
+    - title: How do I create a new session?
+      comment: >-
+        Click here to be directed to an interactive demo showing you the steps
+        to create a new session.
+    - title: How do I execute a session as a Service Provider?
+      comment: >-
+        Click here to learn more about Postman and links to collections you can
+        use to simulate a Service Provider.
+    - title: How do I execute a session as a Mobile Money Operator?
+      comment: >-
+        Click here to learn more about how you can execute test cases as a
+        Mobile Money Operator.
+    - title: Postman Collections
+      comment: >-
+        Click here to be taken to a list of Postman collections you can use on
+        the test platform.
+    - title: Learn more about Mojaloop
+      comment: >-
+        Click here to learn more about Mojaloop with links to documentations and
+        specifications
+    - title: Learn more about Mobile Money API
+      comment: >-
+        Click here to learn more about the Mobile Money API with links to
+        documentations and specifications
+  drop-panel:
+    - title: How do I create a new session?
+      comment: >-
+        To start the interactive demo, simply press the "Start interactive demo"
+        below and follow the red circle which will indicate where to click and
+        give you additional information.
+      demo-steps:
+        - Start by creating a new session
+        - Select the System Under Test
+        - "Let's select Service Provider, and enter our URL"
+        - Press Next
+        - Add a name and select test cases by ticking the corresponding box
+        - Select test cases by ticking the corresponding box
+        - Select test cases by ticking the corresponding box
+        - Press Next when you are finished
+        - Configure your System Under Test using this data and press Confirm
+        - >-
+          Your session has now been created and test cases can be accessed on
+          the left. Click "Reset Demo" to start the demo again
+    - title: How do I execute a session as a Service Provider?
+      comment:
+        - >-
+          To start the interactive demo, simply press the "Start interactive
+          demo" below and follow the red circle which will indicate where to
+          click and give you additional information.
+        - You can find a Postman collection ready to use by clicking
+      links:
+        - here
+      demo-steps:
+        - 'First, select the session you would like to execute'
+        - >-
+          On the left panel has all your selected test cases with information on
+          previous runs. Select the one you would like to test
+        - >-
+          This page details the test case and test runs. You can also view the
+          use case flow and test data example. Click here to view the flow for
+          this test
+        - >-
+          Configuration settings are shown here. Make sure your system is
+          properly set-up to send and receive messages from these URLs
+        - >-
+          Here we are using Postman instead of a real SUT. Collections can be
+          found on the tutorials page. Once all the information is correct,
+          press "Send"
+        - >-
+          You should now see your test run. Click to be taken to the test run
+          page
+        - >-
+          On this page are all the details about the test run. Clicking on any
+          particular test will give you more information
+        - >-
+          You can also see the request and response data and test validations
+          for each step of the use case flow. To start the demo again click
+          "Reset Demo"
+    - title: How do I execute a session as a Mobile Money Operator?
+      comment: >-
+        To start the interactive demo, simply press the "Start interactive demo"
+        below and follow the red circle which will indicate where to click and
+        give you additional information.
+      demo-steps:
+        - 'First, select the session you would like to execute'
+        - >-
+          On the left panel has all your selected test cases with information on
+          previous runs. Select the one you would like to test
+        - >-
+          This page details the use case and test runs. You can also view the
+          use case flow and test data example. Click here to view the flow for
+          this test
+        - >-
+          Configuration settings are shown here. Make sure your system is
+          properly set-up to send and receive messages from these URLs
+        - >-
+          In this test case we can see the Service Provider performs the first
+          step. Click Run Test Case to start the test run
+        - >-
+          We should now be able to see the test run by returning to the test run
+          page
+        - Click the test run to see more details
+        - >-
+          Here we can view all the details about the test run for each
+          individual step. Clicking on a performed test will bring up the
+          expected and actual results
+        - >-
+          You can also see the request and response data and validation for each
+          step of the use case flow. To start the demo again press "Reset Demo"
+    - title: Postman Collections
+      comment: >-
+        Below is an updated list of Postman Collections you can use in the test
+        platform:
+      links:
+        - Service Provider Simulator
+    - title: Learn more about Mojaloop
+      comment: 'To learn more about Mojaloop, you can follow the links below:'
+      links:
+        - Mojaloop documentation
+        - Mojaloop specification
+    - title: Learn more about Mobile Money API
+      comment: >-
+        To learn more about the GSMA Mobile Money API, you can follow the links
+        below:
+      links:
+        - GSMA Mobile Money API website
+        - GSMA Mobile Money API developer portal
+  buttons:
+    start-demo: Start interactive demo
+    reset-demo: Reset Demo
+error:
+  page:
+    title: Oops...You just found an error page
+  errors:
+    e-400:
+      title: 400 Bad Request
+      comment: >-
+        We are sorry but your browser sent a request that this server could not
+        understand.
+    e-401:
+      title: 401 Unauthorized
+      comment: We are sorry but you are not authorized to access this page.
+    e-403:
+      title: 403 Forbidden
+      comment: We are sorry but you do not have permission to access this page.
+    e-404:
+      title: 404 Page Not Found
+      comment: We are sorry but the page you were looking for does not exist.
+    e-405:
+      title: 405 Method Not Supported
+      comment: We are sorry but the method not supported.
+    e-419:
+      title: 419 Page Expired
+      comment: We are sorry but your session has expired.
+    e-429:
+      title: 429 Too Many Requests
+      comment: We are sorry but too many requests.
+    e-500:
+      title: 500 Server Error
+      comment: >-
+        We are sorry but your request contains bad syntax and cannot be
+        fulfilled.
+    e-503:
+      title: 503 Service Unavailable
+      comment: We are sorry but the service is temporarily unavailable.
+  buttons:
+    home: Take me home
+home:
+  page:
+    title: Latest sessions
+  content:
+    title: You have no sessions
+    comment: Click the button below to create your first session.
+  buttons:
+    new-session: New Session
+  alerts:
+    no-modes: No test modes are enabled in the environment
+sessions:
+  register:
+    card:
+      title: Session Type
+    page:
+      title: Create new session
+    types:
+      questionnaire:
+        title: Test
+        description:
+          - >-
+            A <b>@:(sessions.register.types.questionnaire.title)</b> session is
+            designed to help you quickly evaluate your system independently.
+          - >-
+            Unlike a <b>@:(sessions.register.types.compliance.title)</b>
+            session, you can execute tests as many times as desired, and can
+            change the chosen set of test cases at any time
+      test:
+        title: Manual
+        description: >-
+          A <b>@:(sessions.register.types.test.title)</b> session allows you to
+          select the precise test cases to execute, without completing a
+          questionnaire. You can execute each test case as many times as
+          desired, and can change the set of selected test cases at any time.
+      compliance:
+        title: '@:(special-locales.compliance)'
+        description: >-
+          A <b>@:(sessions.register.types.compliance.title)</b> is designed to
+          be executed once you are confident in your system. You will only be
+          able to execute each test case <b>{testRunAttempts}</b> times, and you
+          will not be able to adjust the test case selection once the session is
+          created. After executing your tests, you will be able to submit your
+          results for review by a platform administrator.

@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>{{ $t('page.title') }}</b>
+                    <b>{{ $t('layout.sessions.questionnaire.page.title') }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -35,7 +35,11 @@
                                 }"
                             >
                                 <span class="d-inline-block mt-2">
-                                    {{ $t('info.summary') }}
+                                    {{
+                                        $t(
+                                            'layout.sessions.questionnaire.info.summary'
+                                        )
+                                    }}
                                 </span>
                             </span>
                         </div>
@@ -55,7 +59,7 @@ import Layout from '@/layouts/main';
 export default {
     metaInfo() {
         return {
-            title: this.$t('page.title'),
+            title: this.$t('layout.sessions.questionnaire.page.title'),
         };
     },
     components: {
@@ -69,5 +73,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/special-locales.json"></i18n>
-<i18n src="@locales/layout/sessions/questionnaire.json"></i18n>

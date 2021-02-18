@@ -70,10 +70,13 @@
                                     <span v-if="searchList.emailFilter">
                                         <strong>
                                             {{
-                                                $t('errors.option-not-add', {
-                                                    option:
-                                                        searchList.emailFilter,
-                                                })
+                                                $t(
+                                                    'v-select.errors.option-not-add',
+                                                    {
+                                                        option:
+                                                            searchList.emailFilter,
+                                                    }
+                                                )
                                             }}
                                         </strong>
                                     </span>
@@ -181,5 +184,4 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/v-select.json"></i18n>
 <i18n src="@locales/pages/admin/groups/create.json"></i18n>

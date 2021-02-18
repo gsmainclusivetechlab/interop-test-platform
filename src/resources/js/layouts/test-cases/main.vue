@@ -66,7 +66,9 @@ export default {
             return (
                 this.breadcrumbs ?? [
                     {
-                        name: this.$t('breadcrumb.test-cases'),
+                        name: this.$t(
+                            'layout.test-cases.breadcrumb.test-cases'
+                        ),
                         url: route('admin.test-cases.index'),
                     },
                     { name: this.testCase.name },
@@ -76,14 +78,14 @@ export default {
         navLinks() {
             return [
                 {
-                    title: this.$t('breadcrumb.info'),
+                    title: this.$t('layout.test-cases.breadcrumb.info'),
                     route: 'admin.test-cases.info.show',
                     condition:
                         route().current('admin.test-cases.info.show') ||
                         route().current('admin.test-cases.info.edit'),
                 },
                 {
-                    title: this.$t('breadcrumb.test-steps'),
+                    title: this.$t('layout.test-cases.breadcrumb.test-steps'),
                     route: 'admin.test-cases.test-steps.index',
                     condition:
                         route().current('admin.test-cases.test-steps.index') ||
@@ -92,26 +94,26 @@ export default {
                         route().current('admin.test-cases.test-steps.edit'),
                 },
                 {
-                    title: this.$t('breadcrumb.test-flow'),
+                    title: this.$t('layout.test-cases.breadcrumb.test-flow'),
                     route: 'admin.test-cases.flow',
                     condition: route().current('admin.test-cases.flow'),
                 },
                 {
-                    title: this.$t('breadcrumb.groups'),
+                    title: this.$t('layout.test-cases.breadcrumb.groups'),
                     route: 'admin.test-cases.groups.index',
                     condition:
                         route().current('admin.test-cases.groups.index') ||
                         route().current('admin.test-cases.groups.edit'),
                 },
                 {
-                    title: this.$t('breadcrumb.versions'),
+                    title: this.$t('layout.test-cases.breadcrumb.versions'),
                     route: 'admin.test-cases.versions.index',
                     condition: route().current(
                         'admin.test-cases.versions.index'
                     ),
                 },
                 {
-                    title: this.$t('breadcrumb.components'),
+                    title: this.$t('layout.test-cases.breadcrumb.components'),
                     route: 'admin.test-cases.components.index',
                     condition: route().current(
                         'admin.test-cases.components.index'
@@ -122,5 +124,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/special-locales.json"></i18n>
-<i18n src="@locales/layout/test-cases/main.json"></i18n>

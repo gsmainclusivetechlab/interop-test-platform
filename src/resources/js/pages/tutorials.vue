@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        <b>{{ $t('page.title') }}</b>
+                        <b>{{ $t('tutorials.page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -13,7 +13,7 @@
             <div class="row justify-content-md-around">
                 <div class="w-100"><br /></div>
                 <template v-for="(item, index) of tutorials">
-                    <div class="col-3 tutorial-cards">
+                    <div class="col-3 tutorial-cards" v-bind:key="index">
                         <a
                             class="d-inline-block btn scenario-card"
                             :href="'#' + item.id"
@@ -30,12 +30,18 @@
                             </div>
                         </a>
                     </div>
-                    <div v-if="(index + 1) % 3 === 0" class="w-100"><br /></div>
+                    <div
+                        v-bind:key="index"
+                        v-if="(index + 1) % 3 === 0"
+                        class="w-100"
+                    >
+                        <br />
+                    </div>
                 </template>
             </div>
             <div role="tablist" class="tutorial-accordion px-4">
-                <template v-for="item of tutorials">
-                    <article class="mb-3 card">
+                <template v-for="(item, index) of tutorials">
+                    <article class="mb-3 card" v-bind:key="index">
                         <header
                             :id="item.id"
                             class="pl-0 card-header"
@@ -80,7 +86,7 @@
                     <h4
                         class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center"
                     >
-                        {{ $t('page.noTutorials') }}
+                        {{ $t('tutorials.page.noTutorials') }}
                     </h4>
                 </div>
                 <div class="w-100"><br /></div>
@@ -96,7 +102,7 @@ import TutorialDemo from '@/components/tutorial-demo';
 export default {
     metaInfo() {
         return {
-            title: this.$t('page.title'),
+            title: this.$t('tutorials.page.title'),
         };
     },
     components: {
@@ -116,4 +122,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/pages/tutorials.json"></i18n>
