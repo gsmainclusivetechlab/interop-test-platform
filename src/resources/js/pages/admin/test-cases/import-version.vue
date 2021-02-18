@@ -28,17 +28,41 @@
                                         :browse-text="$t('inputs.file.browse')"
                                         :class="{
                                             'is-invalid':
-                                                $page.props.errors.file,
+                                                Object.keys($page.props.errors)
+                                                    .length > 0 ||
+                                                $page.props.messages.error,
                                         }"
+                                        @input="changeFile"
                                     />
-                                    <span
-                                        v-if="$page.props.errors.file"
+                                    <div
+                                        v-if="
+                                            Object.keys($page.props.errors)
+                                                .length > 0 ||
+                                            $page.props.messages.error
+                                        "
                                         class="invalid-feedback"
                                     >
-                                        <strong>
-                                            {{ $page.props.errors.file }}
-                                        </strong>
-                                    </span>
+                                        <p>
+                                            <strong>{{
+                                                $t('inputs.errors.file', {
+                                                    fileName: form.fileName,
+                                                })
+                                            }}</strong>
+                                        </p>
+                                        <p v-if="$page.props.errors.file">
+                                            <strong>
+                                                {{ $page.props.errors.file }}
+                                            </strong>
+                                        </p>
+                                        <p v-if="$page.props.errors.entries">
+                                            <strong
+                                                v-html="
+                                                    $page.props.errors.entries
+                                                "
+                                            >
+                                            </strong>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -66,6 +90,7 @@
                                 v-else
                                 type="submit"
                                 class="btn btn-primary"
+                                :disabled="!form.file"
                             >
                                 <span
                                     v-if="sending"
@@ -112,6 +137,7 @@ export default {
             sending: false,
             form: {
                 file: null,
+                fileName: null,
             },
         };
     },
@@ -127,7 +153,23 @@ export default {
                 },
             });
         },
+        changeFile(value) {
+            if (value) {
+                this.form.fileName = value.name;
+            }
+        },
+    },
+    mounted() {
+        this.$inertia.on('finish', () => {
+            if (
+                Object.keys(this.$page.props.errors).length > 0 ||
+                this.$page.props.messages.error
+            ) {
+                this.form.file = null;
+            }
+        });
     },
 };
 </script>
+<i18n src="@locales/pages/admin/test-cases/import.json"></i18n>
 <i18n src="@locales/pages/admin/test-cases/import-version.json"></i18n>

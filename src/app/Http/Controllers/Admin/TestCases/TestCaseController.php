@@ -239,9 +239,12 @@ class TestCaseController extends Controller
                 'entries' => implode(
                     '<br>',
                     array_merge(
-                        ['Test Case validation failed. Please resolve errors listed below:<br>'],
-                        $e->validator->errors()->all())
-                )
+                        [
+                            'Test Case validation failed. Please resolve errors listed below:',
+                        ],
+                        $e->validator->errors()->all()
+                    )
+                ),
             ]);
         } catch (\Throwable $e) {
             return redirect()
