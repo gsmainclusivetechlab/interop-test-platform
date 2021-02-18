@@ -210,12 +210,9 @@ class TestRun extends Model
             ->orderByDesc('iteration')
             ->first();
 
-        return $this->testResults()
-            ->create([
-                'test_step_id' => $testStep->id,
-                'iteration' => !empty($testResult) ?
-                    ++$testResult->iteration :
-                    1,
-            ]);
+        return $this->testResults()->create([
+            'test_step_id' => $testStep->id,
+            'iteration' => !empty($testResult) ? ++$testResult->iteration : 1,
+        ]);
     }
 }

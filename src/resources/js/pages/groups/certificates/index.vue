@@ -21,11 +21,14 @@
                         <tr>
                             <th class="text-nowrap">Name</th>
                             <th class="text-nowrap w-auto">Uploaded At</th>
-                            <th class="text-nowrap w-1"></th>
+                            <th class="text-nowrap w-0"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="certificate in certificates.data">
+                        <tr
+                            v-for="(certificate, i) in certificates.data"
+                            :key="i"
+                        >
                             <td class="text-break">
                                 {{ certificate.name }}
                             </td>

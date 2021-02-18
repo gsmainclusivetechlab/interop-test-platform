@@ -44,7 +44,10 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Files </label>
-                                <file-environments v-model="form.files" />
+                                <environments
+                                    v-model="form.files"
+                                    envs-type="file"
+                                />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.files"
@@ -82,8 +85,7 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
-import Environments from '@/components/environments/environments';
-import FileEnvironments from '@/components/environments/file-environments';
+import Environments from '@/components/environments';
 
 export default {
     metaInfo() {
@@ -94,7 +96,6 @@ export default {
     components: {
         Layout,
         Environments,
-        FileEnvironments,
     },
     props: {
         group: {
@@ -107,17 +108,27 @@ export default {
             sending: false,
             form: {
                 name: null,
-                variables: null,
-                files: null,
+                variables: [],
+                files: [],
             },
         };
     },
     methods: {
         submit() {
+            const form = {
+                name: this.form.name,
+                variables: Object.fromEntries(
+                    this.form.variables.map((el) => [el.key, el.value])
+                ),
+                files: Object.fromEntries(
+                    this.form.files.map((el) => [el.key, el.value])
+                ),
+            };
+
             this.sending = true;
             this.$inertia.post(
                 route('groups.environments.store', this.group),
-                serialize(this.form, {
+                serialize(form, {
                     indices: true,
                 }),
                 {

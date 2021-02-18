@@ -40,7 +40,18 @@ class AppServiceProvider extends ServiceProvider
             'implicit_sut' => ImplicitSut::class,
         ]);
 
-        $this->registerValidators();
+        Validator::extend('ilpPacket', function (
+            $attribute,
+            $value,
+            $parameters,
+            $validator
+        ) {
+            return IlpPacket::validateIlpPacket(
+                $value,
+                $parameters,
+                $validator->getData()
+            );
+        });
     }
 
     /**

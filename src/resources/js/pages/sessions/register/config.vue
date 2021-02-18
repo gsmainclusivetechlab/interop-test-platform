@@ -5,7 +5,6 @@
                 <div class="card-header">
                     <h3 class="card-title">Configure components</h3>
                 </div>
-
                 <div class="card-body" v-if="groupsDefaultList.length">
                     <label class="form-label">Group Default Sessions</label>
                     <p>
@@ -35,7 +34,7 @@
                     />
                 </div>
 
-                <div class="card-body" v-if="suts.data && suts.data.length">
+                <div v-if="suts.data && suts.data.length" class="card-body">
                     <template
                         v-if="form.groupsDefault && form.groupsDefault.length"
                     >
@@ -103,13 +102,13 @@
                         v-if="!form.groupsDefault || !form.groupsDefault.length"
                     >
                         <template v-for="(sut, i) in suts.data">
-                            <h3 :key="`sut-${i}`">{{ sut.name }}</h3>
+                            <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
                             <template
                                 v-for="(connection, j) in sut.connections"
                             >
                                 <div
                                     class="mb-3"
-                                    :key="`connection-${j}`"
+                                    :key="`session-connection-${i}-${j}`"
                                     v-if="
                                         Array.from(
                                             new Set(
@@ -151,25 +150,68 @@
                         </template>
                     </template>
                 </div>
+                <div v-if="hasGroupEnvironments" class="card-body">
+                    <label class="form-label">Groups environments</label>
+                    <v-select
+                        v-model="groupsEnvs"
+                        multiple
+                        :options="groupsEnvsList"
+                        label="name"
+                        placeholder="Select environments"
+                        :selectable="
+                            (option) => isSelectable(option, groupsEnvs)
+                        "
+                        class="form-control d-flex p-0 mb-1"
+                    />
+                    <span class="d-block text-muted small"
+                        >Chose groups environments and merge with current</span
+                    >
+                    <div class="text-right">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="
+                                mergeGroupsEnvs(
+                                    groupsEnvs,
+                                    form.environments,
+                                    form.fileEnvironments
+                                )
+                            "
+                        >
+                            Merge
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Test cases environments</label>
+                    <span class="d-block text-muted small"
+                        >Load test cases environments and merge with
+                        current</span
+                    >
+                    <div class="text-right">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="
+                                loadTestCasesEnvs(
+                                    $page.props.session.info.test_cases
+                                ).then((data) => {
+                                    mergeTestCasesEnvs(
+                                        data.data,
+                                        form.environments,
+                                        form.fileEnvironments
+                                    );
+                                })
+                            "
+                        >
+                            Merge
+                        </button>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Environments</label>
-                        <v-select
-                            v-if="hasGroupEnvironments"
-                            v-model="groupEnvironment"
-                            :options="groupEnvironmentsList"
-                            label="name"
-                            placeholder="Group environment..."
-                            :selectable="
-                                (option) =>
-                                    isSelectable(option, groupEnvironment)
-                            "
-                            class="form-control d-flex p-0 mb-3"
-                        />
-                        <environments
-                            v-model="form.environments"
-                            ref="environments"
-                        />
+                        <environments v-model="form.environments" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.props.errors.environments"
@@ -181,9 +223,9 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label"> File Environments </label>
-                        <file-environments
+                        <environments
                             v-model="form.fileEnvironments"
-                            ref="fileEnvironments"
+                            envs-type="file"
                         />
                         <div
                             class="text-danger small mt-2"
@@ -218,15 +260,14 @@
 <script>
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
-import Environments from '@/components/environments/environments';
-import FileEnvironments from '@/components/environments/file-environments';
+import Environments from '@/components/environments';
 import mixinVSelect from '@/components/v-select/mixin';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
     components: {
         Layout,
         Environments,
-        FileEnvironments,
     },
     props: {
         session: {
@@ -250,7 +291,7 @@ export default {
             required: true,
         },
     },
-    mixins: [mixinVSelect],
+    mixins: [mixinVSelect, mixinEnvs],
     data() {
         const ziggyConf = { ...this.route().ziggy };
         ziggyConf.baseUrl = this.$page.props.app.http_base_url;
@@ -258,45 +299,50 @@ export default {
         return {
             ziggyConf,
             sending: false,
-            groupEnvironment: null,
-            groupEnvironmentsList: [],
+            groupsEnvs: [],
+            groupsEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
-                group_environment_id: null,
-                environments: null,
-                groupsDefault: null,
-                fileEnvironments: null,
+                environments: [],
+                fileEnvironments: [],
+                groupsDefault: [],
             },
         };
     },
-    watch: {
-        groupEnvironment: {
-            immediate: true,
-            handler(value) {
-                this.form.group_environment_id = value?.id ?? null;
-                if (value !== null) {
-                    this.form.environments = value.variables;
-                    this.$refs.environments.syncEnvironments(
-                        this.form.environments
-                    );
-
-                    this.form.fileEnvironments = value.files;
-                    this.$refs.fileEnvironments.syncEnvironments(
-                        this.form.fileEnvironments
-                    );
-                }
-            },
-        },
-    },
     mounted() {
-        this.loadGroupEnvironmentList();
+        this.loadGroupsEnvsList().then((result) => {
+            this.groupsEnvsList = result.data.data;
+        });
+        this.loadTestCasesEnvs(this.$page.props.session.info.test_cases).then(
+            (data) => {
+                this.mergeTestCasesEnvs(
+                    data.data,
+                    this.form.environments,
+                    this.form.fileEnvironments
+                );
+            }
+        );
     },
     methods: {
         submit() {
+            const form = {
+                environments: Object.fromEntries(
+                    this.form.environments?.map((el) => [el.key, el.value]) ??
+                        []
+                ),
+                fileEnvironments: Object.fromEntries(
+                    this.form.fileEnvironments?.map((el) => [
+                        el.key,
+                        el.value,
+                    ]) ?? []
+                ),
+                groupsDefault: this.form.groupsDefault,
+            };
+
             this.sending = true;
             this.$inertia.post(
                 route('sessions.register.config.store'),
-                serialize(this.form, {
+                serialize(form, {
                     indices: true,
                 }),
                 {
@@ -305,15 +351,6 @@ export default {
                     },
                 }
             );
-        },
-        loadGroupEnvironmentList(query = '') {
-            axios
-                .get(route('sessions.register.group-environment-candidates'), {
-                    params: { q: query },
-                })
-                .then((result) => {
-                    this.groupEnvironmentsList = result.data.data;
-                });
         },
         getRoute(useEncryption, data, isForGroup = false) {
             const group = isForGroup ? '-group' : '';

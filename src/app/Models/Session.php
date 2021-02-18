@@ -226,29 +226,7 @@ class Session extends Model
     {
         return array_merge(
             $this->environments ?? [],
-            $this->fileEnvironments->pluck('path', 'name')->all(),
-            [
-                'SP_BASE_URI' => $this->getBaseUriForEnvironment(
-                    'service-provider'
-                ),
-                'MMO1_BASE_URI' => $this->getBaseUriForEnvironment('mmo-1'),
-                'MOJALOOP_BASE_URI' => $this->getBaseUriForEnvironment(
-                    'mojaloop'
-                ),
-                'MMO2_BASE_URI' => $this->getBaseUriForEnvironment('mmo-2'),
-            ]
-        );
-    }
-
-    /**
-     * @param string $slug
-     *
-     * @return string|null
-     */
-    public function getBaseUriForEnvironment(string $slug)
-    {
-        return $this->getBaseUriOfComponent(
-            Component::where('slug', $slug)->first()
+            $this->fileEnvironments->pluck('path', 'name')->all()
         );
     }
 
