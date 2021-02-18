@@ -153,13 +153,13 @@
                 <div v-if="hasGroupEnvironments" class="card-body">
                     <label class="form-label">Groups environments</label>
                     <v-select
-                        v-model="groupEnvs"
+                        v-model="groupsEnvs"
                         multiple
-                        :options="groupEnvsList"
+                        :options="groupsEnvsList"
                         label="name"
                         placeholder="Select environments"
                         :selectable="
-                            (option) => isSelectable(option, groupEnvs)
+                            (option) => isSelectable(option, groupsEnvs)
                         "
                         class="form-control d-flex p-0 mb-1"
                     />
@@ -170,7 +170,13 @@
                         <button
                             type="button"
                             class="btn btn-primary"
-                            @click="mergeGroupsEnvs"
+                            @click="
+                                mergeGroupsEnvs(
+                                    groupsEnvs,
+                                    form.environments,
+                                    form.fileEnvironments
+                                )
+                            "
                         >
                             Merge
                         </button>
@@ -186,7 +192,17 @@
                         <button
                             type="button"
                             class="btn btn-primary"
-                            @click="loadTestCasesEnvs"
+                            @click="
+                                loadTestCasesEnvs(
+                                    $page.props.session.info.test_cases
+                                ).then((data) => {
+                                    mergeTestCasesEnvs(
+                                        data.data,
+                                        form.environments,
+                                        form.fileEnvironments
+                                    );
+                                })
+                            "
                         >
                             Merge
                         </button>
@@ -246,7 +262,7 @@ import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/sessions/register';
 import Environments from '@/components/environments';
 import mixinVSelect from '@/components/v-select/mixin';
-import mixinEnvs from '@/components/environments/mixin';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
     components: {
@@ -283,8 +299,8 @@ export default {
         return {
             ziggyConf,
             sending: false,
-            groupEnvs: [],
-            groupEnvsList: [],
+            groupsEnvs: [],
+            groupsEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 environments: [],
@@ -294,8 +310,18 @@ export default {
         };
     },
     mounted() {
-        this.loadGroupsEnvsList();
-        this.loadTestCasesEnvs();
+        this.loadGroupsEnvsList().then((result) => {
+            this.groupsEnvsList = result.data.data;
+        });
+        this.loadTestCasesEnvs(this.$page.props.session.info.test_cases).then(
+            (data) => {
+                this.mergeTestCasesEnvs(
+                    data.data,
+                    this.form.environments,
+                    this.form.fileEnvironments
+                );
+            }
+        );
     },
     methods: {
         submit() {
@@ -325,55 +351,6 @@ export default {
                     },
                 }
             );
-        },
-        loadGroupsEnvsList(query = '') {
-            axios
-                .get(route('sessions.register.group-environment-candidates'), {
-                    params: { q: query },
-                })
-                .then((result) => {
-                    this.groupEnvsList = result.data.data;
-                });
-        },
-        loadTestCasesEnvs() {
-            axios
-                .post(route('admin.test-cases.environment-candidates'), {
-                    testCasesIds: this.$page.props.session.info.test_cases,
-                })
-                .then((data) => {
-                    if (data.data?.env?.length) {
-                        const variables = Object.fromEntries(
-                            data.data.env.map((key) => [key, null])
-                        );
-
-                        this.mergeEnvs(
-                            variables,
-                            this.form.environments,
-                            'text'
-                        );
-                    }
-                    if (data.data?.file_env?.length) {
-                        const files = data.data.file_env.map((key) => ({
-                            name: key,
-                            value: null,
-                            file_name: null,
-                        }));
-
-                        this.mergeEnvs(
-                            files,
-                            this.form.fileEnvironments,
-                            'file'
-                        );
-                    }
-                });
-        },
-        mergeGroupsEnvs() {
-            if (!this.groupEnvs?.length) return;
-
-            this.groupEnvs.forEach((env) => {
-                this.mergeEnvs(env.variables, this.form.environments, 'text');
-                this.mergeEnvs(env.files, this.form.fileEnvironments, 'file');
-            });
         },
         getRoute(useEncryption, data, isForGroup = false) {
             const group = isForGroup ? '-group' : '';

@@ -360,17 +360,14 @@
                                     >Groups environments</label
                                 >
                                 <v-select
-                                    v-model="groupsEnvironments"
+                                    v-model="groupsEnvs"
                                     multiple
-                                    :options="groupsEnvironmentsList"
+                                    :options="groupsEnvsList"
                                     label="name"
                                     placeholder="Select environments"
                                     :selectable="
                                         (option) =>
-                                            isSelectable(
-                                                option,
-                                                groupsEnvironments
-                                            )
+                                            isSelectable(option, groupsEnvs)
                                     "
                                     class="form-control d-flex p-0 mb-1"
                                 />
@@ -382,7 +379,13 @@
                                     <button
                                         type="button"
                                         class="btn btn-primary"
-                                        @click="mergeGroupsEnvironments"
+                                        @click="
+                                            mergeGroupsEnvs(
+                                                groupsEnvs,
+                                                form.environments,
+                                                form.fileEnvironments
+                                            )
+                                        "
                                     >
                                         Merge
                                     </button>
@@ -400,7 +403,17 @@
                                     <button
                                         type="button"
                                         class="btn btn-primary"
-                                        @click="loadTestCasesEnvironments"
+                                        @click="
+                                            loadTestCasesEnvs(
+                                                form.test_cases
+                                            ).then((data) => {
+                                                mergeTestCasesEnvs(
+                                                    data.data,
+                                                    form.environments,
+                                                    form.fileEnvironments
+                                                );
+                                            })
+                                        "
                                     >
                                         Merge
                                     </button>
@@ -484,7 +497,7 @@ import Layout from '@/layouts/sessions/app';
 import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 import mixinVSelect from '@/components/v-select/mixin';
-import mixinEnvs from '@/components/environments/mixin';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
     components: {
@@ -519,8 +532,8 @@ export default {
         return {
             sending: false,
             isCompliance: this.session.type === 'compliance',
-            groupsEnvironments: this.session.groupEnvironment?.data ?? [],
-            groupsEnvironmentsList: [],
+            groupsEnvs: this.session.groupEnvironment?.data ?? [],
+            groupsEnvsList: [],
             groupCertificatesList: [],
             form: {
                 name: this.session.name,
@@ -548,8 +561,19 @@ export default {
         };
     },
     mounted() {
-        this.loadGroupEnvironmentList();
-        this.loadGroupCertificateList();
+        this.loadGroupsEnvsList().then((result) => {
+            this.groupsEnvsList = result.data.data;
+        });
+        this.loadGroupCertificateList(this.session.id).then((result) => {
+            this.groupCertificatesList = result.data.data;
+
+            this.form.components.forEach(
+                (el) =>
+                    (el.certificate.serialized = this.groupCertificatesList?.find(
+                        (crt) => crt.id === el.certificate_id
+                    ))
+            );
+        });
     },
     methods: {
         submit() {
@@ -612,78 +636,21 @@ export default {
                     !component.certificate.client_key)
             );
         },
-        loadGroupEnvironmentList(query = '') {
-            axios
-                .get(route('sessions.register.group-environment-candidates'), {
-                    params: { q: query },
-                })
-                .then((result) => {
-                    this.groupsEnvironmentsList = result.data.data;
-                });
-        },
-        loadTestCasesEnvironments() {
-            axios
-                .post(route('admin.test-cases.environment-candidates'), {
-                    testCasesIds: this.form.test_cases,
-                })
-                .then((data) => {
-                    if (data.data?.env?.length) {
-                        const variables = Object.fromEntries(
-                            data.data.env.map((key) => [key, null])
-                        );
-
-                        this.mergeEnvs(
-                            variables,
-                            this.form.environments,
-                            'text'
-                        );
-                    }
-                    if (data.data?.file_env?.length) {
-                        const files = data.data.file_env.map((key) => ({
-                            name: key,
-                            value: null,
-                            file_name: null,
-                        }));
-
-                        this.mergeEnvs(
-                            files,
-                            this.form.fileEnvironments,
-                            'file'
-                        );
-                    }
-                });
-        },
-        loadGroupCertificateList(query = '') {
-            axios
-                .get(route('sessions.register.group-certificate-candidates'), {
-                    params: {
-                        q: query,
-                        session: this.session.id,
-                    },
-                })
-                .then((result) => {
-                    this.groupCertificatesList = result.data.data;
-
-                    this.form.components.forEach(
-                        (el) =>
-                            (el.certificate.serialized = this.groupCertificatesList?.find(
-                                (crt) => crt.id === el.certificate_id
-                            ))
-                    );
-                });
-        },
-        mergeGroupsEnvironments() {
-            if (!this.groupsEnvironments?.length) return;
-
-            this.groupsEnvironments.forEach((env) => {
-                this.mergeEnvs(env.variables, this.form.environments, 'text');
-                this.mergeEnvs(env.files, this.form.fileEnvironments, 'file');
-            });
-        },
         changeEncryption(component, use) {
             component.use_encryption = use ? 1 : 0;
             Object.keys(component.certificate).forEach(
                 (crt) => (component.certificate[crt] = null)
+            );
+        },
+        loadGroupCertificateList(sessionId, query = '') {
+            return axios.get(
+                route('sessions.register.group-certificate-candidates'),
+                {
+                    params: {
+                        q: query,
+                        session: sessionId,
+                    },
+                }
             );
         },
     },
