@@ -93,13 +93,13 @@
                                 <div class="d-flex mb-3">
                                     <label class="form-check form-switch">
                                         <input
+                                            type="checkbox"
+                                            class="form-check-input"
                                             :checked="
                                                 `${component.use_encryption}` ===
                                                 '1'
                                             "
-                                            type="checkbox"
-                                            class="form-check-input"
-                                            @input="
+                                            @change="
                                                 (e) =>
                                                     changeEncryption(
                                                         component,
@@ -133,7 +133,7 @@
                                 >
                                     <div
                                         class="mb-3"
-                                        v-if="showGroupCertificates(component)"
+                                        v-if="hasGroupCertificates"
                                     >
                                         <label class="form-label"
                                             >Certificate</label
@@ -181,7 +181,7 @@
                                     <div
                                         class="hr-text"
                                         v-if="
-                                            showGroupCertificates(component) &&
+                                            hasGroupCertificates &&
                                             !component.certificate.serialized
                                         "
                                     >
@@ -498,6 +498,7 @@ import Environments from '@/components/environments';
 import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
 import mixinVSelect from '@/components/v-select/mixin';
 import mixinEnvs from '@/pages/sessions/mixins/environments';
+import mixinCrts from '@/pages/sessions/mixins/certificates';
 
 export default {
     components: {
@@ -527,7 +528,7 @@ export default {
             required: true,
         },
     },
-    mixins: [mixinVSelect, mixinEnvs],
+    mixins: [mixinVSelect, mixinEnvs, mixinCrts],
     data() {
         return {
             sending: false,
@@ -624,31 +625,6 @@ export default {
                 {
                     onFinish: () => {
                         this.sending = false;
-                    },
-                }
-            );
-        },
-        showGroupCertificates(component) {
-            return (
-                this.hasGroupCertificates ||
-                (!component.certificate.ca_crt &&
-                    !component.certificate.client_crt &&
-                    !component.certificate.client_key)
-            );
-        },
-        changeEncryption(component, use) {
-            component.use_encryption = use ? 1 : 0;
-            Object.keys(component.certificate).forEach(
-                (crt) => (component.certificate[crt] = null)
-            );
-        },
-        loadGroupCertificateList(sessionId, query = '') {
-            return axios.get(
-                route('sessions.register.group-certificate-candidates'),
-                {
-                    params: {
-                        q: query,
-                        session: sessionId,
                     },
                 }
             );
