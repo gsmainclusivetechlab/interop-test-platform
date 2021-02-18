@@ -63,6 +63,8 @@ services:
     build:
       context: mysqldb
     env_file: service.env
+    cap_add:
+      - SYS_NICE
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s
