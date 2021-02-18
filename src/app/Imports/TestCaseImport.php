@@ -20,6 +20,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class TestCaseImport implements Importable
 {
@@ -79,13 +80,8 @@ class TestCaseImport implements Importable
             }
 
             if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
+                $this->validateTestSteps($testStepRows);
                 foreach ($testStepRows as $key => $testStepRow) {
-                    Validator::validate(
-                        $testStepRow,
-                        $this->testStepRules($testStepRow, $key),
-                        $this->testStepMessages($key)
-                    );
-
                     /**
                      * @var TestStep $testStep
                      */
@@ -263,6 +259,37 @@ class TestCaseImport implements Importable
         return $testStep;
     }
 
+    /**
+     * @param $rows
+     */
+    protected function validateTestSteps($rows)
+    {
+        $errors = '<ol>';
+        $hasErrors = false;
+        foreach ($rows as $key => $testStepRow) {
+            $key++;
+            $testStepValidator = Validator::make(
+                $testStepRow,
+                $this->testStepRules($testStepRow, $key),
+                $this->testStepMessages()
+            );
+            if ($testStepValidator->fails()) {
+                $hasErrors = true;
+                $errors .= "<li><b>Test step $key:</b><ul>";
+                foreach ($testStepValidator->errors()->all() as $message) {
+                    $errors .= "<li>$message</li>";
+                }
+                $errors .= '</ul></li>';
+            }
+        }
+        $errors .= '</ol>';
+
+        if ($hasErrors)
+        {
+            throw ValidationException::withMessages([$errors]);
+        }
+    }
+
     protected function testCaseRules($rows): array
     {
         return [
@@ -291,7 +318,6 @@ class TestCaseImport implements Importable
      */
     protected function testStepRules($rows, $step): array
     {
-        $step++;
         return [
             'source' => ['required', 'exists:components,slug'],
             'target' => ['required', 'exists:components,slug'],
@@ -394,14 +420,9 @@ class TestCaseImport implements Importable
         ];
     }
 
-    /**
-     * @param $step
-     * @return array
-     */
-    protected function testStepMessages($step): array
+    protected function testStepMessages(): array
     {
-        $step++;
-        $messages = [
+        return [
             'source.required' => __('Source field is required.'),
             'target.required' => __('Target field is required.'),
             'source.exists' => __('Source component does not exists.'),
@@ -474,10 +495,5 @@ class TestCaseImport implements Importable
                 'Repeat test response scripts rules field is required.'
             ),
         ];
-        array_walk($messages, function (&$value) use ($step) {
-            $value .= __(' On Test Step :step.', ['step' => $step]);
-        });
-
-        return $messages;
     }
 }
