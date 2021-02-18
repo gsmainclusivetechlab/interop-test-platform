@@ -9,15 +9,17 @@
                         <img
                             src="/assets/images/logo.png"
                             class="navbar-brand-image h-5 outline-light"
-                            alt="Interoperability Test Platform"
+                            alt="{{$t('main-nav.title')}}"
                         />
                     </inertia-link>
                 </div>
 
                 <div class="col d-none d-md-block text-center text-primary">
-                    <h1 class="col-login__title mb-1">Inclusive Tech Lab</h1>
+                    <h1 class="col-login__title mb-1">
+                        {{ $t('main-nav.title') }}
+                    </h1>
                     <h2 class="col-login__subtitle mb-0">
-                        Interoperability Test Platform
+                        {{ $t('main-nav.subtitle') }}
                     </h2>
                 </div>
 
@@ -332,7 +334,7 @@
                         </li>
                         <li class="nav-item">
                             <a
-                                href="https://www.gsma.com/lab"
+                                href="{{ $t('main-nav.external-link') }}"
                                 class="nav-link"
                                 target="_blank"
                             >
@@ -342,7 +344,7 @@
                                     <icon name="link" />
                                 </span>
                                 <span class="nav-link-title">{{
-                                    $t('main-nav.lab')
+                                    $t('main-nav.external')
                                 }}</span>
                             </a>
                         </li>

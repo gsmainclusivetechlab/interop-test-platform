@@ -22,7 +22,16 @@
             "groups": "Groups",
             "tutorials": "Tutorials",
             "doc": "Documentation",
-            "lab": "The Lab"
+            "external": "The Lab",
+            "external-link": "https://www.gsma.com/lab",
+            "title": "Inclusive Tech Lab",
+            "subtitle": "Interoperability Test Platform"
+        },
+        "footer": {
+            "link": "https://www.gsma.com/aboutus/legal",
+            "cookies-link": "https://www.gsma.com/aboutus/legal/cookie-policy",
+            "copyright-link": "https://www.gsma.com",
+            "copyright-name": "GSMA"
         },
         "buttons": {
             "new-session": "New Session"
