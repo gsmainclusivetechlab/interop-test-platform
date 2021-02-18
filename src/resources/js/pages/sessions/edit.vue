@@ -77,6 +77,10 @@
                                                 .base_url
                                         "
                                         class="form-control"
+                                        :readonly="
+                                            form.components[component.id]
+                                                .implicit_sut_id
+                                        "
                                         :class="{
                                             'is-invalid':
                                                 $page.props.errors[
@@ -99,7 +103,13 @@
                                         }}
                                     </span>
                                 </div>
-                                <div class="d-flex mb-3">
+                                <div
+                                    class="d-flex mb-3"
+                                    v-if="
+                                        !form.components[component.id]
+                                            .implicit_sut_id
+                                    "
+                                >
                                     <label class="form-check form-switch">
                                         <input
                                             class="form-check-input"
@@ -133,7 +143,9 @@
                                 <div
                                     v-if="
                                         form.components[component.id]
-                                            .use_encryption
+                                            .use_encryption &&
+                                        !form.components[component.id]
+                                            .implicit_sut_id
                                     "
                                 >
                                     <div
@@ -528,6 +540,7 @@ export default {
                                 'base_url',
                                 'use_encryption',
                                 'certificate_id',
+                                'implicit_sut_id',
                             ])
                             .all();
                     })

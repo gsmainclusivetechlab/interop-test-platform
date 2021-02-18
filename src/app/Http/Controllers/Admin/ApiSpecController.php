@@ -18,7 +18,6 @@ class ApiSpecController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->authorizeResource(ApiSpec::class, 'api_spec', [
             'only' => ['index', 'destroy'],
         ]);

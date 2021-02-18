@@ -182,6 +182,19 @@
                                     {{ $t('menu.import-question-def') }}
                                 </inertia-link>
                             </li>
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.implicit_suts
+                                        .viewAny
+                                "
+                            >
+                                <inertia-link
+                                    :href="route('admin.implicit-suts.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    {{ $t('menu.implicit-sut') }}
+                                </inertia-link>
+                            </li>
                         </b-nav-item-dropdown>
 
                         <b-nav-item-dropdown

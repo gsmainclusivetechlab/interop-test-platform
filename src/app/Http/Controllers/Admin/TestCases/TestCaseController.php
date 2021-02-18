@@ -31,7 +31,6 @@ class TestCaseController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->middleware('test-case.latest')->only([
             'showImportVersionForm',
             'flow',

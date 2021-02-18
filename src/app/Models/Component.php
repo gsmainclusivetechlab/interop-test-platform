@@ -28,8 +28,7 @@ class Component extends Model
 {
     use HasSlug;
 
-    const UPDATED_AT = null;
-    const CREATED_AT = null;
+    public $timestamps = false;
 
     /** @var array */
     protected $fillable = ['slug'];

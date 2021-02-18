@@ -18,7 +18,6 @@ class TestCaseVersionController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->middleware('test-case.latest')->only(['index']);
         $this->authorizeResource(TestCase::class, 'test_case', [
             'only' => ['index'],

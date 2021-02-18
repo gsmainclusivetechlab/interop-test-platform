@@ -34,7 +34,6 @@
                             </td>
                             <td class="text-center text-break">
                                 <b-dropdown
-                                    v-if="certificate.can.delete"
                                     no-caret
                                     right
                                     toggle-class="align-items-center text-muted"
@@ -44,7 +43,7 @@
                                     <template v-slot:button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
-                                    <li v-if="certificate.can.delete">
+                                    <li>
                                         <confirm-link
                                             class="dropdown-item"
                                             :href="

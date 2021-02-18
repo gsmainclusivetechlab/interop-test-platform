@@ -295,7 +295,7 @@ class TestCase extends Model
 
     public function scopeWithVersions(Builder $query, Session $session): Builder
     {
-        $components = $session->components->where('pivot.version');
+        $components = $session->components->where('pivot.version')->values();
 
         return $query->when($components->count(), function (
             Builder $query
@@ -313,10 +313,12 @@ class TestCase extends Model
                     ) {
                         $query
                             ->where('id', $component->id)
-                            ->whereJsonDoesntContain(
+                            ->where(
                                 'component_versions',
-                                $component->pivot->version
-                            );
+                                'not regexp',
+                                "(\"{$component->pivot->version}\")"
+                            )
+                            ->whereJsonLength('component_versions', '>', 0);
                     });
                 });
             });

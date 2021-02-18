@@ -23,7 +23,6 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->authorizeResource(User::class, 'user', [
             'only' => ['index', 'destroy'],
         ]);

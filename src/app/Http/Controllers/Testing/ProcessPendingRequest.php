@@ -105,7 +105,11 @@ class ProcessPendingRequest
 
             if ($targetComponent && $targetComponent->pivot->use_encryption) {
                 /** @var Certificate $certificate */
-                if (!($certificate = $targetComponent->pivot->certificate)) {
+                $certificate = $targetComponent->pivot->implicitSut
+                    ? $targetComponent->pivot->implicitSut->certificate
+                    : $targetComponent->pivot->certificate;
+
+                if (!$certificate) {
                     (new SendingRejectedHandler($this->testResult))(
                         new Exception(
                             __(
@@ -143,9 +147,11 @@ class ProcessPendingRequest
     {
         $response = null;
         if ($this->simulateRequest) {
-            $response = $this->testResult->iteration > $this->testResult->testStep->repeat_count
-                ? $this->testResult->testStep->response
-                : $this->testResult->testStep->repeat_response;
+            $response =
+                $this->testResult->iteration >
+                $this->testResult->testStep->repeat_count
+                    ? $this->testResult->testStep->response
+                    : $this->testResult->testStep->repeat_response;
 
             $response = new Response(
                 $response->status(),

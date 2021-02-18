@@ -19,7 +19,6 @@ class ComponentsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->middleware('test-case.latest')->except(['index']);
         $this->authorizeResource(Component::class, 'component');
     }

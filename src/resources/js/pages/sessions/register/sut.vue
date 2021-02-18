@@ -41,20 +41,17 @@
                     <div class="list-group">
                         <template v-for="(sut, i) in components.data">
                             <div
-                                v-if="form.components[sut.id]"
+                                v-if="component_ids.includes(sut.id)"
                                 class="list-group-item"
                                 :key="i"
                             >
-                                <div
-                                    class="mb-3"
-                                    v-if="typeof versions[sut.id] === 'object'"
-                                >
+                                <div class="mb-3" v-if="getVersions(sut)">
                                     <label class="form-label"
                                         >{{ sut.name }} version</label
                                     >
                                     <v-select
                                         v-model="componentsData.version[sut.id]"
-                                        :options="versions[sut.id]"
+                                        :options="getVersions(sut)"
                                         label="name"
                                         placeholder="Select version..."
                                         :selectable="
@@ -103,6 +100,7 @@
                                                     `components.${sut.id}.base_url`
                                                 ],
                                         }"
+                                        :readonly="implicitSutUrl(sut)"
                                         class="form-control"
                                     />
                                     <span
@@ -120,7 +118,7 @@
                                         }}
                                     </span>
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3" v-if="!implicitSutUrl(sut)">
                                     <label class="form-check form-switch">
                                         <input
                                             v-model="
@@ -153,7 +151,10 @@
                                     </span>
                                 </div>
                                 <div
-                                    v-if="componentsData.use_encryption[sut.id]"
+                                    v-if="
+                                        componentsData.use_encryption[sut.id] &&
+                                        !implicitSutUrl(sut)
+                                    "
                                 >
                                     <div v-if="showGroupCertificates(sut)">
                                         <label class="form-label"
@@ -416,6 +417,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        implicitSuts: {
+            type: Object | Array,
+            required: true,
+        },
     },
     mixins: [mixinVSelect],
     data() {
@@ -428,6 +433,7 @@ export default {
             isCompliance,
             selectedSut,
             groupCertificatesList: [],
+            component_ids: [],
             versionConflicts: collect(this.versions)
                 .filter((v) => {
                     return typeof v === 'string';
@@ -445,6 +451,9 @@ export default {
                         s.id,
                         s.use_encryption === '0' ? false : s.use_encryption,
                     ])
+                    .all(),
+                implicit_sut_id: collect(sessionData)
+                    .mapWithKeys((s) => [s.id, s.implicit_sut_id])
                     .all(),
                 certificate_id: [],
                 ca_crt: [],
@@ -467,48 +476,10 @@ export default {
                     ? [collect(this.components.data).first()]
                     : [],
             },
-            form: {
-                components: this.session?.sut ?? [],
-            },
         };
     },
     mounted() {
         this.loadGroupCertificateList();
-
-        this.setForm(this.componentsData);
-    },
-    watch: {
-        'currentSuts.selected': {
-            immediate: true,
-            handler(values) {
-                const c = this.componentsData;
-                this.form.components = [];
-
-                Object.values(values || []).forEach((value) => {
-                    const id = value.id;
-
-                    this.form.components[id] = {
-                        id,
-                        base_url: c.base_url[c.id],
-                        version: c.version[c.id],
-                        use_encryption: c.use_encryption[c.id],
-                        certificate_id: c.certificate_id[c.id]
-                            ? c.certificate_id[c.id].id
-                            : null,
-                        ca_crt: c.ca_crt[c.id],
-                        client_crt: c.client_crt[c.id],
-                        client_key: c.client_key[c.id],
-                        passphrase: c.passphrase[c.id],
-                    };
-                });
-            },
-        },
-        'componentsData': {
-            deep: true,
-            handler(values) {
-                this.setForm(values);
-            },
-        },
     },
     methods: {
         submit() {
@@ -516,7 +487,7 @@ export default {
 
             this.$inertia.post(
                 route('sessions.register.sut.store'),
-                serialize(this.form, {
+                serialize(this.getForm(), {
                     indices: true,
                     booleansAsIntegers: true,
                 }),
@@ -527,19 +498,28 @@ export default {
                 }
             );
         },
-        setForm(values) {
-            this.form.components.forEach((c) => {
-                c.base_url = values.base_url[c.id];
-                c.version = values.version[c.id];
-                c.use_encryption = values.use_encryption[c.id];
-                c.certificate_id = values.certificate_id[c.id]
-                    ? values.certificate_id[c.id].id
-                    : null;
-                c.ca_crt = values.ca_crt[c.id];
-                c.client_crt = values.client_crt[c.id];
-                c.client_key = values.client_key[c.id];
-                c.passphrase = values.passphrase[c.id];
+        getForm() {
+            let components = {},
+                c = this.componentsData;
+
+            Object.values(this.component_ids).forEach((id) => {
+                components[id] = {
+                    id,
+                    base_url: c.base_url[id],
+                    version: c.version[id],
+                    use_encryption: c.use_encryption[id],
+                    certificate_id: c.certificate_id[id]
+                        ? c.certificate_id[id].id
+                        : null,
+                    ca_crt: c.ca_crt[id],
+                    client_crt: c.client_crt[id],
+                    client_key: c.client_key[id],
+                    passphrase: c.passphrase[id],
+                    implicit_sut_id: c.implicit_sut_id[id],
+                };
             });
+
+            return { components };
         },
         showGroupCertificates(sut) {
             return (
@@ -566,12 +546,41 @@ export default {
                         this.componentsData.certificate_id[
                             key
                         ] = collection.where('id', parseInt(ids[key])).first();
-                        this.form.components[key].certificate_id = ids[key];
                     });
                 });
         },
         setComponents(items) {
-            this.form.component_ids = items?.map((item) => item.id) ?? [];
+            this.component_ids = items?.map((item) => item.id) ?? [];
+        },
+        getVersions(sut) {
+            if (typeof this.versions[sut.id] === 'object') {
+                return this.versions[sut.id];
+            } else if (this.implicitSuts[sut.slug]) {
+                const versions = collect(this.implicitSuts[sut.slug]).pluck(
+                    'version'
+                );
+
+                if (versions.count() === 1) {
+                    this.componentsData.version[sut.id] = versions.first();
+                }
+
+                return versions.all();
+            }
+            return false;
+        },
+        implicitSutUrl(sut) {
+            const implicitSut = collect(this.implicitSuts[sut.slug])
+                .filter((implicitSut) => {
+                    const regex = new RegExp(implicitSut.version, 'g');
+
+                    return this.componentsData.version[sut.id]?.match(regex);
+                })
+                .first();
+
+            this.componentsData.base_url[sut.id] = implicitSut?.url;
+            this.componentsData.implicit_sut_id[sut.id] = implicitSut?.id;
+
+            return implicitSut?.url;
         },
     },
 };

@@ -1,0 +1,54 @@
+{
+    "en": {
+        "page": {
+            "title": "Implicit SUT Rules"
+        },
+        "table": {
+            "header": {
+                "slug": "Slug",
+                "version": "Version",
+                "url": "URL"
+            },
+            "menu": {
+                "edit": "Edit",
+                "delete": {
+                    "title": "Delete",
+                    "modal": {
+                        "title": "Confirm delete",
+                        "text": "Are you sure you want to delete {name}?"
+                    }
+                }
+            },
+            "no-results": "No Results"
+        },
+        "buttons": {
+            "create": "New rule"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Неявные правила SUT"
+        },
+        "table": {
+            "header": {
+                "slug": "Slug",
+                "version": "Версия",
+                "url": "URL"
+            },
+            "menu": {
+                "edit": "Редактировать",
+                "delete": {
+                    "title": "Удалить",
+                    "modal": {
+                        "title": "Подтвердить удаление",
+                        "text": "Вы уверены что хотите удалить {name}?"
+                    }
+                }
+            },
+            "no-results": "Результатов нет"
+        },
+        "buttons": {
+            "create": "Новое правило"
+        }
+    }
+}

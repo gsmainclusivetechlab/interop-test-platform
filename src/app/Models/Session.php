@@ -122,6 +122,7 @@ class Session extends Model
                 'base_url',
                 'use_encryption',
                 'certificate_id',
+                'implicit_sut_id',
                 'version',
             ]);
     }
