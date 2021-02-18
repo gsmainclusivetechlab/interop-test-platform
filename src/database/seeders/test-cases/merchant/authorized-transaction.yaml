@@ -63,8 +63,8 @@ test_steps:
       uri: /transactions
       jws:
         alg: RS256
-        key: '{{ env.CERTIFICATE_PATH }}'
-        public_key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
+        key: '{{ file_env.CERTIFICATE_PATH }}'
+        public_key: '{{ file_env.PUBLIC_CERTIFICATE_PATH }}'
         protectedHeaders:
           - x-callback-url
           - x-date
@@ -86,8 +86,8 @@ test_steps:
             value: '+33555789123'
     response:
       jws:
-        key: '{{ env.CERTIFICATE_PATH }}'
-        public_key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
+        key: '{{ file_env.CERTIFICATE_PATH }}'
+        public_key: '{{ file_env.PUBLIC_CERTIFICATE_PATH }}'
         header: FSPIOP-Signature
         protectedHeaders:
           - x-date
@@ -129,8 +129,8 @@ test_steps:
       uri: /transactionRequests
       jws:
         alg: RS256
-        key: '{{ env.CERTIFICATE_PATH }}'
-        public_key: '{{ env.PUBLIC_CERTIFICATE_PATH }}'
+        key: '{{ file_env.CERTIFICATE_PATH }}'
+        public_key: '{{ file_env.PUBLIC_CERTIFICATE_PATH }}'
         protectedHeaders:
           - FSPIOP-URI
           - FSPIOP-HTTP-Method

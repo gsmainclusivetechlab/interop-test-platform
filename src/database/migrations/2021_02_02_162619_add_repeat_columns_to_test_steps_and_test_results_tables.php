@@ -14,15 +14,33 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
     public function up()
     {
         Schema::table('test_steps', function (Blueprint $table) {
-            $table->unsignedTinyInteger('repeat_max')->default(0)->after('response');
-            $table->unsignedTinyInteger('repeat_count')->default(0)->after('repeat_max');
-            $table->json('repeat_condition')->nullable()->after('repeat_count');
-            $table->json('repeat_response')->nullable()->after('repeat_condition');
+            $table
+                ->unsignedTinyInteger('repeat_max')
+                ->default(0)
+                ->after('response');
+            $table
+                ->unsignedTinyInteger('repeat_count')
+                ->default(0)
+                ->after('repeat_max');
+            $table
+                ->json('repeat_condition')
+                ->nullable()
+                ->after('repeat_count');
+            $table
+                ->json('repeat_response')
+                ->nullable()
+                ->after('repeat_condition');
         });
 
         Schema::table('test_results', function (Blueprint $table) {
-            $table->unsignedTinyInteger('iteration')->default(1)->after('test_step_id');
-            $table->boolean('repeat')->default(false)->after('iteration');
+            $table
+                ->unsignedTinyInteger('iteration')
+                ->default(1)
+                ->after('test_step_id');
+            $table
+                ->boolean('repeat')
+                ->default(false)
+                ->after('iteration');
         });
     }
 
@@ -38,15 +56,12 @@ class AddRepeatColumnsToTestStepsAndTestResultsTables extends Migration
                 'repeat_max',
                 'repeat_count',
                 'repeat_condition',
-                'repeat_response'
+                'repeat_response',
             ]);
         });
 
         Schema::table('test_results', function (Blueprint $table) {
-            $table->dropColumn([
-                'iteration',
-                'repeat'
-            ]);
+            $table->dropColumn(['iteration', 'repeat']);
         });
     }
 }

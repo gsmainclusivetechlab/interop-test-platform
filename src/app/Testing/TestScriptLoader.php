@@ -39,22 +39,24 @@ class TestScriptLoader
         if (
             $testResponseScripts = $testResult->testStep
                 ->testScripts()
-                ->ofType($isRepeat
-                    ? TestScript::TYPE_REPEAT_RESPONSE
-                    : TestScript::TYPE_RESPONSE
+                ->ofType(
+                    $isRepeat
+                        ? TestScript::TYPE_REPEAT_RESPONSE
+                        : TestScript::TYPE_RESPONSE
                 )
                 ->get()
         ) {
             foreach ($testResponseScripts as $testResponseScript) {
-                $testSuite->addTest($isRepeat ?
-                    new RepeatResponseScriptValidationTest(
-                        $testResult,
-                        $testResponseScript
-                    ) :
-                    new ResponseScriptValidationTest(
-                        $testResult,
-                        $testResponseScript
-                    )
+                $testSuite->addTest(
+                    $isRepeat
+                        ? new RepeatResponseScriptValidationTest(
+                            $testResult,
+                            $testResponseScript
+                        )
+                        : new ResponseScriptValidationTest(
+                            $testResult,
+                            $testResponseScript
+                        )
                 );
             }
         }

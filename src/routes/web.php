@@ -93,10 +93,6 @@ Route::name('sessions.')
         Route::put('{session}/update', 'SessionController@update')->name(
             'update'
         );
-        Route::put(
-            '{session}/update-test-case/{testCaseToRemove}/{testCaseToAdd}',
-            'SessionController@updateTestCase'
-        )->name('update-test-case');
         Route::delete('{session}/destroy', 'SessionController@destroy')->name(
             'destroy'
         );
@@ -107,6 +103,10 @@ Route::name('sessions.')
             '{session}/message-log',
             '\App\Http\Controllers\MessageLogController@index'
         )->name('message-log.index');
+        Route::put(
+            '{session}/update-test-case/{testCaseToRemove}/{testCaseToAdd}',
+            'SessionController@updateTestCase'
+        )->name('update-test-case');
         Route::get(
             '{session}/test-cases/{testCase}',
             'TestCaseController@show'
@@ -345,6 +345,10 @@ Route::name('admin.')
                         'group-candidates',
                         'TestCaseController@groupCandidates'
                     )->name('group-candidates');
+                    Route::post(
+                        'environment-candidates',
+                        'TestCaseController@environmentCandidates'
+                    )->name('environment-candidates');
                     Route::prefix('{testCase}')->group(function () {
                         Route::get(
                             'import',

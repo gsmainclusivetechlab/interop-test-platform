@@ -143,9 +143,11 @@ class ProcessPendingRequest
     {
         $response = null;
         if ($this->simulateRequest) {
-            $response = $this->testResult->iteration > $this->testResult->testStep->repeat_count
-                ? $this->testResult->testStep->response
-                : $this->testResult->testStep->repeat_response;
+            $response =
+                $this->testResult->iteration >
+                $this->testResult->testStep->repeat_count
+                    ? $this->testResult->testStep->response
+                    : $this->testResult->testStep->repeat_response;
 
             $response = new Response(
                 $response->status(),

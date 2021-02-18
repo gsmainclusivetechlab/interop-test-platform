@@ -53,17 +53,16 @@ a {
   @include box-shadow($form-file-box-shadow);
 
   &::after {
+    content: 'Browse';
     position: absolute;
     top: -1px;
     right: 0;
     bottom: 0;
-    z-index: 3;
     display: flex;
     align-items: center;
     height: $form-file-height;
     padding: $form-file-padding-y $form-file-padding-x;
     color: $form-file-button-color;
-    content: 'Browse';
 
     @include gradient-bg($form-file-button-bg);
 
@@ -74,12 +73,14 @@ a {
 }
 
 .custom-file-input {
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: $form-file-height;
+  height: 100%;
   margin: 0;
   opacity: 0;
+  z-index: 2;
   cursor: pointer;
 
   &:focus ~ .custom-file-label {

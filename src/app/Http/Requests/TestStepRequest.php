@@ -61,7 +61,7 @@ class TestStepRequest extends FormRequest
                 'min:0',
                 function ($attribute, $value, $fail) {
                     $count = $this->input('repeat.count', 0);
-                    if ($count != 0 &&  $count >= $value) {
+                    if ($count != 0 && $count >= $value) {
                         $fail(__("Must be greater than $count."));
                     }
                 },
@@ -72,7 +72,7 @@ class TestStepRequest extends FormRequest
                 'min:0',
                 function ($attribute, $value, $fail) {
                     $max = $this->input('repeat.max', 0);
-                    if ($value != 0 &&  $max <= $value) {
+                    if ($value != 0 && $max <= $value) {
                         $fail(__("May not be greater than $max."));
                     }
                 },
@@ -82,12 +82,16 @@ class TestStepRequest extends FormRequest
                 'array',
                 Rule::requiredIf(function () {
                     return $this->input('repeat.max', 0) > 0;
-                })
+                }),
             ],
             'repeat.response' => ['nullable', 'array'],
             'repeat.response.status' => ['required'],
             'test.scripts.repeat_response' => ['nullable', 'array'],
-            'test.scripts.repeat_response.*.name' => ['required', 'string', 'max:255'],
+            'test.scripts.repeat_response.*.name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'test.scripts.repeat_response.*.rules' => ['required', 'array'],
         ];
     }
