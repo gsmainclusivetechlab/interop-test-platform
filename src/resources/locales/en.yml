@@ -1,0 +1,88 @@
+compliance-sessions:
+  page:
+    title: '@:(special-locales.compliance) session'
+  tabs:
+    all: All
+    in-verification: 'In verification'
+
+confirm-link:
+  buttons:
+    cancel: Cancel
+    ok: Confirm
+  modal:
+    text: "You won't be able to revert this!"
+    title: 'Are you sure?'
+
+input-search:
+  placeholder: Search...
+
+special-locales:
+  compliance: 'Certification'
+  administration: 'Administration'
+
+layout:
+  buttons:
+    new-session: 'New Session'
+  footer:
+    cookies-link: 'https://www.gsma.com/aboutus/legal/cookie-policy'
+    copyright-link: 'https://www.gsma.com'
+    copyright-name: GSMA
+    link: 'https://www.gsma.com/aboutus/legal'
+  main-nav:
+    dashboard: Dashboard
+    doc: Documentation
+    external: 'The Lab'
+    external-link: 'https://www.gsma.com/lab'
+    groups: Groups
+    sessions: Sessions
+    subtitle: 'Interoperability Test Platform'
+    title: 'Inclusive Tech Lab'
+    tutorials: Tutorials
+  menu:
+    api-specs: 'API Specs'
+    cert-sessions: '@:(special-locales.compliance) Sessions'
+    components: Components
+    groups: Groups
+    import-question-def: 'Import Questionnaire Definition'
+    message-log: 'Message Log'
+    sessions: Sessions
+    test-cases: 'Test Cases'
+    use-cases: 'Use Cases'
+    users: Users
+  user-menu:
+    logout: Logout
+    settings: Settings
+
+pagination:
+  buttons:
+    next: Next
+    prev: Prev
+  comment:
+    - Showing
+    - to
+    - of
+    - 'entry | entries'
+
+questionnaire:
+  info:
+    summary: Summary
+  page:
+    title: '@:(special-locales.compliance) session questionnaire'
+
+settings:
+  page:
+    sub-title: General
+    title: Settings
+  tabs:
+    - Profile
+    - 'Change password'
+
+test-cases:
+  breadcrumb:
+    components: Components
+    groups: Groups
+    info: Info
+    test-cases: 'Test Cases'
+    test-flow: 'Test Flow'
+    test-steps: 'Test steps'
+    versions: Versions
