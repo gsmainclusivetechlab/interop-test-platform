@@ -29,7 +29,9 @@ class ImplicitSut extends Model
     public static function booted()
     {
         static::deleted(function (self $implicitSut) {
-            $implicitSut->certificate->delete();
+            if ($implicitSut->certificate) {
+                $implicitSut->certificate->delete();
+            }
         });
     }
 

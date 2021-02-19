@@ -162,7 +162,7 @@
                                 </div>
                                 <template
                                     v-if="
-                                        component.use_encryption &&
+                                        `${component.use_encryption}` === '1' &&
                                         !component.implicit_sut_id
                                     "
                                 >
