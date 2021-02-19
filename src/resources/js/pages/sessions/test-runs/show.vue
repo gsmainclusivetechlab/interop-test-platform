@@ -964,11 +964,13 @@ export default {
             deep: true,
             immediate: true,
             handler() {
-                if (!this.testRun.completed_at) {
-                    setTimeout(() => {
-                        this.$inertia.reload(['testRun', 'testResults']);
-                    }, 2000);
-                }
+                if (this.testRun.completed_at) return;
+
+                setTimeout(() => {
+                    this.$inertia.reload({
+                        only: ['testRun', 'testResults', 'messages', 'errors'],
+                    });
+                }, 2000);
             },
         },
     },
