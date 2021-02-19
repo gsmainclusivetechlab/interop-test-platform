@@ -74,7 +74,7 @@ class ApiSpecController extends Controller
             return redirect()
                 ->route('admin.api-specs.index')
                 ->with('success', __('Api spec created successfully'));
-        } catch (TypeErrorException $e) {
+        } catch (\Throwable $e) {
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());
