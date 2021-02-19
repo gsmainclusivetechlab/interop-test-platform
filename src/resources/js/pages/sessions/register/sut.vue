@@ -162,8 +162,8 @@
                                 </div>
                                 <template
                                     v-if="
-                                        component.use_encryption &&
-                                        !component.implicit_sut_id
+                                        `${component.use_encryption}` === '1' &&
+                                        !implicitSutUrl(component)
                                     "
                                 >
                                     <div v-if="hasGroupCertificates">
