@@ -68,6 +68,7 @@
                                         type="text"
                                         v-model="component.base_url"
                                         class="form-control"
+                                        :readonly="component.implicit_sut_id"
                                         :class="{
                                             'is-invalid':
                                                 $page.props.errors[
@@ -90,7 +91,10 @@
                                         }}
                                     </span>
                                 </div>
-                                <div class="d-flex mb-3">
+                                <div
+                                    class="d-flex mb-3"
+                                    v-if="!component.implicit_sut_id"
+                                >
                                     <label class="form-check form-switch">
                                         <input
                                             type="checkbox"
@@ -129,7 +133,10 @@
                                     </span>
                                 </div>
                                 <div
-                                    v-if="`${component.use_encryption}` === '1'"
+                                    v-if="
+                                        `${component.use_encryption}` === '1' &&
+                                        !component.implicit_sut_id
+                                    "
                                 >
                                     <div
                                         class="mb-3"

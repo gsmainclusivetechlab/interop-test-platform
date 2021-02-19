@@ -1,0 +1,42 @@
+{
+    "en": {
+        "message_has_session": "Implicit SUT rule connected with one or more sessions. You can delete or create new rule.",
+        "page": {
+            "title": "Edit implicit SUT rule"
+        },
+        "inputs": {
+            "slug": "Slug",
+            "version": "Version pattern",
+            "url": "URL",
+            "use_encryption": "Use encryption",
+            "ca_crt": "CA certificate",
+            "client_crt": "Client certificate",
+            "client_key": "Client key",
+            "passphrase": "Pass phrase"
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "create": "Update"
+        }
+    },
+    "ru": {
+        "message_has_session": "Неявное правило SUT прикреплено к одной или нескольким сессиям. Вы можете удалить или создать новое правило.",
+        "page": {
+            "title": "Редактировать неявное правило SUT"
+        },
+        "inputs": {
+            "slug": "Slug",
+            "version": "Паттерн версии",
+            "url": "URL",
+            "use_encryption": "Использовать шифрование",
+            "ca_crt": "Корневой сертификат",
+            "client_crt": "Клиентский сертификат",
+            "client_key": "Клиентский ключ",
+            "passphrase": "Кодовая фраза"
+        },
+        "buttons": {
+            "cancel": "Отмена",
+            "create": "Обновить"
+        }
+    }
+}

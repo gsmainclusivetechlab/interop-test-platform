@@ -16,7 +16,6 @@ class ComponentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->authorizeResource(Component::class, 'component', [
             'except' => ['show'],
         ]);

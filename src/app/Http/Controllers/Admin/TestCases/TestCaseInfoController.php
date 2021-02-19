@@ -21,7 +21,6 @@ class TestCaseInfoController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->middleware('test-case.latest')->only(['show', 'edit']);
     }
 

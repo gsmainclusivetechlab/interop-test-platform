@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Sessions\Register;
 
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureSessionIsPresent;
+use App\Http\Resources\CertificateResource;
 use App\Http\Resources\ComponentResource;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Controllers\Sessions\Register\Traits\{
     Queries,
     QuestionnaireKeys,
     SessionIds
 };
 use App\Http\Requests\SessionSutRequest;
-use App\Models\{Certificate, Component};
+use App\Models\{Certificate, Component, Group, ImplicitSut};
 use Arr;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -37,6 +40,12 @@ class SutController extends Controller
             'session' => session('session'),
             'components' => ComponentResource::collection($components),
             'versions' => $this->getVersions($components),
+            'implicitSuts' => ImplicitSut::whereIn(
+                'slug',
+                $components->pluck('slug')
+            )
+                ->get()
+                ->groupBy('slug'),
             'hasGroupCertificates' =>
                 Certificate::hasGroupCertificates() || $this->getSessionIds(),
         ]);
@@ -82,5 +91,48 @@ class SutController extends Controller
         $request->session()->put('session.sut', $data);
 
         return redirect()->route('sessions.register.config');
+    }
+
+    public function groupCertificateCandidates(): AnonymousResourceCollection
+    {
+        return CertificateResource::collection(
+            Certificate::when(request('q'), function (Builder $query, $q) {
+                $query->whereRaw('name like ?', "%{$q}%");
+            })
+                ->where(function (Builder $query) {
+                    $query
+                        ->whereHasMorph('certificable', Group::class, function (
+                            Builder $query
+                        ) {
+                            $query->whereHas('users', function (
+                                Builder $query
+                            ) {
+                                $query->whereKey(
+                                    auth()
+                                        ->user()
+                                        ->getAuthIdentifier()
+                                );
+                            });
+                        })
+                        ->when($this->getSessionIds(), function (
+                            Builder $query,
+                            $ids
+                        ) {
+                            $query->orWhereIn('id', $ids);
+                        })
+                        ->when(request('session'), function (
+                            Builder $query,
+                            $session
+                        ) {
+                            $query->orWhereHas('sessions', function (
+                                Builder $query
+                            ) use ($session) {
+                                $query->whereKey($session);
+                            });
+                        });
+                })
+                ->latest()
+                ->paginate()
+        );
     }
 }

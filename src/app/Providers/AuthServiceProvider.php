@@ -2,32 +2,38 @@
 
 namespace App\Providers;
 
-use App\Models\ApiSpec;
-use App\Models\AuditLog;
-use App\Models\Component;
-use App\Models\Group;
-use App\Models\GroupEnvironment;
-use App\Models\GroupUser;
-use App\Models\MessageLog;
-use App\Models\QuestionnaireSection;
-use App\Models\Session;
-use App\Models\TestCase;
-use App\Models\TestStep;
-use App\Models\UseCase;
-use App\Models\User;
-use App\Policies\ApiSpecPolicy;
-use App\Policies\AuditLogPolicy;
-use App\Policies\ComponentPolicy;
-use App\Policies\GroupEnvironmentPolicy;
-use App\Policies\GroupUserPolicy;
-use App\Policies\GroupPolicy;
-use App\Policies\MessageLogPolicy;
-use App\Policies\QuestionnairePolicy;
-use App\Policies\SessionPolicy;
-use App\Policies\TestCasePolicy;
-use App\Policies\TestStepPolicy;
-use App\Policies\UseCasePolicy;
-use App\Policies\UserPolicy;
+use App\Models\{
+    ApiSpec,
+    AuditLog,
+    Component,
+    Group,
+    GroupEnvironment,
+    GroupUser,
+    ImplicitSut,
+    MessageLog,
+    QuestionnaireSection,
+    Session,
+    TestCase,
+    TestStep,
+    UseCase,
+    User
+};
+use App\Policies\{
+    ApiSpecPolicy,
+    AuditLogPolicy,
+    ComponentPolicy,
+    GroupEnvironmentPolicy,
+    GroupUserPolicy,
+    GroupPolicy,
+    ImplicitSutPolicy,
+    MessageLogPolicy,
+    QuestionnairePolicy,
+    SessionPolicy,
+    TestCasePolicy,
+    TestStepPolicy,
+    UseCasePolicy,
+    UserPolicy
+};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -49,6 +55,7 @@ class AuthServiceProvider extends ServiceProvider
         MessageLog::class => MessageLogPolicy::class,
         QuestionnaireSection::class => QuestionnairePolicy::class,
         AuditLog::class => AuditLogPolicy::class,
+        ImplicitSut::class => ImplicitSutPolicy::class,
     ];
 
     /**

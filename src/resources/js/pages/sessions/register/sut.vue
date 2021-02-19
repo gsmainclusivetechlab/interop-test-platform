@@ -43,19 +43,13 @@
                                 class="list-group-item"
                                 :key="`component-${i}`"
                             >
-                                <div
-                                    v-if="
-                                        component.versions &&
-                                        component.versions.length
-                                    "
-                                    class="mb-3"
-                                >
+                                <div v-if="getVersions(component)" class="mb-3">
                                     <label class="form-label">{{
                                         `${component.name} version`
                                     }}</label>
                                     <v-select
                                         v-model="component.version"
-                                        :options="component.versions"
+                                        :options="getVersions(component)"
                                         label="name"
                                         placeholder="Select version..."
                                         :selectable="
@@ -100,6 +94,7 @@
                                                     `components.${component.id}.base_url`
                                                 ],
                                         }"
+                                        :readonly="implicitSutUrl(component)"
                                         class="form-control"
                                     />
                                     <span
@@ -117,7 +112,10 @@
                                         }}
                                     </span>
                                 </div>
-                                <div class="mb-3">
+                                <div
+                                    class="mb-3"
+                                    v-if="!implicitSutUrl(component)"
+                                >
                                     <label class="form-check form-switch">
                                         <input
                                             type="checkbox"
@@ -155,7 +153,12 @@
                                         </strong>
                                     </span>
                                 </div>
-                                <template v-if="component.use_encryption">
+                                <template
+                                    v-if="
+                                        component.use_encryption &&
+                                        !implicitSutUrl(component)
+                                    "
+                                >
                                     <div v-if="hasGroupCertificates">
                                         <label class="form-label"
                                             >Certificate</label
@@ -403,6 +406,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        implicitSuts: {
+            type: Object | Array,
+            required: true,
+        },
     },
     mixins: [mixinVSelect, mixinCrts],
     data() {
@@ -484,6 +491,7 @@ export default {
                             client_key: el.certificate.client_key,
                             passphrase: el.certificate.passphrase,
                             version: el.version,
+                            implicit_sut_id: el.implicit_sut_id,
                         },
                     ])
                 ),
@@ -503,6 +511,36 @@ export default {
                     },
                 }
             );
+        },
+        getVersions(sut) {
+            if (typeof this.versions[sut.id] === 'object') {
+                return this.versions[sut.id];
+            } else if (this.implicitSuts[sut.slug]) {
+                const versions = collect(this.implicitSuts[sut.slug]).pluck(
+                    'version'
+                );
+
+                if (versions.count() === 1) {
+                    sut.version = versions.first();
+                }
+
+                return versions.all();
+            }
+            return false;
+        },
+        implicitSutUrl(sut) {
+            const implicitSut = collect(this.implicitSuts[sut.slug])
+                .filter((implicitSut) => {
+                    const regex = new RegExp(implicitSut.version, 'g');
+
+                    return sut.version?.match(regex);
+                })
+                .first();
+
+            sut.base_url = implicitSut?.url;
+            sut.implicit_sut_id = implicitSut?.id;
+
+            return implicitSut?.url;
         },
     },
 };
