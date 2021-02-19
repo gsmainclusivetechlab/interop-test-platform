@@ -3,41 +3,18 @@
         "page": {
             "title": "Import new version of test case"
         },
-        "inputs": {
-            "file": {
-                "label": "File",
-                "placeholder": "Choose file...",
-                "browse": "Browse"
-            }
-        },
         "modal": {
             "title": "Are you sure?",
             "text": "This draft version will be deleted and imported new draft version"
-        },
-        "buttons": {
-            "cancel": "Cancel",
-            "import": "Import"
         }
     },
-
     "ru": {
         "page": {
             "title": "Импорт новой версии тестового образца"
         },
-        "inputs": {
-            "file": {
-                "label": "Файл",
-                "placeholder": "Выбрать файл...",
-                "browse": "Выбрать"
-            }
-        },
         "modal": {
             "title": "Вы уверены?",
             "text": "Эта черновая версия будет удалена и будет импортирована новая черновая версия."
-        },
-        "buttons": {
-            "cancel": "Отмена",
-            "import": "Импорт"
         }
     }
 }

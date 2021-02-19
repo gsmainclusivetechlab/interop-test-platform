@@ -11,13 +11,11 @@ use App\Http\Controllers\Sessions\Register\Traits\{
     SessionIds
 };
 use App\Http\Resources\{
-    CertificateResource,
     ComponentResource,
     GroupEnvironmentResource,
     TestStepResource
 };
 use App\Models\{
-    Certificate,
     Component,
     FileEnvironment,
     GroupEnvironment,
@@ -171,6 +169,7 @@ class ConfigController extends Controller
                                 'version',
                                 'use_encryption',
                                 'certificate_id',
+                                'implicit_sut_id',
                             ])
                         );
                 });
@@ -224,47 +223,6 @@ class ConfigController extends Controller
                                 ->getAuthIdentifier()
                         );
                     });
-                })
-                ->latest()
-                ->paginate()
-        );
-    }
-
-    public function groupCertificateCandidates(): AnonymousResourceCollection
-    {
-        return CertificateResource::collection(
-            Certificate::when(request('q'), function (Builder $query, $q) {
-                $query->whereRaw('name like ?', "%{$q}%");
-            })
-                ->where(function (Builder $query) {
-                    $query
-                        ->whereHas('group', function (Builder $query) {
-                            $query->whereHas('users', function (
-                                Builder $query
-                            ) {
-                                $query->whereKey(
-                                    auth()
-                                        ->user()
-                                        ->getAuthIdentifier()
-                                );
-                            });
-                        })
-                        ->when($this->getSessionIds(), function (
-                            Builder $query,
-                            $ids
-                        ) {
-                            $query->orWhereIn('id', $ids);
-                        })
-                        ->when(request('session'), function (
-                            Builder $query,
-                            $session
-                        ) {
-                            $query->orWhereHas('sessions', function (
-                                Builder $query
-                            ) use ($session) {
-                                $query->whereKey($session);
-                            });
-                        });
                 })
                 ->latest()
                 ->paginate()

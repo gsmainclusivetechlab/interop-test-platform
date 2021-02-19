@@ -23,14 +23,14 @@
                                         'is-invalid': $page.props.errors.name,
                                     }"
                                 />
-                                <span
+                                <p
                                     v-if="$page.props.errors.name"
-                                    class="invalid-feedback"
+                                    class="invalid-feedback mb-1"
                                 >
                                     <strong>
                                         {{ $page.props.errors.name }}
                                     </strong>
-                                </span>
+                                </p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">{{
@@ -41,17 +41,34 @@
                                     :placeholder="$t('inputs.file.placeholder')"
                                     :browse-text="$t('inputs.file.browse')"
                                     :class="{
-                                        'is-invalid': $page.props.errors.file,
+                                        'is-invalid':
+                                            $page.props.errors.file ||
+                                            $page.props.messages.error,
                                     }"
                                 />
-                                <span
-                                    v-if="$page.props.errors.file"
+                                <div
+                                    v-if="
+                                        $page.props.errors.file ||
+                                        $page.props.messages.error
+                                    "
                                     class="invalid-feedback"
                                 >
-                                    <strong>
-                                        {{ $page.props.errors.file }}
-                                    </strong>
-                                </span>
+                                    <p class="mb-1">
+                                        <strong>{{
+                                            $t('inputs.errors.file', {
+                                                fileSrc: form.fileSrc,
+                                            })
+                                        }}</strong>
+                                    </p>
+                                    <p
+                                        v-if="$page.props.errors.file"
+                                        class="invalid-feedback mb-1"
+                                    >
+                                        <strong>
+                                            {{ $page.props.errors.file }}
+                                        </strong>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-right">
@@ -61,12 +78,16 @@
                             >
                                 {{ $t('buttons.cancel') }}
                             </inertia-link>
-                            <button type="submit" class="btn btn-primary">
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                :disabled="!form.file || sending"
+                            >
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                {{ $t('buttons.import') }}
+                                <span>{{ $t('buttons.import') }}</span>
                             </button>
                         </div>
                     </form>
@@ -92,13 +113,15 @@ export default {
             form: {
                 name: null,
                 file: null,
+                fileSrc: null,
             },
         };
     },
     methods: {
         submit() {
             this.sending = true;
-            let data = new FormData();
+
+            const data = new FormData();
 
             if (this.form.name) {
                 data.append('name', this.form.name);
@@ -110,11 +133,14 @@ export default {
 
             this.$inertia.post(route('admin.api-specs.import.confirm'), data, {
                 onFinish: () => {
+                    this.form.fileSrc = `${this.form.file.name}`;
                     this.sending = false;
+                    this.form.file = null;
                 },
             });
         },
     },
 };
 </script>
+<i18n src="@locales/components/form-file.json"></i18n>
 <i18n src="@locales/pages/admin/api-spec/import.json"></i18n>

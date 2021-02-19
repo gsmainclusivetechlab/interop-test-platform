@@ -10,7 +10,8 @@
             "use-cases": "Use Cases",
             "test-cases": "Test Cases",
             "message-log": "Message Log",
-            "import-question-def": "Import Questionnaire Definition"
+            "import-question-def": "Import Questionnaire Definition",
+            "implicit-sut": "Implicit SUT Rules"
         },
         "user-menu": {
             "settings": "Settings",
@@ -40,7 +41,8 @@
             "use-cases": "Образцы Исопльзования",
             "test-cases": "Тестовые Образцы",
             "message-log": "Логи",
-            "import-question-def": "Импорт Анкеты"
+            "import-question-def": "Импорт Анкеты",
+            "implicit-sut": "Неявные правила SUT"
         },
         "user-menu": {
             "settings": "Настройки",

@@ -18,7 +18,6 @@ class ApiSpecController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->authorizeResource(ApiSpec::class, 'api_spec', [
             'only' => ['index', 'destroy'],
         ]);
@@ -75,7 +74,7 @@ class ApiSpecController extends Controller
             return redirect()
                 ->route('admin.api-specs.index')
                 ->with('success', __('Api spec created successfully'));
-        } catch (TypeErrorException $e) {
+        } catch (\Throwable $e) {
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());

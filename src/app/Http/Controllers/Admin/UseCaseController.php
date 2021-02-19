@@ -19,7 +19,6 @@ class UseCaseController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified']);
         $this->authorizeResource(UseCase::class, 'use_case', [
             'except' => ['show'],
         ]);

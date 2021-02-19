@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int $id
@@ -98,9 +99,9 @@ class Group extends Model
         );
     }
 
-    public function certificates(): HasMany
+    public function certificates(): MorphMany
     {
-        return $this->hasMany(Certificate::class);
+        return $this->morphMany(Certificate::class, 'certificable');
     }
 
     /**
