@@ -68,10 +68,7 @@
                                         type="text"
                                         v-model="component.base_url"
                                         class="form-control"
-                                        :readonly="
-                                            form.components[component.id]
-                                                .implicit_sut_id
-                                        "
+                                        :readonly="component.implicit_sut_id"
                                         :class="{
                                             'is-invalid':
                                                 $page.props.errors[
@@ -96,10 +93,7 @@
                                 </div>
                                 <div
                                     class="d-flex mb-3"
-                                    v-if="
-                                        !form.components[component.id]
-                                            .implicit_sut_id
-                                    "
+                                    v-if="!component.implicit_sut_id"
                                 >
                                     <label class="form-check form-switch">
                                         <input

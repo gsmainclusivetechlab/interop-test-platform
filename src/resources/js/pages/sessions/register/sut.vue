@@ -94,7 +94,7 @@
                                                     `components.${component.id}.base_url`
                                                 ],
                                         }"
-                                        :readonly="implicitSutUrl(sut)"
+                                        :readonly="implicitSutUrl(component)"
                                         class="form-control"
                                     />
                                     <span
@@ -112,7 +112,10 @@
                                         }}
                                     </span>
                                 </div>
-                                <div class="mb-3" v-if="!implicitSutUrl(sut)">
+                                <div
+                                    class="mb-3"
+                                    v-if="!implicitSutUrl(component)"
+                                >
                                     <label class="form-check form-switch">
                                         <input
                                             type="checkbox"
@@ -488,6 +491,7 @@ export default {
                             client_key: el.certificate.client_key,
                             passphrase: el.certificate.passphrase,
                             version: el.version,
+                            implicit_sut_id: el.implicit_sut_id,
                         },
                     ])
                 ),
@@ -517,7 +521,7 @@ export default {
                 );
 
                 if (versions.count() === 1) {
-                    this.componentsData.version[sut.id] = versions.first();
+                    sut.version = versions.first();
                 }
 
                 return versions.all();
@@ -529,12 +533,12 @@ export default {
                 .filter((implicitSut) => {
                     const regex = new RegExp(implicitSut.version, 'g');
 
-                    return this.componentsData.version[sut.id]?.match(regex);
+                    return sut.version?.match(regex);
                 })
                 .first();
 
-            this.componentsData.base_url[sut.id] = implicitSut?.url;
-            this.componentsData.implicit_sut_id[sut.id] = implicitSut?.id;
+            sut.base_url = implicitSut?.url;
+            sut.implicit_sut_id = implicitSut?.id;
 
             return implicitSut?.url;
         },
