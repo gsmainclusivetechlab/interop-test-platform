@@ -69,5 +69,4 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/special-locales.json"></i18n>
 <i18n src="@locales/layout/sessions/questionnaire.json"></i18n>

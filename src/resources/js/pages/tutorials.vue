@@ -4,7 +4,7 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        <b>{{ $t('page.title') }}</b>
+                        <b>{{ $t('tutorials.page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -27,10 +27,10 @@
                                 src="/assets/images/tutorials/Gizmo_RED_Stack.png"
                                 class="icon"
                             />
-                            {{ $t('panel[0].title') }}
+                            {{ $t('tutorials.panel[0].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            {{ $t('panel[0].comment') }}
+                            {{ $t('tutorials.panel[0].comment') }}
                         </div>
                     </a>
 
@@ -49,10 +49,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
-                            {{ $t('panel[1].title') }}
+                            {{ $t('tutorials.panel[1].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            {{ $t('panel[1].comment') }}
+                            {{ $t('tutorials.panel[1].comment') }}
                         </div>
                     </a>
 
@@ -71,10 +71,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
-                            {{ $t('panel[2].title') }}
+                            {{ $t('tutorials.panel[2].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            {{ $t('panel[2].comment') }}
+                            {{ $t('tutorials.panel[2].comment') }}
                         </div>
                     </a>
                 </section>
@@ -93,10 +93,10 @@
                                 src="assets/images/tutorials/logo-postman.png"
                                 class="icon"
                             />
-                            {{ $t('panel[3].title') }}
+                            {{ $t('tutorials.panel[3].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            {{ $t('panel[3].comment') }}
+                            {{ $t('tutorials.panel[3].comment') }}
                         </div>
                     </a>
 
@@ -114,10 +114,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_World.png"
                                 class="icon"
                             />
-                            {{ $t('panel[4].title') }}
+                            {{ $t('tutorials.panel[4].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            {{ $t('panel[4].comment') }}
+                            {{ $t('tutorials.panel[4].comment') }}
                         </div>
                     </a>
 
@@ -135,10 +135,10 @@
                                 src="assets/images/tutorials/Gizmo_RED_Mobile_Operator.png"
                                 class="icon"
                             />
-                            {{ $t('panel[5].title') }}
+                            {{ $t('tutorials.panel[5].title') }}
                         </h4>
                         <div id="scenario-desc" class="pl-2 font-weight-normal">
-                            {{ $t('panel[5].comment') }}
+                            {{ $t('tutorials.panel[5].comment') }}
                         </div>
                     </a>
                 </section>
@@ -158,7 +158,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[0].title') }}
+                                {{ $t('tutorials.drop-panel[0].title') }}
                             </h3>
                         </button>
                     </header>
@@ -169,7 +169,7 @@
                     >
                         <div class="card-body">
                             <div id="demo-desc">
-                                {{ $t('drop-panel[0].comment') }}
+                                {{ $t('tutorials.drop-panel[0].comment') }}
                             </div>
                             <div class="demo-create-session mt-3 mx-auto">
                                 <div class="demo-inner-container mb-4">
@@ -193,7 +193,7 @@
                                         class="btn border-primary start-demo-btn"
                                         @click.prevent="startDemo"
                                     >
-                                        {{ $t('buttons.start-demo') }}
+                                        {{ $t('tutorials.buttons.start-demo') }}
                                     </a>
                                 </div>
                                 <button
@@ -202,7 +202,7 @@
                                     type="button"
                                     @click.prevent="resetDemo"
                                 >
-                                    {{ $t('buttons.reset-demo') }}
+                                    {{ $t('tutorials.buttons.reset-demo') }}
                                 </button>
                             </div>
                         </div>
@@ -222,7 +222,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[1].title') }}
+                                {{ $t('tutorials.drop-panel[1].title') }}
                             </h3>
                         </button>
                     </header>
@@ -234,14 +234,22 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    {{ $t('drop-panel[1].comment[0]') }}
+                                    {{
+                                        $t('tutorials.drop-panel[1].comment[0]')
+                                    }}
                                 </p>
                                 <p>
-                                    {{ $t('drop-panel[1].comment[1]') }}
+                                    {{
+                                        $t('tutorials.drop-panel[1].comment[1]')
+                                    }}
                                     <a
                                         href="#postman-collections"
                                         v-b-toggle.accordion-4
-                                        >{{ $t('drop-panel[1].links[0]') }}</a
+                                        >{{
+                                            $t(
+                                                'tutorials.drop-panel[1].links[0]'
+                                            )
+                                        }}</a
                                     >
                                 </p>
                             </div>
@@ -267,7 +275,7 @@
                                         class="btn border-primary start-demo-btn"
                                         @click.prevent="startDemo"
                                     >
-                                        {{ $t('buttons.start-demo') }}
+                                        {{ $t('tutorials.buttons.start-demo') }}
                                     </a>
                                 </div>
                                 <button
@@ -276,7 +284,7 @@
                                     type="button"
                                     @click.prevent="resetDemo"
                                 >
-                                    {{ $t('buttons.reset-demo') }}
+                                    {{ $t('tutorials.buttons.reset-demo') }}
                                 </button>
                             </div>
                         </div>
@@ -296,7 +304,7 @@
                             @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[2].title') }}
+                                {{ $t('tutorials.drop-panel[2].title') }}
                             </h3>
                         </button>
                     </header>
@@ -308,7 +316,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    {{ $t('drop-panel[2].comment') }}
+                                    {{ $t('tutorials.drop-panel[2].comment') }}
                                 </p>
                             </div>
                             <div
@@ -335,7 +343,7 @@
                                         class="btn border-primary start-demo-btn"
                                         @click.prevent="startDemo"
                                     >
-                                        {{ $t('buttons.start-demo') }}
+                                        {{ $t('tutorials.buttons.start-demo') }}
                                     </a>
                                 </div>
                                 <button
@@ -344,7 +352,7 @@
                                     type="button"
                                     @click.prevent="resetDemo"
                                 >
-                                    {{ $t('buttons.reset-demo') }}
+                                    {{ $t('tutorials.buttons.reset-demo') }}
                                 </button>
                             </div>
                         </div>
@@ -363,7 +371,7 @@
                             type="button"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[3].title') }}
+                                {{ $t('tutorials.drop-panel[3].title') }}
                             </h3>
                         </button>
                     </header>
@@ -375,7 +383,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    {{ $t('drop-panel[3].comment') }}
+                                    {{ $t('tutorials.drop-panel[3].comment') }}
                                 </p>
                                 <ul class="mb-0">
                                     <li>
@@ -384,7 +392,9 @@
                                             target="_blank"
                                             class="ml-1"
                                             >{{
-                                                $t('drop-panel[3].links[0]')
+                                                $t(
+                                                    'tutorials.drop-panel[3].links[0]'
+                                                )
                                             }}</a
                                         >
                                     </li>
@@ -406,7 +416,7 @@
                             type="button"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[4].title') }}
+                                {{ $t('tutorials.drop-panel[4].title') }}
                             </h3>
                         </button>
                     </header>
@@ -418,7 +428,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    {{ $t('drop-panel[4].comment') }}
+                                    {{ $t('tutorials.drop-panel[4].comment') }}
                                 </p>
                                 <ul class="mb-0">
                                     <li>
@@ -427,7 +437,9 @@
                                             target="_blank"
                                             class="ml-1"
                                             >{{
-                                                $t('drop-panel[4].links[0]')
+                                                $t(
+                                                    'tutorials.drop-panel[4].links[0]'
+                                                )
                                             }}</a
                                         >
                                     </li>
@@ -437,7 +449,9 @@
                                             target="_blank"
                                             class="ml-1"
                                             >{{
-                                                $t('drop-panel[4].links[0]')
+                                                $t(
+                                                    'tutorials.drop-panel[4].links[0]'
+                                                )
                                             }}</a
                                         >
                                     </li>
@@ -455,7 +469,7 @@
                     >
                         <button v-b-toggle.accordion-6 class="btn shadow-none">
                             <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[5].title') }}
+                                {{ $t('tutorials.drop-panel[5].title') }}
                             </h3>
                         </button>
                     </header>
@@ -467,7 +481,7 @@
                         <div class="card-body">
                             <div id="demo-desc">
                                 <p>
-                                    {{ $t('drop-panel[5].comment') }}
+                                    {{ $t('tutorials.drop-panel[5].comment') }}
                                 </p>
                                 <ul class="mb-0">
                                     <li>
@@ -476,7 +490,9 @@
                                             target="_blank"
                                             class="ml-1"
                                             >{{
-                                                $t('drop-panel[5].links[0]')
+                                                $t(
+                                                    'tutorials.drop-panel[5].links[0]'
+                                                )
                                             }}</a
                                         >
                                     </li>
@@ -486,7 +502,9 @@
                                             target="_blank"
                                             class="ml-1"
                                             >{{
-                                                $t('drop-panel[5].links[1]')
+                                                $t(
+                                                    'tutorials.drop-panel[5].links[1]'
+                                                )
                                             }}</a
                                         >
                                     </li>
@@ -510,7 +528,7 @@ const executeMMOImgPath = 'assets/images/tutorials/mobile-money-operator/';
 export default {
     metaInfo() {
         return {
-            title: this.$t('page.title'),
+            title: this.$t('tutorials.page.title'),
             script: [
                 {
                     src: 'https://code.jquery.com/jquery-3.5.0.min.js',
@@ -541,52 +559,52 @@ export default {
                     [
                         `${createImgPath}dashboard.png`,
                         [1150, 35],
-                        this.$t('drop-panel[0].demo-steps[0]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[0]'),
                     ],
                     [
                         `${createImgPath}select_sut.png`,
                         [415, 360],
-                        this.$t('drop-panel[0].demo-steps[1]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[1]'),
                     ],
                     [
                         `${createImgPath}select_sut_2.png`,
                         [415, 410],
-                        this.$t('drop-panel[0].demo-steps[2]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[2]'),
                     ],
                     [
                         `${createImgPath}select_sut_3.png`,
                         [785, 460],
-                        this.$t('drop-panel[0].demo-steps[3]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[3]'),
                     ],
                     [
                         `${createImgPath}session_info.png`,
                         [616, 337],
-                        this.$t('drop-panel[0].demo-steps[4]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[4]'),
                     ],
                     [
                         `${createImgPath}session_info_2.png`,
                         [616, 360],
-                        this.$t('drop-panel[0].demo-steps[5]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[5]'),
                     ],
                     [
                         `${createImgPath}session_info_3.png`,
                         [616, 405],
-                        this.$t('drop-panel[0].demo-steps[6]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[6]'),
                     ],
                     [
                         `${createImgPath}session_info_4.png`,
                         [900, 500],
-                        this.$t('drop-panel[0].demo-steps[7]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[7]'),
                     ],
                     [
                         `${createImgPath}configure_sut.png`,
                         [780, 436],
-                        this.$t('drop-panel[0].demo-steps[8]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[8]'),
                     ],
                     [
                         `${createImgPath}session_created.png`,
                         [47, 195],
-                        this.$t('drop-panel[0].demo-steps[9]'),
+                        this.$t('tutorials.drop-panel[0].demo-steps[9]'),
                         true,
                     ],
                 ],
@@ -595,42 +613,42 @@ export default {
                     [
                         `${executeSPImgPath}1-session-page.png`,
                         [3, 185],
-                        this.$t('drop-panel[1].demo-steps[0]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[0]'),
                     ],
                     [
                         `${executeSPImgPath}2-session-usecase.png`,
                         [61, 195],
-                        this.$t('drop-panel[1].demo-steps[1]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[1]'),
                     ],
                     [
                         `${executeSPImgPath}3-test-runs.png`,
                         [430, 120],
-                        this.$t('drop-panel[1].demo-steps[2]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[2]'),
                     ],
                     [
                         `${executeSPImgPath}4-test-flow.png`,
                         [251, 199],
-                        this.$t('drop-panel[1].demo-steps[3]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[3]'),
                     ],
                     [
                         `${executeSPImgPath}7-postman-1.png`,
                         [1053, 74],
-                        this.$t('drop-panel[1].demo-steps[4]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[4]'),
                     ],
                     [
                         `${executeSPImgPath}9-test-runs.png`,
                         [384, 209],
-                        this.$t('drop-panel[1].demo-steps[5]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[5]'),
                     ],
                     [
                         `${executeSPImgPath}10-test-details-1.png`,
                         [604, 437],
-                        this.$t('drop-panel[1].demo-steps[6]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[6]'),
                     ],
                     [
                         `${executeSPImgPath}11-test-details-2.png`,
                         [75, 35],
-                        this.$t('drop-panel[1].demo-steps[7]'),
+                        this.$t('tutorials.drop-panel[1].demo-steps[7]'),
                         true,
                     ],
                 ],
@@ -639,47 +657,47 @@ export default {
                     [
                         `${executeMMOImgPath}1-session-page.png`,
                         [5, 240],
-                        this.$t('drop-panel[2].demo-steps[0]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[0]'),
                     ],
                     [
                         `${executeMMOImgPath}2-test-usecase.png`,
                         [65, 215],
-                        this.$t('drop-panel[2].demo-steps[1]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[1]'),
                     ],
                     [
                         `${executeMMOImgPath}3-test-runs.png`,
                         [430, 120],
-                        this.$t('drop-panel[2].demo-steps[2]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[2]'),
                     ],
                     [
                         `${executeMMOImgPath}4-test-flow.png`,
                         [109, 225],
-                        this.$t('drop-panel[2].demo-steps[3]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[3]'),
                     ],
                     [
                         `${executeMMOImgPath}4-test-flow.png`,
                         [1150, 115],
-                        this.$t('drop-panel[2].demo-steps[4]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[4]'),
                     ],
                     [
                         `${executeMMOImgPath}5-run-test.png`,
                         [315, 119],
-                        this.$t('drop-panel[2].demo-steps[5]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[5]'),
                     ],
                     [
                         `${executeMMOImgPath}6-test-runs-2.png`,
                         [370, 205],
-                        this.$t('drop-panel[2].demo-steps[6]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[6]'),
                     ],
                     [
                         `${executeMMOImgPath}7-test-details.png`,
                         [600, 395],
-                        this.$t('drop-panel[2].demo-steps[7]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[7]'),
                     ],
                     [
                         `${executeMMOImgPath}8-test-details-2.png`,
                         [5, 240],
-                        this.$t('drop-panel[2].demo-steps[8]'),
+                        this.$t('tutorials.drop-panel[2].demo-steps[8]'),
                         true,
                     ],
                 ],
@@ -801,4 +819,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/pages/tutorials.json"></i18n>

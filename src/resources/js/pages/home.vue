@@ -5,13 +5,13 @@
             role="alert"
             v-if="$page.props.app.available_session_modes_count === 0"
         >
-            {{ $t('alerts.no-modes') }}
+            {{ $t('home.alerts.no-modes') }}
         </div>
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-auto">
                     <h2 class="page-title">
-                        <b>{{ $t('page.title') }}</b>
+                        <b>{{ $t('home.page.title') }}</b>
                     </h2>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-10 mx-auto">
                                 <p class="empty-title h3 mb-3">
-                                    {{ $t('content.title') }}
+                                    {{ $t('home.content.title') }}
                                 </p>
                                 <p
                                     class="empty-subtitle text-muted mb-0"
@@ -32,7 +32,7 @@
                                             .available_session_modes_count > 0
                                     "
                                 >
-                                    {{ $t('content.comment') }}
+                                    {{ $t('home.content.comment') }}
                                 </p>
                                 <div class="empty-action">
                                     <inertia-link
@@ -45,7 +45,7 @@
                                         class="btn btn-primary"
                                     >
                                         <icon name="plus" />
-                                        {{ $t('buttons.new-session') }}
+                                        {{ $t('home.buttons.new-session') }}
                                     </inertia-link>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@ import SessionProgress from '@/components/sessions/progress';
 export default {
     metaInfo() {
         return {
-            title: this.$t('page.title'),
+            title: this.$t('home.page.title'),
         };
     },
     components: {
@@ -168,4 +168,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/pages/home.json"></i18n>

@@ -228,5 +228,4 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/special-locales.json"></i18n>
 <i18n src="@locales/pages/admin/compliance-sessions/index.json"></i18n>
