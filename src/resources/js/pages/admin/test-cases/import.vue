@@ -27,7 +27,6 @@
                                                     .length > 0 ||
                                                 $page.props.messages.error,
                                         }"
-                                        @input="changeFile"
                                     />
                                     <div
                                         v-if="
@@ -37,19 +36,25 @@
                                         "
                                         class="invalid-feedback"
                                     >
-                                        <p>
+                                        <p class="mb-1">
                                             <strong>{{
                                                 $t('inputs.errors.file', {
-                                                    fileName: form.fileName,
+                                                    fileSrc: form.fileSrc,
                                                 })
                                             }}</strong>
                                         </p>
-                                        <p v-if="$page.props.errors.file">
+                                        <p
+                                            v-if="$page.props.errors.file"
+                                            class="mb-1"
+                                        >
                                             <strong>
                                                 {{ $page.props.errors.file }}
                                             </strong>
                                         </p>
-                                        <p v-if="$page.props.errors.entries">
+                                        <p
+                                            v-if="$page.props.errors.entries"
+                                            class="mb-1"
+                                        >
                                             <strong
                                                 v-html="
                                                     $page.props.errors.entries
@@ -71,13 +76,13 @@
                             <button
                                 type="submit"
                                 class="btn btn-primary"
-                                :disabled="!form.file"
+                                :disabled="!form.file || sending"
                             >
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                {{ $t('buttons.import') }}
+                                <span>{{ $t('buttons.import') }}</span>
                             </button>
                         </div>
                     </form>
@@ -104,37 +109,28 @@ export default {
             sending: false,
             form: {
                 file: null,
-                fileName: null,
+                fileSrc: null,
             },
         };
     },
     methods: {
         submit() {
             this.sending = true;
-            let data = new FormData();
+
+            const data = new FormData();
+
             data.append('file', this.form.file);
+
             this.$inertia.post(route('admin.test-cases.import.confirm'), data, {
                 onFinish: () => {
+                    this.form.fileSrc = `${this.form.file.name}`;
                     this.sending = false;
+                    this.form.file = null;
                 },
             });
         },
-        changeFile(value) {
-            if (value) {
-                this.form.fileName = value.name;
-            }
-        },
-    },
-    mounted() {
-        this.$inertia.on('finish', () => {
-            if (
-                Object.keys(this.$page.props.errors).length > 0 ||
-                this.$page.props.messages.error
-            ) {
-                this.form.file = null;
-            }
-        });
     },
 };
 </script>
+<i18n src="@locales/components/form-file.json"></i18n>
 <i18n src="@locales/pages/admin/test-cases/import.json"></i18n>

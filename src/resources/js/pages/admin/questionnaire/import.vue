@@ -16,19 +16,37 @@
                                     <b-form-file
                                         v-model="form.file"
                                         placeholder="Choose file..."
-                                        v-bind:class="{
+                                        :class="{
                                             'is-invalid':
-                                                $page.props.errors.file,
+                                                Object.keys($page.props.errors)
+                                                    .length > 0 ||
+                                                $page.props.messages.error,
                                         }"
                                     />
-                                    <span
-                                        v-if="$page.props.errors.file"
+                                    <div
+                                        v-if="
+                                            Object.keys($page.props.errors)
+                                                .length > 0 ||
+                                            $page.props.messages.error
+                                        "
                                         class="invalid-feedback"
                                     >
-                                        <strong>
-                                            {{ $page.props.errors.file }}
-                                        </strong>
-                                    </span>
+                                        <p class="mb-1">
+                                            <strong>{{
+                                                $t('inputs.errors.file', {
+                                                    fileSrc: form.fileSrc,
+                                                })
+                                            }}</strong>
+                                        </p>
+                                        <p
+                                            v-if="$page.props.errors.file"
+                                            class="mb-1"
+                                        >
+                                            <strong>
+                                                {{ $page.props.errors.file }}
+                                            </strong>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -42,13 +60,13 @@
                             <button
                                 type="submit"
                                 class="btn btn-primary"
-                                :disabled="!form.file"
+                                :disabled="!form.file || sending"
                             >
                                 <span
                                     v-if="sending"
                                     class="spinner-border spinner-border-sm mr-2"
                                 ></span>
-                                Import
+                                <span>Import</span>
                             </button>
                         </div>
                     </form>
@@ -73,20 +91,26 @@ export default {
             sending: false,
             form: {
                 file: null,
+                fileSrc: null,
             },
         };
     },
     methods: {
         submit() {
             this.sending = true;
-            let data = new FormData();
+
+            const data = new FormData();
+
             data.append('file', this.form.file);
+
             this.$inertia.post(
                 route('admin.questionnaire.import.confirm'),
                 data,
                 {
                     onFinish: () => {
+                        this.form.fileSrc = `${this.form.file.name}`;
                         this.sending = false;
+                        this.form.file = null;
                     },
                 }
             );
@@ -94,3 +118,4 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/components/form-file.json"></i18n>
