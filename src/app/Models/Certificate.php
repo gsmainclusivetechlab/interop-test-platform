@@ -7,8 +7,8 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -75,14 +75,25 @@ class Certificate extends Model
         });
     }
 
-    public static function storeFile(Request $request, $key): string
-    {
-        return $request->file($key)->store('certificates');
+    public static function storeFile(
+        Request $request,
+        $key,
+        $default = null
+    ): ?string {
+        if ($request->hasFile($key)) {
+            $filePath = $request->file($key)->store('certificates');
+
+            if ($filePath && $default) {
+                Storage::delete($default);
+            }
+        }
+
+        return $filePath ?? $default;
     }
 
-    public function group(): BelongsTo
+    public function certificable(): MorphTo
     {
-        return $this->belongsTo(Group::class);
+        return $this->morphTo();
     }
 
     public function sessions(): BelongsToMany
@@ -97,7 +108,9 @@ class Certificate extends Model
 
     public static function hasGroupCertificates(): bool
     {
-        return static::whereHas('group', function (Builder $query) {
+        return static::whereHasMorph('certificable', Group::class, function (
+            Builder $query
+        ) {
             $query->whereHas('users', function (Builder $query) {
                 $query->whereKey(
                     auth()

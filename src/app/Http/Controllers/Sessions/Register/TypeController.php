@@ -17,6 +17,8 @@ class TypeController extends Controller
      */
     public function index()
     {
+        session()->forget('session');
+
         $filteredAvailableModes = collect(
             $availableModes = config('service_session.available_modes')
         )

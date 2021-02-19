@@ -25,7 +25,7 @@ x-php-defaults: &php-defaults
     - ./src/build/certbot-cert-nginx-reload.sh:/etc/periodic/15min/certbot-cert-nginx-reload.sh
     - ./src/build/nginx-includes:/etc/nginx/includes
     - ./src/build/docker-bootstrap.sh:/usr/local/bin/start
-    - ./src:/var/www/html
+    - ./src:/var/www/html:cached
     - ca_certs:/etc/nginx/ssl/default-certs
     - certbot_certs:/etc/nginx/ssl/letsencrypt
     - certbot_www:/var/www/certbot
@@ -63,6 +63,8 @@ services:
     build:
       context: mysqldb
     env_file: service.env
+    cap_add:
+      - SYS_NICE
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s

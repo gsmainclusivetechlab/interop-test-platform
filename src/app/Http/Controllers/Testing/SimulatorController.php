@@ -23,18 +23,21 @@ class SimulatorController extends Controller
     }
 
     /**
-     * @param Component $component
-     * @param Component $connection
+     * @param string $componentSlug
+     * @param string $connectionSlug
      * @param string $path
      * @param ServerRequestInterface $request
      * @return mixed
      */
     public function __invoke(
-        Component $component,
-        Component $connection,
+        string $componentSlug,
+        string $connectionSlug,
         string $path,
         ServerRequestInterface $request
     ) {
+        $component = $this->getComponent($componentSlug);
+        $connection = $this->getComponent($connectionSlug);
+
         $trace = new TraceparentHeader(
             $request->getHeaderLine(TraceparentHeader::NAME)
         );
@@ -117,5 +120,18 @@ class SimulatorController extends Controller
             $session,
             empty($uri)
         ))();
+    }
+
+    protected function getComponent(string $componentSlug): Component
+    {
+        if (!($component = Component::where('slug', $componentSlug)->first())) {
+            throw new MessageMismatchException(
+                null,
+                404,
+                "Unable to find test component with id $componentSlug. Please check the request base URL"
+            );
+        }
+
+        return $component;
     }
 }
