@@ -84,7 +84,10 @@ class TwigSubstitution
         try {
             $template = $this->twig->createTemplate($content);
 
-            return htmlspecialchars_decode($template->render($this->data));
+            return htmlspecialchars_decode(
+                $template->render($this->data),
+                ENT_QUOTES
+            );
         } catch (Exception $e) {
             return $content;
         }

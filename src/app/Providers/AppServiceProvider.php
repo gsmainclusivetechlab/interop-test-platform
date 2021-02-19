@@ -31,18 +31,7 @@ class AppServiceProvider extends ServiceProvider
             'session' => Session::class,
         ]);
 
-        Validator::extend('ilpPacket', function (
-            $attribute,
-            $value,
-            $parameters,
-            $validator
-        ) {
-            return IlpPacket::validateIlpPacket(
-                $value,
-                $parameters,
-                $validator->getData()
-            );
-        });
+        $this->registerValidators();
     }
 
     /**
@@ -70,5 +59,17 @@ class AppServiceProvider extends ServiceProvider
                 );
             });
         }
+
+        Validator::extend(
+            'str_equals',
+            function (
+                $attribute,
+                $value,
+                $parameters,
+                $validator
+            ) {
+                return $value === implode(',', $parameters);
+            },
+            'The :attribute value is invalid.');
     }
 }
