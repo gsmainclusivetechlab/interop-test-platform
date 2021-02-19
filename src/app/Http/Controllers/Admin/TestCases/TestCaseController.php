@@ -20,6 +20,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\Yaml\Yaml;
@@ -233,17 +234,22 @@ class TestCaseController extends Controller
             return redirect()
                 ->route('admin.test-cases.versions.index', $testCase->id)
                 ->with('success', __('Test case imported successfully'));
+        } catch (ValidationException $e) {
+            throw ValidationException::withMessages([
+                'entries' => implode(
+                    '<br>',
+                    array_merge(
+                        [
+                            'Test Case validation failed. Please resolve errors listed below:',
+                        ],
+                        $e->validator->errors()->all()
+                    )
+                ),
+            ]);
         } catch (\Throwable $e) {
-            $errorMessage = implode(
-                '<br>',
-                array_merge(
-                    [$e->getMessage()],
-                    !empty($e->validator) ? $e->validator->errors()->all() : []
-                )
-            );
             return redirect()
                 ->back()
-                ->with('error', $errorMessage);
+                ->with('error', $e->getMessage());
         }
     }
 
