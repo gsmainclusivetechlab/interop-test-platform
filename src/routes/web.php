@@ -175,7 +175,7 @@ Route::name('sessions.')
                     'groupEnvironmentCandidates',
                 ])->name('group-environment-candidates');
                 Route::get('certificate-candidates', [
-                    ConfigController::class,
+                    SutController::class,
                     'groupCertificateCandidates',
                 ])->name('group-certificate-candidates');
             });
@@ -210,6 +210,12 @@ Route::name('testing-insecure.')
     ->namespace('Testing')
     ->group(function () {
         Route::any(
+            '{componentSlug}/{connectionSlug}/simulator/{path?}',
+            'SimulatorController'
+        )
+            ->name('simulator')
+            ->where('path', '.*');
+        Route::any(
             '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
         )
@@ -221,6 +227,12 @@ Route::name('testing.')
     ->prefix('testing')
     ->namespace('Testing')
     ->group(function () {
+        Route::any(
+            '{componentSlug}/{connectionSlug}/simulator/{path?}',
+            'SimulatorController'
+        )
+            ->name('simulator')
+            ->where('path', '.*');
         Route::any(
             '{componentSlug}/{connectionSlug}/{session:uuid}/{path?}',
             'SutController@testingSession'
@@ -259,6 +271,7 @@ Route::name('testing-group.')
 Route::name('admin.')
     ->prefix('admin')
     ->namespace('Admin')
+    ->middleware(['auth', 'verified'])
     ->group(function () {
         Route::resource('users', 'UserController')->only(['destroy']);
         Route::name('users.')
@@ -325,6 +338,9 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
+        Route::resource('implicit-suts', 'ImplicitSutController')->except([
+            'show',
+        ]);
         Route::namespace('TestCases')->group(function () {
             Route::resource('test-cases', 'TestCaseController')->except([
                 'show',
