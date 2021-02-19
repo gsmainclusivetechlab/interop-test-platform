@@ -1,31 +1,31 @@
 <template>
     <div v-if="meta.total" class="d-flex align-items-center">
         <p class="m-0 text-muted">
-            {{ $t('comment[0]') }}
+            {{ $t('components.pagination.comment[0]') }}
             <span>
                 {{ meta.from }}
             </span>
-            {{ $t('comment[1]') }}
+            {{ $t('components.pagination.comment[1]') }}
             <span>
                 {{ meta.to }}
             </span>
-            {{ $t('comment[2]') }}
+            {{ $t('components.pagination.comment[2]') }}
             <span>
                 {{ meta.total }}
             </span>
-            {{ $tc('comment[3]', meta.total) }}
+            {{ $tc('components.pagination.comment[3]', meta.total) }}
         </p>
         <ul v-if="meta.total > meta.per_page" class="pagination m-0 ml-auto">
             <li v-if="links.prev !== null" class="page-item">
                 <inertia-link class="page-link" :href="links.prev">
                     <icon name="arrow-left"></icon>
-                    {{ $t('buttons.prev') }}
+                    {{ $t('components.pagination.buttons.prev') }}
                 </inertia-link>
             </li>
             <li v-else class="page-item disabled">
                 <span class="page-link">
                     <icon name="arrow-left"></icon>
-                    {{ $t('buttons.prev') }}
+                    {{ $t('components.pagination.buttons.prev') }}
                 </span>
             </li>
             <template v-for="(n, i) in meta.last_page">
@@ -92,13 +92,13 @@
             </template>
             <li v-if="links.next !== null" class="page-item">
                 <inertia-link class="page-link" :href="links.next">
-                    {{ $t('buttons.next') }}
+                    {{ $t('components.pagination.buttons.next') }}
                     <icon name="arrow-right"></icon>
                 </inertia-link>
             </li>
             <li v-else class="page-item disabled">
                 <span class="page-link">
-                    {{ $t('buttons.next') }}
+                    {{ $t('components.pagination.buttons.next') }}
                     <icon name="arrow-right"></icon>
                 </span>
             </li>
@@ -166,4 +166,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/pagination.json"></i18n>

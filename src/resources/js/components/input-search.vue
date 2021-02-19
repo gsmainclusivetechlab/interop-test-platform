@@ -6,7 +6,7 @@
             class="form-control"
             @input="$emit('input', $event.target.value)"
             ref="input"
-            :placeholder="$t('placeholder')"
+            :placeholder="$t('components.input-search.placeholder')"
         />
         <span class="input-group-text">
             <a
@@ -39,4 +39,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/input-search.json"></i18n>

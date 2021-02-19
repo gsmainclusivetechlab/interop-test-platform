@@ -4,15 +4,25 @@ compliance-sessions:
   tabs:
     all: All
     in-verification: In verification
-confirm-link:
-  buttons:
-    cancel: Cancel
-    ok: Confirm
-  modal:
-    text: You won't be able to revert this!
-    title: Are you sure?
-input-search:
-  placeholder: Search...
+components:
+  confirm-link:
+    buttons:
+      cancel: Cancel
+      ok: Confirm
+    modal:
+      text: You won't be able to revert this!
+      title: Are you sure?
+  input-search:
+    placeholder: Search...
+  pagination:
+    buttons:
+      next: Next
+      prev: Prev
+    comment:
+      - Showing
+      - to
+      - of
+      - entry | entries
 special-locales:
   compliance: Certification
   administration: Administration
@@ -48,15 +58,6 @@ layout:
   user-menu:
     logout: Logout
     settings: Settings
-pagination:
-  buttons:
-    next: Next
-    prev: Prev
-  comment:
-    - Showing
-    - to
-    - of
-    - entry | entries
 questionnaire:
   info:
     summary: Summary
