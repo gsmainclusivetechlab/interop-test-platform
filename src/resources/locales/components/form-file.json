@@ -1,0 +1,16 @@
+{
+    "en": {
+        "inputs": {
+            "errors": {
+                "file": "Error with file - {fileSrc}"
+            }
+        }
+    },
+    "ru": {
+        "inputs": {
+            "errors": {
+                "file": "Ошибка файла - {fileSrc}"
+            }
+        }
+    }
+}
