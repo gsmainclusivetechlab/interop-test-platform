@@ -33,7 +33,7 @@ class GenerateClientCA extends Command
     {
         $this->info('Start generation...');
 
-        Certificate::whereDoesntHave('group')
+        Certificate::whereDoesntHave('certificable')
             ->whereDoesntHave('sessions')
             ->whereDate('created_at', '<', Carbon::now()->subDays(30))
             ->each(function (Certificate $certificate) {

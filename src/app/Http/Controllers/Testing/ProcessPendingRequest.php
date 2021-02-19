@@ -105,7 +105,11 @@ class ProcessPendingRequest
 
             if ($targetComponent && $targetComponent->pivot->use_encryption) {
                 /** @var Certificate $certificate */
-                if (!($certificate = $targetComponent->pivot->certificate)) {
+                $certificate = $targetComponent->pivot->implicitSut
+                    ? $targetComponent->pivot->implicitSut->certificate
+                    : $targetComponent->pivot->certificate;
+
+                if (!$certificate) {
                     (new SendingRejectedHandler($this->testResult))(
                         new Exception(
                             __(

@@ -3,7 +3,14 @@
 namespace App\Providers;
 
 use App\Extensions\Twig\IlpPacket;
-use App\Models\{GroupEnvironment, Session, TestResult, TestRun};
+use App\Models\{
+    Group,
+    GroupEnvironment,
+    ImplicitSut,
+    Session,
+    TestResult,
+    TestRun
+};
 use App\Observers\{TestResultObserver, TestRunObserver};
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
@@ -27,8 +34,10 @@ class AppServiceProvider extends ServiceProvider
         $this->registerObservers();
 
         Relation::morphMap([
+            'group' => Group::class,
             'group_environment' => GroupEnvironment::class,
             'session' => Session::class,
+            'implicit_sut' => ImplicitSut::class,
         ]);
 
         Validator::extend('ilpPacket', function (

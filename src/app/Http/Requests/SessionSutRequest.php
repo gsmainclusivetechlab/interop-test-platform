@@ -64,6 +64,10 @@ class SessionSutRequest extends FormRequest
                         'nullable',
                         'string',
                     ],
+                    "components.{$id}.implicit_sut_id" => [
+                        'nullable',
+                        'exists:implicit_suts,id',
+                    ],
                 ];
             })
             ->merge([
