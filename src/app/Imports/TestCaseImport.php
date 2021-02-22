@@ -135,28 +135,28 @@ class TestCaseImport implements Importable
                     $this->importTestSetups(
                         $testStep,
                         TestSetup::TYPE_REQUEST,
-                        Arr::get($testStepRow, 'test_request_setups', [])
+                        Arr::get($testStepRow, 'test_request_setups', []) ?: []
                     );
                     $this->importTestSetups(
                         $testStep,
                         TestSetup::TYPE_RESPONSE,
-                        Arr::get($testStepRow, 'test_response_setups', [])
+                        Arr::get($testStepRow, 'test_response_setups', []) ?: []
                     );
 
                     $this->importTestScripts(
                         $testStep,
                         TestScript::TYPE_REQUEST,
-                        Arr::get($testStepRow, 'test_request_scripts', [])
+                        Arr::get($testStepRow, 'test_request_scripts', []) ?: []
                     );
                     $this->importTestScripts(
                         $testStep,
                         TestScript::TYPE_RESPONSE,
-                        Arr::get($testStepRow, 'test_response_scripts', [])
+                        Arr::get($testStepRow, 'test_response_scripts', []) ?: []
                     );
                     $this->importTestScripts(
                         $testStep,
                         TestScript::TYPE_REPEAT_RESPONSE,
-                        Arr::get($repeat, 'test_response_scripts', [])
+                        Arr::get($repeat, 'test_response_scripts', []) ?: []
                     );
                 }
             }
@@ -316,6 +316,7 @@ class TestCaseImport implements Importable
             'components.*.name' => ['required', 'string', 'max:255'],
             'components.*.slug' => ['required', 'string', 'max:255'],
             'components.*.versions' => ['nullable', 'array'],
+            'components.*.versions.*' => ['required', 'string'],
         ];
     }
 
