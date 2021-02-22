@@ -65,6 +65,10 @@
                                                     component.version
                                                 )
                                         "
+                                        :clearable="
+                                            component.versions &&
+                                            component.versions.length > 1
+                                        "
                                         class="form-control d-flex p-0"
                                         :class="{
                                             'is-invalid':
@@ -440,7 +444,7 @@ export default {
             let implicitSut = null;
             const versions =
                 typeof this.versions[c.id] !== 'string' &&
-                this.versions[c.id] !== undefined
+                this.versions[c.id]?.length > 0
                     ? this.versions[c.id]
                     : this.implicitSuts[c.slug]
                     ? this.implicitSuts[c.slug]?.map((iSut) => {
