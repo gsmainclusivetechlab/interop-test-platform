@@ -437,11 +437,19 @@ export default {
     },
     mounted() {
         this.componentsList = this.components.data?.map((c) => {
+            let implicitSut = null;
             const versions =
-                typeof this.versions[c.id] !== 'string'
+                typeof this.versions[c.id] !== 'string' &&
+                this.versions[c.id] !== undefined
                     ? this.versions[c.id]
                     : this.implicitSuts[c.slug]
-                    ? this.implicitSuts[c.slug]?.map((iSut) => iSut.version)
+                    ? this.implicitSuts[c.slug]?.map((iSut) => {
+                          if (this.implicitSuts[c.slug].length === 1) {
+                              implicitSut = iSut;
+                          }
+
+                          return iSut.version;
+                      })
                     : null;
 
             return {
@@ -449,7 +457,7 @@ export default {
                 id: c.id,
                 slug: c.slug,
                 connections: c.connections,
-                base_url: null,
+                base_url: implicitSut?.url,
                 use_encryption: 0,
                 certificate_id: null,
                 certificate: {
@@ -461,7 +469,7 @@ export default {
                 },
                 versions: versions,
                 version: versions?.length === 1 ? versions?.[0] : null,
-                implicit_sut_id: null,
+                implicit_sut_id: implicitSut?.id,
             };
         });
 
