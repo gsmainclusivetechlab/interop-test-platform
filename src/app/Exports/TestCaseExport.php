@@ -20,10 +20,27 @@ class TestCaseExport implements Exportable
 
         return Yaml::dump(
             $data,
-            0,
+            $this->getInline($data),
             2,
             Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
         );
+    }
+
+    /**
+     * @param array $array
+     * @return int
+     */
+    protected function getInline(array $array): int
+    {
+        $depth = [0];
+        foreach ($array as $item)
+        {
+            if (is_array($item)) {
+                $depth[] = $this->getInline($item);
+            }
+        }
+
+        return 1 + max($depth);
     }
 
     /**
