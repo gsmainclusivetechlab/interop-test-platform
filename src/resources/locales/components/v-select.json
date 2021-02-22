@@ -1,0 +1,12 @@
+{
+    "en": {
+        "errors": {
+            "option-not-add": "'{option}' - option hasn't been added. Please select it to be added."
+        }
+    },
+    "ru": {
+        "errors": {
+            "option-not-add": "'{option}' - опция не добавлена. Сделайте действие для добавления опции."
+        }
+    }
+}
