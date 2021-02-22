@@ -548,9 +548,9 @@ export default {
         },
         implicitSutUrl(sut) {
             const implicitSut = this.implicitSuts?.[sut.slug]?.find((iSut) => {
-                const regex = new RegExp(iSut.version, 'g');
+                const regexp = new RegExp(iSut.version, 'g');
 
-                return sut.version?.match(regex);
+                return sut.version?.match(regexp)?.length > 0 ?? false;
             });
 
             sut.implicit_sut_id = implicitSut?.id ?? null;
