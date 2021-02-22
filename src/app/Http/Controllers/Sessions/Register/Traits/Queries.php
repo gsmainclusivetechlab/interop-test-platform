@@ -101,7 +101,7 @@ trait Queries
             if ($versions->count() > 1) {
                 $availableVersions = collect(
                     array_intersect(...$versions->all())
-                );
+                )->values();
 
                 if (!$availableVersions->count()) {
                     return [
