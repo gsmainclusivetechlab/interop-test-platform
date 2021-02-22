@@ -62,19 +62,43 @@
                             :selectable="
                                 (option) => isSelectable(option, form.versions)
                             "
+                            ref="versions"
                             class="form-control d-flex p-0"
                             :class="{
-                                'is-invalid': $page.props.errors.versions,
+                                'is-invalid':
+                                    $page.props.errors.versions ||
+                                    searchList.versions,
                             }"
+                            @search:blur="
+                                searchList.versions = form.versions.includes(
+                                    $refs.versions.search
+                                )
+                                    ? null
+                                    : $refs.versions.search
+                            "
                         />
-                        <span
-                            v-if="$page.props.errors.versions"
+                        <div
+                            v-if="
+                                $page.props.errors.versions ||
+                                searchList.versions
+                            "
                             class="invalid-feedback"
                         >
-                            <strong>
-                                {{ $page.props.errors.versions }}
-                            </strong>
-                        </span>
+                            <span v-if="searchList.versions">
+                                <strong>
+                                    {{
+                                        $t('errors.option-not-add', {
+                                            option: searchList.versions,
+                                        })
+                                    }}
+                                </strong>
+                            </span>
+                            <span v-if="$page.props.errors.versions">
+                                <strong>
+                                    {{ $page.props.errors.versions }}
+                                </strong>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,6 +141,9 @@ export default {
     data() {
         return {
             sending: false,
+            searchList: {
+                versions: null,
+            },
             form: {
                 name: null,
                 slug: null,
@@ -140,4 +167,5 @@ export default {
     },
 };
 </script>
+<i18n src="@locales/components/v-select.json"></i18n>
 <i18n src="@locales/pages/admin/test-cases/components/create.json"></i18n>
