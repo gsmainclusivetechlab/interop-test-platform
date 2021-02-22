@@ -3,10 +3,15 @@
 namespace App\Models;
 
 use App\Casts\OpenApiCast;
+use cebe\openapi\spec\OpenApi;
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @mixin \Eloquent
+ * @mixin Eloquent
+ *
+ * @property string $name
+ * @property OpenApi $openapi
  */
 class ApiSpec extends Model
 {

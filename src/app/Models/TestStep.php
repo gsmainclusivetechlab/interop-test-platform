@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property Component $source
  * @property Component $target
+ * @property ApiSpec $apiSpec
  */
 class TestStep extends Model
 {
