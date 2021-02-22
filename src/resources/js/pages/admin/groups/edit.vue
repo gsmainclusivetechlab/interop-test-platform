@@ -37,28 +37,52 @@
                                     $t('inputs.email-filter.label')
                                 }}</label>
                                 <v-select
-                                    v-model="domains"
+                                    v-model="form.domains"
                                     multiple
                                     taggable
                                     push-tags
                                     :selectable="
                                         (option) =>
-                                            isSelectable(option, domains)
+                                            isSelectable(option, form.domains)
                                     "
+                                    ref="emailFilter"
                                     class="form-control d-flex p-0"
                                     :class="{
-                                        'is-invalid': $page.props.errors.domain,
+                                        'is-invalid':
+                                            $page.props.errors.domain ||
+                                            searchList.emailFilter,
                                     }"
-                                    @input="setDomain"
+                                    @search:blur="
+                                        searchList.emailFilter = form.domains.includes(
+                                            $refs.emailFilter.search
+                                        )
+                                            ? null
+                                            : $refs.emailFilter.search
+                                    "
                                 />
-                                <span
-                                    v-if="$page.props.errors.domain"
+                                <div
+                                    v-if="
+                                        $page.props.errors.domain ||
+                                        searchList.emailFilter
+                                    "
                                     class="invalid-feedback"
                                 >
-                                    <strong>
-                                        {{ $page.props.errors.domain }}
-                                    </strong>
-                                </span>
+                                    <span v-if="searchList.emailFilter">
+                                        <strong>
+                                            {{
+                                                $t('errors.option-not-add', {
+                                                    option:
+                                                        searchList.emailFilter,
+                                                })
+                                            }}
+                                        </strong>
+                                    </span>
+                                    <span v-if="$page.props.errors.domain">
+                                        <strong>
+                                            {{ $page.props.errors.domain }}
+                                        </strong>
+                                    </span>
+                                </div>
                                 <div class="mt-1 text-muted small">
                                     {{ $t('inputs.email-filter.comment') }}
                                 </div>
@@ -132,20 +156,31 @@ export default {
     data() {
         return {
             sending: false,
-            domains: this.group.domain.split(', '),
+            searchList: {
+                emailFilter: null,
+            },
             form: {
                 name: this.group.name,
-                domain: this.group.domain,
+                domains: this.group.domain.split(', '),
                 description: this.group.description,
             },
         };
     },
     methods: {
         submit() {
+            const form = {
+                name: this.form.name,
+                domain:
+                    this.form.domains.length > 0
+                        ? this.form.domains.join(', ')
+                        : null,
+                description: this.form.description,
+            };
+
             this.sending = true;
             this.$inertia.put(
                 route('admin.groups.update', this.group.id),
-                this.form,
+                form,
                 {
                     onFinish: () => {
                         this.sending = false;
@@ -153,11 +188,9 @@ export default {
                 }
             );
         },
-        setDomain(items) {
-            this.form.domain = items.length > 0 ? items.join(', ') : null;
-        },
     },
 };
 </script>
+<i18n src="@locales/components/v-select.json"></i18n>
 <i18n src="@locales/pages/admin/groups/create.json"></i18n>
 <i18n src="@locales/pages/admin/groups/edit.json"></i18n>
