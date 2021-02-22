@@ -535,9 +535,11 @@ export default {
             );
         },
         implicitSutUrl(sut) {
-            const implicitSut = this.implicitSuts?.[sut.slug]?.find(
-                (iSut) => iSut.version === sut.version
-            );
+            const implicitSut = this.implicitSuts?.[sut.slug]?.find((iSut) => {
+                const regex = new RegExp(iSut.version, 'g');
+
+                return sut.version?.match(regex);
+            });
 
             sut.implicit_sut_id = implicitSut?.id ?? null;
 
