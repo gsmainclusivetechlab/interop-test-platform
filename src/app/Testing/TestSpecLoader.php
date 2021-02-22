@@ -8,6 +8,7 @@ use App\Testing\Tests\ResponseSchemeValidationTest;
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use League\OpenAPIValidation\PSR7\OperationAddress;
 use League\OpenAPIValidation\PSR7\ResponseAddress;
+use League\OpenAPIValidation\PSR7\SpecFinder;
 use PHPUnit\Framework\TestSuite;
 
 class TestSpecLoader
@@ -21,26 +22,33 @@ class TestSpecLoader
     {
         $testSuite = new TestSuite();
 
-        if ($apiSpec = $testResult->testStep->apiSpec) {
+        $apiSpecCollection = $testResult->testStep
+            ->apiSpec()
+            ->pluck('openapi', 'name');
+        if ($apiSpec = $apiSpecCollection->first()) {
+            $specFinder = new SpecFinder($apiSpec);
+
             $testSuite->addTest(
                 new RequestSchemeValidationTest(
                     $testResult->request,
-                    $apiSpec,
+                    $apiSpecCollection->keys()->first(),
                     new OperationAddress(
                         $testResult->testStep->path,
                         strtolower($testResult->testStep->method)
-                    )
+                    ),
+                    $specFinder
                 )
             );
             $testSuite->addTest(
                 new ResponseSchemeValidationTest(
                     $testResult->response,
-                    $apiSpec,
+                    $apiSpecCollection->keys()->first(),
                     new ResponseAddress(
                         $testResult->testStep->path,
                         strtolower($testResult->testStep->method),
                         $testResult->response->status()
-                    )
+                    ),
+                    $specFinder
                 )
             );
         }
