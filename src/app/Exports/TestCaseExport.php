@@ -19,8 +19,8 @@ class TestCaseExport implements Exportable
         $data = $this->getArray($testCase);
 
         return Yaml::dump(
-            $this->arrayFilter($data),
-            2,
+            $data,
+            0,
             2,
             Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
         );
@@ -33,7 +33,9 @@ class TestCaseExport implements Exportable
      */
     public function getArray($testCase): array
     {
-        return $this->mapTestCase($testCase);
+        return $this->arrayFilter(
+            $this->mapTestCase($testCase)
+        );
     }
 
     /**
@@ -85,7 +87,7 @@ class TestCaseExport implements Exportable
                 'method' => $testStep->method,
                 'source' => $testStep->source->slug,
                 'target' => $testStep->target->slug,
-                'mtls' => $testStep->mtls,
+                'mtls' => (bool) $testStep->mtls ?: null,
                 'api_spec' => $testStep->apiSpec()->exists()
                     ? $testStep->apiSpec->name
                     : null,
@@ -140,8 +142,13 @@ class TestCaseExport implements Exportable
                 TestScript::TYPE_REPEAT_RESPONSE
             ),
         ];
+        $result = $this->arrayFilter($result);
+        if (2 == count($result))
+        {
+            return null;
+        }
 
-        return $this->arrayFilter($result);
+        return $result;
     }
 
     /**
