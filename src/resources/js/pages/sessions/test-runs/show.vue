@@ -959,6 +959,23 @@ export default {
             required: true,
         },
     },
+    data() {
+        return {
+            reload: true,
+        };
+    },
+    mounted() {
+        this.$inertia.on('start', (e) => {
+            if (
+                e.detail.visit.only.length === 0 &&
+                route('sessions.test-cases.run', [
+                    this.session.id,
+                    this.testCase.id,
+                ]).url() !== e.detail.visit.url.href
+            )
+                this.reload = false;
+        });
+    },
     watch: {
         testRun: {
             deep: true,
@@ -967,6 +984,8 @@ export default {
                 if (this.testRun.completed_at) return;
 
                 setTimeout(() => {
+                    if (!this.reload) return;
+
                     this.$inertia.reload({
                         only: ['testRun', 'testResults', 'messages', 'errors'],
                     });
