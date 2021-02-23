@@ -9,7 +9,8 @@ use Arr;
 use File;
 use Gamegos\JWS\JWS;
 use Gamegos\JWS\Util\Base64Url;
-use Gamegos\JWS\Util\Json;
+use App\Utils\JWS\Json;
+use Illuminate\Support\Collection;
 
 class JwsValidationTest extends TestCase
 {
@@ -25,6 +26,9 @@ class JwsValidationTest extends TestCase
     /** @var string */
     protected $title;
 
+    /** @var Collection */
+    protected $headers;
+
     /**
      * JwsValidationTest constructor.
      *
@@ -38,6 +42,12 @@ class JwsValidationTest extends TestCase
         $this->jwsData = $jwsData;
         $this->jws = new JWS();
         $this->title = $title;
+
+        $this->headers = collect(
+            $this->requestOrResponse->headers()
+        )->mapWithKeys(function ($header, $headerName) {
+            return [strtolower($headerName) => $header[0]];
+        });
     }
 
     public function getName(): string
@@ -81,21 +91,27 @@ class JwsValidationTest extends TestCase
         }
 
         $this->jws->verify($token, $this->getKey());
+
+        collect($this->jws->decode($token)['headers'])
+            ->forget('alg')
+            ->each(function ($protectedHeaderValue, $headerName) {
+                $httpHeaderValue = $this->headers->get(strtolower($headerName));
+
+                if ($httpHeaderValue !== $protectedHeaderValue) {
+                    throw new \Exception(
+                        __(
+                            "{$headerName} HTTP header value: '{$httpHeaderValue}' does not match protected header value: '{$protectedHeaderValue}'"
+                        )
+                    );
+                }
+            });
     }
 
     protected function getHeader(): string
     {
         $neededHeader = strtolower($this->getHeaderName());
 
-        $result = collect($this->requestOrResponse->headers())->first(function (
-            $header,
-            $headerName
-        ) use ($neededHeader) {
-            return $neededHeader == strtolower($headerName);
-        },
-        '');
-
-        return is_array($result) ? $result[0] : $result;
+        return $this->headers->get($neededHeader, '');
     }
 
     protected function getHeaderName(): string
@@ -110,7 +126,7 @@ class JwsValidationTest extends TestCase
             : $filePath;
     }
 
-    protected function isMojaloop()
+    protected function isMojaloop(): bool
     {
         return Arr::get($this->jwsData, 'transform') === 'mojaloop';
     }

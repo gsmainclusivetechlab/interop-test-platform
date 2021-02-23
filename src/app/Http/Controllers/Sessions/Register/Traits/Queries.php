@@ -103,7 +103,7 @@ trait Queries
                     array_intersect(...$versions->all())
                 );
 
-                if (!count($availableVersions)) {
+                if (!$availableVersions->count()) {
                     return [
                         $component->id => __(
                             '<b>Test cases that you selected are incompatible.</b><br>:testCases',
