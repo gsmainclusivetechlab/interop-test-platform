@@ -6,9 +6,9 @@ use App\Http\Client\Request;
 use App\Models\TestResult;
 use Arr;
 use File;
-use Gamegos\JWS\JWS;
+use App\Utils\JWS\JWS;
 use Gamegos\JWS\Util\Base64Url;
-use Gamegos\JWS\Util\Json;
+use App\Utils\JWS\Json;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\MessageInterface;
 
