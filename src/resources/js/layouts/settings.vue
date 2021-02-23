@@ -5,10 +5,12 @@
                 <div class="col-md-3">
                     <div class="page-header">
                         <h2 class="page-title">
-                            <b>{{ $t('page.title') }}</b>
+                            <b>{{ $t('layout.settings.page.title') }}</b>
                         </h2>
                     </div>
-                    <div class="subheader mb-2">{{ $t('page.sub-title') }}</div>
+                    <div class="subheader mb-2">
+                        {{ $t('layout.settings.page.sub-title') }}
+                    </div>
                     <div class="list-group list-group-transparent">
                         <inertia-link
                             :href="route('settings.profile')"
@@ -17,7 +19,7 @@
                                 active: route().current('settings.profile'),
                             }"
                         >
-                            {{ $t('tabs[0]') }}
+                            {{ $t('layout.settings.tabs[0]') }}
                         </inertia-link>
                         <inertia-link
                             :href="route('settings.password')"
@@ -26,7 +28,7 @@
                                 active: route().current('settings.password'),
                             }"
                         >
-                            {{ $t('tabs[1]') }}
+                            {{ $t('layout.settings.tabs[1]') }}
                         </inertia-link>
                     </div>
                 </div>
@@ -47,9 +49,8 @@ export default {
     },
     metaInfo() {
         return {
-            title: this.$t('page.title'),
+            title: this.$t('layout.settings.page.title'),
         };
     },
 };
 </script>
-<i18n src="@locales/layout/settings.json"></i18n>

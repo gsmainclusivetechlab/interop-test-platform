@@ -9,17 +9,17 @@
                         <img
                             src="/assets/images/logo.png"
                             class="navbar-brand-image h-5 outline-light"
-                            :alt="$t('layout.main-nav.title')"
+                            :alt="$t('layout.main.main-nav.title')"
                         />
                     </inertia-link>
                 </div>
 
                 <div class="col d-none d-md-block text-center text-primary">
                     <h1 class="col-login__title mb-1">
-                        {{ $t('layout.main-nav.title') }}
+                        {{ $t('layout.main.main-nav.title') }}
                     </h1>
                     <h2 class="col-login__subtitle mb-0">
-                        {{ $t('layout.main-nav.subtitle') }}
+                        {{ $t('layout.main.main-nav.subtitle') }}
                     </h2>
                 </div>
 
@@ -73,7 +73,7 @@
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.users') }}
+                                    {{ $t('layout.main.menu.users') }}
                                 </inertia-link>
                             </li>
                             <li v-if="$page.props.auth.user.can.groups.viewAny">
@@ -81,7 +81,7 @@
                                     :href="route('admin.groups.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.groups') }}
+                                    {{ $t('layout.main.menu.groups') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -93,7 +93,7 @@
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.sessions') }}
+                                    {{ $t('layout.main.menu.sessions') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -107,7 +107,7 @@
                                     "
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.cert-sessions') }}
+                                    {{ $t('layout.main.menu.cert-sessions') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -119,7 +119,7 @@
                                     :href="route('admin.api-specs.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.api-specs') }}
+                                    {{ $t('layout.main.menu.api-specs') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -131,7 +131,7 @@
                                     :href="route('admin.components.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.components') }}
+                                    {{ $t('layout.main.menu.components') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -143,7 +143,7 @@
                                     :href="route('admin.use-cases.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.use-cases') }}
+                                    {{ $t('layout.main.menu.use-cases') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -155,7 +155,7 @@
                                     :href="route('admin.test-cases.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.test-cases') }}
+                                    {{ $t('layout.main.menu.test-cases') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -168,7 +168,7 @@
                                     :href="route('admin.message-log')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.message-log') }}
+                                    {{ $t('layout.main.menu.message-log') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -181,7 +181,11 @@
                                     :href="route('admin.questionnaire.import')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.menu.import-question-def') }}
+                                    {{
+                                        $t(
+                                            'layout.main.menu.import-question-def'
+                                        )
+                                    }}
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -214,7 +218,7 @@
                                     :href="route('settings.profile')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.user-menu.settings') }}
+                                    {{ $t('layout.main.user-menu.settings') }}
                                 </inertia-link>
                             </li>
                             <b-dropdown-divider></b-dropdown-divider>
@@ -225,7 +229,7 @@
                                     class="text-reset dropdown-item"
                                     as="button"
                                 >
-                                    {{ $t('layout.user-menu.logout') }}
+                                    {{ $t('layout.main.user-menu.logout') }}
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -252,7 +256,7 @@
                                     <icon name="activity" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('layout.main-nav.dashboard') }}
+                                    {{ $t('layout.main.main-nav.dashboard') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -272,7 +276,7 @@
                                     <icon name="box" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('layout.main-nav.sessions') }}
+                                    {{ $t('layout.main.main-nav.sessions') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -292,7 +296,7 @@
                                     <icon name="users" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('layout.main-nav.groups') }}
+                                    {{ $t('layout.main.main-nav.groups') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -312,7 +316,7 @@
                                     <icon name="help" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('layout.main-nav.tutorials') }}
+                                    {{ $t('layout.main.main-nav.tutorials') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -328,13 +332,13 @@
                                     <icon name="book" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('layout.main-nav.doc') }}
+                                    {{ $t('layout.main.main-nav.doc') }}
                                 </span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a
-                                :href="$t('layout.main-nav.external-link')"
+                                :href="$t('layout.main.main-nav.external-link')"
                                 class="nav-link"
                                 target="_blank"
                             >
@@ -344,7 +348,7 @@
                                     <icon name="link" />
                                 </span>
                                 <span class="nav-link-title">{{
-                                    $t('layout.main-nav.external')
+                                    $t('layout.main.main-nav.external')
                                 }}</span>
                             </a>
                         </li>
@@ -356,7 +360,7 @@
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />
-                        {{ $t('layout.buttons.new-session') }}
+                        {{ $t('layout.main.buttons.new-session') }}
                     </inertia-link>
                 </div>
             </b-collapse>
@@ -375,7 +379,7 @@
                         <ul class="list-inline list-inline-dots mb-0">
                             <li class="list-inline-item">
                                 <a
-                                    :href="$t('layout.footer.link')"
+                                    :href="$t('layout.main.footer.link')"
                                     class="link-secondary"
                                     target="_blank"
                                 >
@@ -384,7 +388,9 @@
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    :href="$t('layout.footer.cookies-link')"
+                                    :href="
+                                        $t('layout.main.footer.cookies-link')
+                                    "
                                     class="link-secondary"
                                     target="_blank"
                                 >
@@ -396,11 +402,11 @@
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         {{ `Copyright © ${new Date().getFullYear()}` }}
                         <a
-                            :href="$t('layout.footer.copyright-link')"
+                            :href="$t('layout.main.footer.copyright-link')"
                             class="link-secondary"
                             target="_blank"
                         >
-                            {{ $t('layout.footer.copyright-name') }} </a
+                            {{ $t('layout.main.footer.copyright-name') }} </a
                         >. All rights reserved.
                     </div>
                 </div>

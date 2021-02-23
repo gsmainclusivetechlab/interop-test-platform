@@ -27,37 +27,66 @@ special-locales:
   compliance: Certification
   administration: Administration
 layout:
-  buttons:
-    new-session: New Session
-  footer:
-    cookies-link: 'https://www.gsma.com/aboutus/legal/cookie-policy'
-    copyright-link: 'https://www.gsma.com'
-    copyright-name: GSMA
-    link: 'https://www.gsma.com/aboutus/legal'
-  main-nav:
-    dashboard: Dashboard
-    doc: Documentation
-    external: The Lab
-    external-link: 'https://www.gsma.com/lab'
-    groups: Groups
-    sessions: Sessions
-    subtitle: Interoperability Test Platform
-    title: Inclusive Tech Lab
-    tutorials: Tutorials
-  menu:
-    api-specs: API Specs
-    cert-sessions: '@:(special-locales.compliance) Sessions'
-    components: Components
-    groups: Groups
-    import-question-def: Import Questionnaire Definition
-    message-log: Message Log
-    sessions: Sessions
-    test-cases: Test Cases
-    use-cases: Use Cases
-    users: Users
-  user-menu:
-    logout: Logout
-    settings: Settings
+  compliance-sessions:
+    page:
+      title: '@:(special-locales.compliance) session'
+    tabs:
+      all: All
+      in-verification: In verification
+  sessions:
+    questionnaire:
+      page:
+        title: '@:(special-locales.compliance) session questionnaire'
+      info:
+        summary: Summary
+  test-cases:
+    breadcrumb:
+      test-cases: Test Cases
+      info: Info
+      test-steps: Test steps
+      test-flow: Test Flow
+      groups: Groups
+      versions: Versions
+      components: Components
+  settings:
+    page:
+      title: Settings
+      sub-title: General
+    tabs:
+      - Profile
+      - Change password
+  main:
+    buttons:
+      new-session: New Session
+    footer:
+      cookies-link: 'https://www.gsma.com/aboutus/legal/cookie-policy'
+      copyright-link: 'https://www.gsma.com'
+      copyright-name: GSMA
+      link: 'https://www.gsma.com/aboutus/legal'
+    main-nav:
+      dashboard: Dashboard
+      doc: Documentation
+      external: The Lab
+      external-link: 'https://www.gsma.com/lab'
+      groups: Groups
+      sessions: Sessions
+      subtitle: Interoperability Test Platform
+      title: Inclusive Tech Lab
+      tutorials: Tutorials
+    menu:
+      api-specs: API Specs
+      cert-sessions: '@:(special-locales.compliance) Sessions'
+      components: Components
+      groups: Groups
+      import-question-def: Import Questionnaire Definition
+      message-log: Message Log
+      sessions: Sessions
+      test-cases: Test Cases
+      use-cases: Use Cases
+      users: Users
+    user-menu:
+      logout: Logout
+      settings: Settings
 questionnaire:
   info:
     summary: Summary
@@ -263,31 +292,33 @@ home:
 sessions:
   register:
     card:
-      title: 'Session Type'
+      title: Session Type
     page:
-      title: 'Create new session'
+      title: Create new session
     types:
       questionnaire:
         title: Test
         description:
-          - 'A <b>@:(sessions.register.types.questionnaire.title)</b> session is
-            designed to help you quickly evaluate your system independently.'
-          - 'Unlike a <b>@:(sessions.register.types.compliance.title)</b>
+          - >-
+            A <b>@:(sessions.register.types.questionnaire.title)</b> session is
+            designed to help you quickly evaluate your system independently.
+          - >-
+            Unlike a <b>@:(sessions.register.types.compliance.title)</b>
             session, you can execute tests as many times as desired, and can
-            change the chosen set of test cases at any time '
+            change the chosen set of test cases at any time
       test:
         title: Manual
-        description:
-          'A <b>@:(sessions.register.types.test.title)</b> session allows you to
+        description: >-
+          A <b>@:(sessions.register.types.test.title)</b> session allows you to
           select the precise test cases to execute, without completing a
           questionnaire. You can execute each test case as many times as
-          desired, and can change the set of selected test cases at any time.'
+          desired, and can change the set of selected test cases at any time.
       compliance:
         title: '@:(special-locales.compliance)'
-        description:
-          'A <b>@:(sessions.register.types.compliance.title)</b> is designed to
+        description: >-
+          A <b>@:(sessions.register.types.compliance.title)</b> is designed to
           be executed once you are confident in your system. You will only be
           able to execute each test case <b>{testRunAttempts}</b> times, and you
           will not be able to adjust the test case selection once the session is
           created. After executing your tests, you will be able to submit your
-          results for review by a platform administrator. '
+          results for review by a platform administrator.
