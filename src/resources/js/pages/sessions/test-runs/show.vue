@@ -257,10 +257,25 @@
                             >
                                 <b-tab
                                     v-for="(result, i) in testResults"
-                                    :title="`№ ${result.iteration}`"
                                     title-link-class="justify-content-center py-1 text-nowrap rounded-0"
                                     :key="`result-${i}`"
                                 >
+                                    <template #title>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="flex-shrink-0 badge mr-2"
+                                                :class="{
+                                                    'bg-success':
+                                                        result.successful,
+                                                    'bg-danger': !result.successful,
+                                                }"
+                                            >
+                                            </span>
+                                            <span>{{
+                                                `№ ${result.iteration}`
+                                            }}</span>
+                                        </div>
+                                    </template>
                                     <div v-if="testStep" class="lead py-3 px-4">
                                         <div
                                             class="d-flex justigy-content-between"
