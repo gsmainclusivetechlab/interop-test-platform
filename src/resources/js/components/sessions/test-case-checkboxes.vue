@@ -18,7 +18,13 @@
                         v-show="!isCompliance"
                         type="button"
                         class="btn btn-link p-0 ml-3"
-                        @click.prevent="toggleCheckboxes"
+                        @click.prevent="
+                            toggleCheckboxes(
+                                useCase.testCases.positive.concat(
+                                    useCase.testCases.negative
+                                )
+                            )
+                        "
                     >
                         <icon
                             v-show="
@@ -76,7 +82,11 @@
                                     v-show="!isCompliance"
                                     type="button"
                                     class="btn btn-link p-0 ml-3"
-                                    @click.prevent="toggleCheckboxes"
+                                    @click.prevent="
+                                        toggleCheckboxes(
+                                            useCase.testCases.positive
+                                        )
+                                    "
                                 >
                                     <icon
                                         v-show="
@@ -121,11 +131,22 @@
                                     >
                                         <label class="form-check mb-0">
                                             <input
-                                                v-model="testCases"
-                                                :value="testCase.id"
+                                                :checked="
+                                                    testCases.includes(
+                                                        testCase.id
+                                                    )
+                                                "
                                                 type="checkbox"
                                                 class="form-check-input"
                                                 :disabled="isCompliance"
+                                                @change="
+                                                    changeCheckbox(
+                                                        testCase.id,
+                                                        testCases.includes(
+                                                            testCase.id
+                                                        )
+                                                    )
+                                                "
                                             />
                                             <span class="form-check-label">
                                                 {{ testCase.name }}
@@ -169,7 +190,11 @@
                                     v-show="!isCompliance"
                                     type="button"
                                     class="btn btn-link p-0 ml-3"
-                                    @click.prevent="toggleCheckboxes"
+                                    @click.prevent="
+                                        toggleCheckboxes(
+                                            useCase.testCases.negative
+                                        )
+                                    "
                                 >
                                     <icon
                                         v-show="
@@ -214,11 +239,22 @@
                                     >
                                         <label class="form-check mb-0">
                                             <input
-                                                v-model="testCases"
-                                                :value="testCase.id"
+                                                :checked="
+                                                    testCases.includes(
+                                                        testCase.id
+                                                    )
+                                                "
                                                 type="checkbox"
                                                 class="form-check-input"
                                                 :disabled="isCompliance"
+                                                @change="
+                                                    changeCheckbox(
+                                                        testCase.id,
+                                                        testCases.includes(
+                                                            testCase.id
+                                                        )
+                                                    )
+                                                "
                                             />
                                             <span class="form-check-label">
                                                 {{ testCase.name }}
@@ -329,20 +365,20 @@ export default {
         });
     },
     methods: {
-        toggleCheckboxes(e) {
-            const btn = e.target;
-            const closestParentList = btn.closest('.list-group-item');
-            const checkboxes = Array.from(
-                closestParentList.querySelectorAll('input[type="checkbox"]')
-            );
-            const isChecked = checkboxes.every(
-                (checkbox) => checkbox.checked === true
-            );
+        toggleCheckboxes(testCases) {
+            const testCasesIds = testCases?.map((el) => el.id);
+            const allChecked =
+                testCasesIds?.filter((id) => this.testCases.includes(id))
+                    .length === testCases.length;
 
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = !isChecked;
-                checkbox.dispatchEvent(new Event('change'));
-            });
+            testCasesIds?.forEach((id) => this.changeCheckbox(id, allChecked));
+        },
+        changeCheckbox(id, remove) {
+            if (remove && this.testCases.includes(id)) {
+                this.testCases.splice(this.testCases.indexOf(id), 1);
+            } else if (!remove && !this.testCases.includes(id)) {
+                this.testCases.push(id);
+            }
         },
         updateVersion(versions) {
             if (this.testCases.includes(versions.current.id)) {
@@ -354,16 +390,17 @@ export default {
             }
         },
         isListChecked(customList, checkList) {
-            const customListLength = customList.filter((el) =>
+            const checkedListLength = customList.filter((el) =>
                 checkList.includes(el.id)
             ).length;
+            const customListLength = customList.length;
 
-            if (customListLength === 0) return 'empty';
+            if (checkedListLength === 0) return 'empty';
 
-            if (customListLength > 0 && customListLength !== customList.length)
+            if (checkedListLength > 0 && checkedListLength !== customListLength)
                 return 'partial';
 
-            if (customListLength === customList.length) return 'full';
+            if (checkedListLength === customListLength) return 'full';
         },
     },
 };
