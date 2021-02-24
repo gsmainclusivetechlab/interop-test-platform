@@ -21,10 +21,7 @@ class AddFilePathColumnToApiSpecsTable extends Migration
 
         ApiSpec::all()->each(function (ApiSpec $apiSpec) {
             $path = 'openapis/' . Str::random(32) . '.yaml';
-            Storage::put(
-                $path,
-                Writer::writeToYaml($apiSpec->openapi)
-            );
+            Writer::writeToYamlFile($apiSpec->openapi, Storage::path($path));
             $apiSpec->update([
                 'file_path' => $path,
             ]);

@@ -9,6 +9,7 @@ use cebe\openapi\Reader;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Str;
 
 class ApiSpecController extends Controller
 {
@@ -62,12 +63,14 @@ class ApiSpecController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'file' => ['required', 'mimetypes:text/yaml,text/plain'],
         ]);
+        $file = $request->file('file');
 
         try {
-            ApiSpec::create(array_merge(
-                ['name' => $request->input('name')],
-                $this->storeApiSpec($request->file('file'))
-            ));
+            ApiSpec::create([
+                'name' => $request->input('name'),
+                'openapi' => Reader::readFromYamlFile($file->path()),
+                'file_path' => $file->store('openapis'),
+            ]);
 
             return redirect()
                 ->route('admin.api-specs.index')
@@ -104,12 +107,17 @@ class ApiSpecController extends Controller
         $request->validate([
             'file' => ['required', 'mimetypes:text/yaml,text/plain'],
         ]);
+        $file = $request->file('file');
 
         try {
             $path = $apiSpec->file_path;
-            $apiSpec->update(
-                $this->storeApiSpec($request->file('file'))
-            );
+            $apiSpec->update([
+                'openapi' => Reader::readFromYamlFile($file->path()),
+                'file_path' => $file->storeAs(
+                    'openapis',
+                    Str::random(32) . '.yaml'
+                ),
+            ]);
             app()->terminating(function () use ($path) {
                 \Storage::delete($path);
             });
@@ -131,7 +139,9 @@ class ApiSpecController extends Controller
      */
     public function destroy(ApiSpec $apiSpec)
     {
-        $apiSpec->delete();
+        if ($apiSpec->delete()) {
+            \Storage::delete($apiSpec->file_path);
+        }
 
         return redirect()
             ->back()
@@ -146,26 +156,7 @@ class ApiSpecController extends Controller
     {
         return response()->download(
             \Storage::path($apiSpec->file_path),
-            str_replace(
-                '/',
-                '',
-                $apiSpec->name . '.yaml'
-            )
+            str_replace('/', '', $apiSpec->name . '.yaml')
         );
-    }
-
-    /**
-     * @param $file
-     * @return array
-     * @throws \cebe\openapi\exceptions\IOException
-     * @throws \cebe\openapi\exceptions\TypeErrorException
-     * @throws \cebe\openapi\exceptions\UnresolvableReferenceException
-     */
-    protected function storeApiSpec($file)
-    {
-        return [
-            'openapi' => Reader::readFromYamlFile($file->path()),
-            'file_path' => $file->store('openapis'),
-        ];
     }
 }
