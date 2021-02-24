@@ -1,9 +1,9 @@
 <template>
-    <div v-if="useCases.data.length" class="card overflow-auto">
+    <div v-if="sortUseCases.length" class="card overflow-auto">
         <ul class="list-group card-body">
             <li
                 class="list-group-item border-0 py-0"
-                v-for="(useCase, i) in useCases.data"
+                v-for="(useCase, i) in sortUseCases"
                 :key="i"
             >
                 <div class="d-flex align-items-center">
@@ -18,20 +18,54 @@
                         v-show="!isCompliance"
                         type="button"
                         class="btn btn-link p-0 ml-3"
-                        @click.prevent="toggleCheckboxes"
+                        @click.prevent="
+                            toggleCbxList(
+                                useCase.testCases.positive.concat(
+                                    useCase.testCases.negative
+                                )
+                            )
+                        "
                     >
-                        <icon name="checkbox" />
+                        <icon
+                            v-show="
+                                checkCbxList(
+                                    useCase.testCases.positive.concat(
+                                        useCase.testCases.negative
+                                    ),
+                                    testCases
+                                ) === 'empty'
+                            "
+                            name="square"
+                        />
+                        <icon
+                            v-show="
+                                checkCbxList(
+                                    useCase.testCases.positive.concat(
+                                        useCase.testCases.negative
+                                    ),
+                                    testCases
+                                ) === 'partial'
+                            "
+                            name="square-dot"
+                        />
+                        <icon
+                            v-show="
+                                checkCbxList(
+                                    useCase.testCases.positive.concat(
+                                        useCase.testCases.negative
+                                    ),
+                                    testCases
+                                ) === 'full'
+                            "
+                            name="checkbox"
+                        />
                     </button>
                 </div>
 
                 <b-collapse :id="`use-case-${useCase.id}`" visible>
                     <ul
                         class="list-group"
-                        v-if="
-                            collect(useCase.testCases)
-                                .where('behavior', 'positive')
-                                .count()
-                        "
+                        v-if="useCase.testCases.positive.length"
                     >
                         <li class="list-group-item border-0 py-0">
                             <div class="d-flex align-items-center">
@@ -48,9 +82,39 @@
                                     v-show="!isCompliance"
                                     type="button"
                                     class="btn btn-link p-0 ml-3"
-                                    @click.prevent="toggleCheckboxes"
+                                    @click.prevent="
+                                        toggleCbxList(
+                                            useCase.testCases.positive
+                                        )
+                                    "
                                 >
-                                    <icon name="checkbox" />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.positive,
+                                                testCases
+                                            ) === 'empty'
+                                        "
+                                        name="square"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.positive,
+                                                testCases
+                                            ) === 'partial'
+                                        "
+                                        name="square-dot"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.positive,
+                                                testCases
+                                            ) === 'full'
+                                        "
+                                        name="checkbox"
+                                    />
                                 </button>
                             </div>
 
@@ -60,35 +124,43 @@
                             >
                                 <ul class="list-group">
                                     <li
+                                        v-for="(testCase, i) in useCase
+                                            .testCases.positive"
                                         class="list-group-item"
-                                        v-for="(testCase, i) in collect(
-                                            useCase.testCases
-                                        )
-                                            .where('behavior', 'positive')
-                                            .all()"
-                                        :key="i"
+                                        :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
                                         <label class="form-check mb-0">
                                             <input
-                                                :value="testCase.id"
-                                                :disabled="isCompliance"
-                                                v-model="testCases"
+                                                :checked="
+                                                    testCases.includes(
+                                                        testCase.id
+                                                    )
+                                                "
                                                 type="checkbox"
                                                 class="form-check-input"
+                                                :disabled="isCompliance"
+                                                @change="
+                                                    toggleCbx(
+                                                        testCase.id,
+                                                        testCases.includes(
+                                                            testCase.id
+                                                        )
+                                                    )
+                                                "
                                             />
                                             <span class="form-check-label">
                                                 {{ testCase.name }}
                                                 <test-case-update
-                                                    @update="updateVersion"
                                                     :test-case="testCase"
                                                     :session="session"
                                                     :is-compliance="
                                                         isCompliance
                                                     "
+                                                    @update="updateVersion"
                                                 />
                                                 <icon
-                                                    name="lock"
                                                     v-if="!testCase.public"
+                                                    name="lock"
                                                     class="text-muted"
                                                 />
                                             </span>
@@ -101,11 +173,7 @@
 
                     <ul
                         class="list-group"
-                        v-if="
-                            collect(useCase.testCases)
-                                .where('behavior', 'negative')
-                                .count()
-                        "
+                        v-if="useCase.testCases.negative.length"
                     >
                         <li class="list-group-item border-0 py-0">
                             <div class="d-flex align-items-center">
@@ -122,9 +190,39 @@
                                     v-show="!isCompliance"
                                     type="button"
                                     class="btn btn-link p-0 ml-3"
-                                    @click.prevent="toggleCheckboxes"
+                                    @click.prevent="
+                                        toggleCbxList(
+                                            useCase.testCases.negative
+                                        )
+                                    "
                                 >
-                                    <icon name="checkbox" />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.negative,
+                                                testCases
+                                            ) === 'empty'
+                                        "
+                                        name="square"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.negative,
+                                                testCases
+                                            ) === 'partial'
+                                        "
+                                        name="square-dot"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.negative,
+                                                testCases
+                                            ) === 'full'
+                                        "
+                                        name="checkbox"
+                                    />
                                 </button>
                             </div>
 
@@ -134,35 +232,43 @@
                             >
                                 <ul class="list-group">
                                     <li
+                                        v-for="(testCase, i) in useCase
+                                            .testCases.negative"
                                         class="list-group-item"
-                                        v-for="(testCase, i) in collect(
-                                            useCase.testCases
-                                        )
-                                            .where('behavior', 'negative')
-                                            .all()"
-                                        :key="i"
+                                        :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
                                         <label class="form-check mb-0">
                                             <input
-                                                :value="testCase.id"
-                                                :disabled="isCompliance"
-                                                v-model="testCases"
+                                                :checked="
+                                                    testCases.includes(
+                                                        testCase.id
+                                                    )
+                                                "
                                                 type="checkbox"
                                                 class="form-check-input"
+                                                :disabled="isCompliance"
+                                                @change="
+                                                    toggleCbx(
+                                                        testCase.id,
+                                                        testCases.includes(
+                                                            testCase.id
+                                                        )
+                                                    )
+                                                "
                                             />
                                             <span class="form-check-label">
                                                 {{ testCase.name }}
                                                 <test-case-update
-                                                    @update="updateVersion"
                                                     :test-case="testCase"
                                                     :session="session"
                                                     :is-compliance="
                                                         isCompliance
                                                     "
+                                                    @update="updateVersion"
                                                 />
                                                 <icon
-                                                    name="lock"
                                                     v-if="!testCase.public"
+                                                    name="lock"
                                                     class="text-muted"
                                                 />
                                             </span>
@@ -221,31 +327,71 @@ export default {
     data() {
         return {
             testCases: this.value,
+            sortUseCases: [],
         };
     },
     watch: {
         testCases: {
             immediate: true,
-            handler: function (value) {
-                this.$emit('input', value);
+            handler() {
+                this.$emit('input', this.testCases);
             },
         },
     },
-    methods: {
-        toggleCheckboxes(e) {
-            const btn = e.target;
-            const closestParentList = btn.closest('.list-group-item');
-            const checkboxes = Array.from(
-                closestParentList.querySelectorAll('input[type="checkbox"]')
-            );
-            const isChecked = checkboxes.every(
-                (checkbox) => checkbox.checked === true
-            );
+    mounted() {
+        this.sortUseCases = this.useCases.data?.map((useCase) => {
+            const sortUseCase = {
+                can: useCase.can,
+                description: useCase.description,
+                id: useCase.id,
+                name: useCase.name,
+                testCasesCount: useCase.testCasesCount,
+                testCases: {
+                    positive: [],
+                    negative: [],
+                },
+            };
 
-            checkboxes.forEach((checkbox) => {
-                checkbox.checked = !isChecked;
-                checkbox.dispatchEvent(new Event('change'));
+            useCase.testCases?.forEach((testCase) => {
+                if (testCase.behavior === 'positive') {
+                    sortUseCase.testCases.positive.push(testCase);
+                }
+                if (testCase.behavior === 'negative') {
+                    sortUseCase.testCases.negative.push(testCase);
+                }
             });
+
+            return sortUseCase;
+        });
+    },
+    methods: {
+        toggleCbxList(tcList) {
+            const tcIdList = tcList?.map((el) => el.id);
+            const isAllChecked =
+                tcIdList?.filter((id) => this.testCases.includes(id)).length ===
+                tcList.length;
+
+            tcIdList?.forEach((id) => this.toggleCbx(id, isAllChecked));
+        },
+        toggleCbx(tcId, remove) {
+            if (remove && this.testCases.includes(tcId)) {
+                this.testCases.splice(this.testCases.indexOf(tcId), 1);
+            } else if (!remove && !this.testCases.includes(tcId)) {
+                this.testCases.push(tcId);
+            }
+        },
+        checkCbxList(customList, mainList) {
+            const mainListLength = customList?.filter((el) =>
+                mainList.includes(el.id)
+            ).length;
+            const customListLength = customList.length;
+
+            if (mainListLength === 0) return 'empty';
+
+            if (mainListLength > 0 && mainListLength !== customListLength)
+                return 'partial';
+
+            if (mainListLength === customListLength) return 'full';
         },
         updateVersion(versions) {
             if (this.testCases.includes(versions.current.id)) {
