@@ -135,12 +135,14 @@ class TestCaseExport implements Exportable
                     TestScript::TYPE_RESPONSE
                 ),
                 'request' => array_diff_key(
+<<<<<<< HEAD
                     $this->arrayFilter($testStep->request->toArray()),
+=======
+                    array_filter($testStep->request->toArray()),
+>>>>>>> fix array filter
                     array_flip(['path'])
                 ),
-                'response' => $this->arrayFilter(
-                    $testStep->response->toArray()
-                ),
+                'response' => array_filter($testStep->response->toArray()),
                 'repeat' => $this->mapRepeat($testStep),
             ]);
         }
@@ -174,9 +176,15 @@ class TestCaseExport implements Exportable
             'max' => $testStep->repeat_max,
             'count' => $testStep->repeat_count,
             'condition' => $testStep->repeat_condition,
+<<<<<<< HEAD
             'response' => $testStep->repeat_response
                 ? $this->arrayFilter($testStep->repeat_response->toArray())
                 : null,
+=======
+            'response' => $testStep->repeat_response ?
+                array_filter($testStep->repeat_response->toArray()) :
+                null,
+>>>>>>> fix array filter
             'test_response_scripts' => $this->mapTestScripts(
                 $testStep->testScripts,
                 TestScript::TYPE_REPEAT_RESPONSE
