@@ -81,7 +81,7 @@
                                                 <test-case-update
                                                     @update="updateVersion"
                                                     :test-case="testCase"
-                                                    :session-id="session.id"
+                                                    :session="session"
                                                     :is-compliance="
                                                         isCompliance
                                                     "
@@ -155,7 +155,7 @@
                                                 <test-case-update
                                                     @update="updateVersion"
                                                     :test-case="testCase"
-                                                    :session-id="session.id"
+                                                    :session="session"
                                                     :is-compliance="
                                                         isCompliance
                                                     "

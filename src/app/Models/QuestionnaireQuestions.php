@@ -64,7 +64,9 @@ class QuestionnaireQuestions extends Model
     {
         return $this->answers
             ->map(function (QuestionnaireAnswer $answer) {
-                return Arr::get($this->values, $answer->answer);
+                return $this->values
+                    ? Arr::get($this->values, $answer->answer)
+                    : $answer->answer;
             })
             ->all();
     }

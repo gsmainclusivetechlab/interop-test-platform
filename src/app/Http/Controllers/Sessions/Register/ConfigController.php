@@ -51,12 +51,17 @@ class ConfigController extends Controller
 
     public function index(): Response
     {
-        $session = session('session');
+        $sutIds = collect(session('session.sut'))
+            ->filter(function ($sut) {
+                return !$sut['implicit_sut_id'];
+            })
+            ->keys() ?: [0];
+
         return Inertia::render('sessions/register/config', [
-            'session' => $session,
+            'session' => session('session'),
             'suts' => ComponentResource::collection(
                 Component::with('connections')
-                    ->whereIn('id', array_keys(session('session.sut', [0])))
+                    ->whereIn('id', $sutIds)
                     ->get()
             ),
             'components' => ComponentResource::collection(
