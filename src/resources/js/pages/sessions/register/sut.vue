@@ -441,27 +441,25 @@ export default {
     },
     mounted() {
         this.componentsList = this.components.data?.map((c) => {
-            let implicitSut = null;
             const versions =
                 typeof this.versions[c.id] !== 'string' &&
                 this.versions[c.id]?.length > 0
                     ? this.versions[c.id]
                     : this.implicitSuts[c.slug]
-                    ? this.implicitSuts[c.slug]?.map((iSut) => {
-                          if (this.implicitSuts[c.slug].length === 1) {
-                              implicitSut = iSut;
-                          }
-
-                          return iSut.version;
-                      })
+                    ? this.implicitSuts[c.slug]?.map((iSut) => iSut.version)
                     : null;
+
+            const version = versions?.length === 1 ? versions?.[0] : null;
+            const iSut = this.implicitSuts[c.slug]?.find((iSut) =>
+                this.checkSutParity(version, iSut.version)
+            );
 
             return {
                 name: c.name,
                 id: c.id,
                 slug: c.slug,
                 connections: c.connections,
-                base_url: implicitSut?.url,
+                base_url: iSut?.url ?? null,
                 use_encryption: 0,
                 certificate_id: null,
                 certificate: {
@@ -472,8 +470,8 @@ export default {
                     serialized: null,
                 },
                 versions: versions,
-                version: versions?.length === 1 ? versions?.[0] : null,
-                implicit_sut_id: implicitSut?.id,
+                version: version,
+                implicit_sut_id: iSut?.id ?? null,
             };
         });
 
@@ -546,12 +544,15 @@ export default {
                 }
             );
         },
-        implicitSutUrl(sut) {
-            const implicitSut = this.implicitSuts?.[sut.slug]?.find((iSut) => {
-                const regexp = new RegExp(iSut.version, 'g');
+        checkSutParity(sutV, iSutV) {
+            const regexp = new RegExp(iSutV, 'g');
 
-                return sut.version?.match(regexp)?.length > 0 ?? false;
-            });
+            return sutV?.match(regexp)?.length > 0 ?? false;
+        },
+        implicitSutUrl(sut) {
+            const implicitSut = this.implicitSuts?.[sut.slug]?.find((iSut) =>
+                this.checkSutParity(sut.version, iSut.version)
+            );
 
             sut.implicit_sut_id = implicitSut?.id ?? null;
 

@@ -53,7 +53,7 @@ class FileEnvironment extends Model
                     'file_name' => $file->getClientOriginalName(),
                     'file_path' => $file->store('environments'),
                 ]);
-            } else {
+            } elseif ($file) {
                 $environment = static::find($file);
                 if (
                     class_basename($model) !=
