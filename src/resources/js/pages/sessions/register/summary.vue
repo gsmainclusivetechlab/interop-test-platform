@@ -78,11 +78,15 @@ export default {
             answers = Array.isArray(answers) ? answers : [answers];
 
             Object.values(answers).forEach((answer) => {
-                Object.values(question.values).forEach((value) => {
-                    if (value.id === answer) {
-                        answersTexts.push(value.label);
-                    }
-                });
+                if (['text-short', 'text-long'].includes(question.type)) {
+                    answersTexts.push(answer);
+                } else {
+                    Object.values(question.values).forEach((value) => {
+                        if (value.id === answer) {
+                            answersTexts.push(value.label);
+                        }
+                    });
+                }
             });
 
             return answersTexts;

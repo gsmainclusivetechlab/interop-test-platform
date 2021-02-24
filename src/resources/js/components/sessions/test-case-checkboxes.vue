@@ -152,7 +152,7 @@
                                                 {{ testCase.name }}
                                                 <test-case-update
                                                     :test-case="testCase"
-                                                    :session-id="session.id"
+                                                    :session="session"
                                                     :is-compliance="
                                                         isCompliance
                                                     "
@@ -260,7 +260,7 @@
                                                 {{ testCase.name }}
                                                 <test-case-update
                                                     :test-case="testCase"
-                                                    :session-id="session.id"
+                                                    :session="session"
                                                     :is-compliance="
                                                         isCompliance
                                                     "

@@ -87,12 +87,20 @@ class QuestionnaireController extends Controller
         $rules = [];
         foreach ($section->questions as $question) {
             if ($this->isRequiredAnswers($question, $data)) {
-                $values = array_keys($question->values);
+                $values = array_keys($question->values ?? []);
 
-                $rules[$question->name] = [
-                    'required',
-                    $question->isMultiSelect() ? 'array' : Rule::in($values),
-                ];
+                switch ($question->type) {
+                    case 'select':
+                        $rule = Rule::in($values);
+                        break;
+                    case 'multiselect':
+                        $rule = 'array';
+                        break;
+                    default:
+                        $rule = 'string';
+                }
+
+                $rules[$question->name] = ['required', $rule];
 
                 if ($question->isMultiSelect()) {
                     $rules["{$question->name}.*"] = [Rule::in($values)];

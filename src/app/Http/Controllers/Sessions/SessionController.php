@@ -250,8 +250,18 @@ class SessionController extends Controller
     ) {
         $this->authorize('update', $session);
 
+        $testCaseToRemove->isAvailableToUpdate($session);
+
+        abort_unless(
+            $testCaseToRemove->isAvailableToUpdate($session),
+            403,
+            __(
+                'New version of test case component mismatch with session SUT version'
+            )
+        );
+
         try {
-            $session = DB::transaction(function () use (
+            DB::transaction(function () use (
                 $session,
                 $testCaseToRemove,
                 $testCaseToAdd
@@ -286,8 +296,6 @@ class SessionController extends Controller
                     });
 
                 $session->testCasesWithSoftDeletes()->attach($testCaseToAdd);
-
-                return $session;
             });
 
             return redirect()

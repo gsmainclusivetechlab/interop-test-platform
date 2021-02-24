@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasPosition;
 use App\Models\Concerns\HasUuid;
+use App\Models\Pivots\SessionTestCases;
 use App\Models\Pivots\TestCaseComponents;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,8 @@ use Illuminate\Support\Collection;
  * @mixin \Eloquent
  *
  * @property int $id
+ *
+ * @property-read TestCase $last_available_version
  *
  * @property TestRun $lastTestRun
  * @property TestRun[]|Collection $testRuns
@@ -68,6 +71,8 @@ class TestCase extends Model
         static::saving(function ($model) {
             $model->attributes['test_case_group_id'] =
                 $model->attributes['test_case_group_id'] ?? Str::random();
+
+            session()->forget('session');
         });
     }
 
@@ -118,7 +123,7 @@ class TestCase extends Model
             'session_test_cases',
             'test_case_id',
             'session_id'
-        );
+        )->using(SessionTestCases::class);
     }
 
     /**
@@ -334,6 +339,46 @@ class TestCase extends Model
             ->lastPerGroup(false)
             ->where('test_case_group_id', $this->test_case_group_id)
             ->first();
+    }
+
+    public function isAvailableToUpdate(?Session $session): bool
+    {
+        if (
+            !$session ||
+            ($lastTestCase = $this->last_available_version)->version ==
+                $this->version
+        ) {
+            return false;
+        }
+
+        $lastTestCaseComponents = $lastTestCase->components->whereNotNull(
+            'pivot.version'
+        );
+
+        return !$session->components
+            ->where('pivot.version')
+            ->filter(function (Component $component) use (
+                $lastTestCaseComponents
+            ) {
+                if (
+                    $testCaseComponent = $lastTestCaseComponents->firstWhere(
+                        'id',
+                        $component->id
+                    )
+                ) {
+                    return !collect($testCaseComponent->pivot->versions)
+                        ->filter(function ($version) use ($component) {
+                            return preg_match(
+                                "/^{$component->pivot->version}$/",
+                                $version
+                            );
+                        })
+                        ->count();
+                }
+
+                return false;
+            })
+            ->count();
     }
 
     /**
