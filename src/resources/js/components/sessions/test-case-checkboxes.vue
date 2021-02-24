@@ -19,7 +19,7 @@
                         type="button"
                         class="btn btn-link p-0 ml-3"
                         @click.prevent="
-                            toggleCheckboxes(
+                            toggleCbxList(
                                 useCase.testCases.positive.concat(
                                     useCase.testCases.negative
                                 )
@@ -28,7 +28,7 @@
                     >
                         <icon
                             v-show="
-                                isListChecked(
+                                checkCbxList(
                                     useCase.testCases.positive.concat(
                                         useCase.testCases.negative
                                     ),
@@ -39,7 +39,7 @@
                         />
                         <icon
                             v-show="
-                                isListChecked(
+                                checkCbxList(
                                     useCase.testCases.positive.concat(
                                         useCase.testCases.negative
                                     ),
@@ -50,7 +50,7 @@
                         />
                         <icon
                             v-show="
-                                isListChecked(
+                                checkCbxList(
                                     useCase.testCases.positive.concat(
                                         useCase.testCases.negative
                                     ),
@@ -83,14 +83,14 @@
                                     type="button"
                                     class="btn btn-link p-0 ml-3"
                                     @click.prevent="
-                                        toggleCheckboxes(
+                                        toggleCbxList(
                                             useCase.testCases.positive
                                         )
                                     "
                                 >
                                     <icon
                                         v-show="
-                                            isListChecked(
+                                            checkCbxList(
                                                 useCase.testCases.positive,
                                                 testCases
                                             ) === 'empty'
@@ -99,7 +99,7 @@
                                     />
                                     <icon
                                         v-show="
-                                            isListChecked(
+                                            checkCbxList(
                                                 useCase.testCases.positive,
                                                 testCases
                                             ) === 'partial'
@@ -108,7 +108,7 @@
                                     />
                                     <icon
                                         v-show="
-                                            isListChecked(
+                                            checkCbxList(
                                                 useCase.testCases.positive,
                                                 testCases
                                             ) === 'full'
@@ -140,7 +140,7 @@
                                                 class="form-check-input"
                                                 :disabled="isCompliance"
                                                 @change="
-                                                    changeCheckbox(
+                                                    toggleCbx(
                                                         testCase.id,
                                                         testCases.includes(
                                                             testCase.id
@@ -191,14 +191,14 @@
                                     type="button"
                                     class="btn btn-link p-0 ml-3"
                                     @click.prevent="
-                                        toggleCheckboxes(
+                                        toggleCbxList(
                                             useCase.testCases.negative
                                         )
                                     "
                                 >
                                     <icon
                                         v-show="
-                                            isListChecked(
+                                            checkCbxList(
                                                 useCase.testCases.negative,
                                                 testCases
                                             ) === 'empty'
@@ -207,7 +207,7 @@
                                     />
                                     <icon
                                         v-show="
-                                            isListChecked(
+                                            checkCbxList(
                                                 useCase.testCases.negative,
                                                 testCases
                                             ) === 'partial'
@@ -216,7 +216,7 @@
                                     />
                                     <icon
                                         v-show="
-                                            isListChecked(
+                                            checkCbxList(
                                                 useCase.testCases.negative,
                                                 testCases
                                             ) === 'full'
@@ -248,7 +248,7 @@
                                                 class="form-check-input"
                                                 :disabled="isCompliance"
                                                 @change="
-                                                    changeCheckbox(
+                                                    toggleCbx(
                                                         testCase.id,
                                                         testCases.includes(
                                                             testCase.id
@@ -333,8 +333,8 @@ export default {
     watch: {
         testCases: {
             immediate: true,
-            handler(value) {
-                this.$emit('input', value);
+            handler() {
+                this.$emit('input', this.testCases);
             },
         },
     },
@@ -365,20 +365,33 @@ export default {
         });
     },
     methods: {
-        toggleCheckboxes(testCases) {
-            const testCasesIds = testCases?.map((el) => el.id);
-            const allChecked =
-                testCasesIds?.filter((id) => this.testCases.includes(id))
-                    .length === testCases.length;
+        toggleCbxList(tcList) {
+            const tcIdList = tcList?.map((el) => el.id);
+            const isAllChecked =
+                tcIdList?.filter((id) => this.testCases.includes(id)).length ===
+                tcList.length;
 
-            testCasesIds?.forEach((id) => this.changeCheckbox(id, allChecked));
+            tcIdList?.forEach((id) => this.toggleCbx(id, isAllChecked));
         },
-        changeCheckbox(id, remove) {
-            if (remove && this.testCases.includes(id)) {
-                this.testCases.splice(this.testCases.indexOf(id), 1);
-            } else if (!remove && !this.testCases.includes(id)) {
-                this.testCases.push(id);
+        toggleCbx(tcId, remove) {
+            if (remove && this.testCases.includes(tcId)) {
+                this.testCases.splice(this.testCases.indexOf(tcId), 1);
+            } else if (!remove && !this.testCases.includes(tcId)) {
+                this.testCases.push(tcId);
             }
+        },
+        checkCbxList(customList, mainList) {
+            const mainListLength = customList?.filter((el) =>
+                mainList.includes(el.id)
+            ).length;
+            const customListLength = customList.length;
+
+            if (mainListLength === 0) return 'empty';
+
+            if (mainListLength > 0 && mainListLength !== customListLength)
+                return 'partial';
+
+            if (mainListLength === customListLength) return 'full';
         },
         updateVersion(versions) {
             if (this.testCases.includes(versions.current.id)) {
@@ -388,19 +401,6 @@ export default {
                     versions.last.id
                 );
             }
-        },
-        isListChecked(customList, checkList) {
-            const checkedListLength = customList.filter((el) =>
-                checkList.includes(el.id)
-            ).length;
-            const customListLength = customList.length;
-
-            if (checkedListLength === 0) return 'empty';
-
-            if (checkedListLength > 0 && checkedListLength !== customListLength)
-                return 'partial';
-
-            if (checkedListLength === customListLength) return 'full';
         },
     },
 };
