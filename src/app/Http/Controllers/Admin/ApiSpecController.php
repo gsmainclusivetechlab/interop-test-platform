@@ -70,7 +70,10 @@ class ApiSpecController extends Controller
                 'openapi' => Reader::readFromYamlFile(
                     $file->path()
                 ),
-                'file_path' => $file->store('openapis'),
+                'file_path' => $file->storeAs(
+                    'openapis',
+                    Str::random(32) . '.yaml'
+                ),
             ]);
 
             return redirect()
