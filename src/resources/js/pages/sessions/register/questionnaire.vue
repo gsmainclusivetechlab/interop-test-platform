@@ -19,7 +19,27 @@
                         <label class="form-label">{{
                             question.question
                         }}</label>
+                        <input
+                            v-if="question.type === 'text-short'"
+                            class="form-control"
+                            :value="answers[question.name]"
+                            :class="{
+                                'is-invalid': $page.props.errors[question.name],
+                            }"
+                            @input="(value) => setAnswer(value, question.name)"
+                        />
+                        <textarea
+                            v-else-if="question.type === 'text-long'"
+                            class="form-control"
+                            rows="5"
+                            :value="answers[question.name]"
+                            :class="{
+                                'is-invalid': $page.props.errors[question.name],
+                            }"
+                            @input="(value) => setAnswer(value, question.name)"
+                        ></textarea>
                         <v-select
+                            v-else
                             :value="answers[question.name]"
                             :multiple="question.type === 'multiselect'"
                             :options="question.values"
@@ -126,7 +146,9 @@ export default {
                         key,
                         Array.isArray(value)
                             ? Object.values(value).map((val) => val.id)
-                            : value.id,
+                            : value.id
+                            ? value.id
+                            : value,
                     ])
             );
 
@@ -155,11 +177,13 @@ export default {
                     this.answers[name] = Object.values(
                         sessionAnswers[name]
                     ).map((answer) => this.getValue(question, answer));
-                } else {
+                } else if (question.type === 'select') {
                     this.answers[name] = this.getValue(
                         question,
                         sessionAnswers[name]
                     );
+                } else {
+                    this.answers[name] = sessionAnswers[name];
                 }
             });
         },
@@ -174,11 +198,17 @@ export default {
                     this.answers[question.name] = null;
                 }
 
-                if (
-                    JSON.stringify(this.answers[name]) !==
-                    JSON.stringify(values)
-                ) {
-                    this.answers[name] = values;
+                if (values instanceof InputEvent) {
+                    if (this.answers[name] !== values.target.value) {
+                        this.answers[name] = values.target.value;
+                    }
+                } else {
+                    if (
+                        JSON.stringify(this.answers[name]) !==
+                        JSON.stringify(values)
+                    ) {
+                        this.answers[name] = values;
+                    }
                 }
             });
         },

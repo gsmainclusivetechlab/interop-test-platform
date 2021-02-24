@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
 use App\Models\Pivots\SessionComponent;
+use App\Models\Pivots\SessionTestCases;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -177,6 +178,7 @@ class Session extends Model
             'session_id',
             'test_case_id'
         )
+            ->using(SessionTestCases::class)
             ->withPivot(['deleted_at'])
             ->wherePivot('deleted_at', null);
     }

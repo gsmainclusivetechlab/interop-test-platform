@@ -160,6 +160,7 @@
                                 >
                                     <div
                                         v-if="
+                                            !component.implicit_sut_id &&
                                             Array.from(
                                                 new Set(
                                                     testSteps.data.map(
