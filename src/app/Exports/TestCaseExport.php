@@ -19,13 +19,7 @@ class TestCaseExport implements Exportable
         'jws',
     ];
 
-    protected $responseOrder = [
-        'status',
-        'delay',
-        'headers',
-        'body',
-        'jws',
-    ];
+    protected $responseOrder = ['status', 'delay', 'headers', 'body', 'jws'];
 
     /**
      * @param Model $testCase
@@ -51,8 +45,7 @@ class TestCaseExport implements Exportable
     protected function getInline(array $array): int
     {
         $depth = [0];
-        foreach ($array as $item)
-        {
+        foreach ($array as $item) {
             if (is_array($item)) {
                 $depth[] = $this->getInline($item);
             }
@@ -68,9 +61,7 @@ class TestCaseExport implements Exportable
      */
     public function getArray($testCase): array
     {
-        return $this->arrayFilter(
-            $this->mapTestCase($testCase)
-        );
+        return $this->arrayFilter($this->mapTestCase($testCase));
     }
 
     /**
@@ -143,19 +134,12 @@ class TestCaseExport implements Exportable
                     $testScripts,
                     TestScript::TYPE_RESPONSE
                 ),
-                'request' => $this->withOrder(
-                    json_decode(
-                        $testStep->getRawOriginal('request'),
-                        true
-                    ),
-                    $this->requestOrder
+                'request' => array_diff_key(
+                    $this->arrayFilter($testStep->request->toArray()),
+                    array_flip(['path'])
                 ),
-                'response' => $this->withOrder(
-                    json_decode(
-                        $testStep->getRawOriginal('response'),
-                        true
-                    ),
-                    $this->responseOrder
+                'response' => $this->arrayFilter(
+                    $testStep->response->toArray()
                 ),
                 'repeat' => $this->mapRepeat($testStep),
             ]);
@@ -175,10 +159,7 @@ class TestCaseExport implements Exportable
             return $array;
         }
         return array_intersect_key(
-            array_merge(
-                array_flip($order),
-                $array
-            ),
+            array_merge(array_flip($order), $array),
             $array
         );
     }
@@ -193,21 +174,16 @@ class TestCaseExport implements Exportable
             'max' => $testStep->repeat_max,
             'count' => $testStep->repeat_count,
             'condition' => $testStep->repeat_condition,
-            'response' => $this->withOrder(
-                json_decode(
-                    $testStep->getRawOriginal('repeat_response'),
-                    true
-                ),
-                $this->responseOrder
-            ),
+            'response' => $testStep->repeat_response
+                ? $this->arrayFilter($testStep->repeat_response->toArray())
+                : null,
             'test_response_scripts' => $this->mapTestScripts(
                 $testStep->testScripts,
                 TestScript::TYPE_REPEAT_RESPONSE
             ),
         ];
         $result = $this->arrayFilter($result);
-        if (2 == count($result))
-        {
+        if (2 == count($result)) {
             return null;
         }
 
