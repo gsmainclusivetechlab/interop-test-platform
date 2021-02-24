@@ -31,6 +31,12 @@ questions:
           merchant-behaviors:
             in:
               - merchant-negative
+      - property: merchant-question2
+        question: Short text question
+        type: text-short
+      - property: merchant-question3
+        question: Long text question
+        type: text-long
   section-two:
     name: 'P2P transfer section'
     description: 'Here we ask a few questions re P2P Transfer.'

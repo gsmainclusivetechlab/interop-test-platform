@@ -1,14 +1,24 @@
 <template>
-    <span>
+    <span
+        v-if="
+            !isCompliance && testCase.lastAvailableVersion && checkLastVersion
+        "
+    >
         <button
-            v-if="
-                !isCompliance &&
-                testCase.lastAvailableVersion &&
-                checkLastVersion
-            "
+            v-if="isAvailableToUpdate"
             v-b-modal="`update-test-case-${versions.current.id}`"
             v-b-popover.hover.top.html="
                 'A newer version of this test case is available.<br> Click to update your session with it.'
+            "
+            type="button"
+            class="btn btn-sm btn-outline-primary text-uppercase"
+        >
+            update
+        </button>
+        <button
+            v-else
+            v-b-popover.hover.top.html="
+                '<b>Can\'t be updated!</b><br>New version of test case component mismatch with session SUT version'
             "
             type="button"
             class="btn btn-sm btn-outline-primary text-uppercase"
@@ -37,8 +47,8 @@ export default {
             type: Object,
             required: true,
         },
-        sessionId: {
-            type: Number,
+        session: {
+            type: Object,
             required: false,
         },
         isCompliance: {
@@ -64,7 +74,7 @@ export default {
         submit() {
             this.$inertia.put(
                 route('sessions.update-test-case', [
-                    this.sessionId,
+                    this.session.id,
                     this.versions.current.id,
                     this.versions.last.id,
                 ]),
@@ -83,6 +93,13 @@ export default {
                 this.testCase.lastAvailableVersion?.version !==
                 this.testCase?.version
             );
+        },
+        isAvailableToUpdate() {
+            const testCase = this.session?.testCases.data?.find(
+                (testCase) => this.testCase.id === testCase.id
+            );
+
+            return testCase ? testCase.isAvailableToUpdate : true;
         },
     },
 };

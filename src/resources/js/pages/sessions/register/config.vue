@@ -98,9 +98,7 @@
                             </div>
                         </template>
                     </template>
-                    <template
-                        v-if="!form.groupsDefault || !form.groupsDefault.length"
-                    >
+                    <template v-else>
                         <template v-for="(sut, i) in suts.data">
                             <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
                             <template
