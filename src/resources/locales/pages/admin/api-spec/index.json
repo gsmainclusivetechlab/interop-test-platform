@@ -11,12 +11,18 @@
                 "name": "Name"
             },
             "menu": {
+                "edit": {
+                    "title": "Edit"
+                },
                 "delete": {
                     "title": "Delete",
                     "modal": {
                         "title": "Confirm delete",
                         "text": "Are you sure you want to delete {name}?"
                     }
+                },
+                "download": {
+                    "title": "Download"
                 }
             },
             "no-results": "No Results"
@@ -34,12 +40,18 @@
                 "name": "Имя"
             },
             "menu": {
+                "edit": {
+                    "title": "Редактировать"
+                },
                 "delete": {
                     "title": "Удалить",
                     "modal": {
                         "title": "Подтвердить удаление",
                         "text": "Вы уверены что хотите удалить {name}?"
                     }
+                },
+                "download": {
+                    "title": "Скачать"
                 }
             },
             "no-results": "Результатов нет"

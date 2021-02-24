@@ -1,0 +1,42 @@
+{
+    "en": {
+        "page": {
+            "title": "Edit API spec"
+        },
+        "inputs": {
+            "file": {
+                "label": "File",
+                "placeholder": "Choose file ...",
+                "browse": "Browse"
+            }
+        },
+        "modal": {
+            "title": "Are you sure?",
+            "text": "Current API spec will be replaced with new one."
+        },
+        "buttons": {
+            "import": "Import",
+            "cancel": "Cancel"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Редактировать API спецификацию"
+        },
+        "inputs": {
+            "file": {
+                "label": "Файл",
+                "placeholder": "Выберите файл ...",
+                "browse": "Выбрать"
+            }
+        },
+        "modal": {
+            "title": "Вы уверены?",
+            "text": "Текущая API спецификация будет заменена на новую."
+        },
+        "buttons": {
+            "import": "Импорт",
+            "cancel": "Отмена"
+        }
+    }
+}

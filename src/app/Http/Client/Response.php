@@ -42,10 +42,10 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
     {
         return [
             'status' => $this->status(),
+            'delay' => $this->delay(),
             'headers' => $this->headers(),
             'body' => $this->json(),
             'jws' => $this->jws(),
-            'delay' => $this->delay(),
         ];
     }
 
