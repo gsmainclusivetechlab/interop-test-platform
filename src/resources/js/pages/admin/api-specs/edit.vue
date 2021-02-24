@@ -3,7 +3,7 @@
         <div class="flex-fill d-flex flex-column justify-content-center">
             <div class="page-header">
                 <h1 class="page-title text-center">
-                    <b>{{ $t('page.title') }} {{ apiSpec.name }}</b>
+                    <b>{{ `${$t('page.title')} - ${apiSpec.name}` }}</b>
                 </h1>
             </div>
             <div class="container">
@@ -98,7 +98,6 @@ export default {
     },
     data() {
         return {
-            sending: false,
             form: {
                 file: null,
                 fileSrc: null,
@@ -107,8 +106,6 @@ export default {
     },
     methods: {
         submit() {
-            this.sending = true;
-
             const data = new FormData();
 
             data.append('file', this.form.file);
@@ -119,7 +116,6 @@ export default {
                 {
                     onFinish: () => {
                         this.form.fileSrc = `${this.form.file.name}`;
-                        this.sending = false;
                         this.form.file = null;
                     },
                 }
