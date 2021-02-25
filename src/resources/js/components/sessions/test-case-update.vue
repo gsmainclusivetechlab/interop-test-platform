@@ -80,7 +80,7 @@ export default {
                 ]),
                 {},
                 {
-                    onFinish: () => {
+                    onSuccess: () => {
                         this.$emit('update', this.versions);
                     },
                 }

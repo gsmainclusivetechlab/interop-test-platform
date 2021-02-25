@@ -327,7 +327,7 @@ export default {
     data() {
         return {
             testCases: this.value,
-            sortUseCases: [],
+            sortUseCases: this.updateSortUseCases(),
         };
     },
     watch: {
@@ -337,32 +337,6 @@ export default {
                 this.$emit('input', this.testCases);
             },
         },
-    },
-    mounted() {
-        this.sortUseCases = this.useCases.data?.map((useCase) => {
-            const sortUseCase = {
-                can: useCase.can,
-                description: useCase.description,
-                id: useCase.id,
-                name: useCase.name,
-                testCasesCount: useCase.testCasesCount,
-                testCases: {
-                    positive: [],
-                    negative: [],
-                },
-            };
-
-            useCase.testCases?.forEach((testCase) => {
-                if (testCase.behavior === 'positive') {
-                    sortUseCase.testCases.positive.push(testCase);
-                }
-                if (testCase.behavior === 'negative') {
-                    sortUseCase.testCases.negative.push(testCase);
-                }
-            });
-
-            return sortUseCase;
-        });
     },
     methods: {
         toggleCbxList(tcList) {
@@ -396,11 +370,38 @@ export default {
         updateVersion(versions) {
             if (this.testCases.includes(versions.current.id)) {
                 this.testCases.splice(
-                    [this.testCases.indexOf(versions.current.id)],
+                    this.testCases.indexOf(versions.current.id),
                     1,
                     versions.last.id
                 );
             }
+            this.sortUseCases = this.updateSortUseCases();
+        },
+        updateSortUseCases() {
+            return this.useCases.data?.map((useCase) => {
+                const sortUseCase = {
+                    can: useCase.can,
+                    description: useCase.description,
+                    id: useCase.id,
+                    name: useCase.name,
+                    testCasesCount: useCase.testCasesCount,
+                    testCases: {
+                        positive: [],
+                        negative: [],
+                    },
+                };
+
+                useCase.testCases?.forEach((testCase) => {
+                    if (testCase.behavior === 'positive') {
+                        sortUseCase.testCases.positive.push(testCase);
+                    }
+                    if (testCase.behavior === 'negative') {
+                        sortUseCase.testCases.negative.push(testCase);
+                    }
+                });
+
+                return sortUseCase;
+            });
         },
     },
 };
