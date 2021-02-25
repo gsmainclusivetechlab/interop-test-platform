@@ -351,11 +351,9 @@ class TestCase extends Model
             return false;
         }
 
-        $lastTestCaseComponents = $lastTestCase->components->filter(function (
-            Component $component
-        ) {
-            return $component->pivot->component_versions;
-        });
+        $lastTestCaseComponents = $lastTestCase->components->where(
+            'pivot.component_versions'
+        );
 
         return !$session->components
             ->where('pivot.version')
