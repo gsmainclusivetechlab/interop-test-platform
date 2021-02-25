@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestRunResource;
