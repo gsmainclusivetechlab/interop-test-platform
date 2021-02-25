@@ -54,6 +54,33 @@ class TestStepRequest extends FormRequest
             'test.setups.response' => ['nullable', 'array'],
             'test.setups.response.*.name' => ['required', 'string', 'max:255'],
             'test.setups.response.*.values' => ['required', 'array'],*/
+            // callback
+            'callback' => ['nullable', 'array'],
+            'callback.method' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () {
+                    return $this->input('callback.path') ||
+                        $this->input('callback.name');
+                }),
+            ],
+            'callback.path' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () {
+                    return $this->input('callback.method') ||
+                        $this->input('callback.name');
+                }),
+            ],
+            'callback.name' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () {
+                    return $this->input('callback.method') ||
+                        $this->input('callback.path');
+                }),
+            ],
+            // repeat
             'repeat' => ['required', 'array'],
             'repeat.max' => [
                 'required',
@@ -112,6 +139,7 @@ class TestStepRequest extends FormRequest
             'test.*.*.*.name.max' => __(
                 'The name may not be greater than 255 characters.'
             ),
+            'callback.*.required' => __('Field is required.'),
         ];
     }
 
@@ -226,6 +254,9 @@ class TestStepRequest extends FormRequest
                 'repeat_count' => $this->input('repeat.count', 0),
                 'repeat_condition' => $this->input('repeat.condition'),
                 'repeat_response' => $this->mapTestStepResponse('repeat.'),
+                'callback_origin_path' => $this->input('callback.path'),
+                'callback_origin_method' => $this->input('callback.method'),
+                'callback_name' => $this->input('callback.name'),
             ]
         );
     }
