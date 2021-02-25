@@ -43,7 +43,8 @@ class RequestMtlsValidationTest extends TestCase
 
     protected function getEncryptionStatus(): bool
     {
-        return Route::currentRouteNamed('testing*') &&
-            !Route::currentRouteNamed('*insecure*');
+        $isSimulatorRoute = !Route::currentRouteNamed('testing*');
+        $isSecureRoute = !Route::currentRouteNamed('*insecure*');
+        return $isSimulatorRoute || $isSecureRoute;
     }
 }
