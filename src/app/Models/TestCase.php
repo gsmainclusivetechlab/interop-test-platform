@@ -351,9 +351,11 @@ class TestCase extends Model
             return false;
         }
 
-        $lastTestCaseComponents = $lastTestCase->components->whereNotNull(
-            'pivot.version'
-        );
+        $lastTestCaseComponents = $lastTestCase->components->filter(function (
+            Component $component
+        ) {
+            return $component->pivot->component_versions;
+        });
 
         return !$session->components
             ->where('pivot.version')
@@ -366,7 +368,9 @@ class TestCase extends Model
                         $component->id
                     )
                 ) {
-                    return !collect($testCaseComponent->pivot->versions)
+                    return !collect(
+                        $testCaseComponent->pivot->component_versions
+                    )
                         ->filter(function ($version) use ($component) {
                             return preg_match(
                                 "/^{$component->pivot->version}$/",
