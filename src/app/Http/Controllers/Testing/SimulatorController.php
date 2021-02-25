@@ -98,9 +98,7 @@ class SimulatorController extends Controller
             );
         }
 
-        $testResult = $testRun
-            ->testResults()
-            ->create(['test_step_id' => $testStep->id]);
+        $testResult = $testRun->createTestResult($testStep);
         $request = $request->withUri(
             UriResolver::resolve(
                 new Uri(
