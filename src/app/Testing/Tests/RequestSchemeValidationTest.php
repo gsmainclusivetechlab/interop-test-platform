@@ -4,16 +4,21 @@ namespace App\Testing\Tests;
 
 use App\Http\Client\Request;
 use App\Testing\TestCase;
+use League\OpenAPIValidation\PSR7\{
+    CallbackAddress,
+    OperationAddress,
+    SpecFinder,
+};
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
-use League\OpenAPIValidation\PSR7\OperationAddress;
-use League\OpenAPIValidation\PSR7\SpecFinder;
 use League\OpenAPIValidation\PSR7\Validators\BodyValidator\BodyValidator;
 use League\OpenAPIValidation\PSR7\Validators\CookiesValidator\CookiesValidator;
-use League\OpenAPIValidation\PSR7\Validators\HeadersValidator;
-use League\OpenAPIValidation\PSR7\Validators\PathValidator;
-use League\OpenAPIValidation\PSR7\Validators\QueryArgumentsValidator;
-use League\OpenAPIValidation\PSR7\Validators\SecurityValidator;
-use League\OpenAPIValidation\PSR7\Validators\ValidatorChain;
+use League\OpenAPIValidation\PSR7\Validators\{
+    HeadersValidator,
+    PathValidator,
+    QueryArgumentsValidator,
+    SecurityValidator,
+    ValidatorChain,
+};
 use PHPUnit\Framework\AssertionFailedError;
 use Throwable;
 
@@ -42,13 +47,13 @@ class RequestSchemeValidationTest extends TestCase
     /**
      * @param Request $request
      * @param string $apiSpec
-     * @param OperationAddress $operationAddress
+     * @param OperationAddress|CallbackAddress $operationAddress
      * @param SpecFinder $specFinder
      */
     public function __construct(
         Request $request,
         string $apiSpec,
-        OperationAddress $operationAddress,
+        $operationAddress,
         SpecFinder $specFinder
     ) {
         $this->request = $request;

@@ -5,10 +5,14 @@ namespace App\Testing;
 use App\Models\TestResult;
 use App\Testing\Tests\RequestSchemeValidationTest;
 use App\Testing\Tests\ResponseSchemeValidationTest;
+use League\OpenAPIValidation\PSR7\{
+    CallbackAddress,
+    CallbackResponseAddress,
+    OperationAddress,
+    ResponseAddress,
+    SpecFinder,
+};
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
-use League\OpenAPIValidation\PSR7\OperationAddress;
-use League\OpenAPIValidation\PSR7\ResponseAddress;
-use League\OpenAPIValidation\PSR7\SpecFinder;
 use PHPUnit\Framework\TestSuite;
 
 class TestSpecLoader
@@ -22,8 +26,8 @@ class TestSpecLoader
     {
         $testSuite = new TestSuite();
 
-        $apiSpecCollection = $testResult->testStep
-            ->apiSpec()
+        $testStep = $testResult->testStep;
+        $apiSpecCollection = $testStep->apiSpec()
             ->pluck('openapi', 'name');
         if ($apiSpec = $apiSpecCollection->first()) {
             $specFinder = new SpecFinder($apiSpec);
@@ -32,10 +36,17 @@ class TestSpecLoader
                 new RequestSchemeValidationTest(
                     $testResult->request,
                     $apiSpecCollection->keys()->first(),
-                    new OperationAddress(
-                        $testResult->testStep->path,
-                        strtolower($testResult->testStep->method)
-                    ),
+                    $testStep->isCallback() ?
+                        new CallbackAddress(
+                            $testStep->callback_origin_path,
+                            strtolower($testStep->callback_origin_method),
+                            $testStep->callback_name,
+                            strtolower($testStep->method)
+                        ) :
+                        new OperationAddress(
+                            $testStep->path,
+                            strtolower($testStep->method)
+                        ),
                     $specFinder
                 )
             );
@@ -43,11 +54,19 @@ class TestSpecLoader
                 new ResponseSchemeValidationTest(
                     $testResult->response,
                     $apiSpecCollection->keys()->first(),
-                    new ResponseAddress(
-                        $testResult->testStep->path,
-                        strtolower($testResult->testStep->method),
-                        $testResult->response->status()
-                    ),
+                    $testStep->isCallback() ?
+                        new CallbackResponseAddress(
+                            $testStep->callback_origin_path,
+                            strtolower($testStep->callback_origin_method),
+                            $testStep->callback_name,
+                            strtolower($testStep->method),
+                            $testResult->response->status()
+                        ) :
+                        new ResponseAddress(
+                            $testStep->path,
+                            strtolower($testStep->method),
+                            $testResult->response->status()
+                        ),
                     $specFinder
                 )
             );

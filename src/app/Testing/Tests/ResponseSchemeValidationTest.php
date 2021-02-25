@@ -4,9 +4,12 @@ namespace App\Testing\Tests;
 
 use App\Http\Client\Response;
 use App\Testing\TestCase;
+use League\OpenAPIValidation\PSR7\{
+    CallbackResponseAddress,
+    ResponseAddress,
+    SpecFinder,
+};
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
-use League\OpenAPIValidation\PSR7\ResponseAddress;
-use League\OpenAPIValidation\PSR7\SpecFinder;
 use League\OpenAPIValidation\PSR7\Validators\BodyValidator\BodyValidator;
 use League\OpenAPIValidation\PSR7\Validators\HeadersValidator;
 use League\OpenAPIValidation\PSR7\Validators\ValidatorChain;
@@ -38,13 +41,13 @@ class ResponseSchemeValidationTest extends TestCase
     /**
      * @param Response $response
      * @param string $apiSpec
-     * @param ResponseAddress $operationAddress
+     * @param ResponseAddress|CallbackResponseAddress $operationAddress
      * @param SpecFinder $specFinder
      */
     public function __construct(
         Response $response,
         string $apiSpec,
-        ResponseAddress $operationAddress,
+        $operationAddress,
         SpecFinder $specFinder
     ) {
         $this->response = $response;
