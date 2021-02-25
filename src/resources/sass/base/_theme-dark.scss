@@ -1,20 +1,38 @@
 .theme-dark {
+  .btn-secondary {
+    @include button-variant(
+      $gray-600,
+      $border-color,
+      $dark-mode-text,
+      rgba($gray-600, 0.8),
+      $border-color,
+      $dark-mode-text
+    );
+
+    background-image: none;
+  }
   .v-select {
     color: $dark-mode-text;
-    background-color: $dark;
-    border-color: $dark-mode-text;
-    .vs__selected {
-      border-color: $dark-mode-text;
-    }
+    background-color: $dark-mode-darken;
     .vs__dropdown-menu {
       background-color: inherit;
     }
     .vs__dropdown-option {
       &--highlight {
+        background-color: $dark;
+      }
+    }
+    &.vs--disabled {
+      .vs__dropdown-toggle,
+      .vs__clear,
+      .vs__search,
+      .vs__selected,
+      .vs__open-indicator {
         background-color: $dark-mode-darken;
       }
     }
   }
+
   .nav-tabs {
     .nav-link {
       color: $gray-300;
@@ -22,7 +40,16 @@
   }
 
   .json-tree-wrapper {
-    background-color: inherit;
+    background-color: $dark-mode-darken;
+  }
+
+  .json-editor {
+    background-color: $dark-mode-darken;
+    .key__input,
+    .new-item-form__input,
+    .json-editor__select {
+      color: $dark-mode-text;
+    }
   }
 
   & ~ div {
@@ -39,10 +66,10 @@
     .modal-content {
       .btn-secondary {
         @include button-variant(
-          $dark-mode-lighten,
+          $gray-600,
           $border-color,
           $dark-mode-text,
-          rgba($dark, 0),
+          rgba($gray-600, 0.8),
           $border-color,
           $dark-mode-text
         );
@@ -121,25 +148,30 @@
     }
   }
 
-  .list-group {
-    .list-group-item-action {
-      &:hover,
-      &:focus {
-        color: $dark;
-      }
+  .list-group-item-action {
+    &.active {
+      color: $dark-mode-text;
+      background-color: $dark-mode-darken;
     }
 
-    &.list-group-transparent {
-      .list-group-item-action {
-        &.active {
-          color: $dark-mode-text;
-          background-color: $dark;
-        }
+    &:hover,
+    &:focus {
+      color: $dark-mode-text;
+      background-color: rgba($dark-mode-darken, 0.8);
+    }
+  }
 
-        &:hover,
-        &:focus {
-          color: $dark-mode-text;
-        }
+  .list-group-transparent {
+    .list-group-item-action {
+      &.active {
+        color: $dark-mode-text;
+        background-color: $dark-mode-lighten;
+      }
+
+      &:hover,
+      &:focus {
+        color: $dark-mode-text;
+        background-color: rgba($dark-mode-darken, 0.8);
       }
     }
   }
@@ -150,7 +182,7 @@
 
   .custom-file-label {
     color: $dark-mode-text;
-    background-color: $dark;
+    background-color: $dark-mode-darken;
 
     &::after {
       color: $dark-mode-text;
