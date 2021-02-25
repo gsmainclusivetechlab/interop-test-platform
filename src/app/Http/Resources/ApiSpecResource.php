@@ -16,6 +16,7 @@ class ApiSpecResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'file_path' => $this->file_path,
             'can' => [
                 'delete' => auth()
                     ->user()
