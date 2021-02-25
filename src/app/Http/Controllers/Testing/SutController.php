@@ -121,8 +121,11 @@ class SutController extends Controller
                         ->selectRaw('1')
                         ->from('test_results')
                         ->where('test_run_id', '=', $currentRun->id)
-                        ->whereColumn('test_step_id', '=', 'test_steps.id')
-                        ->completed();
+                        ->whereColumn('test_step_id', '=', 'test_steps.id');
+                    // TODO: I commented out this line because it was causing problems (#476), but I don't know what it was supposed to do.
+                    // If you are reading this and know that this code path is working, please delete the comment and resolve the github issue:
+                    // https://github.com/gsmainclusivetechlab/interop-test-platform/issues/476
+                    // ->completed();
                 });
         } else {
             // otherwise any step from any test is fair game
@@ -224,7 +227,7 @@ class SutController extends Controller
             ->incompleted()
             ->where('test_case_id', $testStep->test_case_id)
             ->firstOr(function () use ($session, $testStep) {
-                if (env('CREATE_TESTRUN_ON_MATCH', false)) {
+                if (env('CREATE_TESTRUN_ON_MATCH', true)) {
                     return $session->testRuns()->create([
                         'test_case_id' => $testStep->test_case_id,
                     ]);
