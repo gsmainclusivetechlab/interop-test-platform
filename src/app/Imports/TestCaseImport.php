@@ -131,6 +131,10 @@ class TestCaseImport implements Importable
                     );
                     $repeat = Arr::get($testStepRow, 'repeat', []);
                     $testStep = $this->setRepeat($testStep, $repeat);
+                    $testStep = $this->setCallback(
+                        $testStep,
+                        Arr::get($testStepRow, 'callback', [])
+                    );
                     $testStep->saveOrFail();
 
                     $this->importTestSetups(
@@ -255,6 +259,22 @@ class TestCaseImport implements Importable
             'repeat_count' => Arr::get($repeat, 'count', 0),
             'repeat_condition' => Arr::get($repeat, 'condition'),
             'repeat_response' => $response,
+        ]);
+
+        return $testStep;
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param $callback
+     * @return TestStep
+     */
+    protected function setCallback(TestStep $testStep, $callback)
+    {
+        $testStep->fill([
+            'callback_origin_method' => Arr::get($callback, 'origin_method'),
+            'callback_origin_path' => Arr::get($callback, 'origin_path'),
+            'callback_name' => Arr::get($callback, 'name'),
         ]);
 
         return $testStep;

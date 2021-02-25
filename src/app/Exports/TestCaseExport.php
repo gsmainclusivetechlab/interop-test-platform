@@ -158,6 +158,7 @@ class TestCaseExport implements Exportable
                     $this->responseOrder
                 ),
                 'repeat' => $this->mapRepeat($testStep),
+                'callback' => $this->mapCallback($testStep),
             ]);
         }
 
@@ -207,6 +208,26 @@ class TestCaseExport implements Exportable
         ];
         $result = $this->arrayFilter($result);
         if (2 == count($result))
+        {
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @return array|null
+     */
+    protected function mapCallback($testStep)
+    {
+        $result = [
+            'origin_method' => $testStep->callback_origin_method,
+            'origin_path' => $testStep->callback_origin_path,
+            'name' => $testStep->callback_name,
+        ];
+        $result = $this->arrayFilter($result);
+        if (3 != count($result))
         {
             return null;
         }
