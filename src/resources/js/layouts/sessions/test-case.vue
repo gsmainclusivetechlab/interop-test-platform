@@ -374,11 +374,19 @@ export default {
         },
     },
     data() {
-        const ziggyConf = { ...this.route().ziggy };
-        ziggyConf.baseUrl = this.$page.props.app.http_base_url;
+        const ziggyConf = this.route().ziggy;
 
         return {
-            ziggyConf,
+            ziggyConf: {
+                http: {
+                    ...ziggyConf,
+                    baseUrl: this.$page.props.app.testing_url_http,
+                },
+                https: {
+                    ...ziggyConf,
+                    baseUrl: this.$page.props.app.testing_url_https,
+                },
+            },
             hasEncrypted:
                 this.session.components.data?.filter(
                     (component) => component.use_encryption
@@ -395,16 +403,19 @@ export default {
         getRoute(useEncryption, data, isForGroup = false) {
             const group = isForGroup ? '-group' : '';
 
-            if (useEncryption) {
-                return this.route('testing' + group + '.sut', data);
-            }
-
-            return this.route(
-                'testing-insecure' + group + '.sut',
-                data,
-                undefined,
-                this.ziggyConf
-            );
+            return useEncryption
+                ? this.route(
+                      `testing${group}.sut`,
+                      data,
+                      undefined,
+                      this.ziggyConf.https
+                  )
+                : this.route(
+                      `testing-insecure${group}.sut`,
+                      data,
+                      undefined,
+                      this.ziggyConf.http
+                  );
         },
     },
 };

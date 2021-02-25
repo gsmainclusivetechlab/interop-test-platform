@@ -53,10 +53,19 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'http_base_url' =>
+    'testing_url_http' => env(
+        'TESTING_URL_HTTP',
         'http://' .
-        parse_url(env('APP_URL'), PHP_URL_HOST) .
-        (($port = env('HOST_WEB_PORT', 80)) == 80 ? '' : ":$port"),
+            parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) .
+            (($port = env('HOST_WEB_PORT', 80)) == 80 ? '' : ":$port")
+    ),
+
+    'testing_url_https' => env(
+        'TESTING_URL_HTTPS',
+        'https://' .
+            parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) .
+            (($port = env('HOST_HTTPS_WEB_PORT', 443)) == 443 ? '' : ":$port")
+    ),
 
     'asset_url' => env('ASSET_URL', null),
 

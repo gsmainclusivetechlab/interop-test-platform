@@ -114,9 +114,7 @@ class TestResult extends Model
      */
     public function scopeCompleted($query)
     {
-        return $query->whereExists(function ($query) {
-            $query->where(['repeat' => false]);
-        });
+        return $query->where(['repeat' => false]);
     }
 
     /**
@@ -125,9 +123,7 @@ class TestResult extends Model
      */
     public function scopeIncompleted($query)
     {
-        return $query->whereNotExists(function ($query) {
-            $query->where(['repeat' => false]);
-        });
+        return $query->where(['repeat' => true]);
     }
 
     /**
