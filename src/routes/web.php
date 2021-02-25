@@ -320,6 +320,7 @@ Route::name('admin.')
             });
         Route::resource('api-specs', 'ApiSpecController')->only([
             'index',
+            'edit',
             'destroy',
         ]);
         Route::name('api-specs.')
@@ -330,6 +331,12 @@ Route::name('admin.')
                 );
                 Route::post('import', 'ApiSpecController@import')->name(
                     'import.confirm'
+                );
+                Route::get('{apiSpec}/download', 'ApiSpecController@download')->name(
+                    'download'
+                );
+                Route::post('{apiSpec}/update-spec', 'ApiSpecController@updateSpec')->name(
+                    'update-spec'
                 );
             });
         Route::resource('components', 'ComponentController')->except(['show']);

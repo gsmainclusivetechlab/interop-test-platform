@@ -60,6 +60,19 @@
                                     <template #button-content>
                                         <icon name="dots-vertical"></icon>
                                     </template>
+                                    <li>
+                                        <inertia-link
+                                            class="dropdown-item"
+                                            :href="
+                                                route(
+                                                    'admin.api-specs.edit',
+                                                    apiSpec.id
+                                                )
+                                            "
+                                        >
+                                            {{ $t('table.menu.edit.title') }}
+                                        </inertia-link>
+                                    </li>
                                     <li v-if="apiSpec.can.delete">
                                         <confirm-link
                                             class="dropdown-item"
@@ -84,6 +97,19 @@
                                         >
                                             {{ $t('table.menu.delete.title') }}
                                         </confirm-link>
+                                    </li>
+                                    <li v-if="apiSpec.file_path">
+                                        <a
+                                            class="dropdown-item"
+                                            :href="
+                                                route(
+                                                    'admin.api-specs.download',
+                                                    apiSpec.id
+                                                )
+                                            "
+                                        >
+                                            {{ $t('table.menu.download.title') }}
+                                        </a>
                                     </li>
                                 </b-dropdown>
                             </td>

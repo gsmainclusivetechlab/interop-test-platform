@@ -6,6 +6,7 @@ use App\Casts\OpenApiCast;
 use cebe\openapi\spec\OpenApi;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
+use Storage;
 
 /**
  * @mixin Eloquent
@@ -23,7 +24,12 @@ class ApiSpec extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'openapi', 'description'];
+    protected $fillable = [
+        'name',
+        'openapi',
+        'description',
+        'file_path'
+    ];
 
     /**
      * @var array
@@ -31,4 +37,11 @@ class ApiSpec extends Model
     protected $casts = [
         'openapi' => OpenApiCast::class,
     ];
+
+    protected static function booted(): void
+    {
+        static::deleted(function (self $apiSpec) {
+            Storage::delete($apiSpec->file_path);
+        });
+    }
 }

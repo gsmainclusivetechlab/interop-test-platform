@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $mtls
  * @property Request $request
  * @property Response $response
+ * @property Response $repeat_response
  *
  * @property Component $source
  * @property Component $target

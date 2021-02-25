@@ -26,5 +26,6 @@ $factory->define(ApiSpec::class, function (Faker $faker) {
             );
         },
         'description' => $faker->text,
+        'file_path' => 'openapis/' . Str::random(32) . '.yaml',
     ];
 });

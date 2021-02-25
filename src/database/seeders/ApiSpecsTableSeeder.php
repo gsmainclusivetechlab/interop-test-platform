@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\ApiSpec;
 use cebe\openapi\Reader;
 use Illuminate\Database\Seeder;
+use Storage;
+use Str;
 
 class ApiSpecsTableSeeder extends Seeder
 {
@@ -26,20 +28,30 @@ class ApiSpecsTableSeeder extends Seeder
      */
     protected function getApiSpecsData()
     {
+        $mmPath = 'openapis/' . Str::random(32) . '.yaml';
+        $mojaPath = 'openapis/' . Str::random(32) . '.yaml';
+        $mmSeedersPath = database_path('seeders/openapis/mm.yaml');
+        $mojaSeedersPath = database_path('seeders/openapis/mojaloop.yaml');
+        Storage::delete(Storage::allFiles('openapis'));
+
         return [
             [
                 'name' => 'MM v1.1.2',
                 'description' => '',
-                'openapi' => Reader::readFromYamlFile(
-                    database_path('seeders/openapis/mm.yaml')
-                ),
+                'openapi' => Reader::readFromYamlFile($mmSeedersPath),
+                'file_path' => \File::copy(
+                    $mmSeedersPath,
+                    \Storage::path($mmPath)
+                ) ? $mmPath : '',
             ],
             [
                 'name' => 'Mojaloop v1.0',
                 'description' => '',
-                'openapi' => Reader::readFromYamlFile(
-                    database_path('seeders/openapis/mojaloop.yaml')
-                ),
+                'openapi' => Reader::readFromYamlFile($mojaSeedersPath),
+                'file_path' => \File::copy(
+                    $mojaSeedersPath,
+                    \Storage::path($mojaPath)
+                ) ? $mojaPath : '',
             ],
         ];
     }

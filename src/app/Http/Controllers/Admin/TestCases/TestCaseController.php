@@ -254,21 +254,24 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
-     * @throws \Throwable
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function export(TestCase $testCase)
     {
-        $data = (new TestCaseExport())->export($testCase);
-        $fileName = 'TestCase-' . substr($testCase->name, 0, 50);
-
-        header('Content-Type: application/yaml');
-        header(
-            "Content-Disposition: attachment; filename=\"{$fileName}.yaml\""
+        return response()->streamDownload(
+            function () use ($testCase) {
+                echo (new TestCaseExport())->export($testCase);
+            },
+            str_replace(
+                '/',
+                '',
+                substr(
+                    $testCase->slug ?: $testCase->name,
+                    0,
+                    50
+                )
+            ) . '.yaml'
         );
-        header('Content-Length: ' . strlen($data));
-
-        ($file = fopen('php://output', 'w')) or die('Unable to open file!');
-        fwrite($file, $data);
     }
 
     /**
