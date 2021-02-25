@@ -9,7 +9,6 @@ use cebe\openapi\Reader;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Str;
 
 class ApiSpecController extends Controller
 {
