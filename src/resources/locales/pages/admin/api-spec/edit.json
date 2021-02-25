@@ -1,0 +1,20 @@
+{
+    "en": {
+        "page": {
+            "title": "Edit API spec"
+        },
+        "modal": {
+            "title": "Are you sure?",
+            "text": "Current API spec will be replaced with new one."
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Редактировать API спецификацию"
+        },
+        "modal": {
+            "title": "Вы уверены?",
+            "text": "Текущая API спецификация будет заменена на новую."
+        }
+    }
+}

@@ -67,11 +67,11 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
         return [
             'method' => $this->method(),
             'uri' => $this->url(),
+            'delay' => $this->delay(),
             'path' => $this->path(),
             'headers' => $this->headers(),
             'body' => $this->json(),
             'jws' => $this->jws(),
-            'delay' => $this->delay(),
         ];
     }
 

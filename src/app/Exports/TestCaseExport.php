@@ -9,6 +9,24 @@ use Symfony\Component\Yaml\Yaml;
 
 class TestCaseExport implements Exportable
 {
+    protected $requestOrder = [
+        'method',
+        'uri',
+        'delay',
+        'path',
+        'headers',
+        'body',
+        'jws',
+    ];
+
+    protected $responseOrder = [
+        'status',
+        'delay',
+        'headers',
+        'body',
+        'jws',
+    ];
+
     /**
      * @param Model $testCase
      * @return string
@@ -125,19 +143,44 @@ class TestCaseExport implements Exportable
                     $testScripts,
                     TestScript::TYPE_RESPONSE
                 ),
-                'request' => json_decode(
-                    $testStep->getRawOriginal('request'),
-                    true
+                'request' => $this->withOrder(
+                    json_decode(
+                        $testStep->getRawOriginal('request'),
+                        true
+                    ),
+                    $this->requestOrder
                 ),
-                'response' => json_decode(
-                    $testStep->getRawOriginal('response'),
-                    true
+                'response' => $this->withOrder(
+                    json_decode(
+                        $testStep->getRawOriginal('response'),
+                        true
+                    ),
+                    $this->responseOrder
                 ),
                 'repeat' => $this->mapRepeat($testStep),
             ]);
         }
 
         return $this->arrayFilter($result);
+    }
+
+    /**
+     * @param array|null $array
+     * @param array $order
+     * @return array|null
+     */
+    protected function withOrder($array, array $order)
+    {
+        if (!is_array($array)) {
+            return $array;
+        }
+        return array_intersect_key(
+            array_merge(
+                array_flip($order),
+                $array
+            ),
+            $array
+        );
     }
 
     /**
@@ -150,9 +193,12 @@ class TestCaseExport implements Exportable
             'max' => $testStep->repeat_max,
             'count' => $testStep->repeat_count,
             'condition' => $testStep->repeat_condition,
-            'response' => json_decode(
-                $testStep->getRawOriginal('repeat_response'),
-                true
+            'response' => $this->withOrder(
+                json_decode(
+                    $testStep->getRawOriginal('repeat_response'),
+                    true
+                ),
+                $this->responseOrder
             ),
             'test_response_scripts' => $this->mapTestScripts(
                 $testStep->testScripts,
