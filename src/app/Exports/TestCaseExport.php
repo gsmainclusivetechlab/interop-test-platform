@@ -117,6 +117,7 @@ class TestCaseExport implements Exportable
                 'api_spec' => $testStep->apiSpec()->exists()
                     ? $testStep->apiSpec->name
                     : null,
+                'callback' => $this->mapCallback($testStep),
                 'trigger' => $testStep->trigger,
                 'test_request_setups' => $this->mapTestSetups(
                     $testSetups,
@@ -143,7 +144,6 @@ class TestCaseExport implements Exportable
                     $this->responseOrder
                 ),
                 'repeat' => $this->mapRepeat($testStep),
-                'callback' => $this->mapCallback($testStep),
             ]);
         }
 
