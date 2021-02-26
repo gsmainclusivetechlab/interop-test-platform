@@ -70,7 +70,7 @@
                                                 )
                                             "
                                         >
-                                            {{ $t('table.menu.edit.title') }}
+                                            {{ $t('table.menu.import.title') }}
                                         </inertia-link>
                                     </li>
                                     <li v-if="apiSpec.can.delete">
