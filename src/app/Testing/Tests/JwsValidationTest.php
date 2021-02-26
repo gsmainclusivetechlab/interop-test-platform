@@ -7,6 +7,7 @@ use App\Http\Client\Response;
 use App\Testing\TestCase;
 use Arr;
 use File;
+use Gamegos\JWS\Exception\MalformedSignatureException;
 use Gamegos\JWS\JWS;
 use Gamegos\JWS\Util\Base64Url;
 use App\Utils\JWS\Json;
@@ -76,19 +77,31 @@ class JwsValidationTest extends TestCase
 
     protected function test()
     {
-        $token = $this->getHeader();
+        $jwsString = $this->getHeader();
+        $data = Arr::get($this->requestOrResponse->toArray(), 'body');
 
         if ($this->isMojaloop()) {
-            $header = Json::decode($token);
-            $data = Arr::get($this->requestOrResponse->toArray(), 'body');
+            $header = Json::decode($jwsString);
 
-            $token = sprintf(
-                '%s.%s.%s',
-                Arr::get($header, 'protectedHeader'),
-                Base64Url::encode(Json::encode($data)),
-                Arr::get($header, 'signature')
-            );
+            $protectedHeader = Arr::get($header, 'protectedHeader');
+            $signature = Arr::get($header, 'signature');
+        } else {
+            $components = explode('.', $jwsString);
+            if (count($components) !== 3) {
+                throw new MalformedSignatureException(
+                    'JWS string must contain 3 dot separated component.'
+                );
+            }
+
+            [$protectedHeader, , $signature] = $components;
         }
+
+        $token = sprintf(
+            '%s.%s.%s',
+            $protectedHeader,
+            Base64Url::encode(Json::encode($data)),
+            $signature
+        );
 
         $this->jws->verify($token, $this->getKey());
 
