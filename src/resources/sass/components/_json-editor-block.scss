@@ -1,6 +1,8 @@
 .json-editor-block {
   .json-editor {
     --color-accent: #{$red};
+    --color-input-bg: transparent;
+    padding: 0.5rem;
     &__btn {
       outline: none;
       &_icon {
