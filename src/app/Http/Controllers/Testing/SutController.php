@@ -8,10 +8,12 @@ use App\Http\Headers\TracestateHeader;
 use App\Models\Component;
 use App\Models\Group;
 use App\Models\Session;
+use Debugbar;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Illuminate\Database\Eloquent\Builder;
 use Psr\Http\Message\ServerRequestInterface;
+use Str;
 
 class SutController extends Controller
 {
@@ -20,10 +22,10 @@ class SutController extends Controller
         parent::__construct();
 
         if (class_exists('\Debugbar')) {
-            \Debugbar::disable();
+            Debugbar::disable();
         }
 
-        if (request()->header('Accept') == '*/*') {
+        if (!Str::contains(request()->header('Accept'), 'json')) {
             request()->headers->set('Accept', 'application/json');
         }
     }
@@ -133,39 +135,47 @@ class SutController extends Controller
                             ->where('position', '=', 1)
                             ->where(function ($query) {
                                 $query
-                                    ->whereDoesntHave('testRuns', function ($query) {
+                                    ->whereDoesntHave('testRuns', function (
+                                        $query
+                                    ) {
                                         $query->incompleted();
                                     })
                                     ->orWhereHas('testRuns', function ($query) {
                                         $query
                                             ->incompleted()
-                                            ->whereDoesntHave('testResults', function (
-                                                $query
-                                            ) {
-                                                $query->whereColumn(
-                                                    'test_step_id',
-                                                    'test_steps.id'
-                                                )->completed();
-                                            });
+                                            ->whereDoesntHave(
+                                                'testResults',
+                                                function ($query) {
+                                                    $query
+                                                        ->whereColumn(
+                                                            'test_step_id',
+                                                            'test_steps.id'
+                                                        )
+                                                        ->completed();
+                                                }
+                                            );
                                     });
                             });
                     })
                     ->orWhere(function (Builder $query) {
-                        $query->where('position', '!=', 1)
+                        $query
+                            ->where('position', '!=', 1)
                             ->whereHas('testRuns', function (Builder $query) {
                                 $query
                                     ->incompleted()
                                     ->whereDoesntHave('testResults', function (
                                         Builder $query
                                     ) {
-                                        $query
-                                            ->where(function (Builder $query) {
-                                                $query->whereColumn(
+                                        $query->where(function (
+                                            Builder $query
+                                        ) {
+                                            $query
+                                                ->whereColumn(
                                                     'test_step_id',
                                                     'test_steps.id'
                                                 )
-                                                    ->completed();
-                                            });
+                                                ->completed();
+                                        });
                                     });
                             });
                     });
