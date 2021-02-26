@@ -184,6 +184,128 @@
                             />
                         </b-collapse>
                     </div>
+                    <div class="col-12">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'callback'"
+                        >
+                            {{ $t('inputs.callback.label') }}
+                        </button>
+                        <b-collapse id="callback">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="text-small text-muted">
+                                        <small>{{
+                                            $t('inputs.callback.comment')
+                                        }}</small>
+                                    </span>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">{{
+                                        $t('inputs.callback.name')
+                                    }}</label>
+                                    <input
+                                        v-model="callback.name"
+                                        type="text"
+                                        class="form-control"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.props.errors[
+                                                    'callback.name'
+                                                ],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="
+                                            $page.props.errors['callback.name']
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.props.errors[
+                                                    'callback.name'
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">{{
+                                        $t('inputs.method.label')
+                                    }}</label>
+                                    <v-select
+                                        v-model="callback.method.selected"
+                                        :placeholder="
+                                            $t('inputs.method.placeholder')
+                                        "
+                                        :options="method.list"
+                                        :selectable="
+                                            (option) =>
+                                                isSelectable(
+                                                    option,
+                                                    callback.method.selected
+                                                )
+                                        "
+                                        class="form-control d-flex p-0"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.props.errors[
+                                                    'callback.method'
+                                                ],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="
+                                            $page.props.errors[
+                                                'callback.method'
+                                            ]
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.props.errors[
+                                                    'callback.method'
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">{{
+                                        $t('inputs.path')
+                                    }}</label>
+                                    <input
+                                        v-model="callback.path"
+                                        type="text"
+                                        class="form-control"
+                                        :class="{
+                                            'is-invalid':
+                                                $page.props.errors[
+                                                    'callback.path'
+                                                ],
+                                        }"
+                                    />
+                                    <span
+                                        v-if="
+                                            $page.props.errors['callback.path']
+                                        "
+                                        class="invalid-feedback"
+                                    >
+                                        <strong>
+                                            {{
+                                                $page.props.errors[
+                                                    'callback.path'
+                                                ]
+                                            }}
+                                        </strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </b-collapse>
+                    </div>
                     <hr />
                     <div class="col-12 mb-3">
                         <button
@@ -1177,6 +1299,13 @@ export default {
                 selected: this.testStep.apiSpec?.data?.name ?? null,
             },
             trigger: this.testStep?.trigger,
+            callback: {
+                name: this.testStep.callback?.name,
+                method: {
+                    selected: this.testStep.callback?.method,
+                },
+                path: this.testStep.callback?.path,
+            },
             mtls: this.testStep?.mtls,
             test: {
                 scripts: {

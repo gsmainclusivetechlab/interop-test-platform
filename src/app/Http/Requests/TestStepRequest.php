@@ -55,8 +55,9 @@ class TestStepRequest extends FormRequest
             'test.setups.response.*.name' => ['required', 'string', 'max:255'],
             'test.setups.response.*.values' => ['required', 'array'],*/
             // callback
-            'callback' => ['nullable', 'array'],
+            'callback' => ['required', 'array'],
             'callback.method' => [
+                'nullable',
                 'string',
                 'max:255',
                 Rule::requiredIf(function () {
@@ -65,6 +66,7 @@ class TestStepRequest extends FormRequest
                 }),
             ],
             'callback.path' => [
+                'nullable',
                 'string',
                 'max:255',
                 Rule::requiredIf(function () {
@@ -73,6 +75,7 @@ class TestStepRequest extends FormRequest
                 }),
             ],
             'callback.name' => [
+                'nullable',
                 'string',
                 'max:255',
                 Rule::requiredIf(function () {
