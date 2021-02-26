@@ -10,6 +10,7 @@ use App\Models\Group;
 use App\Models\Session;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
+use Illuminate\Database\Eloquent\Builder;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SutController extends Controller
@@ -128,35 +129,45 @@ class SutController extends Controller
             $candidateSteps = $session->testSteps()->where(function ($query) {
                 $query
                     ->where(function ($query) {
-                        $query->where('position', '=', 1);
-                        $query->whereDoesntHave('testRuns', function ($query) {
-                            $query
-                                ->incompleted()
-                                ->whereDoesntHave('testResults', function (
-                                    $query
-                                ) {
-                                    $query->whereColumn(
-                                        'test_step_id',
-                                        'test_steps.id'
-                                    );
-                                });
-                        });
+                        $query
+                            ->where('position', '=', 1)
+                            ->where(function ($query) {
+                                $query
+                                    ->whereDoesntHave('testRuns', function ($query) {
+                                        $query->incompleted();
+                                    })
+                                    ->orWhereHas('testRuns', function ($query) {
+                                        $query
+                                            ->incompleted()
+                                            ->whereDoesntHave('testResults', function (
+                                                $query
+                                            ) {
+                                                $query->whereColumn(
+                                                    'test_step_id',
+                                                    'test_steps.id'
+                                                )->completed();
+                                            });
+                                    });
+                            });
                     })
-                    ->orWhere(function ($query) {
-                        $query->whereHas('testRuns', function ($query) {
-                            $query
-                                ->incompleted()
-                                ->whereDoesntHave('testResults', function (
-                                    $query
-                                ) {
-                                    $query
-                                        ->whereColumn(
-                                            'test_step_id',
-                                            'test_steps.id'
-                                        )
-                                        ->completed();
-                                });
-                        });
+                    ->orWhere(function (Builder $query) {
+                        $query->where('position', '!=', 1)
+                            ->whereHas('testRuns', function (Builder $query) {
+                                $query
+                                    ->incompleted()
+                                    ->whereDoesntHave('testResults', function (
+                                        Builder $query
+                                    ) {
+                                        $query
+                                            ->where(function (Builder $query) {
+                                                $query->whereColumn(
+                                                    'test_step_id',
+                                                    'test_steps.id'
+                                                )
+                                                    ->completed();
+                                            });
+                                    });
+                            });
                     });
             });
         }

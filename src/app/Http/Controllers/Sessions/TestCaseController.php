@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ComponentResource;
 use App\Http\Resources\SessionResource;
 use App\Http\Resources\TestCaseResource;
 use App\Http\Resources\TestRunResource;
@@ -103,7 +102,8 @@ class TestCaseController extends Controller
         $firstSourceId = $testCase->testSteps()->firstOrFail()->source->id;
         $firstSUT = $session
             ->components()
-            ->where('components.id', '=', $firstSourceId)
+            ->whereKey($firstSourceId)
+            ->wherePivotNull('implicit_sut_id')
             ->first();
         if (!$firstSUT) {
             ExecuteTestRunJob::dispatch($testRun)->afterResponse();

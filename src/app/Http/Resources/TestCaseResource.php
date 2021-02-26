@@ -60,6 +60,15 @@ class TestCaseResource extends JsonResource
                 }
             ),
             'lastAvailableVersion' => $this->last_available_version,
+            'isAvailableToUpdate' => $this->isAvailableToUpdate(
+                $this->whenPivotLoaded(
+                    'session_test_cases',
+                    function () {
+                        return $this->pivot->session;
+                    },
+                    null
+                )
+            ),
             'can' => [
                 'update' => auth()
                     ->user()

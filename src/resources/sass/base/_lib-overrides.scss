@@ -1,6 +1,9 @@
 a {
   transition: $btn-transition;
 }
+pre {
+  font-size: 0.875rem;
+}
 
 #nprogress {
   .bar {
@@ -209,4 +212,9 @@ a {
 
 dt .badge {
   font-size: 0.7rem;
+}
+
+.modal-content .close {
+  color: $danger;
+  text-shadow: none;
 }

@@ -110,17 +110,15 @@
                         <div class="col-3 pr-0">
                             <ul class="list-group mb-0">
                                 <template
-                                    v-for="(testStep, i) in testCase.testSteps
+                                    v-for="(tStep, i) in testCase.testSteps
                                         .data"
                                 >
                                     <li
-                                        v-if="testResultSteps.has(testStep.id)"
+                                        v-if="testResultSteps.has(tStep.id)"
+                                        class="list-group-item list-group-item-action p-0 rounded-0 border-0"
                                         :class="{
-                                            'list-group-item-action': testResultSteps.has(
-                                                testStep.id
-                                            ),
+                                            active: tStep.id === testStep.id,
                                         }"
-                                        class="list-group-item p-0 rounded-0 border-0"
                                         :key="`step-${i}`"
                                     >
                                         <inertia-link
@@ -131,7 +129,7 @@
                                                         session.id,
                                                         testCase.id,
                                                         testRun.id,
-                                                        testStep.position,
+                                                        tStep.position,
                                                     ]
                                                 )
                                             "
@@ -140,13 +138,13 @@
                                             <div class="mr-1 text-truncate">
                                                 <span class="font-weight-bold">
                                                     {{
-                                                        `Step ${testStep.position}`
+                                                        `Step ${tStep.position}`
                                                     }}
                                                 </span>
                                                 <div
                                                     v-if="
                                                         testResultSteps.get(
-                                                            testStep.id
+                                                            tStep.id
                                                         ).request
                                                     "
                                                     class="d-flex align-items-baseline"
@@ -156,25 +154,25 @@
                                                         :class="{
                                                             'text-orange':
                                                                 testResultSteps.get(
-                                                                    testStep.id
+                                                                    tStep.id
                                                                 ).request
                                                                     .method ===
                                                                 'POST',
                                                             'text-blue':
                                                                 testResultSteps.get(
-                                                                    testStep.id
+                                                                    tStep.id
                                                                 ).request
                                                                     .method ===
                                                                 'PUT',
                                                             'text-red':
                                                                 testResultSteps.get(
-                                                                    testStep.id
+                                                                    tStep.id
                                                                 ).request
                                                                     .method ===
                                                                 'DELETE',
                                                             'text-mint':
                                                                 testResultSteps.get(
-                                                                    testStep.id
+                                                                    tStep.id
                                                                 ).request
                                                                     .method ===
                                                                 'GET',
@@ -182,7 +180,7 @@
                                                     >
                                                         {{
                                                             testResultSteps.get(
-                                                                testStep.id
+                                                                tStep.id
                                                             ).request.method
                                                         }}
                                                     </span>
@@ -190,17 +188,17 @@
                                                         class="d-inline-block ml-1 text-truncate"
                                                         :title="`${
                                                             testResultSteps.get(
-                                                                testStep.id
+                                                                tStep.id
                                                             ).request.method
                                                         } ${
                                                             testResultSteps.get(
-                                                                testStep.id
+                                                                tStep.id
                                                             ).request.path
                                                         }`"
                                                     >
                                                         {{
                                                             testResultSteps.get(
-                                                                testStep.id
+                                                                tStep.id
                                                             ).request.path
                                                         }}
                                                     </span>
@@ -210,10 +208,10 @@
                                                 class="flex-shrink-0 badge mr-0"
                                                 :class="{
                                                     'bg-success': testResultSteps.get(
-                                                        testStep.id
+                                                        tStep.id
                                                     ).successful,
                                                     'bg-danger': !testResultSteps.get(
-                                                        testStep.id
+                                                        tStep.id
                                                     ).successful,
                                                 }"
                                             >
@@ -227,16 +225,14 @@
                                     >
                                         <div class="text-truncate">
                                             <span class="font-weight-bold">
-                                                {{
-                                                    `Step ${testStep.position}`
-                                                }}
+                                                {{ `Step ${tStep.position}` }}
                                             </span>
                                             <div
                                                 class="text-truncate"
-                                                :title="`${testStep.method} ${testStep.path}`"
+                                                :title="`${tStep.method} ${tStep.path}`"
                                             >
-                                                {{ testStep.method }}
-                                                {{ testStep.path }}
+                                                {{ tStep.method }}
+                                                {{ tStep.path }}
                                             </div>
                                         </div>
                                     </li>
@@ -257,10 +253,25 @@
                             >
                                 <b-tab
                                     v-for="(result, i) in testResults"
-                                    :title="`№ ${result.iteration}`"
                                     title-link-class="justify-content-center py-1 text-nowrap rounded-0"
                                     :key="`result-${i}`"
                                 >
+                                    <template #title>
+                                        <div class="d-flex align-items-center">
+                                            <span
+                                                class="flex-shrink-0 badge mr-2"
+                                                :class="{
+                                                    'bg-success':
+                                                        result.successful,
+                                                    'bg-danger': !result.successful,
+                                                }"
+                                            >
+                                            </span>
+                                            <span>{{
+                                                `№ ${result.iteration}`
+                                            }}</span>
+                                        </div>
+                                    </template>
                                     <div v-if="testStep" class="lead py-3 px-4">
                                         <div
                                             class="d-flex justigy-content-between"
@@ -529,7 +540,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `request-headers-${result.id}`
                                                     "
@@ -589,7 +600,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `request-body-${result.id}`
                                                     "
@@ -656,7 +667,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `request-overridden-${result.id}`
                                                     "
@@ -734,7 +745,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `response-headers-${result.id}`
                                                     "
@@ -794,7 +805,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `response-body-${result.id}`
                                                     "
@@ -861,7 +872,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `response-overridden-${result.id}`
                                                     "

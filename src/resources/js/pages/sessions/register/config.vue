@@ -98,9 +98,7 @@
                             </div>
                         </template>
                     </template>
-                    <template
-                        v-if="!form.groupsDefault || !form.groupsDefault.length"
-                    >
+                    <template v-else>
                         <template v-for="(sut, i) in suts.data">
                             <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
                             <template
@@ -293,11 +291,19 @@ export default {
     },
     mixins: [mixinVSelect, mixinEnvs],
     data() {
-        const ziggyConf = { ...this.route().ziggy };
-        ziggyConf.baseUrl = this.$page.props.app.http_base_url;
+        const ziggyConf = this.route().ziggy;
 
         return {
-            ziggyConf,
+            ziggyConf: {
+                http: {
+                    ...ziggyConf,
+                    baseUrl: this.$page.props.app.testing_url_http,
+                },
+                https: {
+                    ...ziggyConf,
+                    baseUrl: this.$page.props.app.testing_url_https,
+                },
+            },
             sending: false,
             groupsEnvs: [],
             groupsEnvsList: [],
@@ -355,16 +361,19 @@ export default {
         getRoute(useEncryption, data, isForGroup = false) {
             const group = isForGroup ? '-group' : '';
 
-            if (useEncryption) {
-                return this.route('testing' + group + '.sut', data);
-            }
-
-            return this.route(
-                'testing-insecure' + group + '.sut',
-                data,
-                undefined,
-                this.ziggyConf
-            );
+            return useEncryption
+                ? this.route(
+                      `testing${group}.sut`,
+                      data,
+                      undefined,
+                      this.ziggyConf.https
+                  )
+                : this.route(
+                      `testing-insecure${group}.sut`,
+                      data,
+                      undefined,
+                      this.ziggyConf.http
+                  );
         },
     },
 };
