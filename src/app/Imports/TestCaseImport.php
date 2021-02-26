@@ -445,6 +445,32 @@ class TestCaseImport implements Importable
                 'max:255',
             ],
             'repeat.test_response_scripts.*.rules' => ['required', 'array'],
+            // callbacks
+            'callback' => ['nullable', 'array'],
+            'callback.origin_method' => [
+                'string',
+                Rule::in(array_keys(HttpMethod::list())),
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'callback.origin_path') ||
+                        Arr::get($rows, 'callback.name');
+                }),
+            ],
+            'callback.origin_path' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'callback.name') ||
+                        Arr::get($rows, 'callback.origin_method');
+                }),
+            ],
+            'callback.name' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'callback.origin_path') ||
+                        Arr::get($rows, 'callback.origin_method');
+                }),
+            ],
         ];
     }
 
