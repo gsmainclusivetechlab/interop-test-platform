@@ -45,21 +45,29 @@ class RequestSchemeValidationTest extends TestCase
     protected $specFinder;
 
     /**
+     * @var bool
+     */
+    protected $isCallback;
+
+    /**
      * @param Request $request
      * @param string $apiSpec
      * @param OperationAddress|CallbackAddress $operationAddress
      * @param SpecFinder $specFinder
+     * @param bool $isCallback
      */
     public function __construct(
         Request $request,
         string $apiSpec,
         $operationAddress,
-        SpecFinder $specFinder
+        SpecFinder $specFinder,
+        bool $isCallback
     ) {
         $this->request = $request;
         $this->apiSpec = $apiSpec;
         $this->operationAddress = $operationAddress;
         $this->specFinder = $specFinder;
+        $this->isCallback = $isCallback;
     }
 
     /**
@@ -67,14 +75,17 @@ class RequestSchemeValidationTest extends TestCase
      */
     public function test()
     {
-        $validator = new ValidatorChain(
+        $validators = [
             new HeadersValidator($this->specFinder),
             new CookiesValidator($this->specFinder),
             new BodyValidator($this->specFinder),
             new QueryArgumentsValidator($this->specFinder),
-            new PathValidator($this->specFinder),
             new SecurityValidator($this->specFinder)
-        );
+        ];
+        if (!$this->isCallback) {
+            $validators[] = new PathValidator($this->specFinder);
+        }
+        $validator = new ValidatorChain(...$validators);
 
         try {
             $validator->validate(

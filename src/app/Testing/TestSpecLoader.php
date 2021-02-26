@@ -31,12 +31,13 @@ class TestSpecLoader
             ->pluck('openapi', 'name');
         if ($apiSpec = $apiSpecCollection->first()) {
             $specFinder = new SpecFinder($apiSpec);
+            $isCallback = $testStep->isCallback();
 
             $testSuite->addTest(
                 new RequestSchemeValidationTest(
                     $testResult->request,
                     $apiSpecCollection->keys()->first(),
-                    $testStep->isCallback() ?
+                    $isCallback?
                         new CallbackAddress(
                             $testStep->callback_origin_path,
                             strtolower($testStep->callback_origin_method),
@@ -47,14 +48,15 @@ class TestSpecLoader
                             $testStep->path,
                             strtolower($testStep->method)
                         ),
-                    $specFinder
+                    $specFinder,
+                    $isCallback
                 )
             );
             $testSuite->addTest(
                 new ResponseSchemeValidationTest(
                     $testResult->response,
                     $apiSpecCollection->keys()->first(),
-                    $testStep->isCallback() ?
+                    $isCallback ?
                         new CallbackResponseAddress(
                             $testStep->callback_origin_path,
                             strtolower($testStep->callback_origin_method),
