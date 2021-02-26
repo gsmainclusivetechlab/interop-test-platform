@@ -4,16 +4,21 @@ namespace App\Testing\Tests;
 
 use App\Http\Client\Request;
 use App\Testing\TestCase;
+use League\OpenAPIValidation\PSR7\{
+    CallbackAddress,
+    OperationAddress,
+    SpecFinder,
+};
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
-use League\OpenAPIValidation\PSR7\OperationAddress;
-use League\OpenAPIValidation\PSR7\SpecFinder;
 use League\OpenAPIValidation\PSR7\Validators\BodyValidator\BodyValidator;
 use League\OpenAPIValidation\PSR7\Validators\CookiesValidator\CookiesValidator;
-use League\OpenAPIValidation\PSR7\Validators\HeadersValidator;
-use League\OpenAPIValidation\PSR7\Validators\PathValidator;
-use League\OpenAPIValidation\PSR7\Validators\QueryArgumentsValidator;
-use League\OpenAPIValidation\PSR7\Validators\SecurityValidator;
-use League\OpenAPIValidation\PSR7\Validators\ValidatorChain;
+use League\OpenAPIValidation\PSR7\Validators\{
+    HeadersValidator,
+    PathValidator,
+    QueryArgumentsValidator,
+    SecurityValidator,
+    ValidatorChain,
+};
 use PHPUnit\Framework\AssertionFailedError;
 use Throwable;
 
@@ -40,21 +45,29 @@ class RequestSchemeValidationTest extends TestCase
     protected $specFinder;
 
     /**
+     * @var bool
+     */
+    protected $isCallback;
+
+    /**
      * @param Request $request
      * @param string $apiSpec
-     * @param OperationAddress $operationAddress
+     * @param OperationAddress|CallbackAddress $operationAddress
      * @param SpecFinder $specFinder
+     * @param bool $isCallback
      */
     public function __construct(
         Request $request,
         string $apiSpec,
-        OperationAddress $operationAddress,
-        SpecFinder $specFinder
+        $operationAddress,
+        SpecFinder $specFinder,
+        bool $isCallback
     ) {
         $this->request = $request;
         $this->apiSpec = $apiSpec;
         $this->operationAddress = $operationAddress;
         $this->specFinder = $specFinder;
+        $this->isCallback = $isCallback;
     }
 
     /**
@@ -62,14 +75,17 @@ class RequestSchemeValidationTest extends TestCase
      */
     public function test()
     {
-        $validator = new ValidatorChain(
+        $validators = [
             new HeadersValidator($this->specFinder),
             new CookiesValidator($this->specFinder),
             new BodyValidator($this->specFinder),
             new QueryArgumentsValidator($this->specFinder),
-            new PathValidator($this->specFinder),
             new SecurityValidator($this->specFinder)
-        );
+        ];
+        if (!$this->isCallback) {
+            $validators[] = new PathValidator($this->specFinder);
+        }
+        $validator = new ValidatorChain(...$validators);
 
         try {
             $validator->validate(

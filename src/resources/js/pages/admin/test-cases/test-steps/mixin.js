@@ -15,6 +15,7 @@ export default {
             sending: false,
             component: {
                 list: this.$page.props.components.map((el) => el.name),
+                // TODO: delete if components connections functional not needed
                 // connections: new Map(
                 //     this.$page.props.components.map((el) => [
                 //         el.name,
@@ -59,6 +60,11 @@ export default {
                     (el) => el.name === this.target
                 )?.[0]?.id,
                 trigger: this.trigger,
+                callback: {
+                    name: this.callback.name,
+                    method: this.callback.method.selected,
+                    path: this.callback.path,
+                },
                 request: this.example.request,
                 response: {
                     delay: this.example.response.delay,
@@ -110,6 +116,7 @@ export default {
     },
     computed: {
         sourceList() {
+            // TODO: delete if components connections functional not needed
             // const list = this.component.connections.get(this.target);
             //
             // if (list) return list;
@@ -117,6 +124,7 @@ export default {
             return this.component.list;
         },
         targetList() {
+            // TODO: delete if components connections functional not needed
             // const list = this.component.connections.get(this.source);
             //
             // if (list) return list;

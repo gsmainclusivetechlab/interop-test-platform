@@ -48,6 +48,9 @@ class TestStep extends Model
         'repeat_count',
         'repeat_condition',
         'repeat_response',
+        'callback_origin_path',
+        'callback_origin_method',
+        'callback_name',
     ];
 
     /**
@@ -159,5 +162,15 @@ class TestStep extends Model
             'env' => array_filter($matches[1]),
             'file_env' => array_filter($matches[2]),
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCallback()
+    {
+        return $this->callback_origin_path &&
+            $this->callback_origin_method &&
+            $this->callback_name;
     }
 }

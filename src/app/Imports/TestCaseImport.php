@@ -130,6 +130,10 @@ class TestCaseImport implements Importable
                     );
                     $repeat = Arr::get($testStepRow, 'repeat', []);
                     $testStep = $this->setRepeat($testStep, $repeat);
+                    $testStep = $this->setCallback(
+                        $testStep,
+                        Arr::get($testStepRow, 'callback', [])
+                    );
                     $testStep->saveOrFail();
 
                     $this->importTestSetups(
@@ -254,6 +258,22 @@ class TestCaseImport implements Importable
             'repeat_count' => Arr::get($repeat, 'count', 0),
             'repeat_condition' => Arr::get($repeat, 'condition'),
             'repeat_response' => $response,
+        ]);
+
+        return $testStep;
+    }
+
+    /**
+     * @param TestStep $testStep
+     * @param $callback
+     * @return TestStep
+     */
+    protected function setCallback(TestStep $testStep, $callback)
+    {
+        $testStep->fill([
+            'callback_origin_method' => Arr::get($callback, 'origin_method'),
+            'callback_origin_path' => Arr::get($callback, 'origin_path'),
+            'callback_name' => Arr::get($callback, 'name'),
         ]);
 
         return $testStep;
@@ -417,6 +437,32 @@ class TestCaseImport implements Importable
             'repeat.test_response_scripts' => ['nullable', 'array'],
             'repeat.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
             'repeat.test_response_scripts.*.rules' => ['required', 'array'],
+            // callbacks
+            'callback' => ['nullable', 'array'],
+            'callback.origin_method' => [
+                'string',
+                Rule::in(array_keys(HttpMethod::list())),
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'callback.origin_path') ||
+                        Arr::get($rows, 'callback.name');
+                }),
+            ],
+            'callback.origin_path' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'callback.name') ||
+                        Arr::get($rows, 'callback.origin_method');
+                }),
+            ],
+            'callback.name' => [
+                'string',
+                'max:255',
+                Rule::requiredIf(function () use ($rows) {
+                    return Arr::get($rows, 'callback.origin_path') ||
+                        Arr::get($rows, 'callback.origin_method');
+                }),
+            ],
         ];
     }
 

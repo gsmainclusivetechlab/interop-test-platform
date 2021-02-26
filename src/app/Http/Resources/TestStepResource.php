@@ -45,6 +45,11 @@ class TestStepResource extends JsonResource
             'testScripts' => TestScriptResource::collection(
                 $this->whenLoaded('testScripts')
             ),
+            'callback' => [
+                'method' => $this->callback_origin_method,
+                'path' => $this->callback_origin_path,
+                'name' => $this->callback_name,
+            ],
         ];
     }
 }
