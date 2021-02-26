@@ -22,16 +22,13 @@ class TestSpecLoader
     {
         $testSuite = new TestSuite();
 
-        $apiSpecCollection = $testResult->testStep
-            ->apiSpec()
-            ->pluck('openapi', 'name');
-        if ($apiSpec = $apiSpecCollection->first()) {
-            $specFinder = new SpecFinder($apiSpec);
+        if ($apiSpec = $testResult->testStep->apiSpec) {
+            $specFinder = new SpecFinder($apiSpec->openapi);
 
             $testSuite->addTest(
                 new RequestSchemeValidationTest(
                     $testResult->request,
-                    $apiSpecCollection->keys()->first(),
+                    $apiSpec,
                     new OperationAddress(
                         $testResult->testStep->path,
                         strtolower($testResult->testStep->method)
@@ -42,7 +39,7 @@ class TestSpecLoader
             $testSuite->addTest(
                 new ResponseSchemeValidationTest(
                     $testResult->response,
-                    $apiSpecCollection->keys()->first(),
+                    $apiSpec,
                     new ResponseAddress(
                         $testResult->testStep->path,
                         strtolower($testResult->testStep->method),

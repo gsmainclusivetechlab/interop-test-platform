@@ -3,6 +3,7 @@
 namespace App\Testing\Tests;
 
 use App\Http\Client\Response;
+use App\Models\ApiSpec;
 use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use League\OpenAPIValidation\PSR7\ResponseAddress;
@@ -21,7 +22,7 @@ class ResponseSchemeValidationTest extends TestCase
     protected $response;
 
     /**
-     * @var string
+     * @var ApiSpec
      */
     protected $apiSpec;
 
@@ -37,13 +38,13 @@ class ResponseSchemeValidationTest extends TestCase
 
     /**
      * @param Response $response
-     * @param string $apiSpec
+     * @param ApiSpec $apiSpec
      * @param ResponseAddress $operationAddress
      * @param SpecFinder $specFinder
      */
     public function __construct(
         Response $response,
-        string $apiSpec,
+        ApiSpec $apiSpec,
         ResponseAddress $operationAddress,
         SpecFinder $specFinder
     ) {
@@ -79,7 +80,7 @@ class ResponseSchemeValidationTest extends TestCase
     public function getName(): string
     {
         return __('Response: :name API Spec validation', [
-            'name' => $this->apiSpec,
+            'name' => $this->apiSpec->name,
         ]);
     }
 

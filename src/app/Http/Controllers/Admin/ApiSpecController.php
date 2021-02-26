@@ -5,10 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\ApiSpecResource;
 use App\Models\ApiSpec;
 use App\Http\Controllers\Controller;
+use cebe\openapi\exceptions\IOException;
+use cebe\openapi\exceptions\TypeErrorException;
+use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\Reader;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
+use Inertia\Response;
+use Storage;
+use Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
 
 class ApiSpecController extends Controller
 {
@@ -23,7 +35,7 @@ class ApiSpecController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function index()
     {
@@ -42,7 +54,7 @@ class ApiSpecController extends Controller
     }
 
     /**
-     * @return \Inertia\Response
+     * @return Response
      */
     public function showImportForm()
     {
@@ -52,8 +64,8 @@ class ApiSpecController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function import(Request $request)
     {
@@ -64,15 +76,17 @@ class ApiSpecController extends Controller
         ]);
 
         try {
-            ApiSpec::create(array_merge(
-                ['name' => $request->input('name')],
-                $this->storeApiSpec($request->file('file'))
-            ));
+            ApiSpec::create(
+                array_merge(
+                    ['name' => $request->input('name')],
+                    $this->storeApiSpec($request->file('file'))
+                )
+            );
 
             return redirect()
                 ->route('admin.api-specs.index')
                 ->with('success', __('Api spec created successfully'));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());
@@ -81,8 +95,8 @@ class ApiSpecController extends Controller
 
     /**
      * @param ApiSpec $apiSpec
-     * @return \Inertia\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function edit(ApiSpec $apiSpec)
     {
@@ -95,8 +109,8 @@ class ApiSpecController extends Controller
     /**
      * @param ApiSpec $apiSpec
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function updateSpec(ApiSpec $apiSpec, Request $request)
     {
@@ -106,18 +120,16 @@ class ApiSpecController extends Controller
         ]);
 
         try {
-            $path = $apiSpec->file_path;
-            $apiSpec->update(
-                $this->storeApiSpec($request->file('file'))
-            );
-            app()->terminating(function () use ($path) {
-                \Storage::delete($path);
+            $oldFiles = [$apiSpec->file_path, $apiSpec->api_path];
+            $apiSpec->update($this->storeApiSpec($request->file('file')));
+            app()->terminating(function () use ($oldFiles) {
+                Storage::delete($oldFiles);
             });
 
             return redirect()
                 ->route('admin.api-specs.index')
                 ->with('success', __('Api spec updated successfully'));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());
@@ -126,8 +138,8 @@ class ApiSpecController extends Controller
 
     /**
      * @param ApiSpec $apiSpec
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(ApiSpec $apiSpec)
     {
@@ -140,31 +152,31 @@ class ApiSpecController extends Controller
 
     /**
      * @param ApiSpec $apiSpec
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
     public function download(ApiSpec $apiSpec)
     {
         return response()->download(
-            \Storage::path($apiSpec->file_path),
-            str_replace(
-                '/',
-                '',
-                $apiSpec->name . '.yaml'
-            )
+            Storage::path($apiSpec->file_path),
+            str_replace('/', '', $apiSpec->name . '.yaml')
         );
     }
 
     /**
      * @param $file
      * @return array
-     * @throws \cebe\openapi\exceptions\IOException
-     * @throws \cebe\openapi\exceptions\TypeErrorException
-     * @throws \cebe\openapi\exceptions\UnresolvableReferenceException
+     * @throws IOException
+     * @throws TypeErrorException
+     * @throws UnresolvableReferenceException
      */
-    protected function storeApiSpec($file)
+    protected function storeApiSpec(UploadedFile $file)
     {
+        $path = 'openapis/' . Str::random(40) . '.txt';
+        $spec = Reader::readFromYamlFile($file->path());
+        $data = json_encode($spec->getSerializableData());
+
         return [
-            'openapi' => Reader::readFromYamlFile($file->path()),
+            'api_path' => Storage::put($path, $data),
             'file_path' => $file->store('openapis'),
         ];
     }

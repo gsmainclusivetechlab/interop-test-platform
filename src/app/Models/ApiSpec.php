@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\OpenApiCast;
+use cebe\openapi\Reader;
 use cebe\openapi\spec\OpenApi;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,10 @@ use Storage;
  * @mixin Eloquent
  *
  * @property string $name
- * @property OpenApi $openapi
+ * @property string $api_path
+ * @property string $file_path
+ *
+ * @property-read OpenApi $openapi
  */
 class ApiSpec extends Model
 {
@@ -24,24 +27,17 @@ class ApiSpec extends Model
     /**
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'openapi',
-        'description',
-        'file_path'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'openapi' => OpenApiCast::class,
-    ];
+    protected $fillable = ['name', 'description', 'file_path', 'api_path'];
 
     protected static function booted(): void
     {
         static::deleted(function (self $apiSpec) {
-            Storage::delete($apiSpec->file_path);
+            Storage::delete([$apiSpec->api_path, $apiSpec->file_path]);
         });
+    }
+
+    public function getOpenapiAttribute()
+    {
+        return Reader::readFromJsonFile(Storage::path($this->api_path));
     }
 }
