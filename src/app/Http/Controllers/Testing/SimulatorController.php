@@ -10,6 +10,7 @@ use App\Models\TestRun;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Psr\Http\Message\ServerRequestInterface;
+use Str;
 
 class SimulatorController extends Controller
 {
@@ -20,6 +21,10 @@ class SimulatorController extends Controller
     {
         parent::__construct();
         $this->middleware(ValidateTraceContext::class);
+
+        if (!Str::contains(request()->header('Accept'), 'json')) {
+            request()->headers->set('Accept', 'application/json');
+        }
     }
 
     /**
