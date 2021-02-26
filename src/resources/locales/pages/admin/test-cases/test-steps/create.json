@@ -23,6 +23,11 @@
                 "placeholder": "Select API specification"
             },
             "trigger": "Trigger",
+            "callback": {
+                "label": "X-Callback-URL settings",
+                "comment": "Open API callback validation info",
+                "name": "Name"
+            },
             "test-scripts": {
                 "request": "Test Request Scripts",
                 "response": "Test Response Scripts",
@@ -105,6 +110,11 @@
                 "placeholder": "Выберите API спецификации"
             },
             "trigger": "Триггер",
+            "callback": {
+                "label": "X-Callback-URL настройки",
+                "comment": "Open API обратный вызов информация валидации",
+                "name": "Имя"
+            },
             "test-scripts": {
                 "request": "Скрипты Тестового Запроса",
                 "response": "Скрипты Тестового Ответа",

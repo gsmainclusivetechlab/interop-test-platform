@@ -10,37 +10,37 @@
                         <label class="form-label">{{
                             $t('inputs.method.label')
                         }}</label>
-                        <p class="form-control">{{ method.selected }}</p>
+                        <span class="form-control">{{ method.selected }}</span>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
                             $t('inputs.path')
                         }}</label>
-                        <p class="form-control">{{ path }}</p>
+                        <span class="form-control">{{ path }}</span>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-label">{{
                             $t('inputs.pattern')
                         }}</label>
-                        <p class="form-control">{{ pattern }}</p>
+                        <span class="form-control">{{ pattern }}</span>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
                             $t('inputs.source.label')
                         }}</label>
-                        <p class="form-control">{{ source }}</p>
+                        <span class="form-control">{{ source }}</span>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
                             $t('inputs.target.label')
                         }}</label>
-                        <p class="form-control">{{ target }}</p>
+                        <span class="form-control">{{ target }}</span>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
                             $t('inputs.api-spec.label')
                         }}</label>
-                        <p class="form-control">{{ apiSpec.selected }}</p>
+                        <span class="form-control">{{ apiSpec.selected }}</span>
                     </div>
                     <div class="col-12 mb-3">
                         <label class="form-check form-switch">
@@ -68,6 +68,50 @@
                                 :show-line="false"
                                 class="p-2"
                             ></json-tree>
+                        </b-collapse>
+                    </div>
+                    <div class="col-12">
+                        <button
+                            type="button"
+                            class="btn btn-link card-title dropdown-toggle px-0"
+                            v-b-toggle="'callback'"
+                        >
+                            {{ $t('inputs.callback.label') }}
+                        </button>
+                        <b-collapse id="callback">
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="text-small text-muted">
+                                        <small>{{
+                                            $t('inputs.callback.comment')
+                                        }}</small>
+                                    </span>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">{{
+                                        $t('inputs.callback.name')
+                                    }}</label>
+                                    <span class="form-control">
+                                        {{ callback.name }}
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">{{
+                                        $t('inputs.method.label')
+                                    }}</label>
+                                    <span class="form-control">
+                                        {{ callback.method.selected }}
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">{{
+                                        $t('inputs.path')
+                                    }}</label>
+                                    <span class="form-control">
+                                        {{ callback.path }}
+                                    </span>
+                                </div>
+                            </div>
                         </b-collapse>
                     </div>
                     <hr />
@@ -113,13 +157,17 @@
                         <h2 class="card-title">
                             {{ $t('inputs.request.uri') }}
                         </h2>
-                        <p class="form-control">{{ example.request.uri }}</p>
+                        <span class="form-control">{{
+                            example.request.uri
+                        }}</span>
                     </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">
                             {{ $t('inputs.request.delay') }}
                         </h2>
-                        <p class="form-control">{{ example.request.delay }}</p>
+                        <span class="form-control">{{
+                            example.request.delay
+                        }}</span>
                     </div>
                     <div class="col-12 mb-3">
                         <button
@@ -245,15 +293,17 @@
                         <h2 class="card-title">
                             {{ $t('inputs.response.status.label') }}
                         </h2>
-                        <p class="form-control">
+                        <span class="form-control">
                             {{ example.response.status.selected }}
-                        </p>
+                        </span>
                     </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">
                             {{ $t('inputs.response.delay') }}
                         </h2>
-                        <p class="form-control">{{ example.response.delay }}</p>
+                        <span class="form-control">{{
+                            example.response.delay
+                        }}</span>
                     </div>
                     <div class="col-12 mb-3">
                         <button
@@ -401,24 +451,26 @@
                         <h2 class="card-title">
                             {{ $t('inputs.repeat.count') }}
                         </h2>
-                        <p class="form-control">
+                        <span class="form-control">
                             {{ example.repeat.count }}
-                        </p>
+                        </span>
                     </div>
                     <div class="col-6 mb-3">
                         <h2 class="card-title">
                             {{ $t('inputs.repeat.max') }}
                         </h2>
-                        <p class="form-control">{{ example.repeat.max }}</p>
+                        <span class="form-control">{{
+                            example.repeat.max
+                        }}</span>
                     </div>
                     <template v-if="testStep.repeat.response">
                         <div class="col-6 mb-3">
                             <h2 class="card-title">
                                 {{ $t('inputs.repeat.response.status.label') }}
                             </h2>
-                            <p class="form-control">
+                            <span class="form-control">
                                 {{ example.repeat.response.status.selected }}
-                            </p>
+                            </span>
                         </div>
                         <div class="col-12 mb-3">
                             <button
@@ -551,6 +603,13 @@ export default {
                 selected: this.testStep.apiSpec?.data?.name ?? null,
             },
             trigger: this.testStep?.trigger,
+            callback: {
+                name: this.testStep.callback?.name,
+                method: {
+                    selected: this.testStep.callback?.method,
+                },
+                path: this.testStep.callback?.path,
+            },
             mtls: this.testStep?.mtls,
             test: {
                 scripts: {
