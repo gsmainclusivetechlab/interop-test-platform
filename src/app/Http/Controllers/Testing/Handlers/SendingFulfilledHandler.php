@@ -86,12 +86,6 @@ class SendingFulfilledHandler
             $this->testResult->pass();
         } else {
             $this->testResult->fail();
-
-            if ($isRepeat) {
-                $this->testResult->testRun->complete();
-
-                return $response;
-            }
         }
 
         $nextTestStep = $isRepeat
@@ -117,7 +111,7 @@ class SendingFulfilledHandler
             );
         }
 
-        if ($this->testResult->testStep->isLastPosition()) {
+        if ($this->testResult->testStep->isLastPosition() && !$isRepeat) {
             $this->testResult->testRun->complete();
         }
 

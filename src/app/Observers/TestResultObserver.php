@@ -24,7 +24,9 @@ class TestResultObserver
      */
     public function fail(TestResult $testResult)
     {
-        $testResult->testRun()->increment('failures');
+        if (!$testResult->repeat) {
+            $testResult->testRun()->increment('failures');
+        }
         $testResult->testRun()->increment('duration', $testResult->duration);
     }
 }
