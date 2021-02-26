@@ -175,8 +175,10 @@ class ApiSpecController extends Controller
         $spec = Reader::readFromYamlFile($file->path());
         $data = json_encode($spec->getSerializableData());
 
+        Storage::put($path, $data);
+
         return [
-            'api_path' => Storage::put($path, $data),
+            'api_path' => $path,
             'file_path' => $file->store('openapis'),
         ];
     }
