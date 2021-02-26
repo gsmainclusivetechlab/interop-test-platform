@@ -540,7 +540,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `request-headers-${result.id}`
                                                     "
@@ -600,7 +600,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `request-body-${result.id}`
                                                     "
@@ -667,7 +667,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `request-overridden-${result.id}`
                                                     "
@@ -745,7 +745,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `response-headers-${result.id}`
                                                     "
@@ -805,7 +805,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `response-body-${result.id}`
                                                     "
@@ -872,7 +872,7 @@
                                             >
                                                 <button
                                                     type="button"
-                                                    class="dropdown-toggle text-left bg-light border rounded-0 w-25 px-4 py-2"
+                                                    class="dropdown-toggle btn-link bg-transparent text-left border rounded-0 w-25 px-4 py-2"
                                                     v-b-toggle="
                                                         `response-overridden-${result.id}`
                                                     "

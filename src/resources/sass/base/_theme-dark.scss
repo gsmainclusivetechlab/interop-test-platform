@@ -1,4 +1,22 @@
 .theme-dark {
+  .alert {
+    &-danger {
+      color: $white;
+      background-color: rgba(222, 0, 43, 0.4);
+    }
+    &-success {
+      color: $white;
+      background-color: rgba(0, 161, 130, 0.4);
+    }
+    &-warning {
+      color: $white;
+      background-color: rgba(252, 187, 44, 0.4);
+    }
+    &-secondary {
+      color: $white;
+      background-color: rgba(124, 124, 124, 0.4);
+    }
+  }
   .btn-secondary {
     @include button-variant(
       $gray-600,
