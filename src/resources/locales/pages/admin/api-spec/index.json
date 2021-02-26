@@ -11,8 +11,8 @@
                 "name": "Name"
             },
             "menu": {
-                "edit": {
-                    "title": "Edit"
+                "import": {
+                    "title": "Import"
                 },
                 "delete": {
                     "title": "Delete",
@@ -40,8 +40,8 @@
                 "name": "Имя"
             },
             "menu": {
-                "edit": {
-                    "title": "Редактировать"
+                "import": {
+                    "title": "Импорт"
                 },
                 "delete": {
                     "title": "Удалить",
