@@ -97,13 +97,8 @@
                     "GSMA Mobile Money API developer portal"
                 ]
             }
-        ],
-        "buttons": {
-            "start-demo": "Start interactive demo",
-            "reset-demo": "Reset Demo"
-        }
+        ]
     },
-
     "ru": {
         "page": {
             "title": "Руководство"
@@ -202,10 +197,6 @@
                     "GSMA Mobile Money API портал разработчиков"
                 ]
             }
-        ],
-        "buttons": {
-            "start-demo": "Начать интерактивную демонстрацию",
-            "reset-demo": "Сбросить демонстрацию"
-        }
+        ]
     }
 }

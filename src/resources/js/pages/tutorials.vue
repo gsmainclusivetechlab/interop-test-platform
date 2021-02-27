@@ -16,20 +16,17 @@
                         class="d-inline-block btn scenario-card demo1"
                         href="#create-session"
                         v-b-toggle.accordion-1
-                        @click="initDemo"
                     >
                         <h4
-                            id="scenario-heading"
                             class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
                         >
                             <img
-                                id="session-icon"
                                 src="/assets/images/tutorials/Gizmo_RED_Stack.png"
                                 class="icon"
                             />
                             {{ $t('panel[0].title') }}
                         </h4>
-                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                        <div class="pl-2 font-weight-normal">
                             {{ $t('panel[0].comment') }}
                         </div>
                     </a>
@@ -38,20 +35,17 @@
                         class="d-inline-block btn scenario-card demo2"
                         href="#service-provider"
                         v-b-toggle.accordion-2
-                        @click="initDemo"
                     >
                         <h4
-                            id="scenario-heading"
                             class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
                         >
                             <img
-                                id="session-icon"
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
                             {{ $t('panel[1].title') }}
                         </h4>
-                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                        <div class="pl-2 font-weight-normal">
                             {{ $t('panel[1].comment') }}
                         </div>
                     </a>
@@ -60,20 +54,17 @@
                         class="d-inline-block btn scenario-card demo3"
                         href="#mobile-money-operator"
                         v-b-toggle.accordion-3
-                        @click="initDemo"
                     >
                         <h4
-                            id="scenario-heading"
                             class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
                         >
                             <img
-                                id="session-icon"
                                 src="assets/images/tutorials/Gizmo_RED_Press.png"
                                 class="icon"
                             />
                             {{ $t('panel[2].title') }}
                         </h4>
-                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                        <div class="pl-2 font-weight-normal">
                             {{ $t('panel[2].comment') }}
                         </div>
                     </a>
@@ -85,17 +76,15 @@
                         v-b-toggle.accordion-4
                     >
                         <h4
-                            id="scenario-heading"
                             class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
                         >
                             <img
-                                id="session-icon"
                                 src="assets/images/tutorials/logo-postman.png"
                                 class="icon"
                             />
                             {{ $t('panel[3].title') }}
                         </h4>
-                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                        <div class="pl-2 font-weight-normal">
                             {{ $t('panel[3].comment') }}
                         </div>
                     </a>
@@ -106,17 +95,15 @@
                         v-b-toggle.accordion-5
                     >
                         <h4
-                            id="scenario-heading"
                             class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
                         >
                             <img
-                                id="session-icon"
                                 src="assets/images/tutorials/Gizmo_RED_World.png"
                                 class="icon"
                             />
                             {{ $t('panel[4].title') }}
                         </h4>
-                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                        <div class="pl-2 font-weight-normal">
                             {{ $t('panel[4].comment') }}
                         </div>
                     </a>
@@ -127,17 +114,15 @@
                         v-b-toggle.accordion-6
                     >
                         <h4
-                            id="scenario-heading"
                             class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
                         >
                             <img
-                                id="session-icon"
                                 src="assets/images/tutorials/Gizmo_RED_Mobile_Operator.png"
                                 class="icon"
                             />
                             {{ $t('panel[5].title') }}
                         </h4>
-                        <div id="scenario-desc" class="pl-2 font-weight-normal">
+                        <div class="pl-2 font-weight-normal">
                             {{ $t('panel[5].comment') }}
                         </div>
                     </a>
@@ -155,7 +140,6 @@
                             v-b-toggle.accordion-1
                             class="btn shadow-none demo1"
                             type="button"
-                            @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
                                 {{ $t('drop-panel[0].title') }}
@@ -168,43 +152,12 @@
                         role="tabpanel"
                     >
                         <div class="card-body">
-                            <div id="demo-desc">
+                            <div>
                                 {{ $t('drop-panel[0].comment') }}
                             </div>
-                            <div class="demo-create-session mt-3 mx-auto">
-                                <div class="demo-inner-container mb-4">
-                                    <div class="image-holder">
-                                        <div
-                                            class="demo-circle"
-                                            @click.prevent="continueDemo"
-                                        ></div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-center circle-label p-2"
-                                        >
-                                            {{ labelText }}
-                                        </div>
-                                        <img
-                                            class="demo-screenshot"
-                                            :src="screenshotUrl"
-                                        />
-                                    </div>
-                                    <div class="demo-overlay"></div>
-                                    <a
-                                        class="btn border-primary start-demo-btn"
-                                        @click.prevent="startDemo"
-                                    >
-                                        {{ $t('buttons.start-demo') }}
-                                    </a>
-                                </div>
-                                <button
-                                    id="create-session-reset"
-                                    class="btn btn-outline-primary"
-                                    type="button"
-                                    @click.prevent="resetDemo"
-                                >
-                                    {{ $t('buttons.reset-demo') }}
-                                </button>
-                            </div>
+                            <tutorial-demo
+                                :demo-data="demoDataList.createSession"
+                            />
                         </div>
                     </b-collapse>
                 </article>
@@ -219,7 +172,6 @@
                             v-b-toggle.accordion-2
                             class="btn shadow-none demo2"
                             type="button"
-                            @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
                                 {{ $t('drop-panel[1].title') }}
@@ -232,7 +184,7 @@
                         role="tabpanel"
                     >
                         <div class="card-body">
-                            <div id="demo-desc">
+                            <div>
                                 <p>
                                     {{ $t('drop-panel[1].comment[0]') }}
                                 </p>
@@ -245,40 +197,9 @@
                                     >
                                 </p>
                             </div>
-                            <div class="demo-service-provider mt-3 mx-auto">
-                                <div class="demo-inner-container mb-4">
-                                    <div class="image-holder">
-                                        <div
-                                            class="demo-circle"
-                                            @click.prevent="continueDemo"
-                                        ></div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-center circle-label p-2"
-                                        >
-                                            {{ labelText }}
-                                        </div>
-                                        <img
-                                            class="demo-screenshot"
-                                            :src="screenshotUrl"
-                                        />
-                                    </div>
-                                    <div class="demo-overlay"></div>
-                                    <a
-                                        class="btn border-primary start-demo-btn"
-                                        @click.prevent="startDemo"
-                                    >
-                                        {{ $t('buttons.start-demo') }}
-                                    </a>
-                                </div>
-                                <button
-                                    id="service-provider-reset"
-                                    class="btn btn-outline-primary"
-                                    type="button"
-                                    @click.prevent="resetDemo"
-                                >
-                                    {{ $t('buttons.reset-demo') }}
-                                </button>
-                            </div>
+                            <tutorial-demo
+                                :demo-data="demoDataList.serviceProvider"
+                            />
                         </div>
                     </b-collapse>
                 </article>
@@ -293,7 +214,6 @@
                             v-b-toggle.accordion-3
                             class="btn shadow-none demo3"
                             type="button"
-                            @click="initDemo"
                         >
                             <h3 class="mb-0 scenario-accordion text-primary">
                                 {{ $t('drop-panel[2].title') }}
@@ -306,47 +226,14 @@
                         role="tabpanel"
                     >
                         <div class="card-body">
-                            <div id="demo-desc">
+                            <div>
                                 <p>
                                     {{ $t('drop-panel[2].comment') }}
                                 </p>
                             </div>
-                            <div
-                                class="demo-mobile-money-operator mt-3 mx-auto"
-                            >
-                                <div class="demo-inner-container mb-4">
-                                    <div class="image-holder">
-                                        <div
-                                            class="demo-circle"
-                                            @click.prevent="continueDemo"
-                                        ></div>
-                                        <div
-                                            class="d-flex align-items-center justify-content-center circle-label p-2"
-                                        >
-                                            {{ labelText }}
-                                        </div>
-                                        <img
-                                            class="demo-screenshot"
-                                            :src="screenshotUrl"
-                                        />
-                                    </div>
-                                    <div class="demo-overlay"></div>
-                                    <a
-                                        class="btn border-primary start-demo-btn"
-                                        @click.prevent="startDemo"
-                                    >
-                                        {{ $t('buttons.start-demo') }}
-                                    </a>
-                                </div>
-                                <button
-                                    id="service-provider-reset"
-                                    class="btn btn-outline-primary"
-                                    type="button"
-                                    @click.prevent="resetDemo"
-                                >
-                                    {{ $t('buttons.reset-demo') }}
-                                </button>
-                            </div>
+                            <tutorial-demo
+                                :demo-data="demoDataList.mobileMoneyOperator"
+                            />
                         </div>
                     </b-collapse>
                 </article>
@@ -373,7 +260,7 @@
                         role="tabpanel"
                     >
                         <div class="card-body">
-                            <div id="demo-desc">
+                            <div>
                                 <p>
                                     {{ $t('drop-panel[3].comment') }}
                                 </p>
@@ -416,7 +303,7 @@
                         role="tabpanel"
                     >
                         <div class="card-body">
-                            <div id="demo-desc">
+                            <div>
                                 <p>
                                     {{ $t('drop-panel[4].comment') }}
                                 </p>
@@ -465,7 +352,7 @@
                         role="tabpanel"
                     >
                         <div class="card-body">
-                            <div id="demo-desc">
+                            <div>
                                 <p>
                                     {{ $t('drop-panel[5].comment') }}
                                 </p>
@@ -502,6 +389,7 @@
 
 <script>
 import Layout from '@/layouts/main';
+import TutorialDemo from '@/components/tutorial-demo';
 
 const createImgPath = '/assets/images/tutorials/create-session/';
 const executeSPImgPath = '/assets/images/tutorials/service-provider/';
@@ -511,293 +399,185 @@ export default {
     metaInfo() {
         return {
             title: this.$t('page.title'),
-            script: [
-                {
-                    src: 'https://code.jquery.com/jquery-3.5.0.min.js',
-                    defer: true,
-                },
-            ],
         };
     },
     components: {
         Layout,
-    },
-    data() {
-        return {
-            currentStep: 0,
-            interval: null,
-            radius: 28,
-            steps: [],
-            demoWrapper: null,
-            labelText: '',
-            screenshotUrl: '',
-            originalHeight: 0,
-        };
+        TutorialDemo,
     },
     computed: {
-        demoData() {
+        demoDataList() {
             return {
                 createSession: [
-                    [
-                        `${createImgPath}dashboard.png`,
-                        [1150, 35],
-                        this.$t('drop-panel[0].demo-steps[0]'),
-                    ],
-                    [
-                        `${createImgPath}select_sut.png`,
-                        [415, 360],
-                        this.$t('drop-panel[0].demo-steps[1]'),
-                    ],
-                    [
-                        `${createImgPath}select_sut_2.png`,
-                        [415, 410],
-                        this.$t('drop-panel[0].demo-steps[2]'),
-                    ],
-                    [
-                        `${createImgPath}select_sut_3.png`,
-                        [785, 460],
-                        this.$t('drop-panel[0].demo-steps[3]'),
-                    ],
-                    [
-                        `${createImgPath}session_info.png`,
-                        [616, 337],
-                        this.$t('drop-panel[0].demo-steps[4]'),
-                    ],
-                    [
-                        `${createImgPath}session_info_2.png`,
-                        [616, 360],
-                        this.$t('drop-panel[0].demo-steps[5]'),
-                    ],
-                    [
-                        `${createImgPath}session_info_3.png`,
-                        [616, 405],
-                        this.$t('drop-panel[0].demo-steps[6]'),
-                    ],
-                    [
-                        `${createImgPath}session_info_4.png`,
-                        [900, 500],
-                        this.$t('drop-panel[0].demo-steps[7]'),
-                    ],
-                    [
-                        `${createImgPath}configure_sut.png`,
-                        [780, 436],
-                        this.$t('drop-panel[0].demo-steps[8]'),
-                    ],
-                    [
-                        `${createImgPath}session_created.png`,
-                        [47, 195],
-                        this.$t('drop-panel[0].demo-steps[9]'),
-                        true,
-                    ],
+                    {
+                        slideSrc: `${createImgPath}dashboard.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 96, y: 5.3 },
+                        slideText: this.$t('drop-panel[0].demo-steps[0]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}select_sut.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 35, y: 33 },
+                        slideText: this.$t('drop-panel[0].demo-steps[1]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}select_sut_2.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 35, y: 37 },
+                        slideText: this.$t('drop-panel[0].demo-steps[2]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}select_sut_3.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 66.5, y: 41.3 },
+                        slideText: this.$t('drop-panel[0].demo-steps[3]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}session_info.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 53, y: 31 },
+                        slideText: this.$t('drop-panel[0].demo-steps[4]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}session_info_2.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 53, y: 33 },
+                        slideText: this.$t('drop-panel[0].demo-steps[5]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}session_info_3.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 53, y: 37 },
+                        slideText: this.$t('drop-panel[0].demo-steps[6]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}session_info_4.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 76, y: 44.5 },
+                        slideText: this.$t('drop-panel[0].demo-steps[7]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}configure_sut.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 66, y: 39.3 },
+                        slideText: this.$t('drop-panel[0].demo-steps[8]'),
+                    },
+                    {
+                        slideSrc: `${createImgPath}session_created.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 0, y: 0 },
+                        slideText: this.$t('drop-panel[0].demo-steps[9]'),
+                    },
                 ],
-
                 serviceProvider: [
-                    [
-                        `${executeSPImgPath}1-session-page.png`,
-                        [3, 185],
-                        this.$t('drop-panel[1].demo-steps[0]'),
-                    ],
-                    [
-                        `${executeSPImgPath}2-session-usecase.png`,
-                        [61, 195],
-                        this.$t('drop-panel[1].demo-steps[1]'),
-                    ],
-                    [
-                        `${executeSPImgPath}3-test-runs.png`,
-                        [430, 120],
-                        this.$t('drop-panel[1].demo-steps[2]'),
-                    ],
-                    [
-                        `${executeSPImgPath}4-test-flow.png`,
-                        [251, 199],
-                        this.$t('drop-panel[1].demo-steps[3]'),
-                    ],
-                    [
-                        `${executeSPImgPath}7-postman-1.png`,
-                        [1053, 74],
-                        this.$t('drop-panel[1].demo-steps[4]'),
-                    ],
-                    [
-                        `${executeSPImgPath}9-test-runs.png`,
-                        [384, 209],
-                        this.$t('drop-panel[1].demo-steps[5]'),
-                    ],
-                    [
-                        `${executeSPImgPath}10-test-details-1.png`,
-                        [604, 437],
-                        this.$t('drop-panel[1].demo-steps[6]'),
-                    ],
-                    [
-                        `${executeSPImgPath}11-test-details-2.png`,
-                        [75, 35],
-                        this.$t('drop-panel[1].demo-steps[7]'),
-                        true,
-                    ],
+                    {
+                        slideSrc: `${executeSPImgPath}1-session-page.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 3, y: 18 },
+                        slideText: this.$t('drop-panel[1].demo-steps[0]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}2-session-usecase.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 8, y: 19 },
+                        slideText: this.$t('drop-panel[1].demo-steps[1]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}3-test-runs.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 37, y: 12.5 },
+                        slideText: this.$t('drop-panel[1].demo-steps[2]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}4-test-flow.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 23, y: 19.5 },
+                        slideText: this.$t('drop-panel[1].demo-steps[3]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}7-postman-1.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 88, y: 9 },
+                        slideText: this.$t('drop-panel[1].demo-steps[4]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}9-test-runs.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 33, y: 20 },
+                        slideText: this.$t('drop-panel[1].demo-steps[5]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}10-test-details-1.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 53, y: 39.5 },
+                        slideText: this.$t('drop-panel[1].demo-steps[6]'),
+                    },
+                    {
+                        slideSrc: `${executeSPImgPath}11-test-details-2.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 0, y: 0 },
+                        slideText: this.$t('drop-panel[1].demo-steps[7]'),
+                    },
                 ],
-
                 mobileMoneyOperator: [
-                    [
-                        `${executeMMOImgPath}1-session-page.png`,
-                        [5, 240],
-                        this.$t('drop-panel[2].demo-steps[0]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}2-test-usecase.png`,
-                        [65, 215],
-                        this.$t('drop-panel[2].demo-steps[1]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}3-test-runs.png`,
-                        [430, 120],
-                        this.$t('drop-panel[2].demo-steps[2]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}4-test-flow.png`,
-                        [109, 225],
-                        this.$t('drop-panel[2].demo-steps[3]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}4-test-flow.png`,
-                        [1150, 115],
-                        this.$t('drop-panel[2].demo-steps[4]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}5-run-test.png`,
-                        [315, 119],
-                        this.$t('drop-panel[2].demo-steps[5]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}6-test-runs-2.png`,
-                        [370, 205],
-                        this.$t('drop-panel[2].demo-steps[6]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}7-test-details.png`,
-                        [600, 395],
-                        this.$t('drop-panel[2].demo-steps[7]'),
-                    ],
-                    [
-                        `${executeMMOImgPath}8-test-details-2.png`,
-                        [5, 240],
-                        this.$t('drop-panel[2].demo-steps[8]'),
-                        true,
-                    ],
+                    {
+                        slideSrc: `${executeMMOImgPath}1-session-page.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 3, y: 22.5 },
+                        slideText: this.$t('drop-panel[2].demo-steps[0]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}2-test-usecase.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 8, y: 20.8 },
+                        slideText: this.$t('drop-panel[2].demo-steps[1]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}3-test-runs.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 37, y: 12.5 },
+                        slideText: this.$t('drop-panel[2].demo-steps[2]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}4-test-flow.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 11, y: 23.2 },
+                        slideText: this.$t('drop-panel[2].demo-steps[3]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}4-test-flow.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 96, y: 12.2 },
+                        slideText: this.$t('drop-panel[2].demo-steps[4]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}5-run-test.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 28, y: 12.5 },
+                        slideText: this.$t('drop-panel[2].demo-steps[5]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}6-test-runs-2.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 32, y: 20 },
+                        slideText: this.$t('drop-panel[2].demo-steps[6]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}7-test-details.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 52, y: 35.5 },
+                        slideText: this.$t('drop-panel[2].demo-steps[7]'),
+                    },
+                    {
+                        slideSrc: `${executeMMOImgPath}8-test-details-2.png`,
+                        slideRatio: '16/8',
+                        targetPosision: { x: 0, y: 0 },
+                        slideText: this.$t('drop-panel[2].demo-steps[8]'),
+                    },
                 ],
             };
         },
-    },
-    methods: {
-        initDemo(e) {
-            const $target = $(e.currentTarget);
-            const wrapperId = $target.attr('aria-controls');
-
-            this.demoWrapper = $(`#${wrapperId}`);
-            this.currentStep = 0;
-            this.originalHeight = 592;
-
-            if ($target.hasClass('demo1')) {
-                this.steps = this.demoData.createSession;
-                this.screenshotUrl =
-                    'assets/images/tutorials/create-session/dashboard.png';
-            }
-
-            if ($target.hasClass('demo2')) {
-                this.steps = this.demoData.serviceProvider;
-                this.screenshotUrl =
-                    'assets/images/tutorials/service-provider/1-session-page.png';
-            }
-
-            if ($target.hasClass('demo3')) {
-                this.steps = this.demoData.mobileMoneyOperator;
-                this.screenshotUrl =
-                    'assets/images/tutorials/mobile-money-operator/1-session-page.png';
-            }
-
-            this.demoUpdateCircle();
-        },
-        demoAdjusted(length) {
-            const currentHeight = this.demoWrapper
-                .find('.demo-screenshot')
-                .height();
-            const ratio = currentHeight / this.originalHeight;
-
-            return length * ratio;
-        },
-        demoAnimateCircle(circleRadius, ms, cb) {
-            const coordinates = this.steps[this.currentStep][1];
-
-            this.demoWrapper.find('.demo-circle').animate(
-                {
-                    top:
-                        this.demoAdjusted(coordinates[1]) -
-                        (circleRadius - this.radius),
-                    left:
-                        this.demoAdjusted(coordinates[0]) -
-                        (circleRadius - this.radius),
-                    width: circleRadius * 2,
-                    height: circleRadius * 2,
-                },
-                {
-                    complete: cb,
-                    duration: ms,
-                }
-            );
-        },
-        demoUpdateCircle() {
-            this.demoStopPulsate();
-            this.demoAnimateCircle(this.demoAdjusted(2000), 0, () => {
-                this.demoAnimateCircle(this.radius, 750, () => {
-                    this.demoStartPulsate();
-                });
-            });
-
-            this.labelText = this.steps[this.currentStep][2];
-        },
-        demoStartPulsate() {
-            this.interval = setInterval(() => {
-                this.demoAnimateCircle(
-                    this.radius + this.demoAdjusted(20),
-                    250,
-                    () => {
-                        this.demoAnimateCircle(this.radius, 200);
-                    }
-                );
-            }, 2000);
-        },
-        demoStopPulsate() {
-            clearInterval(this.interval);
-        },
-        continueDemo() {
-            this.currentStep = (this.currentStep + 1) % this.steps.length;
-            this.screenshotUrl = this.steps[this.currentStep][0];
-
-            if (this.steps[this.currentStep][3] === true) {
-                this.demoWrapper.find('.demo-circle').toggle();
-            }
-
-            this.demoUpdateCircle();
-        },
-        startDemo() {
-            this.demoWrapper.find('.start-demo-btn').toggle();
-            this.demoWrapper.find('.demo-overlay').toggle();
-        },
-        resetDemo() {
-            this.currentStep = 0;
-            this.screenshotUrl = this.steps[this.currentStep][0];
-
-            this.demoUpdateCircle();
-
-            if (this.demoWrapper.find('.start-demo-btn').is(':hidden')) {
-                this.demoWrapper.find('.start-demo-btn').toggle();
-            }
-
-            if (this.demoWrapper.find('.demo-overlay').is(':hidden')) {
-                this.demoWrapper.find('.demo-overlay').toggle();
-            }
-        },
-    },
-    destroyed() {
-        this.demoStopPulsate();
     },
 };
 </script>
