@@ -1,0 +1,14 @@
+{
+    "en": {
+        "buttons": {
+            "start-demo": "Start interactive demo",
+            "reset-demo": "Reset Demo"
+        }
+    },
+    "ru": {
+        "buttons": {
+            "start-demo": "Начать интерактивную демонстрацию",
+            "reset-demo": "Сбросить демонстрацию"
+        }
+    }
+}

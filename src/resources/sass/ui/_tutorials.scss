@@ -13,17 +13,69 @@ $tutorials-red-color: $primary;
 }
 
 .tutorial-accordion {
-  .demo-create-session,
-  .demo-service-provider,
-  .demo-mobile-money-operator {
-    height: 65%;
-    width: 60%;
+  .demo-container {
+    width: 65%;
 
-    .demo-circle {
+    .target-circle {
+      --size-factor: 5;
+      --border-width: 2px;
+      --translate-x: 0;
+      --translate-y: 0;
       position: absolute;
-      border: solid 3px #d87070;
-      border-radius: 50%;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      width: calc(1% * var(--size-factor));
+      padding-bottom: calc(1% * var(--size-factor));
+      overflow: visible;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      transform-origin: center;
+      transform: translate(
+        calc(
+          1% * (var(--translate-x) - var(--size-factor) / 2) * 100 /
+            var(--size-factor)
+        ),
+        calc(
+          1% * (var(--translate-y) - var(--size-factor) / 2) * 100 /
+            var(--size-factor)
+        )
+      );
       cursor: pointer;
+      appearance: none;
+      outline: none;
+      transition: transform 0.5s ease;
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: solid var(--border-width) $primary;
+        border-radius: 50%;
+        animation: scale-animation 2s infinite alternate,
+          pulse-animation 4s infinite;
+      }
+
+      @keyframes pulse-animation {
+        0% {
+          box-shadow: 0 0 0 0 rgba($primary, 0.2);
+        }
+        100% {
+          box-shadow: 0 0 1px 20px rgba($primary, 0);
+        }
+      }
+
+      @keyframes scale-animation {
+        0% {
+          transform: scale(0.6);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
     }
 
     .demo-inner-container {
@@ -31,23 +83,21 @@ $tutorials-red-color: $primary;
       overflow: hidden;
     }
 
-    .image-holder {
+    .slide-img-holder {
+      --img-height-ratio: calc(9 / 16);
       position: relative;
+      padding-bottom: calc(100% * var(--img-height-ratio));
+      .slide-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+      }
     }
 
-    [class*='circle-label'] {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 10%;
-      width: 100%;
-      text-align: center;
-      font-weight: 600;
-      background-color: #222;
-      color: #fff;
-    }
-
-    [class*='demo-overlay'] {
+    .demo-overlay {
       position: absolute;
       top: 0;
       left: 0;
@@ -60,23 +110,12 @@ $tutorials-red-color: $primary;
       border: 1px solid #000;
     }
 
-    [class*='start-demo-btn'] {
+    .start-demo-btn {
       position: absolute;
       z-index: 6;
       left: 50%;
-      top: 40%;
-      margin-left: -7.2em;
-      color: $tutorials-red-color;
-      font-weight: 600;
-      background: #fff;
-      border: 1px solid #ccc;
-      box-shadow: 0 1px 3px 0 black;
-      cursor: pointer;
-
-      &:hover {
-        color: #fff;
-        background: $tutorials-red-color;
-      }
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }
