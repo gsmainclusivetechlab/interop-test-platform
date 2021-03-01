@@ -111,7 +111,11 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
         $data = $this->toArray();
         $data['uri'] = rawurldecode($data['uri']);
 
-        $substitution = new TwigSubstitution($testResults, $session);
+        $substitution = new TwigSubstitution(
+            $testResults,
+            $session,
+            $currentTestStep
+        );
         $data = $substitution->replaceRecursive($data);
 
         return new self(
