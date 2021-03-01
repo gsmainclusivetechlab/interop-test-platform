@@ -15,11 +15,11 @@ class UpdateTestResultRequestAndResponse extends Migration
     {
         Schema::table('test_results', function (Blueprint $table) {
             $table
-                ->text('request')
+                ->mediumText('request')
                 ->nullable()
                 ->change();
             $table
-                ->text('response')
+                ->mediumText('response')
                 ->nullable()
                 ->change();
         });
