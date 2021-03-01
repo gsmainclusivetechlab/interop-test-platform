@@ -1,5 +1,6 @@
 .json-tree-wrapper {
   position: relative;
+  min-height: 3rem;
   background-color: $gray-100;
 
   [data-clipboard-btn] {
