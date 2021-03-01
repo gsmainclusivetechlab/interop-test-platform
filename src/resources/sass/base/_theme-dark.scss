@@ -1,4 +1,15 @@
-.theme-dark {
+%dark-mode-override {
+  .card,
+  .card-footer,
+  .card-header {
+    border-color: $dark-mode-border !important;
+  }
+  [class*='border'] {
+    border-color: $dark-mode-border !important;
+  }
+  .dropdown-menu {
+    border-color: $dark-mode-border !important;
+  }
   .alert {
     &-danger {
       color: $white;
@@ -19,10 +30,10 @@
   }
   .btn-secondary {
     @include button-variant(
-      $gray-600,
+      $dark-mode-border,
       $border-color,
       $dark-mode-text,
-      rgba($gray-600, 0.8),
+      rgba($dark-mode-border, 0.8),
       $border-color,
       $dark-mode-text
     );
@@ -33,7 +44,7 @@
     color: $dark-mode-text;
     background-color: $dark-mode-darken;
     .vs__dropdown-menu {
-      background-color: inherit;
+      background-color: $dark-mode-darken;
     }
     .vs__dropdown-option {
       &--highlight {
@@ -59,6 +70,13 @@
 
   .json-tree-wrapper {
     background-color: $dark-mode-darken;
+    .vjs-tree {
+      &__brackets {
+        &:hover {
+          color: $gray-600 !important;
+        }
+      }
+    }
   }
 
   .json-editor {
@@ -70,69 +88,17 @@
       color: $dark-mode-text;
     }
   }
-
-  & ~ div {
-    .modal-content,
-    .modal-header {
-      color: $dark-mode-text;
-      background-color: $dark;
-
-      .json-tree-wrapper {
-        background-color: inherit;
+  .table {
+    &-hover {
+      tbody {
+        tr:hover {
+          color: $dark-mode-text;
+        }
       }
     }
-
-    .modal-content {
-      .btn-secondary {
-        @include button-variant(
-          $gray-600,
-          $border-color,
-          $dark-mode-text,
-          rgba($gray-600, 0.8),
-          $border-color,
-          $dark-mode-text
-        );
-
-        background-image: none;
-      }
-    }
-  }
-
-  & ~ .popover.b-popover {
-    color: $dark-mode-text;
-    background-color: $dark;
-    border-color: $dark-mode-text;
-
-    &.bs-popover-bottom > .arrow {
-      &::after {
-        border-bottom-color: $dark;
-      }
-
-      &::before {
-        border-bottom-color: rgba($dark-mode-text, 0.1);
-      }
-    }
-
-    .popover-body {
-      color: inherit;
-    }
-
-    .json-tree-wrapper {
-      background-color: inherit;
-    }
-
-    .nav-tabs {
-      .nav-link {
-        color: $gray-300;
-      }
-    }
-  }
-
-  .table-hover {
-    tbody {
-      tr:hover {
-        color: $dark-mode-text;
-      }
+    th,
+    td {
+      border-color: $dark-mode-border !important;
     }
   }
 
@@ -206,6 +172,39 @@
     &::after {
       color: $dark-mode-text;
       background-color: $gray-500;
+    }
+  }
+}
+
+.theme-dark {
+  @extend %dark-mode-override;
+  & ~ div {
+    .modal-content,
+    .modal-header {
+      color: $dark-mode-text;
+      background-color: $dark;
+      border-color: $dark-mode-border !important;
+    }
+    .modal-content {
+      @extend %dark-mode-override;
+    }
+  }
+
+  & ~ .popover.b-popover {
+    color: $dark-mode-text;
+    background-color: $dark;
+    border-color: $dark-mode-text;
+    @extend %dark-mode-override;
+    &.bs-popover-bottom > .arrow {
+      &::after {
+        border-bottom-color: $dark;
+      }
+      &::before {
+        border-bottom-color: rgba($dark-mode-text, 0.1);
+      }
+    }
+    .popover-body {
+      color: inherit;
     }
   }
 }
