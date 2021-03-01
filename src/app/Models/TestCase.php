@@ -410,11 +410,13 @@ class TestCase extends Model
             ] = $testStep->testResults()->make([
                 'request' => $testStep->request->withSubstitutions(
                     $simulatedTestResultsCollection,
-                    $session
+                    $session,
+                    $testStep
                 ),
                 'response' => $testStep->response->withSubstitutions(
                     $simulatedTestResultsCollection,
-                    $session
+                    $session,
+                    $testStep
                 ),
             ]);
         }

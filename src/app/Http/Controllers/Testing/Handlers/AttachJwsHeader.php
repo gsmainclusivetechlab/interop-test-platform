@@ -39,7 +39,8 @@ class AttachJwsHeader
             $jws = $this->jwsSource
                 ->withSubstitutions(
                     $this->testResult->testRun->testResults,
-                    $this->testResult->session
+                    $this->testResult->session,
+                    $this->testResult->testStep
                 )
                 ->jws();
 

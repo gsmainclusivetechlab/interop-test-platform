@@ -53,7 +53,8 @@ class ExecuteTestRunJob implements ShouldQueue
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
         $requestTemplate = $testStep->request->withSubstitutions(
             $testRun->testResults,
-            $session
+            $session,
+            $testStep
         );
         $request = $requestTemplate
             ->toPsrRequest()

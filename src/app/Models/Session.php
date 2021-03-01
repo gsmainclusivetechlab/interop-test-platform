@@ -41,6 +41,7 @@ use Str;
  * @property TestCase[]|Collection $testCases
  * @property Component[]|Collection $components
  * @property FileEnvironment[]|Collection $fileEnvironments
+ * @property TestStep[]|Collection $testSteps
  */
 class Session extends Model
 {
@@ -428,5 +429,61 @@ class Session extends Model
                     config(
                         'service_session.compliance_session_execution_limit'
                     ));
+    }
+
+    public static function getMappedUrls(
+        $components,
+        Session $session = null,
+        Group $group = null
+    ): Collection {
+        $useEncryptionComponentIds = $session
+            ? $session->components->where('pivot.use_encryption')->pluck('id')
+            : collect(session('session.sut'))
+                ->where('use_encryption', '1')
+                ->keys();
+
+        $groupPrefix = $group ? '-group' : '';
+
+        return $components->mapWithKeys(function (Component $component) use (
+            $useEncryptionComponentIds,
+            $groupPrefix,
+            $session,
+            $group
+        ) {
+            $secure = $useEncryptionComponentIds->contains($component->id);
+
+            return [
+                $component->slug => $component->connections->mapWithKeys(
+                    function (Component $connection) use (
+                        $component,
+                        $secure,
+                        $groupPrefix,
+                        $group,
+                        $session
+                    ) {
+                        $url = route(
+                            $secure
+                                ? "testing{$groupPrefix}.sut"
+                                : "testing-insecure{$groupPrefix}.sut",
+                            [
+                                $component->slug,
+                                $connection->slug,
+                                $group->id ??
+                                ($session->uuid ??
+                                    session('session.info.uuid')),
+                            ],
+                            false
+                        );
+
+                        return [
+                            $connection->slug =>
+                                ($secure
+                                    ? config('app.testing_url_https')
+                                    : config('app.testing_url_http')) . $url,
+                        ];
+                    }
+                ),
+            ];
+        });
     }
 }

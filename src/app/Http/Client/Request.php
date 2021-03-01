@@ -4,6 +4,7 @@ namespace App\Http\Client;
 
 use App\Models\Session;
 use App\Models\TestSetup;
+use App\Models\TestStep;
 use App\Utils\TwigSubstitution;
 use GuzzleHttp\Psr7\ServerRequest;
 use Illuminate\Contracts\Support\Arrayable;
@@ -102,9 +103,10 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
     /**
      * @param $testResults
      * @param Session $session
+     * @param TestStep $currentTestStep
      * @return $this
      */
-    public function withSubstitutions($testResults, $session)
+    public function withSubstitutions($testResults, $session, $currentTestStep)
     {
         $data = $this->toArray();
         $data['uri'] = rawurldecode($data['uri']);

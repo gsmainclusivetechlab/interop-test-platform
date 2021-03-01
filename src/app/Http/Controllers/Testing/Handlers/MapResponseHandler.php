@@ -51,7 +51,8 @@ class MapResponseHandler
         ) {
             $testResponse = $testResponse->withSubstitutions(
                 $this->testResult->testRun->testResults,
-                $this->testResult->session
+                $this->testResult->session,
+                $this->testResult->testStep
             );
         }
         $this->testResult->update(['response' => $testResponse]);

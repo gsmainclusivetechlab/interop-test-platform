@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int $id
+ * @property string $name
  *
  * @mixin Eloquent
  */

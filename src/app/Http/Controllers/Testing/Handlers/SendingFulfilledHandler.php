@@ -75,7 +75,8 @@ class SendingFulfilledHandler
             $delay = $this->testResult->testStep->response
                 ->withSubstitutions(
                     $this->testResult->testRun->testResults,
-                    $this->session
+                    $this->session,
+                    $this->testResult->testStep
                 )
                 ->delay();
 
@@ -98,7 +99,8 @@ class SendingFulfilledHandler
             $delay = $nextTestStep->request
                 ->withSubstitutions(
                     $this->testResult->testRun->testResults,
-                    $this->session
+                    $this->session,
+                    $this->testResult->testStep
                 )
                 ->delay();
 
@@ -159,6 +161,7 @@ class SendingFulfilledHandler
     /**
      * @param TestSuite $testSuite
      * @param Request|Response $requestOrResponse
+     * @param Request|Response $testStepRequestOrResponse
      * @param string $title
      */
     protected function attachJWSValidation(
@@ -177,7 +180,8 @@ class SendingFulfilledHandler
                     $testStepRequestOrResponse
                         ->withSubstitutions(
                             $this->testResult->testRun->testResults,
-                            $this->testResult->session
+                            $this->testResult->session,
+                            $this->testResult->testStep
                         )
                         ->jws(),
                     $title

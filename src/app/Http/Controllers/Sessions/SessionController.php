@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sessions;
 use App\Enums\AuditActionEnum;
 use App\Enums\AuditTypeEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Sessions\Traits\WithSutUrls;
 use App\Http\Exports\ComplianceSessionExport;
 use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
@@ -20,6 +21,7 @@ use App\Models\{
     Certificate,
     Component,
     FileEnvironment,
+    Group,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
@@ -42,6 +44,8 @@ use Throwable;
 
 class SessionController extends Controller
 {
+    use WithSutUrls;
+
     /**
      * @return void
      */
@@ -146,6 +150,7 @@ class SessionController extends Controller
                     ->latest()
                     ->paginate()
             ),
+            'sutUrls' => $this->getSutUrls($session),
         ]);
     }
 
