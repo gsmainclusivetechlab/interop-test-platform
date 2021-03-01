@@ -5,6 +5,8 @@ role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
 
 if [ "$role" = "app" ]; then
+    mkdir -p /var/www/html/storage/app/openapis || true
+    chmod 777 /var/www/html/storage/app/openapis
     mkdir -p /etc/nginx/ssl/default-certs || true
     cd /etc/nginx/ssl/default-certs
 
@@ -23,7 +25,7 @@ if [ "$role" = "app" ]; then
     else
         # check if the certificate will expire in the next month
         EXP=`openssl x509 -checkend 2592000 -noout -in RootCA.crt;`
-        if [ ! "$EXP" ]; then 
+        if [ ! "$EXP" ]; then
             echo "Renewing certificates"
             openssl req -x509 -nodes -new -sha256 -days 1024 -newkey rsa:2048 -keyout RootCA.key -out RootCA.crt -subj "/C=UK/CN=localhost-CA"
             openssl x509 -outform pem -in RootCA.crt -out RootCA.crt &&\
