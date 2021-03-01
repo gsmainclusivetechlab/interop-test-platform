@@ -15,9 +15,13 @@ class AddFilePathColumnToApiSpecsTable extends Migration
      */
     public function up()
     {
-        Schema::table('api_specs', function (Blueprint $table) {
-            $table->string('file_path')->after('description');
-        });
+        $columns = Schema::getColumnListing('api_specs');
+
+        if (!in_array('file_path', $columns)) {
+            Schema::table('api_specs', function (Blueprint $table) {
+                $table->string('file_path')->after('description');
+            });
+        }
 
         DB::table('api_specs')
             ->orderBy('id')
