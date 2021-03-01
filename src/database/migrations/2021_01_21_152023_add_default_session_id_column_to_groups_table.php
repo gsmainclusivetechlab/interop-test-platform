@@ -34,6 +34,8 @@ class AddDefaultSessionIdColumnToGroupsTable extends Migration
     public function down()
     {
         Schema::table('groups', function (Blueprint $table) {
+            $table->dropForeign(['default_session_id']);
+
             $table->dropColumn('default_session_id');
         });
     }
