@@ -128,6 +128,9 @@ class SessionController extends Controller
                             },
                         ]);
                     },
+                    'components' => function ($query) {
+                        return $query->with(['connections']);
+                    },
                 ])
             ))->resolve(),
             'questionnaire' => SectionResource::collection(
