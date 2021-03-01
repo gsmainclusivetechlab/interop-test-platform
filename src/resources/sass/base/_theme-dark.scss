@@ -133,16 +133,19 @@
     }
   }
 
-  .list-group-item-action {
-    &.active {
-      color: $dark-mode-text;
-      background-color: $dark-mode-darken;
-    }
+  .list-group-item {
+    border-color: $dark-mode-border !important;
+    &-action {
+      &.active {
+        color: $dark-mode-text;
+        background-color: $dark-mode-darken;
+      }
 
-    &:hover,
-    &:focus {
-      color: $dark-mode-text;
-      background-color: rgba($dark-mode-darken, 0.8);
+      &:hover,
+      &:focus {
+        color: $dark-mode-text;
+        background-color: rgba($dark-mode-darken, 0.8);
+      }
     }
   }
 
@@ -168,11 +171,24 @@
   .custom-file-label {
     color: $dark-mode-text;
     background-color: $dark-mode-darken;
+    border-color: $dark-mode-border !important;
 
     &::after {
-      color: $dark-mode-text;
-      background-color: $gray-500;
+      @include button-variant(
+        $dark-mode-border,
+        $border-color,
+        $dark-mode-text,
+        rgba($dark-mode-border, 0.8),
+        $border-color,
+        $dark-mode-text
+      );
+
+      background-image: none;
     }
+  }
+  .form-control,
+  .input-group-text {
+    border-color: $dark-mode-border !important;
   }
 }
 
