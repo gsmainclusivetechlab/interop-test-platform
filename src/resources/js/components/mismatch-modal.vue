@@ -11,7 +11,6 @@
             size="lg"
             centered
             hide-footer
-            hide-header-close
             title="Request"
         >
             <div class="border">

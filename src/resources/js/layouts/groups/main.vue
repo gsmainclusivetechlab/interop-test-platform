@@ -23,7 +23,7 @@
                                     <inertia-link
                                         :href="route('groups.show', group.id)"
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active: route().current(
                                                 'groups.show'
                                             ),
@@ -41,7 +41,7 @@
                                             )
                                         "
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active: route().current(
                                                 'groups.users.*'
                                             ),
@@ -59,7 +59,7 @@
                                             )
                                         "
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active: route().current(
                                                 'groups.user-invitations.*'
                                             ),
@@ -77,7 +77,7 @@
                                             )
                                         "
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active: route().current(
                                                 'groups.environments.*'
                                             ),
@@ -95,7 +95,7 @@
                                             )
                                         "
                                         class="nav-link rounded-0"
-                                        v-bind:class="{
+                                        :class="{
                                             active: route().current(
                                                 'groups.certificates.*'
                                             ),

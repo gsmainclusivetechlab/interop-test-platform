@@ -76,7 +76,6 @@
                                     size="lg"
                                     centered
                                     hide-footer
-                                    hide-header-close
                                     title="Request"
                                 >
                                     <clipboard-json-to-curl
@@ -203,7 +202,6 @@
                                     size="lg"
                                     centered
                                     hide-footer
-                                    hide-header-close
                                     title="Response"
                                 >
                                     <div class="border">

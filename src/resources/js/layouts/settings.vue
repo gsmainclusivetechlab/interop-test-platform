@@ -13,7 +13,7 @@
                         <inertia-link
                             :href="route('settings.profile')"
                             class="list-group-item list-group-item-action d-flex align-items-center"
-                            v-bind:class="{
+                            :class="{
                                 active: route().current('settings.profile'),
                             }"
                         >
@@ -22,7 +22,7 @@
                         <inertia-link
                             :href="route('settings.password')"
                             class="list-group-item list-group-item-action d-flex align-items-center"
-                            v-bind:class="{
+                            :class="{
                                 active: route().current('settings.password'),
                             }"
                         >
