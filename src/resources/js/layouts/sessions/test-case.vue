@@ -153,7 +153,7 @@
                                     </div>
                                 </template>
                             </div>
-                            <template id="by-session" v-if="!hasGroupUrls">
+                            <template id="by-session" v-else>
                                 <template
                                     v-for="(component, i) in session.components
                                         .data"

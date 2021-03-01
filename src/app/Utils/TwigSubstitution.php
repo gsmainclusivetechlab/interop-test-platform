@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use App\Models\TestStep;
 use App\Extensions\Twig\{Base64, Datetime, IlpPacket, Uuid};
 use App\Models\Component;
 use App\Models\Session;
@@ -35,11 +36,14 @@ class TwigSubstitution
      */
     protected $data = [];
 
-    public function __construct($testResults, Session $session)
-    {
+    public function __construct(
+        $testResults,
+        Session $session,
+        TestStep $currentTestStep
+    ) {
         $this->twig = new Environment(new ArrayLoader());
         $this->registerTwigExtensions();
-        $this->data = $this->mapInto($testResults, $session);
+        $this->data = $this->mapInto($testResults, $session, $currentTestStep);
     }
 
     public function replaceRecursive(array $input = []): array
@@ -106,11 +110,15 @@ class TwigSubstitution
     /**
      * @param $testResults
      * @param Session $session
+     * @param TestStep $currentTestStep
      *
      * @return mixed
      */
-    protected function mapInto($testResults, Session $session): array
-    {
+    protected function mapInto(
+        $testResults,
+        Session $session,
+        TestStep $currentTestStep
+    ): array {
         $components = Component::with('connections')->get();
         $sutBaseUrls = $session->components->pluck('pivot.base_url', 'id');
         return [
@@ -145,42 +153,13 @@ class TwigSubstitution
                     ];
                 })
                 ->toArray(),
-            'mapped_urls' => $this->mapUrls($components, $session),
+            'mapped_urls' => Session::getMappedUrls(
+                $components,
+                $session
+            )->toArray(),
             'session_uuid' => $session->uuid,
             'app_url' => route('home'),
+            'current_step' => $currentTestStep->position,
         ];
-    }
-
-    protected function mapUrls($components, $session): array
-    {
-        $useEncryptionComponentIds = $session
-            ->components()
-            ->withPivotValue('use_encryption', true)
-            ->pluck('id')
-            ->toArray();
-
-        return $components
-            ->mapWithKeys(function (Component $component) use (
-                $session,
-                $useEncryptionComponentIds
-            ) {
-                $connectionUrls = [];
-                $secure = in_array($component->id, $useEncryptionComponentIds);
-
-                foreach ($component->connections as $connection) {
-                    $urn = route(
-                        $secure ? 'testing.sut' : 'testing-insecure.sut',
-                        [$component->slug, $connection->slug, $session->uuid],
-                        false
-                    );
-                    $connectionUrls[$component->slug][$connection->slug] =
-                        ($secure
-                            ? config('app.testing_url_https')
-                            : config('app.testing_url_http')) . $urn;
-                }
-
-                return $connectionUrls;
-            })
-            ->toArray();
     }
 }

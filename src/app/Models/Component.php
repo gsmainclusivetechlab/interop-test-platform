@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
+use App\Models\Pivots\ComponentConnections;
 use App\Models\Pivots\TestCaseComponents;
 use Eloquent;
 use Illuminate\Support\Collection;
@@ -62,7 +63,9 @@ class Component extends Model
             'test_steps',
             'source_id',
             'target_id'
-        )->distinct();
+        )
+            ->using(ComponentConnections::class)
+            ->distinct();
     }
 
     public function getNameAttribute(): string

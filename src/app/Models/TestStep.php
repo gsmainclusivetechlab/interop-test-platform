@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Request $request
  * @property Response $response
  * @property Response $repeat_response
+ * @property int $position
  *
  * @property Component $source
  * @property Component $target

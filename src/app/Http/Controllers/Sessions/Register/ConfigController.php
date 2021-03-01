@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sessions\Register;
 
+use App\Http\Controllers\Sessions\Traits\WithSutUrls;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Enums\{AuditActionEnum, AuditTypeEnum};
 use App\Http\Controllers\Controller;
@@ -39,7 +40,7 @@ use Throwable;
 
 class ConfigController extends Controller
 {
-    use Queries, SessionIds, QuestionnaireKeys;
+    use Queries, SessionIds, QuestionnaireKeys, WithSutUrls;
 
     public function __construct()
     {
@@ -87,6 +88,7 @@ class ConfigController extends Controller
                     )
                     ->get()
             ),
+            'sutUrls' => $this->getConfigUrls(),
         ]);
     }
 
