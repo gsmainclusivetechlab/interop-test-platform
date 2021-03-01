@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="page"
-        v-bind:class="{ 'theme-dark': $page.props.app.dark_mode }"
-    >
+    <div class="page" :class="{ 'theme-dark': $page.props.app.dark_mode }">
         <slot />
         <cookies />
     </div>

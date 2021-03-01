@@ -255,7 +255,7 @@
                                         ])
                                     "
                                     class="nav-link rounded-0"
-                                    v-bind:class="{
+                                    :class="{
                                         active:
                                             route().current(
                                                 'sessions.test-cases.show'
@@ -277,7 +277,7 @@
                                         )
                                     "
                                     class="nav-link rounded-0"
-                                    v-bind:class="{
+                                    :class="{
                                         active: route().current(
                                             'sessions.test-cases.test-steps.index'
                                         ),
@@ -295,7 +295,7 @@
                                         )
                                     "
                                     class="nav-link rounded-0"
-                                    v-bind:class="{
+                                    :class="{
                                         active: route().current(
                                             'sessions.test-cases.test-steps.flow'
                                         ),

@@ -28,7 +28,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="message in logItems.data">
+                        <tr
+                            v-for="(message, i) in logItems.data"
+                            :key="`message-${i}`"
+                        >
                             <td>
                                 {{ message.user.name }}
                             </td>
@@ -56,7 +59,6 @@
                                     size="lg"
                                     centered
                                     hide-footer
-                                    hide-header-close
                                     title="Request"
                                 >
                                     <div

@@ -108,7 +108,7 @@
                                                     [user.id, role]
                                                 )
                                             "
-                                            v-bind:class="{
+                                            :class="{
                                                 active: user.role === role,
                                             }"
                                         >

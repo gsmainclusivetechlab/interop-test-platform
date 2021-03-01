@@ -251,7 +251,7 @@
                     <b-navbar-nav tag="nav">
                         <li
                             class="nav-item"
-                            v-bind:class="{ active: route().current('home') }"
+                            :class="{ active: route().current('home') }"
                         >
                             <inertia-link
                                 :href="route('home')"
@@ -269,7 +269,7 @@
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{
+                            :class="{
                                 active: route().current('sessions.*'),
                             }"
                         >
@@ -289,7 +289,7 @@
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{
+                            :class="{
                                 active: route().current('groups.*'),
                             }"
                         >
@@ -309,7 +309,7 @@
                         </li>
                         <li
                             class="nav-item"
-                            v-bind:class="{
+                            :class="{
                                 active: route().current('tutorials'),
                             }"
                         >

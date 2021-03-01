@@ -37,7 +37,7 @@
                                 <b-form-file
                                     v-model="form.ca_crt"
                                     placeholder="Choose file..."
-                                    v-bind:class="{
+                                    :class="{
                                         'is-invalid': $page.props.errors.ca_crt,
                                     }"
                                 />
@@ -57,7 +57,7 @@
                                 <b-form-file
                                     v-model="form.client_crt"
                                     placeholder="Choose file..."
-                                    v-bind:class="{
+                                    :class="{
                                         'is-invalid':
                                             $page.props.errors.client_crt,
                                     }"
@@ -76,7 +76,7 @@
                                 <b-form-file
                                     v-model="form.client_key"
                                     placeholder="Choose file..."
-                                    v-bind:class="{
+                                    :class="{
                                         'is-invalid':
                                             $page.props.errors.client_key,
                                     }"

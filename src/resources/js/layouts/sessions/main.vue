@@ -7,10 +7,7 @@
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-unstyled">
-                        <li
-                            v-for="useCase in useCases.data"
-                            v-bind:key="useCase.id"
-                        >
+                        <li v-for="useCase in useCases.data" :key="useCase.id">
                             <b
                                 class="d-block dropdown-toggle py-2 px-3 border-bottom"
                                 v-b-toggle="`use-case-${useCase.id}`"
@@ -50,11 +47,9 @@
                                                             'positive'
                                                         )
                                                         .all()"
-                                                    v-bind:key="
-                                                        positiveTestCase.id
-                                                    "
+                                                    :key="positiveTestCase.id"
                                                     class="list-group-item-action border-bottom"
-                                                    v-bind:class="{
+                                                    :class="{
                                                         'bg-body':
                                                             testCase !==
                                                                 undefined &&
@@ -148,11 +143,9 @@
                                                             'negative'
                                                         )
                                                         .all()"
-                                                    v-bind:key="
-                                                        negativeTestCase.id
-                                                    "
+                                                    :key="negativeTestCase.id"
                                                     class="list-group-item-action border-bottom"
-                                                    v-bind:class="{
+                                                    :class="{
                                                         'bg-body':
                                                             testCase !==
                                                                 undefined &&

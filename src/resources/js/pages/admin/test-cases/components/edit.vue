@@ -50,7 +50,7 @@
                             </strong>
                         </span>
                     </div>
-                    <div class="col-6 mb-3">
+                    <div class="col-6">
                         <label class="form-label">{{
                             $t('inputs.versions')
                         }}</label>
