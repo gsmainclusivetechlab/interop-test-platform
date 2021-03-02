@@ -122,7 +122,7 @@ class SutController extends Controller
                         ->from('test_results')
                         ->where('test_run_id', '=', $currentRun->id)
                         ->whereColumn('test_step_id', '=', 'test_steps.id')
-                        ->completed();
+                        ->where(['repeat' => false]);
                 });
         } else {
             // otherwise any step from any test is fair game
@@ -224,7 +224,7 @@ class SutController extends Controller
             ->incompleted()
             ->where('test_case_id', $testStep->test_case_id)
             ->firstOr(function () use ($session, $testStep) {
-                if (env('CREATE_TESTRUN_ON_MATCH', false)) {
+                if (env('CREATE_TESTRUN_ON_MATCH', true)) {
                     return $session->testRuns()->create([
                         'test_case_id' => $testStep->test_case_id,
                     ]);
