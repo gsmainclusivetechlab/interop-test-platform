@@ -7,7 +7,7 @@ use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\{
     CallbackResponseAddress,
     ResponseAddress,
-    SpecFinder,
+    SpecFinder
 };
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use League\OpenAPIValidation\PSR7\Validators\BodyValidator\BodyValidator;

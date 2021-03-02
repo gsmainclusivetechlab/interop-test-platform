@@ -42,7 +42,9 @@ class ApiSpecsTableSeeder extends Seeder
                 'file_path' => \File::copy(
                     $mmSeedersPath,
                     \Storage::path($mmPath)
-                ) ? $mmPath : '',
+                )
+                    ? $mmPath
+                    : '',
             ],
             [
                 'name' => 'Mojaloop v1.0',
@@ -51,7 +53,9 @@ class ApiSpecsTableSeeder extends Seeder
                 'file_path' => \File::copy(
                     $mojaSeedersPath,
                     \Storage::path($mojaPath)
-                ) ? $mojaPath : '',
+                )
+                    ? $mojaPath
+                    : '',
             ],
         ];
     }

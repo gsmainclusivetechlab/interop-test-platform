@@ -108,7 +108,9 @@
                                                 )
                                             "
                                         >
-                                            {{ $t('table.menu.download.title') }}
+                                            {{
+                                                $t('table.menu.download.title')
+                                            }}
                                         </a>
                                     </li>
                                 </b-dropdown>

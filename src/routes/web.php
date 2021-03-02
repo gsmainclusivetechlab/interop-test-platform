@@ -332,12 +332,14 @@ Route::name('admin.')
                 Route::post('import', 'ApiSpecController@import')->name(
                     'import.confirm'
                 );
-                Route::get('{apiSpec}/download', 'ApiSpecController@download')->name(
-                    'download'
-                );
-                Route::post('{apiSpec}/update-spec', 'ApiSpecController@updateSpec')->name(
-                    'update-spec'
-                );
+                Route::get(
+                    '{apiSpec}/download',
+                    'ApiSpecController@download'
+                )->name('download');
+                Route::post(
+                    '{apiSpec}/update-spec',
+                    'ApiSpecController@updateSpec'
+                )->name('update-spec');
             });
         Route::resource('components', 'ComponentController')->except(['show']);
         Route::get(

@@ -258,20 +258,13 @@ class TestCaseController extends Controller
      */
     public function export(TestCase $testCase)
     {
-        return response()->streamDownload(
-            function () use ($testCase) {
-                echo (new TestCaseExport())->export($testCase);
-            },
-            str_replace(
-                '/',
-                '',
-                substr(
-                    $testCase->slug ?: $testCase->name,
-                    0,
-                    50
-                )
-            ) . '.yaml'
-        );
+        return response()->streamDownload(function () use ($testCase) {
+            echo (new TestCaseExport())->export($testCase);
+        }, str_replace(
+            '/',
+            '',
+            substr($testCase->slug ?: $testCase->name, 0, 50)
+        ) . '.yaml');
     }
 
     /**

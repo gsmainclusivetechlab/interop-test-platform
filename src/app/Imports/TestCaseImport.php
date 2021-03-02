@@ -44,7 +44,8 @@ class TestCaseImport implements Importable
             /**
              * @var TestCase $testCase
              */
-            $testCase = $useCase->testCases()
+            $testCase = $useCase
+                ->testCases()
                 ->make(Arr::only($rows, TestCase::make()->getFillable()));
             $testCase->saveOrFail();
 
@@ -155,7 +156,8 @@ class TestCaseImport implements Importable
                     $this->importTestScripts(
                         $testStep,
                         TestScript::TYPE_RESPONSE,
-                        Arr::get($testStepRow, 'test_response_scripts', []) ?: []
+                        Arr::get($testStepRow, 'test_response_scripts', []) ?:
+                        []
                     );
                     $this->importTestScripts(
                         $testStep,
@@ -304,8 +306,7 @@ class TestCaseImport implements Importable
         }
         $errors .= '</ol>';
 
-        if ($hasErrors)
-        {
+        if ($hasErrors) {
             throw ValidationException::withMessages([$errors]);
         }
     }
@@ -319,7 +320,7 @@ class TestCaseImport implements Importable
                 'required',
                 'string',
                 'max:255',
-                Rule::in(array_keys(TestCase::getBehaviorNames()))
+                Rule::in(array_keys(TestCase::getBehaviorNames())),
             ],
             'description' => ['string'],
             'precondition' => ['string'],
@@ -330,7 +331,7 @@ class TestCaseImport implements Importable
                 Rule::unique('test_cases')->ignore(
                     Arr::get($rows, 'test_case_group_id'),
                     'test_case_group_id'
-                )
+                ),
             ],
             'components' => ['nullable', 'array'],
             'components.*.name' => ['required', 'string', 'max:255'],
@@ -356,7 +357,7 @@ class TestCaseImport implements Importable
                 'required',
                 'string',
                 'max:255',
-                Rule::in(array_keys(HttpMethod::list()))
+                Rule::in(array_keys(HttpMethod::list())),
             ],
             'pattern' => ['required', 'string', 'max:255'],
             'trigger' => ['nullable', 'array'],
@@ -366,12 +367,12 @@ class TestCaseImport implements Importable
             'request.method' => [
                 'required',
                 'string',
-                Rule::in(array_keys(HttpMethod::list()))
+                Rule::in(array_keys(HttpMethod::list())),
             ],
             'response' => ['required', 'array'],
             'response.status' => [
                 'required',
-                Rule::in(array_keys(HttpStatus::list()))
+                Rule::in(array_keys(HttpStatus::list())),
             ],
             // test scripts
             'test_request_scripts' => ['nullable', 'array'],
@@ -388,16 +389,18 @@ class TestCaseImport implements Importable
                 'min:0',
                 function ($attribute, $value, $fail) use ($rows, $step) {
                     $count = Arr::get($rows, 'repeat.count', 0);
-                    if ($count != 0 &&  $count >= $value) {
-                        $fail(__(
-                            'The repeat max must be greater than count (:count). On Test Step :step.',
-                            ['count' => $count, 'step' => $step]
-                        ));
+                    if ($count != 0 && $count >= $value) {
+                        $fail(
+                            __(
+                                'The repeat max must be greater than count (:count). On Test Step :step.',
+                                ['count' => $count, 'step' => $step]
+                            )
+                        );
                     }
                 },
                 Rule::requiredIf(function () use ($rows) {
                     return !empty(Arr::get($rows, 'repeat.count'));
-                })
+                }),
             ],
             'repeat.count' => [
                 'nullable',
@@ -405,37 +408,43 @@ class TestCaseImport implements Importable
                 'min:0',
                 function ($attribute, $value, $fail) use ($rows, $step) {
                     $max = Arr::get($rows, 'repeat.max', 0);
-                    if ($value != 0 &&  $max <= $value) {
-                        $fail(__(
-                            'The repeat count may not be greater than max (:max). On Test Step :step.',
-                            ['max' => $max, 'step' => $step]
-                        ));
+                    if ($value != 0 && $max <= $value) {
+                        $fail(
+                            __(
+                                'The repeat count may not be greater than max (:max). On Test Step :step.',
+                                ['max' => $max, 'step' => $step]
+                            )
+                        );
                     }
-                }
+                },
             ],
             'repeat.condition' => [
                 'nullable',
                 'array',
                 Rule::requiredIf(function () use ($rows) {
                     return Arr::get($rows, 'repeat.max', 0) > 0;
-                })
+                }),
             ],
             'repeat.response' => [
                 'nullable',
                 'array',
                 Rule::requiredIf(function () use ($rows) {
                     return Arr::get($rows, 'repeat.count', 0) > 0;
-                })
+                }),
             ],
             'repeat.response.status' => [
                 'nullable',
                 Rule::in(array_keys(HttpStatus::list())),
                 Rule::requiredIf(function () use ($rows) {
                     return Arr::get($rows, 'repeat.count', 0) > 0;
-                })
+                }),
             ],
             'repeat.test_response_scripts' => ['nullable', 'array'],
-            'repeat.test_response_scripts.*.name' => ['required', 'string', 'max:255'],
+            'repeat.test_response_scripts.*.name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'repeat.test_response_scripts.*.rules' => ['required', 'array'],
             // callbacks
             'callback' => ['nullable', 'array'],
@@ -472,15 +481,12 @@ class TestCaseImport implements Importable
             'slug.unique' => __(
                 'The slug should be unique for different test cases groups.'
             ),
-            'behavior.in' => __(
-                'The behavior must be in: :behaviour.',
-                [
-                    'behaviour' => implode(
-                        ', ',
-                        array_keys(TestCase::getBehaviorNames())
-                    )
-                ]
-            ),
+            'behavior.in' => __('The behavior must be in: :behaviour.', [
+                'behaviour' => implode(
+                    ', ',
+                    array_keys(TestCase::getBehaviorNames())
+                ),
+            ]),
         ];
     }
 
@@ -489,43 +495,48 @@ class TestCaseImport implements Importable
         return [
             'source.exists' => __('The source component does not exist.'),
             'target.exists' => __('The target component does not exist.'),
-            'method.in' => __(
-                'The method must be in: :methods.',
-                [
-                    'methods' => implode(
-                        ', ',
-                        array_keys(HttpMethod::list())
-                    )
-                ]
-            ),
+            'method.in' => __('The method must be in: :methods.', [
+                'methods' => implode(', ', array_keys(HttpMethod::list())),
+            ]),
 
             // request
             'request.uri.required' => __('The request uri field is required.'),
-            'request.method.required' => __('The request method field is required.'),
+            'request.method.required' => __(
+                'The request method field is required.'
+            ),
             'request.method.in' => __(
                 'The request method must be in: :methods.',
                 [
-                    'methods' => implode(
-                        ', ',
-                        array_keys(HttpMethod::list())
-                    )
+                    'methods' => implode(', ', array_keys(HttpMethod::list())),
                 ]
             ),
 
             // response
-            'response.status.required' => __('The response status field is required.'),
+            'response.status.required' => __(
+                'The response status field is required.'
+            ),
             'response.status.in' => __('The response status is invalid.'),
 
             // repeats
             'repeat.max.required' => __('The repeat max field is required.'),
             'repeat.max.integer' => __('The repeat max must be an integer.'),
             'repeat.max.min' => __('The repeat max must be at least 0.'),
-            'repeat.count.integer' => __('The repeat count must be an integer.'),
+            'repeat.count.integer' => __(
+                'The repeat count must be an integer.'
+            ),
             'repeat.count.min' => __('The repeat count must be at least 0.'),
-            'repeat.condition.required' => __('The repeat condition field is required.'),
-            'repeat.response.required' => __('The repeat response field is required.'),
-            'repeat.response.status.required' => __('The repeat response status field is required.'),
-            'repeat.response.status.in' => __('The repeat response status field is invalid.'),
+            'repeat.condition.required' => __(
+                'The repeat condition field is required.'
+            ),
+            'repeat.response.required' => __(
+                'The repeat response field is required.'
+            ),
+            'repeat.response.status.required' => __(
+                'The repeat response status field is required.'
+            ),
+            'repeat.response.status.in' => __(
+                'The repeat response status field is invalid.'
+            ),
         ];
     }
 }
