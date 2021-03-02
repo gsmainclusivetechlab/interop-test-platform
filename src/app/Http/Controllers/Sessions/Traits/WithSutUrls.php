@@ -39,7 +39,7 @@ trait WithSutUrls
 
         return [
             'isGroup' => !$groups->isEmpty(),
-            'items' => $items,
+            'items' => $items->values(),
         ];
     }
 
@@ -66,12 +66,12 @@ trait WithSutUrls
                     ->get(),
                 $sessionComponents,
                 $targetIds
-            ),
+            )->values(),
             'session' => $this->getComponentsMap(
                 $sessionComponents,
                 $urls,
                 $targetIds
-            ),
+            )->values(),
         ];
     }
 
@@ -93,15 +93,13 @@ trait WithSutUrls
             );
 
             return [
-                $group->id => [
-                    'id' => $group->id,
-                    'title' => $group->name . ' URLs:',
-                    'items' => $this->getComponentsMap(
-                        $sessionComponents,
-                        $urls,
-                        $targetIds
-                    ),
-                ],
+                'id' => $group->id,
+                'title' => $group->name . ' URLs:',
+                'items' => $this->getComponentsMap(
+                    $sessionComponents,
+                    $urls,
+                    $targetIds
+                )->values(),
             ];
         });
     }

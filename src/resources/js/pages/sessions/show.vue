@@ -1,5 +1,86 @@
 <template>
     <layout :session="session" :useCases="useCases">
+        <div v-if="sutUrls.items && sutUrls.items.length" class="card">
+            <div class="card-header">
+                <h2 class="card-title"><b>Session SUTs URLs</b></h2>
+            </div>
+            <div v-if="sutUrls.isGroup" class="card-body">
+                <div v-for="group in sutUrls.items" :key="group.id">
+                    <h3>
+                        {{
+                            `${
+                                $page.props.auth.user.groups.find(
+                                    (el) => el.id === group.id
+                                ).name
+                            }`
+                        }}
+                    </h3>
+                    <div
+                        class="mb-3"
+                        v-for="(component, i) in group.items"
+                        :key="component.title"
+                    >
+                        <h4>
+                            {{ component.title }}
+                        </h4>
+                        <div
+                            class="mb-3"
+                            v-for="(connection, j) in component.items"
+                            :key="connection.label"
+                        >
+                            <label>
+                                <i>{{ connection.label }}</i>
+                            </label>
+                            <div class="input-group">
+                                <input
+                                    :id="`#testing-${group.id}-${i}-${j}`"
+                                    type="text"
+                                    :value="connection.url"
+                                    class="form-control"
+                                    readonly
+                                />
+                                <clipboard-copy-btn
+                                    :target="`#testing-${i}-${j}`"
+                                    title="Copy"
+                                ></clipboard-copy-btn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="card-body">
+                <div
+                    v-for="(component, i) in sutUrls.items"
+                    :key="component.title"
+                >
+                    <h4>
+                        {{ component.title }}
+                    </h4>
+                    <div
+                        class="mb-3"
+                        v-for="(connection, j) in component.items"
+                        :key="connection.label"
+                    >
+                        <label>
+                            <i>{{ connection.label }}</i>
+                        </label>
+                        <div class="input-group">
+                            <input
+                                :id="`#testing-${i}-${j}`"
+                                type="text"
+                                :value="connection.url"
+                                class="form-control"
+                                readonly
+                            />
+                            <clipboard-copy-btn
+                                :target="`#testing-${i}-${j}`"
+                                title="Copy"
+                            ></clipboard-copy-btn>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card" v-if="isCompliance">
             <div class="card-header">
                 <h2 class="card-title">Session info</h2>
@@ -465,6 +546,10 @@ export default {
         testRuns: {
             type: Object,
             required: true,
+        },
+        sutUrls: {
+            type: Object,
+            required: false,
         },
     },
     data() {

@@ -33,119 +33,78 @@
                         class="form-control d-flex p-0 mb-3"
                     />
                 </div>
-
                 <div v-if="suts.data && suts.data.length" class="card-body">
                     <template
                         v-if="form.groupsDefault && form.groupsDefault.length"
                     >
-                        <template v-for="(group, k) in form.groupsDefault">
-                            <h3 class="text-secondary mb-3" :key="`name-${k}`">
-                                {{ group.name }} URLs:
+                        <div v-for="group in sutUrls.groups" :key="group.title">
+                            <h3>
+                                {{ `${group.title}` }}
                             </h3>
                             <div
                                 class="mb-3"
-                                v-for="(sut, i) in suts.data"
-                                :key="`sut-${i}-${k}`"
+                                v-for="(component, i) in group.items"
+                                :key="component.title"
                             >
-                                <h3>{{ sut.name }}</h3>
-
-                                <template
-                                    v-for="(connection, j) in sut.connections"
-                                >
-                                    <div
-                                        class="mb-3"
-                                        :key="`connection-${j}`"
-                                        v-if="
-                                            Array.from(
-                                                new Set(
-                                                    testSteps.data.map(
-                                                        (el) => el.target.id
-                                                    )
-                                                )
-                                            ).includes(connection.id)
-                                        "
-                                    >
-                                        <label class="form-label">
-                                            {{ connection.name }}
-                                        </label>
-                                        <div class="input-group">
-                                            <input
-                                                :id="`testing-${connection.id}`"
-                                                type="text"
-                                                :value="
-                                                    getRoute(
-                                                        session.sut[sut.id]
-                                                            .use_encryption ===
-                                                            '1',
-                                                        [
-                                                            sut.slug,
-                                                            connection.slug,
-                                                            group.id,
-                                                        ],
-                                                        true
-                                                    )
-                                                "
-                                                class="form-control"
-                                                readonly
-                                            />
-                                            <clipboard-copy-btn
-                                                :target="`#testing-${connection.id}`"
-                                                title="Copy"
-                                            ></clipboard-copy-btn>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                        </template>
-                    </template>
-                    <template v-else>
-                        <template v-for="(sut, i) in suts.data">
-                            <h3 :key="`session-sut-${i}`">{{ sut.name }}</h3>
-                            <template
-                                v-for="(connection, j) in sut.connections"
-                            >
+                                <h4>
+                                    {{ component.title }}
+                                </h4>
                                 <div
                                     class="mb-3"
-                                    :key="`session-connection-${i}-${j}`"
-                                    v-if="
-                                        Array.from(
-                                            new Set(
-                                                testSteps.data.map(
-                                                    (el) => el.target.id
-                                                )
-                                            )
-                                        ).includes(connection.id)
-                                    "
+                                    v-for="(connection, j) in component.items"
+                                    :key="connection.label"
                                 >
-                                    <label class="form-label">
-                                        {{ connection.name }}
+                                    <label>
+                                        <i>{{ connection.label }}</i>
                                     </label>
                                     <div class="input-group">
                                         <input
-                                            :id="`testing-${connection.id}`"
+                                            :id="`#testing-${group.id}-${i}-${j}`"
                                             type="text"
-                                            :value="
-                                                getRoute(
-                                                    session.sut[sut.id]
-                                                        .use_encryption === '1',
-                                                    [
-                                                        sut.slug,
-                                                        connection.slug,
-                                                        session.info.uuid,
-                                                    ]
-                                                )
-                                            "
+                                            :value="connection.url"
                                             class="form-control"
                                             readonly
                                         />
                                         <clipboard-copy-btn
-                                            :target="`#testing-${connection.id}`"
+                                            :target="`#testing-${i}-${j}`"
                                             title="Copy"
                                         ></clipboard-copy-btn>
                                     </div>
                                 </div>
-                            </template>
-                        </template>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            v-for="(component, i) in sutUrls.session"
+                            :key="component.title"
+                        >
+                            <h4>
+                                {{ component.title }}
+                            </h4>
+                            <div
+                                class="mb-3"
+                                v-for="(connection, j) in component.items"
+                                :key="connection.label"
+                            >
+                                <label>
+                                    <i>{{ connection.label }}</i>
+                                </label>
+                                <div class="input-group">
+                                    <input
+                                        :id="`#testing-${i}-${j}`"
+                                        type="text"
+                                        :value="connection.url"
+                                        class="form-control"
+                                        readonly
+                                    />
+                                    <clipboard-copy-btn
+                                        :target="`#testing-${i}-${j}`"
+                                        title="Copy"
+                                    ></clipboard-copy-btn>
+                                </div>
+                            </div>
+                        </div>
                     </template>
                 </div>
                 <div v-if="hasGroupEnvironments" class="card-body">
@@ -288,22 +247,14 @@ export default {
             type: Object,
             required: true,
         },
+        sutUrls: {
+            type: Object,
+            required: false,
+        },
     },
     mixins: [mixinVSelect, mixinEnvs],
     data() {
-        const ziggyConf = this.route().ziggy;
-
         return {
-            ziggyConf: {
-                http: {
-                    ...ziggyConf,
-                    baseUrl: this.$page.props.app.testing_url_http,
-                },
-                https: {
-                    ...ziggyConf,
-                    baseUrl: this.$page.props.app.testing_url_https,
-                },
-            },
             sending: false,
             groupsEnvs: [],
             groupsEnvsList: [],
@@ -357,23 +308,6 @@ export default {
                     },
                 }
             );
-        },
-        getRoute(useEncryption, data, isForGroup = false) {
-            const group = isForGroup ? '-group' : '';
-
-            return useEncryption
-                ? this.route(
-                      `testing${group}.sut`,
-                      data,
-                      undefined,
-                      this.ziggyConf.https
-                  )
-                : this.route(
-                      `testing-insecure${group}.sut`,
-                      data,
-                      undefined,
-                      this.ziggyConf.http
-                  );
         },
     },
 };
