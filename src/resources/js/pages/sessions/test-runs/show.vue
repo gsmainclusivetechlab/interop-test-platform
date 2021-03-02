@@ -4,6 +4,7 @@
         :testCase="testCase"
         :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
+        :sutUrls="sutUrls"
     >
         <div class="card">
             <div class="card-header">
@@ -968,6 +969,10 @@ export default {
         isAvailableRun: {
             type: Boolean,
             required: true,
+        },
+        sutUrls: {
+            type: Object,
+            required: false,
         },
     },
     data() {
