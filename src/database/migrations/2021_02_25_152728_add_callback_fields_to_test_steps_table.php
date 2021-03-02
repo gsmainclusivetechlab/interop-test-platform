@@ -14,13 +14,16 @@ class AddCallbackFieldsToTestStepsTable extends Migration
     public function up()
     {
         Schema::table('test_steps', function (Blueprint $table) {
-            $table->string('callback_origin_path')
+            $table
+                ->string('callback_origin_path')
                 ->nullable()
                 ->after('mtls');
-            $table->string('callback_origin_method')
+            $table
+                ->string('callback_origin_method')
                 ->nullable()
                 ->after('callback_origin_path');
-            $table->string('callback_name')
+            $table
+                ->string('callback_name')
                 ->nullable()
                 ->after('callback_origin_method');
         });

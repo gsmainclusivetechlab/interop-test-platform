@@ -205,8 +205,7 @@ class TestCaseExport implements Exportable
             'name' => $testStep->callback_name,
         ];
         $result = $this->arrayFilter($result);
-        if (3 != count($result))
-        {
+        if (3 != count($result)) {
             return null;
         }
 

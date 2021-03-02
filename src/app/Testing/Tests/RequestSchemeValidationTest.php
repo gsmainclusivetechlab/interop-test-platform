@@ -7,7 +7,7 @@ use App\Testing\TestCase;
 use League\OpenAPIValidation\PSR7\{
     CallbackAddress,
     OperationAddress,
-    SpecFinder,
+    SpecFinder
 };
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use League\OpenAPIValidation\PSR7\Validators\BodyValidator\BodyValidator;
@@ -17,7 +17,7 @@ use League\OpenAPIValidation\PSR7\Validators\{
     PathValidator,
     QueryArgumentsValidator,
     SecurityValidator,
-    ValidatorChain,
+    ValidatorChain
 };
 use PHPUnit\Framework\AssertionFailedError;
 use Throwable;
@@ -80,7 +80,7 @@ class RequestSchemeValidationTest extends TestCase
             new CookiesValidator($this->specFinder),
             new BodyValidator($this->specFinder),
             new QueryArgumentsValidator($this->specFinder),
-            new SecurityValidator($this->specFinder)
+            new SecurityValidator($this->specFinder),
         ];
         if (!$this->isCallback) {
             $validators[] = new PathValidator($this->specFinder);

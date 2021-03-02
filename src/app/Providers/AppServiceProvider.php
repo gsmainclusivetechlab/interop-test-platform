@@ -71,14 +71,10 @@ class AppServiceProvider extends ServiceProvider
 
         Validator::extend(
             'str_equals',
-            function (
-                $attribute,
-                $value,
-                $parameters,
-                $validator
-            ) {
+            function ($attribute, $value, $parameters, $validator) {
                 return $value === implode(',', $parameters);
             },
-            'The :attribute value is invalid.');
+            'The :attribute value is invalid.'
+        );
     }
 }

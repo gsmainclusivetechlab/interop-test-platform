@@ -10,7 +10,7 @@ use League\OpenAPIValidation\PSR7\{
     CallbackResponseAddress,
     OperationAddress,
     ResponseAddress,
-    SpecFinder,
+    SpecFinder
 };
 use League\OpenAPIValidation\PSR7\Exception\NoPath;
 use PHPUnit\Framework\TestSuite;
@@ -27,8 +27,7 @@ class TestSpecLoader
         $testSuite = new TestSuite();
 
         $testStep = $testResult->testStep;
-        $apiSpecCollection = $testStep->apiSpec()
-            ->pluck('openapi', 'name');
+        $apiSpecCollection = $testStep->apiSpec()->pluck('openapi', 'name');
         if ($apiSpec = $apiSpecCollection->first()) {
             $specFinder = new SpecFinder($apiSpec);
             $isCallback = $testStep->isCallback();
@@ -37,14 +36,14 @@ class TestSpecLoader
                 new RequestSchemeValidationTest(
                     $testResult->request,
                     $apiSpecCollection->keys()->first(),
-                    $isCallback?
-                        new CallbackAddress(
+                    $isCallback
+                        ? new CallbackAddress(
                             $testStep->callback_origin_path,
                             strtolower($testStep->callback_origin_method),
                             $testStep->callback_name,
                             strtolower($testStep->method)
-                        ) :
-                        new OperationAddress(
+                        )
+                        : new OperationAddress(
                             $testStep->path,
                             strtolower($testStep->method)
                         ),
@@ -56,15 +55,15 @@ class TestSpecLoader
                 new ResponseSchemeValidationTest(
                     $testResult->response,
                     $apiSpecCollection->keys()->first(),
-                    $isCallback ?
-                        new CallbackResponseAddress(
+                    $isCallback
+                        ? new CallbackResponseAddress(
                             $testStep->callback_origin_path,
                             strtolower($testStep->callback_origin_method),
                             $testStep->callback_name,
                             strtolower($testStep->method),
                             $testResult->response->status()
-                        ) :
-                        new ResponseAddress(
+                        )
+                        : new ResponseAddress(
                             $testStep->path,
                             strtolower($testStep->method),
                             $testResult->response->status()
