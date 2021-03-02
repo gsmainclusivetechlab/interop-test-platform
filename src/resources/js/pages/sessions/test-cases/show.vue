@@ -5,6 +5,7 @@
         :testSteps="testSteps"
         :isAvailableRun="isAvailableRun"
         :testRunAttempts="testRunAttempts"
+        :sutUrls="sutUrls"
     >
         <div class="card">
             <div class="empty h-auto" v-if="!testRuns.data.length">
@@ -151,6 +152,10 @@ export default {
         },
         testRunAttempts: {
             type: Number | String,
+            required: false,
+        },
+        sutUrls: {
+            type: Object,
             required: false,
         },
     },

@@ -42,7 +42,7 @@
                             class="mb-3"
                         >
                             <h3>
-                                <strong>Configuration</strong>
+                                <b>Configuration</b>
                             </h3>
                             <div v-if="hasEncrypted" class="mb-3">
                                 <h4>Encrypted connection</h4>
@@ -56,171 +56,99 @@
                                     Download certificates
                                 </a>
                             </div>
-                            <div id="by-groups" v-if="hasGroupUrls">
-                                <template
-                                    v-for="(group, i) in $page.props.auth.user
-                                        .groups"
-                                >
+                            <template
+                                v-if="testCaseUrls && testCaseUrls.length"
+                            >
+                                <h3>
+                                    <b>SUTs URLs</b>
+                                </h3>
+                                <template v-if="sutUrls.isGroup">
                                     <div
-                                        v-if="
-                                            group.default_session_id ===
-                                            session.id
-                                        "
-                                        :key="`group-${i}`"
+                                        v-for="group in testCaseUrls"
+                                        :key="group.id"
                                     >
-                                        <h4 class="text-secondary">
-                                            {{ group.name }} URLs:
-                                        </h4>
-                                        <template
-                                            v-for="(component, j) in session
-                                                .components.data"
-                                        >
-                                            <div
-                                                v-if="
-                                                    Array.from(
-                                                        new Set(
-                                                            testSteps.data.map(
-                                                                (el) =>
-                                                                    el.source.id
-                                                            )
-                                                        )
-                                                    ).includes(component.id)
-                                                "
-                                                class="mb-3"
-                                                :key="`component-${j}`"
-                                            >
-                                                <h4>
-                                                    {{ component.name }}
-                                                </h4>
-                                                <div
-                                                    class="mb-3"
-                                                    v-for="(
-                                                        connection, k
-                                                    ) in component.connections"
-                                                    :key="`connection-${k}`"
-                                                >
-                                                    <template
-                                                        v-if="
-                                                            Array.from(
-                                                                new Set(
-                                                                    testSteps.data.map(
-                                                                        (el) =>
-                                                                            el
-                                                                                .target
-                                                                                .id
-                                                                    )
-                                                                )
-                                                            ).includes(
-                                                                connection.id
-                                                            )
-                                                        "
-                                                        class="mb-3"
-                                                    >
-                                                        <label>
-                                                            {{
-                                                                connection.name
-                                                            }}
-                                                        </label>
-                                                        <div
-                                                            class="input-group"
-                                                        >
-                                                            <input
-                                                                :id="`testing-${group.id}-${component.id}-${connection.id}`"
-                                                                type="text"
-                                                                :value="
-                                                                    getRoute(
-                                                                        component.use_encryption,
-                                                                        [
-                                                                            component.slug,
-                                                                            connection.slug,
-                                                                            group.id,
-                                                                        ],
-                                                                        true
-                                                                    )
-                                                                "
-                                                                class="form-control"
-                                                                readonly
-                                                            />
-                                                            <clipboard-copy-btn
-                                                                :target="`#testing-${group.id}-${component.id}-${connection.id}`"
-                                                                title="Copy"
-                                                            ></clipboard-copy-btn>
-                                                        </div>
-                                                    </template>
-                                                </div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </template>
-                            </div>
-                            <template id="by-session" v-else>
-                                <template
-                                    v-for="(component, i) in session.components
-                                        .data"
-                                >
-                                    <div
-                                        v-if="
-                                            !component.implicit_sut_id &&
-                                            Array.from(
-                                                new Set(
-                                                    testSteps.data.map(
-                                                        (el) => el.source.id
-                                                    )
-                                                )
-                                            ).includes(component.id)
-                                        "
-                                        class="mb-3"
-                                        :key="`component-${i}`"
-                                    >
-                                        <h4>
-                                            {{ component.name }}
-                                        </h4>
-                                        <template
+                                        <h3>
+                                            {{
+                                                `${
+                                                    $page.props.auth.user.groups.find(
+                                                        (el) =>
+                                                            el.id === group.id
+                                                    ).name
+                                                }`
+                                            }}
+                                        </h3>
+                                        <div
                                             v-for="(
-                                                connection, j
-                                            ) in component.connections"
+                                                component, i
+                                            ) in group.items"
+                                            class="mb-3"
+                                            :key="component.title"
                                         >
+                                            <h4>
+                                                {{ component.title }}
+                                            </h4>
                                             <div
-                                                v-if="
-                                                    Array.from(
-                                                        new Set(
-                                                            testSteps.data.map(
-                                                                (el) =>
-                                                                    el.target.id
-                                                            )
-                                                        )
-                                                    ).includes(connection.id)
-                                                "
+                                                v-for="(
+                                                    connection, j
+                                                ) in component.items"
                                                 class="mb-3"
-                                                :key="`connection-${j}`"
+                                                :key="connection.label"
                                             >
                                                 <label>
-                                                    {{ connection.name }}
+                                                    <i>{{
+                                                        connection.label
+                                                    }}</i>
                                                 </label>
                                                 <div class="input-group">
                                                     <input
-                                                        :id="`testing-${component.id}-${connection.id}`"
+                                                        :id="`#testing-${group.id}-${i}-${j}`"
                                                         type="text"
-                                                        :value="
-                                                            getRoute(
-                                                                component.use_encryption,
-                                                                [
-                                                                    component.slug,
-                                                                    connection.slug,
-                                                                    session.uuid,
-                                                                ]
-                                                            )
-                                                        "
+                                                        :value="connection.url"
                                                         class="form-control"
                                                         readonly
                                                     />
                                                     <clipboard-copy-btn
-                                                        :target="`#testing-${component.id}-${connection.id}`"
+                                                        :target="`#testing-${i}-${j}`"
                                                         title="Copy"
                                                     ></clipboard-copy-btn>
                                                 </div>
                                             </div>
-                                        </template>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <div
+                                        v-for="(component, i) in testCaseUrls"
+                                        class="mb-3"
+                                        :key="component.title"
+                                    >
+                                        <h4>
+                                            {{ component.title }}
+                                        </h4>
+                                        <div
+                                            v-for="(
+                                                connection, j
+                                            ) in component.items"
+                                            class="mb-3"
+                                            :key="connection.label"
+                                        >
+                                            <label>
+                                                <i>{{ connection.label }}</i>
+                                            </label>
+                                            <div class="input-group">
+                                                <input
+                                                    :id="`#testing-${i}-${j}`"
+                                                    type="text"
+                                                    :value="connection.url"
+                                                    class="form-control"
+                                                    readonly
+                                                />
+                                                <clipboard-copy-btn
+                                                    :target="`#testing-${i}-${j}`"
+                                                    title="Copy"
+                                                ></clipboard-copy-btn>
+                                            </div>
+                                        </div>
                                     </div>
                                 </template>
                             </template>
@@ -372,51 +300,56 @@ export default {
             type: Number | String,
             required: false,
         },
+        sutUrls: {
+            type: Object,
+            required: false,
+        },
     },
     data() {
-        const ziggyConf = this.route().ziggy;
-
         return {
-            ziggyConf: {
-                http: {
-                    ...ziggyConf,
-                    baseUrl: this.$page.props.app.testing_url_http,
-                },
-                https: {
-                    ...ziggyConf,
-                    baseUrl: this.$page.props.app.testing_url_https,
-                },
-            },
+            testCaseUrls: [],
             hasEncrypted:
                 this.session.components.data?.filter(
                     (component) => component.use_encryption
                 )?.length > 0,
-            hasGroupUrls:
-                this.$page.props.auth.user.groups &&
-                this.$page.props.auth.user.groups.length > 0 &&
-                this.$page.props.auth.user.groups.some(
-                    (el) => el.default_session_id === this.session.id
-                ),
         };
     },
-    methods: {
-        getRoute(useEncryption, data, isForGroup = false) {
-            const group = isForGroup ? '-group' : '';
 
-            return useEncryption
-                ? this.route(
-                      `testing${group}.sut`,
-                      data,
-                      undefined,
-                      this.ziggyConf.https
-                  )
-                : this.route(
-                      `testing-insecure${group}.sut`,
-                      data,
-                      undefined,
-                      this.ziggyConf.http
-                  );
-        },
+    mounted() {
+        if (this.sutUrls.isGroup) {
+            this.testCaseUrls = this.sutUrls.items.map((group) => ({
+                items: group.items
+                    .filter((component) =>
+                        this.testSteps.data.some(
+                            (step) => step.source.name === component.title
+                        )
+                    )
+                    .map((component) => ({
+                        items: component.items.filter((connection) =>
+                            this.testSteps.data.some((step) =>
+                                connection.label.match(`-> ${step.target.name}`)
+                            )
+                        ),
+                        title: component.title,
+                    })),
+                id: group.id,
+            }));
+        } else {
+            this.testCaseUrls = this.sutUrls.items
+                .filter((component) =>
+                    this.testSteps.data.some(
+                        (step) => step.source.name === component.title
+                    )
+                )
+                .map((component) => ({
+                    items: component.items.filter((connection) =>
+                        this.testSteps.data.some((step) =>
+                            connection.label.match(`-> ${step.target.name}`)
+                        )
+                    ),
+                    title: component.title,
+                }));
+        }
     },
 };
 </script>
