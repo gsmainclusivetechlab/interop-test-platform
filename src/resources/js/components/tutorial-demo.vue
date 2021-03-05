@@ -69,21 +69,20 @@ export default {
 
             this.$refs.img.style.setProperty('--img-height-ratio', ratio);
         },
-        mooveTarget() {
-            const targetPosision = this.demoData[this.currentStep]
-                .targetPosision;
-
+        moveTarget() {
+            const targetPosition = this.demoData[this.currentStep]
+                .targetPosition;
             this.$refs.target.style.setProperty(
                 '--translate-x',
-                targetPosision.x
+                targetPosition.x
             );
             this.$refs.target.style.setProperty(
                 '--translate-y',
-                targetPosision.y
+                targetPosition.y
             );
         },
         updateSlide() {
-            this.mooveTarget();
+            this.moveTarget();
 
             this.slideText = this.demoData[this.currentStep].slideText;
             this.slideSrc = this.demoData[this.currentStep].slideSrc;
