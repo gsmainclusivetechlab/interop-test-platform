@@ -9,28 +9,69 @@
                 </div>
             </div>
         </div>
+        <div class="card" v-if="tutorials">
+            <div class="centered tutorial-cards mb-2 p-4">
+                <section class="d-flex justify-content-around mb-4">
+                    <template v-for="item of tutorials">
+                        <a
+                            class="d-inline-block btn scenario-card"
+                            :href="'#' + item.id"
+                            v-b-toggle.accordion-1
+                        >
+                            <h4
+                                class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
+                            >
+                                <img :src="item.icon" class="icon" />
+                                {{ item.tile.title }}
+                            </h4>
+                            <div class="pl-2 font-weight-normal">
+                                {{ item.tile.comment }}
+                            </div>
+                        </a>
+                    </template>
+                </section>
+            </div>
+            <div role="tablist" class="tutorial-accordion px-4">
+                <template v-for="item of tutorials">
+                    <article class="mb-3 card">
+                        <header
+                            :id="item.id"
+                            class="pl-0 card-header"
+                            role="tab"
+                        >
+                            <button
+                                v-b-toggle.accordion-1
+                                class="btn shadow-none"
+                                type="button"
+                            >
+                                <h3
+                                    class="mb-0 scenario-accordion text-primary"
+                                >
+                                    {{ item.accordion.title }}
+                                </h3>
+                            </button>
+                        </header>
+                        <b-collapse
+                            id="accordion-1"
+                            accordion="tutorial-accordion"
+                            role="tabpanel"
+                        >
+                            <div class="card-body">
+                                <div v-html="item.accordion.htmlContent"></div>
+                                <tutorial-demo
+                                    v-if="item.accordion.tutorialData"
+                                    :demo-data="item.accordion.tutorialData"
+                                />
+                            </div>
+                        </b-collapse>
+                    </article>
+                </template>
+            </div>
+        </div>
+
         <div class="card">
             <div class="centered tutorial-cards mb-2 p-4">
                 <section class="d-flex justify-content-around mb-4">
-                    <a
-                        class="d-inline-block btn scenario-card demo1"
-                        href="#create-session"
-                        v-b-toggle.accordion-1
-                    >
-                        <h4
-                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
-                        >
-                            <img
-                                src="/assets/images/tutorials/Gizmo_RED_Stack.png"
-                                class="icon"
-                            />
-                            {{ $t('panel[0].title') }}
-                        </h4>
-                        <div class="pl-2 font-weight-normal">
-                            {{ $t('panel[0].comment') }}
-                        </div>
-                    </a>
-
                     <a
                         class="d-inline-block btn scenario-card demo2"
                         href="#service-provider"
@@ -130,38 +171,6 @@
             </div>
 
             <div role="tablist" class="tutorial-accordion px-4">
-                <article class="mb-3 card">
-                    <header
-                        id="create-session"
-                        class="pl-0 card-header"
-                        role="tab"
-                    >
-                        <button
-                            v-b-toggle.accordion-1
-                            class="btn shadow-none demo1"
-                            type="button"
-                        >
-                            <h3 class="mb-0 scenario-accordion text-primary">
-                                {{ $t('drop-panel[0].title') }}
-                            </h3>
-                        </button>
-                    </header>
-                    <b-collapse
-                        id="accordion-1"
-                        accordion="tutorial-accordion"
-                        role="tabpanel"
-                    >
-                        <div class="card-body">
-                            <div>
-                                {{ $t('drop-panel[0].comment') }}
-                            </div>
-                            <tutorial-demo
-                                :demo-data="demoDataList.createSession"
-                            />
-                        </div>
-                    </b-collapse>
-                </article>
-
                 <article class="mb-3 card">
                     <header
                         id="service-provider"
@@ -405,6 +414,16 @@ export default {
         Layout,
         TutorialDemo,
     },
+    data() {
+        return {
+            tutorials: null,
+        };
+    },
+    mounted() {
+        axios.get('http://localhost:8080/tutorial_en.json').then((res) => {
+            this.tutorials = res.data;
+        });
+    },
     computed: {
         demoDataList() {
             return {
@@ -412,61 +431,61 @@ export default {
                     {
                         slideSrc: `${createImgPath}dashboard.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 96, y: 5.3 },
+                        targetPosition: { x: 96, y: 5.3 },
                         slideText: this.$t('drop-panel[0].demo-steps[0]'),
                     },
                     {
                         slideSrc: `${createImgPath}select_sut.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 35, y: 33 },
+                        targetPosition: { x: 35, y: 33 },
                         slideText: this.$t('drop-panel[0].demo-steps[1]'),
                     },
                     {
                         slideSrc: `${createImgPath}select_sut_2.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 35, y: 37 },
+                        targetPosition: { x: 35, y: 37 },
                         slideText: this.$t('drop-panel[0].demo-steps[2]'),
                     },
                     {
                         slideSrc: `${createImgPath}select_sut_3.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 66.5, y: 41.3 },
+                        targetPosition: { x: 66.5, y: 41.3 },
                         slideText: this.$t('drop-panel[0].demo-steps[3]'),
                     },
                     {
                         slideSrc: `${createImgPath}session_info.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 53, y: 31 },
+                        targetPosition: { x: 53, y: 31 },
                         slideText: this.$t('drop-panel[0].demo-steps[4]'),
                     },
                     {
                         slideSrc: `${createImgPath}session_info_2.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 53, y: 33 },
+                        targetPosition: { x: 53, y: 33 },
                         slideText: this.$t('drop-panel[0].demo-steps[5]'),
                     },
                     {
                         slideSrc: `${createImgPath}session_info_3.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 53, y: 37 },
+                        targetPosition: { x: 53, y: 37 },
                         slideText: this.$t('drop-panel[0].demo-steps[6]'),
                     },
                     {
                         slideSrc: `${createImgPath}session_info_4.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 76, y: 44.5 },
+                        targetPosition: { x: 76, y: 44.5 },
                         slideText: this.$t('drop-panel[0].demo-steps[7]'),
                     },
                     {
                         slideSrc: `${createImgPath}configure_sut.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 66, y: 39.3 },
+                        targetPosition: { x: 66, y: 39.3 },
                         slideText: this.$t('drop-panel[0].demo-steps[8]'),
                     },
                     {
                         slideSrc: `${createImgPath}session_created.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 0, y: 0 },
+                        targetPosition: { x: 0, y: 0 },
                         slideText: this.$t('drop-panel[0].demo-steps[9]'),
                     },
                 ],
@@ -474,49 +493,49 @@ export default {
                     {
                         slideSrc: `${executeSPImgPath}1-session-page.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 3, y: 18 },
+                        targetPosition: { x: 3, y: 18 },
                         slideText: this.$t('drop-panel[1].demo-steps[0]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}2-session-usecase.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 8, y: 19 },
+                        targetPosition: { x: 8, y: 19 },
                         slideText: this.$t('drop-panel[1].demo-steps[1]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}3-test-runs.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 37, y: 12.5 },
+                        targetPosition: { x: 37, y: 12.5 },
                         slideText: this.$t('drop-panel[1].demo-steps[2]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}4-test-flow.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 23, y: 19.5 },
+                        targetPosition: { x: 23, y: 19.5 },
                         slideText: this.$t('drop-panel[1].demo-steps[3]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}7-postman-1.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 88, y: 9 },
+                        targetPosition: { x: 88, y: 9 },
                         slideText: this.$t('drop-panel[1].demo-steps[4]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}9-test-runs.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 33, y: 20 },
+                        targetPosition: { x: 33, y: 20 },
                         slideText: this.$t('drop-panel[1].demo-steps[5]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}10-test-details-1.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 53, y: 39.5 },
+                        targetPosition: { x: 53, y: 39.5 },
                         slideText: this.$t('drop-panel[1].demo-steps[6]'),
                     },
                     {
                         slideSrc: `${executeSPImgPath}11-test-details-2.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 0, y: 0 },
+                        targetPosition: { x: 0, y: 0 },
                         slideText: this.$t('drop-panel[1].demo-steps[7]'),
                     },
                 ],
@@ -524,55 +543,55 @@ export default {
                     {
                         slideSrc: `${executeMMOImgPath}1-session-page.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 3, y: 22.5 },
+                        targetPosition: { x: 3, y: 22.5 },
                         slideText: this.$t('drop-panel[2].demo-steps[0]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}2-test-usecase.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 8, y: 20.8 },
+                        targetPosition: { x: 8, y: 20.8 },
                         slideText: this.$t('drop-panel[2].demo-steps[1]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}3-test-runs.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 37, y: 12.5 },
+                        targetPosition: { x: 37, y: 12.5 },
                         slideText: this.$t('drop-panel[2].demo-steps[2]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}4-test-flow.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 11, y: 23.2 },
+                        targetPosition: { x: 11, y: 23.2 },
                         slideText: this.$t('drop-panel[2].demo-steps[3]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}4-test-flow.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 96, y: 12.2 },
+                        targetPosition: { x: 96, y: 12.2 },
                         slideText: this.$t('drop-panel[2].demo-steps[4]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}5-run-test.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 28, y: 12.5 },
+                        targetPosition: { x: 28, y: 12.5 },
                         slideText: this.$t('drop-panel[2].demo-steps[5]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}6-test-runs-2.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 32, y: 20 },
+                        targetPosition: { x: 32, y: 20 },
                         slideText: this.$t('drop-panel[2].demo-steps[6]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}7-test-details.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 52, y: 35.5 },
+                        targetPosition: { x: 52, y: 35.5 },
                         slideText: this.$t('drop-panel[2].demo-steps[7]'),
                     },
                     {
                         slideSrc: `${executeMMOImgPath}8-test-details-2.png`,
                         slideRatio: '16/8',
-                        targetPosision: { x: 0, y: 0 },
+                        targetPosition: { x: 0, y: 0 },
                         slideText: this.$t('drop-panel[2].demo-steps[8]'),
                     },
                 ],
