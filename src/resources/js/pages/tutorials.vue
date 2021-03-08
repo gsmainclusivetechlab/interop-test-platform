@@ -110,7 +110,7 @@ export default {
     },
     mounted() {
         const locale = this.$i18n.locale;
-        axios.get(`/tutorial_${locale}.json`).then((res) => {
+        axios.get(`/assets/tutorial/${locale}.json`).then((res) => {
             this.tutorials = res.data;
         });
     },

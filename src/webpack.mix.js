@@ -37,6 +37,7 @@ mix.setPublicPath('public/assets')
     .sass('resources/sass/app.scss', 'css')
     .sourceMaps(!mix.inProduction(), 'source-map')
     .copyDirectory('resources/fonts', 'public/assets/fonts')
+    .copyDirectory('resources/tutorial', 'public/assets/tutorial')
     .copyDirectory('resources/images', 'public/assets/images')
     .copy(
         'node_modules/@tabler/icons/tabler-sprite.svg',
