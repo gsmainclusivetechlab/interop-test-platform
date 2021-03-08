@@ -109,8 +109,9 @@ export default {
         };
     },
     mounted() {
-        axios.get('http://localhost:8080/tutorial_en.json').then((res) => {
-            //this.tutorials = res.data;
+        const locale = this.$i18n.locale;
+        axios.get(`/tutorial_${locale}.json`).then((res) => {
+            this.tutorials = res.data;
         });
     },
 };
