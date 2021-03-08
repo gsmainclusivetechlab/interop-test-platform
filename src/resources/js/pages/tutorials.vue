@@ -73,6 +73,19 @@
                 </template>
             </div>
         </div>
+        <div class="card" v-else>
+            <div class="row justify-content-md-around">
+                <div class="w-100"><br /></div>
+                <div class="col-3 tutorial-cards">
+                    <h4
+                        class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center"
+                    >
+                        {{ $t('page.noTutorials') }}
+                    </h4>
+                </div>
+                <div class="w-100"><br /></div>
+            </div>
+        </div>
     </layout>
 </template>
 
@@ -97,7 +110,7 @@ export default {
     },
     mounted() {
         axios.get('http://localhost:8080/tutorial_en.json').then((res) => {
-            this.tutorials = res.data;
+            //this.tutorials = res.data;
         });
     },
 };
