@@ -10,13 +10,14 @@
             </div>
         </div>
         <div class="card" v-if="tutorials">
-            <div class="centered tutorial-cards mb-2 p-4">
-                <section class="d-flex justify-content-around mb-4">
-                    <template v-for="item of tutorials">
+            <div class="row justify-content-md-around">
+                <div class="w-100"><br /></div>
+                <template v-for="(item, index) of tutorials">
+                    <div class="col-3 tutorial-cards">
                         <a
                             class="d-inline-block btn scenario-card"
                             :href="'#' + item.id"
-                            v-b-toggle.accordion-1
+                            v-b-toggle="'accordion-' + item.id"
                         >
                             <h4
                                 class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
@@ -28,8 +29,9 @@
                                 {{ item.tile.comment }}
                             </div>
                         </a>
-                    </template>
-                </section>
+                    </div>
+                    <div v-if="(index + 1) % 3 === 0" class="w-100"><br /></div>
+                </template>
             </div>
             <div role="tablist" class="tutorial-accordion px-4">
                 <template v-for="item of tutorials">
@@ -40,7 +42,7 @@
                             role="tab"
                         >
                             <button
-                                v-b-toggle.accordion-1
+                                v-b-toggle="'accordion-' + item.id"
                                 class="btn shadow-none"
                                 type="button"
                             >
@@ -52,14 +54,17 @@
                             </button>
                         </header>
                         <b-collapse
-                            id="accordion-1"
+                            :id="'accordion-' + item.id"
                             accordion="tutorial-accordion"
                             role="tabpanel"
                         >
                             <div class="card-body">
                                 <div v-html="item.accordion.htmlContent"></div>
                                 <tutorial-demo
-                                    v-if="item.accordion.tutorialData"
+                                    v-if="
+                                        item.accordion.tutorialData &&
+                                        item.accordion.tutorialData.length > 0
+                                    "
                                     :demo-data="item.accordion.tutorialData"
                                 />
                             </div>
@@ -70,106 +75,6 @@
         </div>
 
         <div class="card">
-            <div class="centered tutorial-cards mb-2 p-4">
-                <section class="d-flex justify-content-around mb-4">
-                    <a
-                        class="d-inline-block btn scenario-card demo2"
-                        href="#service-provider"
-                        v-b-toggle.accordion-2
-                    >
-                        <h4
-                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
-                        >
-                            <img
-                                src="assets/images/tutorials/Gizmo_RED_Press.png"
-                                class="icon"
-                            />
-                            {{ $t('panel[1].title') }}
-                        </h4>
-                        <div class="pl-2 font-weight-normal">
-                            {{ $t('panel[1].comment') }}
-                        </div>
-                    </a>
-
-                    <a
-                        class="d-inline-block btn scenario-card demo3"
-                        href="#mobile-money-operator"
-                        v-b-toggle.accordion-3
-                    >
-                        <h4
-                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
-                        >
-                            <img
-                                src="assets/images/tutorials/Gizmo_RED_Press.png"
-                                class="icon"
-                            />
-                            {{ $t('panel[2].title') }}
-                        </h4>
-                        <div class="pl-2 font-weight-normal">
-                            {{ $t('panel[2].comment') }}
-                        </div>
-                    </a>
-                </section>
-                <section class="d-flex justify-content-around">
-                    <a
-                        class="d-inline-block btn scenario-card"
-                        href="#postman-collections"
-                        v-b-toggle.accordion-4
-                    >
-                        <h4
-                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
-                        >
-                            <img
-                                src="assets/images/tutorials/logo-postman.png"
-                                class="icon"
-                            />
-                            {{ $t('panel[3].title') }}
-                        </h4>
-                        <div class="pl-2 font-weight-normal">
-                            {{ $t('panel[3].comment') }}
-                        </div>
-                    </a>
-
-                    <a
-                        class="d-inline-block btn scenario-card"
-                        href="#mojaloop-info"
-                        v-b-toggle.accordion-5
-                    >
-                        <h4
-                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
-                        >
-                            <img
-                                src="assets/images/tutorials/Gizmo_RED_World.png"
-                                class="icon"
-                            />
-                            {{ $t('panel[4].title') }}
-                        </h4>
-                        <div class="pl-2 font-weight-normal">
-                            {{ $t('panel[4].comment') }}
-                        </div>
-                    </a>
-
-                    <a
-                        class="d-inline-block btn scenario-card"
-                        href="#mobile-money-api-info"
-                        v-b-toggle.accordion-6
-                    >
-                        <h4
-                            class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
-                        >
-                            <img
-                                src="assets/images/tutorials/Gizmo_RED_Mobile_Operator.png"
-                                class="icon"
-                            />
-                            {{ $t('panel[5].title') }}
-                        </h4>
-                        <div class="pl-2 font-weight-normal">
-                            {{ $t('panel[5].comment') }}
-                        </div>
-                    </a>
-                </section>
-            </div>
-
             <div role="tablist" class="tutorial-accordion px-4">
                 <article class="mb-3 card">
                     <header
