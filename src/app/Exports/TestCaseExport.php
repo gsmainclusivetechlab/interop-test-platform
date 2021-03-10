@@ -140,7 +140,7 @@ class TestCaseExport implements Exportable
                     $this->requestOrder
                 ),
                 'response' => $this->withOrder(
-                    json_decode($testStp->getRawOriginal('response'), true),
+                    json_decode($testStep->getRawOriginal('response'), true),
                     $this->responseOrder
                 ),
                 'repeat' => $this->mapRepeat($testStep),
