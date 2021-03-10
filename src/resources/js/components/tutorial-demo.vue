@@ -27,7 +27,7 @@
                 :hidden="!controls.start"
                 @click.prevent="startDemo"
             >
-                {{ $t('buttons.start-demo') }}
+                {{ $t('tutorials.buttons.start-demo') }}
             </button>
         </div>
         <button
@@ -35,7 +35,7 @@
             class="btn btn-outline-primary"
             @click.prevent="resetDemo"
         >
-            {{ $t('buttons.reset-demo') }}
+            {{ $t('tutorials.buttons.reset-demo') }}
         </button>
     </div>
 </template>
@@ -118,4 +118,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/tutorial-demo.json"></i18n>

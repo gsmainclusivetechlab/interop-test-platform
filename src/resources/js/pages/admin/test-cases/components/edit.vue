@@ -88,7 +88,7 @@
                             <span v-if="searchList.versions">
                                 <strong>
                                     {{
-                                        $t('errors.option-not-add', {
+                                        $t('v-select.errors.option-not-add', {
                                             option: searchList.versions,
                                         })
                                     }}
@@ -179,5 +179,4 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/v-select.json"></i18n>
 <i18n src="@locales/pages/admin/test-cases/components/edit.json"></i18n>

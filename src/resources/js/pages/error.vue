@@ -9,7 +9,7 @@
                         </div>
                     </div>
                     <p class="empty-title h3">
-                        {{ $t('page.title') }}
+                        {{ $t('error.page.title') }}
                     </p>
                     <p class="empty-subtitle text-muted">
                         {{ message }}
@@ -20,7 +20,7 @@
                             class="btn btn-primary"
                         >
                             <icon name="arrow-left" />
-                            {{ $t('buttons.home') }}
+                            {{ $t('error.buttons.home') }}
                         </inertia-link>
                     </div>
                 </div>
@@ -36,15 +36,15 @@ export default {
     metaInfo() {
         return {
             title: {
-                400: this.$t('errors.e-400.title'),
-                401: this.$t('errors.e-401.title'),
-                403: this.$t('errors.e-403.title'),
-                404: this.$t('errors.e-404.title'),
-                405: this.$t('errors.e-405.title'),
-                419: this.$t('errors.e-419.title'),
-                429: this.$t('errors.e-429.title'),
-                500: this.$t('errors.e-500.title'),
-                503: this.$t('errors.e-503.title'),
+                400: this.$t('error.errors.e-400.title'),
+                401: this.$t('error.errors.e-401.title'),
+                403: this.$t('error.errors.e-403.title'),
+                404: this.$t('error.errors.e-404.title'),
+                405: this.$t('error.errors.e-405.title'),
+                419: this.$t('error.errors.e-419.title'),
+                429: this.$t('error.errors.e-429.title'),
+                500: this.$t('error.errors.e-500.title'),
+                503: this.$t('error.errors.e-503.title'),
             }[this.status],
         };
     },
@@ -60,18 +60,17 @@ export default {
     computed: {
         message() {
             return {
-                400: this.$t('errors.e-400.comment'),
-                401: this.$t('errors.e-401.comment'),
-                403: this.$t('errors.e-403.comment'),
-                404: this.$t('errors.e-404.comment'),
-                405: this.$t('errors.e-405.comment'),
-                419: this.$t('errors.e-419.comment'),
-                429: this.$t('errors.e-429.comment'),
-                500: this.$t('errors.e-500.comment'),
-                503: this.$t('errors.e-503.comment'),
+                400: this.$t('error.errors.e-400.comment'),
+                401: this.$t('error.errors.e-401.comment'),
+                403: this.$t('error.errors.e-403.comment'),
+                404: this.$t('error.errors.e-404.comment'),
+                405: this.$t('error.errors.e-405.comment'),
+                419: this.$t('error.errors.e-419.comment'),
+                429: this.$t('error.errors.e-429.comment'),
+                500: this.$t('error.errors.e-500.comment'),
+                503: this.$t('error.errors.e-503.comment'),
             }[this.status];
         },
     },
 };
 </script>
-<i18n src="@locales/pages/error.json"></i18n>

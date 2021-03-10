@@ -15,6 +15,7 @@ import {
 } from 'bootstrap-vue';
 import VueI18n from 'vue-i18n';
 import { InertiaProgress } from '@inertiajs/progress';
+import { load } from 'js-yaml';
 
 InertiaProgress.init();
 
@@ -94,6 +95,14 @@ const i18n = new VueI18n({
     silentFallbackWarn: true,
     messages: {},
 });
+
+async function loadLanguage(lang = 'en') {
+    axios
+        .get(`/assets/locales/${lang}.yml`)
+        .then((x) => load(x.data))
+        .then((x) => i18n.setLocaleMessage(lang, x));
+}
+loadLanguage('en');
 
 let app = document.getElementById('app');
 

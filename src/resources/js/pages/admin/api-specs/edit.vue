@@ -33,7 +33,7 @@
                                 >
                                     <p class="mb-1">
                                         <strong>{{
-                                            $t('inputs.errors.file', {
+                                            $t('form-file.inputs.errors.file', {
                                                 fileSrc: form.fileSrc,
                                             })
                                         }}</strong>
@@ -124,6 +124,5 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/components/form-file.json"></i18n>
 <i18n src="@locales/pages/admin/api-spec/import.json"></i18n>
 <i18n src="@locales/pages/admin/api-spec/edit.json"></i18n>

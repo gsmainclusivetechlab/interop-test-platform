@@ -28,6 +28,11 @@ mix.setPublicPath('public/assets')
                         type: 'javascript/auto',
                         loader: '@kazupon/vue-i18n-loader',
                     },
+                    {
+                        test: /\.yml$/,
+                        type: 'json',
+                        use: 'yaml-loader',
+                    },
                 ];
             }
         })()
@@ -39,6 +44,7 @@ mix.setPublicPath('public/assets')
     .copyDirectory('resources/fonts', 'public/assets/fonts')
     .copyDirectory('resources/tutorial', 'public/assets/tutorial')
     .copyDirectory('resources/images', 'public/assets/images')
+    .copyDirectory('resources/locales', 'public/assets/locales')
     .copy(
         'node_modules/@tabler/icons/tabler-sprite.svg',
         'public/assets/images/icons.svg'

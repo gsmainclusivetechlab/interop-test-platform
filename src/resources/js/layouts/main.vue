@@ -9,15 +9,17 @@
                         <img
                             src="/assets/images/logo.png"
                             class="navbar-brand-image h-5 outline-light"
-                            alt="Interoperability Test Platform"
+                            :alt="$t('layout.main.main-nav.title')"
                         />
                     </inertia-link>
                 </div>
 
                 <div class="col d-none d-md-block text-center text-primary">
-                    <h1 class="col-login__title mb-1">Inclusive Tech Lab</h1>
+                    <h1 class="col-login__title mb-1">
+                        {{ $t('layout.main.main-nav.title') }}
+                    </h1>
                     <h2 class="col-login__subtitle mb-0">
-                        Interoperability Test Platform
+                        {{ $t('layout.main.main-nav.subtitle') }}
                     </h2>
                 </div>
 
@@ -71,7 +73,7 @@
                                     :href="route('admin.users.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.users') }}
+                                    {{ $t('layout.main.menu.users') }}
                                 </inertia-link>
                             </li>
                             <li v-if="$page.props.auth.user.can.groups.viewAny">
@@ -79,7 +81,7 @@
                                     :href="route('admin.groups.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.groups') }}
+                                    {{ $t('layout.main.menu.groups') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -91,7 +93,7 @@
                                     :href="route('admin.sessions.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.sessions') }}
+                                    {{ $t('layout.main.menu.sessions') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -105,7 +107,7 @@
                                     "
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.cert-sessions') }}
+                                    {{ $t('layout.main.menu.cert-sessions') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -117,7 +119,7 @@
                                     :href="route('admin.api-specs.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.api-specs') }}
+                                    {{ $t('layout.main.menu.api-specs') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -129,7 +131,7 @@
                                     :href="route('admin.components.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.components') }}
+                                    {{ $t('layout.main.menu.components') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -141,7 +143,7 @@
                                     :href="route('admin.use-cases.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.use-cases') }}
+                                    {{ $t('layout.main.menu.use-cases') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -153,7 +155,7 @@
                                     :href="route('admin.test-cases.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.test-cases') }}
+                                    {{ $t('layout.main.menu.test-cases') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -166,7 +168,7 @@
                                     :href="route('admin.message-log')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.message-log') }}
+                                    {{ $t('layout.main.menu.message-log') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -179,7 +181,11 @@
                                     :href="route('admin.questionnaire.import')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.import-question-def') }}
+                                    {{
+                                        $t(
+                                            'layout.main.menu.import-question-def'
+                                        )
+                                    }}
                                 </inertia-link>
                             </li>
                             <li
@@ -192,7 +198,7 @@
                                     :href="route('admin.implicit-suts.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('menu.implicit-sut') }}
+                                    {{ $t('layout.main.menu.implicit-sut') }}
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -225,7 +231,7 @@
                                     :href="route('settings.profile')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('user-menu.settings') }}
+                                    {{ $t('layout.main.user-menu.settings') }}
                                 </inertia-link>
                             </li>
                             <b-dropdown-divider></b-dropdown-divider>
@@ -236,7 +242,7 @@
                                     class="text-reset dropdown-item"
                                     as="button"
                                 >
-                                    {{ $t('user-menu.logout') }}
+                                    {{ $t('layout.main.user-menu.logout') }}
                                 </inertia-link>
                             </li>
                         </b-nav-item-dropdown>
@@ -263,7 +269,7 @@
                                     <icon name="activity" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('main-nav.dashboard') }}
+                                    {{ $t('layout.main.main-nav.dashboard') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -283,7 +289,7 @@
                                     <icon name="box" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('main-nav.sessions') }}
+                                    {{ $t('layout.main.main-nav.sessions') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -303,7 +309,7 @@
                                     <icon name="users" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('main-nav.groups') }}
+                                    {{ $t('layout.main.main-nav.groups') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -323,7 +329,7 @@
                                     <icon name="help" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('main-nav.tutorials') }}
+                                    {{ $t('layout.main.main-nav.tutorials') }}
                                 </span>
                             </inertia-link>
                         </li>
@@ -339,13 +345,13 @@
                                     <icon name="book" />
                                 </span>
                                 <span class="nav-link-title">
-                                    {{ $t('main-nav.doc') }}
+                                    {{ $t('layout.main.main-nav.doc') }}
                                 </span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a
-                                href="https://www.gsma.com/lab"
+                                :href="$t('layout.main.main-nav.external-link')"
                                 class="nav-link"
                                 target="_blank"
                             >
@@ -355,7 +361,7 @@
                                     <icon name="link" />
                                 </span>
                                 <span class="nav-link-title">{{
-                                    $t('main-nav.lab')
+                                    $t('layout.main.main-nav.external')
                                 }}</span>
                             </a>
                         </li>
@@ -367,7 +373,7 @@
                         class="btn btn-outline-primary"
                     >
                         <icon name="plus" />
-                        {{ $t('buttons.new-session') }}
+                        {{ $t('layout.main.buttons.new-session') }}
                     </inertia-link>
                 </div>
             </b-collapse>
@@ -386,7 +392,7 @@
                         <ul class="list-inline list-inline-dots mb-0">
                             <li class="list-inline-item">
                                 <a
-                                    href="https://www.gsma.com/aboutus/legal"
+                                    :href="$t('layout.main.footer.link')"
                                     class="link-secondary"
                                     target="_blank"
                                 >
@@ -395,7 +401,9 @@
                             </li>
                             <li class="list-inline-item">
                                 <a
-                                    href="https://www.gsma.com/aboutus/legal/cookie-policy"
+                                    :href="
+                                        $t('layout.main.footer.cookies-link')
+                                    "
                                     class="link-secondary"
                                     target="_blank"
                                 >
@@ -407,11 +415,11 @@
                     <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                         {{ `Copyright © ${new Date().getFullYear()}` }}
                         <a
-                            href="https://www.gsma.com/"
+                            :href="$t('layout.main.footer.copyright-link')"
                             class="link-secondary"
                             target="_blank"
                         >
-                            GSMA </a
+                            {{ $t('layout.main.footer.copyright-name') }} </a
                         >. All rights reserved.
                     </div>
                 </div>
@@ -431,5 +439,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/special-locales.json"></i18n>
-<i18n src="@locales/layout/main.json"></i18n>

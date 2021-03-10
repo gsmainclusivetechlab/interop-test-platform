@@ -31,7 +31,11 @@
                                                 ) && status === undefined,
                                         }"
                                     >
-                                        {{ $t('tabs.all') }}
+                                        {{
+                                            $t(
+                                                'layout.compliance-sessions.tabs.all'
+                                            )
+                                        }}
                                     </inertia-link>
                                 </li>
                                 <li class="nav-item">
@@ -51,7 +55,11 @@
                                                 status === 'in_verification',
                                         }"
                                     >
-                                        {{ $t('tabs.in-verification') }}
+                                        {{
+                                            $t(
+                                                'layout.compliance-sessions.tabs.in-verification'
+                                            )
+                                        }}
                                     </inertia-link>
                                 </li>
                             </ul>
@@ -90,7 +98,7 @@ export default {
             return (
                 this.breadcrumbs ?? [
                     {
-                        name: this.$t('page.title'),
+                        name: this.$t('layout.compliance-sessions.page.title'),
                         url: route('admin.compliance-sessions.index'),
                     },
                     { name: this.title },
@@ -100,5 +108,3 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/special-locales.json"></i18n>
-<i18n src="@locales/layout/compliance-sessions/main.json"></i18n>
