@@ -517,7 +517,7 @@ export default {
                             id: c.id,
                             base_url: c.base_url,
                             use_encryption: c.use_encryption,
-                            certificate_id: c.certificate_id,
+                            certificate_id: c.certificate.serialized?.id,
                             ca_crt: c.certificate.ca_crt,
                             client_crt: c.certificate.client_crt,
                             client_key: c.certificate.client_key,

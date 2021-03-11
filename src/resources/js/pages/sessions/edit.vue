@@ -99,10 +99,7 @@
                                         <input
                                             type="checkbox"
                                             class="form-check-input"
-                                            :checked="
-                                                `${component.use_encryption}` ===
-                                                '1'
-                                            "
+                                            :checked="component.use_encryption"
                                             @change="
                                                 (e) =>
                                                     changeEncryption(
@@ -134,7 +131,7 @@
                                 </div>
                                 <div
                                     v-if="
-                                        `${component.use_encryption}` === '1' &&
+                                        component.use_encryption &&
                                         !component.implicit_sut_id
                                     "
                                 >

@@ -105,8 +105,13 @@
                                 v-model="form.ca_crt"
                                 :placeholder="
                                     implicitSut.certificate
-                                        ? 'CA certificate'
+                                        ? 'CA certificate is uploaded'
                                         : 'Choose file...'
+                                "
+                                :browse-text="
+                                    implicitSut.certificate
+                                        ? 'Change file'
+                                        : 'Browse'
                                 "
                                 :class="{
                                     'is-invalid': $page.props.errors.ca_crt,
@@ -129,8 +134,13 @@
                                 v-model="form.client_crt"
                                 :placeholder="
                                     implicitSut.certificate
-                                        ? 'Client certificate'
+                                        ? 'Client certificate is uploaded'
                                         : 'Choose file...'
+                                "
+                                :browse-text="
+                                    implicitSut.certificate
+                                        ? 'Change file'
+                                        : 'Browse'
                                 "
                                 :class="{
                                     'is-invalid': $page.props.errors.client_crt,
@@ -153,8 +163,13 @@
                                 v-model="form.client_key"
                                 :placeholder="
                                     implicitSut.certificate
-                                        ? 'Client key'
+                                        ? 'Client key is uploaded'
                                         : 'Choose file...'
+                                "
+                                :browse-text="
+                                    implicitSut.certificate
+                                        ? 'Change file'
+                                        : 'Browse'
                                 "
                                 :class="{
                                     'is-invalid': $page.props.errors.client_key,
