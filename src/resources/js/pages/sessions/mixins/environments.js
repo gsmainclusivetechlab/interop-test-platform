@@ -3,6 +3,15 @@ export default {
         mergeEnvs(incomingEnvs, currentEnvs, envsType) {
             switch (envsType) {
                 case 'text': {
+                    Object.keys(currentEnvs).forEach(function (key) {
+                        if (
+                            currentEnvs[key].value === null ||
+                            incomingEnvs[currentEnvs[key].key]
+                        ) {
+                            currentEnvs[key].value =
+                                incomingEnvs[currentEnvs[key].key];
+                        }
+                    });
                     Object.entries(incomingEnvs)
                         .filter(
                             ([key, value]) =>
