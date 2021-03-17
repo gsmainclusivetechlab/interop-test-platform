@@ -6,6 +6,7 @@ use Artisan;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -25,6 +26,8 @@ use Storage;
  * @property string $client_crt_path
  * @property string $client_key_path
  * @property string $passphrase
+ * @property string $certificable_type
+ * @property int $certificable_id
  * @property Carbon $created_at
  *
  * @mixin Eloquent
@@ -108,6 +111,16 @@ class Certificate extends Model
 
     public static function hasGroupCertificates(): bool
     {
+        return static::groupCertificatesQuery()->exists();
+    }
+
+    public static function getGroupCertificates(): Collection
+    {
+        return static::groupCertificatesQuery()->get();
+    }
+
+    protected static function groupCertificatesQuery()
+    {
         return static::whereHasMorph('certificable', Group::class, function (
             Builder $query
         ) {
@@ -118,6 +131,34 @@ class Certificate extends Model
                         ->getAuthIdentifier()
                 );
             });
-        })->exists();
+        });
+    }
+
+    public static function getCertificateAttribures(
+        Request $request,
+        ?self $certificate,
+        string $caCrtKey = 'ca_crt',
+        string $clientCrtKey = 'client_crt',
+        string $clientKeyKey = 'client_key',
+        string $passphrase = null
+    ): array {
+        return [
+            'passphrase' => $passphrase ?? $request->get('passphrase'),
+            'ca_crt_path' => static::storeFile(
+                $request,
+                $caCrtKey,
+                $certificate->ca_crt_path ?? null
+            ),
+            'client_crt_path' => static::storeFile(
+                $request,
+                $clientCrtKey,
+                $certificate->client_crt_path ?? null
+            ),
+            'client_key_path' => static::storeFile(
+                $request,
+                $clientKeyKey,
+                $certificate->client_key_path ?? null
+            ),
+        ];
     }
 }

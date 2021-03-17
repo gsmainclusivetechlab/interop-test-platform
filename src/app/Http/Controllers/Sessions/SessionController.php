@@ -21,7 +21,6 @@ use App\Models\{
     Certificate,
     Component,
     FileEnvironment,
-    Group,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
@@ -335,32 +334,6 @@ class SessionController extends Controller
                     ],
                     $request->validated()
                 );
-                collect($request->file('certificates'))->each(function (
-                    $certificate,
-                    $componentId
-                ) use ($session, $request, &$data) {
-                    $data['components'][$componentId][
-                        'certificate_id'
-                    ] = Certificate::create([
-                        'passphrase' => Arr::get($certificate, 'passphrase'),
-                        'name' => $session->components->firstWhere(
-                            'id',
-                            $componentId
-                        )->name,
-                        'ca_crt_path' => Certificate::storeFile(
-                            $request,
-                            "certificates.{$componentId}.ca_crt"
-                        ),
-                        'client_crt_path' => Certificate::storeFile(
-                            $request,
-                            "certificates.{$componentId}.client_crt"
-                        ),
-                        'client_key_path' => Certificate::storeFile(
-                            $request,
-                            "certificates.{$componentId}.client_key"
-                        ),
-                    ])->id;
-                });
 
                 $session->update(
                     $session->isComplianceSession()
@@ -378,14 +351,39 @@ class SessionController extends Controller
 
                 $session->components->each(function (Component $component) use (
                     $data,
-                    $session
+                    $session,
+                    $request
                 ) {
-                    $session
-                        ->components()
-                        ->updateExistingPivot(
-                            $component->id,
-                            $data['components'][$component->id]
-                        );
+                    $component->pivot->update(
+                        $data['components'][$component->id]
+                    );
+
+                    if (
+                        $component->pivot->use_encryption &&
+                        (!$component->pivot->certificate ||
+                            !$component->pivot->certificate->certificable_id)
+                    ) {
+                        $certificate = $component->pivot
+                            ->certificate()
+                            ->updateOrCreate(
+                                [],
+                                Certificate::getCertificateAttribures(
+                                    $request,
+                                    $component->pivot->certificate,
+                                    "certificates.{$component->id}.ca_crt",
+                                    "certificates.{$component->id}.client_crt",
+                                    "certificates.{$component->id}.client_key",
+                                    Arr::get(
+                                        $request->all(),
+                                        "certificates.{$component->id}.passphrase"
+                                    )
+                                )
+                            );
+
+                        $component->pivot->update([
+                            'certificate_id' => $certificate->id,
+                        ]);
+                    }
                 });
 
                 if (!$session->isComplianceSession()) {

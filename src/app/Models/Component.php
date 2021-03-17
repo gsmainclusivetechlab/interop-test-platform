@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
 use App\Models\Pivots\ComponentConnections;
+use App\Models\Pivots\SessionComponent;
 use App\Models\Pivots\TestCaseComponents;
 use Eloquent;
 use Illuminate\Support\Collection;
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\{
  * @property TestStep[]|Collection $sourceTestSteps
  * @property TestStep[]|Collection $targetTestSteps
  * @property Component[]|Collection $connections
+ *
+ * @property ComponentConnections|TestCaseComponents|SessionComponent $pivot
  */
 class Component extends Model
 {

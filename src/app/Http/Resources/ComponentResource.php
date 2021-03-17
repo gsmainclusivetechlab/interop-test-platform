@@ -34,6 +34,11 @@ class ComponentResource extends JsonResource
                     return $this->pivot->certificate_id;
                 }
             ),
+            'certificate' => CertificateResource::make(
+                $this->whenPivotLoaded('session_components', function () {
+                    return $this->pivot->certificate;
+                })
+            ),
             'implicit_sut_id' => $this->whenPivotLoaded(
                 'session_components',
                 function () {

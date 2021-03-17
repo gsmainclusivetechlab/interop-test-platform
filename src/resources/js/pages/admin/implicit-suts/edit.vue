@@ -254,7 +254,7 @@ export default {
                 ca_crt: null,
                 client_crt: null,
                 client_key: null,
-                passphrase: this.implicitSut.certificate?.passphrase,
+                passphrase: this.implicitSut.certificate?.data.passphrase,
             },
         };
     },
