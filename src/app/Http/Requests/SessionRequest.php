@@ -22,7 +22,8 @@ class SessionRequest extends FormRequest
                 );
                 $filesRequired = Rule::requiredIf(
                     $useEncription &&
-                        !$this->input("components.{$id}.certificate_id")
+                        !$this->input("components.{$id}.certificate_id") &&
+                        !$component->pivot->implicitSut
                 );
 
                 return [
@@ -36,7 +37,8 @@ class SessionRequest extends FormRequest
                     "components.{$id}.certificate_id" => [
                         Rule::requiredIf(
                             $useEncription &&
-                                !$this->hasFile("certificates.{$id}.ca_crt")
+                                !$this->hasFile("certificates.{$id}.ca_crt") &&
+                                !$component->pivot->implicitSut
                         ),
                         'nullable',
                         'exists:certificates,id',

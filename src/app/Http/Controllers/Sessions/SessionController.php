@@ -360,6 +360,7 @@ class SessionController extends Controller
 
                     if (
                         $component->pivot->use_encryption &&
+                        !$component->pivot->implicitSut &&
                         (!$component->pivot->certificate ||
                             !$component->pivot->certificate->certificable_id)
                     ) {
