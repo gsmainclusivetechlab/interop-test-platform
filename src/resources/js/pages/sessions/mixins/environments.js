@@ -5,7 +5,8 @@ export default {
                 case 'text': {
                     Object.keys(currentEnvs).forEach(function (key) {
                         if (
-                            currentEnvs[key].value === null ||
+                            (currentEnvs[key].value === null ||
+                                currentEnvs[key].value === '') &&
                             incomingEnvs[currentEnvs[key].key]
                         ) {
                             currentEnvs[key].value =
