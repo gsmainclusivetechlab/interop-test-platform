@@ -44,7 +44,10 @@ class ImplicitSutController extends Controller
                 $implicitSut
                     ->certificate()
                     ->create(
-                        $this->getCertificateAttribures($request, $implicitSut)
+                        Certificate::getCertificateAttribures(
+                            $request,
+                            $implicitSut->certificate
+                        )
                     );
             }
         });
@@ -75,7 +78,10 @@ class ImplicitSutController extends Controller
                     ->certificate()
                     ->updateOrCreate(
                         [],
-                        $this->getCertificateAttribures($request, $implicitSut)
+                        Certificate::getCertificateAttribures(
+                            $request,
+                            $implicitSut->certificate
+                        )
                     );
             } elseif ($implicitSut->certificate) {
                 $implicitSut->certificate->delete();
@@ -94,32 +100,5 @@ class ImplicitSutController extends Controller
         return redirect()
             ->route('admin.implicit-suts.index')
             ->with('success', __('Implicit SUT rule deleted successfully'));
-    }
-
-    protected function getCertificateAttribures(
-        ImplicitSutRequest $request,
-        ImplicitSut $implicitSut
-    ): array {
-        $certificate = $implicitSut->certificate;
-
-        return [
-            'name' => $implicitSut->slug,
-            'passphrase' => $request->get('passphrase'),
-            'ca_crt_path' => Certificate::storeFile(
-                $request,
-                'ca_crt',
-                $certificate->ca_crt_path ?? null
-            ),
-            'client_crt_path' => Certificate::storeFile(
-                $request,
-                'client_crt',
-                $certificate->client_crt_path ?? null
-            ),
-            'client_key_path' => Certificate::storeFile(
-                $request,
-                'client_key',
-                $certificate->client_key_path ?? null
-            ),
-        ];
     }
 }
