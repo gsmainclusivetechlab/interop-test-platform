@@ -234,7 +234,9 @@
                             </li>
                         </ul>
                         <div class="ml-auto">
-                            <confirm-link
+                            <inertia-link
+                                :data="data"
+                                as="button"
                                 v-if="isAvailableRun"
                                 :href="
                                     route('sessions.test-cases.run', [
@@ -242,14 +244,12 @@
                                         testCase.id,
                                     ])
                                 "
-                                :confirm-title="'Run test case'"
-                                :confirm-text="`Start a new test case run?`"
                                 method="post"
                                 class="btn btn-primary"
                             >
                                 <icon name="bike"></icon>
                                 Run Test Case
-                            </confirm-link>
+                            </inertia-link>
                             <button
                                 class="btn btn-secondary"
                                 v-else
