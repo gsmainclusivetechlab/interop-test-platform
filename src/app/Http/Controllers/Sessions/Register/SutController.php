@@ -8,13 +8,9 @@ use App\Http\Resources\CertificateResource;
 use App\Http\Resources\ComponentResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Controllers\Sessions\Register\Traits\{
-    Queries,
-    QuestionnaireKeys,
-    SessionIds
-};
+use App\Http\Controllers\Sessions\Register\Traits\{Queries, QuestionnaireKeys};
 use App\Http\Requests\SessionSutRequest;
-use App\Models\{Certificate, Component, Group, ImplicitSut};
+use App\Models\{Certificate, Group, ImplicitSut};
 use Arr;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -22,7 +18,7 @@ use Inertia\Response;
 
 class SutController extends Controller
 {
-    use Queries, SessionIds, QuestionnaireKeys;
+    use Queries, QuestionnaireKeys;
 
     public function __construct()
     {
@@ -35,6 +31,7 @@ class SutController extends Controller
     public function index(): Response
     {
         $components = $this->getComponents();
+        $groupCertificates = Certificate::getGroupCertificates();
 
         return Inertia::render('sessions/register/sut', [
             'session' => session('session'),
@@ -46,8 +43,11 @@ class SutController extends Controller
             )
                 ->get()
                 ->groupBy('slug'),
-            'hasGroupCertificates' =>
-                Certificate::hasGroupCertificates() || $this->getSessionIds(),
+            'hasGroupCertificates' => $groupCertificates->isNotEmpty(),
+            'certificateIds' => collect(session('session.sut'))
+                ->whereNotIn('certificate_id', $groupCertificates->pluck('id'))
+                ->pluck('certificate_id')
+                ->filter(),
         ]);
     }
 
@@ -56,34 +56,31 @@ class SutController extends Controller
         $data = collect($request->get('components'))
             ->map(function ($sut, $key) use ($request) {
                 $sut['use_encryption'] = $sut['use_encryption'] ?? false;
+                $certificate = ($id = Arr::get($sut, 'certificate_id'))
+                    ? Certificate::find($id)
+                    : null;
 
                 if (
                     (bool) $sut['use_encryption'] &&
-                    !Arr::get($sut, 'certificate_id')
+                    (!$certificate || !$certificate->certificable_id)
                 ) {
-                    $sut['certificate_id'] = Certificate::create([
-                        'passphrase' => Arr::get($sut, 'passphrase'),
-                        'name' => Component::find($sut['id'])->name,
-                        'ca_crt_path' => Certificate::storeFile(
+                    $sut['certificate_id'] = Certificate::updateOrCreate(
+                        ['id' => $sut['certificate_id']],
+                        Certificate::getCertificateAttribures(
                             $request,
-                            "components.{$key}.ca_crt"
-                        ),
-                        'client_crt_path' => Certificate::storeFile(
-                            $request,
-                            "components.{$key}.client_crt"
-                        ),
-                        'client_key_path' => Certificate::storeFile(
-                            $request,
-                            "components.{$key}.client_key"
-                        ),
-                    ])->id;
+                            $certificate,
+                            "components.{$key}.ca_crt",
+                            "components.{$key}.client_crt",
+                            "components.{$key}.client_key",
+                            Arr::get($sut, 'passphrase')
+                        )
+                    )->id;
                 }
 
                 return Arr::except($sut, [
                     'ca_crt',
                     'client_crt',
                     'client_key',
-                    'passphrase',
                 ]);
             })
             ->all();
@@ -100,10 +97,10 @@ class SutController extends Controller
                 $query->whereRaw('name like ?', "%{$q}%");
             })
                 ->where(function (Builder $query) {
-                    $query
-                        ->whereHasMorph('certificable', Group::class, function (
-                            Builder $query
-                        ) {
+                    $query->whereHasMorph(
+                        'certificable',
+                        Group::class,
+                        function (Builder $query) {
                             $query->whereHas('users', function (
                                 Builder $query
                             ) {
@@ -113,23 +110,8 @@ class SutController extends Controller
                                         ->getAuthIdentifier()
                                 );
                             });
-                        })
-                        ->when($this->getSessionIds(), function (
-                            Builder $query,
-                            $ids
-                        ) {
-                            $query->orWhereIn('id', $ids);
-                        })
-                        ->when(request('session'), function (
-                            Builder $query,
-                            $session
-                        ) {
-                            $query->orWhereHas('sessions', function (
-                                Builder $query
-                            ) use ($session) {
-                                $query->whereKey($session);
-                            });
-                        });
+                        }
+                    );
                 })
                 ->latest()
                 ->paginate()

@@ -233,7 +233,16 @@
                                                 v-model="
                                                     component.certificate.ca_crt
                                                 "
-                                                placeholder="Choose file..."
+                                                :placeholder="
+                                                    component.hasNonGroupCertificate
+                                                        ? 'CA certificate is uploaded'
+                                                        : 'Choose file...'
+                                                "
+                                                :browse-text="
+                                                    component.hasNonGroupCertificate
+                                                        ? 'Change file'
+                                                        : 'Browse'
+                                                "
                                                 :class="{
                                                     'is-invalid':
                                                         $page.props.errors[
@@ -267,7 +276,16 @@
                                                     component.certificate
                                                         .client_crt
                                                 "
-                                                placeholder="Choose file..."
+                                                :placeholder="
+                                                    component.hasNonGroupCertificate
+                                                        ? 'Client certificate is uploaded'
+                                                        : 'Choose file...'
+                                                "
+                                                :browse-text="
+                                                    component.hasNonGroupCertificate
+                                                        ? 'Change file'
+                                                        : 'Browse'
+                                                "
                                                 :class="{
                                                     'is-invalid':
                                                         $page.props.errors[
@@ -301,7 +319,16 @@
                                                     component.certificate
                                                         .client_key
                                                 "
-                                                placeholder="Choose file..."
+                                                :placeholder="
+                                                    component.hasNonGroupCertificate
+                                                        ? 'Client key is uploaded'
+                                                        : 'Choose file...'
+                                                "
+                                                :browse-text="
+                                                    component.hasNonGroupCertificate
+                                                        ? 'Change file'
+                                                        : 'Browse'
+                                                "
                                                 :class="{
                                                     'is-invalid':
                                                         $page.props.errors[
@@ -421,6 +448,10 @@ export default {
             type: Object | Array,
             required: true,
         },
+        certificateIds: {
+            type: Object | Array,
+            required: true,
+        },
     },
     mixins: [mixinVSelect, mixinCrts],
     data() {
@@ -462,6 +493,7 @@ export default {
                 base_url: iSut?.url ?? null,
                 use_encryption: 0,
                 certificate_id: null,
+                hasNonGroupCertificate: false,
                 certificate: {
                     ca_crt: null,
                     client_crt: null,
@@ -487,6 +519,10 @@ export default {
 
                     c.id = sut.id;
                     c.certificate_id = sut.certificate_id;
+                    c.hasNonGroupCertificate = this.certificateIds.includes(
+                        sut.certificate_id
+                    );
+                    c.certificate.passphrase = sut.passphrase;
                     c.base_url = sut.base_url;
                     c.use_encryption = sut.use_encryption;
                     c.version = sut.version;
@@ -517,7 +553,11 @@ export default {
                             id: c.id,
                             base_url: c.base_url,
                             use_encryption: c.use_encryption,
-                            certificate_id: c.certificate_id,
+                            certificate_id:
+                                c.certificate.serialized?.id ??
+                                (c.hasNonGroupCertificate
+                                    ? c.certificate_id
+                                    : null),
                             ca_crt: c.certificate.ca_crt,
                             client_crt: c.certificate.client_crt,
                             client_key: c.certificate.client_key,

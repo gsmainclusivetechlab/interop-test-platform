@@ -6,11 +6,7 @@ use App\Http\Controllers\Sessions\Traits\WithSutUrls;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Enums\{AuditActionEnum, AuditTypeEnum};
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Sessions\Register\Traits\{
-    Queries,
-    QuestionnaireKeys,
-    SessionIds
-};
+use App\Http\Controllers\Sessions\Register\Traits\{Queries, QuestionnaireKeys};
 use App\Http\Resources\{
     ComponentResource,
     GroupEnvironmentResource,
@@ -40,7 +36,7 @@ use Throwable;
 
 class ConfigController extends Controller
 {
-    use Queries, SessionIds, QuestionnaireKeys, WithSutUrls;
+    use Queries, QuestionnaireKeys, WithSutUrls;
 
     public function __construct()
     {
