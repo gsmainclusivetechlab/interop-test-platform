@@ -212,33 +212,42 @@ export default {
                 }
             });
         },
+        normaliseAnswer(answer) {
+            if (Array.isArray(answer)) return answer;
+            return [answer];
+        },
+        getAnswers(attribute) {
+            // check for an answer in the current page
+            if (this.answers[attribute])
+                return this.normaliseAnswer(this.answers[attribute]).map(
+                    (a) => a.id
+                );
+
+            // check for an answer in other sections
+            const { questionnaire } = this.$page.props.session;
+            for (const section of Object.values(questionnaire)) {
+                if (section[attribute])
+                    return this.normaliseAnswer(section[attribute]);
+            }
+            return null;
+        },
+        validateRule(rule, params, answers) {
+            switch (rule) {
+                case 'in':
+                    return answers.every((a) => params.includes(a));
+            }
+            console.warn('Unknown rule type ' + rule);
+            return false;
+        },
         availablePreconditions(question) {
             const preconditions = question.preconditions;
-            let result = false;
-
-            Object.keys(preconditions).forEach((attribute) => {
-                if (this.answers[attribute]) {
-                    const answers = Array.isArray(this.answers[attribute])
-                        ? this.answers[attribute]
-                        : [this.answers[attribute]];
-
-                    Object.keys(preconditions[attribute]).forEach((rule) => {
-                        if (rule === 'in') {
-                            Object.values(answers).forEach((answer) => {
-                                if (
-                                    preconditions[attribute][rule].includes(
-                                        answer.id
-                                    )
-                                ) {
-                                    result = true;
-                                }
-                            });
-                        }
-                    });
-                }
+            return Object.keys(preconditions).every((attribute) => {
+                const answers = this.getAnswers(attribute);
+                const rules = Object.entries(preconditions[attribute]);
+                return rules.every(([rule, params]) =>
+                    this.validateRule(rule, params, answers)
+                );
             });
-
-            return result;
         },
         getValue(question, name) {
             return collect(question.values).where('id', name).first();
