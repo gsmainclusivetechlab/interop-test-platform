@@ -9,16 +9,17 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    <p>{{ sectionDescription }}</p>
+                    <p v-html="sectionDescription"></p>
                     <div
                         class="mb-3"
                         v-for="(question, i) in questions.data"
                         v-show="!hidden[question.name]"
                         :key="i"
                     >
-                        <label class="form-label">{{
-                            question.question
-                        }}</label>
+                        <label
+                            class="form-label"
+                            v-html="question.question"
+                        ></label>
                         <input
                             v-if="question.type === 'text-short'"
                             class="form-control"
