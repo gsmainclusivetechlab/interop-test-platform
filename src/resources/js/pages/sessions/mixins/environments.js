@@ -3,6 +3,16 @@ export default {
         mergeEnvs(incomingEnvs, currentEnvs, envsType) {
             switch (envsType) {
                 case 'text': {
+                    Object.keys(currentEnvs).forEach(function (key) {
+                        if (
+                            (currentEnvs[key].value === null ||
+                                currentEnvs[key].value === '') &&
+                            incomingEnvs[currentEnvs[key].key]
+                        ) {
+                            currentEnvs[key].value =
+                                incomingEnvs[currentEnvs[key].key];
+                        }
+                    });
                     Object.entries(incomingEnvs)
                         .filter(
                             ([key, value]) =>
@@ -17,6 +27,17 @@ export default {
                     break;
                 }
                 case 'file': {
+                    currentEnvs.forEach(function (current) {
+                        if (!current.file_name || !current.value) {
+                            const incoming = incomingEnvs.find(
+                                (incoming) => incoming.name === current.key
+                            );
+                            if (incoming) {
+                                current.value = incoming.id;
+                                current.file_name = incoming.file_name;
+                            }
+                        }
+                    });
                     incomingEnvs
                         .filter(
                             (incoming) =>
