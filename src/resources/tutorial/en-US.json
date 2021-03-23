@@ -8,129 +8,97 @@
         },
         "accordion": {
             "title": "How do I create a new session?",
-            "htmlContent": "<p>To start the interactive demo, simply press the \"Start interactive demo\" below and follow the red circle which will indicate where to click and give you additional information.</p>",
+            "htmlContent": "<p>\n    To start the interactive demo, simply press the \"Start interactive\n    demo\" button below and follow the red circle which will indicate where to click and\n    give you additional information.\n</p>\n",
             "tutorialData": [
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/dashboard.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 96, "y": 5.3 },
+                    "targetPosition": {
+                        "x": 96,
+                        "y": 5.3
+                    },
                     "slideText": "Start by creating a new session"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/select_sut.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 35, "y": 33 },
+                    "targetPosition": {
+                        "x": 35,
+                        "y": 33
+                    },
                     "slideText": "Select the System Under Test"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/select_sut_2.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 35, "y": 37 },
+                    "targetPosition": {
+                        "x": 35,
+                        "y": 37
+                    },
                     "slideText": "Let's select Service Provider, and enter our URL"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/select_sut_3.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 66.5, "y": 41.3 },
+                    "targetPosition": {
+                        "x": 66.5,
+                        "y": 41.3
+                    },
                     "slideText": "Press Next"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/session_info.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 53, "y": 31 },
+                    "targetPosition": {
+                        "x": 53,
+                        "y": 31
+                    },
                     "slideText": "Add a name and select test cases by ticking the corresponding box"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/session_info_2.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 53, "y": 33 },
+                    "targetPosition": {
+                        "x": 53,
+                        "y": 33
+                    },
                     "slideText": "Select test cases by ticking the corresponding box"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/session_info_3.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 53, "y": 37 },
+                    "targetPosition": {
+                        "x": 53,
+                        "y": 37
+                    },
                     "slideText": "Select test cases by ticking the corresponding box"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/session_info_4.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 76, "y": 44.5 },
+                    "targetPosition": {
+                        "x": 76,
+                        "y": 44.5
+                    },
                     "slideText": "Press Next when you are finished"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/configure_sut.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 66, "y": 39.3 },
+                    "targetPosition": {
+                        "x": 66,
+                        "y": 39.3
+                    },
                     "slideText": "Configure your System Under Test using this data and press Confirm"
                 },
                 {
                     "slideSrc": "/assets/images/tutorials/create-session/session_created.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 0, "y": 0 },
-                    "slideText": "Your session has now been created and test cases can be accessed on the left. Click \"Reset Demo\" to start the demo again"
-                }
-            ]
-        }
-    },
-    {
-        "id": "service-provider",
-        "icon": "/assets/images/tutorials/Gizmo_RED_Press.png",
-        "tile": {
-            "title": "How do I execute a session as a Service Provider?",
-            "comment": "Click here to learn more about Postman and links to collections you can use to simulate a Service Provider."
-        },
-        "accordion": {
-            "title": "How do I execute a session as a Service Provider?",
-            "htmlContent": "<p>To start the interactive demo, simply press the \"Start interactive demo\" below and follow the red circle which will indicate where to click and give you additional information.</p><p>You can find a Postman collection ready to use by clicking <a href=\"#postman-collections\" v-b-toggle.accordion-postman-collections>here</a></p>",
-            "tutorialData": [
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/1-session-page.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 3, "y": 18 },
-                    "slideText": "First, select the session you would like to execute"
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/2-session-usecase.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 8, "y": 19 },
-                    "slideText": "On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test"
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/3-test-runs.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 37, "y": 12.5 },
-                    "slideText": "This page details the test case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test"
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/4-test-flow.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 23, "y": 19.5 },
-                    "slideText": "Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs"
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/7-postman-1.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 88, "y": 9 },
-                    "slideText": "Here we are using Postman instead of a real SUT. Collections can be found on the tutorials page. Once all the information is correct, press \"Send\""
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/9-test-runs.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 33, "y": 20 },
-                    "slideText": "You should now see your test run. Click to be taken to the test run page"
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/10-test-details-1.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 53, "y": 39.5 },
-                    "slideText": "On this page are all the details about the test run. Clicking on any particular test will give you more information"
-                },
-                {
-                    "slideSrc": "/assets/images/tutorials/service-provider/11-test-details-2.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 0, "y": 0 },
-                    "slideText": "You can also see the request and response data and test validations for each step of the use case flow. To start the demo again click \"Reset Demo\""
+                    "targetPosition": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "slideText": "Your session has now been created and the test cases can be accessed on the left. Click \"Reset Demo\" to start the demo again"
                 }
             ]
         }
@@ -139,104 +107,125 @@
         "id": "mobile-money-operator",
         "icon": "/assets/images/tutorials/Gizmo_RED_Press.png",
         "tile": {
-            "title": "How do I execute a session as a Mobile Money Operator?",
-            "comment": "Click here to learn more about how you can execute test cases as a Mobile Money Operator."
+            "title": "How do I execute a session as a Mobile Money API Provider?",
+            "comment": "Click here to learn more about how you can execute test cases as a Mobile Money API Provider."
         },
         "accordion": {
-            "title": "How do I execute a session as a Mobile Money Operator?",
-            "htmlContent": "<p>To start the interactive demo, simply press the \"Start interactive demo\" below and follow the red circle which will indicate where to click and give you additional information.</p>",
+            "title": "How do I execute a session as a Mobile Money API Provider?",
+            "htmlContent": "<p>\n  To start the interactive demo, simply press the \"Start interactive\n  demo\" button below and follow the red circle which will indicate where to click and\n  give you additional information.\n</p>\n",
             "tutorialData": [
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/1-session-page.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 3, "y": 22.5 },
+                    "targetPosition": {
+                        "x": 3,
+                        "y": 22.5
+                    },
                     "slideText": "First, select the session you would like to execute"
                 },
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/2-test-usecase.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 8, "y": 20.8 },
-                    "slideText": "On the left panel has all your selected test cases with information on previous runs. Select the one you would like to test"
+                    "targetPosition": {
+                        "x": 8,
+                        "y": 20.8
+                    },
+                    "slideText": "The left panel shows all selected test cases, along with information on previous runs. Select the one you would like to test"
                 },
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/3-test-runs.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 37, "y": 12.5 },
-                    "slideText": "This page details the use case and test runs. You can also view the use case flow and test data example. Click here to view the flow for this test"
+                    "targetPosition": {
+                        "x": 37,
+                        "y": 12.5
+                    },
+                    "slideText": "This page details the use case and displays test runs. You can also view the use case flow and example test data. Click here to view the flow for this test."
                 },
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/4-test-flow.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 11, "y": 23.2 },
-                    "slideText": "Configuration settings are shown here. Make sure your system is properly set-up to send and receive messages from these URLs"
+                    "targetPosition": {
+                        "x": 11,
+                        "y": 23.2
+                    },
+                    "slideText": "Configuration settings are shown here. Make sure your system is properly set-up to send requests using these URLs"
                 },
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/4-test-flow.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 96, "y": 12.2 },
-                    "slideText": "In this test case we can see the Service Provider performs the first step. Click Run Test Case to start the test run"
-                },
-                {
-                    "slideSrc": "assets/images/tutorials/mobile-money-operator/5-run-test.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 28, "y": 12.5 },
-                    "slideText": "We should now be able to see the test run by returning to the test run page"
-                },
-                {
-                    "slideSrc": "assets/images/tutorials/mobile-money-operator/6-test-runs-2.png",
-                    "slideRatio": "16/8",
-                    "targetPosition": { "x": 32, "y": 20 },
-                    "slideText": "Click the test run to see more details"
+                    "targetPosition": {
+                        "x": 96,
+                        "y": 12.2
+                    },
+                    "slideText": "In this test case we can see the API client performs the first request. Click \"Run Test Case\" to start the test run"
                 },
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/7-test-details.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 52, "y": 35.5 },
+                    "targetPosition": {
+                        "x": 52,
+                        "y": 35.5
+                    },
                     "slideText": "Here we can view all the details about the test run for each individual step. Clicking on a performed test will bring up the expected and actual results"
                 },
                 {
                     "slideSrc": "assets/images/tutorials/mobile-money-operator/8-test-details-2.png",
                     "slideRatio": "16/8",
-                    "targetPosition": { "x": 0, "y": 0 },
+                    "targetPosition": {
+                        "x": 0,
+                        "y": 0
+                    },
                     "slideText": "You can also see the request and response data and validation for each step of the use case flow. To start the demo again press \"Reset Demo\""
                 }
             ]
         }
     },
     {
-        "id": "postman-collections",
-        "icon": "/assets/images/tutorials/logo-postman.png",
-        "tile": {
-            "title": "Postman Collections",
-            "comment": "Click here to be taken to a list of Postman collections you can use on the test platform."
-        },
-        "accordion": {
-            "title": "Postman Collections",
-            "htmlContent": "<p>Below is an updated list of Postman Collections you can use in the test platform:</p><ul class=\"mb-0\"><li><a href=\"https://explore.postman.com/api/5380/interoperability-test-platform---service-provider-simulator\" target=\"_blank\" class=\"ml-1\"> Service Provider Simulator</a></li></ul>"
-        }
-    },
-    {
-        "id": "mojaloop-info",
-        "icon": "/assets/images/tutorials/Gizmo_RED_World.png",
-        "tile": {
-            "title": "Learn more about Mojaloop",
-            "comment": "Click here to learn more about Mojaloop with links to documentations and specifications"
-        },
-        "accordion": {
-            "title": "Learn more about Mojaloop",
-            "htmlContent": "<p>To learn more about Mojaloop, you can follow the links below:</p><ul class=\"mb-0\"><li><a href=\"https://mojaloop.io/documentation/\" target=\"_blank\" class=\"ml-1\">Mojaloop documentation</a></li><li><a href=\"https://mojaloop.io/mojaloop-specification/\" target=\"_blank\" class=\"ml-1\">Mojaloop specification</a></li></ul>"
-        }
-    },
-    {
         "id": "mobile-money-api-info",
         "icon": "/assets/images/tutorials/Gizmo_RED_Mobile_Operator.png",
         "tile": {
-            "title": "Learn more about Mobile Money API",
+            "title": "Learn more about the GSMA Mobile Money API",
             "comment": "Click here to learn more about the Mobile Money API with links to documentations and specifications"
         },
         "accordion": {
-            "title": "Learn more about Mobile Money API",
-            "htmlContent": "<p>To learn more about the GSMA Mobile Money API, you can follow the links below:</p><ul class=\"mb-0\"><li><a href=\"https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/\" target=\"_blank\" class=\"ml-1\">GSMA Mobile Money API website</a></li><li><a href=\"https://developer.mobilemoneyapi.io/\" target=\"_blank\" class=\"ml-1\">GSMA Mobile Money API developer portal</a></li></ul>"
+            "title": "Learn more about the GSMA Mobile Money API",
+            "htmlContent": "<p>\n    To learn more about the GSMA Mobile Money API, you can follow the links below:\n</p>\n<ul class=\"mb-0\">\n    <li>\n        <a href=\"https://www.gsma.com/mobilefordevelopment/mobile-money/mobile-money-api/\" target=\"_blank\" class=\"ml-1\">\n            GSMA Mobile Money API website\n        </a>\n    </li>\n    <li>\n        <a href=\"https://developer.mobilemoneyapi.io/\" target=\"_blank\" class=\"ml-1\">\n            GSMA Mobile Money API developer portal\n        </a>\n    </li>\n</ul>\n"
+        }
+    },
+    {
+        "id": "mobile-money-api-businessrules",
+        "icon": "/assets/images/tutorials/businessrules-icon.png",
+        "tile": {
+            "title": "GSMA Mobile Money API Response Codes and Business Rules",
+            "comment": "Click here to learn more about GSMA Mobile Money API Response Codes and Business Rules before you complete the use case questionnaire"
+        },
+        "accordion": {
+            "title": "GSMA Mobile Money API Response Codes and Business Rules",
+            "htmlContent": "<section class=\"m-auto\" style=\"max-width: 800px\">\n    <h1>Introduction</h1>\n    <p>\n        Mobile Money Operators and Technology Platform Providers who provide Mobile\n        Money APIs should maximise their adherence to the GSMA Mobile Money API\n        Specification business rules ensure that their platform APIs are as\n        consistently accessible as possible by the mobile money ecosystem.\n    </p>\n    <p>\n        As part of the quality assessment of providers who are seeking compliance\n        with the GSMA Mobile Money API Compliance Verification Service and obtaining\n        the compliant mark to demonstrate compliance to the API Specification, the\n        GSMA requests adherence to the <strong>GSMA Mobile Money API\n        Response Codes and Business Rules</strong> which outlines expected API behaviour\n        for APIs and API state and exception handling in a harmonised manner.\n    </p>\n</section>\n<section class=\"m-auto\" style=\"max-width: 800px\">\n    <h1>GSMA Mobile Money API Return Codes Harmonisation</h1>\n    <p>\n        The GSMA Mobile Money API Specification manages API state and exception\n        handling in the harmonised manner described below. For more details, see the\n        <a href=\"https://developer.mobilemoneyapi.io/1.1\">API specification</a>.\n    </p>\n    <h2>Harmonised API State Model and HTTP codes</h2>\n    <p>\n        Synchronous requests should be handled using\n        <a href=\"https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\">Standardised HTTP Response Codes</a>\n    </p>\n    <p>\n        Asynchronous requests should be handled using an intermediate\n        <a href=\"https://developer.mobilemoneyapi.io/1.1/content/getting-started#RequestStateObject2\">RequestState Object</a>\n        which can return an object reference or\n        <a href=\"https://developer.mobilemoneyapi.io/1.1/content/getting-started#APIBehaviourErrorHandling5\">Error Object</a>.\n    </p>\n    <p>\n        Asynchronous Callback responses can return an object reference or\n        <a href=\"https://developer.mobilemoneyapi.io/1.1/content/getting-started#APIBehaviourErrorHandling5\">Error Object</a>.\n    </p>\n    <h2>Harmonised Return Codes</h2>\n    <p>\n        Standardised return codes are returned for all successful requests permitted\n        by the API specification.\n    </p>\n    <table class=\"mb-3\">\n        <thead>\n            <tr>\n                <th class=\"p-2 border\"><strong>Request Type</strong></th>\n                <th class=\"p-2 border\"><strong>Caller</strong></th>\n                <th class=\"p-2 border\"><strong>Supported HTTP Method</strong></th>\n                <th class=\"p-2 border\"><strong>Flow</strong></th>\n                <th class=\"p-2 border\"><strong>Response Code</strong></th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td class=\"p-2 border\">Synchronous</td>\n                <td class=\"p-2 border\">Client</td>\n                <td class=\"p-2 border\">GET</td>\n                <td class=\"p-2 border\">SuccessfulObject Response</td>\n                <td class=\"p-2 border\">200</td>\n            </tr>\n            <tr>\n                <td class=\"p-2 border\">Asynchronous</td>\n                <td class=\"p-2 border\">Client</td>\n                <td class=\"p-2 border\">POST</td>\n                <td class=\"p-2 border\">SuccessfulRequestState Response</td>\n                <td class=\"p-2 border\">202</td>\n            </tr>\n            <tr>\n                <td class=\"p-2 border\">Asynchronous</td>\n                <td class=\"p-2 border\">Client</td>\n                <td class=\"p-2 border\">PATCH</td>\n                <td class=\"p-2 border\">SuccessfulRequestState Response</td>\n                <td class=\"p-2 border\">202</td>\n            </tr>\n            <tr>\n                <td class=\"p-2 border\">Asynchronous</td>\n                <td class=\"p-2 border\">Provider</td>\n                <td class=\"p-2 border\">PUT</td>\n                <td class=\"p-2 border\">SuccessfulObject Response</td>\n                <td class=\"p-2 border\">204</td>\n            </tr>\n        </tbody>\n    </table>\n    <h2>Harmonised Error Codes</h2>\n    <p>\n        Standardised error codes are returned in the Error Object for all errors\n        returned by the permitted requests above. To ensure industry wide\n        harmonisation across mobile money platform APIs, please use the following\n        business rules for harmonised error objects.\n    </p>\n    <p style=\"color: #7030A0\">\n        If a platform specific error is NOT defined, it is permitted to use the\n        generic error codes described.\n    </p>\n    <table class=\"mb-3\">\n        <thead>\n            <tr>\n                <th class=\"p-2 border\"><strong>Error Category</strong></th>\n                <th class=\"p-2 border\"><strong>HTTP code</strong></th>\n                <th class=\"p-2 border\"><strong>Error Description (OPTIONAL)</strong></th>\n                <th class=\"p-2 border\"><strong>Error Code</strong></th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr style=\"background-color: #FBE4D5;\">\n                <td class=\"p-2 border\">Authentication</td>\n                <td class=\"p-2 border\">401</td>\n                <td class=\"p-2 border\">\n                General Client Authentication failure. No further details provided to\n                prevent leakage of security information.\n                </td>\n                <td class=\"p-2 border\">ClientAuthorisationError</td>\n            </tr>\n            <tr style=\"background-color: #FBE4D5;\">\n                <td class=\"p-2 border\">Authentication</td>\n                <td class=\"p-2 border\">401</td>\n                <td class=\"p-2 border\">The debit party did not approve the request.</td>\n                <td class=\"p-2 border\">RequestDeclined</td>\n            </tr>\n            <tr style=\"background-color: #FBE4D5;\">\n                <td class=\"p-2 border\">Authentication</td>\n                <td class=\"p-2 border\">401</td>\n                <td class=\"p-2 border\">\n                The party requesting the service has not provided the right\n                credentials and/or does not have permission to perform this service.\n                </td>\n                <td class=\"p-2 border\">RequestingPartyAuthorisationError</td>\n            </tr>\n            <tr style=\"background-color: #DEEAF6;\">\n                <td class=\"p-2 border\">Identification</td>\n                <td class=\"p-2 border\">404</td>\n                <td class=\"p-2 border\">\n                The requested resource could not be matched on the system with the\n                supplied identifier(s).\n                </td>\n                <td class=\"p-2 border\">IdentifierError</td>\n            </tr>\n            <tr style=\"background-color: #E2EFD9;\">\n                <td class=\"p-2 border\">Validation</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The specified property contents are greater than the maximum allowed\n                length or less than the minimum allowed length.\n                </td>\n                <td class=\"p-2 border\">LengthError</td>\n            </tr>\n            <tr style=\"background-color: #E2EFD9;\">\n                <td class=\"p-2 border\">Validation</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The specified property contents do not conform to the format required\n                for this Property.\n                </td>\n                <td class=\"p-2 border\">FormatError</td>\n            </tr>\n            <tr style=\"background-color: #E2EFD9;\">\n                <td class=\"p-2 border\">Validation</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The amount supplied is negative and this is not allowed for the given\n                service.\n                </td>\n                <td class=\"p-2 border\">NegativeValue</td>\n            </tr>\n            <tr style=\"background-color: #E2EFD9;\">\n                <td class=\"p-2 border\">Validation</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">The currency supplied is not supported by the API Provider.</td>\n                <td class=\"p-2 border\">CurrencyNotSupported</td>\n            </tr>\n            <tr style=\"background-color: #E2EFD9;\">\n                <td class=\"p-2 border\">Validation</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                A mandatory value has not been provided in the header and/or JSON\n                body.\n                </td>\n                <td class=\"p-2 border\">MandatoryValueNotSupplied</td>\n            </tr>\n            <tr style=\"background-color: #E2EFD9;color: #7030A0\">\n                <td class=\"p-2 border\">Validation</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                A generic Error Code for the Validation Error Category. This is used\n                in where the API Provider has generated an error that does not map to\n                existing Validation error codes.\n                </td>\n                <td class=\"p-2 border\">GenericError</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their daily transacting volume limit - This can\n                be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">DailyVolumeLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their daily transacting value limit - This can\n                be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">DailyValueLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their weekly transacting volume limit - This\n                can be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">WeeklyVolumeLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their weekly transacting value limit - This can\n                be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">WeeklyValueLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their monthly transacting volume limit - This\n                can be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">MonthlyVolumeLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their monthly transacting value limit - This\n                can be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">MonthlyValueLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their cumulative transacting value limit\n                defined for the account.\n                </td>\n                <td class=\"p-2 border\">AccountMaxTotalValueExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their cumulative transacting volume limit\n                defined for the account.\n                </td>\n                <td class=\"p-2 border\">AccountMaxTotalVolumeExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The amount specified for the transaction is less than the defined\n                minimum for the service.\n                </td>\n                <td class=\"p-2 border\">LessThanTransactionMinValue</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The amount specified for the transaction is greater than the defined\n                maximum for the service.\n                </td>\n                <td class=\"p-2 border\">GreaterThanTransactionMaxValue</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The amount specified will cause the balance of the credit parties\n                account to exceed the rule limit.\n                </td>\n                <td class=\"p-2 border\">MaxBalanceExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">The debit and credit parties are the same.</td>\n                <td class=\"p-2 border\">SamePartiesError</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The request has previously been processed, i.e. this request is a\n                duplicate and hence has been rejected.\n                </td>\n                <td class=\"p-2 border\">DuplicateRequest</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                Available funds are not sufficient to enable the party to be debited\n                for the requested transaction.\n                </td>\n                <td class=\"p-2 border\">InsufficientFunds</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The account is in a state that does not permit the requested service.\n                </td>\n                <td class=\"p-2 border\">IncorrectState</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The requested amount is less than the amount that needs to be supplied\n                for this transaction\n                </td>\n                <td class=\"p-2 border\">UnderPaymentNotAllowed</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The requested amount is greater than the amount that needs to be\n                supplied for this transaction\n                </td>\n                <td class=\"p-2 border\">OverPaymentNotAllowed</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The client has submitted too many requests within a period of time.\n                </td>\n                <td class=\"p-2 border\">RateLimitError</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their daily transacting volume limit - This can\n                be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">DailyVolumeLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their daily transacting value limit - This can\n                be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">DailyValueLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their weekly transacting volume limit - This\n                can be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">WeeklyVolumeLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their weekly transacting value limit - This can\n                be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">WeeklyValueLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">\n                The party has exceeded their monthly transacting volume limit - This\n                can be a service limit or a limit that is specific to the party.\n                </td>\n                <td class=\"p-2 border\">MonthlyVolumeLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">The party has exceeded their monthly transacting value limit - This can be a service limit or a limit that is specific to the party.</td>\n                <td class=\"p-2 border\">MonthlyValueLimitExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">The party has exceeded their cumulative transacting value limit defined for the account.</td>\n                <td class=\"p-2 border\">AccountMaxTotalValueExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">The party has exceeded their cumulative transacting volume limit defined for the account.</td>\n                <td class=\"p-2 border\">AccountMaxTotalVolumeExceeded</td>\n            </tr>\n            <tr style=\"background-color: #EDEDED;color: #7030A0\">\n                <td class=\"p-2 border\">Business Rule</td>\n                <td class=\"p-2 border\">400</td>\n                <td class=\"p-2 border\">A generic Error Code which should only be used if the API Provider has generated an error that does not map to existing Rule error codes or the API Provider wishes to avoid disclosure of confidential information regarding the resource or parties to the resource.</td>\n                <td class=\"p-2 border\">GenericError</td>\n            </tr>\n        </tbody>\n    </table>\n</section>\n<section class=\"m-auto\" style=\"max-width: 800px\">\n    <h1>GSMA Mobile Money API Business Rules</h1>\n\n    <h2>Account Balances API</h2>\n    <p>This API defines specific properties for returning balances associated with an account</p>\n    <h3>Method and Path</h3>\n    <pre>GET /accounts/{identifierType}/{identifier}/balance</pre>\n    <h3>Minimum compliance</h3>\n    <table class=\"mb-3\">\n        <thead>\n            <tr>\n                <th class=\"p-2 border\"><strong>Property</strong></th>\n                <th class=\"p-2 border\"><strong>Type</strong></th>\n                <th class=\"p-2 border\"><strong>Description</strong></th>\n                <th class=\"p-2 border\"><strong>Validation</strong></th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td class=\"p-2 border\">currentBalance</td>\n                <td class=\"p-2 border\">string</td>\n                <td class=\"p-2 border\">\n                  <p>The current outstanding balance on the account</p>\n                  <p><em>Note the current balance comprises all funds which are included on the balance of the account including unavailable funds, reserved funds and uncleared funds</em>.</p>\n                </td>\n                <td class=\"p-2 border\"><a href=\"https://developer.mobilemoneyapi.io/1.1/content/getting-started#APIFundamentals11\">Amount Validation</a></td>\n            </tr>\n        </tbody>\n    </table>\n\n    <h2>Transactions API</h2>\n    <p>This API defines specific properties for returning balances associated with an account</p>\n    <h3>Method and Path</h3>\n    <pre>POST /transactions/type/{transactiontype}</pre>\n    <h3>Compliance rules</h3>\n    <table class=\"mb-3\">\n        <thead>\n            <tr>\n                <th class=\"p-2 border\"><strong>Property</strong></th>\n                <th class=\"p-2 border\"><strong>Type</strong></th>\n                <th class=\"p-2 border\"><strong>Description</strong></th>\n                <th class=\"p-2 border\"><strong>Validation</strong></th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr>\n                <td class=\"p-2 border\">debitParty</td>\n                <td class=\"p-2 border\">array</td>\n                <td class=\"p-2 border\">A collection of key/value pairs that enable the debit party to be identified. Keys include MSISDN and Wallet Identifier</td>\n                <td class=\"p-2 border\">\n                  <p><em>For Payee-Initiated Merchant Payments Mandatory</em></p>\n                  <p><em>For Payer-Initiated Merchant Payments</em> <em>Optional (platform can infer via Client)</em></p>\n                </td>\n            </tr>\n            <tr>\n                <td class=\"p-2 border\">creditParty</td>\n                <td class=\"p-2 border\">array</td>\n                <td class=\"p-2 border\">A collection of key/value pairs that enable the debit party to be identified. Keys include MSISDN and Wallet Identifier</td>\n                <td class=\"p-2 border\">\n                  <p> <em>For Payer-Initiated Merchant Payments Mandatory</em></p>\n                  <p><em>For Payee-Initiated Merchant Payments Optional (platform can infer via Client)</em></p>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n\n    <p><em>\n        Note for any type of transaction request, at least one of\n        debitParty and creditParty must be supplied and both can be\n        supplied. If one of the optional parties is not supplied by\n        the request, it will be updated by the platform before the\n        transaction object is returned to the client.\n    </em></p>\n</section>\n"
+        }
+    },
+    {
+        "id": "mobile-money-api-security",
+        "icon": "/assets/images/tutorials/security-icon.png",
+        "tile": {
+            "title": "GSMA Mobile Money API Security",
+            "comment": "Click here to learn more about the GSMA Mobile Money API Security before you complete the security questionnaire."
+        },
+        "accordion": {
+            "title": "GSMA Mobile Money API Security",
+            "htmlContent": "<section class=\"m-auto\" style=\"max-width: 800px\">\n    <h1>Introduction</h1>\n    <p>\n        Mobile Money Operators and Technology Platform Providers who\n        provide Mobile Money APIs used for delivering financial services\n        to customers have a responsibility to secure customer information\n        and services.\n    </p>\n    <p>\n        As part of the quality assessment of providers who are\n        seeking compliance with the GSMA Mobile Money API Compliance\n        Verification Service and obtaining the compliant mark to\n        demonstrate compliance to the API Specification, the GSMA\n        requests completion of the security questionnaire below. The\n        questionnaire enables submission of a brief self-assessment\n        by providers on their baseline security recommendations\n        encompassing two main areas.\n    </p>\n    <ul>\n        <li>\n            API provider operational security, based on common industry\n            guidance for baseline security for mobile operators and\n            payment providers, provided by global industry bodies such as\n            the GSMA and the PCI SSC.\n        </li>\n        <li>\n            Technical API security for API gateway to API client\n            connections and authenticating end users, based on the GSMA\n            Mobile Money API Security Design and Implementation\n            Guidelines, provided by the GSMA.\n        </li>\n    </ul>\n</section>\n<section class=\"m-auto\" style=\"max-width: 800px\">\n    <h1>Reference Guidelines</h1>\n\n    <h2>API Provider Operational Security</h2>\n    <p>\n        Several global industry bodies provide common industry\n        guidance for baseline security for organisations who provide\n        connectivity and services, especially financial services, to\n        customers. Any organisations providing APIs which store or\n        transmit customer data have a responsibility to ensure the\n        security of their operations. For example, guidance on\n        baseline operational security has been provided by\n        organisations such as the GSMA and the PCI SSC.\n    </p>\n\n    <h3>GSMA Mobile Money Certification</h3>\n    <p>\n        The GSMA provides GSMA Mobile Money Certification to Mobile\n        Money Providers to promote excellence in the provision of\n        mobile money services. It is based on independent assessments\n        of a provider’s ability to deliver secure and reliable\n        services, and are measured against global industry best\n        practice.\n    </p>\n    <p><a href=\"https://www.gsma.com/mobilefordevelopment/mobile-money/certification/\" target=\"_blank\" class=\"ml-1\">\n        GSMA Mobile Money Certification \n    </a></p>\n\n    <h3>GSMA Baseline Security Controls</h3>\n    <p>\n        The GSMA provides self-assessment guidelines on baseline security\n        controls for the global industry of Mobile Network Operators to\n        facilitate understanding and development of their security\n        posture to a foundation level in order to protect the global\n        mobile ecosystem.\n    </p>\n    <p><a href=\"https://www.gsma.com/security/resources/fs-31-gsma-baseline-security-controls/\" target=\"_blank\" class=\"ml-1\">\n        GSMA Baseline Security Controls \n    </a></p>\n\n    <h3>PCI Data Security Standard </h3>\n    <p>\n        The PCI Security Standards Council provides standards for\n        global payment account data security, in particular PCI DSS\n        was developed to encourage and enhance cardholder data\n        security and facilitate the broad adoption of consistent data\n        security measures globally. PCI DSS provides a baseline of\n        technical and operational requirements designed to protect\n        account data, and applies to all entities involved in\n        payments processing which store, process or transmit\n        cardholder or authentication data.\n    </p>\n    <p><a href=\"https://www.pcisecuritystandards.org/document_library?category=pcidss&document=pci_dss\" target=\"_blank\" class=\"ml-1\">\n        PCI Data Security Standard  \n    </a></p>\n    \n    <h2>Technical API Security</h2>\n    <h3>GSMA Mobile Money API Security Design and Implementation Guidelines</h3>\n    <p>\n        Alongside the GSMA Mobile Money API specification definitions\n        which standardise the connection between API Clients and\n        Mobile Money platforms, the GSMA have published complementary\n        Security Design and Implementation Guidelines which provide\n        best practice guidance for the following two aspects of\n        providing open APIs.\n    </p>\n    <ul>\n        <li> Security measures and best practices applicable to the connection between the API Client and the API Gateway. </li>\n        <li> Security measures and best practices applicable to authenticating end users to the Mobile Money platform. </li>\n    </ul>\n    <p>\n      <a href=\"https://developer.mobilemoneyapi.io/sites/default/files/GSMA%20Mobile%20Money%20API%20-%20Security%20Design%20and%20Implementation%20Guidelines1_8.pdf\" target=\"_blank\" class=\"ml-1\">\n          GSMA Mobile Money API Security Design and Implementation Guidelines  \n      </a>\n    </p>\n</section>\n"
+        }
+    },
+    {
+        "id": "mobile-money-api-security-questionnaire",
+        "icon": "/assets/images/tutorials/security-icon.png",
+        "tile": {
+            "title": "GSMA Mobile Money API Security Questionnaire",
+            "comment": "Click here to complete the GSMA Mobile Money API Security Self-Assessment Questionnaire"
+        },
+        "accordion": {
+            "title": "GSMA Mobile Money API Security Questionnaire",
+            "htmlContent": "<iframe src=\"https://qfreeaccountssjc1.az1.qualtrics.com/jfe/form/SV_0VAQXok3iBta78q\" style=\"border: none;\"></iframe>"
         }
     }
 ]
