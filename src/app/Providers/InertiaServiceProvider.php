@@ -49,6 +49,7 @@ class InertiaServiceProvider extends ServiceProvider
                 return [
                     'debug' => env('APP_DEBUG'),
                     'dark_mode' => request()->cookie('dark_mode'),
+                    'gtag' => env('APP_GOOGLE_ANALYTICS'),
                     'locales' => [
                         'default' => config('app.locale'),
                         'selected' => app()->getLocale(),

@@ -28,23 +28,25 @@ export default {
                     href: '/assets/images/favicon/apple-touch-icon.png',
                 },
             ],
-            script: this.$page.props.app.debug
-                ? []
-                : [
-                      {
-                          src:
-                              'https://www.googletagmanager.com/gtag/js?id=UA-162371764-1',
-                          async: true,
-                      },
-                      {
-                          type: 'text/javascript',
-                          innerHTML:
-                              'window.dataLayer = window.dataLayer || [];' +
-                              'function gtag(){dataLayer.push(arguments);}' +
-                              'gtag("js", new Date());' +
-                              'gtag("config", "UA-162371764-1");',
-                      },
-                  ],
+            script:
+                this.$page.props.app.gtag && !this.$page.props.app.debug
+                    ? [
+                          {
+                              src:
+                                  'https://www.googletagmanager.com/gtag/js?id=' +
+                                  this.$page.props.app.gtag,
+                              async: true,
+                          },
+                          {
+                              type: 'text/javascript',
+                              innerHTML:
+                                  'window.dataLayer = window.dataLayer || [];' +
+                                  'function gtag(){dataLayer.push(arguments);}' +
+                                  'gtag("js", new Date());' +
+                                  `gtag("config", "${this.$page.props.app.gtag}");`,
+                          },
+                      ]
+                    : [],
             titleTemplate: (title) =>
                 title
                     ? `${title} - Interoperability Test Platform - GSMA`
