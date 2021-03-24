@@ -121,26 +121,44 @@
                                         may submit them for verification.</i
                                     >
                                 </span>
-                                <div
-                                    v-if="session.can.update"
-                                    class="text-right"
-                                >
-                                    <confirm-link
-                                        method="post"
-                                        class="btn btn-outline-primary"
-                                        :href="
-                                            route(
-                                                'sessions.complete',
-                                                session.id
-                                            )
-                                        "
-                                        :confirm-title="'Confirm completion'"
-                                        :confirm-text="`This is a non-reversible action, and you will need to create a new
+                                <div v-if="session.can.update">
+                                    <div class="text-right">
+                                        <b
+                                            v-if="warning"
+                                            class="float-left text-primary"
+                                        >
+                                            <icon name="alert-circle"></icon>
+                                            One or more of your tests is
+                                            currently failing. Please ensure you
+                                            are satisfied with the test results
+                                            listed below before submitting
+                                            results.
+                                        </b>
+                                        <b
+                                            v-else
+                                            class="float-left text-success"
+                                        >
+                                            <icon name="check"></icon>
+                                            All tests are passing, and your
+                                            results are ready to submit.
+                                        </b>
+                                        <confirm-link
+                                            method="post"
+                                            class="btn btn-outline-primary"
+                                            :href="
+                                                route(
+                                                    'sessions.complete',
+                                                    session.id
+                                                )
+                                            "
+                                            :confirm-title="'Confirm completion'"
+                                            :confirm-text="`This is a non-reversible action, and you will need to create a new
                                         session if you wish to execute any more test cases.`"
-                                    >
-                                        <icon name="checks"></icon>
-                                        Submit Results
-                                    </confirm-link>
+                                        >
+                                            <icon name="checks"></icon>
+                                            Submit Results
+                                        </confirm-link>
+                                    </div>
                                 </div>
                             </template>
                             <span v-else>
@@ -552,8 +570,25 @@ export default {
             required: false,
         },
     },
+    methods: {
+        allTestsPass() {
+            var testCase = this.session.testCases.data;
+            for (var t in testCase) {
+                if (!testCase[t].lastTestRun.successful) {
+                    this.warning = true;
+                    return [this.warning];
+                }
+            }
+            this.warning = false;
+            return this.warning;
+        },
+    },
+    mounted() {
+        this.allTestsPass();
+    },
     data() {
         return {
+            warning: false,
             isCompliance: this.session.type === 'compliance',
         };
     },
