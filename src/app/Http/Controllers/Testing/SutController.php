@@ -25,9 +25,9 @@ class SutController extends Controller
             Debugbar::disable();
         }
 
-        if (!Str::contains(request()->header('Accept'), 'json')) {
-            request()->headers->set('Accept', 'application/json');
-        }
+        // if (!Str::contains(request()->header('Accept'), 'json')) {
+        //     request()->headers->set('Accept', 'application/json');
+        // }
     }
 
     /**
