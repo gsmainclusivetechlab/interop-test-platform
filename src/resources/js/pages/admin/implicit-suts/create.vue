@@ -129,48 +129,6 @@
                                 </strong>
                             </span>
                         </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{
-                                $t('inputs.client_key')
-                            }}</label>
-                            <b-form-file
-                                v-model="form.client_key"
-                                placeholder="Choose file..."
-                                :class="{
-                                    'is-invalid': $page.props.errors.client_key,
-                                }"
-                            />
-                            <span
-                                v-if="$page.props.errors.client_key"
-                                class="invalid-feedback"
-                            >
-                                <strong>
-                                    {{ $page.props.errors.client_key }}
-                                </strong>
-                            </span>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">{{
-                                $t('inputs.passphrase')
-                            }}</label>
-                            <input
-                                name="slug"
-                                type="text"
-                                class="form-control"
-                                :class="{
-                                    'is-invalid': $page.props.errors.passphrase,
-                                }"
-                                v-model="form.passphrase"
-                            />
-                            <span
-                                v-if="$page.props.errors.passphrase"
-                                class="invalid-feedback"
-                            >
-                                <strong>
-                                    {{ $page.props.errors.passphrase }}
-                                </strong>
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -211,8 +169,6 @@ export default {
                 use_encryption: false,
                 ca_crt: null,
                 client_crt: null,
-                client_key: null,
-                passphrase: '',
             },
         };
     },

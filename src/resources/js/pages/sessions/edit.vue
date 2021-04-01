@@ -238,7 +238,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label"
-                                                >Client certificate</label
+                                                >Client certificate (Optional)</label
                                             >
                                             <b-form-file
                                                 v-model="
@@ -274,83 +274,6 @@
                                                     {{
                                                         $page.props.errors[
                                                             `certificates.${component.id}.client_crt`
-                                                        ]
-                                                    }}
-                                                </strong>
-                                            </span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label"
-                                                >Client key</label
-                                            >
-                                            <b-form-file
-                                                v-model="
-                                                    component.certificate
-                                                        .client_key
-                                                "
-                                                :placeholder="
-                                                    component.hasNonGroupCertificate
-                                                        ? 'Client key is uploaded'
-                                                        : 'Choose file...'
-                                                "
-                                                :browse-text="
-                                                    component.hasNonGroupCertificate
-                                                        ? 'Change file'
-                                                        : 'Browse'
-                                                "
-                                                :class="{
-                                                    'is-invalid':
-                                                        $page.props.errors[
-                                                            `certificates.${component.id}.client_key`
-                                                        ],
-                                                }"
-                                            />
-                                            <span
-                                                v-if="
-                                                    $page.props.errors[
-                                                        `certificates.${component.id}.client_key`
-                                                    ]
-                                                "
-                                                class="invalid-feedback"
-                                            >
-                                                <strong>
-                                                    {{
-                                                        $page.props.errors[
-                                                            `certificates.${component.id}.client_key`
-                                                        ]
-                                                    }}
-                                                </strong>
-                                            </span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label"
-                                                >Pass phrase</label
-                                            >
-                                            <input
-                                                v-model="
-                                                    component.certificate
-                                                        .passphrase
-                                                "
-                                                :class="{
-                                                    'is-invalid':
-                                                        $page.props.errors[
-                                                            `certificates.${component.id}.passphrase`
-                                                        ],
-                                                }"
-                                                class="form-control"
-                                            />
-                                            <span
-                                                v-if="
-                                                    $page.props.errors[
-                                                        `certificates.${component.id}.passphrase`
-                                                    ]
-                                                "
-                                                class="invalid-feedback"
-                                            >
-                                                <strong>
-                                                    {{
-                                                        $page.props.errors[
-                                                            `certificates.${component.id}.passphrase`
                                                         ]
                                                     }}
                                                 </strong>
@@ -584,8 +507,6 @@ export default {
                         serialized: null,
                         ca_crt: null,
                         client_crt: null,
-                        client_key: null,
-                        passphrase: el.certificate?.passphrase,
                         group_id: el.certificate?.group_id,
                     },
                     hasNonGroupCertificate:
@@ -642,8 +563,6 @@ export default {
                         const crt = el.certificate.serialized?.id ?? {
                             ca_crt: el.certificate.ca_crt,
                             client_crt: el.certificate.client_crt,
-                            client_key: el.certificate.client_key,
-                            passphrase: el.certificate.passphrase,
                         };
 
                         return [el.id, crt];

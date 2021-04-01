@@ -24,8 +24,6 @@ use Storage;
  * @property string $ca_md5
  * @property string $ca_crt_path
  * @property string $client_crt_path
- * @property string $client_key_path
- * @property string $passphrase
  * @property string $certificable_type
  * @property int $certificable_id
  * @property Carbon $created_at
@@ -41,9 +39,7 @@ class Certificate extends Model
         'group_id',
         'name',
         'ca_crt_path',
-        'client_crt_path',
-        'client_key_path',
-        'passphrase',
+        'client_crt_path'
     ];
 
     /** @var string[] */
@@ -69,7 +65,6 @@ class Certificate extends Model
             Storage::delete([
                 $certificate->ca_crt_path,
                 $certificate->client_crt_path,
-                $certificate->client_key_path,
             ]);
 
             if (!static::where('ca_md5', $certificate->ca_md5)->exists()) {
@@ -138,12 +133,9 @@ class Certificate extends Model
         Request $request,
         ?self $certificate,
         string $caCrtKey = 'ca_crt',
-        string $clientCrtKey = 'client_crt',
-        string $clientKeyKey = 'client_key',
-        string $passphrase = null
+        string $clientCrtKey = 'client_crt'
     ): array {
         return [
-            'passphrase' => $passphrase ?? $request->get('passphrase'),
             'ca_crt_path' => static::storeFile(
                 $request,
                 $caCrtKey,
@@ -153,11 +145,6 @@ class Certificate extends Model
                 $request,
                 $clientCrtKey,
                 $certificate->client_crt_path ?? null
-            ),
-            'client_key_path' => static::storeFile(
-                $request,
-                $clientKeyKey,
-                $certificate->client_key_path ?? null
             ),
         ];
     }

@@ -71,45 +71,6 @@
                                     </strong>
                                 </span>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label"> Client key </label>
-                                <b-form-file
-                                    v-model="form.client_key"
-                                    placeholder="Choose file..."
-                                    :class="{
-                                        'is-invalid':
-                                            $page.props.errors.client_key,
-                                    }"
-                                />
-                                <span
-                                    v-if="$page.props.errors.client_key"
-                                    class="invalid-feedback"
-                                >
-                                    <strong>
-                                        {{ $page.props.errors.client_key }}
-                                    </strong>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label"> Pass phrase </label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    v-model="form.passphrase"
-                                    :class="{
-                                        'is-invalid':
-                                            $page.props.errors.passphrase,
-                                    }"
-                                />
-                                <span
-                                    v-if="$page.props.errors.passphrase"
-                                    class="invalid-feedback"
-                                >
-                                    <strong>
-                                        {{ $page.props.errors.passphrase }}
-                                    </strong>
-                                </span>
-                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -160,8 +121,6 @@ export default {
                 name: '',
                 ca_crt: '',
                 client_crt: '',
-                client_key: '',
-                passphrase: '',
             },
         };
     },

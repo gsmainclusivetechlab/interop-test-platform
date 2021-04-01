@@ -79,8 +79,14 @@ Route::name('sessions.')
     ->namespace('Sessions')
     ->group(function () {
         Route::get('/', 'SessionController@index')->name('index');
-        Route::get('certificates', 'CertificatesController@download')->name(
+        Route::get('certificates-download', 'CertificatesController@download')->name(
             'certificates.download'
+        );
+        Route::post('certificates-upload-csr', 'CertificatesController@uploadCsr')->name(
+            'certificates.upload-csr'
+        );
+        Route::get('certificates-download-csr', 'CertificatesController@downloadCsr')->name(
+            'certificates.download-csr'
         );
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');

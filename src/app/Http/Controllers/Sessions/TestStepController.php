@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Sessions\Traits\WithSutUrls;
 use App\Http\Resources\{
     ComponentResource,
     SessionResource,
@@ -17,6 +18,8 @@ use Inertia\Response;
 
 class TestStepController extends Controller
 {
+    use WithSutUrls;
+
     /**
      * @return void
      */
@@ -65,6 +68,7 @@ class TestStepController extends Controller
                     ->paginate()
             ),
             'simulatedTestResults' => $testCase->simulateTestResults($session),
+            'sutUrls' => $this->getSutUrls($session),
         ]);
     }
 
@@ -104,6 +108,7 @@ class TestStepController extends Controller
                     ->with(['source', 'target'])
                     ->get()
             ),
+            'sutUrls' => $this->getSutUrls($session),
         ]);
     }
 }

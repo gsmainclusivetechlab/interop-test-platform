@@ -10,9 +10,7 @@
             "url": "URL",
             "use_encryption": "Use encryption",
             "ca_crt": "CA certificate",
-            "client_crt": "Client certificate",
-            "client_key": "Client key",
-            "passphrase": "Pass phrase"
+            "client_crt": "Client certificate"
         },
         "buttons": {
             "cancel": "Cancel",
@@ -30,9 +28,7 @@
             "url": "URL",
             "use_encryption": "Использовать шифрование",
             "ca_crt": "Корневой сертификат",
-            "client_crt": "Клиентский сертификат",
-            "client_key": "Клиентский ключ",
-            "passphrase": "Кодовая фраза"
+            "client_crt": "Клиентский сертификат"
         },
         "buttons": {
             "cancel": "Отмена",

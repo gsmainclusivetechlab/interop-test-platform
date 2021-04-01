@@ -46,16 +46,76 @@
                             </h3>
                             <div v-if="hasEncrypted" class="mb-3">
                                 <h4>Encrypted connection</h4>
-
-                                <a
-                                    :href="
-                                        route('sessions.certificates.download')
-                                    "
+                                <button
                                     class="btn btn-sm btn-block btn-outline-primary"
+                                    v-b-modal="`modal-download`"
                                 >
                                     Download certificates
-                                </a>
+                                </button>
                             </div>
+                            <b-modal
+                                :id="`modal-download`"
+                                size="lg"
+                                centered
+                                hide-footer
+                                title="Upload CSR of your SUT"
+                                @hidden="resetModal"
+                            >
+                                <form @submit.prevent="submit">
+                                    <div class="card-body">
+                                        <div class="mb-1">
+                                            <h4>
+                                                It will be used by ITP to generate public certificate.
+                                            </h4>
+                                        </div>
+                                        <div class="mb-3">
+                                            <b-form-file
+                                                v-model="form.file"
+                                                :placeholder="'Choose file ...'"
+                                                :browse-text="'Browse'"
+                                                :class="{
+                                                    'is-invalid': $page.props.errors.file,
+                                                }"
+                                            />
+                                            <div
+                                                v-if="$page.props.errors.file"
+                                                class="invalid-feedback"
+                                            >
+                                                <p class="mb-1">
+                                                    <strong>
+                                                        Error with file - {{form.fileSrc}}
+                                                    </strong>
+                                                </p>
+                                                <p
+                                                    v-if="$page.props.errors.file"
+                                                    class="mb-1"
+                                                >
+                                                    <strong>
+                                                        {{ $page.props.errors.file }}
+                                                    </strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary"
+                                            :disabled="!form.file"
+                                        >
+                                            Submit CSR
+                                        </button>
+                                        <a
+                                            @click="disableBtn"
+                                            :class="{disabled: btnDisabled}"
+                                            :href="
+                                                route('sessions.certificates.download')
+                                            "
+                                            class="btn btn-primary"
+                                        >
+                                            Download certificates
+                                        </a>
+                                    </div>
+                                </form>
+                            </b-modal>
                             <template
                                 v-if="testCaseUrls && testCaseUrls.length"
                             >
@@ -304,6 +364,10 @@ export default {
             type: Object,
             required: false,
         },
+        data: {
+            type: Object,
+            required: false,
+        },
     },
     data() {
         return {
@@ -312,8 +376,43 @@ export default {
                 this.session.components.data?.filter(
                     (component) => component.use_encryption
                 )?.length > 0,
+            btnDisabled: true,
+            form: {
+                file: null,
+                fileSrc: null,
+            }
         };
     },
+  methods: {
+        submit() {
+            const data = new FormData();
+            this.$page.props.errors.file = null;
+
+            data.append('file', this.form.file);
+            this.$inertia.post(
+                route('sessions.certificates.upload-csr'),
+                data,
+                {
+                    onFinish: () => {
+                        this.form.fileSrc = `${this.form.file.name}`;
+                        this.form.file = null;
+                        if (!this.$page.props.errors.file) {
+                            this.btnDisabled = false;
+                        }
+                    },
+                }
+            );
+        },
+        resetModal() {
+            this.form.file = null;
+            this.form.fileSrc = null;
+            this.$page.props.errors.file = null;
+            this.btnDisabled = true;
+        },
+        disableBtn() {
+            this.btnDisabled = true;
+        },
+  },
 
     mounted() {
         if (this.sutUrls.isGroup) {

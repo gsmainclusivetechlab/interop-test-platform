@@ -45,6 +45,11 @@ if [ "$role" = "app" ]; then
         cp RootCA.crt ClientCA.pem
     fi
 
+    if [ ! -f client.key ]; then
+        openssl req -new -nodes -newkey rsa:4096 -keyout client.key -subj "/C=UK/ST=State/L=City/O=Default-Localhost-Certificates/CN=${PROJECT_DOMAIN}"
+        chmod +xr /etc/nginx/ssl/default-certs/client.key
+    fi
+
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf;
 
 elif [ "$role" = "queue" ]; then
