@@ -134,8 +134,8 @@ class ProcessPendingRequest
 
                 $options = [
                     'verify' => Storage::path($certificate->ca_crt_path),
-                    'cert' => Storage::path($certificate->client_crt_path),
-                    'ssl_key' => env('CLIENT_KEY_PATH'),
+                    'cert' => [Storage::path($certificate->client_crt_path)],
+                    'ssl_key' => [env('CLIENT_KEY_PATH')],
                 ];
             }
         }

@@ -195,6 +195,12 @@
                                         v-if="!component.certificate.serialized"
                                     >
                                         <div class="mb-3">
+                                            <a
+                                                :href="route('sessions.certificates.download-csr')"
+                                                class="btn btn-sm btn-block btn-outline-primary"
+                                            >
+                                                Download CSR
+                                            </a>
                                             <label class="form-label"
                                                 >CA certificate</label
                                             >
@@ -203,12 +209,14 @@
                                                     component.certificate.ca_crt
                                                 "
                                                 :placeholder="
-                                                    component.hasNonGroupCertificate
+                                                    component.hasNonGroupCertificate &&
+                                                    component.hasCaCertificate
                                                         ? 'CA certificate is uploaded'
                                                         : 'Choose file...'
                                                 "
                                                 :browse-text="
-                                                    component.hasNonGroupCertificate
+                                                    component.hasNonGroupCertificate &&
+                                                    component.hasCaCertificate
                                                         ? 'Change file'
                                                         : 'Browse'
                                                 "
@@ -246,12 +254,14 @@
                                                         .client_crt
                                                 "
                                                 :placeholder="
-                                                    component.hasNonGroupCertificate
+                                                    component.hasNonGroupCertificate &&
+                                                    component.hasClientCertificate
                                                         ? 'Client certificate is uploaded'
                                                         : 'Choose file...'
                                                 "
                                                 :browse-text="
-                                                    component.hasNonGroupCertificate
+                                                    component.hasNonGroupCertificate &&
+                                                    component.hasClientCertificate
                                                         ? 'Change file'
                                                         : 'Browse'
                                                 "
@@ -511,6 +521,8 @@ export default {
                     },
                     hasNonGroupCertificate:
                         el.certificate_id && !el.certificate?.certificable_id,
+                    hasCaCertificate: el.certificate?.has_ca_crt,
+                    hasClientCertificate: el.certificate?.has_client_crt,
                 })),
                 test_cases: this.session.testCases.data?.map((el) => el.id),
             },
