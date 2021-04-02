@@ -79,7 +79,9 @@ class CertificatesController extends Controller
 
     public function downloadCsr(): StreamedResponse
     {
-        $clientPrivateKey = openssl_pkey_get_private(env('CLIENT_KEY_PATH'));
+        $clientPrivateKey = openssl_pkey_get_private(
+            File::get(env('CLIENT_KEY_PATH'))
+        );
         $csr = openssl_csr_new(
             [
                 'countryName' => 'UK',
