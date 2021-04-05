@@ -115,7 +115,12 @@ class TestStepRequest extends FormRequest
                 }),
             ],
             'repeat.response' => ['nullable', 'array'],
-            'repeat.response.status' => ['required'],
+            'repeat.response.status' => [
+                'nullable',
+                Rule::requiredIf(function () {
+                    return $this->input('repeat.count', 0) > 0;
+                }),
+            ],
             'test.scripts.repeat_response' => ['nullable', 'array'],
             'test.scripts.repeat_response.*.name' => [
                 'required',
@@ -256,11 +261,13 @@ class TestStepRequest extends FormRequest
                 'repeat_max' => $this->input('repeat.max', 0),
                 'repeat_count' => $this->input('repeat.count', 0),
                 'repeat_condition' => $this->input('repeat.condition'),
-                'repeat_response' => $this->mapTestStepResponse('repeat.'),
                 'callback_origin_path' => $this->input('callback.path'),
                 'callback_origin_method' => $this->input('callback.method'),
                 'callback_name' => $this->input('callback.name'),
-            ]
+            ],
+            Arr::get($this->input('repeat.response'), 'status') ?
+                ['repeat_response' => $this->mapTestStepResponse('repeat.')] :
+                []
         );
     }
 
