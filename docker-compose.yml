@@ -46,10 +46,10 @@ services:
       WAIT_HOSTS_TIMEOUT: 100
       HOST_WEB_PORT: ${HOST_WEB_PORT}
 
-#  queue:
-#    <<: *php-defaults
-#    environment:
-#      CONTAINER_ROLE: queue
+  queue:
+    <<: *php-defaults
+    environment:
+      CONTAINER_ROLE: queue
 
   redis:
     image: redis:5
