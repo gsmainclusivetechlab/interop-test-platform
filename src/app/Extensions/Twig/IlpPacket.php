@@ -2,6 +2,7 @@
 
 namespace App\Extensions\Twig;
 
+use App\Utils\Packer;
 use App\Utils\StringReader;
 use Arr;
 use Carbon\Carbon;
@@ -51,13 +52,33 @@ class IlpPacket extends AbstractExtension
         } else {
             // For buffers longer than 128 bytes, we should write a single byte
             // containing the length of the length in bytes, with the most significant
-            // bit set, and then write the length of the buffer itself. For now our simulators shouldn't need this path.
-            // TODO: See https://github.com/interledgerjs/interledgerjs/blob/d6cce52c48fec6bdf95401ee3593360d461aaa93/packages/oer-utils/src/lib/writer.ts#L271-L278
-            throw new Exception('Long data not yet implemented');
+            // bit set, and then write the length of the buffer itself.
+            // See https://github.com/interledgerjs/interledgerjs/blob/d6cce52c48fec6bdf95401ee3593360d461aaa93/packages/oer-utils/src/lib/writer.ts#L271-L278
+
+            $lengthOfLength = $this->getLengthOfLength($length);
+
+            return pack('C', 0x80 | $lengthOfLength) . Packer::pack($lengthOfLength, $length);
         }
     }
 
-    // variable-length data needs to be prefixed with its length for decoding
+    protected function getLengthOfLength($value)
+    {
+        $sizes = Packer::bytesMaxSize();
+
+        foreach ($sizes as $size) {
+            if ($value <= $size['max']) {
+                return $size['bytes'];
+            }
+        }
+        throw new Exception('Data size greater than max safe byte');
+    }
+
+    /**
+     * variable-length data needs to be prefixed with its length for decoding
+     *
+     * @param $x
+     * @return string
+     */
     function varLength($x)
     {
         $bytes = unpack('C*', $x);
