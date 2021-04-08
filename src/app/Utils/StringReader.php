@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Arr;
+use Exception;
 
 class StringReader
 {
@@ -49,8 +50,41 @@ class StringReader
 
     public function readVarOctetString(): string
     {
-        $length = $this->readUInt8Number();
+        $length = $this->readLengthPrefix();
 
         return $this->read($length);
+    }
+
+    /**
+     * @return bool|int|string
+     * @throws Exception
+     */
+    public function readLengthPrefix() {
+        $length = $this->readUInt8Number();
+        if ($length & 0x80) {
+            $lengthPrefixLength = $length & 0x7f;
+            $actualLength = $this->readUIntNumber($lengthPrefixLength);
+            $minLength = max(128, 1 << (($lengthPrefixLength - 1) * 8));
+            if ($lengthPrefixLength === 0 || $actualLength < $minLength) {
+                throw new Exception(
+                    'Length prefix encoding is not canonical: ' .
+                    $actualLength .
+                    ' encoded in ' .
+                    $lengthPrefixLength .
+                    ' bytes'
+                );
+            }
+
+            return $actualLength;
+        }
+
+        return $length;
+    }
+
+    public function readUIntNumber($length)
+    {
+        $string = $this->read($length);
+
+        return Packer::unpack($length, $string);
     }
 }
