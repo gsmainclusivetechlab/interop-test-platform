@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div
-                        v-bind:key="index"
+                        v-bind:key="index + 'divider'"
                         v-if="(index + 1) % 3 === 0"
                         class="w-100"
                     >
@@ -121,6 +121,10 @@ export default {
         axios.get(`/assets/tutorial/${locale}.json`).then((res) => {
             this.tutorials = res.data;
             if (location.hash) {
+                const id = 'accordion-' + location.hash.replace('#', '');
+                this.$nextTick(function () {
+                    this.$root.$emit('bv::toggle::collapse', id);
+                });
             }
         });
     },
