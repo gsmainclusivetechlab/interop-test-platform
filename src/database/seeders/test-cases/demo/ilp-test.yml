@@ -1,0 +1,86 @@
+name: ILP Test
+slug: ilp-test
+use_case: Demo
+behavior: positive
+description: This test case verifies that long data is used in ILP packets
+precondition: ''
+components:
+  - name: Client
+    slug: client
+  - name: Server
+    slug: server
+
+test_steps:
+  ## POST/Quotes: MMO1 -> Mojaloop ##
+  - path: /ilp
+    pattern: '^ilp$'
+    method: POST
+    source: client
+    target: server
+    test_request_scripts:
+      - name: ILP is correctly generated
+        rules:
+          body.ilpPacket:
+            - 'required'
+            - 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+            - 'ilpPacketAmount:10000'
+            # TODO: possibly restore this - my current understanding is that `body.expiration` is for the quote, but `ilpPacket.expiration` is for the eventual transfer
+            # - 'ilpPacketExpiration'
+            - 'ilpPacketCondition'
+    response:
+      status: 200
+    request:
+      method: POST
+      uri: /quotes
+      headers:
+        accept: 'application/vnd.interoperability.quotes+json;version=1.0'
+        content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+        date: '{{ new_date_rfc2822() }}'
+      body: |
+        {% set expiry = date("+1 hour") %}
+        {% set fulfilment = ilpFulfilment() %}
+        {% set condition = ilpCondition(fulfilment) %}
+        {% set data = {
+            transactionId: uuidv4(),
+            quoteId: uuidv4(),
+            payee: "Mr P. Ee",
+            payer:  "Mr P. Er",
+            amount: 100,
+            transactionType: "Transaction",
+            note: "this is an important transaction",
+            extensionList: {
+              extension:
+                [
+                  { key: 'KYCPayerTier', value: '1' },
+                  { key: 'KYCNationality', value: 'CI' },
+                  { key: 'KYCOccupation', value: 'Engineer' },
+                  { key: 'KYCEmployerName', value: 'Example Corp' },
+                  { key: 'KYCContactPhone', value: '1122334455' },
+                  { key: 'KYCEmailAddress', value: 'user@mail.com' },
+                  { key: 'KYCBirthCountry', value: 'CI' },
+                  {
+                    key: 'KYCPayerAddress1',
+                    value: "Immeuble Le Quartz Boulevard Valery Giscard d'Estaing Marcory",
+                  },
+                  { key: 'KYCPayerAddress2', value: '11 BP 202 Abidjan 11' },
+                  { key: 'KYCPayerAddressCity', value: 'Abidjan' },
+                  { key: 'KYCPayerAddressCode', value: 'NE1 3TQ' },
+                  { key: 'KYCPayerIDType', value: 'PASSPORT' },
+                  { key: 'KYCPayerIDValue', value: '770423742' },
+                  { key: 'KYCPayerTransferReason', value: 'Bill payment' }
+                ]
+            }
+          }  %}
+        {{
+          {
+            ilpPacket:  ilpPacket(
+              10000,
+              expiry | date("Y-m-d\\TH:i:s.vP"),
+              condition,
+              "g.gh.msisdn.01234567898",
+              data | json_encode
+            ) | base64url_encode,
+            condition: condition | base64url_encode
+          }
+          | json_encode
+        }}
