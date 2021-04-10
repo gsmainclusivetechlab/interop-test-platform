@@ -121,9 +121,14 @@ export default {
         axios.get(`/assets/tutorial/${locale}.json`).then((res) => {
             this.tutorials = res.data;
             if (location.hash) {
-                const id = 'accordion-' + location.hash.replace('#', '');
+                const headerId = location.hash.replace('#', '');
+                const accordionId = `accordion-${headerId}`;
                 this.$nextTick(function () {
-                    this.$root.$emit('bv::toggle::collapse', id);
+                    this.$root.$emit('bv::toggle::collapse', accordionId);
+                    setTimeout(() => {
+                        const el = document.getElementById(headerId);
+                        el.scrollIntoView({ behavior: 'smooth' });
+                    }, 200);
                 });
             }
         });
