@@ -10,28 +10,30 @@
             </div>
         </div>
         <div class="card" v-if="tutorials">
-            <div class="row justify-content-md-around">
+            <div class="row justify-content-around">
                 <div class="w-100"><br /></div>
                 <template v-for="(item, index) of tutorials">
-                    <div class="col-3 tutorial-cards" v-bind:key="index">
-                        <a
-                            class="d-inline-block btn scenario-card"
-                            :href="'#' + item.id"
-                            v-b-toggle="'accordion-' + item.id"
-                        >
-                            <h4
-                                class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
+                    <div class="col-md-3 col-sm-10" v-bind:key="index">
+                        <div class="tutorial-cards pt-3">
+                            <a
+                                class="d-inline-block btn scenario-card"
+                                :href="'#' + item.id"
+                                v-b-toggle="'accordion-' + item.id"
                             >
-                                <img :src="item.icon" class="icon" />
-                                {{ item.tile.title }}
-                            </h4>
-                            <div class="pl-2 font-weight-normal">
-                                {{ item.tile.comment }}
-                            </div>
-                        </a>
+                                <h4
+                                    class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center border-bottom border-primary"
+                                >
+                                    <img :src="item.icon" class="icon" />
+                                    {{ item.tile.title }}
+                                </h4>
+                                <div class="pl-2 font-weight-normal">
+                                    {{ item.tile.comment }}
+                                </div>
+                            </a>
+                        </div>
                     </div>
                     <div
-                        v-bind:key="index"
+                        v-bind:key="index + 'divider'"
                         v-if="(index + 1) % 3 === 0"
                         class="w-100"
                     >
@@ -99,6 +101,15 @@
 import Layout from '@/layouts/main';
 import TutorialDemo from '@/components/tutorial-demo';
 
+const timeout = function (headerId) {
+    setTimeout(() => {
+        const el = document.getElementById(headerId);
+        el.scrollIntoView({ behavior: 'smooth' });
+        if (window.scrollY <= 0) {
+            timeout(headerId);
+        }
+    }, 200);
+};
 export default {
     metaInfo() {
         return {
@@ -118,6 +129,14 @@ export default {
         const locale = this.$i18n.locale;
         axios.get(`/assets/tutorial/${locale}.json`).then((res) => {
             this.tutorials = res.data;
+            if (location.hash) {
+                const headerId = location.hash.replace('#', '');
+                const accordionId = `accordion-${headerId}`;
+                this.$nextTick(function () {
+                    this.$root.$emit('bv::toggle::collapse', accordionId);
+                    timeout(headerId);
+                });
+            }
         });
     },
 };
