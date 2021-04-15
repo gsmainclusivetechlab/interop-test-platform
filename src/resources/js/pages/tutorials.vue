@@ -101,6 +101,15 @@
 import Layout from '@/layouts/main';
 import TutorialDemo from '@/components/tutorial-demo';
 
+const timeout = function (headerId) {
+    setTimeout(() => {
+        const el = document.getElementById(headerId);
+        el.scrollIntoView({ behavior: 'smooth' });
+        if (window.scrollY <= 0) {
+            timeout(headerId);
+        }
+    }, 200);
+};
 export default {
     metaInfo() {
         return {
@@ -125,10 +134,7 @@ export default {
                 const accordionId = `accordion-${headerId}`;
                 this.$nextTick(function () {
                     this.$root.$emit('bv::toggle::collapse', accordionId);
-                    setTimeout(() => {
-                        const el = document.getElementById(headerId);
-                        el.scrollIntoView({ behavior: 'smooth' });
-                    }, 200);
+                    timeout(headerId);
                 });
             }
         });
