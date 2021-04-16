@@ -18,10 +18,6 @@ components:
     inputs:
       errors:
         file: 'Error with file - {fileSrc}'
-  v-select:
-    errors:
-      option-not-add:
-        "'{option}' - option hasn't been added. Please select it to be added."
   pagination:
     buttons:
       next: Next
@@ -31,6 +27,10 @@ components:
       - to
       - of
       - entry | entries
+v-select:
+  errors:
+    option-not-add:
+      "'{option}' - option hasn't been added. Please select it to be added."
 special-locales:
   compliance: Certification
   administration: Administration
@@ -78,8 +78,8 @@ layout:
       external-link: 'https://www.gsma.com/lab'
       groups: Groups
       sessions: Sessions
-      subtitle: Interoperability Test Platform
-      title: Inclusive Tech Lab
+      subtitle: ''
+      title: ColorHub Onboarding Platform
       tutorials: Tutorials
     menu:
       api-specs: API Specs
