@@ -118,6 +118,15 @@ class ProcessPendingRequest
                         )
                     );
                 }
+                if (!$certificate->client_crt_path) {
+                    (new SendingRejectedHandler($this->testResult))(
+                        new Exception(
+                            __(
+                                'No client certificate has been uploaded. Please configure it in session settings.'
+                            )
+                        )
+                    );
+                }
 
                 $this->request = $this->request->withUri(
                     $this->request->getUri()->withScheme('https')
@@ -125,14 +134,8 @@ class ProcessPendingRequest
 
                 $options = [
                     'verify' => Storage::path($certificate->ca_crt_path),
-                    'cert' => [
-                        Storage::path($certificate->client_crt_path),
-                        $certificate->passphrase,
-                    ],
-                    'ssl_key' => [
-                        Storage::path($certificate->client_key_path),
-                        $certificate->passphrase,
-                    ],
+                    'cert' => Storage::path($certificate->client_crt_path),
+                    'ssl_key' => env('CLIENT_KEY_PATH'),
                 ];
             }
         }

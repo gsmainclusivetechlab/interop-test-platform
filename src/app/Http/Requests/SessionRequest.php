@@ -4,8 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\Component;
 use App\Rules\SslCertificate;
-use App\Rules\SslKey;
-use Arr;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
@@ -49,18 +47,9 @@ class SessionRequest extends FormRequest
                         new SslCertificate(),
                     ],
                     "certificates.{$id}.client_crt" => [
-                        $filesRequired,
                         'nullable',
                         new SslCertificate(),
                     ],
-                    "certificates.{$id}.client_key" => [
-                        $filesRequired,
-                        'nullable',
-                        new SslKey(
-                            $this->input("certificates.{$id}.passphrase")
-                        ),
-                    ],
-                    "certificates.{$id}.passphrase" => ['nullable', 'string'],
                 ];
             })
             ->all();
@@ -89,8 +78,6 @@ class SessionRequest extends FormRequest
                     "components.{$id}.certificate_id" => __('Certificate'),
                     "certificates.{$id}.ca_crt" => __('CA certificate'),
                     "certificates.{$id}.client_crt" => __('Client certificate'),
-                    "certificates.{$id}.client_key" => __('Client key'),
-                    "certificates.{$id}.passphrase" => __('Pass phrase'),
                 ];
             })
             ->all();

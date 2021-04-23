@@ -16,11 +16,17 @@
             <div class="card-header">
                 <div class="card-options">
                     <a
-                        :href="route('sessions.certificates.download')"
+                        :href="route('sessions.certificates.download-csr')"
+                        class="btn btn-primary mr-3"
+                    >
+                        Download CSR
+                    </a>
+                    <button
+                        v-b-modal="`modal-download`"
                         class="btn btn-outline-primary mr-3"
                     >
                         Download certificates
-                    </a>
+                    </button>
                     <inertia-link
                         :href="route('admin.implicit-suts.create')"
                         class="btn btn-primary"
@@ -28,6 +34,69 @@
                         <icon name="plus" />
                         {{ $t('buttons.create') }}
                     </inertia-link>
+                    <b-modal
+                        :id="`modal-download`"
+                        size="lg"
+                        centered
+                        hide-footer
+                        title="Upload CSR of your SUT"
+                        @hidden="resetModal"
+                    >
+                        <form @submit.prevent="submit">
+                            <div class="card-body">
+                                <div class="mb-1">
+                                    <h4>
+                                        It will be used by ITP to generate public certificate.
+                                    </h4>
+                                </div>
+                                <div class="mb-3">
+                                    <b-form-file
+                                        v-model="form.file"
+                                        :placeholder="'Choose file ...'"
+                                        :browse-text="'Browse'"
+                                        :class="{
+                                                    'is-invalid': $page.props.errors.file,
+                                                }"
+                                    />
+                                    <div
+                                        v-if="$page.props.errors.file"
+                                        class="invalid-feedback"
+                                    >
+                                        <p class="mb-1">
+                                            <strong>
+                                                Error with file - {{form.fileSrc}}
+                                            </strong>
+                                        </p>
+                                        <p
+                                            v-if="$page.props.errors.file"
+                                            class="mb-1"
+                                        >
+                                            <strong>
+                                                {{ $page.props.errors.file }}
+                                            </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    :disabled="!form.file"
+                                >
+                                    Submit CSR
+                                </button>
+                                <a
+                                    @click="disableBtn"
+                                    :class="{disabled: btnDisabled}"
+                                    :href="
+                                                route('sessions.certificates.download')
+                                            "
+                                    class="btn btn-primary"
+                                >
+                                    Download certificates
+                                </a>
+                            </div>
+                        </form>
+                    </b-modal>
                 </div>
             </div>
             <div class="table-responsive mb-0">
@@ -145,6 +214,49 @@ export default {
         implicitSuts: {
             type: Object,
             required: true,
+        },
+        data: {
+            type: Object,
+            required: false,
+        },
+    },
+    data() {
+        return {
+        btnDisabled: true,
+        form: {
+            file: null,
+            fileSrc: null,
+        }
+        };
+    },
+    methods: {
+        submit() {
+            const data = new FormData();
+            this.$page.props.errors.file = null;
+
+            data.append('file', this.form.file);
+            this.$inertia.post(
+                route('sessions.certificates.upload-csr'),
+                data,
+                {
+                    onFinish: () => {
+                        this.form.fileSrc = `${this.form.file.name}`;
+                        this.form.file = null;
+                        if (!this.$page.props.errors.file) {
+                            this.btnDisabled = false;
+                        }
+                    },
+                }
+            );
+        },
+        resetModal() {
+            this.form.file = null;
+            this.form.fileSrc = null;
+            this.$page.props.errors.file = null;
+            this.btnDisabled = true;
+        },
+        disableBtn() {
+            this.btnDisabled = true;
         },
     },
 };

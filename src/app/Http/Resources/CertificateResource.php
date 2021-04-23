@@ -24,7 +24,8 @@ class CertificateResource extends JsonResource
             'id' => $this->id,
             'certificable_id' => $this->certificable_id,
             'name' => $this->name,
-            'passphrase' => $this->passphrase,
+            'has_ca_crt' => !empty($this->ca_crt_path),
+            'has_client_crt' => !empty($this->client_crt_path),
             'created_at' => $this->created_at->toDateTimeString(),
             'can' => [
                 'delete' => auth()

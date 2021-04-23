@@ -226,6 +226,16 @@
                                         v-if="!component.certificate.serialized"
                                     >
                                         <div class="mb-3">
+                                            <h4>Encrypted connection</h4>
+
+                                            <a
+                                                :href="route('sessions.certificates.download-csr')"
+                                                class="btn btn-sm btn-block btn-outline-primary"
+                                            >
+                                                Download CSR
+                                            </a>
+                                        </div>
+                                        <div class="mb-3">
                                             <label class="form-label"
                                                 >CA certificate</label
                                             >
@@ -269,7 +279,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label"
-                                                >Client certificate</label
+                                                >Client certificate (Optional)</label
                                             >
                                             <b-form-file
                                                 v-model="
@@ -305,83 +315,6 @@
                                                     {{
                                                         $page.props.errors[
                                                             `components.${component.id}.client_crt`
-                                                        ]
-                                                    }}
-                                                </strong>
-                                            </span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label"
-                                                >Client key</label
-                                            >
-                                            <b-form-file
-                                                v-model="
-                                                    component.certificate
-                                                        .client_key
-                                                "
-                                                :placeholder="
-                                                    component.hasNonGroupCertificate
-                                                        ? 'Client key is uploaded'
-                                                        : 'Choose file...'
-                                                "
-                                                :browse-text="
-                                                    component.hasNonGroupCertificate
-                                                        ? 'Change file'
-                                                        : 'Browse'
-                                                "
-                                                :class="{
-                                                    'is-invalid':
-                                                        $page.props.errors[
-                                                            `components.${component.id}.client_key`
-                                                        ],
-                                                }"
-                                            />
-                                            <span
-                                                v-if="
-                                                    $page.props.errors[
-                                                        `components.${component.id}.client_key`
-                                                    ]
-                                                "
-                                                class="invalid-feedback"
-                                            >
-                                                <strong>
-                                                    {{
-                                                        $page.props.errors[
-                                                            `components.${component.id}.client_key`
-                                                        ]
-                                                    }}
-                                                </strong>
-                                            </span>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label"
-                                                >Pass phrase</label
-                                            >
-                                            <input
-                                                v-model="
-                                                    component.certificate
-                                                        .passphrase
-                                                "
-                                                :class="{
-                                                    'is-invalid':
-                                                        $page.props.errors[
-                                                            `components.${component.id}.passphrase`
-                                                        ],
-                                                }"
-                                                class="form-control"
-                                            />
-                                            <span
-                                                v-if="
-                                                    $page.props.errors[
-                                                        `components.${component.id}.passphrase`
-                                                    ]
-                                                "
-                                                class="invalid-feedback"
-                                            >
-                                                <strong>
-                                                    {{
-                                                        $page.props.errors[
-                                                            `components.${component.id}.passphrase`
                                                         ]
                                                     }}
                                                 </strong>
@@ -497,8 +430,6 @@ export default {
                 certificate: {
                     ca_crt: null,
                     client_crt: null,
-                    client_key: null,
-                    passphrase: null,
                     serialized: null,
                 },
                 versions: versions,
@@ -522,7 +453,6 @@ export default {
                     c.hasNonGroupCertificate = this.certificateIds.includes(
                         sut.certificate_id
                     );
-                    c.certificate.passphrase = sut.passphrase;
                     c.base_url = sut.base_url;
                     c.use_encryption = sut.use_encryption;
                     c.version = sut.version;
@@ -560,8 +490,6 @@ export default {
                                     : null),
                             ca_crt: c.certificate.ca_crt,
                             client_crt: c.certificate.client_crt,
-                            client_key: c.certificate.client_key,
-                            passphrase: c.certificate.passphrase,
                             version: c.version,
                             implicit_sut_id: c.implicit_sut_id,
                         },

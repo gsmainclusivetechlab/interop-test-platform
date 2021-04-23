@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Http\Controllers\Sessions\Register\Traits\Queries;
 use App\Models\Session;
 use App\Rules\SslCertificate;
-use App\Rules\SslKey;
 use Arr;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
@@ -44,21 +43,9 @@ class SessionSutRequest extends FormRequest
                         new SslCertificate(),
                     ],
                     "components.{$id}.client_crt" => [
-                        $filesRequired,
                         'nullable',
                         new SslCertificate(),
                     ],
-                    "components.{$id}.client_key" => [
-                        $filesRequired,
-                        'nullable',
-                        new SslKey(
-                            Arr::get(
-                                $this->all(),
-                                "components.{$id}.passphrase"
-                            )
-                        ),
-                    ],
-                    "components.{$id}.passphrase" => ['nullable', 'string'],
                     "components.{$id}.version" => [
                         Rule::requiredIf(is_array($versions->get($id))),
                         'nullable',
@@ -94,8 +81,6 @@ class SessionSutRequest extends FormRequest
                     "components.{$id}.certificate_id" => __('Certificate'),
                     "components.{$id}.ca_crt" => __('CA certificate'),
                     "components.{$id}.client_crt" => __('Client certificate'),
-                    "components.{$id}.client_key" => __('Client key'),
-                    "components.{$id}.passphrase" => __('Pass phrase'),
                     "components.{$id}.version" => __('Version'),
                 ];
             })

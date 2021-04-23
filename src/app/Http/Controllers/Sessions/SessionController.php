@@ -372,12 +372,7 @@ class SessionController extends Controller
                                     $request,
                                     $component->pivot->certificate,
                                     "certificates.{$component->id}.ca_crt",
-                                    "certificates.{$component->id}.client_crt",
-                                    "certificates.{$component->id}.client_key",
-                                    Arr::get(
-                                        $request->all(),
-                                        "certificates.{$component->id}.passphrase"
-                                    )
+                                    "certificates.{$component->id}.client_crt"
                                 )
                             );
 

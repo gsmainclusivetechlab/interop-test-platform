@@ -8,7 +8,6 @@ use App\Http\Resources\GroupResource;
 use App\Models\Certificate;
 use App\Models\Group;
 use App\Rules\SslCertificate;
-use App\Rules\SslKey;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -67,19 +66,12 @@ class GroupCertificatesController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'ca_crt' => ['required', new SslCertificate()],
             'client_crt' => ['required', new SslCertificate()],
-            'client_key' => [
-                'required',
-                new SslKey($request->get('passphrase')),
-            ],
-            'passphrase' => ['nullable', 'string'],
         ]);
 
         $group->certificates()->create([
             'name' => $request->get('name'),
-            'passphrase' => $request->get('passphrase'),
             'ca_crt_path' => Certificate::storeFile($request, 'ca_crt'),
             'client_crt_path' => Certificate::storeFile($request, 'client_crt'),
-            'client_key_path' => Certificate::storeFile($request, 'client_key'),
         ]);
 
         return redirect()

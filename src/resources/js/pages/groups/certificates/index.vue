@@ -11,6 +11,13 @@
                         <icon name="plus" />
                         Upload Certificates
                     </inertia-link>
+                    <a
+                        v-if="group.can.admin"
+                        :href="route('sessions.certificates.download-csr')"
+                        class="btn btn-primary ml-2"
+                    >
+                        Download CSR
+                    </a>
                 </div>
             </div>
             <div class="table-responsive mb-0">

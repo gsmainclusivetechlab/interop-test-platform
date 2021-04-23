@@ -70,9 +70,7 @@ class SutController extends Controller
                             $request,
                             $certificate,
                             "components.{$key}.ca_crt",
-                            "components.{$key}.client_crt",
-                            "components.{$key}.client_key",
-                            Arr::get($sut, 'passphrase')
+                            "components.{$key}.client_crt"
                         )
                     )->id;
                 }
@@ -80,7 +78,6 @@ class SutController extends Controller
                 return Arr::except($sut, [
                     'ca_crt',
                     'client_crt',
-                    'client_key',
                 ]);
             })
             ->all();

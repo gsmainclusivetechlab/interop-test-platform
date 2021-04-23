@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\ImplicitSut;
 use App\Rules\SslCertificate;
-use App\Rules\SslKey;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -43,12 +42,6 @@ class ImplicitSutRequest extends FormRequest
                 'nullable',
                 new SslCertificate(),
             ],
-            'client_key' => [
-                $isRequiredCertificates,
-                'nullable',
-                new SslKey($this->get('passphrase')),
-            ],
-            'passphrase' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -57,7 +50,6 @@ class ImplicitSutRequest extends FormRequest
         return [
             'ca_crt' => __('CA certificate'),
             'client_crt' => __('Client certificate'),
-            'client_key' => __('Client key'),
         ];
     }
 }
