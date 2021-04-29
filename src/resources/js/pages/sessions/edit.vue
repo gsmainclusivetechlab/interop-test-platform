@@ -196,7 +196,11 @@
                                     >
                                         <div class="mb-3">
                                             <a
-                                                :href="route('sessions.certificates.download-csr')"
+                                                :href="
+                                                    route(
+                                                        'sessions.certificates.download-csr'
+                                                    )
+                                                "
                                                 class="btn btn-sm btn-block btn-outline-primary"
                                             >
                                                 Download CSR
@@ -246,7 +250,8 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label"
-                                                >Client certificate (Optional)</label
+                                                >Client certificate
+                                                (Optional)</label
                                             >
                                             <b-form-file
                                                 v-model="
@@ -385,7 +390,10 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Environments </label>
-                                <environments v-model="form.environments" />
+                                <environments
+                                    ref="textEnv"
+                                    v-model="form.combinedEnv"
+                                />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.environments"
@@ -395,23 +403,22 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    File environments
-                                </label>
-                                <environments
-                                    v-model="form.fileEnvironments"
-                                    envs-type="file"
-                                />
-                                <div
-                                    class="text-danger small mt-2"
-                                    v-if="$page.props.errors.fileEnvironments"
-                                >
-                                    <strong>{{
-                                        $page.props.errors.fileEnvironments
-                                    }}</strong>
-                                </div>
-                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-block btn-secondary"
+                                @click="$refs.textEnv.addEnvironment('text')"
+                            >
+                                <icon name="plus" />
+                                <span>Add New</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-block btn-secondary"
+                                @click="$refs.textEnv.addEnvironment('file')"
+                            >
+                                <icon name="plus" />
+                                <span>Add File</span>
+                            </button>
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
@@ -503,6 +510,11 @@ export default {
             form: {
                 name: this.session.name,
                 description: this.session.description,
+                combinedEnv: Object.entries(this.session.environments ?? {})
+                    ?.map(([key, value]) => ({ key: key, value: value }))
+                    .map((x) => {
+                        return { ...x, type: 'text' };
+                    }),
                 environments: Object.entries(
                     this.session.environments ?? {}
                 )?.map(([key, value]) => ({ key: key, value: value })),
@@ -545,16 +557,39 @@ export default {
     },
     methods: {
         submit() {
+            console.log(
+                this.form.combinedEnv
+                    .filter(({ type }) => type === 'text')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    )
+            );
             const form = {
                 _method: 'PUT',
                 name: this.form.name,
                 description: this.form.description,
-                environments: Object.fromEntries(
-                    this.form.environments.map((el) => [el.key, el.value])
-                ),
-                fileEnvironments: Object.fromEntries(
-                    this.form.fileEnvironments.map((el) => [el.key, el.value])
-                ),
+                environments: this.form.combinedEnv
+                    ?.filter(({ type }) => type === 'text')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    ),
+                combinedEnv: this.form.environments
+                    .map((x) => {
+                        return { ...x, type: 'text' };
+                    })
+                    .concat(
+                        this.form.fileEnvironments.map((x) => {
+                            return { ...x, type: 'file' };
+                        })
+                    ),
+                fileEnvironments: this.form.combinedEnv
+                    ?.filter(({ type }) => type === 'file')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    ),
                 components: Object.fromEntries(
                     this.form.components?.map((el) => [
                         el.id,

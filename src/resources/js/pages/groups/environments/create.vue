@@ -32,7 +32,10 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Variables </label>
-                                <environments v-model="form.variables" />
+                                <environments
+                                    ref="textEnv"
+                                    v-model="form.combinedVars"
+                                />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.variables"
@@ -42,21 +45,22 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label"> Files </label>
-                                <environments
-                                    v-model="form.files"
-                                    envs-type="file"
-                                />
-                                <div
-                                    class="text-danger small mt-2"
-                                    v-if="$page.props.errors.files"
-                                >
-                                    <strong>{{
-                                        $page.props.errors.files
-                                    }}</strong>
-                                </div>
-                            </div>
+                            <button
+                                type="button"
+                                class="btn btn-block btn-secondary"
+                                @click="$refs.textEnv.addEnvironment('text')"
+                            >
+                                <icon name="plus" />
+                                <span>Add New</span>
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-block btn-secondary"
+                                @click="$refs.textEnv.addEnvironment('file')"
+                            >
+                                <icon name="plus" />
+                                <span>Add File</span>
+                            </button>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -117,12 +121,27 @@ export default {
         submit() {
             const form = {
                 name: this.form.name,
-                variables: Object.fromEntries(
-                    this.form.variables.map((el) => [el.key, el.value])
-                ),
-                files: Object.fromEntries(
-                    this.form.files.map((el) => [el.key, el.value])
-                ),
+                variables: this.form.combinedVars
+                    ?.filter(({ type }) => type === 'text')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    ),
+                combinedVars: this.form.variables
+                    .map((x) => {
+                        return { ...x, type: 'text' };
+                    })
+                    .concat(
+                        this.form.files.map((x) => {
+                            return { ...x, type: 'file' };
+                        })
+                    ),
+                files: this.form.combinedVars
+                    ?.filter(({ type }) => type === 'file')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    ),
             };
 
             this.sending = true;

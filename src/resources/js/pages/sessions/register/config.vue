@@ -168,7 +168,10 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Environments</label>
-                        <environments v-model="form.environments" />
+                        <environments
+                            ref="textEnv"
+                            v-model="form.combinedEnv"
+                        />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.props.errors.environments"
@@ -178,21 +181,22 @@
                             }}</strong>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label"> File Environments </label>
-                        <environments
-                            v-model="form.fileEnvironments"
-                            envs-type="file"
-                        />
-                        <div
-                            class="text-danger small mt-2"
-                            v-if="$page.props.errors.fileEnvironments"
-                        >
-                            <strong>{{
-                                $page.props.errors.fileEnvironments
-                            }}</strong>
-                        </div>
-                    </div>
+                    <button
+                        type="button"
+                        class="btn btn-block btn-secondary"
+                        @click="$refs.textEnv.addEnvironment('text')"
+                    >
+                        <icon name="plus" />
+                        <span>Add New</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-block btn-secondary"
+                        @click="$refs.textEnv.addEnvironment('file')"
+                    >
+                        <icon name="plus" />
+                        <span>Add File</span>
+                    </button>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -283,16 +287,27 @@ export default {
     methods: {
         submit() {
             const form = {
-                environments: Object.fromEntries(
-                    this.form.environments?.map((el) => [el.key, el.value]) ??
-                        []
-                ),
-                fileEnvironments: Object.fromEntries(
-                    this.form.fileEnvironments?.map((el) => [
-                        el.key,
-                        el.value,
-                    ]) ?? []
-                ),
+                environments: this.form.combinedEnv
+                    ?.filter(({ type }) => type === 'text')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    ),
+                combinedEnv: this.form.environments
+                    .map((x) => {
+                        return { ...x, type: 'text' };
+                    })
+                    .concat(
+                        this.form.fileEnvironments.map((x) => {
+                            return { ...x, type: 'file' };
+                        })
+                    ),
+                fileEnvironments: this.form.combinedEnv
+                    ?.filter(({ type }) => type === 'file')
+                    .reduce(
+                        (obj, item) => ((obj[item.key] = item.value), obj),
+                        {}
+                    ),
                 groupsDefault: this.form.groupsDefault,
             };
 

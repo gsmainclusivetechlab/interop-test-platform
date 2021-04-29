@@ -1,6 +1,6 @@
 <template>
-    <ul class="list-group">
-        <li
+    <div>
+        <div
             v-for="(environment, i) in environments"
             class="list-group-item"
             :key="i"
@@ -24,7 +24,7 @@
                     "
                 />
                 <input
-                    v-if="envsType === 'text'"
+                    v-if="environment.type === 'text'"
                     v-model="environment.value"
                     type="text"
                     placeholder="Value"
@@ -33,7 +33,7 @@
                         'is-invalid': environment.error,
                     }"
                 />
-                <template v-else-if="envsType === 'file'">
+                <template v-else-if="environment.type === 'file'">
                     <input
                         v-if="environment.file_name"
                         v-model="environment.file_name"
@@ -66,18 +66,8 @@
                     {{ environment.error }}
                 </strong>
             </span>
-        </li>
-        <li class="list-group-item">
-            <button
-                type="button"
-                class="btn btn-block btn-secondary"
-                @click="addEnvironment"
-            >
-                <icon name="plus" />
-                <span>Add New</span>
-            </button>
-        </li>
-    </ul>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -116,8 +106,13 @@ export default {
 
             this.$emit('input', value);
         },
-        addEnvironment() {
-            this.environments.push({ key: '', value: null, error: null });
+        addEnvironment(type) {
+            this.environments.push({
+                key: '',
+                value: null,
+                type: type,
+                error: null,
+            });
         },
         deleteEnvironment(index) {
             this.environments.splice(index, 1);
