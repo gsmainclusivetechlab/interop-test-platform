@@ -130,8 +130,8 @@
                             @click="
                                 mergeGroupsEnvs(
                                     groupsEnvs,
-                                    form.environments,
-                                    form.fileEnvironments
+                                    form.combinedEnv,
+                                    form.combinedEnv
                                 )
                             "
                         >
@@ -155,8 +155,8 @@
                                 ).then((data) => {
                                     mergeTestCasesEnvs(
                                         data.data,
-                                        form.environments,
-                                        form.fileEnvironments
+                                        form.combinedEnv,
+                                        form.combinedEnv
                                     );
                                 })
                             "
@@ -265,6 +265,7 @@ export default {
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
                 environments: [],
+                combinedEnv: [],
                 fileEnvironments: [],
                 groupsDefault: [],
             },
@@ -278,8 +279,8 @@ export default {
             (data) => {
                 this.mergeTestCasesEnvs(
                     data.data,
-                    this.form.environments,
-                    this.form.fileEnvironments
+                    this.form.combinedEnv,
+                    this.form.combinedEnv
                 );
             }
         );

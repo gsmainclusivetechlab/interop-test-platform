@@ -22,6 +22,7 @@ export default {
                             currentEnvs.push({
                                 key: key,
                                 value: value,
+                                type: 'text',
                             })
                         );
                     break;
@@ -50,6 +51,7 @@ export default {
                                 key: incoming.name,
                                 value: incoming.id,
                                 file_name: incoming.file_name,
+                                type: 'file',
                             })
                         );
                     break;

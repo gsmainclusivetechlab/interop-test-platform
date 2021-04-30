@@ -351,8 +351,8 @@
                                         @click="
                                             mergeGroupsEnvs(
                                                 groupsEnvs,
-                                                form.environments,
-                                                form.fileEnvironments
+                                                form.combinedEnv,
+                                                form.combinedEnv
                                             )
                                         "
                                     >
@@ -378,8 +378,8 @@
                                             ).then((data) => {
                                                 mergeTestCasesEnvs(
                                                     data.data,
-                                                    form.environments,
-                                                    form.fileEnvironments
+                                                    form.combinedEnv,
+                                                    form.combinedEnv
                                                 );
                                             })
                                         "
@@ -514,7 +514,15 @@ export default {
                     ?.map(([key, value]) => ({ key: key, value: value }))
                     .map((x) => {
                         return { ...x, type: 'text' };
-                    }),
+                    })
+                    .concat(
+                        this.session.fileEnvironments?.map((el) => ({
+                            key: el.name,
+                            value: el.id,
+                            file_name: el.file_name,
+                            type: 'file',
+                        }))
+                    ),
                 environments: Object.entries(
                     this.session.environments ?? {}
                 )?.map(([key, value]) => ({ key: key, value: value })),

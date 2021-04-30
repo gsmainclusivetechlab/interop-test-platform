@@ -116,6 +116,19 @@ export default {
             sending: false,
             form: {
                 name: this.environment.name,
+                combinedVar: Object.entries(this.environment.variables ?? {})
+                    ?.map(([key, value]) => ({ key: key, value: value }))
+                    .map((x) => {
+                        return { ...x, type: 'text' };
+                    })
+                    .concat(
+                        this.environment.files?.map((el) => ({
+                            key: el.name,
+                            value: el.id,
+                            file_name: el.file_name,
+                            type: 'file',
+                        }))
+                    ),
                 variables:
                     Object.entries(
                         this.environment.variables ?? {}
@@ -141,12 +154,12 @@ export default {
                         (obj, item) => ((obj[item.key] = item.value), obj),
                         {}
                     ),
-                combinedVar: this.environment.variables
+                combinedVar: this.form.variables
                     .map((x) => {
                         return { ...x, type: 'text' };
                     })
                     .concat(
-                        this.environment.files.map((x) => {
+                        this.form.files.map((x) => {
                             return { ...x, type: 'file' };
                         })
                     ),

@@ -113,6 +113,7 @@ export default {
             form: {
                 name: null,
                 variables: [],
+                combinedVars: [],
                 files: [],
             },
         };
