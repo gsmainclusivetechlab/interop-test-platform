@@ -42,21 +42,6 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label"> Files </label>
-                                <environments
-                                    v-model="form.files"
-                                    envs-type="file"
-                                />
-                                <div
-                                    class="text-danger small mt-2"
-                                    v-if="$page.props.errors.files"
-                                >
-                                    <strong>{{
-                                        $page.props.errors.files
-                                    }}</strong>
-                                </div>
-                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -86,8 +71,10 @@
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
 import Environments from '@/components/environments';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
+    mixins: [mixinEnvs],
     metaInfo() {
         return {
             title: `Update environment for ${this.group.name}`,
@@ -112,17 +99,10 @@ export default {
             sending: false,
             form: {
                 name: this.environment.name,
-                variables:
-                    Object.entries(
-                        this.environment.variables ?? {}
-                    )?.map(([key, value]) => ({ key: key, value: value })) ??
-                    [],
-                files:
-                    this.environment.files?.map((el) => ({
-                        key: el.name,
-                        value: el.id,
-                        file_name: el.file_name,
-                    })) ?? [],
+                variables: this.combineEnv(
+                    this.environment.variables,
+                    this.environment.files
+                ),
             },
         };
     },
@@ -131,12 +111,7 @@ export default {
             const form = {
                 _method: 'PUT',
                 name: this.form.name,
-                variables: Object.fromEntries(
-                    this.form.variables?.map((el) => [el.key, el.value]) ?? []
-                ),
-                files: Object.fromEntries(
-                    this.form.files?.map((el) => [el.key, el.value]) ?? []
-                ),
+                ...this.separateEnv(this.form.variables),
             };
 
             this.sending = true;

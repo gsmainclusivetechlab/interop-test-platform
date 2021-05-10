@@ -128,10 +128,9 @@
                             type="button"
                             class="btn btn-primary"
                             @click="
-                                mergeGroupsEnvs(
+                                form.variables = mergeGroupsEnvs(
                                     groupsEnvs,
-                                    form.environments,
-                                    form.fileEnvironments
+                                    form.variables
                                 )
                             "
                         >
@@ -153,10 +152,9 @@
                                 loadTestCasesEnvs(
                                     $page.props.session.info.test_cases
                                 ).then((data) => {
-                                    mergeTestCasesEnvs(
+                                    form.variables = mergeTestCasesEnvs(
                                         data.data,
-                                        form.environments,
-                                        form.fileEnvironments
+                                        form.variables
                                     );
                                 })
                             "
@@ -168,28 +166,13 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Environments</label>
-                        <environments v-model="form.environments" />
+                        <environments v-model="form.variables" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.props.errors.environments"
                         >
                             <strong>{{
                                 $page.props.errors.environments
-                            }}</strong>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label"> File Environments </label>
-                        <environments
-                            v-model="form.fileEnvironments"
-                            envs-type="file"
-                        />
-                        <div
-                            class="text-danger small mt-2"
-                            v-if="$page.props.errors.fileEnvironments"
-                        >
-                            <strong>{{
-                                $page.props.errors.fileEnvironments
                             }}</strong>
                         </div>
                     </div>
@@ -260,8 +243,7 @@ export default {
             groupsEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
-                environments: [],
-                fileEnvironments: [],
+                variables: [],
                 groupsDefault: [],
             },
         };
@@ -272,27 +254,19 @@ export default {
         });
         this.loadTestCasesEnvs(this.$page.props.session.info.test_cases).then(
             (data) => {
-                this.mergeTestCasesEnvs(
+                this.form.variables = this.mergeTestCasesEnvs(
                     data.data,
-                    this.form.environments,
-                    this.form.fileEnvironments
+                    this.form.variables
                 );
             }
         );
     },
     methods: {
         submit() {
+            const { variables, files } = this.separateEnv(this.form.variables);
             const form = {
-                environments: Object.fromEntries(
-                    this.form.environments?.map((el) => [el.key, el.value]) ??
-                        []
-                ),
-                fileEnvironments: Object.fromEntries(
-                    this.form.fileEnvironments?.map((el) => [
-                        el.key,
-                        el.value,
-                    ]) ?? []
-                ),
+                environments: variables,
+                fileEnvironments: files,
                 groupsDefault: this.form.groupsDefault,
             };
 

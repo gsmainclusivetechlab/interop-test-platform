@@ -42,21 +42,6 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label"> Files </label>
-                                <environments
-                                    v-model="form.files"
-                                    envs-type="file"
-                                />
-                                <div
-                                    class="text-danger small mt-2"
-                                    v-if="$page.props.errors.files"
-                                >
-                                    <strong>{{
-                                        $page.props.errors.files
-                                    }}</strong>
-                                </div>
-                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -86,8 +71,10 @@
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
 import Environments from '@/components/environments';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
+    mixins: [mixinEnvs],
     metaInfo() {
         return {
             title: `Create new environment for ${this.group.name}`,
@@ -108,8 +95,9 @@ export default {
             sending: false,
             form: {
                 name: null,
-                variables: [],
-                files: [],
+                variables: [
+                    { type: 'text', key: '', value: null, error: null },
+                ],
             },
         };
     },
@@ -117,12 +105,7 @@ export default {
         submit() {
             const form = {
                 name: this.form.name,
-                variables: Object.fromEntries(
-                    this.form.variables.map((el) => [el.key, el.value])
-                ),
-                files: Object.fromEntries(
-                    this.form.files.map((el) => [el.key, el.value])
-                ),
+                ...this.separateEnv(this.form.variables),
             };
 
             this.sending = true;
