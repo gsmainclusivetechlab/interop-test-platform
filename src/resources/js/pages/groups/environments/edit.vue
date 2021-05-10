@@ -32,10 +32,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Variables </label>
-                                <environments
-                                    ref="textEnv"
-                                    v-model="form.combinedVar"
-                                />
+                                <environments v-model="form.variables" />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.variables"
@@ -45,22 +42,6 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <button
-                                type="button"
-                                class="btn btn-block btn-secondary"
-                                @click="$refs.textEnv.addEnvironment('text')"
-                            >
-                                <icon name="plus" />
-                                <span>Add New</span>
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-block btn-secondary"
-                                @click="$refs.textEnv.addEnvironment('file')"
-                            >
-                                <icon name="plus" />
-                                <span>Add File</span>
-                            </button>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -90,8 +71,10 @@
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
 import Environments from '@/components/environments';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
+    mixins: [mixinEnvs],
     metaInfo() {
         return {
             title: `Update environment for ${this.group.name}`,
@@ -116,30 +99,10 @@ export default {
             sending: false,
             form: {
                 name: this.environment.name,
-                combinedVar: Object.entries(this.environment.variables ?? {})
-                    ?.map(([key, value]) => ({ key: key, value: value }))
-                    .map((x) => {
-                        return { ...x, type: 'text' };
-                    })
-                    .concat(
-                        this.environment.files?.map((el) => ({
-                            key: el.name,
-                            value: el.id,
-                            file_name: el.file_name,
-                            type: 'file',
-                        }))
-                    ),
-                variables:
-                    Object.entries(
-                        this.environment.variables ?? {}
-                    )?.map(([key, value]) => ({ key: key, value: value })) ??
-                    [],
-                files:
-                    this.environment.files?.map((el) => ({
-                        key: el.name,
-                        value: el.id,
-                        file_name: el.file_name,
-                    })) ?? [],
+                variables: this.combineEnv(
+                    this.environment.variables,
+                    this.environment.files
+                ),
             },
         };
     },
@@ -148,27 +111,7 @@ export default {
             const form = {
                 _method: 'PUT',
                 name: this.form.name,
-                variables: this.form.combinedVar
-                    ?.filter(({ type }) => type === 'text')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
-                combinedVar: this.form.variables
-                    .map((x) => {
-                        return { ...x, type: 'text' };
-                    })
-                    .concat(
-                        this.form.files.map((x) => {
-                            return { ...x, type: 'file' };
-                        })
-                    ),
-                files: this.form.combinedVar
-                    ?.filter(({ type }) => type === 'file')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
+                ...this.separateEnv(this.form.variables),
             };
 
             this.sending = true;

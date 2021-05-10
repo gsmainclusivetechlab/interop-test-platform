@@ -349,10 +349,9 @@
                                         type="button"
                                         class="btn btn-primary"
                                         @click="
-                                            mergeGroupsEnvs(
+                                            form.variables = mergeGroupsEnvs(
                                                 groupsEnvs,
-                                                form.combinedEnv,
-                                                form.combinedEnv
+                                                form.variables
                                             )
                                         "
                                     >
@@ -376,10 +375,9 @@
                                             loadTestCasesEnvs(
                                                 form.test_cases
                                             ).then((data) => {
-                                                mergeTestCasesEnvs(
+                                                form.variables = mergeTestCasesEnvs(
                                                     data.data,
-                                                    form.combinedEnv,
-                                                    form.combinedEnv
+                                                    form.variables
                                                 );
                                             })
                                         "
@@ -390,10 +388,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Environments </label>
-                                <environments
-                                    ref="textEnv"
-                                    v-model="form.combinedEnv"
-                                />
+                                <environments v-model="form.variables" />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.environments"
@@ -403,22 +398,6 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <button
-                                type="button"
-                                class="btn btn-block btn-secondary"
-                                @click="$refs.textEnv.addEnvironment('text')"
-                            >
-                                <icon name="plus" />
-                                <span>Add New</span>
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-block btn-secondary"
-                                @click="$refs.textEnv.addEnvironment('file')"
-                            >
-                                <icon name="plus" />
-                                <span>Add File</span>
-                            </button>
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
@@ -510,27 +489,10 @@ export default {
             form: {
                 name: this.session.name,
                 description: this.session.description,
-                combinedEnv: Object.entries(this.session.environments ?? {})
-                    ?.map(([key, value]) => ({ key: key, value: value }))
-                    .map((x) => {
-                        return { ...x, type: 'text' };
-                    })
-                    .concat(
-                        this.session.fileEnvironments?.map((el) => ({
-                            key: el.name,
-                            value: el.id,
-                            file_name: el.file_name,
-                            type: 'file',
-                        }))
-                    ),
-                environments: Object.entries(
-                    this.session.environments ?? {}
-                )?.map(([key, value]) => ({ key: key, value: value })),
-                fileEnvironments: this.session.fileEnvironments?.map((el) => ({
-                    key: el.name,
-                    value: el.id,
-                    file_name: el.file_name,
-                })),
+                variables: this.combineEnv(
+                    this.session.environments,
+                    this.session.fileEnvironments
+                ),
                 components: this.components.data?.map((el) => ({
                     ...el,
                     certificate: {
@@ -565,39 +527,13 @@ export default {
     },
     methods: {
         submit() {
-            console.log(
-                this.form.combinedEnv
-                    .filter(({ type }) => type === 'text')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    )
-            );
+            const { variables, files } = this.separateEnv(this.form.variables);
             const form = {
+                environments: variables,
+                fileEnvironments: files,
                 _method: 'PUT',
                 name: this.form.name,
                 description: this.form.description,
-                environments: this.form.combinedEnv
-                    ?.filter(({ type }) => type === 'text')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
-                combinedEnv: this.form.environments
-                    .map((x) => {
-                        return { ...x, type: 'text' };
-                    })
-                    .concat(
-                        this.form.fileEnvironments.map((x) => {
-                            return { ...x, type: 'file' };
-                        })
-                    ),
-                fileEnvironments: this.form.combinedEnv
-                    ?.filter(({ type }) => type === 'file')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
                 components: Object.fromEntries(
                     this.form.components?.map((el) => [
                         el.id,

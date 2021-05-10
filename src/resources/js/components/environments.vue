@@ -1,14 +1,10 @@
 <template>
     <div>
-        <div
-            v-for="(environment, i) in environments"
-            class="list-group-item"
-            :key="i"
-        >
+        <div v-for="(environment, i) in value" class="list-group-item" :key="i">
             <div
                 class="input-group"
                 :class="{
-                    'is-invalid': environment.error,
+                    'is-invalid': errors[i],
                 }"
             >
                 <input
@@ -17,26 +13,34 @@
                     placeholder="Key"
                     class="form-control px-2"
                     :class="{
-                        'is-invalid': environment.error,
+                        'is-invalid': errors[i],
                     }"
                     @input.prevent="
-                        (e) => setKey(e.target.value, environment, i)
+                        (e) =>
+                            setVar(
+                                { ...environment, key: e.target.value.trim() },
+                                i
+                            )
                     "
                 />
                 <input
                     v-if="environment.type === 'text'"
-                    v-model="environment.value"
+                    :value="environment.value"
+                    @input.prevent="
+                        (e) =>
+                            setVar({ ...environment, value: e.target.value }, i)
+                    "
                     type="text"
                     placeholder="Value"
                     class="form-control px-2"
                     :class="{
-                        'is-invalid': environment.error,
+                        'is-invalid': errors[i],
                     }"
                 />
                 <template v-else-if="environment.type === 'file'">
                     <input
                         v-if="environment.file_name"
-                        v-model="environment.file_name"
+                        :value="environment.file_name"
                         type="text"
                         placeholder="Value"
                         readonly
@@ -44,7 +48,10 @@
                     />
                     <b-form-file
                         v-else
-                        v-model="environment.value"
+                        :value="environment.value"
+                        @input="
+                            (file) => setVar({ ...environment, value: file }, i)
+                        "
                         placeholder="Choose file..."
                         class="form-control border-0"
                     />
@@ -53,19 +60,37 @@
                     type="button"
                     class="btn btn-icon"
                     :class="{
-                        'btn-secondary': !environment.error,
-                        'btn-outline-primary': environment.error,
+                        'btn-secondary': !errors[i],
+                        'btn-outline-primary': errors[i],
                     }"
-                    @click="deleteEnvironment(i)"
+                    @click="deleteVar(i)"
                 >
                     <icon name="trash" />
                 </button>
             </div>
-            <span v-if="environment.error" class="invalid-feedback">
+            <span v-if="errors[i]" class="invalid-feedback">
                 <strong>
-                    {{ environment.error }}
+                    {{ errors[i] }}
                 </strong>
             </span>
+        </div>
+        <div class="btn-group w-100 mt-2">
+            <button
+                type="button"
+                class="btn btn-secondary"
+                @click="addVar('text')"
+            >
+                <icon name="plus" />
+                <span>Add String</span>
+            </button>
+            <button
+                type="button"
+                class="btn btn-secondary"
+                @click="addVar('file')"
+            >
+                <icon name="plus" />
+                <span>Add File</span>
+            </button>
         </div>
     </div>
 </template>
@@ -75,73 +100,50 @@ export default {
     props: {
         value: {
             type: Array,
-            required: false,
-            default: [],
-        },
-        envsType: {
-            type: String,
-            required: false,
-            default: 'text',
-        },
-    },
-    data() {
-        return {
-            environments: this.value,
-        };
-    },
-    watch: {
-        environments: {
-            deep: true,
-            handler(value) {
-                this.emitEnvironments(value);
-            },
+            defaultValue: [],
         },
     },
     methods: {
-        syncEnvironments(value) {
-            this.environments.splice(0, this.environments.length, ...value);
+        setVar(variable, index) {
+            this.$emit(
+                'input',
+                this.value.map((v, i) => (i === index ? variable : v))
+            );
         },
-        emitEnvironments(value) {
-            if (value.find((el) => el.error !== null)) return;
+        addVar(type) {
+            this.$emit(
+                'input',
+                this.value.concat([{ type, key: '', value: null, error: null }])
+            );
+        },
+        deleteVar(index) {
+            this.$emit(
+                'input',
+                this.value.filter((v, i) => i !== index)
+            );
+        },
+    },
+    computed: {
+        errors: function () {
+            return Object.fromEntries(
+                this.value
+                    .map((v, index) => {
+                        if (!v.key && v.value) {
+                            return [index, 'Empty key'];
+                        }
 
-            this.$emit('input', value);
-        },
-        addEnvironment(type) {
-            this.environments.push({
-                key: '',
-                value: null,
-                type: type,
-                error: null,
-            });
-        },
-        deleteEnvironment(index) {
-            this.environments.splice(index, 1);
-        },
-        setKey(val, environment, index) {
-            if (environment.error) environment.error = null;
-
-            environment.key = val;
-
-            switch (this.checkKey(val, index)) {
-                case 'duplicated':
-                    environment.error = 'Duplicated key';
-                    break;
-                case 'empty':
-                    environment.error = 'Empty key';
-                    break;
-                default:
-                    break;
-            }
-        },
-        checkKey(key, index) {
-            if (
-                this.environments.some((el, i) => el.key === key && index !== i)
-            ) {
-                return 'duplicated';
-            }
-            if (key === null || key === undefined || key === '') {
-                return 'empty';
-            }
+                        // NB: technically the BE will allow a file env and a text env to share a key, but we forbid anyway
+                        if (
+                            this.value.some(
+                                (el) => el !== v && el.key && el.key === v.key
+                            )
+                        ) {
+                            return [index, 'Duplicate key'];
+                        }
+                        return null;
+                    })
+                    .filter((err) => !!err)
+            );
         },
     },
 };

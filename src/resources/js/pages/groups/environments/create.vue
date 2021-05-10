@@ -32,10 +32,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label"> Variables </label>
-                                <environments
-                                    ref="textEnv"
-                                    v-model="form.combinedVars"
-                                />
+                                <environments v-model="form.variables" />
                                 <div
                                     class="text-danger small mt-2"
                                     v-if="$page.props.errors.variables"
@@ -45,22 +42,6 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <button
-                                type="button"
-                                class="btn btn-block btn-secondary"
-                                @click="$refs.textEnv.addEnvironment('text')"
-                            >
-                                <icon name="plus" />
-                                <span>Add New</span>
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-block btn-secondary"
-                                @click="$refs.textEnv.addEnvironment('file')"
-                            >
-                                <icon name="plus" />
-                                <span>Add File</span>
-                            </button>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -90,8 +71,10 @@
 import { serialize } from '@/utilities/object-to-formdata';
 import Layout from '@/layouts/main';
 import Environments from '@/components/environments';
+import mixinEnvs from '@/pages/sessions/mixins/environments';
 
 export default {
+    mixins: [mixinEnvs],
     metaInfo() {
         return {
             title: `Create new environment for ${this.group.name}`,
@@ -112,9 +95,9 @@ export default {
             sending: false,
             form: {
                 name: null,
-                variables: [],
-                combinedVars: [],
-                files: [],
+                variables: [
+                    { type: 'text', key: '', value: null, error: null },
+                ],
             },
         };
     },
@@ -122,27 +105,7 @@ export default {
         submit() {
             const form = {
                 name: this.form.name,
-                variables: this.form.combinedVars
-                    ?.filter(({ type }) => type === 'text')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
-                combinedVars: this.form.variables
-                    .map((x) => {
-                        return { ...x, type: 'text' };
-                    })
-                    .concat(
-                        this.form.files.map((x) => {
-                            return { ...x, type: 'file' };
-                        })
-                    ),
-                files: this.form.combinedVars
-                    ?.filter(({ type }) => type === 'file')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
+                ...this.separateEnv(this.form.variables),
             };
 
             this.sending = true;

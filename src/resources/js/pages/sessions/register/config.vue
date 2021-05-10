@@ -128,10 +128,9 @@
                             type="button"
                             class="btn btn-primary"
                             @click="
-                                mergeGroupsEnvs(
+                                form.variables = mergeGroupsEnvs(
                                     groupsEnvs,
-                                    form.combinedEnv,
-                                    form.combinedEnv
+                                    form.variables
                                 )
                             "
                         >
@@ -153,10 +152,9 @@
                                 loadTestCasesEnvs(
                                     $page.props.session.info.test_cases
                                 ).then((data) => {
-                                    mergeTestCasesEnvs(
+                                    form.variables = mergeTestCasesEnvs(
                                         data.data,
-                                        form.combinedEnv,
-                                        form.combinedEnv
+                                        form.variables
                                     );
                                 })
                             "
@@ -168,10 +166,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Environments</label>
-                        <environments
-                            ref="textEnv"
-                            v-model="form.combinedEnv"
-                        />
+                        <environments v-model="form.variables" />
                         <div
                             class="text-danger small mt-2"
                             v-if="$page.props.errors.environments"
@@ -181,22 +176,6 @@
                             }}</strong>
                         </div>
                     </div>
-                    <button
-                        type="button"
-                        class="btn btn-block btn-secondary"
-                        @click="$refs.textEnv.addEnvironment('text')"
-                    >
-                        <icon name="plus" />
-                        <span>Add New</span>
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-block btn-secondary"
-                        @click="$refs.textEnv.addEnvironment('file')"
-                    >
-                        <icon name="plus" />
-                        <span>Add File</span>
-                    </button>
                 </div>
             </div>
             <div class="d-flex justify-content-between">
@@ -264,9 +243,7 @@ export default {
             groupsEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
             form: {
-                environments: [],
-                combinedEnv: [],
-                fileEnvironments: [],
+                variables: [],
                 groupsDefault: [],
             },
         };
@@ -277,38 +254,19 @@ export default {
         });
         this.loadTestCasesEnvs(this.$page.props.session.info.test_cases).then(
             (data) => {
-                this.mergeTestCasesEnvs(
+                this.form.variables = this.mergeTestCasesEnvs(
                     data.data,
-                    this.form.combinedEnv,
-                    this.form.combinedEnv
+                    this.form.variables
                 );
             }
         );
     },
     methods: {
         submit() {
+            const { variables, files } = this.separateEnv(this.form.variables);
             const form = {
-                environments: this.form.combinedEnv
-                    ?.filter(({ type }) => type === 'text')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
-                combinedEnv: this.form.environments
-                    .map((x) => {
-                        return { ...x, type: 'text' };
-                    })
-                    .concat(
-                        this.form.fileEnvironments.map((x) => {
-                            return { ...x, type: 'file' };
-                        })
-                    ),
-                fileEnvironments: this.form.combinedEnv
-                    ?.filter(({ type }) => type === 'file')
-                    .reduce(
-                        (obj, item) => ((obj[item.key] = item.value), obj),
-                        {}
-                    ),
+                environments: variables,
+                fileEnvironments: files,
                 groupsDefault: this.form.groupsDefault,
             };
 
