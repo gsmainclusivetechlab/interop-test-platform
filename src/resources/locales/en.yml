@@ -78,8 +78,8 @@ layout:
       external-link: 'https://www.gsma.com/lab'
       groups: Groups
       sessions: Sessions
-      subtitle: ''
-      title: ColorHub Onboarding Platform
+      subtitle: Interoperability Test Platform
+      title: Inclusive Tech Lab
       tutorials: Tutorials
     menu:
       api-specs: API Specs
