@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Extension;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,6 +16,7 @@ class SimulatorPluginRequest extends FormRequest
                 Rule::requiredIf($this->isMethod('POST')),
                 'nullable',
                 'file',
+                new Extension(['js']),
             ],
         ];
     }
