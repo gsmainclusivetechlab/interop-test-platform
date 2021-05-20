@@ -148,13 +148,13 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
 
         return new self(
             new ServerRequest(
-                $data['method'] ?? $this->method(),
-                $data['uri'] ?? $this->url(),
-                $data['headers'] ?? [],
-                json_encode($data['body'] ?? '')
+                $data['method'],
+                $data['uri'],
+                $data['headers'],
+                json_encode($data['body'])
             ),
-            $data['jws'] ?? null,
-            $data['delay'] ?? 0
+            $data['jws'],
+            $data['delay']
         );
     }
 

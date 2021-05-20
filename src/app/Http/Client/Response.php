@@ -118,12 +118,12 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
 
         return new self(
             new \GuzzleHttp\Psr7\Response(
-                $data['status'] ?? 200,
-                $data['headers'] ?? [],
-                json_encode($data['body'] ?? '')
+                $data['status'],
+                $data['headers'],
+                json_encode($data['body'])
             ),
-            $data['jws'] ?? null,
-            $data['delay'] ?? 0
+            $data['jws'],
+            $data['delay']
         );
     }
 
