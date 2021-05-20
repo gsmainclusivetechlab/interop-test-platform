@@ -106,8 +106,7 @@ class ConfigController extends Controller
             'fileEnvironments' => ['nullable', 'array'],
             'groupsDefault' => ['nullable', 'array'],
             'groupsDefault.*.id' => ['required', 'exists:groups,id'],
-            'simulatorPlugin' => ['nullable', 'array'],
-            'simulatorPlugin.id' => ['required', 'exists:simulator_plugins,id'],
+            'simulatorPlugin.id' => ['nullable', 'exists:simulator_plugins,id'],
         ]);
 
         try {
