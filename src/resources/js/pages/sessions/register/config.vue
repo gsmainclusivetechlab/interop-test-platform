@@ -177,6 +177,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-body" v-if="simulatorPluginsList">
+                    <label class="form-label">Simulator plugin</label>
+                    <v-select
+                        v-model="form.simulatorPlugin"
+                        :options="simulatorPluginsList"
+                        label="name"
+                        placeholder="Plugins"
+                        class="form-control d-flex p-0 mb-3 mt-3"
+                    />
+                </div>
             </div>
             <div class="d-flex justify-content-between">
                 <inertia-link
@@ -234,6 +244,10 @@ export default {
             type: Object,
             required: false,
         },
+        simulatorPlugins: {
+            type: Object,
+            required: true,
+        },
     },
     mixins: [mixinVSelect, mixinEnvs],
     data() {
@@ -242,9 +256,11 @@ export default {
             groupsEnvs: [],
             groupsEnvsList: [],
             groupsDefaultList: this.$page.props.auth.user.groups ?? [],
+            simulatorPluginsList: this.simulatorPlugins.data ?? [],
             form: {
                 variables: [],
                 groupsDefault: [],
+                simulatorPlugin: null,
             },
         };
     },
@@ -268,6 +284,7 @@ export default {
                 environments: variables,
                 fileEnvironments: files,
                 groupsDefault: this.form.groupsDefault,
+                simulatorPlugin: this.form.simulatorPlugin,
             };
 
             this.sending = true;

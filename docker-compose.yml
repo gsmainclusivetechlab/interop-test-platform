@@ -4,6 +4,7 @@
 version: '3.7'
 
 x-php-defaults: &php-defaults
+  platform: linux/x86_64
   image: gsmainclusivetechlab/interop-test-platform:latest
   build:
     context: src
@@ -59,6 +60,7 @@ services:
       - redisdata:/data
 
   mysqldb:
+    platform: linux/x86_64
     image: gsmainclusivetechlab/interop-test-platform/mysqldb:latest
     build:
       context: mysqldb

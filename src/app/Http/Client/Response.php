@@ -3,11 +3,14 @@
 namespace App\Http\Client;
 
 use App\Models\Session;
+use App\Models\TestResult;
 use App\Models\TestSetup;
 use App\Models\TestStep;
+use App\Utils\SimulatorPlugin;
 use App\Utils\TwigSubstitution;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
+use Throwable;
 
 class Response extends \Illuminate\Http\Client\Response implements Arrayable
 {
@@ -97,6 +100,30 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
             ),
             $data['jws'],
             $data['delay']
+        );
+    }
+
+    /**
+     * @param TestResult $testResult
+     * @return $this
+     * @throws Throwable
+     */
+    public function withPlugin(TestResult $testResult): Response
+    {
+        if (!$testResult->session->simulatorPlugin) {
+            return $this;
+        }
+
+        $data = (new SimulatorPlugin($this, $testResult))->process();
+
+        return new self(
+            new \GuzzleHttp\Psr7\Response(
+                $data['status'] ?? 200,
+                $data['headers'] ?? [],
+                json_encode($data['body'] ?? '')
+            ),
+            $data['jws'] ?? null,
+            $data['delay'] ?? 0
         );
     }
 

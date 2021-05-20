@@ -11,6 +11,7 @@
 |
 */
 
+use App\Http\Controllers\Groups\GroupSimulatorPluginsController;
 use App\Http\Controllers\Sessions\Register\{
     ConfigController,
     InfoController,
@@ -65,6 +66,13 @@ Route::namespace('Groups')
             'groups.certificates',
             'GroupCertificatesController'
         )->except(['show', 'edit']);
+        Route::get('plugins/{simulator_plugin}/download', [
+            GroupSimulatorPluginsController::class,
+            'download',
+        ])->name('plugins.download');
+        Route::resource('groups.plugins', 'GroupSimulatorPluginsController')
+            ->except(['show'])
+            ->shallow();
         Route::resource(
             'groups.user-invitations',
             'GroupUserInvitationController'
@@ -79,15 +87,18 @@ Route::name('sessions.')
     ->namespace('Sessions')
     ->group(function () {
         Route::get('/', 'SessionController@index')->name('index');
-        Route::get('certificates-download', 'CertificatesController@download')->name(
-            'certificates.download'
-        );
-        Route::post('certificates-upload-csr', 'CertificatesController@uploadCsr')->name(
-            'certificates.upload-csr'
-        );
-        Route::get('certificates-download-csr', 'CertificatesController@downloadCsr')->name(
-            'certificates.download-csr'
-        );
+        Route::get(
+            'certificates-download',
+            'CertificatesController@download'
+        )->name('certificates.download');
+        Route::post(
+            'certificates-upload-csr',
+            'CertificatesController@uploadCsr'
+        )->name('certificates.upload-csr');
+        Route::get(
+            'certificates-download-csr',
+            'CertificatesController@downloadCsr'
+        )->name('certificates.download-csr');
         Route::get('{session}', 'SessionController@show')->name('show');
         Route::get('{session}/edit', 'SessionController@edit')->name('edit');
         Route::get('{session}/export', 'SessionController@export')->name(
