@@ -124,7 +124,7 @@ export default {
          * @returns {Var[]}
          */
         combineEnv(texts = {}, files = []) {
-            return Object.entries(texts)
+            return Object.entries(texts || {})
                 ?.map(([key, value]) => ({
                     key: key,
                     value: value,

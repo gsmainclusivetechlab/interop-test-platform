@@ -10,10 +10,12 @@ use App\Http\Exports\ComplianceSessionExport;
 use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
 use App\Utils\AuditLogUtil;
+use Auth;
 use App\Http\Resources\{
     ComponentResource,
     SectionResource,
     SessionResource,
+    SimulatorPluginResource,
     TestRunResource,
     UseCaseResource
 };
@@ -172,6 +174,7 @@ class SessionController extends Controller
             },
             'groupEnvironment',
             'fileEnvironments',
+            'simulatorPlugin',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
         $sessionTestCasesGroupIds = $session->testCases->pluck(
@@ -240,6 +243,11 @@ class SessionController extends Controller
                     });
                 }
             )->exists(),
+            'simulatorPlugins' => SimulatorPluginResource::collection(
+                Auth::user()
+                    ->groups->pluck('simulatorPlugins')
+                    ->flatten()
+            ),
         ]);
     }
 

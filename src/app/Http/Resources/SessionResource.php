@@ -80,6 +80,9 @@ class SessionResource extends JsonResource
             'lastTestRun' => new TestRunResource(
                 $this->whenLoaded('lastTestRun')
             ),
+            'simulatorPlugin' => new SimulatorPluginResource(
+                $this->whenLoaded('simulatorPlugin')
+            ),
             'can' => [
                 'update' => auth()
                     ->user()
