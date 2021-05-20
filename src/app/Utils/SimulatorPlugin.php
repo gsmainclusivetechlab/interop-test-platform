@@ -52,7 +52,7 @@ class SimulatorPlugin
 
     protected function getJsString(): string
     {
-        $env = json_encode($this->session->environments ?? []);
+        $env = json_encode($this->testResult->session->environments ?? []);
 
         return <<<EOT
 const main = require('{$this->testResult->session->simulatorPlugin->file_path}');
