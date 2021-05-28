@@ -40,7 +40,7 @@
                                     readonly
                                 />
                                 <clipboard-copy-btn
-                                    :target="`#testing-${i}-${j}`"
+                                    :target="`#testing-${group.id}-${i}-${j}`"
                                     title="Copy"
                                 ></clipboard-copy-btn>
                             </div>
