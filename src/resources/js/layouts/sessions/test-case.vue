@@ -65,7 +65,8 @@
                                     <div class="card-body">
                                         <div class="mb-1">
                                             <h4>
-                                                It will be used by ITP to generate public certificate.
+                                                It will be used by ITP to
+                                                generate public certificate.
                                             </h4>
                                         </div>
                                         <div class="mb-3">
@@ -74,7 +75,8 @@
                                                 :placeholder="'Choose file ...'"
                                                 :browse-text="'Browse'"
                                                 :class="{
-                                                    'is-invalid': $page.props.errors.file,
+                                                    'is-invalid':
+                                                        $page.props.errors.file,
                                                 }"
                                             />
                                             <div
@@ -83,15 +85,21 @@
                                             >
                                                 <p class="mb-1">
                                                     <strong>
-                                                        Error with file - {{form.fileSrc}}
+                                                        Error with file -
+                                                        {{ form.fileSrc }}
                                                     </strong>
                                                 </p>
                                                 <p
-                                                    v-if="$page.props.errors.file"
+                                                    v-if="
+                                                        $page.props.errors.file
+                                                    "
                                                     class="mb-1"
                                                 >
                                                     <strong>
-                                                        {{ $page.props.errors.file }}
+                                                        {{
+                                                            $page.props.errors
+                                                                .file
+                                                        }}
                                                     </strong>
                                                 </p>
                                             </div>
@@ -105,9 +113,11 @@
                                         </button>
                                         <a
                                             @click="disableBtn"
-                                            :class="{disabled: btnDisabled}"
+                                            :class="{ disabled: btnDisabled }"
                                             :href="
-                                                route('sessions.certificates.download')
+                                                route(
+                                                    'sessions.certificates.download'
+                                                )
                                             "
                                             class="btn btn-primary"
                                         >
@@ -161,7 +171,7 @@
                                                 </label>
                                                 <div class="input-group">
                                                     <input
-                                                        :id="`#testing-${group.id}-${i}-${j}`"
+                                                        :id="`testing-${group.id}-${i}-${j}`"
                                                         type="text"
                                                         :value="connection.url"
                                                         class="form-control"
@@ -197,7 +207,7 @@
                                             </label>
                                             <div class="input-group">
                                                 <input
-                                                    :id="`#testing-${i}-${j}`"
+                                                    :id="`testing-${i}-${j}`"
                                                     type="text"
                                                     :value="connection.url"
                                                     class="form-control"
@@ -380,10 +390,10 @@ export default {
             form: {
                 file: null,
                 fileSrc: null,
-            }
+            },
         };
     },
-  methods: {
+    methods: {
         submit() {
             const data = new FormData();
             this.$page.props.errors.file = null;
@@ -412,7 +422,7 @@ export default {
         disableBtn() {
             this.btnDisabled = true;
         },
-  },
+    },
 
     mounted() {
         if (this.sutUrls.isGroup) {
