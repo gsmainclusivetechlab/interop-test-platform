@@ -8,10 +8,15 @@ use App\Models\{
     GroupEnvironment,
     ImplicitSut,
     Session,
+    SimulatorPlugin,
     TestResult,
     TestRun
 };
-use App\Observers\{TestResultObserver, TestRunObserver};
+use App\Observers\{
+    SimulatorPluginObserver,
+    TestResultObserver,
+    TestRunObserver
+};
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Validator;
@@ -50,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
     {
         TestRun::observe(TestRunObserver::class);
         TestResult::observe(TestResultObserver::class);
+        SimulatorPlugin::observe(SimulatorPluginObserver::class);
     }
 
     protected function registerValidators()

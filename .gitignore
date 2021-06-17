@@ -49,6 +49,7 @@ Thumbs.db
 /src/storage/logs/*
 /src/storage/app/certificates/*
 /src/storage/app/environments/*
+/src/storage/app/simulator-plugins/*
 /src/public/assets
 
 # testing assets

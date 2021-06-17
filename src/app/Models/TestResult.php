@@ -7,10 +7,17 @@ use App\Casts\ResponseCast;
 use App\Http\Client\Request;
 use App\Http\Client\Response;
 use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
- * @mixin \Eloquent
+ * @mixin Eloquent
+ *
+ * @property int $iteration
  *
  * @property Carbon $completed_at
  * @property TestStep $testStep
@@ -70,7 +77,7 @@ class TestResult extends Model
     protected $observables = ['pass', 'fail'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function testRun()
     {
@@ -78,7 +85,7 @@ class TestResult extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function testStep()
     {
@@ -86,7 +93,7 @@ class TestResult extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function testExecutions()
     {
@@ -94,7 +101,7 @@ class TestResult extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     * @return HasOneThrough
      */
     public function session()
     {
@@ -109,8 +116,8 @@ class TestResult extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeCompleted($query)
     {
@@ -118,8 +125,8 @@ class TestResult extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeIncompleted($query)
     {

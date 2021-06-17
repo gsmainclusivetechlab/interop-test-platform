@@ -3,16 +3,12 @@
 namespace App\Http\Controllers\Groups;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CertificateResource;
-use App\Http\Resources\GroupResource;
-use App\Models\Certificate;
-use App\Models\Group;
+use App\Http\Resources\{CertificateResource, GroupResource};
+use App\Models\{Certificate, Group};
 use App\Rules\SslCertificate;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\Http\{RedirectResponse, Request};
+use Inertia\{Inertia, Response};
 
 class GroupCertificatesController extends Controller
 {

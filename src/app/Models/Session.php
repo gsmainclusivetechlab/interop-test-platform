@@ -42,6 +42,7 @@ use Str;
  * @property Component[]|Collection $components
  * @property FileEnvironment[]|Collection $fileEnvironments
  * @property TestStep[]|Collection $testSteps
+ * @property SimulatorPlugin $simulatorPlugin
  */
 class Session extends Model
 {
@@ -73,6 +74,7 @@ class Session extends Model
         'description',
         'use_encryption',
         'group_environment_id',
+        'simulator_plugin_id',
         'environments',
         'completed_at',
         'closed_at',
@@ -223,6 +225,11 @@ class Session extends Model
     public function fileEnvironments(): MorphMany
     {
         return $this->morphMany(FileEnvironment::class, 'environmentable');
+    }
+
+    public function simulatorPlugin(): BelongsTo
+    {
+        return $this->belongsTo(SimulatorPlugin::class);
     }
 
     public function environments(): array
