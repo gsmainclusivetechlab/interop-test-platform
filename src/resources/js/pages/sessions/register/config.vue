@@ -59,14 +59,14 @@
                                     </label>
                                     <div class="input-group">
                                         <input
-                                            :id="`#testing-${group.id}-${i}-${j}`"
+                                            :id="`testing-${group.id}-${i}-${j}`"
                                             type="text"
                                             :value="connection.url"
                                             class="form-control"
                                             readonly
                                         />
                                         <clipboard-copy-btn
-                                            :target="`#testing-${i}-${j}`"
+                                            :target="`#testing-${group.id}-${i}-${j}`"
                                             title="Copy"
                                         ></clipboard-copy-btn>
                                     </div>
@@ -92,7 +92,7 @@
                                 </label>
                                 <div class="input-group">
                                     <input
-                                        :id="`#testing-${i}-${j}`"
+                                        :id="`testing-${i}-${j}`"
                                         type="text"
                                         :value="connection.url"
                                         class="form-control"
