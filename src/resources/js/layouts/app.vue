@@ -49,8 +49,8 @@ export default {
                     : [],
             titleTemplate: (title) =>
                 title
-                    ? `${title} - Interoperability Test Platform - GSMA`
-                    : 'Interoperability Test Platform - GSMA',
+                    ? `${title} - Mobile Money API Compliance Platform - GSMA`
+                    : 'Mobile Money API Compliance Platform - GSMA',
         };
     },
     mounted() {
