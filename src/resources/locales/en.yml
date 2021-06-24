@@ -80,6 +80,7 @@ layout:
       sessions: Sessions
       subtitle: Interoperability Test Platform
       title: Inclusive Tech Lab
+      tab-name: Interoperability Test Platform - GSMA
       tutorials: Tutorials
     menu:
       api-specs: API Specs
