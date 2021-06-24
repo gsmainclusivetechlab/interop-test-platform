@@ -49,8 +49,8 @@ export default {
                     : [],
             titleTemplate: (title) =>
                 title
-                    ? `${title} - ` + this.$t('layout.main.main-nav.tab-name')
-                    : this.$t('layout.main.main-nav.tab-name'),
+                    ? `${title} - Interoperability Test Platform - GSMA`
+                    : 'Interoperability Test Platform - GSMA',
         };
     },
     mounted() {
