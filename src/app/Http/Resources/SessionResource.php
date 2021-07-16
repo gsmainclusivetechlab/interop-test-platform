@@ -46,6 +46,7 @@ class SessionResource extends JsonResource
             'fileEnvironments' => $this->whenLoaded('fileEnvironments'),
             'owner' => new UserResource($this->whenLoaded('owner')),
             'testCasesCount' => $testCases->count(),
+            'firstTestStepsWithSourceSut' => $this->getFirstTestStepsWithSourceSut(),
             'useCasesCount' => $testCases
                 ->pluck('use_case_id')
                 ->unique()

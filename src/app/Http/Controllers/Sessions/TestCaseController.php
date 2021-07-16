@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Sessions\Traits\WithSutUrls;
-use App\Http\Resources\SessionResource;
-use App\Http\Resources\TestCaseResource;
-use App\Http\Resources\TestRunResource;
-use App\Http\Resources\TestStepResource;
+use App\Http\Resources\{
+    SessionResource,
+    TestCaseResource,
+    TestRunResource,
+    TestStepResource,
+};
+use App\Jobs\ExecuteSessionTestCasesJob;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\TestCase;
 use App\Models\Session;
@@ -119,6 +122,34 @@ class TestCaseController extends Controller
                 $testCase->id,
                 $testRun->id,
             ])
+            ->with('success', __('Run started successfully'));
+    }
+
+    /**
+     * @param Session $session
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function runAll(Session $session)
+    {
+        $this->authorize('view', $session);
+
+        $testCases = $session->testCases()
+            ->whereNotIn('id', $session->getFirstTestStepsWithSourceSut()->pluck('testCase.id'))
+            ->get();
+
+        $testCasesToExecute = [];
+        foreach ($testCases as $testCase) {
+            if (!$session->isAvailableTestCaseRun($testCase)) {
+                continue;
+            }
+            $testCasesToExecute[] = $testCase->id;
+        }
+
+        ExecuteSessionTestCasesJob::dispatch($session, $testCasesToExecute)->afterResponse();
+
+        return redirect()
+            ->route('sessions.show', [$session->id])
             ->with('success', __('Run started successfully'));
     }
 }
