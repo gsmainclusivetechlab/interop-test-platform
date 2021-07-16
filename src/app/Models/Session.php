@@ -486,4 +486,15 @@ class Session extends Model
             ];
         });
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getFirstTestStepsWithSourceSut()
+    {
+        return $this->testSteps()
+            ->where('position', 1)
+            ->whereIn('source_id', $this->components()->get()->pluck('id'))
+            ->with('testCase')->get();
+    }
 }
