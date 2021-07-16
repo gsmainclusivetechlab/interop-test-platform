@@ -174,6 +174,16 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function showBatchImportForm()
+    {
+        $this->authorize('create', TestCase::class);
+        return Inertia::render('admin/test-cases/batch-import');
+    }
+
+    /**
      * @param TestCase $testCase
      * @return Response
      * @throws AuthorizationException
@@ -196,6 +206,78 @@ class TestCaseController extends Controller
         request()->validate([
             'file' => ['required', 'mimetypes:text/yaml,text/plain'],
         ]);
+
+        try {
+            $rows = Yaml::parse(
+                request()
+                    ->file('file')
+                    ->get()
+            );
+
+            $baseTestCaseId = request()->input('testCaseId');
+            if (
+                $baseTestCaseId &&
+                ($baseTestCase = TestCase::findOrFail($baseTestCaseId))
+            ) {
+                $rows = array_merge($rows, [
+                    'test_case_group_id' => $baseTestCase->test_case_group_id,
+                    'public' => $baseTestCase->public,
+                    'draft' => true,
+                ]);
+            }
+
+            $testCase = (new TestCaseImport())->import($rows);
+            if (
+                !empty($baseTestCase) &&
+                ($baseGroups = $baseTestCase->groups()->pluck('id'))
+            ) {
+                $testCase->groups()->sync($baseGroups);
+                if ($baseTestCase->draft) {
+                    $baseTestCase->delete();
+                }
+            }
+            $testCase
+                ->owner()
+                ->associate(auth()->user())
+                ->save();
+            return redirect()
+                ->route('admin.test-cases.versions.index', $testCase->id)
+                ->with('success', __('Test case imported successfully'));
+        } catch (ValidationException $e) {
+            throw ValidationException::withMessages([
+                'entries' => implode(
+                    '<br>',
+                    array_merge(
+                        [
+                            'Test Case validation failed. Please resolve errors listed below:',
+                        ],
+                        $e->validator->errors()->all()
+                    )
+                ),
+            ]);
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function batchImport()
+    {
+        $this->authorize('create', TestCase::class);
+        request()->validate([
+            'file' => ['required', 'array'],
+            'file.*' => ['required', 'mimetypes:text/yaml,text/plain'],
+        ], ['file.*.mimetypes' => 'Only text/yaml, text/plain files are allowed']);
+
+        foreach (request()->file('file') as $file) {
+            dd($file->get());
+        }
+        return '';
 
         try {
             $rows = Yaml::parse(

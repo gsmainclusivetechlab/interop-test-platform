@@ -377,6 +377,13 @@ Route::name('admin.')
                         'import.confirm'
                     );
                     Route::get(
+                        'batch-import',
+                        'TestCaseController@showBatchImportForm'
+                    )->name('batch-import');
+                    Route::post('batch-import', 'TestCaseController@batchImport')->name(
+                        'batch-import.confirm'
+                    );
+                    Route::get(
                         'group-candidates',
                         'TestCaseController@groupCandidates'
                     )->name('group-candidates');
