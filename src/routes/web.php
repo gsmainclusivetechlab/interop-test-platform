@@ -121,6 +121,10 @@ Route::name('sessions.')
             '{session}/test-cases/{testCase}/run',
             'TestCaseController@run'
         )->name('test-cases.run');
+        Route::post(
+            '{session}/test-cases/run-all',
+            'TestCaseController@runAll'
+        )->name('test-cases.run-all');
         Route::get(
             '{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}',
             'TestRunController@show'
