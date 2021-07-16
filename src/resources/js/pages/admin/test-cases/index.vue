@@ -33,6 +33,14 @@
                         <icon name="file-import" />
                         {{ $t('buttons.import') }}
                     </inertia-link>
+                    <inertia-link
+                        :href="route('admin.test-cases.batch-import')"
+                        v-if="$page.props.auth.user.can.test_cases.create"
+                        class="btn btn-primary ml-2"
+                    >
+                        <icon name="file-import" />
+                        {{ $t('buttons.batch-import') }}
+                    </inertia-link>
                 </div>
             </div>
             <div class="table-responsive mb-0">
