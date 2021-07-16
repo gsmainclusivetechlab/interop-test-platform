@@ -5,8 +5,11 @@
             :data="JSON.stringify(data)"
             class="json-tree-copy px-2"
         ></clipboard-copy-btn>
-
-        <vue-json-pretty v-bind="$props"></vue-json-pretty>
+        <div
+            class="json-string mr-5"
+            v-if="nestedCount(data) > $page.props.app.json_pretty_max_size"
+        >{{data}}</div>
+        <vue-json-pretty v-bind="$props" v-else></vue-json-pretty>
     </div>
 </template>
 
@@ -67,6 +70,16 @@ export default {
     },
     components: {
         vueJsonPretty,
+    },
+    methods:{
+        nestedCount(data) {
+            const recurseKeys = obj => Object.keys(obj).reduce(((acc, curr) => {
+                if (acc > this.$page.props.app.json_pretty_max_size) return acc;
+                if (typeof obj[curr] === 'object' && obj[curr] !== null) return ++acc + recurseKeys(obj[curr]);
+                else return ++acc;
+            }), 0);
+            return recurseKeys(data);
+        }
     },
 };
 </script>
