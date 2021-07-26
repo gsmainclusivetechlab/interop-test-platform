@@ -26,7 +26,7 @@ RUN mkdir -p /usr/src/php/ext/redis && \
     && git clone -b php7 --depth 1 https://github.com/phpv8/v8js.git /tmp/v8js \
     && cd /tmp/v8js \
 	&& phpize \
-	&& ./configure --with-v8js=/usr/local/v8 LDFLAGS="-lstdc++" CPPFLAGS="-DV8_COMPRESS_POINTERS" \
+	&& ./configure --with-v8js=/usr/local/v8 LDFLAGS="-lstdc++" \
 	&& make \
 	&& make install \
 	&& docker-php-ext-enable v8js \
