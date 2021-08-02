@@ -18,6 +18,7 @@
                                     <b-form-file
                                         multiple
                                         v-model="form.file"
+                                        :file-name-formatter="formatNames"
                                         :placeholder="
                                             $t('inputs.file.placeholder')
                                         "
@@ -37,24 +38,40 @@
                                         "
                                         class="invalid-feedback"
                                     >
-                                        <p class="mb-1">
-                                            <strong>{{
-                                                $t(
-                                                    'form-file.inputs.errors.file',
-                                                    {
-                                                        fileSrc: form.fileSrc,
-                                                    }
-                                                )
-                                            }}</strong>
-                                        </p>
-                                        <p
-                                            v-if="$page.props.errors.file"
-                                            class="mb-1"
-                                        >
-                                            <strong>
-                                                {{ $page.props.errors.file }}
-                                            </strong>
-                                        </p>
+                                        <ol>
+                                            <div
+                                                v-for="(fileError, i) in Object.fromEntries(Object
+                                                    .entries($page.props.errors)
+                                                    .filter(([key, value]) => key !== 'entries')
+                                                )"
+                                                :key="i"
+                                            >
+                                                <li>
+                                                    <p class="mb-1">
+                                                        <strong>{{
+                                                            $t(
+                                                                'form-file.inputs.errors.file',
+                                                                {
+                                                                    fileSrc: form.fileSrc[i] ? form.fileSrc[i] : 'File',
+                                                                }
+                                                            )
+                                                        }}</strong>
+                                                    </p>
+                                                    <ul>
+                                                        <li>
+                                                            <p
+                                                                v-if="fileError"
+                                                                class="mb-1"
+                                                            >
+                                                                <strong>
+                                                                    {{ fileError }}
+                                                                </strong>
+                                                            </p>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </div>
+                                        </ol>
                                         <p
                                             v-if="$page.props.errors.entries"
                                             class="mb-1"
@@ -113,7 +130,7 @@ export default {
             sending: false,
             form: {
                 file: null,
-                fileSrc: null,
+                fileSrc: [],
             },
         };
     },
@@ -129,13 +146,18 @@ export default {
 
             this.$inertia.post(route('admin.test-cases.batch-import.confirm'), data, {
                 onFinish: () => {
-                    this.form.fileSrc = `${this.form.file[0].name}`;
+                    for (let i=0; i < this.form.file.length; i++) {
+                        this.form.fileSrc['file.' + i] = this.form.file[i].name;
+                    }
                     this.sending = false;
                     this.form.file = null;
                 },
             });
         },
+        formatNames(files) {
+            return files.length === 1 ? files[0].name : `${files.length} files selected`
+        },
     },
 };
 </script>
-<i18n src="@locales/pages/admin/test-cases/import.json"></i18n>
+<i18n src="@locales/pages/admin/test-cases/batch-import.json"></i18n>
