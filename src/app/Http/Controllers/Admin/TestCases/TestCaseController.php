@@ -276,21 +276,26 @@ class TestCaseController extends Controller
             ['file.*.mimetypes' => 'The file must be a file of type: text/yaml, text/plain.']
         );
 
+        $testCaseImport = new TestCaseImport();
         try {
             $files = request()->file('file');
-            $testCAseImport = new TestCaseImport();
+            $testCaseImport->batchImport($files);
 
-            $testCAseImport->batchImport($files);
             return redirect()
                 ->route('admin.test-cases.index')
                 ->with('success', __('Test cases imported successfully'));
         } catch (ValidationException $e) {
+            $withFileName = $testCaseImport->currentFileName
+                ? "<hr><b>Errors in file '<u>{$testCaseImport->currentFileName}</u>':</b>"
+                : '';
+
             throw ValidationException::withMessages([
                 'entries' => implode(
                     '<br>',
                     array_merge(
                         [
                             'Test Case validation failed. Please resolve errors listed below:',
+                            $withFileName
                         ],
                         $e->validator->errors()->all()
                     )
