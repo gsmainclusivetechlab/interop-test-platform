@@ -25,6 +25,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class TestCaseImport implements Importable
 {
+    public $currentFileName;
+
     /**
      * @param array $rows
      * @return TestCase
@@ -183,6 +185,7 @@ class TestCaseImport implements Importable
         $this->validateByFile($files);
         return DB::transaction(function () use ($files) {
             foreach ($files as $file) {
+                $this->currentFileName = $file->getClientOriginalName();
                 $rows = Yaml::parse($file->get());
                 $testCase = $this->import($rows);
                 $testCase
