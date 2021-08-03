@@ -47,6 +47,9 @@ class SessionResource extends JsonResource
             'owner' => new UserResource($this->whenLoaded('owner')),
             'testCasesCount' => $testCases->count(),
             'firstTestStepsWithSourceSut' => $this->getFirstTestStepsWithSourceSut(),
+            'testCasesReachedLimit' => $this->getTestCasesReachedLimit(),
+            'testCasesExecuteAvailableWithSutInitiator' => $this->getTestCasesExecuteAvailableWithSutInitiator(),
+            'testCasesExecuteAvailableWithoutSutInitiator' => $this->getTestCasesExecuteAvailableWithoutSutInitiator(),
             'useCasesCount' => $testCases
                 ->pluck('use_case_id')
                 ->unique()
