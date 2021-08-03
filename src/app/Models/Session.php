@@ -497,4 +497,56 @@ class Session extends Model
             ->whereIn('source_id', $this->components()->get()->pluck('id'))
             ->with('testCase')->get();
     }
+
+    /**
+     * @return array
+     */
+    public function getTestCasesReachedLimit()
+    {
+        $testCases = [];
+        if (!$this->isComplianceSession()) {
+            return $testCases;
+        }
+
+        foreach ($this->testCases()->get() as $testCase) {
+            if (!$this->isAvailableTestCaseRun($testCase)) {
+                $testCases[] = $testCase;
+            }
+        }
+
+        return $testCases;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTestCasesExecuteAvailableWithSutInitiator()
+    {
+        $testCases = [];
+        foreach ($this->getFirstTestStepsWithSourceSut()->pluck('testCase') as $testCase) {
+            if ($this->isAvailableTestCaseRun($testCase)) {
+                $testCases[] = $testCase;
+            }
+        }
+
+        return $testCases;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTestCasesExecuteAvailableWithoutSutInitiator()
+    {
+        $testCases = [];
+        $testCasesWithoutSutInitiator = $this->testCases()
+            ->whereNotIn('id', $this->getFirstTestStepsWithSourceSut()->pluck('testCase.id'))
+            ->get();
+        foreach ($testCasesWithoutSutInitiator as $testCase) {
+            if ($this->isAvailableTestCaseRun($testCase)) {
+                $testCases[] = $testCase;
+            }
+        }
+
+        return $testCases;
+    }
 }

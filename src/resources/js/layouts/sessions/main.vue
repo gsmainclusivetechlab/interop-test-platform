@@ -3,7 +3,6 @@
         <div class="col-3 mt-3 pr-0">
             <div class="card mb-0">
                 <button
-                    v-if="isExecuteAll"
                     type="button"
                     class="btn btn-primary m-3"
                     v-b-modal="'execute-all-modal'"
@@ -17,29 +16,47 @@
                     ok-title="Execute"
                     centered
                     @ok="submit"
+                    :ok-disabled="!isExecuteAll"
                 >
-                    <p>The <b>total number</b> of Test Cases in this session is {{session.testCasesCount}}</p>
+                    <p>The <b>total number</b> of Test Cases in this session is {{session.testCasesCount}}.</p>
                     <p>
                         The number of Test Cases that <b>will be executed automatically</b> is
-                        {{session.testCasesCount - session.firstTestStepsWithSourceSut.length}}
+                        {{this.session.testCasesExecuteAvailableWithoutSutInitiator.length}}:
                     </p>
-                    <p v-if="0 < session.firstTestStepsWithSourceSut.length">
+                    <ol>
+                        <li
+                            v-for="testCasesExecuteAvailableWithoutSutInitiator in
+                                session.testCasesExecuteAvailableWithoutSutInitiator"
+                            :key="testCasesExecuteAvailableWithoutSutInitiator.id"
+                        >
+                            {{testCasesExecuteAvailableWithoutSutInitiator.name}}
+                        </li>
+                    </ol>
+                    <p v-if="0 < session.testCasesReachedLimit.length">
+                        Please note that {{session.testCasesReachedLimit.length}} Test Case(s)
+                        <b>reached execution limits:</b>
+                    </p>
+                    <ol>
+                        <li
+                            v-for="testCasesReachedLimit in session.testCasesReachedLimit"
+                            :key="testCasesReachedLimit.id"
+                        >
+                            {{testCasesReachedLimit.name}}
+                        </li>
+                    </ol>
+                    <p v-if="0 < session.testCasesExecuteAvailableWithSutInitiator.length">
                         Please note that session's SUT(s) are initiators of
-                        {{session.firstTestStepsWithSourceSut.length}} Test Cases,
+                        {{session.testCasesExecuteAvailableWithSutInitiator.length}} Test Cases,
                         so these Test Cases <b>should be executed manually</b>:
                     </p>
-                    <ul>
+                    <ol>
                         <li
-                            v-for="testCaseWithFirstSut in collect(
-                                session.firstTestStepsWithSourceSut
-                            ).map(function (value) {
-                                return value.test_case;
-                            }).all()"
+                            v-for="testCaseWithFirstSut in session.testCasesExecuteAvailableWithSutInitiator"
                             :key="testCaseWithFirstSut.id"
                         >
                             {{testCaseWithFirstSut.name}}
                         </li>
-                    </ul>
+                    </ol>
                 </b-modal>
                 <div class="card-header px-3">
                     <h3 class="card-title">Select use cases</h3>
@@ -291,8 +308,7 @@ export default {
     },
     data() {
         return {
-            isExecuteAll: this.session.type !== 'compliance'
-                && 0 < (this.session.testCasesCount - this.session.firstTestStepsWithSourceSut.length),
+            isExecuteAll: 0 < this.session.testCasesExecuteAvailableWithoutSutInitiator.length,
         };
     },
 };

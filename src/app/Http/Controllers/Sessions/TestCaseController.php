@@ -140,10 +140,9 @@ class TestCaseController extends Controller
 
         $testCasesToExecute = [];
         foreach ($testCases as $testCase) {
-            if (!$session->isAvailableTestCaseRun($testCase)) {
-                continue;
+            if ($session->isAvailableTestCaseRun($testCase)) {
+                $testCasesToExecute[] = $testCase->id;
             }
-            $testCasesToExecute[] = $testCase->id;
         }
 
         ExecuteSessionTestCasesJob::dispatch($session, $testCasesToExecute)->afterResponse();
