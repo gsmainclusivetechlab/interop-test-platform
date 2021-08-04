@@ -105,7 +105,7 @@
                                     </inertia-link>
                                 </li>
                                 <li
-                                    v-if="$page.props.auth.user.is_admin"
+                                    v-if="group.can.admin"
                                     class="nav-item"
                                 >
                                     <inertia-link

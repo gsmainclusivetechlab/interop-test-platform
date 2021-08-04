@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\SimulatorPlugin;
 use App\Models\User;
 
 class SimulatorPluginPolicy
@@ -16,18 +17,18 @@ class SimulatorPluginPolicy
         return $user->isAdmin();
     }
 
-    public function update(User $user): bool
+    public function update(User $user, SimulatorPlugin $model): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $model->group->hasAdminUser($user);
     }
 
-    public function delete(User $user): bool
+    public function delete(User $user, SimulatorPlugin $model): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $model->group->hasAdminUser($user);
     }
 
-    public function download(User $user): bool
+    public function download(User $user, SimulatorPlugin $model): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $model->group->hasAdminUser($user);
     }
 }

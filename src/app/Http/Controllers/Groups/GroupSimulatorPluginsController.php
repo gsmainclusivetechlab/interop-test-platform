@@ -23,7 +23,7 @@ class GroupSimulatorPluginsController extends Controller
      */
     public function index(Group $group): Response
     {
-        $this->authorize('view', SimulatorPlugin::class);
+        $this->authorize('admin', $group);
 
         return Inertia::render('groups/simulator-plugins/index', [
             'group' => GroupResource::make($group)->resolve(),
@@ -43,7 +43,7 @@ class GroupSimulatorPluginsController extends Controller
      */
     public function create(Group $group): Response
     {
-        $this->authorize('create', SimulatorPlugin::class);
+        $this->authorize('admin', $group);
 
         return Inertia::render('groups/simulator-plugins/create', [
             'group' => GroupResource::make($group)->resolve(),
@@ -60,7 +60,7 @@ class GroupSimulatorPluginsController extends Controller
         Group $group,
         SimulatorPluginRequest $request
     ): RedirectResponse {
-        $this->authorize('create', SimulatorPlugin::class);
+        $this->authorize('admin', $group);
 
         $group->simulatorPlugins()->create(
             $request->validated() + [
