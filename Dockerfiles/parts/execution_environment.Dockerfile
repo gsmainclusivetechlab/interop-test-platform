@@ -27,6 +27,8 @@ RUN mkdir -p /usr/src/php/ext/redis && \
     && cd /tmp/v8js \
 	&& phpize \
 	&& ./configure --with-v8js=/usr/local/v8 LDFLAGS="-lstdc++" CPPFLAGS="-DV8_COMPRESS_POINTERS" \
+	# on Embedder-vs-V8 build configuration mismatch. On embedder side pointer compression is ENABLED while on V8 side it's DISABLED. add flag
+	#&& ./configure --with-v8js=/usr/local/v8 LDFLAGS="-lstdc++" CPPFLAGS="-DV8_COMPRESS_POINTERS" \
 	&& make \
 	&& make install \
 	&& docker-php-ext-enable v8js \
