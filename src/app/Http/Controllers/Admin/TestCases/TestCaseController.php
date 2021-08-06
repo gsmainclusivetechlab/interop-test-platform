@@ -271,9 +271,9 @@ class TestCaseController extends Controller
         request()->validate(
             [
                 'file' => ['required', 'array'],
-                'file.*' => ['required', 'mimetypes:text/yaml,text/plain']
+                'file.*' => ['required', 'mimes:yaml,yml']
             ],
-            ['file.*.mimetypes' => 'The file must be a file of type: text/yaml, text/plain.']
+            ['file.*.mimes' => 'The file must be a file of type: yaml, yml.']
         );
 
         $testCaseImport = new TestCaseImport();
