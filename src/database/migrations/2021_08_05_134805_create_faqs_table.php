@@ -17,7 +17,7 @@ class CreateFaqsTable extends Migration
             $table->id();
             $table->text('description')->nullable();
             $table->json('content');
-            $table->boolean('active');
+            $table->boolean('active')->default(false);
             $table->timestamps();
         });
     }

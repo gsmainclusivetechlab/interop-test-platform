@@ -21,8 +21,7 @@ class FaqController extends Controller
      */
     public function __invoke()
     {
-        $content = Faq::where(['active', true])->firstOrFail()->content;
-        dd($content);
-        return Inertia::render('faq', ['content' => $content]);
+        $faqData = Faq::where(['active' => true])->firstOrFail()->content;
+        return Inertia::render('faq', ['faqData' => $faqData]);
     }
 }

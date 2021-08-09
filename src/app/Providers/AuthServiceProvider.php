@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\{
-    ApiSpec,
+use App\Models\{ApiSpec,
     AuditLog,
     Component,
+    Faq,
     Group,
     GroupEnvironment,
     GroupUser,
@@ -16,12 +16,11 @@ use App\Models\{
     TestCase,
     TestStep,
     UseCase,
-    User
-};
-use App\Policies\{
-    ApiSpecPolicy,
+    User};
+use App\Policies\{ApiSpecPolicy,
     AuditLogPolicy,
     ComponentPolicy,
+    FaqPolicy,
     GroupEnvironmentPolicy,
     GroupUserPolicy,
     GroupPolicy,
@@ -32,8 +31,7 @@ use App\Policies\{
     TestCasePolicy,
     TestStepPolicy,
     UseCasePolicy,
-    UserPolicy
-};
+    UserPolicy};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -56,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
         QuestionnaireSection::class => QuestionnairePolicy::class,
         AuditLog::class => AuditLogPolicy::class,
         ImplicitSut::class => ImplicitSutPolicy::class,
+        Faq::class => FaqPolicy::class,
     ];
 
     /**

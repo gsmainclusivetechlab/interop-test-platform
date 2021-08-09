@@ -13,6 +13,28 @@
                             <div class="mb-3">
                                 <div class="mb-3">
                                     <label class="form-label">{{
+                                        $t('inputs.description.label')
+                                        }}</label>
+                                    <textarea
+                                        name="description"
+                                        class="form-control"
+                                        v-model="form.description"
+                                        :class="{
+                                        'is-invalid': $page.props.errors.description,
+                                    }"
+                                        :placeholder="$page.props.errors.description"
+                                    ></textarea>
+                                    <p
+                                        v-if="$page.props.errors.description"
+                                        class="invalid-feedback mb-1"
+                                    >
+                                        <strong>
+                                            {{ $page.props.errors.description }}
+                                        </strong>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">{{
                                         $t('inputs.file.label')
                                     }}</label>
                                     <b-form-file
@@ -23,15 +45,15 @@
                                         :browse-text="$t('inputs.file.browse')"
                                         :class="{
                                             'is-invalid':
-                                                Object.keys($page.props.errors)
-                                                    .length > 0 ||
+                                                $page.props.errors.file ||
+                                                $page.props.errors.entries ||
                                                 $page.props.messages.error,
                                         }"
                                     />
                                     <div
                                         v-if="
-                                            Object.keys($page.props.errors)
-                                                .length > 0 ||
+                                            $page.props.errors.file ||
+                                            $page.props.errors.entries ||
                                             $page.props.messages.error
                                         "
                                         class="invalid-feedback"
@@ -39,7 +61,7 @@
                                         <p class="mb-1">
                                             <strong>{{
                                                 $t(
-                                                    'form-file.inputs.errors.file',
+                                                    'inputs.errors.file',
                                                     {
                                                         fileSrc: form.fileSrc,
                                                     }
@@ -71,12 +93,22 @@
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
-                                :href="route('admin.test-cases.index')"
+                                :href="route('admin.faqs.index')"
                                 class="btn btn-link"
                             >
                                 {{ $t('buttons.cancel') }}
                             </inertia-link>
                             <button
+                                v-if="hasFaq"
+                                type="button"
+                                class="btn btn-primary"
+                                v-b-modal="'import-version-modal'"
+                                :disabled="!form.file || sending"
+                            >
+                                {{ $t('buttons.import') }}
+                            </button>
+                            <button
+                                v-else
                                 type="submit"
                                 class="btn btn-primary"
                                 :disabled="!form.file || sending"
@@ -90,6 +122,14 @@
                         </div>
                     </form>
                 </div>
+                <b-modal
+                    id="import-version-modal"
+                    :title="$t('modal.title')"
+                    centered
+                    @ok="submit"
+                >
+                    <p>{{ $t('modal.text') }}</p>
+                </b-modal>
             </div>
         </div>
     </layout>
@@ -107,10 +147,17 @@ export default {
     components: {
         Layout,
     },
+    props: {
+        hasFaq: {
+            type: Boolean,
+            required: true,
+        },
+    },
     data() {
         return {
             sending: false,
             form: {
+                description: null,
                 file: null,
                 fileSrc: null,
             },
@@ -124,7 +171,11 @@ export default {
 
             data.append('file', this.form.file);
 
-            this.$inertia.post(route('admin.test-cases.import.confirm'), data, {
+            if (this.form.description) {
+                data.append('description', this.form.description);
+            }
+
+            this.$inertia.post(route('admin.faqs.import.confirm'), data, {
                 onFinish: () => {
                     this.form.fileSrc = `${this.form.file.name}`;
                     this.sending = false;
@@ -135,4 +186,4 @@ export default {
     },
 };
 </script>
-<i18n src="@locales/pages/admin/test-cases/import.json"></i18n>
+<i18n src="@locales/pages/admin/faqs/import.json"></i18n>

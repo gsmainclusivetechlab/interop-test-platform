@@ -82,6 +82,7 @@ layout:
       title: Inclusive Tech Lab
       tab-name: Interoperability Test Platform - GSMA
       tutorials: Tutorials
+      faq: FAQ
     menu:
       api-specs: API Specs
       cert-sessions: '@:(special-locales.compliance) Sessions'
@@ -94,6 +95,7 @@ layout:
       test-cases: Test Cases
       use-cases: Use Cases
       users: Users
+      faqs: FAQ
     user-menu:
       logout: Logout
       settings: Settings

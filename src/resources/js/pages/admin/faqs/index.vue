@@ -34,18 +34,21 @@
                                 {{ $t('table.header.description') }}
                             </th>
                             <th class="text-nowrap text-center">
-                                {{ $t('table.header.active') }}
+                                {{ $t('table.header.updated-at') }}
                             </th>
-                            <th class="text-nowrap text-center">
-                                {{ $t('table.header.created-at') }}
+                            <th class="text-nowrap text-center w-1">
+                                {{ $t('table.header.active') }}
                             </th>
                             <th class="text-nowrap text-center w-1"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(faq, i) in faqs.data" :key="i">
-                            <td class="text-center text-break">
+                            <td class="text-break">
                                 {{faq.description}}
+                            </td>
+                            <td class="text-center text-break">
+                                {{faq.updated_at}}
                             </td>
                             <td class="text-center text-break">
                                 <label class="form-check form-switch">
@@ -57,7 +60,7 @@
                                         @change.prevent="
                                             $inertia.put(
                                                 route(
-                                                    'admin.test-cases.toggle-active',
+                                                    'admin.faqs.toggle-active',
                                                     faq.id
                                                 )
                                             )
@@ -72,8 +75,31 @@
                                     />
                                 </label>
                             </td>
-                            <td class="text-center text-break">
-                                {{faq.created_at}}
+                            <td class="text-center">
+                                <b-dropdown
+                                    no-caret
+                                    right
+                                    toggle-class="align-items-center text-muted"
+                                    variant="link"
+                                    boundary="window"
+                                >
+                                    <template #button-content>
+                                        <icon name="dots-vertical"></icon>
+                                    </template>
+                                    <li>
+                                        <a
+                                            :href="
+                                                route(
+                                                    'admin.faqs.export',
+                                                    faq.id
+                                                )
+                                            "
+                                            class="dropdown-item"
+                                        >
+                                            {{ $t('table.menu.export') }}
+                                        </a>
+                                    </li>
+                                </b-dropdown>
                             </td>
                         </tr>
                         <tr v-if="!faqs.length">

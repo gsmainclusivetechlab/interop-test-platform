@@ -26,12 +26,11 @@ class Faq extends Model
         'active',
     ];
 
-    /** @var bool */
-    public $timestamps = false;
-
     /** @var array */
     protected $casts = [
         'content' => 'array',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /** @var array */

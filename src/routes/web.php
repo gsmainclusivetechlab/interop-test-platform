@@ -360,11 +360,11 @@ Route::name('admin.')
                 Route::post('import', 'FaqController@import')->name(
                     'import.confirm'
                 );
-                Route::get('export', 'FaqController@export')->name(
+                Route::get('{faq}/export', 'FaqController@export')->name(
                     'export'
                 );
-                Route::put('toggle-active', 'TestCaseController@toggleActive')->name(
-                    'toggle-public'
+                Route::put('{faq}/toggle-active', 'FaqController@toggleActive')->name(
+                    'toggle-active'
                 );
             });
         Route::resource('components', 'ComponentController')->except(['show']);

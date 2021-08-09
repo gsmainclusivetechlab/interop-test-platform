@@ -21,12 +21,11 @@ class FaqPolicy
 
     /**
      * @param  User  $user
-     * @param  Group  $model
      * @return mixed
      */
-    public function view(User $user, Group $model)
+    public function view(User $user)
     {
-        return $user->isAdmin() || $model->hasUser($user);
+        return $user->isAdmin();
     }
 
     /**
@@ -40,31 +39,28 @@ class FaqPolicy
 
     /**
      * @param  User  $user
-     * @param  Group  $model
      * @return mixed
      */
-    public function update(User $user, Group $model)
+    public function update(User $user)
     {
         return $user->isAdmin();
     }
 
     /**
      * @param  User  $user
-     * @param  Group  $model
      * @return mixed
      */
-    public function delete(User $user, Group $model)
+    public function delete(User $user)
     {
         return $user->isAdmin();
     }
 
     /**
      * @param  User  $user
-     * @param  Group  $model
      * @return mixed
      */
-    public function admin(User $user, Group $model)
+    public function toggleActive(User $user)
     {
-        return $user->isAdmin() || $model->hasAdminUser($user);
+        return $user->isAdmin();
     }
 }
