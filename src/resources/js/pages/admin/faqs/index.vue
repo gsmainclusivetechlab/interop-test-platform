@@ -102,7 +102,7 @@
                                 </b-dropdown>
                             </td>
                         </tr>
-                        <tr v-if="!faqs.length">
+                        <tr v-if="!faqs.data.length">
                             <td class="text-center" colspan="8">
                                 {{ $t('table.content.no-results') }}
                             </td>

@@ -1,44 +1,66 @@
 <template>
     <layout>
-        <div class="faq">
-            <search-section
-                @on-search="applyFilter"
-                :title="title"
-                :description="description"
-            />
-
-            <div class="search-results-section">
-                <div class="container container--narrow">
-                    <template v-if="Object.keys(filteredFaqData).length">
-                        <div class="faq-results__item" v-for="(item, key) in filteredFaqData" :key="`category-${key}`">
-                            <h2 class="h2 faq-results__item-title">{{ key !== 'undefined' ? key : '' }}</h2>
-                            <accordion>
-                                <accordion-item v-for="(categoryItem, index) in item" :key="`category-item-${index}`">
-                                    <template #header>
-                                        {{ categoryItem.title }}
-                                    </template>
-
-                                    <template #body>
-                                        <div v-html="categoryItem.text"></div>
-                                    </template>
-                                </accordion-item>
-                            </accordion>
-                        </div>
-                    </template>
-                    <div class="card" v-else>
-                        <div class="row justify-content-md-around">
-                            <div class="w-100"><br /></div>
-                            <div class="col-3 tutorial-cards">
-                                <h4
-                                    class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center"
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <h2 class="page-title">
+                        <b>{{ $t('faq.page.title') }}</b>
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="col-sm-4">
+                    <input-search
+                        v-model="filterInput"
+                        @input="handleSearch"
+                    />
+                </div>
+            </div>
+            <div v-if="Object.keys(filteredFaqData).length">
+                <div v-for="(items, key) in filteredFaqData" :key="key">
+                    <div role="tablist" class="faq-accordion px-4">
+                        <div class="card-header h3">{{ key !== 'undefined' ? key : '' }}</div>
+                        <template v-for="(item, index) of items">
+                            <article class="mb-3 card" v-bind:key="index" :key="index">
+                                <header
+                                    :id="key + index"
+                                    class="pl-0 card-header"
+                                    role="tab"
+                                    type="button"
+                                    v-b-toggle="'accordion-' + key + index"
                                 >
-                                    {{ $t('tutorials.page.noTutorials') }}No results found.
-                                </h4>
-                            </div>
-                            <div class="w-100"><br /></div>
-                        </div>
+                                    <button class="btn shadow-none">
+                                        <h3 class="mb-0 text-primary">
+                                            {{ item.title }}
+                                        </h3>
+                                    </button>
+                                </header>
+                                <b-collapse
+                                    :id="'accordion-' + key + index"
+                                    accordion="faq-accordion"
+                                    role="tabpanel"
+                                >
+                                    <div class="card-body">
+                                        <div v-html="item.text"></div>
+                                    </div>
+                                </b-collapse>
+                            </article>
+                        </template>
                     </div>
                 </div>
+            </div>
+            <div class="row justify-content-md-around" v-else>
+                <div class="w-100"><br /></div>
+                <div class="col-3 tutorial-cards">
+                    <h4
+                        class="text-primary mb-2 py-3 d-flex align-items-center justify-content-center"
+                    >
+                        {{ $t('tutorials.page.noTutorials') }}
+                    </h4>
+                </div>
+                <div class="w-100"><br /></div>
             </div>
         </div>
     </layout>
@@ -46,16 +68,14 @@
 
 <script>
 import Layout from '@/layouts/main';
-import accordion from '@/pages/accordion';
-import accordionItem from '@/pages/accordion-item';
-import searchSection from '@/pages/search-section';
 
 export default {
-    name: 'faq-page',
+    metaInfo() {
+        return {
+            title: this.$t('faq.page.title'),
+        };
+    },
     components: {
-        accordion,
-        accordionItem,
-        searchSection,
         Layout,
     },
     props: {
@@ -63,20 +83,13 @@ export default {
             type: Array,
             required: true,
         },
-        title: {
-            type: string,
-            required: false,
-        },
-        description: {
-            type: string,
-            required: false,
-        },
     },
 
     data() {
         return {
             faqDataSource: null,
             filteredFaqData: {},
+            filterInput: '',
         }
     },
 
@@ -103,7 +116,9 @@ export default {
                     }
                 });
             });
-            console.log(this.filteredFaqData)
+        },
+        handleSearch() {
+            this.applyFilter(this.filterInput);
         }
     }
 }

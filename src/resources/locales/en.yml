@@ -120,6 +120,10 @@ test-cases:
     test-flow: Test Flow
     test-steps: Test steps
     versions: Versions
+faq:
+  page:
+    title: FAQ
+    noResults: 'No results found'
 tutorials:
   page:
     title: Tutorials
