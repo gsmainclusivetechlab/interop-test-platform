@@ -1,5 +1,5 @@
-name: P2P Accepted - Receive / Non-Disclosing
-slug: P2P0100
+name: P2P Accepted - Receive - Non-Disclosing
+slug: P2P-Accepted-Receive-NonDisclosing
 use_case: P2P
 test_case: P2P0100
 behavior: positive
