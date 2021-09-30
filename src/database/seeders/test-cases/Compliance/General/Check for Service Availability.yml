@@ -1,0 +1,42 @@
+name: Check for Service Availability
+slug: check-for-service-availability
+use_case: General
+behavior: positive
+description: |
+  Service Provider checks the Mobile Money Provider service is available.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+test_steps:
+  ## 1 ------------------------------GET /heartbeat: SP -> MMAP ------------------------------##
+  - path: /heartbeat
+    pattern: '^heartbeat'
+    method: GET
+    source: sp
+    target: mmap
+    api_spec: MM v1.1.2
+    test_response_scripts:
+      - name: Heartbeat request was successfully received
+        rules:
+          status: 'required|in:200'
+      - name: Heartbeat status is specified correctly
+        rules:
+          body.serviceStatus: 'required|in:available'
+    request:
+      method: GET
+      uri: /heartbeat
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        serviceStatus: 'available'

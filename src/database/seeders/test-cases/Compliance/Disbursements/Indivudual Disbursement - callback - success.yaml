@@ -1,0 +1,128 @@
+name: Indivudual Disbursement - callback - success
+slug: indivudual-disbursement-callback-success
+use_case: Disbursement
+behavior: positive
+description: |
+  The Service Provider wants to test if he is capable of making a single disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the necessary steps for this transaction simulating an approved single disbursement.
+
+precondition: |
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Required Parameters for Execution:
+    - Amount should be the value `50`.
+    - IDENTIFIER_TYPE, default value is `msisdn`
+    - IDENTIFIER, default value is `+33555000500`
+
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+
+test_steps:
+  ##------------------------------POST/Transactions: SP -> MMAP------------------------------##
+  - path: /transactions/type/{transactionType}
+    pattern: '^transactions/type/disbursement$'
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: MM v1.1.3
+    trigger:
+      amount: '50'
+
+    test_request_scripts:
+      - name: Header has the X-Client-Id
+        rules:
+          headers.X-Client-Id: 'required'
+      - name: Header has the Url Callback
+        rules:
+          headers.x-callback-url.*: 'required'
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^50([.][0-9]{0,4})?$/'
+      - name: Transaction is a Disbursement
+        rules:
+          body.type: 'required|in:disbursement'
+
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+
+    request:
+      method: POST
+      uri: /transactions/type/disbursement
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id:
+          '{{ env.X_CLIENT_ID_MERCHANT|default("DISORG1STEP12345") }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amount: '50'
+        currency: '{{ env.CURRENCY|default("USD")}}'
+        type: 'disbursement'
+        debitParty:
+          - key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE|default("+33555000501")}}'
+        creditParty:
+          - key: '{{ env.CREDIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.CREDIT_PARTY_VALUE|default("+33555000500")}}'
+
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 2 ------------------------------PUT/Callback: MMAP -> SP ------------------------------##
+
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    api_spec: MM v1.1.3
+
+    callback:
+      origin_method: POST
+      origin_path: /transactions/type/{transactionType}
+      name: transactionsSuccessEvent
+
+    test_request_scripts:
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^50([.][0-9]{0,4})?$/'
+      - name: Transaction was approved
+        rules:
+          body.transactionStatus: 'required|in:completed'
+
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:204'
+
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        '{{ steps.1.request.body|merge({transactionStatus: "completed",
+        transactionReference: uuidv4()})|json_encode }}'
+
+    response:
+      status: 204

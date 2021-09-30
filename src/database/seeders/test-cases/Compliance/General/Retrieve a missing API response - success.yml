@@ -1,0 +1,94 @@
+name: Retrieve a missing API response - success
+slug: retrieve-a-missing-api-response-success
+use_case: General
+behavior: positive
+description: |
+  Service Provider requests the responses for their client correlation ID through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with the Responses object. The service provider requests a specific object which has previously been created by passing the object’s URL and the Mobile Money Provider responds synchronously with the object.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+  - Define the environment variables to customise this test case:
+      - X_CLIENT_ID, default value is "PROVIDER12345"
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+test_steps:
+  ## 1 ------------------------------GET /responses: SP -> MMAP ------------------------------##
+  - path: /responses/{clientCorrelationId}
+    pattern: '^responses/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    method: GET
+    source: sp
+    target: mmap
+    api_spec: MM v1.1.3
+    trigger:
+      link: '/transactions/be78f48f-2433-4bfa-8cdd-aaf058a400de'
+    test_request_scripts:
+      - name: Header has the X-Client-Id
+        rules:
+          headers.x-client-id: 'required'
+    test_response_scripts:
+      - name: Response request was successfully received
+        rules:
+          status: 'required|in:200'
+      - name: Response contains link
+        rules:
+          body.link: 'required|in:/transactions/be78f48f-2433-4bfa-8cdd-aaf058a400de'
+    request:
+      method: GET
+      uri: /responses/{{ uuidv4() }}
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+        x-client-id: '{{ env.X_CLIENT_ID|default("PROVIDER12345")}}'
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        link: '/transactions/be78f48f-2433-4bfa-8cdd-aaf058a400de'
+  ## 2 ------------------------------GET /transactions: SP -> MMAP ------------------------------##
+  - path: /transactions/{transactionReference}
+    pattern: '^transactions/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    method: GET
+    source: sp
+    target: mmap
+    trigger:
+      link: '/transactions/be78f48f-2433-4bfa-8cdd-aaf058a400de'
+    test_request_scripts:
+      - name: Header has the X-Client-Id
+        rules:
+          headers.x-client-id: 'required'
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+      - name: Transaction reference is correct
+        rules:
+          body.transactionReference: 'required|in:be78f48f-2433-4bfa-8cdd-aaf058a400de'
+    request:
+      method: 'GET'
+      uri: '{{ steps.1.response.body.link }}'
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+        x-client-id: '{{ env.X_CLIENT_ID|default("PROVIDER12345")}}'
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        amount: '23'
+        currency: 'USD'
+        type: 'merchantpay'
+        transactionStatus: 'Completed'
+        transactionReference: '{{ steps.1.response.body.link [14:] }}'
+        debitParty:
+          - key: 'msisdn'
+            value: '+33555123456'
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555789123'
