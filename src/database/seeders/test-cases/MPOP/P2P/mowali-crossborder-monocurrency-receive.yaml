@@ -1,0 +1,645 @@
+name: 'P2P Cross-Border Mono-Currency - Receive'
+slug: mowali-crossborder-monocurrency-receive
+use_case: 'P2P'
+behavior: positive
+description: |
+  This testcase simulates a scenario where the Payer would like to send money
+  to a Payee but each of them uses different providers, different countries and diffetent currencies . This flow shows the
+  steps involved in an P2P cross-vorder multi currency transaction with AmountType: RECEIVE and behaviour: ACCEPTED.
+precondition: |
+  - DFSP 1 and DFSP 2 exist in Mowali as Participants.
+  - The following values are set in the session environment:
+    - `INITIATOR_OAUTH_TOKEN`
+    - `INITIATOR_FSPIOP`
+    - `INITIATOR_PARTY_MSISDN`
+    - `REMOTE_OAUTH_TOKEN`
+    - `REMOTE_FSPIOP`
+  - Required Parameters for Execution:
+    - Remote Party MSISDN: `212522200012`
+components:
+  - name: 'Mobile Money Operator 1'
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+  - name: 'Mobile Money Operator 2'
+    slug: mmo-2
+test_steps:
+  - path: '/parties/{Type}/{ID}'
+    pattern: parties/MSISDN/212522200012$
+    method: GET
+    source: mmo-1
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Authorization header must be provided'
+        rules:
+          headers.Authorization: required
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: GET
+      uri: parties/MSISDN/212522200012
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.parties+json;version=1.0
+        Content-Type: application/vnd.interoperability.parties+json;version=1.0
+        Authorization: 'Bearer {{env.INITIATOR_OAUTH_TOKEN}}'
+        FSPIOP-Source: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body: empty_body
+    response:
+      status: 202
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/parties/{Type}/{ID}'
+    pattern: parties/MSISDN/212522200012$
+    method: GET
+    source: mojaloop
+    target: mmo-2
+    api_spec: 'Mojaloop v1.0'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: GET
+      uri: parties/MSISDN/212522200012
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.parties+json;version=1.0
+        Content-Type: application/vnd.interoperability.parties+json;version=1.0
+        FSPIOP-Source: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+        FSPIOP-Destination: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+      body: empty_body
+    response:
+      status: 202
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/parties/{Type}/{ID}'
+    pattern: '^parties/MSISDN/212522200012(/error)?$'
+    method: PUT
+    source: mmo-2
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Authorization header must be provided'
+        rules:
+          headers.Authorization: required
+      - name: 'Correct party must be returned'
+        rules:
+          body.party.partyIdInfo.partyIdentifier: 'required|in:212522200012'
+    test_response_scripts:
+      - name: 'Participant information was successfully received'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: parties/MSISDN/212522200012
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.parties+json;version=1
+        Content-Type: application/vnd.interoperability.parties+json;version=1.0
+        Authorization: 'Bearer {{env.REMOTE_OAUTH_TOKEN}}'
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body:
+        party:
+          name: 'TestFirst TestLast'
+          partyIdInfo:
+            fspId: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+            partyIdType: MSISDN
+            partyIdentifier: '212522200012'
+          personalInfo:
+            complexName:
+              lastName: TestLast
+              firstName: TestFirst
+              middleName: TestMiddle
+            dateOfBirth: '2010-10-10'
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/parties/{Type}/{ID}'
+    pattern: '^parties/MSISDN/212522200012(/error)?$'
+    method: PUT
+    source: mojaloop
+    target: mmo-1
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Correct party must be returned'
+        rules:
+          body.party.partyIdInfo.partyIdentifier: 'required|in:212522200012'
+    test_response_scripts:
+      - name: 'Participant information was successfully received'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: parties/MSISDN/212522200012
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.parties+json;version=1
+        Content-Type: application/vnd.interoperability.parties+json;version=1.0
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body: '{{steps.3.request.body | json_encode }}'
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: /quotes
+    pattern: quotes$
+    method: POST
+    source: mmo-1
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Mandatory IDs are present'
+        rules:
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: 'Authorization header must be provided'
+        rules:
+          headers.Authorization: required
+      - name: 'Transaction Type is a P2P Forex Transfer'
+        rules:
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
+      - name: 'Initiator wants to send money to Remote party'
+        rules:
+          body.amountType: 'required|in:RECEIVE'
+      - name: 'Payer and Payee parties are present and valid in the network'
+        rules:
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:212522200012'
+          body.payer.partyIdInfo.partyIdentifier:
+            'required|in:{{env.INITIATOR_PARTY_MSISDN | default("33140123456")}}'
+      - name: 'Amount and currency are specified correctly'
+        rules:
+          body.amount.amount: 'required|in:100'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+    test_response_scripts:
+      - name: 'Quote was successfully Accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: POST
+      uri: quotes
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.quotes+json;version=1.0
+        Authorization: 'Bearer {{env.INITIATOR_OAUTH_TOKEN}}'
+        FSPIOP-Source: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+        FSPIOP-Destination: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+      body:
+        payee: '{{steps.4.request.body.party | json_encode}}'
+        payer:
+          name: 'John Doe'
+          partyIdInfo:
+            fspId: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+            partyIdType: MSISDN
+            partyIdentifier:
+              '{{env.INITIATOR_PARTY_MSISDN | default("33140123456")}}'
+          personalInfo:
+            complexName:
+              lastName: Doe
+              firstName: John
+              middleName: Jane
+            dateOfBirth: '2000-01-01'
+        amount:
+          amount: '100'
+          currency: EUR
+        quoteId: '{{uuidv4()}}'
+        amountType: RECEIVE
+        transactionId: '{{uuidv4()}}'
+        transactionType:
+          scenario: TRANSFER
+          initiator: PAYER
+          initiatorType: CONSUMER
+    response:
+      status: 202
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: /quotes
+    pattern: quotes$
+    method: POST
+    source: mojaloop
+    target: mmo-2
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Mandatory IDs is correctly forwarded'
+        rules:
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: 'Transaction Type is a P2P Forex Transfer'
+        rules:
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
+      - name: 'Payer wants to send money to Payee'
+        rules:
+          body.amountType: 'required|in:RECEIVE'
+      - name: 'Payer and Payee parties are present and valid in the network'
+        rules:
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdentifier: 'required|in:212522200012'
+          body.payer.partyIdInfo.partyIdentifier:
+            'required|in:{{env.INITIATOR_PARTY_MSISDN | default("33140123456")}}'
+      - name: 'Amount and currency are specified correctly'
+        rules:
+          body.amount.amount: 'required|in:1100'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: POST
+      uri: quotes
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.quotes+json;version=1.0
+        FSPIOP-Source: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+        FSPIOP-Destination: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+      body:
+        payee: '{{steps.5.request.body.payee | json_encode}}'
+        payer:
+          name: 'John Doe'
+          partyIdInfo:
+            fspId: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+            partyIdType: MSISDN
+            partyIdentifier:
+              '{{env.INITIATOR_PARTY_MSISDN | default("33140123456")}}'
+          personalInfo:
+            complexName:
+              lastName: Doe
+              firstName: John
+              middleName: Jane
+            dateOfBirth: '2000-01-01'
+        amount:
+          amount: '1100'
+          currency: EUR
+        quoteId: '{{uuidv4()}}'
+        amountType: RECEIVE
+        transactionId: '{{uuidv4()}}'
+        transactionType:
+          scenario: TRANSFER
+          initiator: PAYER
+          initiatorType: CONSUMER
+    response:
+      status: 202
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/quotes/{ID}'
+    pattern: 'quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(/error)?$'
+    method: PUT
+    source: mmo-2
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Amounts and currencies are specified correctly'
+        rules:
+          body.transferAmount.amount: 'required|in:1100'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+      - name: 'Quote ID is correctly used'
+        rules:
+          uri: 'required|regex:/quotes\/{{steps.6.request.body.quoteId}}/'
+      - name: 'ILP is correctly generated'
+        rules:
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+          body.expiration:
+            - required
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: 'quotes/{{steps.6.request.body.quoteId}}'
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.quotes+json;version=1.0
+        Authorization: 'Bearer {{env.REMOTE_OAUTH_TOKEN}}'
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body:
+        condition: '{{ilpCondition(ilpFulfilment())  | base64_urlencode}}'
+        ilpPacket:
+          '{{ilpPacket( steps.6.request.body.amount.amount, "+1 hour",
+          ilpCondition(ilpFulfilment()),
+          "g.gh.msisdn.#{steps.6.request.body.payee.partyIdInfo.partyIdentifier}",
+          "") | base64_urlencode}}'
+        expiration: '{{"+1 day" | date("Y-m-d\\TH:i:s.vP")}}'
+        transferAmount:
+          amount: '1100'
+          currency: EUR
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/quotes/{ID}'
+    pattern: 'quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: mojaloop
+    target: mmo-1
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Amounts and currencies are specified correctly'
+        rules:
+          body.transferAmount.amount: 'required|in:100'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+      - name: 'Quote ID is correctly used'
+        rules:
+          uri: 'required|regex:/quotes\/{{steps.6.request.body.quoteId}}/'
+      - name: 'ILP is correctly forwarded'
+        rules:
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+          body.expiration:
+            - required
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: 'quotes/{{steps.6.request.body.quoteId}}'
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.quotes+json;version=1.0
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body:
+        condition: '{{ilpCondition(ilpFulfilment())  | base64_urlencode}}'
+        ilpPacket:
+          '{{ilpPacket( steps.5.request.body.amount.amount, "+1 hour",
+          ilpCondition(ilpFulfilment()),
+          "g.gh.msisdn.#{steps.6.request.body.payee.partyIdInfo.partyIdentifier}",
+          "") | base64_urlencode}}'
+        expiration: '{{"+1 day" | date("Y-m-d\\TH:i:s.vP")}}'
+        transferAmount:
+          amount: '{{steps.5.request.body.amount.amount}}'
+          currency: '{{steps.5.request.body.amount.currency}}'
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: /transfers
+    pattern: transfers$
+    method: POST
+    source: mmo-1
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Transfer ID is generated'
+        rules:
+          body.transferId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: 'Amounts and currencies are specified correctly'
+        rules:
+          body.amount.amount: 'required|in:100'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+      - name: 'ILP is correctly forwarded'
+        rules:
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+          body.expiration:
+            - required
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: 'FSPs are specified correctly'
+        rules:
+          body.payeeFsp:
+            'required|in:{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+          body.payerFsp:
+            'required|in:{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: POST
+      uri: transfers
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.transfers+json;version=1.0
+        Authorization: 'Bearer {{env.INITIATOR_OAUTH_TOKEN}}'
+        FSPIOP-Source: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+        FSPIOP-Destination: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+      body:
+        amount: '{{steps.8.request.body.transferAmount | json_encode}}'
+        payeeFsp: '{{steps.5.request.body.payee.partyIdInfo.fspId}}'
+        payerFsp: '{{steps.5.request.body.payer.partyIdInfo.fspId}}'
+        condition: '{{steps.8.request.body.condition}}'
+        ilpPacket: '{{steps.8.request.body.ilpPacket}}'
+        expiration: '{{steps.8.request.body.expiration}}'
+        transferId: '{{uuidv4()}}'
+    response:
+      status: 202
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: /transfers
+    pattern: transfers$
+    method: POST
+    source: mojaloop
+    target: mmo-2
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Transfer ID is correctly used'
+        rules:
+          body.transferId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - name: 'Amounts and currencies are specified correctly'
+        rules:
+          body.amount.amount: 'required|in:1100'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+      - name: 'ILP is correctly forwarded'
+        rules:
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+          body.ilpPacket: 'required|regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+          body.expiration:
+            - required
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: 'FSPs are specified correctly'
+        rules:
+          body.payeeFsp:
+            'required|in:{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+          body.payerFsp:
+            'required|in:{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: POST
+      uri: transfers
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.transfers+json;version=1.0
+        FSPIOP-Source: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+        FSPIOP-Destination: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+      body:
+        amount: '{{steps.7.request.body.transferAmount | json_encode}}'
+        payeeFsp: '{{steps.5.request.body.payee.partyIdInfo.fspId}}'
+        payerFsp: '{{steps.5.request.body.payer.partyIdInfo.fspId}}'
+        condition: '{{steps.7.request.body.condition}}'
+        ilpPacket: '{{steps.7.request.body.ilpPacket}}'
+        expiration: '{{steps.7.request.body.expiration}}'
+        transferId: '{{uuidv4()}}'
+    response:
+      status: 202
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/transfers/{ID}'
+    pattern: 'transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: mmo-2
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Transfer ID is correct'
+        rules:
+          uri: 'required|regex:/transfers\/{{steps.10.request.body.transferId}}/'
+      - name: 'Transfer State is COMMITTED'
+        rules:
+          body.transferState: 'required|in:COMMITTED'
+      - name: 'completedTimestamp is specified correctly'
+        rules:
+          body.completedTimestamp:
+            - required
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+      - name: 'fulfilment is specified correctly'
+        rules:
+          body.fulfilment: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: 'transfers/{{steps.10.request.body.transferId}}'
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.transfers+json
+        Authorization: 'Bearer {{env.REMOTE_OAUTH_TOKEN}}'
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body:
+        fulfilment: '{{ilpFulfilment() | base64_urlencode}}'
+        transferState: COMMITTED
+        completedTimestamp: '{{"now" | date("Y-m-d\\TH:i:s.vP")}}'
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/transfers/{ID}'
+    pattern: 'transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: mojaloop
+    target: mmo-1
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Transfer ID is correct'
+        rules:
+          uri: 'required|regex:/transfers\/{{steps.11.request.body.transferId}}/'
+      - name: 'Transfer State is COMMITTED'
+        rules:
+          body.transferState: 'required|in:COMMITTED'
+      - name: 'completedTimestamp is specified correctly'
+        rules:
+          body.completedTimestamp: 'required|in:{{steps.11.request.body.completedTimestamp}}'
+      - name: 'fulfilment is specified correctly'
+        rules:
+          body.fulfilment: 'required|in:{{steps.11.request.body.fulfilment}}'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: 'transfers/{{steps.9.request.body.transferId}}'
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.transfers+json
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body: '{{steps.11.request.body | json_encode}}'
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
+  - path: '/transfers/{ID}'
+    pattern: 'transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    source: mojaloop
+    target: mmo-2
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Transfer ID is correct'
+        rules:
+          uri: 'required|regex:/transfers\/{{steps.11.request.body.transferId}}/'
+      - name: 'Transfer State is COMMITTED'
+        rules:
+          body.transferState: 'required|in:COMMITTED'
+      - name: 'completedTimestamp is specified correctly'
+        rules:
+          body.completedTimestamp: 'required|in:{{steps.11.request.body.completedTimestamp}}'
+      - name: 'fulfilment is specified correctly'
+        rules:
+          body.fulfilment: 'required|in:{{steps.11.request.body.fulfilment}}'
+    test_response_scripts:
+      - name: 'Transaction was successfully Accepted'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: 'transfers/{{steps.9.request.body.transferId}}'
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.quotes+json;version=1.0
+        Content-Type: application/vnd.interoperability.transfers+json
+        FSPIOP-Source: '{{env.REMOTE_FSPIOP | default("mmo2fsp")}}'
+        FSPIOP-Destination: '{{env.INITIATOR_FSPIOP | default("mmo1fsp")}}'
+      body: '{{steps.11.request.body | json_encode}}'
+    response:
+      status: 200
+      headers:
+        Date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Content-Type: application/json
+      body: empty_body
