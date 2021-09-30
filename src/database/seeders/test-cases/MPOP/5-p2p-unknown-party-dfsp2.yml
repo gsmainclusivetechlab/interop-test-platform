@@ -1,0 +1,90 @@
+name: Unknown Party (DFSP2 Sender)
+slug: mowali-unknown-party-dfsp2
+use_case: P2P Multicurrency
+behavior: negative
+description: |
+  This testcase simulates a scenario where a party at DFSP2 would like to send money to 
+  a party, but the remote party cannot be found in any DFSP registered to the hub.
+
+  DFSP2 subscriber makes a transfer of X amount to a number related to an unregistered operator	.
+  This is to test that an attempted transaction from DFSP2 to an unregistered Mowali operator is rejected i.e. a DFSP not connected to Mowali.
+precondition: |
+  - DFSP 2 is registered in the Hub.
+  - The following values are set in the session environment:
+    - `DFSP2_FSPIOP`
+    - `DFSP1_PARTY_MSISDN`
+    - `DFSP2_OAUTH_TOKEN` (if DFSP2 is simulated)
+  - The MSISDN `{{ env.DFSP1_PARTY_MSISDN }}` is not registered to any DFSP in the hub (if the hub is live)
+components:
+  - name: DFSP 2
+    slug: dfsp2
+  - name: Mowali Hub
+    slug: mowali
+  - name: DFSP 1
+    slug: dfsp1
+test_steps:
+  - path: '/parties/{Type}/{ID}'
+    pattern: 'parties/MSISDN/[^\/]+$'
+    method: GET
+    source: dfsp2
+    target: mowali
+    mtls: true
+    api_spec: Mojaloop v1.0
+    test_request_scripts:
+      - name: Authorization header must be provided
+        rules:
+          headers.authorization: required
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+    request:
+      method: GET
+      uri: parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+      headers:
+        fspiop-uri: /parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+        fspiop-http-method: GET
+        date: '{{ "now" | date("D, d M Y H:i:s O")}}'
+        accept: application/vnd.interoperability.parties+json;version=1.0
+        content-type: application/vnd.interoperability.parties+json;version=1.0
+        authorization: 'Bearer {{env.DFSP2_OAUTH_TOKEN}}'
+        fspiop-source: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+    response:
+      status: 202
+      headers:
+        date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        content-type: application/json
+
+  - path: '/parties/{Type}/{ID}/error'
+    pattern: 'parties/MSISDN/[^/]+/error$'
+    method: PUT
+    source: mowali
+    target: dfsp2
+    mtls: true
+    api_spec: Mojaloop v1.0
+    test_request_scripts:
+      - name: Error must be provided in the callback payload
+        rules:
+          body.errorInformation.errorCode: 'required|regex:/^[1-9]\d{3}$/'
+          body.errorInformation.errorDescription: 'required'
+    test_response_scripts:
+      - name: Error callback was successfully received
+        rules:
+          status: 'required|in:200'
+    request:
+      uri: parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}/error
+      body:
+        errorInformation:
+          errorCode: '3201'
+          errorDescription: >-
+            Remote Party MSISDN is not associated with any DFSP registered in
+            the Hub.
+      method: PUT
+      headers:
+        date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        accept: application/vnd.interoperability.parties+json;version=1.0
+        content-type: application/vnd.interoperability.parties+json;version=1.0
+        fspiop-source: Switch
+        fspiop-destination: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+    response:
+      status: 200
