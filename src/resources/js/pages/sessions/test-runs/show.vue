@@ -433,9 +433,6 @@
                                                                 :data="
                                                                     testExecution.actual
                                                                 "
-                                                                :show-copy-btn="
-                                                                    false
-                                                                "
                                                                 :deep="1"
                                                                 :show-line="
                                                                     false
@@ -453,9 +450,6 @@
                                                             <json-tree
                                                                 :data="
                                                                     testExecution.expected
-                                                                "
-                                                                :show-copy-btn="
-                                                                    false
                                                                 "
                                                                 :deep="1"
                                                                 :show-line="

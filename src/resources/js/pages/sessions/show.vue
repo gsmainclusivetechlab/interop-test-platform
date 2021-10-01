@@ -427,9 +427,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-nowrap w-auto">ID</th>
-                                    <th class="text-nowrap w-auto">
-                                        Test Case
-                                    </th>
+                                    <th class="text-nowrap w-auto">Test Case</th>
                                     <th class="text-nowrap w-auto">Status</th>
                                     <th class="text-nowrap w-auto">Duration</th>
                                     <th class="text-nowrap w-auto">Date</th>
@@ -574,7 +572,7 @@ export default {
         allTestsPass() {
             var testCase = this.session.testCases.data;
             for (var t in testCase) {
-                if (!testCase[t].lastTestRun.successful) {
+                if (testCase[t].lastTestRun && !testCase[t].lastTestRun.successful) {
                     this.warning = true;
                     return [this.warning];
                 }

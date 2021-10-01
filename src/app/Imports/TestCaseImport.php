@@ -21,9 +21,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\Yaml\Yaml;
 
 class TestCaseImport implements Importable
 {
+    public $currentFileName;
+
     /**
      * @param array $rows
      * @return TestCase
@@ -171,6 +174,28 @@ class TestCaseImport implements Importable
         });
     }
 
+    /**
+     * @param array $files
+     * @return mixed
+     * @throws ValidationException
+     * @throws \Throwable
+     */
+    public function batchImport(array $files)
+    {
+        $this->validateByFile($files);
+        return DB::transaction(function () use ($files) {
+            foreach ($files as $file) {
+                $this->currentFileName = $file->getClientOriginalName();
+                $rows = Yaml::parse($file->get());
+                $testCase = $this->import($rows);
+                $testCase
+                    ->owner()
+                    ->associate(auth()->user())
+                    ->save();
+            }
+        });
+    }
+
     protected function parseComponentRow($componentRow): array
     {
         return [
@@ -305,6 +330,58 @@ class TestCaseImport implements Importable
             }
         }
         $errors .= '</ol>';
+
+        if ($hasErrors) {
+            throw ValidationException::withMessages([$errors]);
+        }
+    }
+
+    /**
+     * @param array $files
+     * @throws ValidationException
+     */
+    protected function validateByFile($files)
+    {
+        $hasErrors = false;
+        $errors = '';
+        foreach ($files as $file) {
+            $fileHasErrors = false;
+            $rows = Yaml::parse($file->get());
+            $testCaseValidator = Validator::make(
+                $rows,
+                $this->testCaseRules($rows),
+                $this->testCaseMessages()
+            );
+            $fileErrorTitle = "<hr><p><b>Errors in file '<u>{$file->getClientOriginalName()}</u>':</b></p>";
+            if ($testCaseValidator->fails()) {
+                $fileHasErrors = true;
+                $hasErrors = true;
+                $errors .= "$fileErrorTitle<ul>";
+                foreach ($testCaseValidator->errors()->all() as $message) {
+                    $errors .= "<li>$message</li>";
+                }
+                $errors .= '</ul>';
+            }
+            if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
+                foreach ($testStepRows as $key => $testStepRow) {
+                    $key++;
+                    $testStepValidator = Validator::make(
+                        $testStepRow,
+                        $this->testStepRules($testStepRow, $key),
+                        $this->testStepMessages()
+                    );
+                    if ($testStepValidator->fails()) {
+                        $hasErrors = true;
+                        $errors .= $fileHasErrors ? '' : $fileErrorTitle;
+                        $errors .= "<ol><li><b>Test step $key:</b><ul>";
+                        foreach ($testStepValidator->errors()->all() as $message) {
+                            $errors .= "<li>$message</li>";
+                        }
+                        $errors .= '</ul></li></ol>';
+                    }
+                }
+            }
+        }
 
         if ($hasErrors) {
             throw ValidationException::withMessages([$errors]);

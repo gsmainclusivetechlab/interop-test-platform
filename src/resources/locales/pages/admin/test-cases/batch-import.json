@@ -1,7 +1,7 @@
 {
     "en": {
         "page": {
-            "title": "Import test case"
+            "title": "Batch import test cases"
         },
         "inputs": {
             "file": {
@@ -18,7 +18,7 @@
     },
     "ru": {
         "page": {
-            "title": "Импорт тестового образца"
+            "title": "Импорт тестовых образцов"
         },
         "inputs": {
             "file": {

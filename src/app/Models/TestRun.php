@@ -215,4 +215,12 @@ class TestRun extends Model
             'iteration' => !empty($testResult) ? ++$testResult->iteration : 1,
         ]);
     }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted()
+    {
+        return !is_null($this->completed_at);
+    }
 }

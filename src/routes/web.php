@@ -132,6 +132,10 @@ Route::name('sessions.')
             '{session}/test-cases/{testCase}/run',
             'TestCaseController@run'
         )->name('test-cases.run');
+        Route::post(
+            '{session}/test-cases/run-all',
+            'TestCaseController@runAll'
+        )->name('test-cases.run-all');
         Route::get(
             '{session}/test-cases/{testCase}/test-runs/{testRun}/{position?}',
             'TestRunController@show'
@@ -382,6 +386,13 @@ Route::name('admin.')
                     )->name('import');
                     Route::post('import', 'TestCaseController@import')->name(
                         'import.confirm'
+                    );
+                    Route::get(
+                        'batch-import',
+                        'TestCaseController@showBatchImportForm'
+                    )->name('batch-import');
+                    Route::post('batch-import', 'TestCaseController@batchImport')->name(
+                        'batch-import.confirm'
                     );
                     Route::get(
                         'group-candidates',

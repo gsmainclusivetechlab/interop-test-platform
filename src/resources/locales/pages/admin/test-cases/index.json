@@ -36,7 +36,8 @@
         },
         "buttons": {
             "create": "Create Test Case",
-            "import": "Import Test Case"
+            "import": "Import Test Case",
+            "batch-import": "Batch Import Test Case"
         }
     },
 
