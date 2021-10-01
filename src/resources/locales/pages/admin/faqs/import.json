@@ -1,0 +1,54 @@
+{
+    "en": {
+        "page": {
+            "title": "Import FAQ"
+        },
+        "inputs": {
+            "file": {
+                "label": "File",
+                "placeholder": "Choose file...",
+                "browse": "Browse"
+            },
+            "description": {
+                "label": "Description"
+            },
+            "errors": {
+                "file": "{fileSrc}"
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "import": "Import"
+        },
+        "modal": {
+            "title": "Are you sure?",
+            "text": "Current FAQ will be deleted and imported new one."
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Импорт FAQ"
+        },
+        "inputs": {
+            "file": {
+                "label": "Файл",
+                "placeholder": "Выбрать файл...",
+                "browse": "Выбрать"
+            },
+            "description": {
+                "label": "Описание"
+            },
+            "errors": {
+                "file": "{fileSrc}"
+            }
+        },
+        "buttons": {
+            "cancel": "Отмена",
+            "import": "Импорт"
+        },
+        "modal": {
+            "title": "Вы уверены?",
+            "text": "Текущая версия FAQ будет заменена новой."
+        }
+    }
+}

@@ -6,6 +6,7 @@ use App\Models\{
     ApiSpec,
     AuditLog,
     Component,
+    Faq,
     Group,
     GroupEnvironment,
     GroupUser,
@@ -23,6 +24,7 @@ use App\Policies\{
     ApiSpecPolicy,
     AuditLogPolicy,
     ComponentPolicy,
+    FaqPolicy,
     GroupEnvironmentPolicy,
     GroupUserPolicy,
     GroupPolicy,
@@ -59,6 +61,7 @@ class AuthServiceProvider extends ServiceProvider
         AuditLog::class => AuditLogPolicy::class,
         ImplicitSut::class => ImplicitSutPolicy::class,
         SimulatorPlugin::class => SimulatorPluginPolicy::class,
+        Faq::class => FaqPolicy::class,
     ];
 
     /**

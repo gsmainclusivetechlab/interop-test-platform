@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\AuditLog;
 use App\Models\Component;
+use App\Models\Faq;
 use App\Models\Group;
 use App\Models\ImplicitSut;
 use App\Models\QuestionnaireSection;
@@ -63,7 +64,11 @@ class InertiaServiceProvider extends ServiceProvider
                     )
                         ->filter()
                         ->count(),
-                    'json_pretty_max_size' => env('JSON_PRETTY_MAX_SIZE') ?? 500,
+                    'json_pretty_max_size' =>
+                        env('JSON_PRETTY_MAX_SIZE') ?? 500,
+                    'available_faq_section' => Faq::where([
+                        'active' => true,
+                    ])->exists(),
                 ];
             },
             'auth' => function () {
@@ -161,6 +166,11 @@ class InertiaServiceProvider extends ServiceProvider
                                     'viewAny' => auth()
                                         ->user()
                                         ->can('viewAny', ImplicitSut::class),
+                                ],
+                                'faqs' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', Faq::class),
                                 ],
                             ],
                         ]
