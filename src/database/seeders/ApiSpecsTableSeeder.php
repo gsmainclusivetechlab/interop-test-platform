@@ -33,6 +33,7 @@ class ApiSpecsTableSeeder extends Seeder
         $mmSeedersPath = database_path('seeders/openapis/mm.yaml');
         $mojaSeedersPath = database_path('seeders/openapis/mojaloop.yaml');
         Storage::delete(Storage::allFiles('openapis'));
+        Storage::makeDirectory('openapis');
 
         return [
             [
