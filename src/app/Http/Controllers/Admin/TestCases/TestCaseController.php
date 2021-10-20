@@ -227,7 +227,7 @@ class TestCaseController extends Controller
             }
 
             $testCase = (new TestCaseImport())->import($rows);
-            if ($baseTestCase) {
+            if (!empty($baseTestCase)) {
                 if ($baseGroups = $baseTestCase->groups()->pluck('id')) {
                     $testCase->groups()->sync($baseGroups);
                 }
