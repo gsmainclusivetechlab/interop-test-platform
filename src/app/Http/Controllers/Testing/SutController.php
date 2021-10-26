@@ -259,7 +259,7 @@ class SutController extends Controller
                     new Uri(
                         ($uri = $session->getBaseUriOfComponent(
                             $connection,
-                            null,
+                            '',
                             true
                         ))
                     ),
