@@ -7,3 +7,4 @@ RUN npm ci
 COPY webpack.mix.js webpack.mix.js
 COPY resources resources
 RUN npm run prod
+

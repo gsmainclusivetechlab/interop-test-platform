@@ -5,4 +5,3 @@ RUN apk add --update npm
 # N.B. we don't install dependencies in the image, instead they will be loaded via volume from the host
 
 # RUN php artisan dusk:chrome-driver 81
-
