@@ -1,8 +1,5 @@
 FROM execution_environment
 
-# Install npm
-RUN apk add --update npm
-
 # Copy in code and configuration files
 COPY --chown=interopdev:interopdevs build/nginx-server.conf /etc/nginx/nginx.conf
 COPY --chown=interopdev:interopdevs build/php-fpm.conf /etc/php7/php-fpm.d/www.conf
