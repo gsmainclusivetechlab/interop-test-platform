@@ -28,6 +28,7 @@ class ApiSpecsTableSeeder extends Seeder
      */
     protected function getApiSpecsData()
     {
+        Storage::makeDirectory('openapis');
         $mmPath = 'openapis/' . Str::random(32) . '.yaml';
         $mojaPath = 'openapis/' . Str::random(32) . '.yaml';
         $mmSeedersPath = database_path('seeders/openapis/mm.yaml');

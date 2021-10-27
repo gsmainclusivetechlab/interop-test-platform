@@ -71,7 +71,7 @@ class ExecuteTestRunJob implements ShouldQueue
                     new Uri(
                         ($uri = $session->getBaseUriOfComponent(
                             $testStep->target,
-                            null,
+                            '',
                             true
                         ))
                     ),

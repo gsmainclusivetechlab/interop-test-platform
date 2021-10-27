@@ -31,6 +31,7 @@ x-php-defaults: &php-defaults
     - certbot_certs:/etc/nginx/ssl/letsencrypt
     - certbot_www:/var/www/certbot
     - storage:/var/www/html/storage/app
+    - openapis:/var/www/html/storage/app/openapis
 
 services:
   app:
@@ -111,3 +112,4 @@ volumes:
   certbot_certs:
   certbot_www:
   storage:
+  openapis:
