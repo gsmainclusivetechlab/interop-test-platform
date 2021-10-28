@@ -6,7 +6,7 @@
         "prepare:docker": "./Dockerfiles/make.sh",
         "dc": "docker-compose -f docker-compose.yml",
         "docker-ops": "yarn dc -f compose/ops.yml",
-        "build": "yarn prepare:docker && yarn dc build",
+        "build": "yarn prepare:docker && yarn dc build && yarn dc run app sh -c \"chmod -R 775 ./storage && chown -R interopdev:www-data *\"",
         "build:prod": "yarn prepare:docker && APP_ENV=production yarn dc build",
         "deps": "yarn dc run app sh -c \"npm i && composer install\"",
         "dev": "yarn dc up",
