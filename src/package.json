@@ -14,7 +14,7 @@
         "@kassaila/vue-json-editor": "^0.4.0",
         "@kazupon/vue-i18n-loader": "^0.5.0",
         "@tabler/icons": "^1.39.1",
-        "axios": "^0.19",
+        "axios": "^0.21",
         "bootstrap-vue": "^2.3.0",
         "clipboard": "^2.0.6",
         "collect.js": "^4.28.6",
