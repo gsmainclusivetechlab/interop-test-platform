@@ -14,6 +14,8 @@ precondition: |
 components:
   - name: Service Provider
     slug: service-provider
+  - name: Mobile Money Operator 1
+    slug: mmo-1
 test_steps:
   - path: /transactions
     pattern: '^transactions$'
