@@ -21,6 +21,7 @@ class FaqController extends Controller
      */
     public function __invoke()
     {
+        $this->authorize('viewContent', Faq::class);
         $faqData = Faq::where(['active' => true])->firstOrFail()->content;
         return Inertia::render('faq', ['faqData' => $faqData]);
     }

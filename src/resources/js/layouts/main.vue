@@ -383,7 +383,7 @@
                             :class="{
                                 active: route().current('faq'),
                             }"
-                            v-if="$page.props.app.available_faq_section"
+                            v-if="$page.props.auth.user.can.faqs.viewContent"
                         >
                             <inertia-link
                                 :href="route('faq')"

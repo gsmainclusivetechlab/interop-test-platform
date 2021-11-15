@@ -64,7 +64,6 @@ class InertiaServiceProvider extends ServiceProvider
                     )
                         ->filter()
                         ->count(),
-                    'available_faq_section' => Faq::where(['active' => true])->exists(),
                 ];
             },
             'auth' => function () {
@@ -167,6 +166,9 @@ class InertiaServiceProvider extends ServiceProvider
                                     'viewAny' => auth()
                                         ->user()
                                         ->can('viewAny', Faq::class),
+                                    'viewContent' => auth()
+                                        ->user()
+                                        ->can('viewContent', Faq::class),
                                 ],
                             ],
                         ]

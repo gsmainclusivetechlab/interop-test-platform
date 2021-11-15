@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Group;
+use App\Models\Faq;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -16,7 +16,7 @@ class FaqPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && env('FEATURE_FAQ');
     }
 
     /**
@@ -25,7 +25,7 @@ class FaqPolicy
      */
     public function view(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && env('FEATURE_FAQ');
     }
 
     /**
@@ -34,7 +34,7 @@ class FaqPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && env('FEATURE_FAQ');
     }
 
     /**
@@ -43,7 +43,7 @@ class FaqPolicy
      */
     public function update(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && env('FEATURE_FAQ');
     }
 
     /**
@@ -52,7 +52,7 @@ class FaqPolicy
      */
     public function delete(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && env('FEATURE_FAQ');
     }
 
     /**
@@ -61,6 +61,14 @@ class FaqPolicy
      */
     public function toggleActive(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && env('FEATURE_FAQ');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function viewContent()
+    {
+        return Faq::where(['active' => true])->exists() && env('FEATURE_FAQ');
     }
 }
