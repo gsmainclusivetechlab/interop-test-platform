@@ -105,7 +105,7 @@
                                     </inertia-link>
                                 </li>
                                 <li
-                                    v-if="group.can.admin"
+                                    v-if="group.can.admin && $page.props.app.enable_simulator_plugin"
                                     class="nav-item"
                                 >
                                     <inertia-link

@@ -17,6 +17,20 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class GroupSimulatorPluginsController extends Controller
 {
     /**
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!env('FEATURE_SIMULATOR_PLUGIN')) {
+                abort(404);
+            }
+
+            return $next($request);
+        });
+    }
+
+    /**
      * @param Group $group
      * @return Response
      * @throws AuthorizationException

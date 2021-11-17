@@ -177,7 +177,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body" v-if="simulatorPluginsList">
+                <div class="card-body" v-if="simulatorPluginsList && $page.props.app.enable_simulator_plugin">
                     <label class="form-label">Simulator plugin</label>
                     <v-select
                         v-model="form.simulatorPlugin"

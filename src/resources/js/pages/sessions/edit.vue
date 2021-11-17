@@ -398,7 +398,7 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <div class="mb-3" v-if="simulatorPluginsList">
+                            <div class="mb-3" v-if="simulatorPluginsList && $page.props.app.enable_simulator_plugin">
                                 <label class="form-label">
                                     Simulator plugin
                                 </label>

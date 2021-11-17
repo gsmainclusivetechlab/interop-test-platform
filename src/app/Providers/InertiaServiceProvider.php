@@ -63,6 +63,7 @@ class InertiaServiceProvider extends ServiceProvider
                     )
                         ->filter()
                         ->count(),
+                    'enable_simulator_plugin' => (bool)env('FEATURE_SIMULATOR_PLUGIN'),
                 ];
             },
             'auth' => function () {

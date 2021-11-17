@@ -110,7 +110,7 @@ class Response extends \Illuminate\Http\Client\Response implements Arrayable
      */
     public function withPlugin(TestResult $testResult): Response
     {
-        if (!$testResult->session->simulatorPlugin) {
+        if (!$testResult->session->simulatorPlugin || !env('FEATURE_SIMULATOR_PLUGIN')) {
             return $this;
         }
 

@@ -140,7 +140,7 @@ class Request extends \Illuminate\Http\Client\Request implements Arrayable
      */
     public function withPlugin(TestResult $testResult): Request
     {
-        if (!$testResult->session->simulatorPlugin) {
+        if (!$testResult->session->simulatorPlugin || !env('FEATURE_SIMULATOR_PLUGIN')) {
             return $this;
         }
 
