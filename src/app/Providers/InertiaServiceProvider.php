@@ -64,6 +64,7 @@ class InertiaServiceProvider extends ServiceProvider
                     )
                         ->filter()
                         ->count(),
+                    'json_pretty_max_size' => env('JSON_PRETTY_MAX_SIZE') ?? 500,
                 ];
             },
             'auth' => function () {

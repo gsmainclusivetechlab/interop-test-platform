@@ -16,14 +16,22 @@ use App\Models\{
     UseCase
 };
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\Yaml\Yaml;
 
 class TestCaseImport implements Importable
 {
+    /** @var string */
+    public $currentFileName;
+
+    /** @var array */
+    protected $testCaseComponentsList = [];
+
     /**
      * @param array $rows
      * @return TestCase
@@ -51,6 +59,7 @@ class TestCaseImport implements Importable
 
             if ($componentRows = Arr::get($rows, 'components', [])) {
                 $componentRows = collect($componentRows)->keyBy('slug');
+                $this->testCaseComponentsList = $componentRows->keys();
                 $components = Component::whereIn(
                     'slug',
                     $componentRows->keys()
@@ -168,6 +177,29 @@ class TestCaseImport implements Importable
             }
 
             return $testCase;
+        });
+    }
+
+    /**
+     * @param array $files
+     * @return mixed
+     * @throws ValidationException
+     * @throws \Throwable
+     */
+    public function batchImport(array $files)
+    {
+        $this->validateByFile($files);
+        return DB::transaction(function () use ($files) {
+            /** @var UploadedFile $file */
+            foreach ($files as $file) {
+                $this->currentFileName = $file->getClientOriginalName();
+                $rows = Yaml::parse($file->get());
+                $testCase = $this->import($rows);
+                $testCase
+                    ->owner()
+                    ->associate(auth()->user())
+                    ->save();
+            }
         });
     }
 
@@ -311,6 +343,63 @@ class TestCaseImport implements Importable
         }
     }
 
+    /**
+     * @param array $files
+     * @throws ValidationException
+     */
+    protected function validateByFile($files)
+    {
+        $hasErrors = false;
+        $errors = '';
+        foreach ($files as $file) {
+            $fileHasErrors = false;
+            $rows = Yaml::parse($file->get());
+            $testCaseValidator = Validator::make(
+                $rows,
+                $this->testCaseRules($rows),
+                $this->testCaseMessages()
+            );
+            $fileErrorTitle = "<hr><p><b>Errors in file '<u>{$file->getClientOriginalName()}</u>':</b></p>";
+            if ($testCaseValidator->fails()) {
+                $fileHasErrors = true;
+                $hasErrors = true;
+                $errors .= "$fileErrorTitle<ul>";
+                foreach ($testCaseValidator->errors()->all() as $message) {
+                    $errors .= "<li>$message</li>";
+                }
+                $errors .= '</ul>';
+            }
+
+            if ($componentRows = Arr::get($rows, 'components', [])) {
+                $componentRows = collect($componentRows)->keyBy('slug');
+                $this->testCaseComponentsList = $componentRows->keys();
+            }
+            if ($testStepRows = Arr::get($rows, 'test_steps', [])) {
+                foreach ($testStepRows as $key => $testStepRow) {
+                    $key++;
+                    $testStepValidator = Validator::make(
+                        $testStepRow,
+                        $this->testStepRules($testStepRow, $key),
+                        $this->testStepMessages()
+                    );
+                    if ($testStepValidator->fails()) {
+                        $hasErrors = true;
+                        $errors .= $fileHasErrors ? '' : $fileErrorTitle;
+                        $errors .= "<ol><li><b>Test step $key:</b><ul>";
+                        foreach ($testStepValidator->errors()->all() as $message) {
+                            $errors .= "<li>$message</li>";
+                        }
+                        $errors .= '</ul></li></ol>';
+                    }
+                }
+            }
+        }
+
+        if ($hasErrors) {
+            throw ValidationException::withMessages([$errors]);
+        }
+    }
+
     protected function testCaseRules($rows): array
     {
         return [
@@ -349,8 +438,16 @@ class TestCaseImport implements Importable
     protected function testStepRules($rows, $step): array
     {
         return [
-            'source' => ['required', 'exists:components,slug'],
-            'target' => ['required', 'exists:components,slug'],
+            'source' => [
+                'required',
+//                'exists:components,slug',
+                Rule::in($this->testCaseComponentsList)
+            ],
+            'target' => [
+                'required',
+//                'exists:components,slug',
+                Rule::in($this->testCaseComponentsList)
+            ],
             'api_spec' => ['nullable', 'string', 'max:255'],
             'path' => ['required', 'string', 'max:255'],
             'method' => [
@@ -495,6 +592,8 @@ class TestCaseImport implements Importable
         return [
             'source.exists' => __('The source component does not exist.'),
             'target.exists' => __('The target component does not exist.'),
+            'source.in' => __('The source component does not exist.'),
+            'target.in' => __('The target component does not exist.'),
             'method.in' => __('The method must be in: :methods.', [
                 'methods' => implode(', ', array_keys(HttpMethod::list())),
             ]),

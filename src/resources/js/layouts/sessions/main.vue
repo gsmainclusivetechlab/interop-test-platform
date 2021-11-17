@@ -2,6 +2,62 @@
     <layout :session="session">
         <div class="col-3 mt-3 pr-0">
             <div class="card mb-0">
+                <button
+                    type="button"
+                    class="btn btn-primary m-3"
+                    v-b-modal="'execute-all-modal'"
+                >
+                    <icon name="bike"></icon>
+                    Execute All
+                </button>
+                <b-modal
+                    id="execute-all-modal"
+                    :title="`Execute all Test Cases`"
+                    ok-title="Execute"
+                    centered
+                    @ok="submit"
+                    :ok-disabled="!isExecuteAll"
+                >
+                    <p>The <b>total number</b> of Test Cases in this session is {{session.testCasesCount}}.</p>
+                    <p>
+                        The number of Test Cases that <b>will be executed automatically</b> is
+                        {{this.session.testCasesExecuteAvailableWithoutSutInitiator.length}}:
+                    </p>
+                    <ol>
+                        <li
+                            v-for="testCasesExecuteAvailableWithoutSutInitiator in
+                                session.testCasesExecuteAvailableWithoutSutInitiator"
+                            :key="testCasesExecuteAvailableWithoutSutInitiator.id"
+                        >
+                            {{testCasesExecuteAvailableWithoutSutInitiator.name}}
+                        </li>
+                    </ol>
+                    <p v-if="0 < session.testCasesReachedLimit.length">
+                        Please note that {{session.testCasesReachedLimit.length}} Test Case(s)
+                        <b>reached execution limits:</b>
+                    </p>
+                    <ol>
+                        <li
+                            v-for="testCasesReachedLimit in session.testCasesReachedLimit"
+                            :key="testCasesReachedLimit.id"
+                        >
+                            {{testCasesReachedLimit.name}}
+                        </li>
+                    </ol>
+                    <p v-if="0 < session.testCasesExecuteAvailableWithSutInitiator.length">
+                        Please note that session's SUT(s) are initiators of
+                        {{session.testCasesExecuteAvailableWithSutInitiator.length}} Test Cases,
+                        so these Test Cases <b>should be executed manually</b>:
+                    </p>
+                    <ol>
+                        <li
+                            v-for="testCaseWithFirstSut in session.testCasesExecuteAvailableWithSutInitiator"
+                            :key="testCaseWithFirstSut.id"
+                        >
+                            {{testCaseWithFirstSut.name}}
+                        </li>
+                    </ol>
+                </b-modal>
                 <div class="card-header px-3">
                     <h3 class="card-title">Select use cases</h3>
                 </div>
@@ -241,6 +297,19 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    methods: {
+        submit() {
+            this.sending = true;
+            this.$inertia
+                .post(route('sessions.test-cases.run-all', this.session))
+                .then(() => (this.sending = false));
+        },
+    },
+    data() {
+        return {
+            isExecuteAll: 0 < this.session.testCasesExecuteAvailableWithoutSutInitiator.length,
+        };
     },
 };
 </script>

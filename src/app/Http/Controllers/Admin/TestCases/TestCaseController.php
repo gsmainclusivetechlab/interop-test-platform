@@ -174,6 +174,16 @@ class TestCaseController extends Controller
     }
 
     /**
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function showBatchImportForm()
+    {
+        $this->authorize('create', TestCase::class);
+        return Inertia::render('admin/test-cases/batch-import');
+    }
+
+    /**
      * @param TestCase $testCase
      * @return Response
      * @throws AuthorizationException
@@ -217,11 +227,10 @@ class TestCaseController extends Controller
             }
 
             $testCase = (new TestCaseImport())->import($rows);
-            if (
-                !empty($baseTestCase) &&
-                ($baseGroups = $baseTestCase->groups()->pluck('id'))
-            ) {
-                $testCase->groups()->sync($baseGroups);
+            if (!empty($baseTestCase)) {
+                if ($baseGroups = $baseTestCase->groups()->pluck('id')) {
+                    $testCase->groups()->sync($baseGroups);
+                }
                 if ($baseTestCase->draft) {
                     $baseTestCase->delete();
                 }
@@ -240,6 +249,53 @@ class TestCaseController extends Controller
                     array_merge(
                         [
                             'Test Case validation failed. Please resolve errors listed below:',
+                        ],
+                        $e->validator->errors()->all()
+                    )
+                ),
+            ]);
+        } catch (\Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function batchImport()
+    {
+        $this->authorize('create', TestCase::class);
+        request()->validate(
+            [
+                'file' => ['required', 'array'],
+                'file.*' => ['required', 'mimetypes:text/yaml,text/plain']
+            ],
+            ['file.*.mimetypes' => 'The file must be a file of type: yaml, yml.']
+        );
+
+        $testCaseImport = new TestCaseImport();
+        try {
+            $files = request()->file('file');
+            $testCaseImport->batchImport($files);
+
+            return redirect()
+                ->route('admin.test-cases.index')
+                ->with('success', __('Test cases imported successfully'));
+        } catch (ValidationException $e) {
+            $withFileName = $testCaseImport->currentFileName
+                ? "<hr><b>Errors in file '<u>{$testCaseImport->currentFileName}</u>':</b>"
+                : '';
+
+            throw ValidationException::withMessages([
+                'entries' => implode(
+                    '<br>',
+                    array_merge(
+                        [
+                            'Test Case validation failed. Please resolve errors listed below:',
+                            $withFileName
                         ],
                         $e->validator->errors()->all()
                     )
