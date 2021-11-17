@@ -507,7 +507,7 @@ export default {
                 name: this.session.name,
                 description: this.session.description,
                 variables: this.combineEnv(
-                    this.session.environments,
+                    this.session.environments ?? [],
                     this.session.fileEnvironments
                 ),
                 components: this.components.data?.map((el) => ({

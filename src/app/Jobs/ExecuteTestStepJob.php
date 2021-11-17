@@ -89,7 +89,7 @@ class ExecuteTestStepJob implements ShouldQueue
                     new Uri(
                         ($uri = $this->session->getBaseUriOfComponent(
                             $testStep->target,
-                            null,
+                            '',
                             true
                         ))
                     ),
