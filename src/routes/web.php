@@ -210,6 +210,10 @@ Route::name('settings.')
         Route::post('password', 'PasswordController@updatePassword')->name(
             'password.update'
         );
+        Route::resource('token', 'TokenController')->only(['index']);
+        Route::post('token/generate', 'TokenController@generate')->name(
+            'token.generate'
+        );
     });
 
 /**

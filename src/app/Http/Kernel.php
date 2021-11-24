@@ -39,7 +39,11 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\CheckLocale::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
         ],
-        'api' => ['throttle:60,1', 'bindings'],
+        'api' => [
+            'throttle:60,1',
+            'bindings',
+            'auth:sanctum',
+        ],
     ];
 
     /**

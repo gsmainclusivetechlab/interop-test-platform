@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Arr;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @mixin \Eloquent
@@ -20,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use SoftDeletes;
+    use HasApiTokens;
 
     const DELETED_AT = 'blocked_at';
 

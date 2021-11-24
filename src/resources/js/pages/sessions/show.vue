@@ -81,6 +81,26 @@
                 </div>
             </div>
         </div>
+        <div v-if="session.can.owner" class="card">
+            <div class="card-header">
+                <h2 class="card-title"><b>Session uuid</b></h2>
+            </div>
+            <div class="card-body">
+                <div class="input-group">
+                    <input
+                        id="session-uuid"
+                        type="text"
+                        :value="session.uuid"
+                        class="form-control"
+                        readonly
+                    />
+                    <clipboard-copy-btn
+                        target="#session-uuid"
+                        title="Copy"
+                    ></clipboard-copy-btn>
+                </div>
+            </div>
+        </div>
         <div class="card" v-if="isCompliance">
             <div class="card-header">
                 <h2 class="card-title">Session info</h2>
