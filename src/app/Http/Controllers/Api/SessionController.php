@@ -9,7 +9,6 @@ use App\Models\Session;
 use App\Models\TestCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Response;
-use function response;
 
 class SessionController extends Controller
 {

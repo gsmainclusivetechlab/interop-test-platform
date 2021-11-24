@@ -12,16 +12,21 @@
 */
 
 use App\Http\Controllers\Api\SessionController;
+use App\Http\Controllers\Api\TestRunController;
 
-Route::name('session.')
-    ->prefix('session/{session:uuid}')
+Route::name('sessions.')
+    ->prefix('sessions/{session:uuid}')
     ->group(function () {
         Route::get('test-cases', [SessionController::class, 'testCases'])
             ->name('test-cases');
         Route::post('test-cases/{testCase:uuid}/run', [SessionController::class, 'run'])
             ->name('test-cases.run');
-        Route::get('test-runs/{testRun:uuid}/status', [SessionController::class, 'status'])
-            ->name('test-runs.status');
-        Route::post('test-runs/{testRun:uuid}/complete', [SessionController::class, 'complete'])
-            ->name('test-runs.complete');
+    });
+Route::name('test-runs.')
+    ->prefix('test-runs/{testRun:uuid}')
+    ->group(function () {
+        Route::get('status', [TestRunController::class, 'status'])
+            ->name('status');
+        Route::post('complete', [TestRunController::class, 'complete'])
+            ->name('complete');
     });

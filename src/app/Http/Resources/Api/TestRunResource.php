@@ -21,10 +21,11 @@ class TestRunResource extends JsonResource
             'total' => $this->total,
             'passed' => $this->passed,
             'failures' => $this->failures,
-            'successful' => $this->successful,
             'duration' => $this->duration,
-            'created_at' => $this->created_at->diffForHumans(),
-            'completed_at' => optional($this->completed_at)->diffForHumans(),
+            'created_at' => $this->created_at->toDateTimeString(),
+            'completed_at' => optional($this->completed_at)->toDateTimeString(),
+            'completed' => (bool)$this->completed_at,
+            'successful' => $this->completed_at ? $this->successful : null,
         ];
     }
 }
