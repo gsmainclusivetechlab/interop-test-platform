@@ -7,6 +7,7 @@ use App\Http\Resources\Api\TestCaseResource;
 use App\Jobs\ExecuteTestRunJob;
 use App\Models\Session;
 use App\Models\TestCase;
+use Arr;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Response;
 
@@ -24,10 +25,11 @@ class SessionController extends Controller
         $testCases = TestCaseResource::collection($session->getTestCasesExecuteAvailableWithoutSutInitiator())
             ->resolve();
         if (!$testCases) {
-            return response(__('No available Test Cases.'), 404);
+            $content = ['message' => 'No available Test Cases'];
+            return response($content, 404);
         }
 
-        return response($testCases, 200);
+        return response($testCases);
     }
 
     /**
@@ -39,6 +41,12 @@ class SessionController extends Controller
     public function run(Session $session, TestCase $testCase): Response
     {
         $this->authorize('owner', $session);
+
+        $availableIds = Arr::pluck($session->getTestCasesExecuteAvailableWithoutSutInitiator(), 'id');
+        if (!in_array($testCase->id, $availableIds)) {
+            $content = ['message' => 'Test case is not available to run for this session'];
+            return response($content, 403);
+        }
 
         $testRun = $session
             ->testRuns()

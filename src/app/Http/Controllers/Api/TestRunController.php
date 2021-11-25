@@ -19,10 +19,7 @@ class TestRunController extends Controller
     {
         $this->authorize('owner', $testRun->session);
 
-        return response(
-            (new TestRunResource($testRun))->resolve(),
-            201
-        );
+        return response((new TestRunResource($testRun))->resolve());
     }
 
     /**
@@ -38,9 +35,6 @@ class TestRunController extends Controller
             $testRun->complete();
         }
 
-        return response(
-            (new TestRunResource($testRun))->resolve(),
-            201
-        );
+        return response((new TestRunResource($testRun))->resolve());
     }
 }
