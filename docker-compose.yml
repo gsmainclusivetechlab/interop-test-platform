@@ -46,6 +46,8 @@ services:
       WAIT_SLEEP_INTERVAL: 5
       WAIT_HOSTS_TIMEOUT: 100
       HOST_WEB_PORT: ${HOST_WEB_PORT}
+      COMMIT_HASH: ${COMMIT_HASH}
+      COMMIT_TAG: ${COMMIT_TAG}
 
   queue:
     <<: *php-defaults
