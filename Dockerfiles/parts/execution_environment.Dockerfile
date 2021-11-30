@@ -17,10 +17,8 @@ RUN mkdir -p /usr/src/php/ext/redis && \
     echo 'redis' >>/usr/src/php-available-exts && \
     apk add --no-cache $PHPIZE_DEPS supervisor freetype-dev libjpeg-turbo-dev libzip-dev libpng-dev postgresql-dev nginx libxml2-dev libxslt-dev zlib-dev g++ make git && \
     rm /etc/nginx/conf.d/default.conf && \
-    docker-php-ext-install pdo pdo_mysql pdo_pgsql mysqli opcache redis pcntl gd bcmath posix zip xmlrpc sockets soap xsl \
-
-	# V8JS
-	&& export V8_DIR=/usr/local/v8 \
+    docker-php-ext-install pdo pdo_mysql pdo_pgsql mysqli opcache redis pcntl gd bcmath posix zip xmlrpc sockets soap xsl
+RUN export V8_DIR=/usr/local/v8 \
 	&& mkdir -p $V8_DIR \
 	&& tar xzvf /tmp/libv8.tar.gz -C $V8_DIR \
     && git clone -b php7 --depth 1 https://github.com/phpv8/v8js.git /tmp/v8js \

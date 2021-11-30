@@ -39,7 +39,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "ext-v8js": "9.2.159"
+        }
     },
     "extra": {
         "laravel": {
