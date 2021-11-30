@@ -7,6 +7,6 @@ cat "$base/parts/frontend.Dockerfile" >> "$base/production.Dockerfile"
 cat "$base/parts/execution_environment.Dockerfile" >> "$base/production.Dockerfile"
 cat "$base/parts/prod.Dockerfile" >> "$base/production.Dockerfile"
 
-# Production Dockerfile
+# Development Dockerfile
 cat "$base/parts/execution_environment.Dockerfile" > "$base/development.Dockerfile"
 cat "$base/parts/dev.Dockerfile" >> "$base/development.Dockerfile"

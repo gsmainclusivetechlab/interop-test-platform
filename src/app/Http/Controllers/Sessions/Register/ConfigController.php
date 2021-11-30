@@ -6,10 +6,12 @@ use App\Http\Controllers\Sessions\Traits\WithSutUrls;
 use App\Http\Middleware\EnsureSessionIsPresent;
 use App\Enums\{AuditActionEnum, AuditTypeEnum};
 use App\Http\Controllers\Controller;
+use Auth;
 use App\Http\Controllers\Sessions\Register\Traits\{Queries, QuestionnaireKeys};
 use App\Http\Resources\{
     ComponentResource,
     GroupEnvironmentResource,
+    SimulatorPluginResource,
     TestStepResource
 };
 use App\Models\{
@@ -85,6 +87,11 @@ class ConfigController extends Controller
                     ->get()
             ),
             'sutUrls' => $this->getConfigUrls(),
+            'simulatorPlugins' => SimulatorPluginResource::collection(
+                Auth::user()
+                    ->groups->pluck('simulatorPlugins')
+                    ->flatten()
+            ),
         ]);
     }
 
@@ -99,6 +106,7 @@ class ConfigController extends Controller
             'fileEnvironments' => ['nullable', 'array'],
             'groupsDefault' => ['nullable', 'array'],
             'groupsDefault.*.id' => ['required', 'exists:groups,id'],
+            'simulatorPlugin.id' => ['nullable', 'exists:simulator_plugins,id'],
         ]);
 
         try {
@@ -112,6 +120,9 @@ class ConfigController extends Controller
                             ->merge($request->input())
                             ->merge([
                                 'type' => session('session.type'),
+                                'simulator_plugin_id' => $request->input(
+                                    'simulatorPlugin.id'
+                                ),
                             ])
                             ->all()
                     );

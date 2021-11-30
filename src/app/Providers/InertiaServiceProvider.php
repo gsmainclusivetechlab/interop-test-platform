@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\AuditLog;
 use App\Models\Component;
+use App\Models\Faq;
 use App\Models\Group;
 use App\Models\ImplicitSut;
 use App\Models\QuestionnaireSection;
@@ -64,6 +65,7 @@ class InertiaServiceProvider extends ServiceProvider
                         ->filter()
                         ->count(),
                     'json_pretty_max_size' => env('JSON_PRETTY_MAX_SIZE') ?? 500,
+                    'enable_simulator_plugin' => (bool)env('FEATURE_SIMULATOR_PLUGIN'),
                     'platform_version' => !empty(env('COMMIT_TAG')) ?
                         env('COMMIT_TAG') :
                         env('COMMIT_HASH'),
@@ -164,6 +166,14 @@ class InertiaServiceProvider extends ServiceProvider
                                     'viewAny' => auth()
                                         ->user()
                                         ->can('viewAny', ImplicitSut::class),
+                                ],
+                                'faqs' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', Faq::class),
+                                    'viewContent' => auth()
+                                        ->user()
+                                        ->can('viewContent', Faq::class),
                                 ],
                             ],
                         ]
