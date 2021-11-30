@@ -104,6 +104,27 @@
                                         Certificates
                                     </inertia-link>
                                 </li>
+                                <li
+                                    v-if="group.can.admin && $page.props.app.enable_simulator_plugin"
+                                    class="nav-item"
+                                >
+                                    <inertia-link
+                                        :href="
+                                            route(
+                                                'groups.plugins.index',
+                                                group.id
+                                            )
+                                        "
+                                        class="nav-link rounded-0"
+                                        :class="{
+                                            active: route().current(
+                                                'groups.plugins.*'
+                                            ),
+                                        }"
+                                    >
+                                        Simulator Plugins
+                                    </inertia-link>
+                                </li>
                             </ul>
                         </div>
                         <slot />

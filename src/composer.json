@@ -4,10 +4,11 @@
     "description": "GSMA ITP Inclusive Tech Lab",
     "license": "MIT",
     "require": {
-        "php": "^7.3.0",
+        "php": "^7.4.0",
         "ext-json": "*",
         "ext-zip": "*",
         "ext-openssl": "*",
+        "ext-v8js": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "gamegos/jws": "^1.0",
@@ -38,7 +39,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "ext-v8js": "9.2.159"
+        }
     },
     "extra": {
         "laravel": {

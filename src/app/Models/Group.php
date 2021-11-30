@@ -105,6 +105,11 @@ class Group extends Model
         return $this->morphMany(Certificate::class, 'certificable');
     }
 
+    public function simulatorPlugins(): HasMany
+    {
+        return $this->hasMany(SimulatorPlugin::class);
+    }
+
     /**
      * @param User $user
      * @return bool
