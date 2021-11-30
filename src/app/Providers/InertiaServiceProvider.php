@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\AuditLog;
 use App\Models\Component;
+use App\Models\Faq;
 use App\Models\Group;
 use App\Models\ImplicitSut;
 use App\Models\QuestionnaireSection;
@@ -162,6 +163,14 @@ class InertiaServiceProvider extends ServiceProvider
                                     'viewAny' => auth()
                                         ->user()
                                         ->can('viewAny', ImplicitSut::class),
+                                ],
+                                'faqs' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', Faq::class),
+                                    'viewContent' => auth()
+                                        ->user()
+                                        ->can('viewContent', Faq::class),
                                 ],
                             ],
                         ]

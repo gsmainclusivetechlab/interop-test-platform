@@ -23,6 +23,7 @@ use App\Http\Controllers\Sessions\Register\{
 Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController')->name('home');
 Route::get('/tutorials', 'TutorialController')->name('tutorials');
+Route::get('/faq', 'FaqController')->name('faq');
 Route::name('legal.')
     ->prefix('legal')
     ->group(function () {
@@ -361,6 +362,25 @@ Route::name('admin.')
                     '{apiSpec}/update-spec',
                     'ApiSpecController@updateSpec'
                 )->name('update-spec');
+            });
+        Route::name('faqs.')
+            ->prefix('faqs')
+            ->group(function () {
+                Route::get('index', 'FaqController@index')->name(
+                    'index'
+                );
+                Route::get('import', 'FaqController@showImportForm')->name(
+                    'import'
+                );
+                Route::post('import', 'FaqController@import')->name(
+                    'import.confirm'
+                );
+                Route::get('{faq}/export', 'FaqController@export')->name(
+                    'export'
+                );
+                Route::put('{faq}/toggle-active', 'FaqController@toggleActive')->name(
+                    'toggle-active'
+                );
             });
         Route::resource('components', 'ComponentController')->except(['show']);
         Route::get(
