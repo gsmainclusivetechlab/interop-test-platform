@@ -14,6 +14,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use V8JsScriptException;
 
 class ExecuteTestStepJob implements ShouldQueue
 {
@@ -65,11 +66,21 @@ class ExecuteTestStepJob implements ShouldQueue
         $traceparent = (new TraceparentHeader())
             ->withTraceId($this->testRun->trace_id)
             ->withVersion(TraceparentHeader::DEFAULT_VERSION);
-        $requestTemplate = $testStep->request->withSubstitutions(
-            $this->testRun->testResults,
-            $this->session,
-            $testStep
-        );
+
+        try {
+            $requestTemplate = $testStep->request
+                ->withSubstitutions(
+                    $this->testRun->testResults,
+                    $this->session,
+                    $testStep
+                )
+                ->withPlugin($testResult);
+        } catch (V8JsScriptException $e) {
+            $testResult->fail($e->getMessage());
+
+            return;
+        }
+
         $request = $requestTemplate
             ->toPsrRequest()
             ->withHeader(TraceparentHeader::NAME, (string) $traceparent)

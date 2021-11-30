@@ -64,6 +64,10 @@ class SessionRequest extends FormRequest
             'environments' => ['nullable', 'array'],
             'fileEnvironments' => ['nullable', 'array'],
             'test_cases' => ['required', 'array', 'exists:test_cases,id'],
+            'simulator_plugin_id' => [
+                'nullable',
+                'exists:simulator_plugins,id',
+            ],
         ] + $urlRules;
     }
 

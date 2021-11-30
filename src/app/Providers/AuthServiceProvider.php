@@ -13,6 +13,7 @@ use App\Models\{
     MessageLog,
     QuestionnaireSection,
     Session,
+    SimulatorPlugin,
     TestCase,
     TestStep,
     UseCase,
@@ -29,6 +30,7 @@ use App\Policies\{
     MessageLogPolicy,
     QuestionnairePolicy,
     SessionPolicy,
+    SimulatorPluginPolicy,
     TestCasePolicy,
     TestStepPolicy,
     UseCasePolicy,
@@ -56,6 +58,7 @@ class AuthServiceProvider extends ServiceProvider
         QuestionnaireSection::class => QuestionnairePolicy::class,
         AuditLog::class => AuditLogPolicy::class,
         ImplicitSut::class => ImplicitSutPolicy::class,
+        SimulatorPlugin::class => SimulatorPluginPolicy::class,
     ];
 
     /**

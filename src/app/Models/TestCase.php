@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
  * @mixin \Eloquent
  *
  * @property int $id
+ * @property string $slug
  *
  * @property-read TestCase $last_available_version
  *

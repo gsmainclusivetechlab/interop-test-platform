@@ -49,11 +49,13 @@ class MapResponseHandler
                 $this->testResult->testStep->target
             )
         ) {
-            $testResponse = $testResponse->withSubstitutions(
-                $this->testResult->testRun->testResults,
-                $this->testResult->session,
-                $this->testResult->testStep
-            );
+            $testResponse = $testResponse
+                ->withSubstitutions(
+                    $this->testResult->testRun->testResults,
+                    $this->testResult->session,
+                    $this->testResult->testStep
+                )
+                ->withPlugin($this->testResult);
         }
         $this->testResult->update(['response' => $testResponse]);
 
