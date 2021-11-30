@@ -455,6 +455,9 @@
                         >
                             {{ $t('layout.main.footer.copyright-name') }} </a
                         >. All rights reserved.
+                        <span v-if="$page.props.app.platform_version">
+                            Version {{ $page.props.app.platform_version }}
+                        </span>
                     </div>
                 </div>
             </div>
