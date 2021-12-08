@@ -398,6 +398,18 @@
                                     }}</strong>
                                 </div>
                             </div>
+                            <div class="mb-3" v-if="simulatorPluginsList && $page.props.app.enable_simulator_plugin">
+                                <label class="form-label">
+                                    Simulator plugin
+                                </label>
+                                <v-select
+                                    v-model="form.simulatorPlugin"
+                                    :options="simulatorPluginsList"
+                                    label="name"
+                                    placeholder="Plugins"
+                                    class="form-control d-flex p-0 mb-3 mt-3"
+                                />
+                            </div>
                         </div>
                         <div class="col-6">
                             <div class="mb-3">
@@ -477,6 +489,10 @@ export default {
             type: Boolean,
             required: true,
         },
+        simulatorPlugins: {
+            type: Object,
+            required: true,
+        },
     },
     mixins: [mixinVSelect, mixinEnvs, mixinCrts],
     data() {
@@ -486,6 +502,7 @@ export default {
             groupsEnvs: this.session.groupEnvironment?.data ?? [],
             groupsEnvsList: [],
             groupCertificatesList: [],
+            simulatorPluginsList: this.simulatorPlugins.data ?? [],
             form: {
                 name: this.session.name,
                 description: this.session.description,
@@ -507,6 +524,7 @@ export default {
                     hasClientCertificate: el.certificate?.has_client_crt,
                 })),
                 test_cases: this.session.testCases.data?.map((el) => el.id),
+                simulatorPlugin: this.session.simulatorPlugin?.data,
             },
         };
     },
@@ -560,6 +578,7 @@ export default {
                     })
                 ),
                 test_cases: this.form.test_cases,
+                simulator_plugin_id: this.form.simulatorPlugin?.id || '',
             };
 
             this.sending = true;

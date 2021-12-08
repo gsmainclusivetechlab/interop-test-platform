@@ -4,7 +4,7 @@
         "lint": "npx prettier . --write --ignore-unknown",
         "pre-commit": "npx lint-staged",
         "prepare:docker": "./Dockerfiles/make.sh",
-        "dc": "docker-compose -f docker-compose.yml",
+        "dc": "export COMMIT_HASH=\"$(git rev-parse --short HEAD)\" && export COMMIT_TAG=\"$(git tag --contains ${COMMIT_HASH})\" && docker-compose -f docker-compose.yml",
         "docker-ops": "yarn dc -f compose/ops.yml",
         "build": "yarn prepare:docker && yarn dc build && yarn dc run app sh -c \"chmod -R 775 ./storage && chown -R interopdev:www-data *\"",
         "build:prod": "yarn prepare:docker && APP_ENV=production yarn dc build",

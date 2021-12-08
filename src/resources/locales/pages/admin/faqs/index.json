@@ -1,0 +1,45 @@
+{
+    "en": {
+        "page": {
+            "title": "FAQ"
+        },
+        "table": {
+            "header": {
+                "description": "Description",
+                "active": "Active",
+                "updated-at": "Updated At"
+            },
+            "content": {
+                "no-results": "No Results"
+            },
+            "menu": {
+                "export": "Export"
+            }
+        },
+        "buttons": {
+            "import": "Import new Faq"
+        }
+    },
+
+    "ru": {
+        "page": {
+            "title": "FAQ"
+        },
+        "table": {
+            "header": {
+                "description": "Описание",
+                "active": "Активные",
+                "updated-at": "Обновлен"
+            },
+            "content": {
+                "no-results": "Результатов нет"
+            },
+            "menu": {
+                "export": "Экспорт"
+            }
+        },
+        "buttons": {
+            "import": "Импорт"
+        }
+    }
+}
