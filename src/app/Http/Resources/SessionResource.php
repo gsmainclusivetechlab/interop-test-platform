@@ -94,6 +94,9 @@ class SessionResource extends JsonResource
                 'delete' => auth()
                     ->user()
                     ->can('delete', $this->resource),
+                'owner' => auth()
+                    ->user()
+                    ->can('owner', $this->resource),
             ],
         ];
     }

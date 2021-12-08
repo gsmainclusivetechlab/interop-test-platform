@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
  *
  * @property int $duration
  * @property Carbon $completed_at
+ * @property string $uuid
  *
  * @property Session $session
  * @property TestResult[]|Collection $testResults

@@ -63,6 +63,7 @@ layout:
     tabs:
       - Profile
       - Change password
+      - API token
   main:
     buttons:
       new-session: New Session
@@ -111,6 +112,7 @@ settings:
   tabs:
     - Profile
     - Change password
+    - API token
 test-cases:
   breadcrumb:
     components: Components

@@ -6,8 +6,9 @@
     "require": {
         "php": "^7.4.0",
         "ext-json": "*",
-        "ext-zip": "*",
         "ext-openssl": "*",
+        "ext-zip": "*",
+        "bensampo/laravel-enum": "3.2.0",
         "ext-v8js": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
@@ -16,6 +17,7 @@
         "inertiajs/inertia-laravel": "^0.3.4",
         "laravel/framework": "^8.0",
         "laravel/legacy-factories": "^1.0",
+        "laravel/sanctum": "^2.12",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "league/openapi-psr7-validator": "^0.15.2",
@@ -24,8 +26,7 @@
         "phpunit/phpunit": "^9.1",
         "symfony/psr-http-message-bridge": "^2.0",
         "tightenco/ziggy": "^0.9.0",
-        "twig/twig": "^3.0",
-        "bensampo/laravel-enum": "3.2.0"
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",
