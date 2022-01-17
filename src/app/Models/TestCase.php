@@ -146,7 +146,8 @@ class TestCase extends Model
      */
     public function testRuns()
     {
-        return $this->hasMany(TestRun::class, 'test_case_id');
+        return $this->hasMany(TestRun::class, 'test_case_id')
+            ->latest();
     }
 
     /**

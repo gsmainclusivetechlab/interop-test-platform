@@ -245,6 +245,96 @@ class SessionController extends Controller
 
     /**
      * @param Session $session
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function report(Session $session)
+    {
+        $this->authorize('view', $session);
+
+        $session->load([
+            'testCases' => function ($query) use ($session) {
+                return $query->with([
+                    'useCase',
+                            'testRuns' => function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            },
+                ]);
+            },
+        ]);
+
+        $sessionTestCasesIds = $session->testCases->pluck('id');
+
+        return Inertia::render('sessions/report', [
+            'session' => (new SessionResource($session))->resolve(),
+            /*'useCases' => UseCaseResource::collection(
+                UseCase::withTestCasesOfSession($session)->get()
+            ),*/
+            'useCases' => UseCaseResource::collection(
+                UseCase::with([
+                    'testCases' => function ($query) use (
+                        $session,
+                        $sessionTestCasesIds
+                    ) {
+                        $query
+                            ->where(function ($query) use ($sessionTestCasesIds) {
+                                $query->whereIn('id', $sessionTestCasesIds);
+                            })
+                            ->with([
+                                'testRuns' => function ($query) use ($session) {
+                                    $query->where('session_id', $session->id);
+                                },
+                            ]);
+                    },
+                ])
+                    ->whereHas('testCases.testRuns', function ($query) use ($session, $sessionTestCasesIds) {
+                        $query->whereIn('test_case_id', $sessionTestCasesIds)
+                            ->where('session_id', $session->id);
+                })
+                    /*->whereHas('testCases', function ($query) use ($session, $sessionTestCasesIds) {
+                        $query->whereIn('id', $sessionTestCasesIds)
+                            ->whereHas('testRuns', function ($query) use ($session) {
+                                $query->where('session_id', $session->id);
+                            });
+                    })*/
+                    ->get()
+            ),/**/
+        ]);
+    }
+
+    public function downloadPdf(Session $session, SessionRequest $request){
+        $this->authorize('view', $session);
+        try {
+            $session->load([
+                'testCases.testRuns' => function (HasMany $query) use ($session) {
+                    $query->where('session_id', $session->id);
+                },
+            ]);
+
+            $wordFile = app(ComplianceSessionExport::class)->export($session);
+
+            $fileName = "Session-{$session->id}-{$session->name}";
+            $path = storage_path("framework/docs/{$fileName}.docx");
+
+            $objWriter = IOFactory::createWriter($wordFile);
+            $objWriter->save($path);
+
+            app()->terminating(function () use ($path) {
+                File::delete($path);
+            });
+
+            return response()->download($path);
+
+        }catch (Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
+        die;
+    }
+
+    /**
+     * @param Session $session
      * @param TestCase $testCaseToRemove
      * @param TestCase $testCaseToAdd
      * @return RedirectResponse

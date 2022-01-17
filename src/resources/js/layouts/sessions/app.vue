@@ -27,6 +27,15 @@
                         class="col-4 d-flex align-items-center justify-content-end"
                     >
                         <inertia-link
+                        :href="
+                                route('sessions.report', session.id)
+                            "
+                        class="btn btn-secondary ml-3"
+                    >
+                        <icon name="file-export"></icon>
+                        Report
+                    </inertia-link>
+                        <inertia-link
                             :href="
                                 route('sessions.message-log.index', session.id)
                             "
