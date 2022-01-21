@@ -14,52 +14,6 @@
                     >
                         {{ useCase.name }}
                     </button>
-                    <button
-                        v-show="!isCompliance"
-                        type="button"
-                        class="btn btn-link p-0 ml-3"
-                        @click.prevent="
-                            toggleCbxList(
-                                useCase.testCases.positive.concat(
-                                    useCase.testCases.negative
-                                )
-                            )
-                        "
-                    >
-                        <icon
-                            v-show="
-                                checkCbxList(
-                                    useCase.testCases.positive.concat(
-                                        useCase.testCases.negative
-                                    ),
-                                    testCases
-                                ) === 'empty'
-                            "
-                            name="square"
-                        />
-                        <icon
-                            v-show="
-                                checkCbxList(
-                                    useCase.testCases.positive.concat(
-                                        useCase.testCases.negative
-                                    ),
-                                    testCases
-                                ) === 'partial'
-                            "
-                            name="square-dot"
-                        />
-                        <icon
-                            v-show="
-                                checkCbxList(
-                                    useCase.testCases.positive.concat(
-                                        useCase.testCases.negative
-                                    ),
-                                    testCases
-                                ) === 'full'
-                            "
-                            name="checkbox"
-                        />
-                    </button>
                 </div>
 
                 <b-collapse :id="`use-case-${useCase.id}`" visible>
@@ -78,44 +32,6 @@
                                 >
                                     Happy flow
                                 </button>
-                                <button
-                                    v-show="!isCompliance"
-                                    type="button"
-                                    class="btn btn-link p-0 ml-3"
-                                    @click.prevent="
-                                        toggleCbxList(
-                                            useCase.testCases.positive
-                                        )
-                                    "
-                                >
-                                    <icon
-                                        v-show="
-                                            checkCbxList(
-                                                useCase.testCases.positive,
-                                                testCases
-                                            ) === 'empty'
-                                        "
-                                        name="square"
-                                    />
-                                    <icon
-                                        v-show="
-                                            checkCbxList(
-                                                useCase.testCases.positive,
-                                                testCases
-                                            ) === 'partial'
-                                        "
-                                        name="square-dot"
-                                    />
-                                    <icon
-                                        v-show="
-                                            checkCbxList(
-                                                useCase.testCases.positive,
-                                                testCases
-                                            ) === 'full'
-                                        "
-                                        name="checkbox"
-                                    />
-                                </button>
                             </div>
 
                             <b-collapse
@@ -129,12 +45,6 @@
                                         class="list-group-item"
                                         :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
-                                        <label class="form-check mb-0">
-<!--                                            <input-->
-<!--                                                type="checkbox"-->
-<!--                                                class="form-check-input"-->
-<!--                                                :disabled="isCompliance"-->
-<!--                                            />-->
                                             <span class="form-check-label">
                                                 {{ testCase.name }}
                                                 <icon
@@ -143,7 +53,6 @@
                                                     class="text-muted"
                                                 />
                                             </span>
-                                        </label>
 
                                         <b-collapse
                                             :id="`positive-test-cases-test-runs-${testCase.id}`"
@@ -159,28 +68,51 @@
                                                         <input
                                                             type="checkbox"
                                                             class="form-check-input"
+                                                            @change="
+                                                                toggleCbx(
+                                                                    testRun.id,
+                                                                    testRuns.includes(
+                                                                        testRun.id
+                                                                    )
+                                                                )
+                                                            "
                                                         />
-                                                        <span class="form-check-label">
-                                                            #{{ testRun.id }} - {{testRun.completed_at}}
+                                                        <span class="form-check-label align-items-center">
+                                                            #Run {{ testRun.id }} - {{ testRun.completed_at }}
+                                                        </span>
                                                             <span
                                                                 v-if="
-                                                                testRun.completed_at &&
-                                                                testRun.successful
-                                                            "
-                                                                class="flex-shrink-0 mr-0 ml-1 badge bg-success"
+                                                                    testRun.completed_at &&
+                                                                    testRun.successful
+                                                                "
+                                                                class="flex-shrink-0 align-items-center"
+                                                            >
+                                                            <span
+                                                                class="badge bg-success mr-2"
                                                             ></span>
+                                                            Pass
+                                                        </span>
                                                         <span
                                                             v-else-if="
-                                                               testRun.completed_at &&
+                                                                testRun.completed_at &&
                                                                 !testRun.successful
                                                             "
-                                                            class="flex-shrink-0 mr-0 ml-1 badge bg-danger"
-                                                        ></span>
+                                                            class="flex-shrink-0 align-items-center"
+                                                        >
+                                                            <span
+                                                                class="badge bg-danger mr-2"
+                                                            ></span>
+                                                            Fail
+                                                        </span>
                                                         <span
                                                             v-else
-                                                            class="flex-shrink-0 mr-0 ml-1 badge bg-secondary"
-                                                        ></span>
-                                                                                        </span>
+                                                            class="flex-shrink-0 align-items-center"
+                                                        >
+                                                            <span
+                                                                class="badge bg-secondary mr-2"
+                                                            ></span>
+                                                            Incomplete
+                                                        </span>
                                                     </label>
                                                 </li>
                                             </ul>
@@ -206,44 +138,6 @@
                                 >
                                     Unhappy flow
                                 </button>
-                                <button
-                                    v-show="!isCompliance"
-                                    type="button"
-                                    class="btn btn-link p-0 ml-3"
-                                    @click.prevent="
-                                        toggleCbxList(
-                                            useCase.testCases.negative
-                                        )
-                                    "
-                                >
-                                    <icon
-                                        v-show="
-                                            checkCbxList(
-                                                useCase.testCases.negative,
-                                                testCases
-                                            ) === 'empty'
-                                        "
-                                        name="square"
-                                    />
-                                    <icon
-                                        v-show="
-                                            checkCbxList(
-                                                useCase.testCases.negative,
-                                                testCases
-                                            ) === 'partial'
-                                        "
-                                        name="square-dot"
-                                    />
-                                    <icon
-                                        v-show="
-                                            checkCbxList(
-                                                useCase.testCases.negative,
-                                                testCases
-                                            ) === 'full'
-                                        "
-                                        name="checkbox"
-                                    />
-                                </button>
                             </div>
 
                             <b-collapse
@@ -257,69 +151,70 @@
                                         class="list-group-item"
                                         :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
-                                        <label class="form-check mb-0">
-                                            <input
-                                                type="checkbox"
-                                                class="form-check-input"
-                                                :disabled="isCompliance"
-                                            />
-                                            <span class="form-check-label">
+                                        <span class="form-check-label">
                                                 {{ testCase.name }}
-                                                <test-case-update
-                                                    :test-case="testCase"
-                                                    :session="session"
-                                                    :is-compliance="
-                                                        isCompliance
-                                                    "
-                                                    @update="updateVersion"
-                                                />
                                                 <icon
                                                     v-if="!testCase.public"
                                                     name="lock"
                                                     class="text-muted"
                                                 />
                                             </span>
-                                        </label>
                                         <b-collapse
-                                        :id="`negative-test-cases-test-runs-${testCase.id}`"
-                                        visible
-                                    >
-                                        <ul class="list-group">
-                                            <li
-                                                v-for="(testRun, j) in testCase.testRuns"
-                                                class="list-group-item"
-                                                :key="`${useCase.id}-${testCase.id}-${i}-${testRun.id}-${j}`"
-                                            >
-                                                <label class="form-check mb-0">
-                                                    <input
-                                                        type="checkbox"
-                                                        class="form-check-input"
-                                                    />
-                                                    <span class="form-check-label">
-                                                            #{{ testRun.id }} - {{testRun.completed_at}}
+                                            :id="`negative-test-cases-test-runs-${testCase.id}`"
+                                            visible
+                                        >
+                                            <ul class="list-group">
+                                                <li
+                                                    v-for="(testRun, j) in testCase.testRuns"
+                                                    class="list-group-item"
+                                                    :key="`${useCase.id}-${testCase.id}-${i}-${testRun.id}-${j}`"
+                                                >
+                                                    <label class="form-check mb-0">
+                                                        <input
+                                                            type="checkbox"
+                                                            class="form-check-input"
+                                                        />
+                                                        <span class="form-check-label">
+                                                            #Run {{ testRun.id }} - {{ testRun.completed_at }}
+                                                        </span>
+
+                                                        <span
+                                                            v-if="
+                                                                    testRun.completed_at &&
+                                                                    testRun.successful
+                                                                "
+                                                            class="flex-shrink-0 align-items-center"
+                                                        >
                                                             <span
-                                                                v-if="
-                                                                testRun.completed_at &&
-                                                                testRun.successful
-                                                            "
-                                                                class="flex-shrink-0 mr-0 ml-1 badge bg-success"
+                                                                class="badge bg-success mr-2"
                                                             ></span>
+                                                            Pass
+                                                        </span>
                                                         <span
                                                             v-else-if="
-                                                               testRun.completed_at &&
+                                                                testRun.completed_at &&
                                                                 !testRun.successful
                                                             "
-                                                            class="flex-shrink-0 mr-0 ml-1 badge bg-danger"
-                                                        ></span>
+                                                            class="flex-shrink-0 align-items-center"
+                                                        >
+                                                            <span
+                                                                class="badge bg-danger mr-2"
+                                                            ></span>
+                                                            Fail
+                                                        </span>
                                                         <span
                                                             v-else
-                                                            class="flex-shrink-0 mr-0 ml-1 badge bg-secondary"
-                                                        ></span>
-                                                                                        </span>
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </b-collapse>
+                                                            class="flex-shrink-0 align-items-center"
+                                                        >
+                                                            <span
+                                                                class="badge bg-secondary mr-2"
+                                                            ></span>
+                                                            Incomplete
+                                                        </span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </b-collapse>
                                     </li>
                                 </ul>
                             </b-collapse>
@@ -354,15 +249,15 @@ export default {
     },
     data() {
         return {
-            testCases: this.value,
+            testRuns: [],
             sortUseCases: this.updateSortUseCases(),
         };
     },
     watch: {
-        testCases: {
+        testRuns: {
             immediate: true,
             handler() {
-                this.$emit('input', this.testCases);
+                this.$emit('input', this.testRuns);
             },
         },
     },
@@ -370,16 +265,16 @@ export default {
         toggleCbxList(tcList) {
             const tcIdList = tcList?.map((el) => el.id);
             const isAllChecked =
-                tcIdList?.filter((id) => this.testCases.includes(id)).length ===
+                tcIdList?.filter((id) => this.testRuns.includes(id)).length ===
                 tcList.length;
 
             tcIdList?.forEach((id) => this.toggleCbx(id, isAllChecked));
         },
         toggleCbx(tcId, remove) {
-            if (remove && this.testCases.includes(tcId)) {
-                this.testCases.splice(this.testCases.indexOf(tcId), 1);
-            } else if (!remove && !this.testCases.includes(tcId)) {
-                this.testCases.push(tcId);
+            if (remove && this.testRuns.includes(tcId)) {
+                this.testRuns.splice(this.testRuns.indexOf(tcId), 1);
+            } else if (!remove && !this.testRuns.includes(tcId)) {
+                this.testRuns.push(tcId);
             }
         },
         checkCbxList(customList, mainList) {
@@ -394,16 +289,6 @@ export default {
                 return 'partial';
 
             if (mainListLength === customListLength) return 'full';
-        },
-        updateVersion(versions) {
-            if (this.testCases.includes(versions.current.id)) {
-                this.testCases.splice(
-                    this.testCases.indexOf(versions.current.id),
-                    1,
-                    versions.last.id
-                );
-            }
-            this.sortUseCases = this.updateSortUseCases();
         },
         updateSortUseCases() {
             return this.useCases.data?.map((useCase) => {

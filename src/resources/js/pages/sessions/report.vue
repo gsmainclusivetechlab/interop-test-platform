@@ -15,7 +15,6 @@
                                         type="radio"
                                         value="simple"
                                         v-model="form.type_of_report"
-                                        :checked="true"
                                         class="form-check-input"
                                     />
                                     <span class="form-check-label">Simple</span>
@@ -37,14 +36,14 @@
                                     :session="session"
                                     :useCases="useCases"
                                     :isCompliance="isCompliance"
-                                    v-model="form.test_cases"
+                                    v-model="form.test_runs"
                                 />
                                 <div
                                     class="text-danger small mt-3"
-                                    v-if="$page.props.errors.test_cases"
+                                    v-if="$page.props.errors.test_runs"
                                 >
                                     <strong>{{
-                                        $page.props.errors.test_cases
+                                        $page.props.errors.test_runs
                                     }}</strong>
                                 </div>
                             </div>
@@ -96,21 +95,27 @@ export default {
             sending: false,
             isCompliance: this.session.type === 'compliance',
             form: {
-                //type_of_report: this.form.type_of_report,
-                test_cases: this.session.testCases.data?.map((el) => el.id),
+                type_of_report: 'simple',
+                test_runs: [],
             },
         };
     },
-    mounted() {
+    created() {
+        /*this.useCases.data?.forEach((useCase) =>
+            useCase.testCases?.forEach((testCase) =>
+                this.form.test_cases.push(testCase.id)
+            )
+        );*/
     },
     methods: {
         submit() {
             const form = {
-                _method: 'PUT',
+                _method: 'POST',
                 type_of_report: this.form.type_of_report,
-                test_cases: this.form.test_cases,
+                test_runs: this.form.test_runs,
             };
-
+//alert(this.form.type_of_report);
+            //alert(this.form.test_cases);
             this.sending = true;
             this.$inertia.post(
                 route('sessions.report.download', this.session.id),

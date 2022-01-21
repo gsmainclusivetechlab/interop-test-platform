@@ -35,6 +35,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -252,85 +253,56 @@ class SessionController extends Controller
     {
         $this->authorize('view', $session);
 
-        $session->load([
-            'testCases' => function ($query) use ($session) {
-                return $query->with([
-                    'useCase',
-                            'testRuns' => function ($query) use ($session) {
-                                $query->where('session_id', $session->id);
-                            },
-                ]);
-            },
-        ]);
-
-        $sessionTestCasesIds = $session->testCases->pluck('id');
-
         return Inertia::render('sessions/report', [
             'session' => (new SessionResource($session))->resolve(),
-            /*'useCases' => UseCaseResource::collection(
-                UseCase::withTestCasesOfSession($session)->get()
-            ),*/
             'useCases' => UseCaseResource::collection(
-                UseCase::with([
-                    'testCases' => function ($query) use (
-                        $session,
-                        $sessionTestCasesIds
-                    ) {
-                        $query
-                            ->where(function ($query) use ($sessionTestCasesIds) {
-                                $query->whereIn('id', $sessionTestCasesIds);
-                            })
-                            ->with([
-                                'testRuns' => function ($query) use ($session) {
-                                    $query->where('session_id', $session->id);
-                                },
-                            ]);
-                    },
-                ])
-                    ->whereHas('testCases.testRuns', function ($query) use ($session, $sessionTestCasesIds) {
-                        $query->whereIn('test_case_id', $sessionTestCasesIds)
-                            ->where('session_id', $session->id);
-                })
-                    /*->whereHas('testCases', function ($query) use ($session, $sessionTestCasesIds) {
-                        $query->whereIn('id', $sessionTestCasesIds)
-                            ->whereHas('testRuns', function ($query) use ($session) {
-                                $query->where('session_id', $session->id);
-                            });
-                    })*/
-                    ->get()
-            ),/**/
+                UseCase::WithTestCasesAndTestRunsOfSession($session)->get()
+            ),
         ]);
     }
 
-    public function downloadPdf(Session $session, SessionRequest $request){
+    public function downloadPdf(Session $session, Request $request)
+    {
         $this->authorize('view', $session);
+
         try {
-            $session->load([
-                'testCases.testRuns' => function (HasMany $query) use ($session) {
-                    $query->where('session_id', $session->id);
-                },
+
+            $data =  $request->validate([
+                'type_of_report' => 'required',
+                'test_runs' => 'required',
+                'test_runs.*' => 'required|integer',
             ]);
 
-            $wordFile = app(ComplianceSessionExport::class)->export($session);
+            $session->load([]);
+            \PhpOffice\PhpWord\Settings::setPdfRendererPath( base_path('/vendor/mpdf/mpdf'));
+            \PhpOffice\PhpWord\Settings::setPdfRendererName('MPDF');
 
-            $fileName = "Session-{$session->id}-{$session->name}";
-            $path = storage_path("framework/docs/{$fileName}.docx");
+            $wordFile = app(ComplianceSessionExport::class)->exportPdf($session, $data);
 
-            $objWriter = IOFactory::createWriter($wordFile);
+            $fileName = "Session-{$session->id}-{$session->name}-testRuns-".implode('-',$data['test_runs']);
+            $path = storage_path("framework/docs/{$fileName}.pdf");
+
+            $objWriter = IOFactory::createWriter($wordFile, 'PDF');
             $objWriter->save($path);
 
             app()->terminating(function () use ($path) {
                 File::delete($path);
             });
 
-            return response()->download($path);
-
+            return response()->download($path, basename($path));
+/*,'',[
+                    'Content-Description: File Transfer',
+                    'Content-Type: application/docx',
+                    'Content-Disposition: attachment; filename="'.basename($path).'"',
+                    'Expires: 0',
+                    'Cache-Control: must-revalidate'
+                ]
+*/
         }catch (Throwable $e) {
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());
         }
-        die;
     }
 
     /**

@@ -96,7 +96,7 @@ Route::name('sessions.')
         Route::get('{session}/report', 'SessionController@report')->name(
             'report'
         );
-        Route::get('{session}/download', 'SessionController@downloadPdf')->name(
+        Route::post('{session}/report/download', 'SessionController@downloadPdf')->name(
             'report.download'
         );
         Route::post('{session}/complete', 'SessionController@complete')->name(
