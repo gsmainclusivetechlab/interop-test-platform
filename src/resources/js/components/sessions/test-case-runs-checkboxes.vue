@@ -160,7 +160,7 @@
                                                 />
                                             </span>
                                         <b-collapse
-                                            :id="`negative-test-cases-test-runs-${testCase.id}`"
+                                            :id="`positive-test-cases-test-runs-${testCase.id}`"
                                             visible
                                         >
                                             <ul class="list-group">
@@ -173,11 +173,18 @@
                                                         <input
                                                             type="checkbox"
                                                             class="form-check-input"
+                                                            @change="
+                                                                toggleCbx(
+                                                                    testRun.id,
+                                                                    testRuns.includes(
+                                                                        testRun.id
+                                                                    )
+                                                                )
+                                                            "
                                                         />
-                                                        <span class="form-check-label">
+                                                        <span class="form-check-label align-items-center">
                                                             #Run {{ testRun.id }} - {{ testRun.completed_at }}
                                                         </span>
-
                                                         <span
                                                             v-if="
                                                                     testRun.completed_at &&
