@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label"> Type of Repor </label>
+                                <label class="form-label"> Type of Report </label>
                                 <label class="form-check form-switch">
                                     <input
                                         type="radio"
