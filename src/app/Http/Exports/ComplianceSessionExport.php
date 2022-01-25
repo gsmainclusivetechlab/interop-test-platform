@@ -177,8 +177,7 @@ class ComplianceSessionExport
                     foreach ($testCase->testRuns as $testRun) {
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
                             (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
-                        $listItem = $section->addListItemRun(3);
-                        $listItem->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true]);
+                        $section->addListItem('# Run ' . $testRun->id . ' ' . $status, ['bold' => true], 3);
 
                         if($testRun->testResults){
                             foreach ($testRun->testResults as $key => $step){
