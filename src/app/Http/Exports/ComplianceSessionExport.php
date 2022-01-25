@@ -169,15 +169,17 @@ class ComplianceSessionExport
         $section->addText('&nbsp;');
 
         $this->title($section, 'Test runs');
-        $section->addText('&nbsp;');
         foreach ($sortUseCases as $useCase) {
+            $section->addText('&nbsp;');
             $this->line($section, 'UseCase', $useCase['name']);
             if ($useCase['testCases']['positive']) {
+                $section->addText('&nbsp;');
                 $section->addText('Happy flow ', ['bold' => true]);
                 foreach ($useCase['testCases']['positive'] as $testCase) {
                     $this->line($section, 'TestCase', $testCase->name);
 
                     foreach ($testCase->testRuns as $testRun) {
+                        $section->addText('&nbsp;');
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
                             (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
                         $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true]);
@@ -208,31 +210,34 @@ class ComplianceSessionExport
                 }
             }
             if ($useCase['testCases']['negative']) {
-                $section->addListItem('Unhappy flow', '1');
+                $section->addText('&nbsp;');
+                $section->addText('Unhappy flow ', ['bold' => true]);
                 foreach ($useCase['testCases']['negative'] as $testCase) {
-                    $section->addListItem($testCase->name, '2');
+                    $this->line($section, 'TestCase', $testCase->name);
+
                     foreach ($testCase->testRuns as $testRun) {
+                        $section->addText('&nbsp;');
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
-                            ($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete';
-                        $section->addListItem('# Run ' . $testRun->id . ' ' . $status, '3');
-                        //dd($testRun->testResults);
+                            (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
+                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true]);
+
                         if ($testRun->testResults) {
-                            $table = $section->addTable([
-                                'borderSize' => 6,
-                                'cellMargin' => 80,
-                                'cellSpacing' => 50,
-                            ]);
-                            $style = ['bold' => true];
-                            $table->addRow();
-                            $table->addCell(4500)->addText(__('Step #'), $style);
-                            $table->addCell(1500)->addText(__('Status'), $style);
-                            $table->addCell(1500)->addText(__('Duration'), $style);
-                            $table->addCell(1500)->addText(__('Attempts'), $style);
-                            foreach ($testRun->testResults as $step) {
-                                dd($step->request);
-                                $table->addRow();
-                                $table->addCell()->addText("Step {$step->iteration} ()");
-                                $table->addCell()->addText($status);
+                            foreach ($testRun->testResults as $key => $step) {
+                                $step_request = $step->request->toArray();
+                                $step_response = $step->response->toArray();
+                                $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
+                                if ($request['type_of_report'] == 'extended') {
+                                    $section->addText('Request Header', ['bold' => true]);
+                                    $section->addListItem(json_encode($step_request['headers']), 5);
+                                    $section->addText('Request Body', ['bold' => true]);
+                                    $section->addListItem(json_encode($step_request['body']), 5);
+
+                                    $section->addText('Response Header', ['bold' => true]);
+                                    $section->addListItem(json_encode($step_response['headers']), 5);
+                                    $section->addText('Response Body', ['bold' => true]);
+                                    $section->addListItem(json_encode($step_response['body']), 5);
+                                }
+                                $section->addLine(['weight' => 100, 'width' => 1000, 'height' => 5, 'color' => 635552]);
                             }
                         }
 
