@@ -17,17 +17,16 @@ use App\Http\Resources\{
     TestRunResource,
     UseCaseResource
 };
-use App\Models\{
-    Certificate,
+use App\Models\{Certificate,
     Component,
     FileEnvironment,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
     TestCase,
+    TestRun,
     UseCase,
-    User
-};
+    User};
 use Arr;
 use Exception;
 use File;
@@ -37,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use PhpOffice\PhpWord\IOFactory;
@@ -264,24 +264,28 @@ class SessionController extends Controller
     public function downloadPdf(Session $session, Request $request)
     {
         $this->authorize('view', $session);
+        $data = $request->validate([
+            'type_of_report' => [
+                'required',
+                Rule::in(['simple', 'extended']),
+            ],
+            'test_runs' => 'required',
+            'test_runs.*' => [
+                'required',
+                Rule::exists(TestRun::class, 'id')
+                    ->where(function ($query) use ($session) {
+                        return $query->where('session_id', $session->id);
+                    }),
+            ],
+        ]);
 
         try {
-
-            $data =  $request->validate([
-                'type_of_report' => 'required',
-                'test_runs' => 'required',
-                'test_runs.*' => 'required|integer',
-            ]);
-
-            $session->load([]);
-            \PhpOffice\PhpWord\Settings::setPdfRendererPath( base_path('/vendor/mpdf/mpdf'));
+            \PhpOffice\PhpWord\Settings::setPdfRendererPath(base_path('/vendor/mpdf/mpdf'));
             \PhpOffice\PhpWord\Settings::setPdfRendererName('MPDF');
 
+            $name = "Session-{$session->id}-{$session->name}-Report-{$data['type_of_report']}";
+            $path = storage_path("framework/docs/{$name}.pdf");
             $wordFile = app(ComplianceSessionExport::class)->exportPdf($session, $data);
-
-            $fileName = "Session-{$session->id}-{$session->name}-testRuns-".implode('-',$data['test_runs']);
-            $path = storage_path("framework/docs/{$fileName}.pdf");
-
             $objWriter = IOFactory::createWriter($wordFile, 'PDF');
             $objWriter->save($path);
 
@@ -289,16 +293,8 @@ class SessionController extends Controller
                 File::delete($path);
             });
 
-            return response()->download($path, basename($path));
-/*,'',[
-                    'Content-Description: File Transfer',
-                    'Content-Type: application/docx',
-                    'Content-Disposition: attachment; filename="'.basename($path).'"',
-                    'Expires: 0',
-                    'Cache-Control: must-revalidate'
-                ]
-*/
-        }catch (Throwable $e) {
+            return response()->download($path);
+        } catch (Throwable $e) {
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());

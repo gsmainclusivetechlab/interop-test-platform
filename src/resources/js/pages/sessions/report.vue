@@ -117,7 +117,7 @@ export default {
 //alert(this.form.type_of_report);
             //alert(this.form.test_cases);
             this.sending = true;
-            this.$inertia.post(
+            /*this.$inertia.post(
                 route('sessions.report.download', this.session.id),
                 serialize(form, {
                     indices: true,
@@ -128,7 +128,29 @@ export default {
                         this.sending = false;
                     },
                 }
-            );
+            );//*/
+            axios.post(route('sessions.report.download', this.session.id), this.form, {
+                responseType: 'blob',
+            })
+                .then(({ data, headers }) => {
+                    const url = window.URL.createObjectURL(new Blob([data], {type: headers['content-type']}));
+                    const dom = document.createElement('a');
+                    const name = headers['content-disposition'].replace(/\w+; filename=(.*)/, '$1')
+                    dom.href = url;
+                    dom.download = decodeURI(name)
+                    dom.style.display = 'none'
+                    document.body.appendChild(dom)
+                    dom.click()
+                    dom.parentNode.removeChild(dom)
+                    window.URL.revokeObjectURL(url)
+                    this.$set(this.$page.props, 'errors', {})
+                })
+                .catch(async (error) => {
+                    let data = JSON.parse(await error.response.data.text())
+                    this.$set(this.$page.props, 'errors', collect(data.errors).map(item => item.join(' ')).all())
+
+                })
+                .finally(() => this.sending = false)//*/
         },
     },
 };

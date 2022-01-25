@@ -94,13 +94,20 @@ class UseCase extends Model
                     $query
                         ->with([
                             'testRuns' => function ($query) use ($session, $testRunsId) {
-                                $query->where('session_id', $session->getKey())
-                                    ->when($testRunsId, function ($query) use ($session, $testRunsId) {
+                                $query
+                                    ->where('session_id', $session->getKey())
+                                    ->when($testRunsId, function ($query) use ($testRunsId) {
                                         $query->whereIn('id', $testRunsId);
                                     });
                             },
                         ])
-                        ->whereHas('testRuns')
+                        ->whereHas('testRuns', function($query) use ($session, $testRunsId){
+                            $query
+                                ->where('session_id', $session->getKey())
+                                ->when($testRunsId, function ($query) use ($testRunsId) {
+                                    $query->whereIn('id', $testRunsId);
+                                });
+                        })
                         ->whereExists(function ($query) use ($session) {
                             $query
                                 ->select(DB::raw(1))
@@ -117,12 +124,14 @@ class UseCase extends Model
                         });
                 },
             ])
-            ->whereHas('testCases', function ($query) use ($session,$testRunsId) {
+            ->whereHas('testCases', function ($query) use ($session, $testRunsId) {
                 $query
-                    ->whereHas('testRuns', function($query) use ($session,$testRunsId){
-                        $query->when($testRunsId, function ($query) use ($session, $testRunsId) {
-                            $query->whereIn('id', $testRunsId);
-                        });
+                    ->whereHas('testRuns', function($query) use ($session, $testRunsId){
+                        $query
+                            ->where('session_id', $session->getKey())
+                            ->when($testRunsId, function ($query) use ($testRunsId) {
+                                $query->whereIn('id', $testRunsId);
+                            });
                     })
                     ->whereExists(function ($query) use ($session) {
                         $query

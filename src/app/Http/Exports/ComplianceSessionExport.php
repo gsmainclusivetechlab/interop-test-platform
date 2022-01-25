@@ -165,19 +165,42 @@ class ComplianceSessionExport
         $this->line($section, 'Session name', $session->name);
 
         $this->title($section, 'Test runs');
-//dd($sortUseCases);
         foreach ($sortUseCases as $useCase) {
             $section->addListItem($useCase['name'], '0');
+                    $this->line($section, 'UseCase', $useCase['name']);
             if ($useCase['testCases']['positive']) {
-                $section->addListItem('Happy flow', '1');
+                $section->addListItem('Happy flow', '1', '', 'TYPE_BULLET_FILLED' );
                 foreach ($useCase['testCases']['positive'] as $testCase) {
-                    $section->addListItem($testCase->name, '2');
+                    $this->line($section, 'TestCase', $testCase->name);
+
+                   // $this->line($section, 'Session name', $session->name);
                     foreach ($testCase->testRuns as $testRun) {
-                        // new TestRun(['test_run_id' => ]);
-                        //dd($testRun->testResults);//()->get()
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
                             (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
-                        $section->addListItem('# Run ' . $testRun->id . ' ' . $status, '3');
+                        $listItem = $section->addListItemRun(3);
+                        $listItem->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true]);
+
+                        if($testRun->testResults){
+                            foreach ($testRun->testResults as $key => $step){
+                                $step_request = $step->request->toArray();
+                                $step_response = $step->response->toArray();
+                                //var_dump( $step->request, $step->response);
+                                //dd($step, $step->request->toArray()); //->method, $step->request->path);->getRequest()
+                                $section->addListItem("Step #".($key+1)." ({$step_request['method']} {$step_request['path']}) - {$status}  -  {$step->duration}ms", 4);
+                                if($request['type_of_report'] == 'extended'){
+                                    $section->addListItem('Request Header', 4);
+                                    $section->addListItem(json_encode($step_request['headers']), 5);
+                                    $section->addListItem('Request Body', 4);
+                                    $section->addListItem(json_encode($step_request['body']), 5);
+
+                                    $section->addListItem('Response Header', 4);
+                                    $section->addListItem(json_encode($step_response['headers']), 5);
+                                    $section->addListItem('Response Body', 4);
+                                    $section->addListItem(json_encode($step_response['body']), 5);
+                                }
+                                $section->addLine(['weight' => 100, 'width' => 1000, 'height' => 5, 'color' => 635552]);
+                            }
+                        }
 
                     }
                 }
@@ -190,6 +213,26 @@ class ComplianceSessionExport
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
                             ($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete';
                         $section->addListItem('# Run ' . $testRun->id . ' ' . $status, '3');
+                        //dd($testRun->testResults);
+                        if($testRun->testResults){
+                            $table = $section->addTable([
+                                'borderSize' => 6,
+                                'cellMargin' => 80,
+                                'cellSpacing' => 50,
+                            ]);
+                            $style = ['bold' => true];
+                            $table->addRow();
+                            $table->addCell(4500)->addText(__('Step #'), $style);
+                            $table->addCell(1500)->addText(__('Status'), $style);
+                            $table->addCell(1500)->addText(__('Duration'), $style);
+                            $table->addCell(1500)->addText(__('Attempts'), $style);
+                            foreach ($testRun->testResults as $step){
+                                dd($step->request);
+                                $table->addRow();
+                                $table->addCell()->addText("Step {$step->iteration} ()");
+                                $table->addCell()->addText($status);
+                            }
+                        }
 
                     }
                 }
