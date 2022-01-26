@@ -32,6 +32,43 @@
                                 >
                                     Happy flow
                                 </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-link p-0 ml-3"
+                                    @click.prevent="
+                                        toggleCbxList(
+                                            useCase.testCases.positive
+                                        )
+                                    "
+                                >
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.positive,
+                                                testRuns
+                                            ) === 'empty'
+                                        "
+                                        name="square"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.positive,
+                                                testRuns
+                                            ) === 'partial'
+                                        "
+                                        name="square-dot"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.positive,
+                                                testRuns
+                                            ) === 'full'
+                                        "
+                                        name="checkbox"
+                                    />
+                                </button>
                             </div>
 
                             <b-collapse
@@ -66,6 +103,11 @@
                                                 >
                                                     <label class="form-check mb-0">
                                                         <input
+                                                            :checked="
+                                                                testRuns.includes(
+                                                                    testRun.id
+                                                                )
+                                                            "
                                                             type="checkbox"
                                                             class="form-check-input"
                                                             @change="
@@ -80,16 +122,16 @@
                                                         <span class="form-check-label align-items-center">
                                                             #Run {{ testRun.id }} - {{ testRun.completed_at }}
                                                         </span>
-                                                            <span
-                                                                v-if="
+                                                        <span
+                                                            v-if="
                                                                     testRun.completed_at &&
                                                                     testRun.successful
                                                                 "
-                                                                class="flex-shrink-0 align-items-center"
-                                                            >
-                                                            <span
-                                                                class="badge bg-success mr-2"
-                                                            ></span>
+                                                            class="flex-shrink-0 align-items-center"
+                                                        >
+<!--                                                            <span-->
+                                                            <!--                                                                class="badge bg-success mr-2"-->
+                                                            <!--                                                            ></span>-->
                                                             Pass
                                                         </span>
                                                         <span
@@ -99,18 +141,18 @@
                                                             "
                                                             class="flex-shrink-0 align-items-center"
                                                         >
-                                                            <span
-                                                                class="badge bg-danger mr-2"
-                                                            ></span>
+<!--                                                            <span-->
+                                                            <!--                                                                class="badge bg-danger mr-2"-->
+                                                            <!--                                                            ></span>-->
                                                             Fail
                                                         </span>
                                                         <span
                                                             v-else
                                                             class="flex-shrink-0 align-items-center"
                                                         >
-                                                            <span
-                                                                class="badge bg-secondary mr-2"
-                                                            ></span>
+<!--                                                            <span-->
+                                                            <!--                                                                class="badge bg-secondary mr-2"-->
+                                                            <!--                                                            ></span>-->
                                                             Incomplete
                                                         </span>
                                                     </label>
@@ -137,6 +179,43 @@
                                     "
                                 >
                                     Unhappy flow
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-link p-0 ml-3"
+                                    @click.prevent="
+                                        toggleCbxList(
+                                            useCase.testCases.negative
+                                        )
+                                    "
+                                >
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.negative,
+                                                testRuns
+                                            ) === 'empty'
+                                        "
+                                        name="square"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.negative,
+                                                testRuns
+                                            ) === 'partial'
+                                        "
+                                        name="square-dot"
+                                    />
+                                    <icon
+                                        v-show="
+                                            checkCbxList(
+                                                useCase.testCases.negative,
+                                                testRuns
+                                            ) === 'full'
+                                        "
+                                        name="checkbox"
+                                    />
                                 </button>
                             </div>
 
@@ -171,6 +250,11 @@
                                                 >
                                                     <label class="form-check mb-0">
                                                         <input
+                                                            :checked="
+                                                                testRuns.includes(
+                                                                    testRun.id
+                                                                )
+                                                            "
                                                             type="checkbox"
                                                             class="form-check-input"
                                                             @change="
@@ -192,9 +276,9 @@
                                                                 "
                                                             class="flex-shrink-0 align-items-center"
                                                         >
-                                                            <span
-                                                                class="badge bg-success mr-2"
-                                                            ></span>
+<!--                                                            <span-->
+                                                            <!--                                                                class="badge bg-success mr-2"-->
+                                                            <!--                                                            ></span>-->
                                                             Pass
                                                         </span>
                                                         <span
@@ -204,18 +288,18 @@
                                                             "
                                                             class="flex-shrink-0 align-items-center"
                                                         >
-                                                            <span
-                                                                class="badge bg-danger mr-2"
-                                                            ></span>
+<!--                                                            <span-->
+                                                            <!--                                                                class="badge bg-danger mr-2"-->
+                                                            <!--                                                            ></span>-->
                                                             Fail
                                                         </span>
                                                         <span
                                                             v-else
                                                             class="flex-shrink-0 align-items-center"
                                                         >
-                                                            <span
-                                                                class="badge bg-secondary mr-2"
-                                                            ></span>
+<!--                                                            <span-->
+                                                            <!--                                                                class="badge bg-secondary mr-2"-->
+                                                            <!--                                                            ></span>-->
                                                             Incomplete
                                                         </span>
                                                     </label>
@@ -270,11 +354,15 @@ export default {
     },
     methods: {
         toggleCbxList(tcList) {
-            const tcIdList = tcList?.map((el) => el.id);
+            const tcIdList = [];
+            tcList?.forEach((testCase) => {
+                testCase.testRuns?.forEach((testRun) => {
+                    tcIdList.push(testRun.id);
+                })
+            });
             const isAllChecked =
                 tcIdList?.filter((id) => this.testRuns.includes(id)).length ===
-                tcList.length;
-
+                tcIdList.length;
             tcIdList?.forEach((id) => this.toggleCbx(id, isAllChecked));
         },
         toggleCbx(tcId, remove) {
@@ -285,10 +373,12 @@ export default {
             }
         },
         checkCbxList(customList, mainList) {
-            const mainListLength = customList?.filter((el) =>
+            const testRuns = [];
+            customList?.forEach((testCase) => testCase.testRuns?.forEach((testRun) => testRuns.push(testRun)));
+            const mainListLength = testRuns?.filter((el) =>
                 mainList.includes(el.id)
             ).length;
-            const customListLength = customList.length;
+            const customListLength = testRuns.length;
 
             if (mainListLength === 0) return 'empty';
 

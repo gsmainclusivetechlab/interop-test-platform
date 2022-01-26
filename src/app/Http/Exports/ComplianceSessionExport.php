@@ -173,16 +173,14 @@ class ComplianceSessionExport
             $section->addText('&nbsp;');
             $this->line($section, 'UseCase', $useCase['name']);
             if ($useCase['testCases']['positive']) {
-                $section->addText('&nbsp;');
-                $section->addText('Happy flow ', ['bold' => true]);
+                $section->addText('Happy flow ', ['bold' => true, 'lineHeight' => 1]);
                 foreach ($useCase['testCases']['positive'] as $testCase) {
                     $this->line($section, 'TestCase', $testCase->name);
 
                     foreach ($testCase->testRuns as $testRun) {
-                        $section->addText('&nbsp;');
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
                             (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
-                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true]);
+                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true, 'lineHeight' => 1]);
 
                         if ($testRun->testResults) {
                             foreach ($testRun->testResults as $key => $step) {
@@ -210,16 +208,14 @@ class ComplianceSessionExport
                 }
             }
             if ($useCase['testCases']['negative']) {
-                $section->addText('&nbsp;');
-                $section->addText('Unhappy flow ', ['bold' => true]);
+                $section->addText('Unhappy flow ', ['bold' => true, 'lineHeight' => 1]);
                 foreach ($useCase['testCases']['negative'] as $testCase) {
                     $this->line($section, 'TestCase', $testCase->name);
 
                     foreach ($testCase->testRuns as $testRun) {
-                        $section->addText('&nbsp;');
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
                             (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
-                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true]);
+                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true, 'lineHeight' => 1]);
 
                         if ($testRun->testResults) {
                             foreach ($testRun->testResults as $key => $step) {
