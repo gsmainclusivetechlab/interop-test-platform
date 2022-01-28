@@ -160,6 +160,9 @@ class ComplianceSessionExport
             }
             $sortUseCases[] = $sort;
         }
+        $section->addImage(resource_path().'/images/logo.png','',false, env('APP_NAME'));
+        $this->title($section, env('APP_NAME'));
+        $section->addText('&nbsp;');
         $type = ($request['type_of_report'] == 'extended') ? 'Technical' : 'Business';
         $this->title($section, $type . ' Report');
         $section->addText('&nbsp;');
