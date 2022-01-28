@@ -13,7 +13,52 @@
                         v-b-toggle="`use-case-${useCase.id}`"
                     >
                         {{ useCase.name }}
-                    </button>
+                    </button><button
+                    v-show="!isCompliance"
+                    type="button"
+                    class="btn btn-link p-0 ml-3"
+                    @click.prevent="
+                            toggleCbxList(
+                                useCase.testCases.positive.concat(
+                                    useCase.testCases.negative
+                                )
+                            )
+                        "
+                >
+                    <icon
+                        v-show="
+                                checkCbxList(
+                                    useCase.testCases.positive.concat(
+                                        useCase.testCases.negative
+                                    ),
+                                    testRuns
+                                ) === 'empty'
+                            "
+                        name="square"
+                    />
+                    <icon
+                        v-show="
+                                checkCbxList(
+                                    useCase.testCases.positive.concat(
+                                        useCase.testCases.negative
+                                    ),
+                                    testRuns
+                                ) === 'partial'
+                            "
+                        name="square-dot"
+                    />
+                    <icon
+                        v-show="
+                                checkCbxList(
+                                    useCase.testCases.positive.concat(
+                                        useCase.testCases.negative
+                                    ),
+                                    testRuns
+                                ) === 'full'
+                            "
+                        name="checkbox"
+                    />
+                </button>
                 </div>
 
                 <b-collapse :id="`use-case-${useCase.id}`" visible>

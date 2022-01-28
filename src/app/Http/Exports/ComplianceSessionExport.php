@@ -205,6 +205,7 @@ class ComplianceSessionExport
                         }
 
                     }
+                    $section->addText('&nbsp;');
                 }
             }
             if ($useCase['testCases']['negative']) {
@@ -238,6 +239,7 @@ class ComplianceSessionExport
                         }
 
                     }
+                    $section->addText('&nbsp;');
                 }
             }
         }
