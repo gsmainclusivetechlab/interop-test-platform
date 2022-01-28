@@ -13,20 +13,21 @@
                         v-b-toggle="`use-case-${useCase.id}`"
                     >
                         {{ useCase.name }}
-                    </button><button
-                    v-show="!isCompliance"
-                    type="button"
-                    class="btn btn-link p-0 ml-3"
-                    @click.prevent="
+                    </button>
+                    <button
+                        v-show="!isCompliance"
+                        type="button"
+                        class="btn btn-link p-0 ml-3"
+                        @click.prevent="
                             toggleCbxList(
                                 useCase.testCases.positive.concat(
                                     useCase.testCases.negative
                                 )
                             )
                         "
-                >
-                    <icon
-                        v-show="
+                    >
+                        <icon
+                            v-show="
                                 checkCbxList(
                                     useCase.testCases.positive.concat(
                                         useCase.testCases.negative
@@ -34,10 +35,10 @@
                                     testRuns
                                 ) === 'empty'
                             "
-                        name="square"
-                    />
-                    <icon
-                        v-show="
+                            name="square"
+                        />
+                        <icon
+                            v-show="
                                 checkCbxList(
                                     useCase.testCases.positive.concat(
                                         useCase.testCases.negative
@@ -45,10 +46,10 @@
                                     testRuns
                                 ) === 'partial'
                             "
-                        name="square-dot"
-                    />
-                    <icon
-                        v-show="
+                            name="square-dot"
+                        />
+                        <icon
+                            v-show="
                                 checkCbxList(
                                     useCase.testCases.positive.concat(
                                         useCase.testCases.negative
@@ -56,9 +57,9 @@
                                     testRuns
                                 ) === 'full'
                             "
-                        name="checkbox"
-                    />
-                </button>
+                            name="checkbox"
+                        />
+                    </button>
                 </div>
 
                 <b-collapse :id="`use-case-${useCase.id}`" visible>
@@ -127,14 +128,54 @@
                                         class="list-group-item"
                                         :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
-                                            <span class="form-check-label">
+                                        <div class="d-flex align-items-center">
+                                            <button
+                                                type="button"
+                                                class="dropdown-toggle btn btn-link d-inline-block text-reset p-0 my-2"
+                                                v-b-toggle="
+                                                `positive-test-cases-test-runs-${testCase.id}`
+                                            "
+                                            >
                                                 {{ testCase.name }}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-link p-0 ml-3"
+                                                @click.prevent="
+                                                    toggleCbxList(
+                                                        [testCase]
+                                                    )
+                                                "
+                                            >
                                                 <icon
-                                                    v-if="!testCase.public"
-                                                    name="lock"
-                                                    class="text-muted"
+                                                    v-show="
+                                                        checkCbxList(
+                                                            [testCase],
+                                                            testRuns
+                                                        ) === 'empty'
+                                                    "
+                                                    name="square"
                                                 />
-                                            </span>
+                                                <icon
+                                                    v-show="
+                                                        checkCbxList(
+                                                            [testCase],
+                                                            testRuns
+                                                        ) === 'partial'
+                                                    "
+                                                    name="square-dot"
+                                                />
+                                                <icon
+                                                    v-show="
+                                                        checkCbxList(
+                                                            [testCase],
+                                                            testRuns
+                                                        ) === 'full'
+                                                    "
+                                                    name="checkbox"
+                                                />
+                                            </button>
+                                        </div>
 
                                         <b-collapse
                                             :id="`positive-test-cases-test-runs-${testCase.id}`"
@@ -275,16 +316,57 @@
                                         class="list-group-item"
                                         :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
-                                        <span class="form-check-label">
+
+                                        <div class="d-flex align-items-center">
+                                            <button
+                                                type="button"
+                                                class="dropdown-toggle btn btn-link d-inline-block text-reset p-0 my-2"
+                                                v-b-toggle="
+                                                `negative-test-cases-test-runs-${testCase.id}`
+                                            "
+                                            >
                                                 {{ testCase.name }}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-link p-0 ml-3"
+                                                @click.prevent="
+                                                    toggleCbxList(
+                                                        [testCase]
+                                                    )
+                                                "
+                                            >
                                                 <icon
-                                                    v-if="!testCase.public"
-                                                    name="lock"
-                                                    class="text-muted"
+                                                    v-show="
+                                                        checkCbxList(
+                                                            [testCase],
+                                                            testRuns
+                                                        ) === 'empty'
+                                                    "
+                                                    name="square"
                                                 />
-                                            </span>
+                                                <icon
+                                                    v-show="
+                                                        checkCbxList(
+                                                            [testCase],
+                                                            testRuns
+                                                        ) === 'partial'
+                                                    "
+                                                    name="square-dot"
+                                                />
+                                                <icon
+                                                    v-show="
+                                                        checkCbxList(
+                                                            [testCase],
+                                                            testRuns
+                                                        ) === 'full'
+                                                    "
+                                                    name="checkbox"
+                                                />
+                                            </button>
+                                        </div>
                                         <b-collapse
-                                            :id="`positive-test-cases-test-runs-${testCase.id}`"
+                                            :id="`negative-test-cases-test-runs-${testCase.id}`"
                                             visible
                                         >
                                             <ul class="list-group">

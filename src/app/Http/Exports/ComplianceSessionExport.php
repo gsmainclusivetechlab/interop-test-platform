@@ -161,11 +161,12 @@ class ComplianceSessionExport
             $sortUseCases[] = $sort;
         }
         $type = ($request['type_of_report'] == 'extended') ? 'Technical' : 'Business';
-        $this->title($section, $type . ' Report By ' . date('F d, Y'));
+        $this->title($section, $type . ' Report');
         $section->addText('&nbsp;');
         //  $section->addLine();
         $this->title($section, 'Info');
         $this->line($section, 'Session name', $session->name);
+        $this->line($section, 'Session date', $session->created_at->format('F d, Y'));
         $section->addText('&nbsp;');
 
         $this->title($section, 'Test runs');
