@@ -395,7 +395,7 @@
                                                                     testRun.completed_at &&
                                                                     testRun.successful
                                                                 "
-                                                            class="flex-shrink-0 align-items-center"
+                                                            class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
                                                             <span class="badge bg-success mr-2"></span>
                                                             Pass
@@ -405,14 +405,14 @@
                                                                 testRun.completed_at &&
                                                                 !testRun.successful
                                                             "
-                                                            class="flex-shrink-0 align-items-center"
+                                                            class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
                                                             <span class="badge bg-danger mr-2"></span>
                                                             Fail
                                                         </span>
                                                         <span
                                                             v-else
-                                                            class="flex-shrink-0 align-items-center"
+                                                            class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
                                                             <span class="badge bg-secondary mr-2"></span>
                                                             Incomplete
