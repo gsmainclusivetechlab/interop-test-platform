@@ -175,11 +175,11 @@ class ComplianceSessionExport
         $this->title($section, 'Test runs');
         foreach ($sortUseCases as $useCase) {
             $section->addText('&nbsp;');
-            $this->line($section, 'UseCase', $useCase['name']);
+            $this->line($section, 'Use Case', $useCase['name']);
             if ($useCase['testCases']['positive']) {
                 $section->addText('Happy flow ', ['bold' => true, 'lineHeight' => 1]);
                 foreach ($useCase['testCases']['positive'] as $testCase) {
-                    $this->line($section, 'TestCase', $testCase->name);
+                    $this->line($section, 'Test Case', $testCase->name);
 
                     foreach ($testCase->testRuns as $testRun) {
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
@@ -215,7 +215,7 @@ class ComplianceSessionExport
             if ($useCase['testCases']['negative']) {
                 $section->addText('Unhappy flow ', ['bold' => true, 'lineHeight' => 1]);
                 foreach ($useCase['testCases']['negative'] as $testCase) {
-                    $this->line($section, 'TestCase', $testCase->name);
+                    $this->line($section, 'Test Case', $testCase->name);
 
                     foreach ($testCase->testRuns as $testRun) {
                         $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
@@ -247,45 +247,6 @@ class ComplianceSessionExport
                 }
             }
         }
-        /*
-        $table = $section->addTable([
-            'borderSize' => 6,
-            'cellMargin' => 80,
-            'cellSpacing' => 50,
-        ]);
-
-        $style = ['bold' => true];
-        $table->addRow();
-        $table->addCell(4500)->addText(__('Test case'), $style);
-        $table->addCell(1500)->addText(__('Status'), $style);
-        $table->addCell(1500)->addText(__('Duration'), $style);
-        $table->addCell(1500)->addText(__('Attempts'), $style);
-
-        foreach ($session->testCases as $testCase) {
-            $status = __('Incomplete');
-
-            $lastTestRun = $testCase
-                ->lastTestRun()
-                ->where('session_id', $session->id)
-                ->first();
-            if ($lastTestRun && $lastTestRun->completed_at) {
-                $status = __($lastTestRun->successful ? 'Pass' : 'Fail');
-            }
-
-            $table->addRow();
-            $table->addCell()->addText($testCase->name);
-            $table->addCell()->addText($status);
-            $table
-                ->addCell()
-                ->addText($lastTestRun ? "{$lastTestRun->duration} ms" : null);
-            $table
-                ->addCell()
-                ->addText(
-                    (string) $testCase->testRuns
-                        ->where('session_id', $session->id)
-                        ->count()
-                );
-        }*/
 
         return $wordFile;
     }
