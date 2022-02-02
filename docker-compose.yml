@@ -4,6 +4,7 @@
 version: '3.7'
 
 x-php-defaults: &php-defaults
+  platform: linux/x86_64
   image: gsmainclusivetechlab/interop-test-platform:latest
   build:
     context: src
@@ -46,6 +47,8 @@ services:
       WAIT_SLEEP_INTERVAL: 5
       WAIT_HOSTS_TIMEOUT: 100
       HOST_WEB_PORT: ${HOST_WEB_PORT}
+      COMMIT_HASH: ${COMMIT_HASH}
+      COMMIT_TAG: ${COMMIT_TAG}
 
   queue:
     <<: *php-defaults
@@ -60,6 +63,7 @@ services:
       - redisdata:/data
 
   mysqldb:
+    platform: linux/x86_64
     image: gsmainclusivetechlab/interop-test-platform/mysqldb:latest
     build:
       context: mysqldb

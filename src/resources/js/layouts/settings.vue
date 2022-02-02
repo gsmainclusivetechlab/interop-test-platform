@@ -30,6 +30,15 @@
                         >
                             {{ $t('layout.settings.tabs[1]') }}
                         </inertia-link>
+                        <inertia-link
+                            :href="route('settings.token.index')"
+                            class="list-group-item list-group-item-action d-flex align-items-center"
+                            :class="{
+                                active: route().current('settings.token.index'),
+                            }"
+                        >
+                            {{ $t('layout.settings.tabs[2]') }}
+                        </inertia-link>
                     </div>
                 </div>
                 <div class="col-md-9">

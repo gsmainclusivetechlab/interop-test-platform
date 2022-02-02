@@ -114,8 +114,6 @@ export default {
                 type_of_report: this.form.type_of_report,
                 test_runs: this.form.test_runs,
             };
-//alert(this.form.type_of_report);
-            //alert(this.form.test_cases);
             this.sending = true;
             /*this.$inertia.post(
                 route('sessions.report.download', this.session.id),

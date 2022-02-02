@@ -42,6 +42,7 @@ class AttachJwsHeader
                     $this->testResult->session,
                     $this->testResult->testStep
                 )
+                ->withPlugin($this->testResult)
                 ->jws();
 
             $headerName = Arr::get($jws, 'header', 'FSPIOP-Signature');

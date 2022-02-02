@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\SimulatorPlugin;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,11 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * @var string
      */
+    protected $apiNamespace = 'App\Http\Controllers\Api';
+
+    /**
+     * @var string
+     */
     public const HOME = '/';
 
     /**
@@ -25,6 +31,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
         $this->registerBindings();
+
+        Route::model('simulator_plugin', SimulatorPlugin::class);
     }
 
     /**
@@ -70,7 +78,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api')
             ->middleware('api')
-            ->namespace($this->namespace)
+            ->name('api.')
+            ->namespace($this->apiNamespace)
             ->group(base_path('routes/api.php'));
     }
 }

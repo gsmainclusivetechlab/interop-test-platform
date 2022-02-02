@@ -61,7 +61,8 @@
                                 $page.props.auth.user.can.components.viewAny ||
                                 $page.props.auth.user.can.use_cases.viewAny ||
                                 $page.props.auth.user.can.message_log.viewAny ||
-                                $page.props.auth.user.can.test_cases.viewAny
+                                $page.props.auth.user.can.test_cases.viewAny ||
+                                $page.props.auth.user.can.faqs.viewAny
                             "
                         >
                             <template v-slot:button-content>
@@ -201,6 +202,18 @@
                                     {{ $t('layout.main.menu.implicit-sut') }}
                                 </inertia-link>
                             </li>
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.faqs.viewAny
+                                "
+                            >
+                                <inertia-link
+                                    :href="route('admin.faqs.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    {{ $t('layout.main.menu.faqs') }}
+                                </inertia-link>
+                            </li>
                         </b-nav-item-dropdown>
 
                         <b-nav-item-dropdown
@@ -326,7 +339,7 @@
                                 <span
                                     class="nav-link-icon d-md-none d-lg-inline-block"
                                 >
-                                    <icon name="help" />
+                                    <icon name="info-circle" />
                                 </span>
                                 <span class="nav-link-title">
                                     {{ $t('layout.main.main-nav.tutorials') }}
@@ -364,6 +377,27 @@
                                     $t('layout.main.main-nav.external')
                                 }}</span>
                             </a>
+                        </li>
+                        <li
+                            class="nav-item"
+                            :class="{
+                                active: route().current('faq'),
+                            }"
+                            v-if="$page.props.auth.user.can.faqs.viewContent"
+                        >
+                            <inertia-link
+                                :href="route('faq')"
+                                class="nav-link"
+                            >
+                                <span
+                                    class="nav-link-icon d-md-none d-lg-inline-block"
+                                >
+                                    <icon name="help" />
+                                </span>
+                                <span class="nav-link-title">
+                                    {{ $t('layout.main.main-nav.faq') }}
+                                </span>
+                            </inertia-link>
                         </li>
                     </b-navbar-nav>
 
@@ -421,6 +455,9 @@
                         >
                             {{ $t('layout.main.footer.copyright-name') }} </a
                         >. All rights reserved.
+                        <span v-if="$page.props.app.platform_version">
+                            Version {{ $page.props.app.platform_version }}
+                        </span>
                     </div>
                 </div>
             </div>

@@ -65,4 +65,14 @@ class SessionPolicy
     {
         return $user->isAdmin() || $model->owner->is($user);
     }
+
+    /**
+     * @param  User  $user
+     * @param  Session  $model
+     * @return mixed
+     */
+    public function owner(User $user, Session $model)
+    {
+        return $model->owner->is($user);
+    }
 }

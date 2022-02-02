@@ -10,10 +10,12 @@ use App\Http\Exports\ComplianceSessionExport;
 use App\Http\Requests\SessionRequest;
 use App\Notifications\SessionStatusChanged;
 use App\Utils\AuditLogUtil;
+use Auth;
 use App\Http\Resources\{
     ComponentResource,
     SectionResource,
     SessionResource,
+    SimulatorPluginResource,
     TestRunResource,
     UseCaseResource
 };
@@ -173,6 +175,7 @@ class SessionController extends Controller
             },
             'groupEnvironment',
             'fileEnvironments',
+            'simulatorPlugin',
         ]);
         $sessionTestCasesIds = $session->testCases->pluck('id');
         $sessionTestCasesGroupIds = $session->testCases->pluck(
@@ -241,6 +244,11 @@ class SessionController extends Controller
                     });
                 }
             )->exists(),
+            'simulatorPlugins' => SimulatorPluginResource::collection(
+                Auth::user()
+                    ->groups->pluck('simulatorPlugins')
+                    ->flatten()
+            ),
         ]);
     }
 
@@ -292,6 +300,14 @@ class SessionController extends Controller
             app()->terminating(function () use ($path) {
                 File::delete($path);
             });
+
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_REPORT_CREATED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
 
             return response()->download($path);
         } catch (Throwable $e) {

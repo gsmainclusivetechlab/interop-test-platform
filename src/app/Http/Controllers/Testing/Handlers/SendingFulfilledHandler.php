@@ -78,6 +78,7 @@ class SendingFulfilledHandler
                     $this->session,
                     $this->testResult->testStep
                 )
+                ->withPlugin($this->testResult)
                 ->delay();
 
             sleep(abs(is_numeric($delay) ? (int) $delay : 0));
@@ -102,6 +103,7 @@ class SendingFulfilledHandler
                     $this->session,
                     $this->testResult->testStep
                 )
+                ->withPlugin($this->testResult)
                 ->delay();
 
             ExecuteTestStepJob::dispatch(
@@ -183,6 +185,7 @@ class SendingFulfilledHandler
                             $this->testResult->session,
                             $this->testResult->testStep
                         )
+                        ->withPlugin($this->testResult)
                         ->jws(),
                     $title
                 )
