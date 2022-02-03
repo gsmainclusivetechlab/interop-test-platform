@@ -176,6 +176,7 @@ class ComplianceSessionExport
         foreach ($sortUseCases as $useCase) {
             $section->addText('&nbsp;');
             $this->line($section, 'Use Case', $useCase['name']);
+            $section->addText('________________________________________________________________________________________________');
             if ($useCase['testCases']['positive']) {
                 $section->addText('Happy flow ', ['bold' => true, 'lineHeight' => 1]);
                 foreach ($useCase['testCases']['positive'] as $testCase) {
@@ -204,12 +205,11 @@ class ComplianceSessionExport
                                     $section->addText('Response Body', ['bold' => true]);
                                     $section->addListItem(json_encode($step_response['body']), 5);
                                 }
-                                $section->addLine(['weight' => 1000, 'width' => 10000, 'height' => 5, 'color' => 000000]);
+                               // $section->addLine(['weight' => 1000, 'width' => 10000, 'height' => 5, 'color' => 000000]);
                             }
                         }
 
                     }
-                    $section->addText('________________________________________________________________________________________________');
                     $section->addText('&nbsp;');
                 }
             }
