@@ -60,6 +60,7 @@
                                 $page.props.auth.user.can.api_specs.viewAny ||
                                 $page.props.auth.user.can.components.viewAny ||
                                 $page.props.auth.user.can.use_cases.viewAny ||
+                                $page.props.auth.user.can.audit_log.viewAny ||
                                 $page.props.auth.user.can.message_log.viewAny ||
                                 $page.props.auth.user.can.test_cases.viewAny ||
                                 $page.props.auth.user.can.faqs.viewAny
@@ -157,6 +158,18 @@
                                     class="text-reset dropdown-item"
                                 >
                                     {{ $t('layout.main.menu.test-cases') }}
+                                </inertia-link>
+                            </li>
+                            <li
+                                v-if="
+                                    $page.props.auth.user.can.audit_log.viewAny
+                                "
+                            >
+                                <inertia-link
+                                    :href="route('admin.audit-log')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    Audit Log
                                 </inertia-link>
                             </li>
                             <li
