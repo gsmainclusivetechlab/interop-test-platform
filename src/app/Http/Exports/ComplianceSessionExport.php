@@ -160,13 +160,13 @@ class ComplianceSessionExport
             }
             $sortUseCases[] = $sort;
         }
-        $section->addImage(resource_path().'/images/logo.png','',false, env('APP_NAME'));
+        $section->addImage(resource_path() . '/images/logo.png', '', false, env('APP_NAME'));
         $this->title($section, env('APP_NAME'));
         $section->addText('&nbsp;');
         $type = ($request['type_of_report'] == 'extended') ? 'Technical' : 'Business';
         $this->title($section, $type . ' Report');
         $section->addText('&nbsp;');
-        //  $section->addLine();
+
         $this->title($section, 'Info');
         $this->line($section, 'Session name', $session->name);
         $this->line($section, 'Session date', $session->created_at->format('F d, Y'));
@@ -189,21 +189,24 @@ class ComplianceSessionExport
 
                         if ($testRun->testResults) {
                             foreach ($testRun->testResults as $key => $step) {
-                                $step_request = $step->request->toArray();
-                                $step_response = $step->response->toArray();
-                                $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
-                                if ($request['type_of_report'] == 'extended') {
-                                    $section->addText('Request Header', ['bold' => true]);
-                                    $section->addListItem(json_encode($step_request['headers']), 5);
-                                    $section->addText('Request Body', ['bold' => true]);
-                                    $section->addListItem(json_encode($step_request['body']), 5);
+                                if ($step->request) {
+                                    $step_request = $step->request->toArray();
+                                    $step_response = $step->response->toArray();
+                                    $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
+                                    if ($request['type_of_report'] == 'extended') {
+                                        $section->addText('Request Header', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_request['headers']), 5);
+                                        $section->addText('Request Body', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_request['body']), 5);
 
-                                    $section->addText('Response Header', ['bold' => true]);
-                                    $section->addListItem(json_encode($step_response['headers']), 5);
-                                    $section->addText('Response Body', ['bold' => true]);
-                                    $section->addListItem(json_encode($step_response['body']), 5);
+                                        $section->addText('Response Header', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_response['headers']), 5);
+                                        $section->addText('Response Body', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_response['body']), 5);
+                                    }
+                                } else {
+                                    $this->line($section, "Step #" . ($key + 1), " broken");
                                 }
-                               // $section->addLine(['weight' => 1000, 'width' => 10000, 'height' => 5, 'color' => 000000]);
                             }
                         }
 
@@ -238,7 +241,6 @@ class ComplianceSessionExport
                                         $section->addText('Response Body', ['bold' => true]);
                                         $section->addListItem(json_encode($step_response['body']), 5);
                                     }
-                                    $section->addLine(['weight' => 100, 'width' => 1000, 'height' => 5, 'color' => 635552]);
                                 } else {
                                     $this->line($section, "Step #" . ($key + 1), " broken");
                                 }
