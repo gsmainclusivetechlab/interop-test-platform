@@ -204,7 +204,7 @@ class ComplianceSessionExport
                                             $section->addText('Response Body', ['bold' => true]);
                                             $section->addListItem(json_encode($step_response['body']), 5);
                                         } else {
-                                            $this->line($section, "Response empty");
+                                            $section->addText('Response empty', ['bold' => true]);
                                         }
                                     }
                                 } else {
@@ -245,7 +245,7 @@ class ComplianceSessionExport
                                             $section->addText('Response Body', ['bold' => true]);
                                             $section->addListItem(json_encode($step_response['body']), 5);
                                         } else {
-                                            $this->line($section, "Response empty");
+                                            $section->addText('Response empty', ['bold' => true]);
                                         }
                                     }
                                 } else {
