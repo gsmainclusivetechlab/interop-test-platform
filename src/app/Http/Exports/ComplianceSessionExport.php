@@ -191,18 +191,19 @@ class ComplianceSessionExport
                             foreach ($testRun->testResults as $key => $step) {
                                 if ($step->request) {
                                     $step_request = $step->request->toArray();
-                                    $step_response = $step->response->toArray();
                                     $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
                                     if ($request['type_of_report'] == 'extended') {
                                         $section->addText('Request Header', ['bold' => true]);
                                         $section->addListItem(json_encode($step_request['headers']), 5);
                                         $section->addText('Request Body', ['bold' => true]);
                                         $section->addListItem(json_encode($step_request['body']), 5);
-
-                                        $section->addText('Response Header', ['bold' => true]);
-                                        $section->addListItem(json_encode($step_response['headers']), 5);
-                                        $section->addText('Response Body', ['bold' => true]);
-                                        $section->addListItem(json_encode($step_response['body']), 5);
+                                        if ($step->response) {
+                                            $step_response = $step->response->toArray();
+                                            $section->addText('Response Header', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['headers']), 5);
+                                            $section->addText('Response Body', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['body']), 5);
+                                        }
                                     }
                                 } else {
                                     $this->line($section, "Step #" . ($key + 1), " broken");
@@ -228,7 +229,6 @@ class ComplianceSessionExport
                             foreach ($testRun->testResults as $key => $step) {
                                 if ($step->request) {
                                     $step_request = $step->request->toArray();
-                                    $step_response = $step->response->toArray();
                                     $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
                                     if ($request['type_of_report'] == 'extended') {
                                         $section->addText('Request Header', ['bold' => true]);
@@ -236,10 +236,13 @@ class ComplianceSessionExport
                                         $section->addText('Request Body', ['bold' => true]);
                                         $section->addListItem(json_encode($step_request['body']), 5);
 
-                                        $section->addText('Response Header', ['bold' => true]);
-                                        $section->addListItem(json_encode($step_response['headers']), 5);
-                                        $section->addText('Response Body', ['bold' => true]);
-                                        $section->addListItem(json_encode($step_response['body']), 5);
+                                        if ($step->response) {
+                                            $step_response = $step->response->toArray();
+                                            $section->addText('Response Header', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['headers']), 5);
+                                            $section->addText('Response Body', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['body']), 5);
+                                        }
                                     }
                                 } else {
                                     $this->line($section, "Step #" . ($key + 1), " broken");
