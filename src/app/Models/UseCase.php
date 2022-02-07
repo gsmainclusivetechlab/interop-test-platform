@@ -59,7 +59,8 @@ class UseCase extends Model
                                     'session_test_cases.test_case_id',
                                     'test_cases.id'
                                 );
-                        });
+                        })
+                        ->orderBy('name');
                 },
             ])
             ->whereHas('testCases', function ($query) use ($session) {
@@ -121,7 +122,8 @@ class UseCase extends Model
                                     'session_test_cases.test_case_id',
                                     'test_cases.id'
                                 );
-                        });
+                        })
+                    ->orderBy('name');
                 },
             ])
             ->whereHas('testCases', function ($query) use ($session, $testRunsId) {

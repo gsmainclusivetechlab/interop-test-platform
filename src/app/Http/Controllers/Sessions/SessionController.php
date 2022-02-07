@@ -215,7 +215,8 @@ class SessionController extends Controller
                                     'id',
                                     $session->testCases()->pluck('id')
                                 );
-                            });
+                            })
+                        ->orderBy('name');
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($session) {
