@@ -19,9 +19,18 @@ class TypeController extends Controller
     {
         session()->forget('session');
 
-        $filteredAvailableModes = collect(
-            $availableModes = config('service_session.available_modes')
-        )
+        $availableModes = config('service_session.available_modes');
+        $userAvailableModes = [];
+        foreach(auth()->user()->groups->toArray() as $group){
+            foreach($group['session_available'] as $available){
+                if(!isset($userAvailableModes[$available])){
+                    $userAvailableModes[$available] = $availableModes[$available];
+                }
+            }
+            if(count($userAvailableModes) == 3) break;
+        }
+
+        $filteredAvailableModes = collect ($userAvailableModes )
             ->filter()
             ->all();
 
@@ -53,7 +62,7 @@ class TypeController extends Controller
             'testRunAttempts' => config(
                 'service_session.compliance_session_execution_limit'
             ),
-            'availableModes' => $availableModes,
+            'availableModes' => $userAvailableModes,
         ]);
     }
 
