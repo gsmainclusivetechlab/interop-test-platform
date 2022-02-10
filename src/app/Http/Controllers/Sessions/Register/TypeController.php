@@ -18,16 +18,20 @@ class TypeController extends Controller
     public function index()
     {
         session()->forget('session');
-
-        $availableModes = config('service_session.available_modes');
-        $userAvailableModes = [];
-        foreach(auth()->user()->groups->toArray() as $group){
-            foreach($group['session_available'] as $available){
-                if(!isset($userAvailableModes[$available])){
-                    $userAvailableModes[$available] = $availableModes[$available];
+        if(auth()->user()->role !== "superadmin"){
+            $availableModes = config('service_session.available_modes');
+            $userAvailableModes = [];
+            foreach(auth()->user()->groups->toArray() as $group){
+                foreach($group['session_available'] as $available){
+                    if(!isset($userAvailableModes[$available])){
+                        $userAvailableModes[$available] = $availableModes[$available];
+                    }
                 }
+                if(count($userAvailableModes) == 3) break;
             }
-            if(count($userAvailableModes) == 3) break;
+
+        } else {
+            $userAvailableModes = config('service_session.available_modes');
         }
 
         $filteredAvailableModes = collect ($userAvailableModes )
