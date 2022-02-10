@@ -18,7 +18,7 @@ class TypeController extends Controller
     public function index()
     {
         session()->forget('session');
-        if(auth()->user()->role !== "superadmin"){
+        if(!auth()->user()->isAdmin()){
             $availableModes = config('service_session.available_modes');
             $userAvailableModes = [];
             foreach(auth()->user()->groups->toArray() as $group){
