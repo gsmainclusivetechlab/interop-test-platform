@@ -7,6 +7,8 @@
         :sutUrls="sutUrls"
     >
         <div class="card">
+
+
             <div class="card-header">
                 <h2 class="card-title d-flex align-items-center">
                     <inertia-link
@@ -76,6 +78,31 @@
                         <icon name="alert-circle" class="icon-md mr-1"></icon>
                         {{ `${testRun.failures} Fail` }}
                     </span>
+                </div>
+                <div class="ml-5"
+                     v-if="testRun && testRun.id && !testRun.completed_at">
+                    <inertia-link
+                        :data="data"
+                        as="button"
+                        :href="
+                        route('sessions.test-cases.stop', [
+                            session.id,
+                            testCase.id,
+                            testRun.id,
+                        ])
+                    "
+                        method="post"
+                        class="btn btn-secondary"
+                    >
+                        <icon name="x"></icon>
+                        Stop Test Case
+                    </inertia-link>
+                    <!--button
+                        class="btn btn-secondary"
+                    >
+                        <icon name="x"></icon>
+                        Stop Test Case
+                    </button-->
                 </div>
             </div>
             <div class="card-body p-0">
@@ -972,6 +999,7 @@ export default {
     data() {
         return {
             reload: true,
+            stop: false,
         };
     },
     mounted() {
@@ -991,7 +1019,7 @@ export default {
             deep: true,
             immediate: true,
             handler() {
-                if (this.testRun.completed_at) return;
+                if (this.testRun.completed_at || this.stop) return;
 
                 setTimeout(() => {
                     if (!this.reload) return;
@@ -1004,6 +1032,9 @@ export default {
         },
     },
     computed: {
+        testStop(){
+            this.stop = true;
+        },
         testResultSteps() {
             return new Map(
                 this.testRun.testResults.data.map((el) => [el.testStep.id, el])
