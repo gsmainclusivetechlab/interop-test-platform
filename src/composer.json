@@ -21,7 +21,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "league/openapi-psr7-validator": "^0.15.2",
-        "mpdf/mpdf": "^8.0",
+        "mpdf/mpdf": "8.0.4",
         "nyholm/psr7": "^1.2",
         "phpoffice/phpword": "^0.17.0",
         "phpunit/phpunit": "^9.1",
@@ -43,8 +43,10 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "platform": {
-            "ext-v8js": "9.2.159"
-        }
+            "ext-v8js": "9.2.159",
+            "ext-gd": "7.4"
+        },
+        "platform-check": false
     },
     "extra": {
         "laravel": {
