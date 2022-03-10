@@ -21,6 +21,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "league/openapi-psr7-validator": "^0.15.2",
+        "mpdf/mpdf": "^8.0",
         "nyholm/psr7": "^1.2",
         "phpoffice/phpword": "^0.17.0",
         "phpunit/phpunit": "^9.1",

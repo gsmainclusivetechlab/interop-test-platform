@@ -19,17 +19,16 @@ use App\Http\Resources\{
     TestRunResource,
     UseCaseResource
 };
-use App\Models\{
-    Certificate,
+use App\Models\{Certificate,
     Component,
     FileEnvironment,
     GroupEnvironment,
     QuestionnaireSection,
     Session,
     TestCase,
+    TestRun,
     UseCase,
-    User
-};
+    User};
 use Arr;
 use Exception;
 use File;
@@ -37,7 +36,9 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use PhpOffice\PhpWord\IOFactory;
@@ -214,7 +215,8 @@ class SessionController extends Controller
                                     'id',
                                     $session->testCases()->pluck('id')
                                 );
-                            });
+                            })
+                        ->orderBy('name');
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($session) {
@@ -249,6 +251,71 @@ class SessionController extends Controller
                     ->flatten()
             ),
         ]);
+    }
+
+    /**
+     * @param Session $session
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function report(Session $session)
+    {
+        $this->authorize('view', $session);
+
+        return Inertia::render('sessions/report', [
+            'session' => (new SessionResource($session))->resolve(),
+            'useCases' => UseCaseResource::collection(
+                UseCase::WithTestCasesAndTestRunsOfSession($session)->get()
+            ),
+        ]);
+    }
+
+    public function downloadPdf(Session $session, Request $request)
+    {
+        $this->authorize('view', $session);
+        $data = $request->validate([
+            'type_of_report' => [
+                'required',
+                Rule::in(['simple', 'extended']),
+            ],
+            'test_runs' => 'required',
+            'test_runs.*' => [
+                'required',
+                Rule::exists(TestRun::class, 'id')
+                    ->where(function ($query) use ($session) {
+                        return $query->where('session_id', $session->id);
+                    }),
+            ],
+        ]);
+
+        try {
+            \PhpOffice\PhpWord\Settings::setPdfRendererPath(base_path('/vendor/mpdf/mpdf'));
+            \PhpOffice\PhpWord\Settings::setPdfRendererName('MPDF');
+
+            $name = "Session-{$session->id}-{$session->name}-Report-{$data['type_of_report']}";
+            $path = storage_path("framework/docs/{$name}.pdf");
+            $wordFile = app(ComplianceSessionExport::class)->exportPdf($session, $data);
+            $objWriter = IOFactory::createWriter($wordFile, 'PDF');
+            $objWriter->save($path);
+
+            app()->terminating(function () use ($path) {
+                File::delete($path);
+            });
+
+            new AuditLogUtil(
+                $request,
+                AuditActionEnum::SESSION_REPORT_CREATED(),
+                AuditTypeEnum::SESSION_TYPE,
+                $session->id,
+                $request->toArray()
+            );
+
+            return response()->download($path);
+        } catch (Throwable $e) {
+            return redirect()
+                ->back()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

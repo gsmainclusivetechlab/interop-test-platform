@@ -2,9 +2,12 @@
 
 namespace App\Http\Exports;
 
+use App\Http\Requests\SessionRequest;
+use App\Http\Resources\UseCaseResource;
 use App\Models\QuestionnaireSection;
 use App\Models\Session;
 use App\Models\TestRun;
+use App\Models\UseCase;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\PhpWord;
 
@@ -120,7 +123,7 @@ class ComplianceSessionExport
             $table
                 ->addCell()
                 ->addText(
-                    (string) $testCase->testRuns
+                    (string)$testCase->testRuns
                         ->where('session_id', $session->id)
                         ->count()
                 );
@@ -129,19 +132,152 @@ class ComplianceSessionExport
         return $wordFile;
     }
 
+    public function exportPdf(Session $session, array $request): PhpWord
+    {
+        $wordFile = new PhpWord();
+
+        $section = $wordFile->addSection();
+
+        $useCases = UseCase::WithTestCasesAndTestRunsOfSession($session, $request['test_runs'])->get();
+
+        $sortUseCases = [];
+        foreach ($useCases as $useCase) {
+            $sort = [
+                'id' => $useCase->id,
+                'name' => $useCase->name,
+                'testCases' => [
+                    'positive' => [],
+                    'negative' => [],
+                ]
+            ];
+            foreach ($useCase->testCases as $testCase) {
+                if ($testCase->behavior === 'positive') {
+                    $sort['testCases']['positive'][] = $testCase;
+                }
+                if ($testCase->behavior === 'negative') {
+                    $sort['testCases']['negative'][] = $testCase;
+                }
+            }
+            $sortUseCases[] = $sort;
+        }
+        $section->addImage(resource_path() . '/images/logo.png', '', false, env('APP_NAME'));
+        $this->title($section, env('APP_NAME'));
+        $section->addText('&nbsp;');
+        $type = ($request['type_of_report'] == 'extended') ? 'Technical' : 'Business';
+        $this->title($section, $type . ' Report');
+        $section->addText('&nbsp;');
+
+        $this->title($section, 'Info');
+        $this->line($section, 'Session name', $session->name);
+        $this->line($section, 'Session date', $session->created_at->format('F d, Y'));
+        $section->addText('&nbsp;');
+
+        $this->title($section, 'Test runs');
+        foreach ($sortUseCases as $useCase) {
+            $section->addText('&nbsp;');
+            $this->line($section, 'Use Case', $useCase['name']);
+            $section->addText('________________________________________________________________________________________________');
+            if ($useCase['testCases']['positive']) {
+                $section->addText('Happy flow ', ['bold' => true, 'lineHeight' => 1]);
+                foreach ($useCase['testCases']['positive'] as $testCase) {
+                    $this->line($section, 'Test Case', $testCase->name);
+
+                    foreach ($testCase->testRuns as $testRun) {
+                        $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
+                            (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
+                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true, 'lineHeight' => 1]);
+
+                        if ($testRun->testResults) {
+                            foreach ($testRun->testResults as $key => $step) {
+                                if ($step->request) {
+                                    $step_request = $step->request->toArray();
+                                    $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
+                                    if ($request['type_of_report'] == 'extended') {
+                                        $section->addText('Request Header', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_request['headers']), 5);
+                                        $section->addText('Request Body', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_request['body']), 5);
+                                        if ($step->response) {
+                                            $step_response = $step->response->toArray();
+                                            $section->addText('Response Header', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['headers']), 5);
+                                            $section->addText('Response Body', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['body']), 5);
+                                        } else {
+                                            $section->addText('Response empty', ['bold' => true]);
+                                        }
+                                    }
+                                } else {
+                                    $this->line($section, "Step #" . ($key + 1), " broken");
+                                }
+                            }
+                        }
+
+                    }
+                    $section->addText('&nbsp;');
+                }
+            }
+            if ($useCase['testCases']['negative']) {
+                $section->addText('Unhappy flow ', ['bold' => true, 'lineHeight' => 1]);
+                foreach ($useCase['testCases']['negative'] as $testCase) {
+                    $this->line($section, 'Test Case', $testCase->name);
+
+                    foreach ($testCase->testRuns as $testRun) {
+                        $status = ($testRun->completed_at && $testRun->successful) ? 'Pass' :
+                            (($testRun->completed_at && !$testRun->successful) ? 'Fail' : 'Incomplete');
+                        $section->addText('# Run ' . $testRun->id . ' ' . $status, ['bold' => true, 'lineHeight' => 1]);
+
+                        if ($testRun->testResults) {
+                            foreach ($testRun->testResults as $key => $step) {
+                                if ($step->request) {
+                                    $step_request = $step->request->toArray();
+                                    $this->line($section, "Step #" . ($key + 1), " ({$step_request['method']} {$step_request['path']}) - {$step->status}  -  {$step->duration}ms");
+                                    if ($request['type_of_report'] == 'extended') {
+                                        $section->addText('Request Header', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_request['headers']), 5);
+                                        $section->addText('Request Body', ['bold' => true]);
+                                        $section->addListItem(json_encode($step_request['body']), 5);
+
+                                        if ($step->response) {
+                                            $step_response = $step->response->toArray();
+                                            $section->addText('Response Header', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['headers']), 5);
+                                            $section->addText('Response Body', ['bold' => true]);
+                                            $section->addListItem(json_encode($step_response['body']), 5);
+                                        } else {
+                                            $section->addText('Response empty', ['bold' => true]);
+                                        }
+                                    }
+                                } else {
+                                    $this->line($section, "Step #" . ($key + 1), " broken");
+                                }
+                            }
+                        }
+
+                    }
+                    $section->addText('&nbsp;');
+                }
+            }
+        }
+
+        return $wordFile;
+    }
+
     protected function title(
         Section $section,
-        string $text,
-        int $textSize = 16
-    ): void {
+        string  $text,
+        int     $textSize = 16
+    ): void
+    {
         $section->addText(__($text), ['size' => $textSize, 'bold' => true]);
     }
 
     protected function line(
         Section $section,
-        string $title,
+        string  $title,
         ?string $text
-    ): void {
+    ): void
+    {
         if ($text) {
             $textRun = $section->addTextRun();
             $textRun->addText(__($title) . ': ', [

@@ -51,6 +51,9 @@ class TestCaseResource extends JsonResource
                     );
                 })
             ),
+            'testRuns' => TestRunResource::collection(
+                $this->whenLoaded('testRuns')
+            ),
             'attemptsCount' => $this->whenPivotLoaded(
                 'session_test_cases',
                 function () {

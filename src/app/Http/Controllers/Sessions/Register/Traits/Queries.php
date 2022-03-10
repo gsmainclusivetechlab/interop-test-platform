@@ -57,7 +57,8 @@ trait Queries
             ) {
                 $query->whereIn('slug', $testCases ?: ['']);
             })
-            ->lastPerGroup(false);
+            ->lastPerGroup(false)
+            ->orderBy('name');
     }
 
     /**
