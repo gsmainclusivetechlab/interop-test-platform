@@ -43,7 +43,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "platform": {
-            "ext-v8js": "9.2.159"
+            "ext-v8js": "9.2.159",
+            "ext-gd": "7.4"
         }
     },
     "extra": {

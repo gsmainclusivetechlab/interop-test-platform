@@ -9,4 +9,5 @@ RUN composer install \
     --prefer-dist \
     --no-autoloader
 COPY . .
-RUN composer dump-autoload --optimize && composer update --ignore-platform-reqs
+RUN composer dump-autoload --optimize
+RUN composer update
