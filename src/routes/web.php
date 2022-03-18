@@ -140,6 +140,10 @@ Route::name('sessions.')
             'TestCaseController@run'
         )->name('test-cases.run');
         Route::post(
+            '{session}/test-cases/{testCase}/stop/{testRun}',
+            'TestCaseController@stop'
+        )->name('test-cases.stop');
+        Route::post(
             '{session}/test-cases/run-all',
             'TestCaseController@runAll'
         )->name('test-cases.run-all');
