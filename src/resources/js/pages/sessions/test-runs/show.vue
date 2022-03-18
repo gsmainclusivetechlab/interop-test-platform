@@ -7,8 +7,6 @@
         :sutUrls="sutUrls"
     >
         <div class="card">
-
-
             <div class="card-header">
                 <h2 class="card-title d-flex align-items-center">
                     <inertia-link
@@ -79,18 +77,20 @@
                         {{ `${testRun.failures} Fail` }}
                     </span>
                 </div>
-                <div class="ml-5"
-                     v-if="testRun && testRun.id && !testRun.completed_at">
+                <div
+                    class="ml-5"
+                    v-if="testRun && testRun.id && !testRun.completed_at"
+                >
                     <inertia-link
                         :data="data"
                         as="button"
                         :href="
-                        route('sessions.test-cases.stop', [
-                            session.id,
-                            testCase.id,
-                            testRun.id,
-                        ])
-                    "
+                            route('sessions.test-cases.stop', [
+                                session.id,
+                                testCase.id,
+                                testRun.id,
+                            ])
+                        "
                         method="post"
                         class="btn btn-secondary"
                     >
@@ -235,12 +235,14 @@
                                             <span
                                                 class="flex-shrink-0 badge mr-0"
                                                 :class="{
-                                                    'bg-success': testResultSteps.get(
-                                                        tStep.id
-                                                    ).successful,
-                                                    'bg-danger': !testResultSteps.get(
-                                                        tStep.id
-                                                    ).successful,
+                                                    'bg-success':
+                                                        testResultSteps.get(
+                                                            tStep.id
+                                                        ).successful,
+                                                    'bg-danger':
+                                                        !testResultSteps.get(
+                                                            tStep.id
+                                                        ).successful,
                                                 }"
                                             >
                                             </span>
@@ -291,7 +293,8 @@
                                                 :class="{
                                                     'bg-success':
                                                         result.successful,
-                                                    'bg-danger': !result.successful,
+                                                    'bg-danger':
+                                                        !result.successful,
                                                 }"
                                             >
                                             </span>
@@ -401,7 +404,8 @@
                                                         :class="{
                                                             'bg-success':
                                                                 testExecution.successful,
-                                                            'bg-danger': !testExecution.successful,
+                                                            'bg-danger':
+                                                                !testExecution.successful,
                                                         }"
                                                     >
                                                         {{
@@ -1010,8 +1014,9 @@ export default {
                     this.session.id,
                     this.testCase.id,
                 ]).url() !== e.detail.visit.url.href
-            )
+            ) {
                 this.reload = false;
+            }
         });
     },
     watch: {
@@ -1019,10 +1024,14 @@ export default {
             deep: true,
             immediate: true,
             handler() {
-                if (this.testRun.completed_at || this.stop) return;
+                if (this.testRun.completed_at || this.stop) {
+                    return;
+                }
 
                 setTimeout(() => {
-                    if (!this.reload) return;
+                    if (!this.reload) {
+                        return;
+                    }
 
                     this.$inertia.reload({
                         only: ['testRun', 'testResults', 'messages', 'errors'],
@@ -1032,7 +1041,7 @@ export default {
         },
     },
     computed: {
-        testStop(){
+        testStop() {
             this.stop = true;
         },
         testResultSteps() {
@@ -1042,7 +1051,9 @@ export default {
         },
         testResultRequestSetups() {
             let data = collect();
-            if (!this.testResults.length > 0) return data;
+            if (!this.testResults.length > 0) {
+                return data;
+            }
             collect(this.testStep.testSetups)
                 .where('type', 'request')
                 .each((item) => {
@@ -1052,7 +1063,9 @@ export default {
         },
         testResultResponseSetups() {
             let data = collect();
-            if (!this.testResults.length > 0) return data;
+            if (!this.testResults.length > 0) {
+                return data;
+            }
             collect(this.testStep.testSetups)
                 .where('type', 'response')
                 .each((item) => {
