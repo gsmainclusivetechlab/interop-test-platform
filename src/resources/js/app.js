@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueMeta from 'vue-meta';
-import { App, plugin } from '@inertiajs/inertia-vue';
+import { App, plugin, Link } from '@inertiajs/inertia-vue';
 import {
     NavPlugin,
     NavbarPlugin,
@@ -52,6 +52,8 @@ Vue.mixin({
 });
 
 Vue.config.productionTip = false;
+
+Vue.component('inertia-link', Link);
 
 Vue.component('icon', () =>
     import(/* webpackChunkName: "icon" */ '@/components/icon.vue')
