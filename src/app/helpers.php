@@ -11,9 +11,11 @@ if (!function_exists('json_prettify')) {
         $arr = explode(PHP_EOL, $json);
 
         $textRun = $section->addTextRun();
+
         foreach ($arr as $line) {
             $textRun->addTextBreak();
-            $textRun->addText($line);
+            $textRun->addText(preg_replace('/\s/', '&nbsp;', $line));
         }
+        $textRun->addTextBreak();
     }
 }

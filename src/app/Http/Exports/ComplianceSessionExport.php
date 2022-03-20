@@ -3,6 +3,7 @@
 namespace App\Http\Exports;
 
 use App\Models\TestCase;
+use Illuminate\Support\Arr;
 use App\Http\Requests\SessionRequest;
 use App\Http\Resources\UseCaseResource;
 use App\Models\QuestionnaireSection;
@@ -269,34 +270,27 @@ class ComplianceSessionExport
                             );
 
                             $section->addText('Request Body', ['bold' => true]);
-                            $section->addListItem(
-                                json_encode(
-                                    $step_request['body'],
-                                    JSON_PRETTY_PRINT
-                                ),
-                                5
+                            phpword_json_prettify(
+                                Arr::wrap($step_request['body']),
+                                $section
                             );
+
                             if ($step->response) {
                                 $step_response = $step->response->toArray();
                                 $section->addText('Response Headers', [
                                     'bold' => true,
                                 ]);
-                                $section->addListItem(
-                                    json_encode(
-                                        $step_response['headers'],
-                                        JSON_PRETTY_PRINT
-                                    ),
-                                    5
+                                phpword_json_prettify(
+                                    $step_response['headers'],
+                                    $section
                                 );
+
                                 $section->addText('Response Body', [
                                     'bold' => true,
                                 ]);
-                                $section->addListItem(
-                                    json_encode(
-                                        $step_response['body'],
-                                        JSON_PRETTY_PRINT
-                                    ),
-                                    5
+                                phpword_json_prettify(
+                                    Arr::wrap($step_response['body']),
+                                    $section
                                 );
                             } else {
                                 $section->addText('Response empty', [
