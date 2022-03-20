@@ -316,7 +316,6 @@ class SessionController extends Controller
 
             return response()->download($path);
         } catch (Throwable $e) {
-            dd($e);
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());
