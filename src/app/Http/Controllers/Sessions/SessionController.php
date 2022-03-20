@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Enums\AuditActionEnum;
 use App\Enums\AuditTypeEnum;
+use PhpOffice\PhpWord\Settings as PhpWordSettings;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Sessions\Traits\WithSutUrls;
 use App\Http\Exports\ComplianceSessionExport;
@@ -19,7 +20,8 @@ use App\Http\Resources\{
     TestRunResource,
     UseCaseResource
 };
-use App\Models\{Certificate,
+use App\Models\{
+    Certificate,
     Component,
     FileEnvironment,
     GroupEnvironment,
@@ -28,7 +30,8 @@ use App\Models\{Certificate,
     TestCase,
     TestRun,
     UseCase,
-    User};
+    User
+};
 use Arr;
 use Exception;
 use File;
@@ -216,7 +219,7 @@ class SessionController extends Controller
                                     $session->testCases()->pluck('id')
                                 );
                             })
-                        ->orderBy('name');
+                            ->orderBy('name');
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($session) {
@@ -274,27 +277,28 @@ class SessionController extends Controller
     {
         $this->authorize('view', $session);
         $data = $request->validate([
-            'type_of_report' => [
-                'required',
-                Rule::in(['simple', 'extended']),
-            ],
+            'type_of_report' => ['required', Rule::in(['simple', 'extended'])],
             'test_runs' => 'required',
             'test_runs.*' => [
                 'required',
-                Rule::exists(TestRun::class, 'id')
-                    ->where(function ($query) use ($session) {
-                        return $query->where('session_id', $session->id);
-                    }),
+                Rule::exists(TestRun::class, 'id')->where(function (
+                    $query
+                ) use ($session) {
+                    return $query->where('session_id', $session->id);
+                }),
             ],
         ]);
 
         try {
-            \PhpOffice\PhpWord\Settings::setPdfRendererPath(base_path('/vendor/mpdf/mpdf'));
-            \PhpOffice\PhpWord\Settings::setPdfRendererName('MPDF');
+            PhpWordSettings::setPdfRendererPath(base_path('/vendor/mpdf/mpdf'));
+            PhpWordSettings::setPdfRendererName('MPDF');
 
             $name = "Session-{$session->id}-{$session->name}-Report-{$data['type_of_report']}";
             $path = storage_path("framework/docs/{$name}.pdf");
-            $wordFile = app(ComplianceSessionExport::class)->exportPdf($session, $data);
+            $wordFile = app(ComplianceSessionExport::class)->exportPdf(
+                $session,
+                $data
+            );
             $objWriter = IOFactory::createWriter($wordFile, 'PDF');
             $objWriter->save($path);
 
@@ -312,6 +316,7 @@ class SessionController extends Controller
 
             return response()->download($path);
         } catch (Throwable $e) {
+            dd($e);
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());
