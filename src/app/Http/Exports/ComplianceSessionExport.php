@@ -173,7 +173,6 @@ class ComplianceSessionExport
             config('app.name')
         );
 
-        $this->title($section, config('app.name'));
         $this->title($section, 'Compliance Platform');
         $section->addText('&nbsp;');
 
