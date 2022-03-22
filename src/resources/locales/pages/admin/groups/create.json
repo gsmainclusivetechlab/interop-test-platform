@@ -9,7 +9,8 @@
                 "label": "Email Filter",
                 "comment": "Only users whose email matches these filters will be eligible to join the group, e.g. domain.com or @domain.com"
             },
-            "description": "Description"
+            "description": "Description",
+            "session-types": "Session Types Available"
         },
         "buttons": {
             "cancel": "Cancel",
