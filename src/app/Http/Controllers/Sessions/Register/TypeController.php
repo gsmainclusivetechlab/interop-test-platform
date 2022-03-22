@@ -18,23 +18,10 @@ class TypeController extends Controller
     public function index()
     {
         session()->forget('session');
-        if(!auth()->user()->isAdmin()){
-            $availableModes = config('service_session.available_modes');
-            $userAvailableModes = [];
-            foreach(auth()->user()->groups->toArray() as $group){
-                foreach($group['session_available'] as $available){
-                    if(!isset($userAvailableModes[$available])){
-                        $userAvailableModes[$available] = $availableModes[$available];
-                    }
-                }
-                if(count($userAvailableModes) == 3) break;
-            }
 
-        } else {
-            $userAvailableModes = config('service_session.available_modes');
-        }
-
-        $filteredAvailableModes = collect ($userAvailableModes )
+        $filteredAvailableModes = collect(
+            $availableModes = config('service_session.available_modes')
+        )
             ->filter()
             ->all();
 
@@ -66,7 +53,7 @@ class TypeController extends Controller
             'testRunAttempts' => config(
                 'service_session.compliance_session_execution_limit'
             ),
-            'availableModes' => $userAvailableModes,
+            'availableModes' => $availableModes,
         ]);
     }
 
