@@ -373,7 +373,6 @@ export default {
         sutUrls: {
             type: Object,
             required: false,
-            default: () => {},
         },
         data: {
             type: Object,
