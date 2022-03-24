@@ -1,5 +1,5 @@
 # Build frontend assets
-FROM node:14.5.0-stretch AS frontend
+FROM node:14.14.0-stretch AS frontend
 WORKDIR /usr/src/app
 COPY package.json ./package.json
 COPY package-lock.json ./package-lock.json
