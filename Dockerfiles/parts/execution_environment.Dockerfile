@@ -1,3 +1,4 @@
+# Execution Environment
 FROM daxium/v8js:9.2.159 as v8build
 RUN tar cvzf /tmp/libv8.tar.gz -C /usr/local/v8 .
 
@@ -52,3 +53,4 @@ EXPOSE 8080
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/health
 
 CMD ["/usr/local/bin/start"]
+

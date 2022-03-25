@@ -1,3 +1,4 @@
+# Development
 FROM execution_environment 
 # Install composer and npm
 RUN php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer;

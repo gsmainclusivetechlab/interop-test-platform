@@ -1,3 +1,4 @@
+# Production
 FROM execution_environment
 
 # Copy in code and configuration files
@@ -20,3 +21,4 @@ RUN chmod +x artisan \
 
 
 USER interopdev
+

@@ -11,3 +11,4 @@ RUN composer install \
 COPY . .
 RUN composer dump-autoload --optimize
 RUN composer update
+
