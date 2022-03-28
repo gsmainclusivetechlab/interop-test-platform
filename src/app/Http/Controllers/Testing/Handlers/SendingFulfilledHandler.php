@@ -95,7 +95,8 @@ class SendingFulfilledHandler
             : $this->testResult->testStep->getNext();
         if (
             $nextTestStep &&
-            !$this->session->getBaseUriOfComponent($nextTestStep->source)
+            !$this->session->getBaseUriOfComponent($nextTestStep->source) &&
+            !$this->testResult->testRun->isCompleted()
         ) {
             $delay = $nextTestStep->request
                 ->withSubstitutions(
