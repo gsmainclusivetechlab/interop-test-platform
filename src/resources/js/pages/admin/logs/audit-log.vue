@@ -103,17 +103,17 @@
 </template>
 
 <script>
-import Layout from '@/layouts/main';
+    import Layout from '@/layouts/logs';
 
-export default {
-    components: {
-        Layout,
-    },
-    props: {
-        logItems: {
-            type: Object,
-            required: true,
+    export default {
+        components: {
+            Layout,
         },
-    },
-};
+        props: {
+            logItems: {
+                type: Object,
+                required: true,
+            },
+        },
+    };
 </script>

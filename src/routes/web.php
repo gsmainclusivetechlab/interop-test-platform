@@ -108,9 +108,10 @@ Route::name('sessions.')
         Route::get('{session}/report', 'SessionController@report')->name(
             'report'
         );
-        Route::post('{session}/report/download', 'SessionController@downloadPdf')->name(
-            'report.download'
-        );
+        Route::post(
+            '{session}/report/download',
+            'SessionController@downloadPdf'
+        )->name('report.download');
         Route::post('{session}/complete', 'SessionController@complete')->name(
             'complete'
         );
@@ -333,14 +334,54 @@ Route::name('admin.')
                 )->name('promote-role');
             });
         Route::resource('groups', 'GroupController')->except(['show']);
-        Route::get(
-            'message-log',
-            '\App\Http\Controllers\MessageLogController@admin'
-        )->name('message-log');
-        Route::get(
-            'audit-log',
-            '\App\Http\Controllers\AuditLogController@admin'
-        )->name('audit-log');
+
+        Route::group(
+            [
+                'prefix' => 'logs',
+                'middleware' => ['auth', 'verified'],
+                'as' => 'logs.',
+            ],
+            function () {
+                Route::get('/', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'index',
+                ])->name('index');
+
+                Route::get('audit-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'auditLog',
+                ])->name('audit-log');
+
+                Route::get('application-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'applicationLog',
+                ])->name('application-log');
+
+                Route::group(
+                    [
+                        'prefix' => 'nginx',
+                        'as' => 'ngninx.',
+                    ],
+                    function () {
+                        Route::get('access-log', [
+                            \App\Http\Controllers\Admin\LoggingController::class,
+                            'nginxAccessLog',
+                        ])->name('access-log');
+
+                        Route::get('error-log', [
+                            \App\Http\Controllers\Admin\LoggingController::class,
+                            'nginxErrorLog',
+                        ])->name('access-log');
+                    }
+                );
+
+                Route::get('queue-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'queueLog',
+                ])->name('queue-log');
+            }
+        );
+
         Route::resource('sessions', 'SessionController')->only(['index']);
         Route::name('compliance-sessions.')
             ->prefix('compliance-sessions')
@@ -380,9 +421,7 @@ Route::name('admin.')
         Route::name('faqs.')
             ->prefix('faqs')
             ->group(function () {
-                Route::get('index', 'FaqController@index')->name(
-                    'index'
-                );
+                Route::get('index', 'FaqController@index')->name('index');
                 Route::get('import', 'FaqController@showImportForm')->name(
                     'import'
                 );
@@ -392,9 +431,10 @@ Route::name('admin.')
                 Route::get('{faq}/export', 'FaqController@export')->name(
                     'export'
                 );
-                Route::put('{faq}/toggle-active', 'FaqController@toggleActive')->name(
-                    'toggle-active'
-                );
+                Route::put(
+                    '{faq}/toggle-active',
+                    'FaqController@toggleActive'
+                )->name('toggle-active');
             });
         Route::resource('components', 'ComponentController')->except(['show']);
         Route::get(
@@ -425,9 +465,10 @@ Route::name('admin.')
                         'batch-import',
                         'TestCaseController@showBatchImportForm'
                     )->name('batch-import');
-                    Route::post('batch-import', 'TestCaseController@batchImport')->name(
-                        'batch-import.confirm'
-                    );
+                    Route::post(
+                        'batch-import',
+                        'TestCaseController@batchImport'
+                    )->name('batch-import.confirm');
                     Route::get(
                         'group-candidates',
                         'TestCaseController@groupCandidates'
