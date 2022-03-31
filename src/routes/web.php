@@ -334,14 +334,54 @@ Route::name('admin.')
                 )->name('promote-role');
             });
         Route::resource('groups', 'GroupController')->except(['show']);
-        Route::get(
-            'message-log',
-            '\App\Http\Controllers\MessageLogController@admin'
-        )->name('message-log');
-        Route::get(
-            'audit-log',
-            '\App\Http\Controllers\AuditLogController@admin'
-        )->name('audit-log');
+
+        Route::group(
+            [
+                'prefix' => 'logs',
+                'middleware' => ['auth', 'verified'],
+                'as' => 'logs.',
+            ],
+            function () {
+                Route::get('/', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'index',
+                ])->name('index');
+
+                Route::get('audit-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'auditLog',
+                ])->name('audit-log');
+
+                Route::get('application-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'applicationLog',
+                ])->name('application-log');
+
+                Route::get('queue-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'queueLog',
+                ])->name('queue-log');
+
+                Route::group(
+                    [
+                        'prefix' => 'nginx',
+                        'as' => 'nginx.',
+                    ],
+                    function () {
+                        Route::get('access-log', [
+                            \App\Http\Controllers\Admin\LoggingController::class,
+                            'nginxAccessLog',
+                        ])->name('access-log');
+
+                        Route::get('error-log', [
+                            \App\Http\Controllers\Admin\LoggingController::class,
+                            'nginxErrorLog',
+                        ])->name('error-log');
+                    }
+                );
+            }
+        );
+
         Route::resource('sessions', 'SessionController')->only(['index']);
         Route::name('compliance-sessions.')
             ->prefix('compliance-sessions')

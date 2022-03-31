@@ -162,27 +162,15 @@
                             </li>
                             <li
                                 v-if="
-                                    $page.props.auth.user.can.audit_log.viewAny
-                                "
-                            >
-                                <inertia-link
-                                    :href="route('admin.audit-log')"
-                                    class="text-reset dropdown-item"
-                                >
-                                    Audit Log
-                                </inertia-link>
-                            </li>
-                            <li
-                                v-if="
                                     $page.props.auth.user.can.message_log
                                         .viewAny
                                 "
                             >
                                 <inertia-link
-                                    :href="route('admin.message-log')"
+                                    :href="route('admin.logs.index')"
                                     class="text-reset dropdown-item"
                                 >
-                                    {{ $t('layout.main.menu.message-log') }}
+                                    {{ $t('layout.main.menu.logs') }}
                                 </inertia-link>
                             </li>
                             <li
@@ -215,11 +203,7 @@
                                     {{ $t('layout.main.menu.implicit-sut') }}
                                 </inertia-link>
                             </li>
-                            <li
-                                v-if="
-                                    $page.props.auth.user.can.faqs.viewAny
-                                "
-                            >
+                            <li v-if="$page.props.auth.user.can.faqs.viewAny">
                                 <inertia-link
                                     :href="route('admin.faqs.index')"
                                     class="text-reset dropdown-item"
@@ -398,10 +382,7 @@
                             }"
                             v-if="$page.props.auth.user.can.faqs.viewContent"
                         >
-                            <inertia-link
-                                :href="route('faq')"
-                                class="nav-link"
-                            >
+                            <inertia-link :href="route('faq')" class="nav-link">
                                 <span
                                     class="nav-link-icon d-md-none d-lg-inline-block"
                                 >
@@ -479,13 +460,13 @@
 </template>
 
 <script>
-import Layout from '@/layouts/app';
-import LocaleChanger from '@/components/locale-changer';
+    import Layout from '@/layouts/app';
+    import LocaleChanger from '@/components/locale-changer';
 
-export default {
-    components: {
-        Layout,
-        LocaleChanger,
-    },
-};
+    export default {
+        components: {
+            Layout,
+            LocaleChanger,
+        },
+    };
 </script>

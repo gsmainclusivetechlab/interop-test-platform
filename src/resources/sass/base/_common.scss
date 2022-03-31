@@ -6,3 +6,7 @@ body {
 [role='button'] {
   cursor: pointer;
 }
+
+.nav-item.active {
+  color: $red; //TODO: improve this workaround somehow
+}

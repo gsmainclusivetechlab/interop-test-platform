@@ -9,6 +9,17 @@
 
 define('LARAVEL_START', microtime(true));
 
+if (!defined('GLOB_BRACE')) {
+    /**
+     * LogReader dependency workaround
+     * GLOB_BRACE is not supported on Alpine OS
+     * @see https://github.com/JackieDo/Laravel-Log-Reader/issues/46
+     *
+     * TODO: remove after the issue is fixed
+     */
+    define('GLOB_BRACE', 0);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

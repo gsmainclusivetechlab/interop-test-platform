@@ -42,15 +42,21 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(
+                'logs/' . env('CONTAINER_ROLE', 'app') . '.log'
+            ),
             'level' => 'debug',
+            'permission' => 0666,
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(
+                'logs/' . env('CONTAINER_ROLE', 'app') . '.log'
+            ),
             'level' => 'debug',
             'days' => 14,
+            'permission' => 0666,
         ],
 
         'slack' => [
@@ -96,7 +102,10 @@ return [
         ],
 
         'emergency' => [
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(
+                'logs/' . env('CONTAINER_ROLE', 'app') . '.log'
+            ),
+            'permission' => 0666,
         ],
     ],
 ];

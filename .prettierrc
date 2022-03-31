@@ -10,5 +10,6 @@
             }
         }
     ],
-    "proseWrap": "always"
+    "proseWrap": "always",
+    "vueIndentScriptAndStyle": true
 }
