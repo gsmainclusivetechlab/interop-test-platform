@@ -96,6 +96,9 @@ layout:
       application-log: Application Log
       queue-log: Queue Log
       nginx-logs: NGINX Logs
+      nginx:
+        access-log: Access Log
+        error-log: Error Log
       logs: App Logs
       sessions: Sessions
       test-cases: Test Cases

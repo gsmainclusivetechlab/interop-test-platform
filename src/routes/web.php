@@ -357,10 +357,15 @@ Route::name('admin.')
                     'applicationLog',
                 ])->name('application-log');
 
+                Route::get('queue-log', [
+                    \App\Http\Controllers\Admin\LoggingController::class,
+                    'queueLog',
+                ])->name('queue-log');
+
                 Route::group(
                     [
                         'prefix' => 'nginx',
-                        'as' => 'ngninx.',
+                        'as' => 'nginx.',
                     ],
                     function () {
                         Route::get('access-log', [
@@ -371,14 +376,9 @@ Route::name('admin.')
                         Route::get('error-log', [
                             \App\Http\Controllers\Admin\LoggingController::class,
                             'nginxErrorLog',
-                        ])->name('access-log');
+                        ])->name('error-log');
                     }
                 );
-
-                Route::get('queue-log', [
-                    \App\Http\Controllers\Admin\LoggingController::class,
-                    'queueLog',
-                ])->name('queue-log');
             }
         );
 

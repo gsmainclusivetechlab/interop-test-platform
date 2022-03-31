@@ -46,6 +46,7 @@ return [
                 'logs/' . env('CONTAINER_ROLE', 'app') . '.log'
             ),
             'level' => 'debug',
+            'permission' => 0666,
         ],
 
         'daily' => [
@@ -55,6 +56,7 @@ return [
             ),
             'level' => 'debug',
             'days' => 14,
+            'permission' => 0666,
         ],
 
         'slack' => [
@@ -103,6 +105,7 @@ return [
             'path' => storage_path(
                 'logs/' . env('CONTAINER_ROLE', 'app') . '.log'
             ),
+            'permission' => 0666,
         ],
     ],
 ];

@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AppLogResource;
 use App\Http\Resources\AuditLogResource;
 use App\Http\Resources\MessageLogResource;
+use App\Http\Resources\NginxErrorLogResource;
+use App\Http\Resources\NginxAccessLogResource;
 use App\Services\Logging\Parsers\NginxErrorLogParser;
 use App\Services\Logging\Parsers\NginxAccessLogParser;
 
@@ -43,7 +45,8 @@ class LoggingController extends Controller
 
     public function applicationLog(LogReader $logReader)
     {
-        return Inertia::render('admin/logs/application-log', [
+        return Inertia::render('admin/logs/laravel-log', [
+            'title' => __('Application log'),
             'logItems' => AppLogResource::collection(
                 $logReader->filename('app.log')->paginate()
             ),
@@ -52,7 +55,8 @@ class LoggingController extends Controller
 
     public function queueLog(LogReader $logReader)
     {
-        return Inertia::render('admin/logs/application-log', [
+        return Inertia::render('admin/logs/laravel-log', [
+            'title' => __('Queue log'),
             'logItems' => AppLogResource::collection(
                 $logReader->filename('queue.log')->paginate()
             ),
@@ -65,7 +69,7 @@ class LoggingController extends Controller
         $logReader->setLogParser(new NginxAccessLogParser());
 
         return Inertia::render('admin/logs/nginx-access-log', [
-            'logItems' => AppLogResource::collection(
+            'logItems' => NginxAccessLogResource::collection(
                 $logReader->filename('access.log')->paginate()
             ),
         ]);
@@ -77,7 +81,7 @@ class LoggingController extends Controller
         $logReader->setLogParser(new NginxErrorLogParser());
 
         return Inertia::render('admin/logs/nginx-error-log', [
-            'logItems' => AppLogResource::collection(
+            'logItems' => NginxErrorLogResource::collection(
                 $logReader->filename('error.log')->paginate()
             ),
         ]);

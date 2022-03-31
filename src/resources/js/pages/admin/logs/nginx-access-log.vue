@@ -1,19 +1,9 @@
 <template>
     <layout>
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
-                    <h2 class="page-title">
-                        <b>Application Log</b>
-                    </h2>
-                </div>
-            </div>
-        </div>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">
-                    <b>Application Log</b>
+                    <b>NGINX Access Log</b>
                 </h2>
             </div>
             <div class="table-responsive mb-0">
@@ -21,46 +11,39 @@
                     <thead>
                         <tr>
                             <th class="text-nowrap w-15">Date and time</th>
-                            <th class="text-nowrap w-auto">Level</th>
-                            <th class="text-nowrap w-15">Context</th>
-                            <th class="text-nowrap w-15">Stack Trace</th>
+                            <th class="text-nowrap w-auto">IP Address</th>
+                            <th class="text-nowrap w-15">Request</th>
+                            <th class="text-nowrap w-15">Response Code</th>
+                            <th class="text-nowrap w-15">Bytes Transerred</th>
+                            <th class="text-nowrap w-15">User Agent</th>
+                            <th class="text-nowrap w-15">Url</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr
-                            v-for="(message, i) in logItems.data"
+                            v-for="(entry, i) in logItems.data"
                             :key="`message-${i}`"
                         >
                             <td>
-                                {{ message.date }}
+                                {{ entry.date }}
                             </td>
                             <td>
-                                <div
-                                    class="badge badge-outline text-xl"
-                                    v-bind:class="msgColor(message.level)"
-                                >
-                                    {{ message.level.toUpperCase() }}
-                                </div>
-                            </td>
-                            <td class="text-break">
-                                <div style="overflow: auto">
-                                    <vue-json-pretty
-                                        :deep="0"
-                                        :virtual="true"
-                                        :data="message.context"
-                                    />
-                                </div>
+                                {{ entry.ip_address }}
                             </td>
                             <td>
-                                <vue-json-pretty
-                                    :deep="0"
-                                    :deepCollapseChildren="true"
-                                    :virtual="true"
-                                    :virtualLines="
-                                        message.stack_traces.length * 3
-                                    "
-                                    :data="message.stack_traces"
-                                />
+                                {{ entry.request }}
+                            </td>
+                            <td>
+                                {{ entry.response_code }}
+                            </td>
+                            <td>
+                                {{ entry.bytes }}
+                            </td>
+                            <td>
+                                {{ entry.user_agent }}
+                            </td>
+                            <td>
+                                {{ entry.url }}
                             </td>
                         </tr>
                         <tr v-if="!Object.keys(logItems.data).length">
@@ -81,30 +64,15 @@
 
 <script>
     import Layout from '@/layouts/logs';
-    import VueJsonPretty from 'vue-json-pretty';
-    import 'vue-json-pretty/lib/styles.css';
 
     export default {
         components: {
             Layout,
-            VueJsonPretty,
         },
         props: {
             logItems: {
                 type: Object,
                 required: true,
-            },
-        },
-        methods: {
-            msgColor(level) {
-                switch (level) {
-                    case 'error':
-                        return 'text-danger';
-                    case 'warning':
-                        return 'text-warg';
-                    default:
-                        return 'text-info';
-                }
             },
         },
     };

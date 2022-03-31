@@ -2,7 +2,7 @@
 
 namespace App\Services\Logging\Parsers;
 
-use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Jackiedo\LogReader\Contracts\LogParser;
 
 class NginxErrorLogParser implements LogParser
@@ -24,7 +24,9 @@ class NginxErrorLogParser implements LogParser
 
             $error = [];
 
-            $error['date'] = strtotime(substr($line, 0, 19));
+            $error['date'] = Carbon::parse(substr($line, 0, 19))->format(
+                'Y-m-d H:i:s'
+            );
 
             $line = substr($line, 20);
             $error_str = explode(': ', strstr($line, ', client:', true), 2);
@@ -56,12 +58,11 @@ class NginxErrorLogParser implements LogParser
         $headerSet = $dateSet = $envSet = $levelSet = $bodySet = [];
 
         foreach ($this->parseErrors($content) as $index => $error) {
-            $headerSet[$index] = $error['client'] . $error['request'];
+            $headerSet[$index] = $error['client'] . ' ' . $error['request'];
             $dateSet[$index] = $error['date'];
             $envSet[$index] = config('app.env');
             $levelSet[$index] = $error['error_type'];
-            $bodySet[$index]['context']['message'] = $error['message'];
-            $bodySet[$index]['stack_traces'] = [];
+            $bodySet[$index] = $error['message'];
         }
 
         return compact('headerSet', 'dateSet', 'envSet', 'levelSet', 'bodySet');
@@ -69,7 +70,10 @@ class NginxErrorLogParser implements LogParser
 
     public function parseLogBody($content): array
     {
-        return [];
+        return [
+            'context' => '',
+            'stack_traces' => [],
+        ];
     }
 
     public function parseLogContext($content): array

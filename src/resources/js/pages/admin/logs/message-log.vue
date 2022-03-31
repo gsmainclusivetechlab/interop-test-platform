@@ -1,15 +1,5 @@
 <template>
     <layout>
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
-                    <h2 class="page-title">
-                        <b>Message Log</b>
-                    </h2>
-                </div>
-            </div>
-        </div>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">
