@@ -9,7 +9,7 @@ use App\Http\Resources\{
     SessionResource,
     TestCaseResource,
     TestRunResource,
-    TestStepResource,
+    TestStepResource
 };
 use App\Jobs\ExecuteSessionTestCasesJob;
 use App\Jobs\ExecuteTestRunJob;
@@ -148,6 +148,25 @@ class TestCaseController extends Controller
 
     /**
      * @param Session $session
+     * @param TestCase $testCase
+     * @param TestRun $testRun
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function stop(Session $session, TestCase $testCase, TestRun $testRun)
+    {
+        $testRun->complete();
+        return redirect()
+            ->route('sessions.test-cases.test-runs.show', [
+                $session->id,
+                $testCase->id,
+                $testRun->id,
+            ])
+            ->with('success', __('Run stopped successfully'));
+    }
+
+    /**
+     * @param Session $session
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -155,8 +174,12 @@ class TestCaseController extends Controller
     {
         $this->authorize('view', $session);
 
-        $testCases = $session->testCases()
-            ->whereNotIn('id', $session->getFirstTestStepsWithSourceSut()->pluck('testCase.id'))
+        $testCases = $session
+            ->testCases()
+            ->whereNotIn(
+                'id',
+                $session->getFirstTestStepsWithSourceSut()->pluck('testCase.id')
+            )
             ->get();
 
         $testCasesToExecute = [];
@@ -166,7 +189,10 @@ class TestCaseController extends Controller
             }
         }
 
-        ExecuteSessionTestCasesJob::dispatch($session, $testCasesToExecute)->afterResponse();
+        ExecuteSessionTestCasesJob::dispatch(
+            $session,
+            $testCasesToExecute
+        )->afterResponse();
 
         return redirect()
             ->route('sessions.show', [$session->id])

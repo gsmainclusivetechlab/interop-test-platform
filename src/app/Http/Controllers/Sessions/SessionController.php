@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sessions;
 
 use App\Enums\AuditActionEnum;
 use App\Enums\AuditTypeEnum;
+use App\Http\Exports\SessionExportFactory;
 use PhpOffice\PhpWord\Settings as PhpWordSettings;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Sessions\Traits\WithSutUrls;
@@ -295,10 +296,9 @@ class SessionController extends Controller
 
             $name = "Session-{$session->id}-{$session->name}-Report-{$data['type_of_report']}";
             $path = storage_path("framework/docs/{$name}.pdf");
-            $wordFile = app(ComplianceSessionExport::class)->exportPdf(
-                $session,
-                $data
-            );
+            $wordFile = SessionExportFactory::resolveSessionExport(
+                $session
+            )->exportPdf($session, $data);
             $objWriter = IOFactory::createWriter($wordFile, 'PDF');
             $objWriter->save($path);
 
@@ -316,6 +316,7 @@ class SessionController extends Controller
 
             return response()->download($path);
         } catch (Throwable $e) {
+            dd($e);
             return redirect()
                 ->back()
                 ->with('error', $e->getMessage());

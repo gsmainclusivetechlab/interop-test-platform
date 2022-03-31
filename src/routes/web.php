@@ -108,9 +108,10 @@ Route::name('sessions.')
         Route::get('{session}/report', 'SessionController@report')->name(
             'report'
         );
-        Route::post('{session}/report/download', 'SessionController@downloadPdf')->name(
-            'report.download'
-        );
+        Route::post(
+            '{session}/report/download',
+            'SessionController@downloadPdf'
+        )->name('report.download');
         Route::post('{session}/complete', 'SessionController@complete')->name(
             'complete'
         );
@@ -380,9 +381,7 @@ Route::name('admin.')
         Route::name('faqs.')
             ->prefix('faqs')
             ->group(function () {
-                Route::get('index', 'FaqController@index')->name(
-                    'index'
-                );
+                Route::get('index', 'FaqController@index')->name('index');
                 Route::get('import', 'FaqController@showImportForm')->name(
                     'import'
                 );
@@ -392,9 +391,10 @@ Route::name('admin.')
                 Route::get('{faq}/export', 'FaqController@export')->name(
                     'export'
                 );
-                Route::put('{faq}/toggle-active', 'FaqController@toggleActive')->name(
-                    'toggle-active'
-                );
+                Route::put(
+                    '{faq}/toggle-active',
+                    'FaqController@toggleActive'
+                )->name('toggle-active');
             });
         Route::resource('components', 'ComponentController')->except(['show']);
         Route::get(
@@ -425,9 +425,10 @@ Route::name('admin.')
                         'batch-import',
                         'TestCaseController@showBatchImportForm'
                     )->name('batch-import');
-                    Route::post('batch-import', 'TestCaseController@batchImport')->name(
-                        'batch-import.confirm'
-                    );
+                    Route::post(
+                        'batch-import',
+                        'TestCaseController@batchImport'
+                    )->name('batch-import.confirm');
                     Route::get(
                         'group-candidates',
                         'TestCaseController@groupCandidates'
