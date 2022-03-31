@@ -126,26 +126,6 @@ class TestCaseController extends Controller
             ->with('success', __('Run started successfully'));
     }
 
-
-    /**
-     * @param Session $session
-     * @param TestCase $testCase
-     * @param TestRun $testRun
-     * @return RedirectResponse
-     * @throws AuthorizationException
-     */
-    public function stop(Session $session, TestCase $testCase, TestRun $testRun)
-    {
-        $testRun->complete();
-        return redirect()
-            ->route('sessions.test-cases.test-runs.show', [
-                $session->id,
-                $testCase->id,
-                $testRun->id,
-            ])
-            ->with('success', __('Run stopped successfully'));
-    }
-
     /**
      * @param Session $session
      * @param TestCase $testCase
