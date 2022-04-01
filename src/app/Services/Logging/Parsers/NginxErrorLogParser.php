@@ -58,7 +58,9 @@ class NginxErrorLogParser implements LogParser
         $headerSet = $dateSet = $envSet = $levelSet = $bodySet = [];
 
         foreach ($this->parseErrors($content) as $index => $error) {
-            $headerSet[$index] = $error['client'] . ' ' . $error['request'];
+            $headerSet[
+                $index
+            ] = "{$error['client']} {$error['request']}|{$error['date']}";
             $dateSet[$index] = $error['date'];
             $envSet[$index] = config('app.env');
             $levelSet[$index] = $error['error_type'];
