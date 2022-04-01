@@ -1,13 +1,13 @@
-name: P2P Accepted - Receive / Non-Disclosing
-slug: P2P0100
-use_case: P2P
-test_case: P2P0100
+name: Customer Initiated Cash-Out - Accepted - Receive
+slug: COCI0001
+use_case: Cash-Out
+test_case: COCI0001
 behavior: positive
 description: |
-  This testcase simulates a scenario where the Payer would like to send money to a Payee but each of them uses different providers and the Payer does not know Payee location. This flow shows the necessary steps for this transaction simulating an approved P2P transaction considering AmountType: Receive and Non-Disclosing Fees.
+  This test case simulates a scenario where the customer (payer) initiates a cash-out transaction from the customer's account when both customer and agent are in diferent DFSPs. This flow consider an approved Customer-Initiated-Cash-Out operation using AmountType: Receive
 precondition: |
   - Mobile Money Operator is capable to handle async calls.
-  - Payee and Payer MMOs exist in Mojaloop as Participants.
+  - Payee and Payer DFSPs exist in Mojaloop as Participants.
   - Payee and Payer exist in Mojaloop as Parties.
   - Configuration for MMO1 as SUT:
     - fspiop-source: 'mmo1fsp'.
@@ -15,12 +15,13 @@ precondition: |
   - Configuration for MMO2 as SUT:
     - fspiop-source: 'mmo2fsp'.
     - fspiop-destination: 'mmo1fsp'.
-  - Payeer request a transfer of 100.
-  - PayeeFsp gives 1 as Comission.
-  - PayerFsp receives 1 as Comission.
-  - PayerFsp Fee should be the value 1.
+  - Customer requests a withdraw of 110.
+  - PayerFsp receives 1 as Fee.
+  - PayeeFsp receives 2 as Fee.
+  - Agente receives 1 as comission.
   - Required Parameters for Execution:
-    - Transfer Amount: 100.
+    - Transfer Amount: 110.
+    - PartyIdType: MSISDN
 components:
   - name: Mobile Money Operator 1
     slug: mmo-1
@@ -39,16 +40,16 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '100'
+        amount: '110'
 
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
           body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Type is a P2P Transfer
+      - name: Transaction Type is a Withdraw Money
         rules:
-          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.scenario: 'required|in:WITHDRAWAL'
           body.transactionType.initiator: 'required|in:PAYER'
           body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
@@ -62,7 +63,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:100'
+          body.amount.amount: 'required|in:110'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -93,15 +94,15 @@ test_steps:
           personalInfo:
             complexName:
               firstName: 'John'
-              middleName: 'Jane'
-              lastName: 'Doe'
+              middleName: 'Doe'
+              lastName: 'Smith'
             dateOfBirth: '2000-01-01'
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '100'
+          amount: '110'
         transactionType:
-          scenario: 'TRANSFER'
+          scenario: 'WITHDRAWAL'
           initiator: 'PAYER'
           initiatorType: 'CONSUMER'
 
@@ -117,16 +118,16 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '100'
+        amount: '110'
 
     test_request_scripts:
       - name: Mandatory IDs is present
         rules:
           body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
           body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
-      - name: Transaction Type is a P2P Transfer
+      - name: Transaction Type is a Withdraw Money
         rules:
-          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.scenario: 'required|in:WITHDRAWAL'
           body.transactionType.initiator: 'required|in:PAYER'
           body.transactionType.initiatorType: 'required|in:CONSUMER'
       - name: Payer wants to send money to Payee
@@ -140,7 +141,7 @@ test_steps:
           body.payee.partyIdInfo.partyIdentifier: 'required|in:+33555789123'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:100'
+          body.amount.amount: 'required|in:110'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -171,15 +172,15 @@ test_steps:
           personalInfo:
             complexName:
               firstName: 'John'
-              middleName: 'Jane'
-              lastName: 'Doe'
+              middleName: 'Doe'
+              lastName: 'Smith'
             dateOfBirth: '2000-01-01'
         amountType: 'RECEIVE'
         amount:
           currency: 'USD'
-          amount: '100'
+          amount: '110'
         transactionType:
-          scenario: 'TRANSFER'
+          scenario: 'WITHDRAWAL'
           initiator: 'PAYER'
           initiatorType: 'CONSUMER'
 
@@ -195,16 +196,16 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '99'
+        amount: '112'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:99'
+          body.transferAmount.amount: 'required|in:112'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:100'
+          body.payeeReceiveAmount.amount: 'required|in:110'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspCommission.amount: 'required|in:1'
+          body.payeeFspCommission.amount: 'required|in:2'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -223,13 +224,13 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '99'
+          amount: '112'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '100'
+          amount: '110'
         payeeFspCommission:
           currency: 'USD'
-          amount: '1'
+          amount: '2'
         expiration: '2021-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -246,16 +247,16 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       transferAmount:
-        amount: '99'
+        amount: '112'
 
     test_request_scripts:
       - name: Amounts and currencies are specified correctly
         rules:
-          body.transferAmount.amount: 'required|in:99'
+          body.transferAmount.amount: 'required|in:112'
           body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeReceiveAmount.amount: 'required|in:100'
+          body.payeeReceiveAmount.amount: 'required|in:110'
           body.payeeReceiveAmount.currency: 'required|regex:/^[A-Z]{3}/'
-          body.payeeFspCommission.amount: 'required|in:1'
+          body.payeeFspCommission.amount: 'required|in:2'
           body.payeeFspCommission.currency: 'required|regex:/^[A-Z]{3}/'
 
     test_response_scripts:
@@ -274,13 +275,13 @@ test_steps:
       body:
         transferAmount:
           currency: 'USD'
-          amount: '99'
+          amount: '112'
         payeeReceiveAmount:
           currency: 'USD'
-          amount: '100'
+          amount: '110'
         payeeFspCommission:
           currency: 'USD'
-          amount: '1'
+          amount: '2'
         expiration: '2021-01-01T00:00:00.000Z'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
@@ -297,7 +298,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '99'
+        amount: '112'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -311,7 +312,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:99'
+          body.amount.amount: 'required|in:112'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -345,7 +346,7 @@ test_steps:
         payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
-          amount: '99'
+          amount: '112'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2021-01-01T00:00:00.000Z'
@@ -362,7 +363,7 @@ test_steps:
     api_spec: Mojaloop v1.0
     trigger:
       amount:
-        amount: '99'
+        amount: '112'
 
     test_request_scripts:
       - name: Transfer ID is present
@@ -376,7 +377,7 @@ test_steps:
           body.payerFsp: 'required|regex:/[0-9a-z]{1,32}$/'
       - name: Amount and currency are specified correctly
         rules:
-          body.amount.amount: 'required|in:99'
+          body.amount.amount: 'required|in:112'
           body.amount.currency: 'required|regex:/^[A-Z]{3}/'
       - name: Expiration is specified correctly
         rules:
@@ -410,7 +411,7 @@ test_steps:
         payerFsp: 'mmo1fsp'
         amount:
           currency: 'USD'
-          amount: '99'
+          amount: '112'
         ilpPacket: 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
         condition: 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
         expiration: '2021-01-01T00:00:00.000Z'

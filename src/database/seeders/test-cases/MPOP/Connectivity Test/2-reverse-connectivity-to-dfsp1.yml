@@ -1,0 +1,28 @@
+name: Mowali to DFSP1
+slug: mowali-reverse-connectivity-dfsp1
+use_case: Connectivity Test
+behavior: positive
+description: |
+  This test case simulates a simple encrypted connection between DFSP1 and the hub.
+precondition: |
+  - mTLS certificates are installed for both DFSP1 and the Hub
+components:
+  - name: DFSP 1
+    slug: dfsp1
+  - name: Mowali Hub
+    slug: mowali
+test_steps:
+  ## 1 ------------------------------GET /parties: Mojaloop -> MMO1 ------------------------------##
+  - path: /parties/msisdn/123
+    pattern: '.*'
+    method: GET
+    source: mowali
+    target: dfsp1
+    mtls: true
+    test_request_scripts: []
+    test_response_scripts: []
+    request:
+      method: GET
+      uri: /
+    response:
+      status: 202
