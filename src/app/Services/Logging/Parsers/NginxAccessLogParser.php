@@ -19,10 +19,9 @@ class NginxAccessLogParser implements LogParser
         $headerSet = $dateSet = $envSet = $levelSet = $bodySet = [];
 
         for ($i = 0; $i < count($matches[0]); $i++) {
-            $headerSet[$i] = $matches[1][$i];
-            $dateSet[$i] = Carbon::parse($matches[2][$i])->format(
-                'Y-m-d H:i:s'
-            );
+            $date = Carbon::parse($matches[2][$i]);
+            $headerSet[$i] = $matches[1][$i] . $date;
+            $dateSet[$i] = $date->format('Y-m-d H:i:s');
             $levelSet[$i] = 'info';
             $envSet[$i] = config('app.env');
             $bodySet[
