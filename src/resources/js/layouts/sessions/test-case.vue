@@ -425,6 +425,10 @@ export default {
     },
 
     mounted() {
+        if (!this.sutUrls) {
+            return;
+        }
+
         if (this.sutUrls.isGroup) {
             this.testCaseUrls = this.sutUrls.items.map((group) => ({
                 items: group.items
