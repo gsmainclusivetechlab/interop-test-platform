@@ -1,7 +1,7 @@
 version: '3.7'
 
 x-common-php: &common-php
-  image: itpaap_app:latest
+  image: gsmainclusivetechlab/interop-test-platform:develop
   restart: always
   environment:
     PROJECT_DOMAIN: ${PROJECT_DOMAIN}
