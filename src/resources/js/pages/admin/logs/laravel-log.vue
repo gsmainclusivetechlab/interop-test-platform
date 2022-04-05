@@ -33,22 +33,51 @@
                                 </div>
                             </td>
                             <td>
-                                <vue-json-pretty
-                                    :deep="0"
-                                    :virtual="true"
-                                    :data="message.context"
-                                />
+                                <button
+                                    class="btn btn-secondary"
+                                    v-if="message.context"
+                                    v-b-modal="`modal-context-${message.id}`"
+                                >
+                                    View Context
+                                </button>
+                                <b-modal
+                                    :id="`modal-context-${message.id}`"
+                                    size="lg"
+                                    centered
+                                    hide-footer
+                                    :title="`${message.level.toUpperCase()} ${
+                                        message.date
+                                    } Context`"
+                                >
+                                    <vue-json-pretty
+                                        :deep="2"
+                                        :data="message.context"
+                                    />
+                                </b-modal>
                             </td>
                             <td>
-                                <vue-json-pretty
-                                    :deep="0"
-                                    :deepCollapseChildren="true"
-                                    :virtual="true"
-                                    :virtualLines="
-                                        message.stack_traces.length * 3
-                                    "
-                                    :data="message.stack_traces"
-                                />
+                                <button
+                                    class="btn btn-secondary"
+                                    v-if="message.stack_traces"
+                                    v-b-modal="`modal-st-${message.id}`"
+                                >
+                                    View Stack Trace
+                                </button>
+                                <b-modal
+                                    :id="`modal-st-${message.id}`"
+                                    size="lg"
+                                    centered
+                                    hide-footer
+                                    :title="`${message.level.toUpperCase()} ${
+                                        message.date
+                                    } Stack Trace`"
+                                >
+                                    <vue-json-pretty
+                                        :deep="2"
+                                        :deepCollapseChildren="true"
+                                        :data="message.stack_traces"
+                                    />
+                                </b-modal>
                             </td>
                         </tr>
                         <tr v-if="!Object.keys(logItems.data).length">
