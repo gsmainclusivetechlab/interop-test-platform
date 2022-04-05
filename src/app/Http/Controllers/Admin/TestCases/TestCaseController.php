@@ -67,6 +67,7 @@ class TestCaseController extends Controller
                             });
                         }
                     )
+                    ->orderBy('name')
                     ->latest()
                     ->paginate()
             ),
@@ -271,9 +272,12 @@ class TestCaseController extends Controller
         request()->validate(
             [
                 'file' => ['required', 'array'],
-                'file.*' => ['required', 'mimetypes:text/yaml,text/plain']
+                'file.*' => ['required', 'mimetypes:text/yaml,text/plain'],
             ],
-            ['file.*.mimetypes' => 'The file must be a file of type: yaml, yml.']
+            [
+                'file.*.mimetypes' =>
+                    'The file must be a file of type: yaml, yml.',
+            ]
         );
 
         $testCaseImport = new TestCaseImport();
@@ -295,7 +299,7 @@ class TestCaseController extends Controller
                     array_merge(
                         [
                             'Test Case validation failed. Please resolve errors listed below:',
-                            $withFileName
+                            $withFileName,
                         ],
                         $e->validator->errors()->all()
                     )
