@@ -67,6 +67,7 @@ class TestCaseController extends Controller
                             });
                         }
                     )
+                    ->orderBy('name')
                     ->latest()
                     ->paginate()
             ),
@@ -83,6 +84,7 @@ class TestCaseController extends Controller
     public function create()
     {
         $this->authorize('create', TestCase::class);
+
         return Inertia::render('admin/test-cases/create', [
             'components' => ComponentResource::collection(
                 Component::get()
@@ -95,6 +97,7 @@ class TestCaseController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -138,6 +141,7 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
+     *
      * @return RedirectResponse
      * @throws Exception
      */
@@ -170,6 +174,7 @@ class TestCaseController extends Controller
     public function showImportForm()
     {
         $this->authorize('create', TestCase::class);
+
         return Inertia::render('admin/test-cases/import');
     }
 
@@ -180,17 +185,20 @@ class TestCaseController extends Controller
     public function showBatchImportForm()
     {
         $this->authorize('create', TestCase::class);
+
         return Inertia::render('admin/test-cases/batch-import');
     }
 
     /**
      * @param TestCase $testCase
+     *
      * @return Response
      * @throws AuthorizationException
      */
     public function showImportVersionForm(TestCase $testCase)
     {
         $this->authorize('update', $testCase);
+
         return Inertia::render('admin/test-cases/import-version', [
             'testCase' => (new TestCaseResource($testCase))->resolve(),
         ]);
@@ -239,6 +247,7 @@ class TestCaseController extends Controller
                 ->owner()
                 ->associate(auth()->user())
                 ->save();
+
             return redirect()
                 ->route('admin.test-cases.versions.index', $testCase->id)
                 ->with('success', __('Test case imported successfully'));
@@ -271,9 +280,12 @@ class TestCaseController extends Controller
         request()->validate(
             [
                 'file' => ['required', 'array'],
-                'file.*' => ['required', 'mimetypes:text/yaml,text/plain']
+                'file.*' => ['required', 'mimetypes:text/yaml,text/plain'],
             ],
-            ['file.*.mimetypes' => 'The file must be a file of type: yaml, yml.']
+            [
+                'file.*.mimetypes' =>
+                    'The file must be a file of type: yaml, yml.',
+            ]
         );
 
         $testCaseImport = new TestCaseImport();
@@ -295,7 +307,7 @@ class TestCaseController extends Controller
                     array_merge(
                         [
                             'Test Case validation failed. Please resolve errors listed below:',
-                            $withFileName
+                            $withFileName,
                         ],
                         $e->validator->errors()->all()
                     )
@@ -310,6 +322,7 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
+     *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function export(TestCase $testCase)
@@ -325,6 +338,7 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
+     *
      * @return Response
      */
     public function flow(TestCase $testCase)
@@ -342,6 +356,7 @@ class TestCaseController extends Controller
 
     /**
      * @param TestCase $testCase
+     *
      * @return RedirectResponse
      * @throws AuthorizationException
      */
@@ -386,6 +401,7 @@ class TestCaseController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return array
      */
     public function environmentCandidates(Request $request)
