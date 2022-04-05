@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -49,7 +50,9 @@ class GroupController extends Controller
      */
     public function create()
     {
-        return Inertia::render('admin/groups/create');
+        return Inertia::render('admin/groups/create', [
+            'availableModes' => config('service_session.available_modes')
+        ]);
     }
 
     /**
@@ -62,6 +65,8 @@ class GroupController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
+            'session_available' => ['required'],
+            //'session_available.*' => ['required', Rule::in(['test', 'test_questionnaire', 'compliance'])],
         ]);
         Group::create($request->input());
 
@@ -76,8 +81,10 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
+        //dd((new GroupResource($group))->resolve());
         return Inertia::render('admin/groups/edit', [
             'group' => (new GroupResource($group))->resolve(),
+            'availableModes' => config('service_session.available_modes')
         ]);
     }
 
@@ -92,6 +99,8 @@ class GroupController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'domain' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
+            'session_available' => ['required'],
+            //'session_available.*' => ['required', Rule::in(['test', 'test_questionnaire', 'compliance'])],
         ]);
         $group->update($request->input());
 

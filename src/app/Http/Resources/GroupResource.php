@@ -17,6 +17,7 @@ class GroupResource extends JsonResource
             'name' => $this->name,
             'domain' => $this->domain,
             'description' => $this->description,
+            'session_available' => $this->session_available,
             'defaultSession' => $this->defaultSession,
             'users' => GroupUserResource::collection(
                 $this->whenLoaded('users')

@@ -113,6 +113,69 @@
                                     </strong>
                                 </span>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    {{ $t('inputs.session-types') }}
+                                </label>
+
+                                <label class="form-check form-switch">
+                                    <input
+                                        type="checkbox"
+                                        value="test_questionnaire"
+                                        v-model="form.session_available"
+                                        class="form-check-input"
+                                    />
+                                    <span class="form-check-label">
+                                        {{
+                                            $t(
+                                                'sessions.register.types.questionnaire.title'
+                                            )
+                                        }}
+                                    </span>
+                                </label>
+
+
+                                <label class="form-check form-switch">
+                                    <input
+                                        type="checkbox"
+                                        value="test"
+                                        v-model="form.session_available"
+                                        class="form-check-input"
+                                    />
+                                    <span class="form-check-label">
+                                        {{
+                                            $t(
+                                                'sessions.register.types.test.title'
+                                            )
+                                        }}
+                                    </span>
+                                </label>
+
+
+                                <label class="form-check form-switch">
+                                    <input
+                                        type="checkbox"
+                                        value="compliance"
+                                        v-model="form.session_available"
+                                        class="form-check-input"
+                                    />
+                                    <span class="form-check-label">
+                                        {{
+                                            $t(
+                                                'sessions.register.types.compliance.title'
+                                            )
+                                        }}
+                                    </span>
+                                </label>
+                            </div>
+                            <div
+                                v-if="$page.props.errors.session_available"
+                                class="text-danger small mt-3"
+                            >
+                                <strong>
+                                    {{ $page.props.errors.session_available }}
+                                </strong>
+                            </div>
                         </div>
                         <div class="card-footer text-right">
                             <inertia-link
@@ -149,6 +212,12 @@ export default {
     components: {
         Layout,
     },
+    props: {
+        availableModes: {
+            type: Object,
+            required: true,
+        },
+    },
     mixins: [mixinVSelect],
     data() {
         return {
@@ -160,6 +229,7 @@ export default {
                 name: null,
                 domains: [],
                 description: null,
+                session_available: [],
             },
         };
     },
@@ -172,6 +242,7 @@ export default {
                         ? this.form.domains.join(', ')
                         : null,
                 description: this.form.description,
+                session_available: this.form.session_available,
             };
 
             this.sending = true;
