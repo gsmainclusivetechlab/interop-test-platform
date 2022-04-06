@@ -31,7 +31,7 @@ CURL_CLI=$(which curl)
 LATEST_VERSION="develop"
 DOCKER_REPO="gsmainclusivetechlab"
 DOCKER_IMAGE="${DOCKER_REPO}/interop-test-platform:${LATEST_VERSION}"
-DOCKER_COMPOSE_CONFIG_URL="https://raw.githubusercontent.com/gsmainclusivetechlab/interop-test-platform/feature/install-script/docker-compose.run.yml"
+DOCKER_COMPOSE_CONFIG_URL="https://raw.githubusercontent.com/gsmainclusivetechlab/interop-test-platform/develop/docker-compose.run.yml"
 
 # Functions
 # print
