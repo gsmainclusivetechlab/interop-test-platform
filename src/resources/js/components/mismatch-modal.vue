@@ -89,12 +89,17 @@
                     </div>
                     <div class="w-75 px-4 py-2 border">
                         <div class="mb-0 p-0">
-                            <json-tree
+                            <vue-json-pretty
+                                :deep="2"
+                                :deepCollapseChildren="true"
+                                :virtual="true"
+                                :virtualLines="
+                                    Object.keys(message.request.headers)
+                                        .length * 3
+                                "
                                 :data="message.request.headers"
-                                :deep="1"
-                                :show-line="false"
                                 class="p-2"
-                            ></json-tree>
+                            />
                         </div>
                     </div>
                 </div>
@@ -107,12 +112,16 @@
                     </div>
                     <div class="w-75 px-4 py-2 border">
                         <div class="mb-0 p-0">
-                            <json-tree
+                            <vue-json-pretty
+                                :deep="2"
+                                :deepCollapseChildren="true"
+                                :virtual="true"
+                                :virtualLines="
+                                    Object.keys(message.request.body).length * 3
+                                "
                                 :data="message.request.body"
-                                :deep="1"
-                                :show-line="false"
                                 class="p-2"
-                            ></json-tree>
+                            />
                         </div>
                     </div>
                 </div>
@@ -122,17 +131,22 @@
 </template>
 
 <script>
-export default {
-    components: {},
-    props: {
-        path: {
-            type: Object,
-            required: true,
+    import VueJsonPretty from 'vue-json-pretty';
+    import 'vue-json-pretty/lib/styles.css';
+
+    export default {
+        components: {
+            VueJsonPretty,
         },
-        message: {
-            type: Object,
-            required: true,
+        props: {
+            path: {
+                type: Object,
+                required: true,
+            },
+            message: {
+                type: Object,
+                required: true,
+            },
         },
-    },
-};
+    };
 </script>

@@ -189,6 +189,8 @@ return [
          * Package Service Providers...
          */
 
+        Jackiedo\LogReader\LogReaderServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -232,6 +234,7 @@ return [
         'Http' => Illuminate\Support\Facades\Http::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
+        'LogReader' => Jackiedo\LogReader\Facades\LogReader::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,

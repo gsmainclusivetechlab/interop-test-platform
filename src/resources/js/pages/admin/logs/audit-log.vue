@@ -1,15 +1,5 @@
 <template>
     <layout>
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <div class="page-pretitle">Administration</div>
-                    <h2 class="page-title">
-                        <b>Audit Log</b>
-                    </h2>
-                </div>
-            </div>
-        </div>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">
@@ -70,12 +60,11 @@
                                         </div>
                                         <div class="w-75 px-4 py-2 border">
                                             <div class="mb-0 p-0">
-                                                <json-tree
+                                                <vue-json-pretty
+                                                    :deep="2"
                                                     :data="message.meta"
-                                                    :deep="1"
-                                                    :show-line="false"
                                                     class="p-2"
-                                                ></json-tree>
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -103,17 +92,20 @@
 </template>
 
 <script>
-import Layout from '@/layouts/main';
+    import Layout from '@/layouts/logs';
+    import VueJsonPretty from 'vue-json-pretty';
+    import 'vue-json-pretty/lib/styles.css';
 
-export default {
-    components: {
-        Layout,
-    },
-    props: {
-        logItems: {
-            type: Object,
-            required: true,
+    export default {
+        components: {
+            Layout,
+            VueJsonPretty,
         },
-    },
-};
+        props: {
+            logItems: {
+                type: Object,
+                required: true,
+            },
+        },
+    };
 </script>

@@ -6,7 +6,6 @@ use App\Http\Resources\SessionResource;
 use App\Http\Resources\MessageLogResource;
 use App\Http\Resources\UseCaseResource;
 use App\Models\Session;
-use App\Models\MessageLog;
 use App\Models\UseCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Inertia\Inertia;
@@ -20,22 +19,6 @@ class MessageLogController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
-    }
-
-    /**
-     * @return Response
-     * @throws AuthorizationException
-     */
-    public function admin()
-    {
-        $this->authorize('viewAny', MessageLog::class);
-        return Inertia::render('admin/message-log/index', [
-            'logItems' => MessageLogResource::collection(
-                MessageLog::with(['testRun', 'testCase', 'testStep', 'session'])
-                    ->latest()
-                    ->paginate()
-            ),
-        ]);
     }
 
     /**

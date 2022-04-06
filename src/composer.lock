@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c101afddfa66683adb9122e5bd9757e6",
+    "content-hash": "5f035277cfb6bcfcdaa8e61d74ad081b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1462,6 +1462,72 @@
                 }
             ],
             "time": "2021-01-08T13:16:40+00:00"
+        },
+        {
+            "name": "jackiedo/log-reader",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JackieDo/Laravel-Log-Reader.git",
+                "reference": "5a56f70c86f55edbfd0d5532fc22d675f9d67f43"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JackieDo/Laravel-Log-Reader/zipball/5a56f70c86f55edbfd0d5532fc22d675f9d67f43",
+                "reference": "5a56f70c86f55edbfd0d5532fc22d675f9d67f43",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": "^9.0|^8.0|^7.0|^6.0|5.*",
+                "illuminate/config": "^9.0|^8.0|^7.0|^6.0|5.*",
+                "illuminate/console": "^9.0|^8.0|^7.0|^6.0|5.*",
+                "illuminate/http": "^9.0|^8.0|^7.0|^6.0|5.*",
+                "illuminate/pagination": "^9.0|^8.0|^7.0|^6.0|5.*",
+                "illuminate/support": "^9.0|^8.0|^7.0|^6.0|5.*",
+                "nesbot/carbon": "^2.0|~1.20"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jackiedo\\LogReader\\LogReaderServiceProvider"
+                    ],
+                    "aliases": {
+                        "LogReader": "Jackiedo\\LogReader\\Facades\\LogReader"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jackiedo\\LogReader\\": "src/Jackiedo/LogReader"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jackie Do",
+                    "email": "anhvudo@gmail.com"
+                }
+            ],
+            "description": "An easy log reader and management tool for Laravel",
+            "keywords": [
+                "Viewer",
+                "laravel",
+                "log",
+                "log-manager",
+                "log-reader",
+                "log-viewer",
+                "logs",
+                "reader"
+            ],
+            "support": {
+                "issues": "https://github.com/JackieDo/Laravel-Log-Reader/issues",
+                "source": "https://github.com/JackieDo/Laravel-Log-Reader/tree/2.2.1"
+            },
+            "time": "2022-02-25T08:31:43+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -11730,12 +11796,13 @@
         "php": "^7.4.0",
         "ext-json": "*",
         "ext-openssl": "*",
-        "ext-zip": "*",
-        "ext-v8js": "*"
+        "ext-v8js": "*",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "ext-v8js": "9.2.159"
+        "ext-v8js": "9.2.159",
+        "ext-gd": "7.4"
     },
     "plugin-api-version": "2.2.0"
 }
