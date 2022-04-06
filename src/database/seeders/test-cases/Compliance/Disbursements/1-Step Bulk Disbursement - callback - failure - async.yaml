@@ -1,0 +1,116 @@
+name: 1-Step Bulk Disbursement - callback - failure - async
+slug: 1-step-bulk-disbursement-callback-failure-async
+use_case: Disbursement
+behavior: negative
+description: |
+  The Service Provider wants to test if he is capable of making a 1 step bulk disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the flow for a single organisation creating an approved batch transaction request, which is unsuccessful.  The error is due to a business rule so is eturned in a callback.The Service Provider wants to test if he is capable of making a 1 step bulk disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the flow for a single organisation creating an approved batch transaction request, which is unsuccessful.  The error is due to a business rule so is eturned in a callback.
+
+precondition: |
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Required Parameters for Execution:
+    - IDENTIFIER_TYPE, default value is `msisdn`
+    - IDENTIFIER, default value is `+33555000700`
+
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+
+test_steps:
+  ##------------------------------POST/Batchtransactions: SP -> MMAP------------------------------##
+  - path: /batchtransactions
+    pattern: '^batchtransactions$'
+    method: POST
+    source: sp
+    target: mmap
+    trigger:
+
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.x-callback-url.*: 'required|url'
+
+    test_response_scripts:
+      - name: Batch transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+
+    request:
+      method: POST
+      uri: /batchtransactions
+      headers:
+        accept: 'application/json'
+        content-type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        transactions:
+          currency: '{{ env.CURRENCY|default("USD")}}'
+          type: 'disbursement'
+          debitParty:
+            - key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+              value: '{{ env.DEBIT_PARTY_VALUE|default("+33555000701")}}'
+          creditParty:
+            - key: '{{ env.CREDIT_PARTY_KEY|default("msisdn")}}'
+              value: '{{ env.CREDIT_PARTY_VALUE|default("+33555000700")}}'
+
+    response:
+      status: 202
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 2 ------------------------------PUT/Callback: MMAP -> SP ------------------------------##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    api_spec: MM v1.1.3
+
+    callback:
+      origin_method: POST
+      origin_path: /batchtransactions
+      name: batchtransactionsFailureEvent
+
+    test_request_scripts:
+      - name: Error category is valid
+        rules:
+          body.errorCategory: 'required|in:Validation'
+      - name: Error code is valid
+        rules:
+          body.errorCode: 'required|in:GenericError'
+
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:204'
+
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        errorCategory: 'Validation'
+        errorCode: 'GenericError'
+        errorDescription:
+          'The request could not be completed due to mandatory data missing.'
+        errorDateTime: '2021-01-01T00:00:00.000Z'
+
+    response:
+      status: 204

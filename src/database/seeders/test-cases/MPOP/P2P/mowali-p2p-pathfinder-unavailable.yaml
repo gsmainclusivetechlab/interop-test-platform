@@ -1,0 +1,76 @@
+name: 'PathFinder Unavailable'
+slug: mowali-p2p-pathfinder-unavailable
+use_case: 'P2P'
+behavior: negative
+description: |
+  This testcase simulates a scenario where the DFSP would like to identify a remote party
+  but the Payee MSISDN cannot be resolved because the PathFinder service is unavailable.
+precondition: |
+  - DFSP 1 is registered in the Hub.
+  - The following values are set in the session environment:
+    - `INITIATOR_OAUTH_TOKEN`
+    - `INITIATOR_FSPIOP`
+  - Required Parameters for Execution:
+    - Remote Party MSISDN: `442079460003`
+components:
+  - name: 'Mobile Money Operator 1'
+    slug: mmo-1
+  - name: Mojaloop
+    slug: mojaloop
+test_steps:
+  - path: '/parties/{Type}/{ID}'
+    pattern: parties/MSISDN/442079460003$
+    method: GET
+    source: mmo-1
+    target: mojaloop
+    api_spec: 'Mojaloop v1.0'
+    test_response_scripts:
+      - name: 'Lookup was successfully accepted'
+        rules:
+          status: 'required|in:202'
+    request:
+      method: GET
+      uri: parties/MSISDN/442079460003
+      headers:
+        Date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        Accept: application/vnd.interoperability.parties+json;version=1.0
+        Content-Type: application/vnd.interoperability.parties+json;version=1.0
+        Authorization: 'Bearer {{ env.INITIATOR_OAUTH_TOKEN }}'
+        FSPIOP-Source: '{{ env.INITIATOR_FSPIOP | default("mmo1fsp") }}'
+      body: empty_body
+    response:
+      status: 202
+      headers:
+        date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        content-type: application/json
+      body: empty_body
+  - path: '/parties/{Type}/{ID}/error'
+    pattern: parties/MSISDN/442079460003/error$
+    method: PUT
+    source: mojaloop
+    target: mmo-1
+    api_spec: 'Mojaloop v1.0'
+    test_request_scripts:
+      - name: 'Error must be provided in the callback payload'
+        rules:
+          body.errorInformation.errorCode: 'required|regex:/^[1-9]\d{3}$/'
+    test_response_scripts:
+      - name: 'Error callback was successfully received'
+        rules:
+          status: 'required|in:200'
+    request:
+      method: PUT
+      uri: parties/MSISDN/442079460003/error
+      headers:
+        date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        accept: application/vnd.interoperability.parties+json;version=1.0
+        content-type: application/vnd.interoperability.parties+json;version=1.0
+        FSPIOP-Source: Switch
+        FSPIOP-Destination: '{{ env.INITIATOR_FSPIOP | default("mmo1fsp") }}'
+      body:
+        errorInformation:
+          errorCode: '3200'
+          errorDescription: 'ID not found. (PathFinder service unavailable)'
+    response:
+      status: 200
+      body: empty_body

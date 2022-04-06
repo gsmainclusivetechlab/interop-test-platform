@@ -9,7 +9,7 @@ use App\Http\Resources\{
     SessionResource,
     TestCaseResource,
     TestRunResource,
-    TestStepResource,
+    TestStepResource
 };
 use App\Jobs\ExecuteSessionTestCasesJob;
 use App\Jobs\ExecuteTestRunJob;
@@ -126,7 +126,6 @@ class TestCaseController extends Controller
             ->with('success', __('Run started successfully'));
     }
 
-
     /**
      * @param Session $session
      * @param TestCase $testCase
@@ -155,8 +154,12 @@ class TestCaseController extends Controller
     {
         $this->authorize('view', $session);
 
-        $testCases = $session->testCases()
-            ->whereNotIn('id', $session->getFirstTestStepsWithSourceSut()->pluck('testCase.id'))
+        $testCases = $session
+            ->testCases()
+            ->whereNotIn(
+                'id',
+                $session->getFirstTestStepsWithSourceSut()->pluck('testCase.id')
+            )
             ->get();
 
         $testCasesToExecute = [];
@@ -166,7 +169,10 @@ class TestCaseController extends Controller
             }
         }
 
-        ExecuteSessionTestCasesJob::dispatch($session, $testCasesToExecute)->afterResponse();
+        ExecuteSessionTestCasesJob::dispatch(
+            $session,
+            $testCasesToExecute
+        )->afterResponse();
 
         return redirect()
             ->route('sessions.show', [$session->id])

@@ -1,0 +1,55 @@
+name: Account Lookup Service Unavailable (DFSP2 Sender)
+slug: mowali-als-unavailable-dfsp2
+use_case: P2P Multicurrency
+behavior: negative
+description: |
+  This testcase simulates a scenario where a party at DFSP2 would like to
+  send money to a remote party, but the Payee MSISDN cannot be retrieved
+  because the account lookup service is unavailable.
+precondition: |
+  - The following values are set in the session environment:
+    - `DFSP1_PARTY_MSISDN`
+    - `DFSP2_FSPIOP` (if DFSP2 is simulated)
+    - `DFSP2_OAUTH_TOKEN` (if DFSP2 is simulated)
+components:
+  - name: DFSP 2
+    slug: dfsp2
+  - name: Mowali Hub
+    slug: mowali
+test_steps:
+  - path: '/parties/{Type}/{ID}'
+    pattern: 'parties/MSISDN/[^\/]+$'
+    method: GET
+    source: dfsp2
+    target: mowali
+    api_spec: Mojaloop v1.0
+    test_response_scripts:
+      - name: Lookup was correctly rejected
+        rules:
+          status: 'required|in:503'
+      - name: Error must be provided in the response
+        rules:
+          body.errorInformation.errorCode: 'required'
+          body.errorInformation.errorDescription: 'required'
+    mtls: true
+    request:
+      method: GET
+      uri: 'parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}'
+      headers:
+        fspiop-uri: '/parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}'
+        fspiop-http-method: GET
+        date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        accept: application/vnd.interoperability.parties+json;version=1.0
+        content-type: application/vnd.interoperability.parties+json;version=1.0
+        authorization: 'Bearer {{ env.DFSP2_OAUTH_TOKEN }}'
+        fspiop-source: '{{ env.DFSP2_FSPIOP | default("DFSP2") }}'
+    response:
+      delay: 5
+      status: 503
+      headers:
+        date: '{{ "now" | date("D, d M Y H:i:s T", "GMT")}}'
+        content-type: application/json
+      body:
+        errorInformation:
+          errorCode: '5000'
+          errorDescription: Service unavailable

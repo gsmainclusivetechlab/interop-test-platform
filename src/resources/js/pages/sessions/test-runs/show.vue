@@ -235,14 +235,12 @@
                                             <span
                                                 class="flex-shrink-0 badge mr-0"
                                                 :class="{
-                                                    'bg-success':
-                                                        testResultSteps.get(
-                                                            tStep.id
-                                                        ).successful,
-                                                    'bg-danger':
-                                                        !testResultSteps.get(
-                                                            tStep.id
-                                                        ).successful,
+                                                    'bg-success': testResultSteps.get(
+                                                        tStep.id
+                                                    ).successful,
+                                                    'bg-danger': !testResultSteps.get(
+                                                        tStep.id
+                                                    ).successful,
                                                 }"
                                             >
                                             </span>
@@ -293,8 +291,7 @@
                                                 :class="{
                                                     'bg-success':
                                                         result.successful,
-                                                    'bg-danger':
-                                                        !result.successful,
+                                                    'bg-danger': !result.successful,
                                                 }"
                                             >
                                             </span>
@@ -404,8 +401,7 @@
                                                         :class="{
                                                             'bg-success':
                                                                 testExecution.successful,
-                                                            'bg-danger':
-                                                                !testExecution.successful,
+                                                            'bg-danger': !testExecution.successful,
                                                         }"
                                                     >
                                                         {{

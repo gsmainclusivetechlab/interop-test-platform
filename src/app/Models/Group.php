@@ -28,7 +28,15 @@ class Group extends Model
         'name',
         'domain',
         'description',
+        'session_available',
         'default_session_id',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'session_available' => 'array',
     ];
 
     /**

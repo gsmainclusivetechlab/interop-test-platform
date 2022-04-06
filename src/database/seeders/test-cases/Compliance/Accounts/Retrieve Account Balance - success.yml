@@ -1,0 +1,59 @@
+name: Retrieve Account Balance - success
+slug: retrieve-account-balance-success
+use_case: Account Information
+behavior: positive
+description: |
+  Service Provider requests their own account balance through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with an account balance.
+
+precondition: |
+  - Mobile Money API Provider has GSMA Mobile Money API Implemented.
+  - Define the envrionment variables to customise this test case:
+    - X_CLIENT_ID, default value is `MERCHANT67890`
+  - Required Parameters for Execution:
+    - IDENTIFIER_TYPE, default value is `msisdn`
+    - IDENTIFIER, default value is `+33555000200`
+
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+
+test_steps:
+  ##------------------------------GET/Accounts: SP -> MMAP------------------------------##
+  - path: /accounts/{identifierType}/{identifier}/balance
+    method: GET
+    pattern: '^accounts/msisdn/[+]?[0-9]{6,15}/balance$'
+    source: sp
+    target: mmap
+    api_spec: MM v1.1.3
+
+    test_request_scripts:
+      - name: Header has the X-Client-Id
+        rules:
+          headers.x-client-id: 'required'
+
+    test_response_scripts:
+      - name: Response request was successfully received
+        rules:
+          status: 'required|in:200'
+
+    request:
+      method: 'GET'
+      uri:
+        /accounts/{{ env.IDENTIFIER_TYPE|default("msisdn") }}/{{
+        env.IDENTIFIER|default("+33555000200") }}/balance
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+        x-client-id: '{{ env.X_CLIENT_ID|default("MERCHANT67890")}}'
+      body:
+        requestDate: '{{ new_date_iso8601() }}'
+
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        accountsBalance: '1000'

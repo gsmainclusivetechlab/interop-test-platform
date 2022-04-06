@@ -1,0 +1,196 @@
+name: 2-Step Bulk Disbursement - callback - success
+slug: 2-step-bulk-disbursement-callback-success
+use_case: Disbursement
+behavior: positive
+description: |
+  The Service Provider wants to test if he is capable of making a 2 step bulk disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the maker part of the organisation creating a batch transaction request, and the checker or approver part of the organisation approving the request.  In this case both steps are successful.
+
+precondition: |
+  - Service Provider has GSMA Mobile Money API Implemented.
+  - Service Provider is capable of handled async calls.
+  - Required Parameters for Execution:
+    - Amount should be the value `54`.
+    - `X_CLIENT_ID`, default value is `DISORG1STEP12345`
+    - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `msisdn`
+    - `DEBIT_PARTY_VALUE`, default value is `+33555123456`
+    - `CREDIT_PARTY_KEY`, default value is `msisdn`
+    - `CREDIT_PARTY_VALUE`, default value is `+33555789123`
+
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+
+test_steps:
+  ##------------------------------POST/Batchtransactions: SP -> MMAP------------------------------##
+  - path: /batchtransactions
+    pattern: '^batchtransactions$'
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: MM v1.1.3
+
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.x-callback-url.*: 'required|url'
+
+    test_response_scripts:
+      - name: Batch transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+
+    request:
+      method: POST
+      uri: /batchtransactions
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id:
+          '{{ env.X_CLIENT_ID_MERCHANT|default("DISORG1STEP12345") }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        transactions:
+          - amount: '54'
+            currency: '{{ env.CURRENCY|default("USD")}}'
+            type: 'disbursement'
+            debitParty:
+              - key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+                value: '{{ env.DEBIT_PARTY_VALUE|default("+33555123456")}}'
+            creditParty:
+              - key: '{{ env.CREDIT_PARTY_KEY|default("msisdn")}}'
+                value: '{{ env.CREDIT_PARTY_VALUE|default("+33555789123")}}'
+
+    response:
+      status: 202
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 2 ------------------------------PUT/Callback: MMAP -> SP ------------------------------##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    api_spec: MM v1.1.3
+
+    callback:
+      origin_method: POST
+      origin_path: /batchtransactions
+      name: batchTransactionsSuccessEvent
+
+    test_response_scripts:
+      - name: Batch transaction was successfully accepted
+        rules:
+          status: 'required|in:204'
+
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        batchId: 'BID12345'
+        batchStatus: 'completed'
+        approvalDate: '2021-01-01T00:00:00.000Z'
+        completionDate: '2021-01-01T00:00:00.000Z'
+        creationDate: '2021-01-01T00:00:00.000Z'
+
+    response:
+      status: 204
+
+  ## 3 ------------------------------PATCH/Batchtransactions: SP -> MMAP------------------------------##
+  - path: /batchtransactions/{batchId}
+    pattern: '^batchtransactions/^[0-9A-Za-Z]$'
+    method: PATCH
+    source: sp
+    target: mmap
+    api_spec: MM v1.1.3
+
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.x-callback-url.*: 'required|url'
+
+    test_response_scripts:
+      - name: Batch transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+
+    request:
+      method: PATCH
+      uri: /batchtransactions/{{ steps.2.request.body.batchId }}
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id:
+          '{{ env.X_CLIENT_ID_MERCHANT|default("DISORG1STEP12345") }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        - path: '/batchStatus'
+          op: 'replace'
+          value: 'approved'
+
+    response:
+      status: 202
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 4 ------------------------------PUT/Callback: MMAP -> SP ------------------------------##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    api_spec: MM v1.1.3
+
+    callback:
+      origin_method: PATCH
+      origin_path: /batchtransactions/{batchId}
+      name: batchTransactionsUpdateSuccessEvent
+
+    test_response_scripts:
+      - name: Batch transaction was successfully accepted
+        rules:
+          status: 'required|in:204'
+
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        result: 'success'
+
+    response:
+      status: 204

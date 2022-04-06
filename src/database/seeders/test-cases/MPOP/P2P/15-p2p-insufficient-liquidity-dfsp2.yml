@@ -1,0 +1,526 @@
+x-aliases:
+  meta:
+    common: &meta-common
+      mtls: true
+      api_spec: Mojaloop v1.0
+    mowali-dfsp1: &mowali-dfsp1-meta
+      <<: *meta-common
+      source: mowali
+      target: dfsp1
+    mowali-dfsp2: &mowali-dfsp2-meta
+      <<: *meta-common
+      source: mowali
+      target: dfsp2
+    dfsp1-mowali: &dfsp1-mowali-meta
+      <<: *meta-common
+      source: dfsp1
+      target: mowali
+    dfsp2-mowali: &dfsp2-mowali-meta
+      <<: *meta-common
+      source: dfsp2
+      target: mowali
+  common-scripts:
+    auth-header: &test-auth-header
+      name: Authorization header must be provided
+      rules:
+        headers.authorization: 'required'
+    status:
+      202: &test-202-status
+        name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:202'
+      200: &test-200-status
+        name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:200'
+
+  jws:
+    dfsp2: &dfsp2-jws
+      jws:
+        alg: RS256
+        key: '{{ file_env.DFSP2_JWS_PRIVATE_KEY }}'
+        public_key: '{{ file_env.DFSP2_JWS_PUBLIC_KEY }}'
+        header: 'fspiop-signature'
+        transform: mojaloop
+        protectedHeaders:
+          - FSPIOP-URI
+          - FSPIOP-HTTP-Method
+          - FSPIOP-Source
+          - FSPIOP-Destination
+          - Date
+    dfsp1: &dfsp1-jws
+      jws:
+        alg: RS256
+        key: '{{ file_env.DFSP1_JWS_PRIVATE_KEY }}'
+        public_key: '{{ file_env.DFSP1_JWS_PUBLIC_KEY }}'
+        header: 'fspiop-signature'
+        transform: mojaloop
+        protectedHeaders:
+          - FSPIOP-URI
+          - FSPIOP-HTTP-Method
+          - FSPIOP-Source
+          - FSPIOP-Destination
+          - Date
+
+  common-headers:
+    response: &response-headers
+      headers:
+        date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        content-type: 'application/json'
+    transfer: &header-post-transfers
+      accept: 'application/vnd.interoperability.transfers+json;version=1.0'
+      content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+    quotes: &header-post-quotes
+      accept: 'application/vnd.interoperability.quotes+json;version=1.0'
+      content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+    parties: &header-get-parties
+      accept: 'application/vnd.interoperability.parties+json;version=1.0'
+      content-type: 'application/vnd.interoperability.parties+json;version=1.0'
+    transfer-put: &header-put-transfers
+      content-type: 'application/vnd.interoperability.transfers+json;version=1.0'
+    quotes-put: &header-put-quotes
+      content-type: 'application/vnd.interoperability.quotes+json;version=1.0'
+    parties-put: &header-put-parties
+      content-type: 'application/vnd.interoperability.parties+json;version=1.0'
+    dfsp2: &header-dfsp2
+      date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+      authorization: Bearer {{env.DFSP2_OAUTH_TOKEN}}
+      fspiop-source: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+      fspiop-destination: '{{env.DFSP1_FSPIOP | default("DFSP1")}}'
+    dfsp1: &header-dfsp1
+      date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+      authorization: Bearer {{env.DFSP1_OAUTH_TOKEN}}
+      fspiop-source: '{{env.DFSP1_FSPIOP | default("DFSP1")}}'
+      fspiop-destination: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+
+  util:
+    fwd-message: &fwded-msg # TODO: can we get method and URI in here?
+      headers:
+        fspiop-uri:
+          '{{ steps[current_step-1].request.headers["fspiop-uri"].0 }}'
+        fspiop-http-method:
+          '{{ steps[current_step-1].request.headers["fspiop-http-method"].0 }}'
+        fspiop-source:
+          '{{ steps[current_step-1].request.headers["fspiop-source"].0 }}'
+        fspiop-destination:
+          '{{ steps[current_step-1].request.headers["fspiop-destination"].0 }}'
+        # TODO: json_encode is a workaround - the prev step's header will be parsed as an array when loaded from DB
+        fspiop-signature:
+          '{{
+          steps[current_step-1].request.headers["fspiop-signature"].0  |json_encode}}'
+        content-type:
+          '{{ steps[current_step-1].request.headers["content-type"].0 }}'
+        accept: '{{ steps[current_step-1].request.headers["accept"].0 }}'
+        date: '{{ steps[current_step-1].request.headers["date"].0 }}'
+      body: '{{steps[current_step-1].request.body | json_encode}}'
+
+name: Insufficient Liquidity (DFSP2 Sender)
+slug: mowali-p2p-insufficient-liquidity-dfsp2
+use_case: P2P
+behavior: negative
+description: |
+  Transfer request rejection due to Sender/payer DFSP low Net Debit Position (NDP) (Classic NDC blocker test)
+
+  This is to test that only DFSPs with positive Net Debit postion can fulfill transactions
+precondition: |
+  - DFSP2 and DFSP1 exist Mowali Hub as Participants.
+  - The following values are set in the session environment:
+    - `DFSP2_FSPIOP`
+    - `DFSP2_PARTY_MSISDN`
+    - `DFSP1_FSPIOP` 
+    - `DFSP1_PARTY_MSISDN` 
+    - `DFSP2_OAUTH_TOKEN` (if DFSP2 is simulated)
+    - `DFSP1_OAUTH_TOKEN` (if DFSP1 is simulated)
+  - The amount transferred should be `900,000,000`
+components:
+  - name: DFSP 2
+    slug: dfsp2
+  - name: Mowali Hub
+    slug: mowali
+  - name: DFSP 1
+    slug: dfsp1
+test_steps:
+  ## 1 ------------------------------GET /parties: MMO1 -> Mojaloop ------------------------------##
+  - path: /parties/{Type}/{ID}
+    pattern: "parties/MSISDN/[^\/]+$"
+    method: GET
+    <<: *dfsp2-mowali-meta
+    test_request_scripts:
+      - <<: *test-auth-header
+    test_response_scripts:
+      - <<: *test-202-status
+    request:
+      method: GET
+      uri: parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+      headers:
+        <<: *header-get-parties
+        date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        authorization: Bearer {{env.DFSP2_OAUTH_TOKEN}}
+        fspiop-source: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+        fspiop-uri: /parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+        fspiop-http-method: GET
+    response:
+      <<: *response-headers
+      status: 202
+
+  ## 2 ------------------------------GET /parties: Mojaloop -> MMO2 ------------------------------##
+  - path: /parties/{Type}/{ID}
+    pattern: "parties/MSISDN/[^\/]+$"
+    method: GET
+    <<: *mowali-dfsp1-meta
+    test_response_scripts:
+      - <<: *test-202-status
+    request:
+      method: GET
+      uri: parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+      <<: *fwded-msg
+    response:
+      <<: *response-headers
+      status: 202
+
+  ## 3 ------------------------------PUT/Parties: Mojaloop <- MMO2 ------------------------------##
+  - path: /parties/{Type}/{ID}
+    pattern: "^parties/MSISDN/[^\/]+(/error)?$"
+    method: PUT
+    <<: *dfsp1-mowali-meta
+    test_request_scripts:
+      - <<: *test-auth-header
+      - &put-parties-test-party
+        name: Correct party must be returned
+        rules:
+          body.party.partyIdInfo.partyIdentifier:
+            'required|in:{{ env.DFSP1_PARTY_MSISDN }}'
+    test_response_scripts:
+      - <<: *test-200-status
+    request:
+      method: PUT
+      uri: parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+      headers:
+        <<: *header-dfsp1
+        <<: *header-put-parties
+        fspiop-uri: /parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+        fspiop-http-method: PUT
+        content-type: 'application/vnd.interoperability.parties+json;version=1.0'
+      body:
+        party:
+          name: 'TestFirst TestLast'
+          partyIdInfo:
+            fspId: '{{env.DFSP1_FSPIOP | default("DFSP1")}}'
+            partyIdType: 'MSISDN'
+            partyIdentifier: '{{ env.DFSP1_PARTY_MSISDN }}'
+          personalInfo:
+            complexName:
+              lastName: 'TestLast'
+              firstName: 'TestFirst'
+              middleName: 'TestMiddle'
+            dateOfBirth: '2010-10-10'
+    response:
+      <<: *response-headers
+      status: 200
+
+  ## 4 ------------------------------PUT/Parties: MMO1 <- Mojaloop ------------------------------##
+  - path: /parties/{Type}/{ID}
+    pattern: "^parties/MSISDN/[^\/]+(/error)?$"
+    method: PUT
+    <<: *mowali-dfsp2-meta
+    test_request_scripts:
+      - <<: *put-parties-test-party
+    test_response_scripts:
+      - <<: *test-200-status
+    request:
+      method: PUT
+      uri: parties/MSISDN/{{ env.DFSP1_PARTY_MSISDN }}
+      <<: *fwded-msg
+    response:
+      <<: *response-headers
+      status: 200
+
+  ## 5 POST/Quotes: MMO1 -> Mojaloop ##
+  - path: /quotes
+    pattern: 'quotes$'
+    method: POST
+    <<: *dfsp2-mowali-meta
+    test_request_scripts:
+      - <<: *test-auth-header
+      - &post-quotes-test-ids
+        name: Mandatory IDs are present
+        rules:
+          body.quoteId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+          body.transactionId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - &post-quotes-test-transfer-type
+        name: Transaction Type is a P2P Transfer
+        rules:
+          body.transactionType.scenario: 'required|in:TRANSFER'
+          body.transactionType.initiator: 'required|in:PAYER'
+          body.transactionType.initiatorType: 'required|in:CONSUMER'
+      - &post-quotes-test-parties
+        name: Payer and Payee parties are present and valid in the network
+        rules:
+          body.payer.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payee.partyIdInfo.partyIdType: 'required|in:MSISDN'
+          body.payer.partyIdInfo.partyIdentifier: 'required|in:{{env.DFSP2_PARTY_MSISDN}}'
+          body.payee.partyIdInfo.partyIdentifier:
+            'required|in:{{ env.DFSP1_PARTY_MSISDN }}'
+      - &post-quotes-test-amount
+        name: Amount is specified correctly
+        rules:
+          body.amountType: 'required|in:SEND'
+          body.amount.amount: 'required|in:900000000'
+          body.amount.currency: 'required|regex:/^[A-Z]{3}/'
+    test_response_scripts:
+      - <<: *test-202-status
+    request:
+      method: POST
+      uri: quotes
+      <<: *dfsp2-jws
+      headers:
+        <<: *header-dfsp2
+        <<: *header-post-quotes
+        fspiop-uri: /quotes
+        fspiop-http-method: POST
+      body:
+        quoteId: '{{uuidv4()}}'
+        transactionId: '{{uuidv4()}}'
+        payee: '{{steps.4.request.body.party | json_encode}}'
+        payer:
+          partyIdInfo:
+            partyIdType: 'MSISDN'
+            partyIdentifier:
+              '{{env.DFSP2_PARTY_MSISDN | default("442079469999")}}'
+            fspId: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+          name: 'John Doe'
+          personalInfo:
+            complexName:
+              firstName: 'John'
+              middleName: 'Jane'
+              lastName: 'Doe'
+            dateOfBirth: '2000-01-01'
+        amountType: 'SEND'
+        amount:
+          currency: '{{ env.DFSP2_TRANSFER_CURRENCY | default("GHS") }}'
+          amount: '900000000'
+        transactionType:
+          scenario: 'TRANSFER'
+          initiator: 'PAYER'
+          initiatorType: 'CONSUMER'
+    response:
+      <<: *response-headers
+      status: 202
+
+  ## 6 POST/Quotes: Mojaloop -> MMO2 ##
+  - path: /quotes
+    pattern: 'quotes$'
+    method: POST
+    <<: *mowali-dfsp1-meta
+    test_request_scripts:
+      - name: Mandatory IDs is correctly forwarded
+        rules:
+          body.quoteId: 'required|in:{{steps.5.request.body.quoteId}}'
+          body.transactionId: 'required|in:{{steps.5.request.body.transactionId}}'
+      - <<: *post-quotes-test-transfer-type
+      - <<: *post-quotes-test-parties
+      - <<: *post-quotes-test-amount
+    test_response_scripts:
+      - <<: *test-202-status
+    request:
+      method: POST
+      uri: quotes
+      <<: *fwded-msg
+    response:
+      <<: *response-headers
+      status: 202
+
+  ## 7 PUT/Quotes/{ID}:  Mojaloop <- MMO2 ##
+  - path: /quotes/{ID}
+    pattern: 'quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(/error)?$'
+    method: PUT
+    <<: *dfsp1-mowali-meta
+    test_request_scripts:
+      - <<: *test-auth-header
+      - &put-quotes-id
+        name: Quote ID is correctly used
+        rules:
+          uri: 'required|regex:/quotes\/{{steps.6.request.body.quoteId}}/'
+      - &put-quotes-test-amount
+        name: Amounts and currencies are specified correctly
+        rules:
+          body.transferAmount.amount: 'required|in:900000000'
+          body.transferAmount.currency: 'required|regex:/^[A-Z]{3}/'
+      - &put-quotes-test-ilp
+        name: ILP is correctly generated
+        rules:
+          body.expiration:
+            - 'required'
+            - 'regex:/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/'
+          body.ilpPacket:
+            - 'required'
+            - 'regex:/^[A-Za-z0-9-_]+[=]{0,2}$/'
+            # See here for justification of the decimals field:
+            # https://docs.mojaloop.io/mojaloop-specification/documents/API%20Definition%20v1.0.html#6512-interledger-payment-request
+            # TODO: enable ilp validation once it is fixed - 'ilpPacketAmount:{{steps.6.request.body.amount.amount * (10 ** (env.DFSP2_TRANSFER_DECIMALS | default(2)) )}}'
+            # TODO: possibly restore this - my current understanding is that `body.expiration` is for the quote, but `ilpPacket.expiration` is for the eventual transfer
+            # - 'ilpPacketExpiration'
+            # TODO: enable ilp validation once it is fixed - 'ilpPacketCondition'
+          body.condition: 'required|regex:/^[A-Za-z0-9-_]{43}$/'
+    test_response_scripts:
+      - <<: *test-200-status
+    request:
+      <<: *dfsp1-jws
+      method: PUT
+      uri: quotes/{{steps.6.request.body.quoteId}}
+      headers:
+        fspiop-uri: /quotes/{{steps.6.request.body.quoteId}}
+        fspiop-http-method: PUT
+        <<: *header-put-quotes
+        <<: *header-dfsp1
+      # TODO: fix ILP implementation to allow long data
+      body: |
+        {% set expiry = date("+1 hour") %}
+        {% set fulfilment = ilpFulfilment() %}
+        {% set condition = ilpCondition(fulfilment) %}
+        {% set data = {} %}
+        {% set longdata = {
+            transactionId: steps.6.request.body.transactionId,
+            quoteId: steps.6.request.body.quoteId,
+            payee: steps.6.request.body.payee,
+            payer: steps.6.request.body.payer,
+            amount: steps.6.request.body.amount,
+            transactionType: steps.6.request.body.transactionType,
+            note: steps.6.request.body.note,
+            extensionList: steps.6.request.body.extensionList,
+          } | json_encode %}
+        {{
+          {
+            transferAmount: {
+              currency: steps.6.request.body.amount.currency,
+              amount: steps.6.request.body.amount.amount
+            },
+            expiration: expiry | date("Y-m-d\\TH:i:s.vP"),
+            condition: condition | base64url_encode,
+            ilpPacket:  ilpPacket(
+              steps.6.request.body.amount.amount * (10 ** (env.DFSP2_TRANSFER_DECIMALS | default(2)) ),
+              expiry | date("Y-m-d\\TH:i:s.vP"),
+              condition,
+              "g.gh.msisdn.#{steps.6.request.body.payee.partyIdInfo.partyIdentifier}",
+              data | json_encode
+            ) | base64url_encode
+          }
+          | merge(
+              env.PAYEE_FSP_FEE 
+              ? {
+                  payeeFspFee: {
+                    amount: env.PAYEE_FSP_FEE,
+                    currency: env.DFSP2_TRANSFER_CURRENCY
+                  }
+                }
+              : {}
+            )
+          | merge(
+              env.PAYEE_FSP_COMMISSION 
+              ? {
+                  payeeFspCommission: {
+                    amount: env.PAYEE_FSP_COMMISSION,
+                    currency: env.DFSP2_TRANSFER_CURRENCY
+                  }
+                }
+              : {}
+            )
+          | json_encode
+        }}
+    response:
+      <<: *response-headers
+      status: 200
+
+  ## 8 PUT/Quotes/{ID}: MMO1 <- Mojaloop ##
+  - path: /quotes/{ID}
+    pattern: 'quotes/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    method: PUT
+    <<: *mowali-dfsp2-meta
+    test_request_scripts:
+      - <<: *put-quotes-id
+      - <<: *put-quotes-test-amount
+      - <<: *put-quotes-test-ilp
+    test_response_scripts:
+      - <<: *test-200-status
+    request:
+      method: PUT
+      uri: quotes/{{steps.6.request.body.quoteId}}
+      <<: *fwded-msg
+    response:
+      <<: *response-headers
+      status: 200
+
+  ## 9. POST/Transfers: MMO1 -> Mojaloop ##
+  - path: /transfers
+    pattern: 'transfers$'
+    method: POST
+    <<: *dfsp2-mowali-meta
+    test_request_scripts:
+      - name: Transfer ID is generated
+        rules:
+          body.transferId: 'required|regex:/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/'
+      - &post-transfers-test-amount
+        name: Amounts and currencies are specified correctly
+        rules:
+          body.amount.amount: 'required|in:{{steps.8.request.body.transferAmount.amount}}'
+          body.amount.currency: 'required|in:{{steps.8.request.body.transferAmount.currency}}'
+      - <<: *put-quotes-test-ilp
+      - &post-transfers-test-fsps
+        name: FSPs are specified correctly
+        rules:
+          body.payeeFsp: 'required|in:{{env.DFSP1_FSPIOP | default("DFSP1")}}'
+          body.payerFsp: 'required|in:{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+    test_response_scripts:
+      - <<: *test-202-status
+    request:
+      <<: *dfsp2-jws
+      method: POST
+      uri: transfers
+      headers:
+        fspiop-uri: /transfers
+        fspiop-http-method: POST
+        <<: *header-post-transfers
+        <<: *header-dfsp2
+      body:
+        transferId: '{{steps.5.request.body.transactionId}}'
+        payerFsp: '{{steps.5.request.body.payer.partyIdInfo.fspId}}'
+        payeeFsp: '{{steps.5.request.body.payee.partyIdInfo.fspId}}'
+        amount: '{{steps.8.request.body.transferAmount | json_encode}}'
+        expiration: '{{steps.8.request.body.expiration}}'
+        ilpPacket: '{{steps.8.request.body.ilpPacket}}'
+        condition: '{{steps.8.request.body.condition}}'
+    response:
+      <<: *response-headers
+      status: 202
+
+  ## 10. PUT/Transfers/{id}/errors: Mojaloop -> MMO1 ##
+  - path: /transfers/{ID}/error
+    pattern: 'transfers/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/error$'
+    method: PUT
+    <<: *mowali-dfsp2-meta
+    test_request_scripts:
+      - name: Transfer ID is correct
+        rules:
+          uri: 'required|regex:/transfers\/{{steps.9.request.body.transferId}}\/error/'
+      - name: Error code is set
+        rules:
+          body.errorInformation.errorCode: 'required|in:4001'
+          body.errorInformation.errorDescription: 'required'
+    test_response_scripts:
+      - <<: *test-200-status
+    request:
+      method: PUT
+      uri: transfers/{{ steps.9.request.body.transferId }}/error
+      headers:
+        <<: *header-put-transfers
+        date: '{{"now" | date("D, d M Y H:i:s T", "GMT")}}'
+        fspiop-source: 'Switch'
+        fspiop-destination: '{{env.DFSP2_FSPIOP | default("DFSP2")}}'
+      body:
+        errorInformation:
+          errorCode: '4001'
+          errorDescription:
+            'Payer FSP has insufficient liquidity to perform the transfer.'
+    response:
+      <<: *response-headers
+      status: 200
