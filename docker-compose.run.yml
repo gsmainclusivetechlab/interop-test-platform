@@ -27,6 +27,9 @@ services:
       - '443:8443'
     environment:
       CONTAINER_ROLE: app
+      WAIT_HOSTS: mysqldb:3306
+      WAIT_SLEEP_INTERVAL: 5
+      WAIT_HOSTS_TIMEOUT: 100
 
   queue:
     <<: *common-php
