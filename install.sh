@@ -15,6 +15,7 @@ DBNAME=
 DBUSER=
 DBPASS=
 DBROOTPASS=
+SUPERADMIN_PASS=
 
 # Features
 COMPLIANCE_ENABLED=
@@ -38,9 +39,22 @@ print() {
   echo -e "$@"
 }
 
+# print_r
+print_r() {
+  echo -ne "$@"
+}
+
 # abort
 abort() {
   echo -e "$@"
+  echo -e ""
+  echo -e "Please refer to https://.../ for detailed install and troubleshoot."
+  exit 1
+}
+
+# abort_r
+abort_r() {
+  echo -ne "$@"
   echo -e ""
   echo -e "Please refer to https://.../ for detailed install and troubleshoot."
   exit 1
@@ -158,19 +172,15 @@ then
   exit 1
 fi
 
-# setting platform name
+# validating platform name
 PLATFORM_NAME=$1
 case ${PLATFORM_NAME} in
   interop)
-    PLATFORM_NAME='interop'
-    PLATFORM_LONGNAME='Interoperability Test Platform'
-    COMPLIANCE_ENABLED='false'
-    FAQ_ENABLED='false'
-    PLUGIN_ENABLED='false'
-    DBNAME='itp-db'
-    DBUSER='itp-user'
-    DBPASS=$(randpw)
-    DBROOTPASS=$(randpw)
+    PLATFORM_NAME="interop"
+    PLATFORM_LONGNAME="Interoperability Test Platform"
+    COMPLIANCE_ENABLED="false"
+    FAQ_ENABLED="false"
+    PLUGIN_ENABLED="false"
     ;;
   compliance)
     PLATFORM_NAME="compliance"
@@ -178,19 +188,20 @@ case ${PLATFORM_NAME} in
     COMPLIANCE_ENABLED='true'
     FAQ_ENABLED='true'
     PLUGIN_ENABLED='true'
-    DBNAME='compliance-db'
-    DBUSER='compliance-user'
-    DBPASS=$(randpw)
-    DBROOTPASS=$(randpw)
     ;;
   *)
     abort "❌ invalid platform name: ${RED}${PLATFORM_NAME}${NC}"
     ;;
 esac
 
+# setting database values based on the platform
+DBNAME="${PLATFORM_NAME}-db"
+DBUSER="${PLATFORM_NAME}-user"
+DBPASS=$(randpw)
+DBROOTPASS=$(randpw)
+SUPERADMIN_PASS=$(randpw)
 
 # Starting
-#print "⚙️  Interop Test Platform automated install"
 print "➡️  GSMA Inclusive Tech Lab - https://www.gsma.com/lab\n"
 
 # checking for docker requirements
@@ -218,9 +229,11 @@ then
 fi
 print "✅ docker: ${GREEN}${DOCKER_VERSION}${NC}"
 print "✅ docker-compose: ${GREEN}${DOCKER_COMPOSE_VERSION}${NC}"
-print "✅ curl: ${GREEN}${CURL_VERSION}${NC}\n"
+print "✅ curl: ${GREEN}${CURL_VERSION}${NC}"
 
-# Install
+print ""
+
+# installation of the platform
 print "⚙️  Installing ${GREEN}${PLATFORM_LONGNAME}${NC}"
 
 # local folder
@@ -240,22 +253,72 @@ create_mysql_env
 print "✅ creating mysql.env => ${GREEN}./${PLATFORM_NAME}/mysql.env${NC}"
 
 # downloading docker-compose.yml
+print "✅ downloading docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
 CMD_OUTPUT=$(curl -sq ${DOCKER_COMPOSE_CONFIG_URL} -o ./${PLATFORM_NAME}/docker-compose.yml 2>&1)
 if [ "$?" -ne 0 ]; then
     abort "❌ ${RED}${CMD_OUTPUT}${NC}"
-else
-    print "✅ downloading docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
 fi
 
 # downloading docker image
+print "✅ downloading docker image => ${GREEN}${DOCKER_IMAGE}${NC}"
 CMD_OUTPUT=$(${DOCKER_CLI} pull -q ${DOCKER_IMAGE} 2>&1)
 if [ "$?" -ne 0 ]; then
     abort "❌ ${RED}${CMD_OUTPUT}${NC}"
-else
-    print "✅ downloading docker image => ${GREEN}${CMD_OUTPUT}${NC}"
 fi
 
 print ""
 
 # Configuring
 print "⚙️  Configuring ${GREEN}${PLATFORM_LONGNAME}${NC}"
+cd ${PLATFORM_NAME}
+
+# setting APP_KEY
+print_r "✅ app key => ${GREEN}generating... ${NC}\\r"
+CMD_OUTPUT=$(docker-compose run app sh -c "echo APP_KEY= >> .env; php artisan key:generate -q; cat .env | grep ^APP_KEY" 2>/dev/null)
+if [ -z "${CMD_OUTPUT}" ]; then
+  abort_r "❌ app key => ${RED}generating... failed!${NC}\\n"
+else
+  CMD_OUTPUT=`sed -i "s#APP_KEY=#$CMD_OUTPUT#" app.env`
+  if [ "$?" -ne 0 ]; then
+    abort_r "❌ app key => ${RED}generating... failed!${NC}\\n"
+  else
+    print_r "✅ app key => ${GREEN}generating... done!${NC}\\n"
+  fi
+fi
+
+# seeding database
+print_r "✅ database => ${GREEN}updating... ${NC}\\r"
+CMD_OUTPUT=$(docker-compose run app sh -c "sed -i \"s/('[^']*'/(\'${SUPERADMIN_PASS}\'/g\" ./database/seeders/UsersTableSeeder.php && /wait && php artisan migrate:refresh --seed --force -q" > /dev/null 2>&1)
+if [ "$?" -ne 0 ]; then
+  abort_r "❌ database => ${RED}updating... failed!${NC}\\n"
+else
+  print_r "✅ database => ${GREEN}updating... done!${NC}\\n"
+fi
+
+# starting app
+print_r "✅ ${PLATFORM_NAME} => ${GREEN}starting... ${NC}\\r"
+CMD_OUTPUT=$(docker-compose up -d --force-recreate 2>/dev/null)
+if [ "$?" -ne 0 ]; then
+  abort_r "❌ ${PLATFORM_NAME} => ${RED}starting... failed!${NC}\\n"
+else
+  print_r "✅ ${PLATFORM_NAME} => ${GREEN}starting... done!${NC}\\n"
+fi
+
+# finalising
+print ""
+print "💻 The installation of the ${GREEN}${PLATFORM_LONGNAME}${NC} is finished! ✅"
+print ""
+print "Some information about your environment:"
+print "🌐 ${PLATFORM_NAME} console: http://localhost"
+print "👤 username: superadmin@gsma.com"
+print "🔑 password: ${SUPERADMIN_PASS}"
+print ""
+print "MySQL database and credential:"
+print "🗄️  database: ${DBNAME}"
+print "👤 username: ${DBUSER}"
+print "🔑 password: ${DBPASS}"
+print "🔑 rootpass: ${DBROOTPASS}"
+print ""
+print "➡️  More information about the project on GitHub Repository:"
+print "🌐 https://github.com/gsmainclusivetechlab/interop-test-platform"
+print ""
