@@ -15,6 +15,7 @@ class GroupControllerTest extends TestCase
             'name' => 'Group Name',
             'domain' => 'Domain name',
             'description' => 'Description',
+            'session_available' => ['test', 'test_questionnaire', 'compliance'],
         ]);
         $response->assertStatus(302);
         $response->assertRedirect(route('admin.groups.index'), ['success']);
@@ -32,6 +33,11 @@ class GroupControllerTest extends TestCase
                 'name' => 'Group Updated Name',
                 'domain' => 'Domain Updated name',
                 'description' => 'Updated Description',
+                'session_available' => [
+                    'test',
+                    'test_questionnaire',
+                    'compliance',
+                ],
             ]
         );
 
