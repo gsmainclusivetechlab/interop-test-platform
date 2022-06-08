@@ -27,12 +27,6 @@ DOCKER_COMPOSE_CLI=$(which docker-compose)
 DOCKER_CLI=$(which docker)
 CURL_CLI=$(which curl)
 
-# interop test platform
-LATEST_VERSION="develop"
-DOCKER_REPO="gsmainclusivetechlab"
-DOCKER_IMAGE="${DOCKER_REPO}/interop-test-platform:${LATEST_VERSION}"
-DOCKER_COMPOSE_CONFIG_URL="https://raw.githubusercontent.com/gsmainclusivetechlab/interop-test-platform/develop/docker-compose.run.yml"
-
 # Functions
 # print
 print() {
@@ -141,6 +135,82 @@ MYSQL_DATABASE=${DBNAME}
 MYSQL_USER=${DBUSER}
 MYSQL_PASSWORD=${DBPASS}
 MYSQL_ROOT_PASSWORD=${DBROOTPASS}
+EOF
+}
+
+# docker-compose.yml
+create_docker_compose_yml() {
+  cat <<EOF > ./${PLATFORM_NAME}/docker-compose.yml
+version: '3.7'
+
+x-common-php: &common-php
+  image: gsmainclusivetechlab/interop-test-platform:develop
+  restart: always
+  environment:
+    PROJECT_DOMAIN: ${PROJECT_DOMAIN}
+  env_file: app.env
+  depends_on:
+    - mysqldb
+    - redis
+    - mailhog
+  security_opt:
+    - apparmor:unconfined
+  cap_add:
+    - SYS_PTRACE
+  volumes:
+    - certbot_certs:/etc/nginx/ssl/letsencrypt
+    - certbot_www:/var/www/certbot
+    - storage:/var/www/html/storage/app
+
+services:
+  app:
+    <<: *common-php
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      CONTAINER_ROLE: app
+      WAIT_HOSTS: mysqldb:3306
+      WAIT_SLEEP_INTERVAL: 5
+      WAIT_HOSTS_TIMEOUT: 100
+
+  queue:
+    <<: *common-php
+    environment:
+      CONTAINER_ROLE: queue
+
+  mysqldb:
+    image: mysql:8
+    restart: always
+    env_file: mysql.env
+    healthcheck:
+      retries: 10
+      test: [CMD, mysqladmin, ping, -h, localhost]
+      timeout: 20s
+    volumes:
+      - mysqldata:/var/lib/mysql:rw
+
+  redis:
+    image: redis:5
+    restart: always
+    environment:
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL
+    volumes:
+      - redisdata:/data:rw
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - '8086:8025'
+
+volumes:
+  mysqldata: {}
+  redisdata: {}
+  ca_certs: {}
+  certbot_certs: {}
+  certbot_www: {}
+  storage: {}
 EOF
 }
 
@@ -259,11 +329,8 @@ create_mysql_env
 print "✅ creating mysql.env => ${GREEN}./${PLATFORM_NAME}/mysql.env${NC}"
 
 # downloading docker-compose.yml
+create_docker_compose_yml
 print "✅ creating docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
-CMD_OUTPUT=$(curl -sq ${DOCKER_COMPOSE_CONFIG_URL} -o ./${PLATFORM_NAME}/docker-compose.yml 2>&1)
-if [ "$?" -ne 0 ]; then
-    abort "❌ ${RED}${CMD_OUTPUT}${NC}"
-fi
 
 print ""
 
