@@ -259,15 +259,8 @@ create_mysql_env
 print "✅ creating mysql.env => ${GREEN}./${PLATFORM_NAME}/mysql.env${NC}"
 
 # downloading docker-compose.yml
-print "✅ downloading docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
+print "✅ creating docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
 CMD_OUTPUT=$(curl -sq ${DOCKER_COMPOSE_CONFIG_URL} -o ./${PLATFORM_NAME}/docker-compose.yml 2>&1)
-if [ "$?" -ne 0 ]; then
-    abort "❌ ${RED}${CMD_OUTPUT}${NC}"
-fi
-
-# downloading docker image
-print "✅ downloading docker image => ${GREEN}${DOCKER_IMAGE}${NC}"
-CMD_OUTPUT=$(${DOCKER_CLI} pull -q ${DOCKER_IMAGE} 2>&1)
 if [ "$?" -ne 0 ]; then
     abort "❌ ${RED}${CMD_OUTPUT}${NC}"
 fi
@@ -277,6 +270,15 @@ print ""
 # Configuring
 print "⚙️  Configuring ${GREEN}${PLATFORM_LONGNAME}${NC}"
 cd ${PLATFORM_NAME}
+
+# downloading images
+print_r "✅ docker images => ${GREEN}downloading... ${NC}\\r"
+CMD_OUTPUT=$(${DOCKER_COMPOSE_CLI} pull -q 2>&1)
+if [ "$?" -ne 0 ]; then
+  abort_r "❌ ${RED}${CMD_OUTPUT}${NC}\\n"
+else
+  print_r "✅ docker images => ${GREEN}downloading... done!${NC}\\n"
+fi
 
 # setting APP_KEY
 print_r "✅ app key => ${GREEN}generating... ${NC}\\r"
