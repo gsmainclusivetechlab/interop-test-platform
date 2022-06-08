@@ -23,7 +23,7 @@ FAQ_ENABLED=
 PLUGIN_ENABLED=
 
 # command path
-DOCKER_COMPOSE=$(which docker-compose)
+DOCKER_COMPOSE_CLI=$(which docker-compose)
 DOCKER_CLI=$(which docker)
 CURL_CLI=$(which curl)
 
@@ -206,15 +206,17 @@ print "➡️  GSMA Inclusive Tech Lab - https://www.gsma.com/lab\n"
 
 # checking for docker requirements
 print "⚙️  Checking for requirements"
-DOCKER_VERSION=`$DOCKER_CLI version |grep ^" Version" | tr -s ' ' | cut -d" " -f3`
-DOCKER_COMPOSE_VERSION=`$DOCKER_COMPOSE version --short`
-DOCKER_SWARM_MODE=`$DOCKER_CLI info |grep ^" Swarm" | cut -d" " -f3`
-CURL_VERSION=`curl --version | head -n 1 | awk '{ print $2 }'`
-
-if [ $DOCKER_SWARM_MODE == "active" ]
-then
-    abort "❌ ${RED}install cannot procede in docker swarm mode.${NC}"
+if [ ! -z $DOCKER_CLI ]; then
+    DOCKER_VERSION=`$DOCKER_CLI version |grep ^" Version" | tr -s ' ' | cut -d" " -f3`
+    DOCKER_SWARM_MODE=`$DOCKER_CLI info |grep ^" Swarm" | cut -d" " -f3`
 fi
+if [ ! -z $DOCKER_COMPOSE_CLI ]; then
+    DOCKER_COMPOSE_VERSION=`$DOCKER_COMPOSE_CLI version --short`
+fi
+if [ ! -z $CURL_CLI ]; then
+    CURL_VERSION=`curl --version | head -n 1 | awk '{ print $2 }'`
+fi
+
 if [ -z "${DOCKER_VERSION:-}" ]
 then
     abort "❌ ${RED}docker is required.${NC}"
@@ -222,6 +224,10 @@ fi
 if [ -z "${DOCKER_COMPOSE_VERSION:-}" ]
 then
     abort "docker-compose is required.${NC}"
+fi
+if [ $DOCKER_SWARM_MODE == "active" ]
+then
+    abort "❌ ${RED}install cannot proceed in docker swarm mode.${NC}"
 fi
 if [ -z "${CURL_VERSION:-}" ]
 then
