@@ -10,7 +10,7 @@ GREEN='\033[0;32m'
 # naming
 PLATFORM_LONGNAME=
 PLATFORM_NAME=
-PROJECT_DOMAIN='www.example.com'
+PROJECT_DOMAIN="www.example.com"
 DBNAME=
 DBUSER=
 DBPASS=
@@ -42,7 +42,7 @@ print_r() {
 abort() {
   echo -e "$@"
   echo -e ""
-  echo -e "Please refer to https://.../ for detailed install and troubleshoot."
+  echo -e "Please refer to https://github.com/gsmainclusivetechlab/interop-test-platform/blob/develop/INSTALL.md for detailed install and troubleshoot."
   exit 1
 }
 
@@ -50,7 +50,7 @@ abort() {
 abort_r() {
   echo -ne "$@"
   echo -e ""
-  echo -e "Please refer to https://.../ for detailed install and troubleshoot."
+  echo -e "Please refer to https://github.com/gsmainclusivetechlab/interop-test-platform/blob/develop/INSTALL.md for detailed install and troubleshoot."
   exit 1
 }
 
@@ -61,7 +61,7 @@ randpw() {
 
 # app.env
 create_app_env() {
-  cat <<EOF > ./${PLATFORM_NAME}/app.env
+  cat <<EOF > ./"${PLATFORM_NAME}"/app.env
 PROJECT_DOMAIN=${PROJECT_DOMAIN}
 
 ## Read by PHP services
@@ -77,7 +77,7 @@ MAIL_USERNAME=trap
 MAIL_PASSWORD=trap
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS=support@${PROJECT_DOMAIN}
-MAIL_FROM_NAME="${PLATFORM_LONGNAME}"
+MAIL_FROM_NAME=${PLATFORM_LONGNAME}
 
 # Platform Settings
 ## Set to 'true' to make Invitation codes mandatory for registration
@@ -129,7 +129,7 @@ EOF
 
 # mysql.env
 create_mysql_env() {
-  cat <<EOF > ./${PLATFORM_NAME}/mysql.env
+  cat <<EOF > ./"${PLATFORM_NAME}"/mysql.env
 ## Read by mysqldb services
 MYSQL_DATABASE=${DBNAME}
 MYSQL_USER=${DBUSER}
@@ -140,7 +140,7 @@ EOF
 
 # docker-compose.yml
 create_docker_compose_yml() {
-  cat <<EOF > ./${PLATFORM_NAME}/docker-compose.yml
+  cat <<EOF > ./"${PLATFORM_NAME}"/docker-compose.yml
 version: '3.7'
 
 x-common-php: &common-php
@@ -254,10 +254,10 @@ case ${PLATFORM_NAME} in
     ;;
   compliance)
     PLATFORM_NAME="compliance"
-    PLATFORM_LONGNAME='Compliance Platform'
-    COMPLIANCE_ENABLED='true'
-    FAQ_ENABLED='true'
-    PLUGIN_ENABLED='true'
+    PLATFORM_LONGNAME="Compliance Platform"
+    COMPLIANCE_ENABLED="true"
+    FAQ_ENABLED="true"
+    PLUGIN_ENABLED="true"
     ;;
   *)
     abort "❌ invalid platform name: ${RED}${PLATFORM_NAME}${NC}"
@@ -276,15 +276,15 @@ print "➡️  GSMA Inclusive Tech Lab - https://www.gsma.com/lab\n"
 
 # checking for docker requirements
 print "⚙️  Checking for requirements"
-if [ ! -z $DOCKER_CLI ]; then
-    DOCKER_VERSION=`$DOCKER_CLI version |grep ^" Version" | tr -s ' ' | cut -d" " -f3`
-    DOCKER_SWARM_MODE=`$DOCKER_CLI info |grep ^" Swarm" | cut -d" " -f3`
+if [ ! -z "${DOCKER_CLI}" ]; then
+    DOCKER_VERSION=$(${DOCKER_CLI} version |grep ^" Version" | tr -s ' ' | cut -d" " -f3)
+    DOCKER_SWARM_MODE=$(${DOCKER_CLI} info |grep ^" Swarm" | cut -d" " -f3)
 fi
-if [ ! -z $DOCKER_COMPOSE_CLI ]; then
-    DOCKER_COMPOSE_VERSION=`$DOCKER_COMPOSE_CLI version --short`
+if [ ! -z "${DOCKER_COMPOSE_CLI}" ]; then
+    DOCKER_COMPOSE_VERSION=$(${DOCKER_COMPOSE_CLI} version --short)
 fi
-if [ ! -z $CURL_CLI ]; then
-    CURL_VERSION=`curl --version | head -n 1 | awk '{ print $2 }'`
+if [ ! -z "${CURL_CLI}" ]; then
+    CURL_VERSION=$(${CURL_CLI} --version | head -n 1 | awk '{ print $2 }')
 fi
 
 if [ -z "${DOCKER_VERSION:-}" ]
@@ -295,7 +295,7 @@ if [ -z "${DOCKER_COMPOSE_VERSION:-}" ]
 then
     abort "docker-compose is required.${NC}"
 fi
-if [ $DOCKER_SWARM_MODE == "active" ]
+if [ "${DOCKER_SWARM_MODE}" == "active" ]
 then
     abort "❌ ${RED}install cannot proceed in docker swarm mode.${NC}"
 fi
