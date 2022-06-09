@@ -1,15 +1,8 @@
 # ITP Install
 
-This guide describes how to install the interoperability test platform in two modes:
+This guide describes how to install the interoperability test platform.
 
-- Installation using `install.sh` script => automated installation suitable for end-users. 
-
-- Installation using the source code => manual compilation suitable for developers.
-
-
-## Installation using `install.sh` script
-
-### Install
+## Install
 
 1. Download the `install.sh` script from ITP Github repository.
 
@@ -44,7 +37,7 @@ This guide describes how to install the interoperability test platform in two mo
     🌐 https://github.com/gsmainclusivetechlab/interop-test-platform
     ```
 
-### Management
+## Management
 
 1. See if ITP is running.
     
@@ -100,7 +93,7 @@ This guide describes how to install the interoperability test platform in two mo
     ```
 
 
-### Uninstall
+## Uninstall
 
 1. Removing ITP.
 
@@ -113,7 +106,7 @@ This guide describes how to install the interoperability test platform in two mo
     ```
 
 
-### Q/A and Troubleshooting
+## Q/A and Troubleshooting
 
 -------
 
