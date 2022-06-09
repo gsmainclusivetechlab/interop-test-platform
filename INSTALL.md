@@ -44,7 +44,7 @@ This guide describes how to install the interoperability test platform in two mo
     🌐 https://github.com/gsmainclusivetechlab/interop-test-platform
     ```
 
-## Management
+### Management
 
 1. See if ITP is running.
     
@@ -100,7 +100,7 @@ This guide describes how to install the interoperability test platform in two mo
     ```
 
 
-# Uninstall
+### Uninstall
 
 1. Removing ITP.
 
@@ -113,7 +113,7 @@ This guide describes how to install the interoperability test platform in two mo
     ```
 
 
-# Q/A and Troubleshooting
+### Q/A and Troubleshooting
 
 -------
 
