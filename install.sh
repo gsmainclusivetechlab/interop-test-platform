@@ -10,7 +10,7 @@ GREEN='\033[0;32m'
 # naming
 PLATFORM_LONGNAME=
 PLATFORM_NAME=
-PROJECT_DOMAIN='www.example.com'
+PROJECT_DOMAIN="www.example.com"
 DBNAME=
 DBUSER=
 DBPASS=
@@ -23,15 +23,9 @@ FAQ_ENABLED=
 PLUGIN_ENABLED=
 
 # command path
-DOCKER_COMPOSE=$(which docker-compose)
+DOCKER_COMPOSE_CLI=$(which docker-compose)
 DOCKER_CLI=$(which docker)
 CURL_CLI=$(which curl)
-
-# interop test platform
-LATEST_VERSION="develop"
-DOCKER_REPO="gsmainclusivetechlab"
-DOCKER_IMAGE="${DOCKER_REPO}/interop-test-platform:${LATEST_VERSION}"
-DOCKER_COMPOSE_CONFIG_URL="https://raw.githubusercontent.com/gsmainclusivetechlab/interop-test-platform/develop/docker-compose.run.yml"
 
 # Functions
 # print
@@ -48,7 +42,7 @@ print_r() {
 abort() {
   echo -e "$@"
   echo -e ""
-  echo -e "Please refer to https://.../ for detailed install and troubleshoot."
+  echo -e "Please refer to https://github.com/gsmainclusivetechlab/interop-test-platform/blob/develop/INSTALL.md for detailed install and troubleshoot."
   exit 1
 }
 
@@ -56,7 +50,7 @@ abort() {
 abort_r() {
   echo -ne "$@"
   echo -e ""
-  echo -e "Please refer to https://.../ for detailed install and troubleshoot."
+  echo -e "Please refer to https://github.com/gsmainclusivetechlab/interop-test-platform/blob/develop/INSTALL.md for detailed install and troubleshoot."
   exit 1
 }
 
@@ -67,7 +61,7 @@ randpw() {
 
 # app.env
 create_app_env() {
-  cat <<EOF > ./${PLATFORM_NAME}/app.env
+  cat <<EOF > ./"${PLATFORM_NAME}"/app.env
 PROJECT_DOMAIN=${PROJECT_DOMAIN}
 
 ## Read by PHP services
@@ -83,7 +77,7 @@ MAIL_USERNAME=trap
 MAIL_PASSWORD=trap
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS=support@${PROJECT_DOMAIN}
-MAIL_FROM_NAME="${PLATFORM_LONGNAME}"
+MAIL_FROM_NAME=${PLATFORM_LONGNAME}
 
 # Platform Settings
 ## Set to 'true' to make Invitation codes mandatory for registration
@@ -135,12 +129,88 @@ EOF
 
 # mysql.env
 create_mysql_env() {
-  cat <<EOF > ./${PLATFORM_NAME}/mysql.env
+  cat <<EOF > ./"${PLATFORM_NAME}"/mysql.env
 ## Read by mysqldb services
 MYSQL_DATABASE=${DBNAME}
 MYSQL_USER=${DBUSER}
 MYSQL_PASSWORD=${DBPASS}
 MYSQL_ROOT_PASSWORD=${DBROOTPASS}
+EOF
+}
+
+# docker-compose.yml
+create_docker_compose_yml() {
+  cat <<EOF > ./"${PLATFORM_NAME}"/docker-compose.yml
+version: '3.7'
+
+x-common-php: &common-php
+  image: gsmainclusivetechlab/interop-test-platform:develop
+  restart: always
+  environment:
+    PROJECT_DOMAIN: ${PROJECT_DOMAIN}
+  env_file: app.env
+  depends_on:
+    - mysqldb
+    - redis
+    - mailhog
+  security_opt:
+    - apparmor:unconfined
+  cap_add:
+    - SYS_PTRACE
+  volumes:
+    - certbot_certs:/etc/nginx/ssl/letsencrypt
+    - certbot_www:/var/www/certbot
+    - storage:/var/www/html/storage/app
+
+services:
+  app:
+    <<: *common-php
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      CONTAINER_ROLE: app
+      WAIT_HOSTS: mysqldb:3306
+      WAIT_SLEEP_INTERVAL: 5
+      WAIT_HOSTS_TIMEOUT: 100
+
+  queue:
+    <<: *common-php
+    environment:
+      CONTAINER_ROLE: queue
+
+  mysqldb:
+    image: mysql:8
+    restart: always
+    env_file: mysql.env
+    healthcheck:
+      retries: 10
+      test: [CMD, mysqladmin, ping, -h, localhost]
+      timeout: 20s
+    volumes:
+      - mysqldata:/var/lib/mysql:rw
+
+  redis:
+    image: redis:5
+    restart: always
+    environment:
+      REDIS_DISABLE_COMMANDS: FLUSHDB,FLUSHALL
+    volumes:
+      - redisdata:/data:rw
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - '8086:8025'
+
+volumes:
+  mysqldata: {}
+  redisdata: {}
+  ca_certs: {}
+  certbot_certs: {}
+  certbot_www: {}
+  storage: {}
 EOF
 }
 
@@ -184,10 +254,10 @@ case ${PLATFORM_NAME} in
     ;;
   compliance)
     PLATFORM_NAME="compliance"
-    PLATFORM_LONGNAME='Compliance Platform'
-    COMPLIANCE_ENABLED='true'
-    FAQ_ENABLED='true'
-    PLUGIN_ENABLED='true'
+    PLATFORM_LONGNAME="Compliance Platform"
+    COMPLIANCE_ENABLED="true"
+    FAQ_ENABLED="true"
+    PLUGIN_ENABLED="true"
     ;;
   *)
     abort "❌ invalid platform name: ${RED}${PLATFORM_NAME}${NC}"
@@ -206,15 +276,17 @@ print "➡️  GSMA Inclusive Tech Lab - https://www.gsma.com/lab\n"
 
 # checking for docker requirements
 print "⚙️  Checking for requirements"
-DOCKER_VERSION=`$DOCKER_CLI version |grep ^" Version" | tr -s ' ' | cut -d" " -f3`
-DOCKER_COMPOSE_VERSION=`$DOCKER_COMPOSE version --short`
-DOCKER_SWARM_MODE=`$DOCKER_CLI info |grep ^" Swarm" | cut -d" " -f3`
-CURL_VERSION=`curl --version | head -n 1 | awk '{ print $2 }'`
-
-if [ $DOCKER_SWARM_MODE == "active" ]
-then
-    abort "❌ ${RED}install cannot procede in docker swarm mode.${NC}"
+if [ ! -z "${DOCKER_CLI}" ]; then
+    DOCKER_VERSION=$(${DOCKER_CLI} version |grep ^" Version" | tr -s ' ' | cut -d" " -f3)
+    DOCKER_SWARM_MODE=$(${DOCKER_CLI} info |grep ^" Swarm" | cut -d" " -f3)
 fi
+if [ ! -z "${DOCKER_COMPOSE_CLI}" ]; then
+    DOCKER_COMPOSE_VERSION=$(${DOCKER_COMPOSE_CLI} version --short)
+fi
+if [ ! -z "${CURL_CLI}" ]; then
+    CURL_VERSION=$(${CURL_CLI} --version | head -n 1 | awk '{ print $2 }')
+fi
+
 if [ -z "${DOCKER_VERSION:-}" ]
 then
     abort "❌ ${RED}docker is required.${NC}"
@@ -222,6 +294,10 @@ fi
 if [ -z "${DOCKER_COMPOSE_VERSION:-}" ]
 then
     abort "docker-compose is required.${NC}"
+fi
+if [ "${DOCKER_SWARM_MODE}" == "active" ]
+then
+    abort "❌ ${RED}install cannot proceed in docker swarm mode.${NC}"
 fi
 if [ -z "${CURL_VERSION:-}" ]
 then
@@ -253,24 +329,23 @@ create_mysql_env
 print "✅ creating mysql.env => ${GREEN}./${PLATFORM_NAME}/mysql.env${NC}"
 
 # downloading docker-compose.yml
-print "✅ downloading docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
-CMD_OUTPUT=$(curl -sq ${DOCKER_COMPOSE_CONFIG_URL} -o ./${PLATFORM_NAME}/docker-compose.yml 2>&1)
-if [ "$?" -ne 0 ]; then
-    abort "❌ ${RED}${CMD_OUTPUT}${NC}"
-fi
-
-# downloading docker image
-print "✅ downloading docker image => ${GREEN}${DOCKER_IMAGE}${NC}"
-CMD_OUTPUT=$(${DOCKER_CLI} pull -q ${DOCKER_IMAGE} 2>&1)
-if [ "$?" -ne 0 ]; then
-    abort "❌ ${RED}${CMD_OUTPUT}${NC}"
-fi
+create_docker_compose_yml
+print "✅ creating docker-compose.yml => ${GREEN}./${PLATFORM_NAME}/docker-compose.yml${NC}"
 
 print ""
 
 # Configuring
 print "⚙️  Configuring ${GREEN}${PLATFORM_LONGNAME}${NC}"
 cd ${PLATFORM_NAME}
+
+# downloading images
+print_r "✅ docker images => ${GREEN}downloading... ${NC}\\r"
+CMD_OUTPUT=$(${DOCKER_COMPOSE_CLI} pull -q 2>&1)
+if [ "$?" -ne 0 ]; then
+  abort_r "❌ ${RED}${CMD_OUTPUT}${NC}\\n"
+else
+  print_r "✅ docker images => ${GREEN}downloading... done!${NC}\\n"
+fi
 
 # setting APP_KEY
 print_r "✅ app key => ${GREEN}generating... ${NC}\\r"
