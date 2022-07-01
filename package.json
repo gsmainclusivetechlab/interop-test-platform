@@ -20,7 +20,8 @@
         "rundusk": "yarn dc -f ./compose/dusk.yml run queue sh -c \"/wait && php artisan dusk\"",
         "test": "yarn runtest && docker cp `docker ps -alq`:/var/www/results .",
         "dusk": "yarn rundusk && docker cp `docker ps -alq`:/var/www/html/tests/Browser/screenshots ./results/screenshots",
-        "mtls:renew": "yarn dc exec app sh -c 'php artisan certificates:generate-ca' && yarn dc exec -u root app sh -c '/etc/periodic/15min/client-CA-nginx-renew.sh'"
+        "mtls:renew": "yarn dc exec app sh -c 'php artisan certificates:generate-ca' && yarn dc exec -u root app sh -c '/etc/periodic/15min/client-CA-nginx-renew.sh'",
+        "genkey": "yarn dc run app sh -c 'php artisan key:generate --show'"
     },
     "devDependencies": {
         "@prettier/plugin-php": "^0.16.1",
