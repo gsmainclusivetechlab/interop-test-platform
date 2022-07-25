@@ -28,6 +28,7 @@ node_modules
 composer.phar
 /src/node_modules
 /src/vendor
+yarn.lock
 
 # caches
 Thumbs.db
