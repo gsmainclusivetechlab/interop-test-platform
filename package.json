@@ -8,7 +8,7 @@
         "docker-ops": "yarn dc -f compose/ops.yml",
         "build": "yarn prepare:docker && yarn dc build && yarn dc run app sh -c \"chmod -R 775 ./storage && chown -R interopdev:www-data *\"",
         "build:prod": "yarn prepare:docker && APP_ENV=production yarn dc build",
-        "deps": "yarn dc run app sh -c \"npm i && composer install\"",
+        "deps": "yarn dc run app sh -c \"npm install -g npm@8.15.0 && npm i && composer install\"",
         "dev": "yarn dc up",
         "dev:deploy": "yarn build && yarn deps && yarn dc run app sh -c \"npm run prod\" && yarn migrate && yarn down && yarn dev -d",
         "down": "yarn dc down --remove-orphans",
