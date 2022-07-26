@@ -1,10 +1,11 @@
-name: Build image and push to Docker Hub
+name: CI/CD
 on:
   push:
     branches:
       - feature/github-actions
 jobs:
   build:
+    name: Build image and push to Docker Hub
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -18,9 +19,31 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: Copy configuration files
+        env:
+          HOST_WEB_PORT: 80
+          HOST_HTTPS_WEB_PORT: 443
+          PROJECT_DOMAIN: www.example.com
+          HOST_MAILHOG_PORT: 8080
+          HOST_PHPMYADMIN_PORT: 8081
+          DB_DATABASE: itp-test
+          DB_USERNAME: itp-test-user
+          DB_PASSWORD: itp-test-pw
         run: envsubst < service.example.env > service.env
 
       - name: Building docker images
         run: |
           yarn prepare:docker
           docker-compose -f docker-compose.ci.yml build app
+
+      - name: Run Tests and get coverage
+        run: |
+          docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit -d memory_limit=512M --coverage-clover=results/clover.xml --log-junit results/results.xml"
+          docker cp $(docker ps -alq):/var/www/src/results .
+          docker-compose -f docker-compose.ci.yml down -v
+
+      - name: Codacy Coverage Reporter
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: ./results/clover.xml
+          tool_version: ''

@@ -57,6 +57,9 @@ jobs:
             --password-stdin
       - checkout
       - run:
+          name: Codacy Project Token
+          command: echo $CODACY_PROJECT_TOKEN
+      - run:
           name: Install gettext for envsubst
           command: sudo apt-get update && sudo apt-get install gettext-base
       - run:
