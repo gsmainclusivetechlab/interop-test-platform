@@ -56,17 +56,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Build and push
+      - name: Build for tests
         uses: docker/build-push-action@v3
         with:
           context: src
           file: Dockerfiles/production.Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          load: true
+          tags: ${{ env.TEST_TAG }}
 
       - name: Run tests and get coverage
+        env:
+          TEST_TAG: ${{ env.TEST_TAG }}
         run: |
+          sed -i "s#gsmainclusivetechlab/interop-test-platform:latest#$TEST_TAG#" docker-compose.ci.yml
           docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit -d memory_limit=512M --coverage-clover=results/clover.xml --log-junit results/results.xml"
           docker cp $(docker ps -alq):/var/www/src/results .
           docker-compose -f docker-compose.ci.yml down -v
@@ -78,3 +80,12 @@ jobs:
           files: ./results/clover.xml
           fail_ci_if_error: true # optional (default = false)
           #verbose: true # optional (default = false)
+
+      - name: Build and push to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+          context: src
+          file: Dockerfiles/production.Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
