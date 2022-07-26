@@ -1,11 +1,11 @@
-name: CI/CD
+name: ci
 on:
   push:
     branches:
       - feature/github-actions
 jobs:
   build:
-    name: Build image and push to Docker Hub
+    name: Build image and push to docker hub
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -35,15 +35,16 @@ jobs:
           yarn prepare:docker
           docker-compose -f docker-compose.ci.yml build app
 
-      - name: Run Tests and get coverage
+      - name: Run tests and get coverage
         run: |
           docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit -d memory_limit=512M --coverage-clover=results/clover.xml --log-junit results/results.xml"
           docker cp $(docker ps -alq):/var/www/src/results .
           docker-compose -f docker-compose.ci.yml down -v
 
-      - name: Codacy Coverage Reporter
-        uses: codacy/codacy-coverage-reporter-action@v1
+      - name: Codecov Coverage Reports
+        uses: codecov/codecov-action@v3
         with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: ./results/clover.xml
-          tool_version: ''
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./results/clover.xml
+        fail_ci_if_error: true # optional (default = false)
+        #verbose: true # optional (default = false)
