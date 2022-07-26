@@ -1,0 +1,26 @@
+name: Build image and push to Docker Hub
+on:
+  push:
+    branches:
+      - feature/github-actions
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Copy configuration files
+        run: envsubst < service.example.env > service.env
+
+      - name: Building docker images
+        run: |
+          yarn prepare:docker
+          docker-compose -f docker-compose.ci.yml build app
