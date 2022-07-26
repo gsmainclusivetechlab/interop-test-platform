@@ -10,6 +10,9 @@ on:
     branches:
       - 'develop'
 
+env:
+  TEST_TAG: gsmainclusivetechlab/interop-test-platform:latest
+
 jobs:
   build:
     name: Build image and push to Docker Hub
@@ -19,10 +22,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: Generating Dockerfile
+        run: yarn prepare:docker
 
-      - name: Copy configuration files
+      - name: Copy configuration file
         env:
           HOST_WEB_PORT: 80
           HOST_HTTPS_WEB_PORT: 443
@@ -34,27 +37,23 @@ jobs:
           DB_PASSWORD: itp-test-pw
         run: envsubst < service.example.env > service.env
 
-      - name: Generating Dockerfile
-        run: yarn prepare:docker
-
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            gsmainclusivetechlab/interop-test-platform
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{raw}}
-            type=semver,pattern={{version}}
-
       - name: Login to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: gsmainclusivetechlab/interop-test-platform
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{raw}}
+            type=semver,pattern={{version}}
 
       - name: Build for tests
         uses: docker/build-push-action@v3
@@ -65,10 +64,7 @@ jobs:
           tags: ${{ env.TEST_TAG }}
 
       - name: Run tests and get coverage
-        env:
-          TEST_TAG: ${{ env.TEST_TAG }}
         run: |
-          sed -i "s#gsmainclusivetechlab/interop-test-platform:latest#$TEST_TAG#" docker-compose.ci.yml
           docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit -d memory_limit=512M --coverage-clover=results/clover.xml --log-junit results/results.xml"
           docker cp $(docker ps -alq):/var/www/src/results .
           docker-compose -f docker-compose.ci.yml down -v
@@ -78,8 +74,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./results/clover.xml
-          fail_ci_if_error: true # optional (default = false)
-          #verbose: true # optional (default = false)
+          fail_ci_if_error: true
+          #verbose: true
 
       - name: Build and push to Docker Hub
         uses: docker/build-push-action@v3
