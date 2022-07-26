@@ -25,7 +25,7 @@ jobs:
       - name: Generating Dockerfile
         run: yarn prepare:docker
 
-      - name: Copy configuration file
+      - name: Copying configuration file
         env:
           HOST_WEB_PORT: 80
           HOST_HTTPS_WEB_PORT: 443
@@ -55,21 +55,20 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern={{version}}
 
-      - name: Build for tests
+      - name: Building ${{ steps.meta.outputs.tags }}
         uses: docker/build-push-action@v3
         with:
           context: src
           file: Dockerfiles/production.Dockerfile
-          load: true
           tags: ${{ env.TEST_TAG }}
 
-      - name: Run tests and get coverage
+      - name: Running tests and getting coverage report
         run: |
           docker-compose -f docker-compose.ci.yml run app sh -c "/wait && cd /var/www && mv html src && cd src && phpdbg -qrr vendor/bin/phpunit -d memory_limit=512M --coverage-clover=results/clover.xml --log-junit results/results.xml"
           docker cp $(docker ps -alq):/var/www/src/results .
           docker-compose -f docker-compose.ci.yml down -v
 
-      - name: Codecov coverage reports
+      - name: Sending coverage report to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -77,7 +76,7 @@ jobs:
           fail_ci_if_error: true
           #verbose: true
 
-      - name: Build and push to Docker Hub
+      - name: Pushing to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: src
