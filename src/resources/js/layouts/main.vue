@@ -345,7 +345,7 @@
                         </li>
                         <li class="nav-item">
                             <a
-                                href="https://docs.interop.gsmainclusivetechlab.io/"
+                                href="https://docs.itp.gsmainclusivetechlab.io/"
                                 class="nav-link"
                                 target="_blank"
                             >
