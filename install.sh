@@ -265,6 +265,7 @@ case ${PLATFORM_NAME} in
 esac
 
 # setting database values based on the platform
+export LC_CTYPE=C
 DBNAME="${PLATFORM_NAME}-db"
 DBUSER="${PLATFORM_NAME}-user"
 DBPASS=$(randpw)
