@@ -349,16 +349,17 @@ fi
 
 # setting APP_KEY
 print_r "✅ app key => ${GREEN}generating... ${NC}\\r"
-CMD_OUTPUT=$(docker-compose run app sh -c "echo APP_KEY= >> .env; php artisan key:generate -q; cat .env | grep ^APP_KEY" 2>/dev/null)
-if [ -z "${CMD_OUTPUT}" ]; then
+GEN_APP_KEY=$(docker-compose run app sh -c "echo APP_KEY= >> .env; php artisan key:generate -q; cat .env | grep ^APP_KEY" 2>/dev/null)
+if [ -z "${GEN_APP_KEY}" ]; then
   abort_r "❌ app key => ${RED}generating... failed!${NC}\\n"
 else
-  CMD_OUTPUT=`sed -i "s#APP_KEY=#$CMD_OUTPUT#" app.env`
+  CMD_OUTPUT=$(sed -i'.bak' -e "s#APP_KEY=#${GEN_APP_KEY}#" app.env)
   if [ "$?" -ne 0 ]; then
     abort_r "❌ app key => ${RED}generating... failed!${NC}\\n"
   else
     print_r "✅ app key => ${GREEN}generating... done!${NC}\\n"
   fi
+  if [ -f "app.env.bak" ]; then rm app.env.bak; fi
 fi
 
 # seeding database
