@@ -8,7 +8,7 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="navbar-brand-image h-5 outline-light"
+                            class="navbar-brand-image"
                             :alt="$t('layout.main.main-nav.title')"
                         />
                     </inertia-link>
