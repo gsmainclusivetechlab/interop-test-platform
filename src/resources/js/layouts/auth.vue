@@ -11,7 +11,7 @@
                         />
                     </inertia-link>
                     <div class="text-primary">
-                        <h1 class="col-login__title mb-1">
+                        <h1 class="col-login__title mb-1" style="color: black">
                             {{ $t('layout.main.main-nav.title') }}
                         </h1>
                         <h2 class="col-login__subtitle mb-0">
