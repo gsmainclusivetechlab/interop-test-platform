@@ -6,12 +6,12 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="mb-2 outline-light"
+                            class="mb-2 h-4"
                             :alt="$t('layout.main.main-nav.title')"
                         />
                     </inertia-link>
                     <div class="text-primary">
-                        <h1 class="col-login__title mb-1">
+                        <h1 class="col-login__title mb-1" style="color: black">
                             {{ $t('layout.main.main-nav.title') }}
                         </h1>
                         <h2 class="col-login__subtitle mb-0">
@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import Layout from '@/layouts/app';
+    import Layout from '@/layouts/app';
 
-export default {
-    components: {
-        Layout,
-    },
-};
+    export default {
+        components: {
+            Layout,
+        },
+    };
 </script>

@@ -8,14 +8,14 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="navbar-brand-image h-5 outline-light"
+                            class="navbar-brand-image h-3"
                             :alt="$t('layout.main.main-nav.title')"
                         />
                     </inertia-link>
                 </div>
 
                 <div class="col d-none d-md-block text-center text-primary">
-                    <h1 class="col-login__title mb-1">
+                    <h1 class="col-login__title mb-1" style="color: black">
                         {{ $t('layout.main.main-nav.title') }}
                     </h1>
                     <h2 class="col-login__subtitle mb-0">
