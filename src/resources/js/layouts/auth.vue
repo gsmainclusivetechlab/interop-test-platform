@@ -6,7 +6,7 @@
                     <inertia-link :href="route('home')">
                         <img
                             src="/assets/images/logo.png"
-                            class="mb-2 h-4"
+                            class="mb-2 h-5"
                             :alt="$t('layout.main.main-nav.title')"
                         />
                     </inertia-link>
