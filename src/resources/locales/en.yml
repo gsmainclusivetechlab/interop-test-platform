@@ -75,6 +75,7 @@ layout:
     main-nav:
       dashboard: Dashboard
       doc: Documentation
+      platform-docs: 'https://docs.itp.gsmainclusivetechlab.io'
       external: The Lab
       external-link: 'https://www.gsma.com/lab'
       groups: Groups

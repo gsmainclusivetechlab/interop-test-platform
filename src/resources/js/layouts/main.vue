@@ -345,7 +345,7 @@
                         </li>
                         <li class="nav-item">
                             <a
-                                href="https://docs.itp.gsmainclusivetechlab.io/"
+                                :href="$t('layout.main.main-nav.platform-docs')"
                                 class="nav-link"
                                 target="_blank"
                             >
