@@ -140,9 +140,9 @@ test_steps:
         x-date: '{{ new_date_iso8601() }}'
         x-client-id: '{{ env.X_CLIENT_ID|default("CUSTOMER12345")}}'
         content-type: application/json
-        x-callback-url: '{{ components["service-provider"].base_url }}/callback'
+        x-callback-url: '{{ mapped_urls["mmap"]["sp"] }}/callback'
       body:
-        amount: '15'
+        amount: '20'
         currency: '{{ env.CURRENCY|default("USD")}}'
         creditParty:
           -
