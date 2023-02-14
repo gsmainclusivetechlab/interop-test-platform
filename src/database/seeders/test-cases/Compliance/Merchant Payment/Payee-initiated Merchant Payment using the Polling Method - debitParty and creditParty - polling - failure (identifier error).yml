@@ -3,7 +3,7 @@ slug: payee-initiated-merchant-payment-using-polling-method-debitparty-creditpar
 use_case: Merchant Payment
 behavior: negative
 description: |
-  Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending both their own and customer’s details and the Mobile Money Provider handles the request and responds with a request state. The Service Provider polls the Mobile Money Provider. The Mobile Money Provider responds with an error due to incorrect serverCorrelationID.
+  Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending both their own and customer's details and the Mobile Money Provider handles the request and responds with a request state. The Service Provider polls the Mobile Money Provider. The Mobile Money Provider responds with an error due to incorrect serverCorrelationID.
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API Implemented.
   - Required Parameters for Execution:

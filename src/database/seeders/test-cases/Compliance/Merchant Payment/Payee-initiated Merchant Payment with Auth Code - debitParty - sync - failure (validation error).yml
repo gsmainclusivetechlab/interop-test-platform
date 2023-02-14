@@ -3,7 +3,7 @@ slug: payee-initiated-merchant-payment-with-auth-code-debitparty-sync-failure-va
 use_case: Merchant Payment
 behavior: negative
 description: |
-  The Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending the customer’s pre-authorised code and the Mobile Money Provider handles the request and responds with an synchronous response. The payment request fails and an error object is sent back to the service provider indicating a failure due to validation error (invalid code).
+  The Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending the customer's pre-authorised code and the Mobile Money Provider handles the request and responds with an synchronous response. The payment request fails and an error object is sent back to the service provider indicating a failure due to validation error (invalid code).
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API Implemented.
   - Required Parameters for Execution:
