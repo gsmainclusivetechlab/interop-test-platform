@@ -190,7 +190,7 @@ test_steps:
       headers:
         x-date: '{{ new_date_iso8601() }}'
         content-type: application/json
-      body: '{{ steps.1.request.body|merge({type: "merchantpay", transactionStatus: "Completed", transactionReference: uuidv4()})|json_encode }}'
+      body: '{{ steps.1.request.body|merge({type: "merchantpay", transactionStatus: "completed", transactionReference: uuidv4()})|json_encode }}'
     response:
       status: 204
       body: empty_body
