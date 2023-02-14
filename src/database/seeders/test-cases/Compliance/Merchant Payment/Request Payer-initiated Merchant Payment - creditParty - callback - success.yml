@@ -1,0 +1,196 @@
+name: Request Payer-Initiated Merchant Payment - creditParty - callback - success
+slug: request-payer-initiated-merchant-payment-creditparty-callback-success
+use_case: Merchant Payment
+behavior: positive
+description: |
+  Service Provider requests a Payer-initiated merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback.
+  The payment request is successful and the transaction object is sent back to the service provider.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+  - Mobile Money Operator is capable of handled async calls.
+  - Define the envrionment variables to customise this test case:
+    - `X_CLIENT_ID`, default value is `CUSTOMER12345`
+    - `CURRENCY`, default value is `USD`
+    - `CREDIT_PARTY_KEY`, default value is `msisdn`
+    - `CREDIT_PARTY_VALUE`, default value is `+33555789123`
+  - Required Parameters for Execution:
+    - Amount should be the value `20`.
+components:
+  -
+    name: 'Service Provider'
+    slug: sp
+  -
+    name: 'Mobile Money API Provider'
+    slug: mmap
+test_steps:
+  -
+    path: '/accounts/{identifierType}/{identifier}/authorisationcodes'
+    pattern: '^accounts/msisdn/[+]?[0-9]{6,15}/authorisationcodes$'
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: 'MM v1.2'
+    trigger:
+      amount: '20'
+    test_request_scripts:
+      -
+        name: 'Amount is correct'
+        rules:
+          body.amount: 'required|in:20'
+    test_response_scripts:
+      -
+        name: 'Status is specified correctly'
+        rules:
+          body.status: 'required|in:pending'
+      -
+        name: 'Notification Method is specified correctly'
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: POST
+      uri: /accounts/msisdn/33555789123/authorisationcodes
+      headers:
+        x-date: '{{ new_date_iso8601() }}'
+        x-client-id: '{{ env.X_CLIENT_ID|default("CUSTOMER12345")}}'
+        content-type: application/json
+      body:
+        amount: '20'
+        currency: USD
+        requestDate: '{{ new_date_iso8601() }}'
+    response:
+      status: 202
+      headers:
+        x-date: '{{ new_date_iso8601() }}'
+        content-type: application/json
+      body:
+        status: pending
+        notificationMethod: callback
+        serverCorrelationId: '{{ uuidv4() }}'
+  -
+    path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    trigger:
+      amount: '20'
+    test_request_scripts:
+      -
+        name: 'Authorisation code is valid and state is active'
+        rules:
+          body.codeState: 'required|in:active'
+          body.authorisationCode: 'required|in:54321'
+    test_response_scripts:
+      -
+        name: 'Transaction was successfully accepted'
+        rules:
+          status: 'required|in:204'
+    request:
+      method: PUT
+      uri: '{{ steps.1.request.headers["x-callback-url"].0 }}'
+      headers:
+        x-date: '{{ new_date_iso8601() }}'
+        content-type: application/json
+      body:
+        codeState: active
+        authorisationCode: '54321'
+    response:
+      status: 204
+      body: empty_body
+  -
+    path: '/transactions/type/{transactionType}'
+    pattern: ^transactions/type/merchantpay$
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: 'MM v1.2'
+    trigger:
+      amount: '20'
+    test_request_scripts:
+      -
+        name: 'Header has the Url Callback'
+        rules:
+          'headers.x-callback-url.*': required|url
+      -
+        name: 'Header has the X-Client-Id'
+        rules:
+          headers.x-client-id: required
+      -
+        name: 'Amount is specified correctly'
+        rules:
+          body.amount: 'required|in:20'
+    test_response_scripts:
+      -
+        name: 'Transaction was successfully accepted'
+        rules:
+          status: 'required|in:202'
+      -
+        name: 'Status is specified correctly'
+        rules:
+          body.status: 'required|in:pending'
+      -
+        name: 'Notification Method is specified correctly'
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: POST
+      uri: /transactions
+      headers:
+        accept: application/json
+        x-date: '{{ new_date_iso8601() }}'
+        x-client-id: '{{ env.X_CLIENT_ID|default("CUSTOMER12345")}}'
+        content-type: application/json
+        x-callback-url: '{{ components["service-provider"].base_url }}/callback'
+      body:
+        amount: '15'
+        currency: '{{ env.CURRENCY|default("USD")}}'
+        creditParty:
+          -
+            key: '{{ env.CREDIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.CREDIT_PARTY_VALUE|default("+33555789123")}}'
+        oneTimeCode: '{{ steps.2.request.body.authorisationCode }}'
+    response:
+      status: 202
+      headers:
+        x-date: '{{ new_date_iso8601() }}'
+        content-type: application/json
+      body:
+        status: pending
+        notificationMethod: callback
+        serverCorrelationId: '{{ uuidv4() }}'
+  -
+    path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    trigger:
+      amount: '20'
+    test_request_scripts:
+      -
+        name: 'Amount is specified correctly'
+        rules:
+          body.amount: 'required|in:20'
+      -
+        name: 'Transaction is a Merchant Payment'
+        rules:
+          body.type: 'required|in:merchantpay'
+      -
+        name: 'Transaction was approved'
+        rules:
+          body.transactionStatus: 'required|in:completed'
+    test_response_scripts:
+      -
+        name: 'Transaction was successfully accepted'
+        rules:
+          status: 'required|in:204'
+    request:
+      method: PUT
+      uri: '{{ steps.1.request.headers["x-callback-url"].0 }}'
+      headers:
+        x-date: '{{ new_date_iso8601() }}'
+        content-type: application/json
+      body: '{{ steps.1.request.body|merge({type: "merchantpay", transactionStatus: "Completed", transactionReference: uuidv4()})|json_encode }}'
+    response:
+      status: 204
+      body: empty_body

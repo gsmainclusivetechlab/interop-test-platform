@@ -1,0 +1,80 @@
+name: Payer/Customer-Initiated Merchant Payment - debitParty and creditParty - sync - failure (insufficient funds)
+slug: payer-initiated-merchant-payment-debitparty-creditparty-sync-failure-insufficient-funds
+use_case: Merchant Payment
+behavior: negative
+description: |
+  Customer Client requests a Payer-initiated merchant payment through the Mobile Money API sending their own and the merchant's details and the Mobile Money Provider handles the request and responds with an synchronous response. The payment request fails and an error object is sent back to the Customer Client indicating a failure due to insufficient funds
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+  - Required Parameters for Execution:
+    - Amount should be the value `33.00`.  
+  - Define the environment variables to customise this test case:
+    - `X_CLIENT_ID`, default value is `CUSTOMER12345`
+    - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `msisdn`
+    - `DEBIT_PARTY_VALUE`, default value is `+33555123456`
+    - `CREDIT_PARTY_KEY`, default value is `msisdn`
+    - `CREDIT_PARTY_VALUE`, default value is `+33555789123`
+components:
+  -
+    name: 'Service Provider'
+    slug: sp
+  -
+    name: 'Mobile Money API Provider'
+    slug: mmap
+test_steps:
+  -
+    path: '/transactions/type/{transactionType}'
+    pattern: ^transactions/type/merchantpay$
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: 'MM v1.2'
+    trigger:
+      amount: '2000.00'
+    test_request_scripts:
+      -
+        name: 'Header has the X-Client-Id'
+        rules:
+          headers.X-Client-Id: required
+      -
+        name: 'Amount is specified correctly'
+        rules:
+          body.amount: 'required|in:33.00'
+    test_response_scripts:
+      -
+        name: 'Error category is valid'
+        rules:
+          body.errorCategory: 'required|in:businessRule'
+      -
+        name: 'Error code is valid'
+        rules:
+          body.errorCode: 'required|in:insufficientFunds'
+    request:
+      method: POST
+      uri: /transactions/type/merchantpay
+      headers:
+        Accept: application/json
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id: '{{ env.X_CLIENT_ID|default("CUSTOMER12345")}}'
+        Content-Type: application/json
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amount: '33'
+        currency: '{{ env.CURRENCY|default("USD")}}'
+        debitParty:
+          -
+            key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE|default("+33555123456")}}'
+        creditParty:
+          -
+            key: '{{ env.CREDIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.CREDIT_PARTY_VALUE|default("+33555789123")}}'
+    response:
+      status: 400
+      headers:
+        X-Date: '{{ new_date_iso8601() }}'
+        Content-Type: application/json
+      body:
+        errorCode: insufficientFunds
+        errorCategory: businessRule
