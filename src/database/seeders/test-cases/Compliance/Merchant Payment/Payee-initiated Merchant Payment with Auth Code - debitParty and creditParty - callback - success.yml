@@ -1,0 +1,202 @@
+name: Payee/Merchant-Initiated Merchant Payment with Auth Code - debitParty and creditParty - callback - success
+slug: payee-initiated-merchant-payment-with-auth-code-debitparty-creditparty-callback-success
+use_case: Merchant Payment
+behavior: positive
+description: |
+  Customer client sets up a pre-authorised code for merchant payments using the through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The authorisation code request is successful and the code object is sent back to the customer client. Offline the customer gives the code to the merchant. The Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending the customer’s pre-authorised code and the Mobile Money Provider handles the request and responds with an asynchronous callback. The payment request is successful and the transaction object is sent back to the service provider.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+  - Mobile Money Operator is capable of handled async calls.
+  - Required Parameters for Execution:
+    - Amount should be the value `8.00`.
+  - Define the envrionment variables to customise this test case:
+    - `X_CLIENT_ID_MERCHANT`, default value is `MERCHANT67890`
+    - `X_CLIENT_ID_CUSTOMER`, default value is `CUSTOMER12345`
+    - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `msisdn`
+    - `DEBIT_PARTY_VALUE`, default value is `+33555123456`
+    - `CREDIT_PARTY_KEY`, default value is `msisdn`
+    - `CREDIT_PARTY_VALUE`, default value is `+33555789123`
+components:
+  - name: 'Mobile Money API Provider'
+    slug: mmap
+  - name: 'Service Provider'
+    slug: sp
+test_steps:
+  ## 1 ------------------------------POST/Accounts: SP -> MMO1------------------------------##
+  - path: /accounts/{identifierType}/{identifier}/authorisationcodes
+    method: POST
+    pattern: '^accounts/([a-zA-Z]*)/([a-zA-Z0-9]*)/authorisationcodes$'
+    source: sp
+    target: mmap
+    api_spec: MM v1.2
+    trigger:
+      amount: '8.00'
+    test_request_scripts:
+      - name: URI has a valid identifierType
+        rules:
+          path:
+            - 'required'
+            - 'regex:/.*\/accounts\/(accountid|msisdn|walletid|linkref|consumerno|serviceprovider|storeid|accountcategory|bankaccountno|accountrank|identityalias|iban|swiftbic|sortcode|organisationid|bankname|bankaccounttitle|username|emailaddress|mandatereference)\/.*\/authorisationcodes$/'
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL.*: 'required|url'
+      - name: Header has the X-Client-Id
+        rules:
+          headers.X-Client-Id: 'required'
+      - name: Amount is correct
+        rules:
+          body.amount: 'regex:/^8([.][0-9]{0,4})?$/'
+    test_response_scripts:
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: 'POST'
+      uri:
+        /accounts/{{ env.DEBIT_PARTY_KEY|default("msisdn")}}/{{
+        env.DEBIT_PARTY_VALUE|default("+33555123456")}}/authorisationcodes
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id: '{{ env.X_CLIENT_ID_CUSTOMER|default("CUSTOMER12345")}}'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        requestDate: '{{ new_date_iso8601_zulu() }}'
+        redemptionTransactionTypes:
+          - transactionType: merchantpay
+        amount: '8.00'
+        currency: '{{ env.CURRENCY|default("USD")}}'
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 2 ------------------------------PUT /Callback: MMO1 -> SP ------------------------------##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    api_spec: MM v1.2
+    callback:
+      origin_method: POST
+      origin_path: /accounts/{identifierType}/{identifier}/authorisationcodes
+      name: authorisationCodesSuccessEvent
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:204'
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        authorisationCode: '{{ env.AUTH_CODE|default("AC12345")}}'
+        codeState: 'active'
+    response:
+      status: 204
+  ## 3 ------------------------------POST /transaction: SP -> MMO1 ------------------------------##
+  - path: /transactions/type/{transactionType}
+    pattern: '^transactions/type/merchantpay$'
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: MM v1.2
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL.*: 'required|url'
+      - name: Header has the X-Client-Id
+        rules:
+          headers.X-Client-Id: 'required'
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^8([.][0-9]{0,4})?$/'
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: POST
+      uri: /transactions/type/merchantpay
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id: '{{ env.X_CLIENT_ID_MERCHANT|default("MERCHANT67890") }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amount: '8.00'
+        currency: '{{ env.CURRENCY|default("USD")}}'
+        oneTimeCode: '{{ steps.2.request.body.authorisationCode }}'
+        debitParty:
+          - key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE|default("+33555123456")}}'
+        creditParty:
+          - key: '{{ env.CREDIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.CREDIT_PARTY_VALUE|default("+33555789123")}}'
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 4 ------------------------------PUT /Callback: MMO1 -> SP ------------------------------##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: mmap
+    target: sp
+    api_spec: MM v1.2
+    callback:
+      origin_method: POST
+      origin_path: /transactions/type/{transactionType}
+      name: transactionsSuccessEvent
+    test_request_scripts:
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^8([.][0-9]{0,4})?$/'
+      - name: Transaction is a Merchant Payment
+        rules:
+          body.type: 'required|in:merchantpay'
+      - name: Transaction was approved
+        rules:
+          body.transactionStatus: 'required|in:completed'
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:204'
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        '{{ steps.3.request.body|merge({type: "merchantpay", transactionStatus:
+        "completed", transactionReference: uuidv4()})|json_encode }}'
+    response:
+      status: 204

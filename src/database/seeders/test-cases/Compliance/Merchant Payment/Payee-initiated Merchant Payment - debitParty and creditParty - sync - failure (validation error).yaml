@@ -1,0 +1,84 @@
+name: Payee/Merchant-Initiated Merchant Payment - debitParty and creditParty - sync - failure (validation error)
+slug: payee-initiated-merchant-payment-debitparty-creditparty-sync-failure-validation-error
+use_case: Merchant Payment
+behavior: negative
+description: |
+  Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending both their own and customer’s details and the Mobile Money Provider handles the request and responds with an synchronous response. The payment request fails and an error object is sent back to the service provider indicating a failure due to validation error (debit & credit parties the same)
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+  - Required Parameters for Execution:
+    - Amount should be the value `30.00`.
+  - Define the envrionment variables to customise this test case:
+    - `X_CLIENT_ID_MERCHANT`, default value is `MERCHANT67890`
+    - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `msisdn`
+      - This value will be set automatic in the field creditParty
+    - `DEBIT_PARTY_VALUE`, default value is `+33555123456`
+      - This value will be set automatic in the field creditParty
+components:
+  -
+    name: 'Service Provider'
+    slug: sp
+  -
+    name: 'Mobile Money API Provider'
+    slug: mmap
+test_steps:
+  -
+    path: '/transactions/type/{transactionType}'
+    pattern: ^transactions/type/merchantpay$
+    method: POST
+    source: sp
+    target: mmap
+    api_spec: 'MM v1.2'
+    trigger:
+      amount: '30.00'
+    test_request_scripts:
+      -
+        name: 'Header has the X-Client-Id'
+        rules:
+          headers.X-Client-Id: required
+      -
+        name: 'Amount is specified correctly'
+        rules:
+          body.amount: 'regex:/^30([.][0-9]{0,4})?$/'
+    test_response_scripts:
+      -
+        name: 'Error category is valid'
+        rules:
+          body.errorCategory: 'required|in:businessRule'
+      -
+        name: 'Error code is valid'
+        rules:
+          body.errorCode: 'required|in:samePartiesError'
+      -
+        name: 'Response code is correct'
+        rules:
+          status: 'required|in:400'
+    request:
+      method: POST
+      uri: /transactions/type/merchantpay
+      headers:
+        Accept: application/json
+        X-Date: '{{ new_date_iso8601() }}'
+        X-Client-Id: '{{ env.X_CLIENT_ID_MERCHANT|default("MERCHANT67890") }}'
+        Content-Type: application/json
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amount: '30.00'
+        currency: '{{ env.CURRENCY|default("USD")}}'
+        debitParty:
+          -
+            key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE|default("+33555123456")}}'
+        creditParty:
+          -
+            key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE|default("+33555123456")}}'
+    response:
+      status: 400
+      headers:
+        X-Date: '{{ new_date_iso8601() }}'
+        Content-Type: application/json
+      body:
+        errorCode: samePartiesError
+        errorCategory: businessRule
