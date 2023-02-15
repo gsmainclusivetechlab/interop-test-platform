@@ -1,4 +1,4 @@
-name: Reversal - callback - success
+name: Merchant Payment Reversal - callback - success
 slug: merchant-payment-reversal-callback-success
 use_case: Merchant Payment
 behavior: positive

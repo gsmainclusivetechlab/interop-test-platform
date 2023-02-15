@@ -1,14 +1,14 @@
-name: Refund - callback - success
-slug: merchant-payment-refund-callback-success
+name: Merchant Payment Refund - callback - failure (validation error)
+slug: merchant-payment-refund-callback-failure-validation-error
 use_case: Merchant Payment
-behavior: positive
+behavior: negative
 description: |
-  Service Provider requests a refund for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The refund is successful and the refund object is sent back to the service provider.
+  Service Provider requests a refund for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The refund request fails and an error object is sent back to the service provider indicating a failure due to a validation error (mandatory value for refund not supplied)
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API Implemented.
   - Mobile Money Operator is capable of handled async calls.
   - Required Parameters for Execution:
-    - Amount should be the value `60.00`.
+    - Amount should be the value `61.00`.
   - Define the envrionment variables to customise this test case:
     - `X_CLIENT_ID_MERCHANT`, default value is `MERCHANT67890`
     - `CURRENCY`, default value is `USD`
@@ -30,7 +30,7 @@ test_steps:
     target: mmap
     api_spec: MM v1.2
     trigger:
-      amount: '60.00'
+      amount: '61.00'
 
     test_request_scripts:
       - name: Header has the Url Callback
@@ -41,7 +41,7 @@ test_steps:
           headers.X-Client-Id: 'required'
       - name: Amount is specified correctly
         rules:
-          body.amount: 'regex:/^60([.][0-9]{0,4})?$/'
+          body.amount: 'regex:/^61([.][0-9]{0,4})?$/'
 
     test_response_scripts:
       - name: Transaction was successfully Accepted
@@ -53,6 +53,9 @@ test_steps:
       - name: Notification Method is specified correctly
         rules:
           body.notificationMethod: 'required|in:callback'
+      - name: serverCorrelationId is specified correctly
+        rules:
+          body.serverCorrelationId: 'required'
 
     request:
       method: POST
@@ -66,7 +69,7 @@ test_steps:
         X-CorrelationID: '{{ uuidv4() }}'
 
       body:
-        amount: '60.00'
+        amount: '61.00'
         currency: '{{ env.CURRENCY|default("USD")}}'
         debitParty:
           - key: '{{ env.DEBIT_PARTY_KEY|default("msisdn")}}'
@@ -92,23 +95,20 @@ test_steps:
     callback:
       origin_method: POST
       origin_path: /transactions/type/{transactionType}
-      name: transactionsSuccessEvent
+      name: transactionsFailureEvent
     trigger:
-      amount: '60.00'
+      amount: '61.00'
 
     test_request_scripts:
-      - name: Amount is specified correctly
+      - name: Error category is valid
         rules:
-          body.amount: 'regex:/^60([.][0-9]{0,4})?$/'
-      - name: Transaction is a Refund
+          body.errorCategory: 'required|in:validation'
+      - name: Error code is valid
         rules:
-          body.type: 'required|in:adjustment'
-      - name: Transaction was approved
-        rules:
-          body.transactionStatus: 'required|in:completed'
+          body.errorCode: 'required|in:mandatoryValueNotSupplied'
 
     test_response_scripts:
-      - name: Transaction was successfully Accepted
+      - name: Transaction was successfully declined
         rules:
           status: 'required|in:204'
 
@@ -119,9 +119,8 @@ test_steps:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
       body:
-        '{{ steps.1.request.body|merge({ type: "adjustment", transactionStatus:
-        "completed",  transactionReference: uuidv4(), creditParty:
-        [{key:"msisdn", value: "+33555654321"}]})|json_encode }}'
+        errorCategory: 'validation'
+        errorCode: 'mandatoryValueNotSupplied'
 
     response:
       status: 204

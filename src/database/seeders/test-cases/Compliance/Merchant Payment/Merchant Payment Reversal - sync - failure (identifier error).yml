@@ -1,4 +1,4 @@
-name: Reversal - sync - failure (identifier error)
+name: Merchant Payment Reversal - sync - failure (identifier error)
 slug: merchant-payment-reversal-sync-failure-identifier-error
 use_case: Merchant Payment
 behavior: negative
