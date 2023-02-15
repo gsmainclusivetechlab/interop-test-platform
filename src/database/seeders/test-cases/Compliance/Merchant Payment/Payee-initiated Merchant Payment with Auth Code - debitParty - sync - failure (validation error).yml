@@ -27,7 +27,7 @@ test_steps:
     method: POST
     source: sp
     target: mmap
-    api_spec: 'MM v1.2'
+    api_spec: 'MM v1.2.0'
     trigger:
       amount: '31.00'
     test_request_scripts:

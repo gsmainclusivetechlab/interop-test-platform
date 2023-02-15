@@ -26,7 +26,7 @@ test_steps:
     method: POST
     source: sp
     target: mmap
-    api_spec: 'MM v1.2'
+    api_spec: 'MM v1.2.0'
     test_request_scripts:
       -
         name: 'Header has the X-Client-Id'

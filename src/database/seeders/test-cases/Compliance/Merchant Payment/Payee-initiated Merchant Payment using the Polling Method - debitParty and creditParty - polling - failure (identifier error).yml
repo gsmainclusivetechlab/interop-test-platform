@@ -27,7 +27,7 @@ test_steps:
     method: POST
     source: sp
     target: mmap
-    api_spec: MM v1.2
+    api_spec: MM v1.2.0
     trigger:
       amount: '12.00'
     test_request_scripts:
@@ -80,7 +80,7 @@ test_steps:
     method: GET
     source: sp
     target: mmap
-    api_spec: MM v1.2
+    api_spec: MM v1.2.0
     test_response_scripts:
       - name: Transaction was successfully Rejected
         rules:

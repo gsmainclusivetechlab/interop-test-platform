@@ -28,7 +28,7 @@ test_steps:
     method: POST
     source: sp
     target: mmap
-    api_spec: MM v1.2
+    api_spec: MM v1.2.0
     trigger:
       amount: '17.00'
     test_request_scripts:
@@ -86,7 +86,7 @@ test_steps:
     method: PUT
     source: mmap
     target: sp
-    api_spec: MM v1.2
+    api_spec: MM v1.2.0
     callback:
       origin_method: POST
       origin_path: /transactions/type/{transactionType}
