@@ -3,7 +3,7 @@ slug: payer-initiated-merchant-payment-debitparty-creditparty-callback-success
 use_case: Merchant Payment
 behavior: positive
 description: |
-  Customer Client requests a Payer-initiated merchant payment through the Mobile Money API sending their own and the merchant’s details and their own and the Mobile Money Provider handles the request and responds with an asynchronous callback. The payment request is successful and the transaction object is sent back to the Customer Client.
+  Customer Client requests a Payer-initiated merchant payment through the Mobile Money API sending their own and the merchant's details and their own and the Mobile Money Provider handles the request and responds with an asynchronous callback. The payment request is successful and the transaction object is sent back to the Customer Client.
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API Implemented.
   - Mobile Money Operator is capable of handled async calls.
@@ -28,7 +28,7 @@ test_steps:
     method: POST
     source: sp
     target: mmap
-    api_spec: MM v1.2.0
+    api_spec: MM v1.2
     trigger:
       amount: '16.00'
     test_request_scripts:
@@ -86,7 +86,7 @@ test_steps:
     method: PUT
     source: mmap
     target: sp
-    api_spec: MM v1.2.0
+    api_spec: MM v1.2
     callback:
       origin_method: POST
       origin_path: /transactions/type/{transactionType}
