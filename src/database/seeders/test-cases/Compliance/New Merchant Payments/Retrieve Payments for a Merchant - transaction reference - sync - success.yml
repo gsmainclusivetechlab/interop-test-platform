@@ -1,0 +1,55 @@
+name: Retrieve Payments for a Merchant - transaction reference - sync - success
+slug: retrieve-payments-merchant-transaction-reference-sync-success
+use_case: Merchant Payment
+behavior: positive
+description: |
+  Service Provider requests their own account transaction history through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with an account transaction list.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+  - Required Parameters for Execution:
+    - transactionReference should be a valid value to reply the inform
+  - Define the envrionment variables to customise this test case:
+    - `TRANSACTION_REFERENCE`, default value is `99999999-2222-4e3d-8333-98234e4f910c`
+components:
+  - name: 'Mobile Money API Provider'
+    slug: mmap
+  - name: 'Service Provider'
+    slug: sp
+test_steps:
+  ## 1 ------------------------------GET /transaction: SP -> MMO1 ------------------------------##
+  - path: /transactions/{transactionReference}
+    pattern: '^transactions/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    method: GET
+    source: sp
+    target: mmap
+    api_spec: MM v1.2.0
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:200'
+    request:
+      method: 'GET'
+      uri:
+        'transactions/{{
+        env.TRANSACTION_REFERENCE|default("99999999-2222-4e3d-8333-98234e4f910c")
+        }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        amount: '23.00'
+        currency: 'USD'
+        debitParty:
+          - key: 'msisdn'
+            value: '+33555123456'
+        creditParty:
+          - key: 'msisdn'
+            value: '+33555123456'
+        type: 'merchantpay'
+        transactionStatus: 'completed'
+        transactionReference: '{{ uuidv4() }}'
