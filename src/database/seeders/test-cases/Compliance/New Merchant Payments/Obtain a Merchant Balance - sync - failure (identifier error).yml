@@ -1,6 +1,6 @@
 name: Obtain a Merchant Balance - sync - failure (identifier error)
 slug: obtain-merchant-balance-sync-failure-identifier-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Service Provider requests their own account balance through the Mobile Money API and the Mobile Money Provider handles the request and responds synchronously with an error indicating a failure to Identify the Target Resource.

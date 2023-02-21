@@ -1,6 +1,6 @@
 name: Retrieve a Missing API Response - sync - success
 slug: retrieve-missing-api-response-sync-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests the responses for their client correlation ID through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with the Responses object. The service provider requests a specific object which has previously been created by passing the object's URL and the Mobile Money Provider responds synchronously with the object.

@@ -1,6 +1,6 @@
 name: Check for Service Availability - sync - success
 slug: check-for-service-availability-sync-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider checks the Mobile Money Provider service is available.

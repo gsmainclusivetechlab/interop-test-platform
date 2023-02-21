@@ -1,6 +1,6 @@
 name: Payee/Merchant-Initiated Merchant Payment using the Polling Method - debitParty and creditParty - polling - success
 slug: payee-initiated-merchant-payment-using-polling-method-debitparty-creditparty-polling-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending both their own and customer's details and the Mobile Money Provider handles the request and responds with a request state. The Service Provider polls the Mobile Money Provider until the request is authorised or declined or the polling limit has been reached. The Service Provider requests the specific transaction using the transaction reference returned in the request state and the transaction object is sent back to the service provider.

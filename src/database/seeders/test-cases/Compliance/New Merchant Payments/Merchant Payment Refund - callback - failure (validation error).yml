@@ -1,6 +1,6 @@
 name: Merchant Payment Refund - callback - failure (validation error)
 slug: merchant-payment-refund-callback-failure-validation-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Service Provider requests a refund for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The refund request fails and an error object is sent back to the service provider indicating a failure due to a validation error (mandatory value for refund not supplied)

@@ -1,6 +1,6 @@
 name: Payer/Customer-Initiated Merchant Payment - debitParty and creditParty - polling - success
 slug: payer-initiated-merchant-payment-debitparty-creditparty-polling-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Customer Client requests a Payer-initiated merchant payment through the Mobile Money API sending their own and the merchant's details and the Mobile Money Provider handles the request and responds with a request state. The Customer Client polls the Mobile Money Provider until the request is authorised or declined or the polling limit has been reached. The Customer Client requests the specific transaction using the transaction reference returned in the request state and the transaction object is sent back to the Customer Client.

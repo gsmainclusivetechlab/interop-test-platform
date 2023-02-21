@@ -1,6 +1,6 @@
 name: Payee/Merchant-Initiated Merchant Payment with Auth Code - debitParty - callback - failure (business rule error)
 slug: payee-initiated-merchant-payment-with-auth-code-debitparty-callback-failure-business-rule-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Customer client tries to set up a pre-authorised code for merchant payments using the through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The authorisation code request fails and an error object is sent back to the customer client indicating a failure create a code due to insufficient funds.

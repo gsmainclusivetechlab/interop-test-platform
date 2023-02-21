@@ -1,6 +1,6 @@
 name: Payer/Customer-Initiated Merchant Payment - debitParty and creditParty - callback - failure (insufficient funds)
 slug: payer-initiated-merchant-payment-debitparty-creditparty-callback-failure-insufficient-funds
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Customer Client requests a Payer-initiated merchant payment through the Mobile Money API sending their own and the merchant's details and the Mobile Money Provider handles the request and responds with an asynchronous callback. The payment request fails and an error object is sent back to the Customer Client indicating a failure due to insufficient funds

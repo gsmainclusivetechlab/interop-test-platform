@@ -1,6 +1,6 @@
 name: Merchant Payment Refund - callback - success
 slug: merchant-payment-refund-callback-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests a refund for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The refund is successful and the refund object is sent back to the service provider.

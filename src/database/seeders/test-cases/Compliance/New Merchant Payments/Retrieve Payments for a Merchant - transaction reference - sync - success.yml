@@ -1,6 +1,6 @@
 name: Retrieve Payments for a Merchant - transaction reference - sync - success
 slug: retrieve-payments-merchant-transaction-reference-sync-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests their own account transaction history through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with an account transaction list.

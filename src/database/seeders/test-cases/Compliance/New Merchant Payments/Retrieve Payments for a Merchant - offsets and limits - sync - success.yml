@@ -1,6 +1,6 @@
 name: Retrieve Payments for a Merchant - offsets and limits - sync - success
 slug: retrieve-payments-merchant-offsets-and-limits-sync-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests their own account transaction history specifying an offset and limit through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with an account transaction list which starts at the offset and contains the number of records specified by the limit.

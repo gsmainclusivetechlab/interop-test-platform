@@ -1,6 +1,6 @@
 name: Merchant Payment Reversal - sync - failure (identifier error)
 slug: merchant-payment-reversal-sync-failure-identifier-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Service Provider requests a reversal for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an synchronous response. The reversal is unsuccessful and the error object is sent back to the service provider.

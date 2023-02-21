@@ -1,6 +1,6 @@
 name: Merchant Payment Reversal - callback - success
 slug: merchant-payment-reversal-callback-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests a reversal for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The reversal is successful and the reversal object is sent back to the service provider.

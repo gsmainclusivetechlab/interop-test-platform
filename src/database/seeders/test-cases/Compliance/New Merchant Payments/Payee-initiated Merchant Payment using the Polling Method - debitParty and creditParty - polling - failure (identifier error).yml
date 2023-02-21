@@ -1,6 +1,6 @@
 name: Payee/Merchant-Initiated Merchant Payment using the Polling Method - debitParty and creditParty - polling - failure (identifier error)
 slug: payee-initiated-merchant-payment-using-polling-method-debitparty-creditparty-polling-failure-identifier-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending both their own and customer's details and the Mobile Money Provider handles the request and responds with a request state. The Service Provider polls the Mobile Money Provider. The Mobile Money Provider responds with an error due to incorrect serverCorrelationID.

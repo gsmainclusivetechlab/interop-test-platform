@@ -1,6 +1,6 @@
 name: Payer/Customer-Initiated Merchant Payment - debitParty and creditParty - callback - success
 slug: payer-initiated-merchant-payment-debitparty-creditparty-callback-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Customer Client requests a Payer-initiated merchant payment through the Mobile Money API sending their own and the merchant's details and their own and the Mobile Money Provider handles the request and responds with an asynchronous callback. The payment request is successful and the transaction object is sent back to the Customer Client.

@@ -1,6 +1,6 @@
-name: Payee/Merchant-Initiated Merchant Payment - debitParty and creditParty - sync - failure (validation error)
+\name: Payee/Merchant-Initiated Merchant Payment - debitParty and creditParty - sync - failure (validation error)
 slug: payee-initiated-merchant-payment-debitparty-creditparty-sync-failure-validation-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending both their own and customer's details and the Mobile Money Provider handles the request and responds with an synchronous response. The payment request fails and an error object is sent back to the service provider indicating a failure due to validation error (debit & credit parties the same)

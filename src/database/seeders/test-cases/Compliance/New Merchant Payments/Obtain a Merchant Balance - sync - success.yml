@@ -1,6 +1,6 @@
 name: Obtain a Merchant Balance - sync - success
 slug: obtain-merchant-balance-sync-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Service Provider requests their own account balance through the Mobile Money API and the Mobile Money Provider handles the request and successfully responds synchronously with an account balance.

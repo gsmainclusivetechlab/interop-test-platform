@@ -1,6 +1,6 @@
 name: Merchant Payment Reversal - callback - failure (format error)
 slug: merchant-payment-reversal-callback-failure-format-error
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: negative
 description: |
   Service Provider requests a reversal for a merchant payment through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The reversal request fails and an error object is sent back to the service provider indicating a failure due to a validation format error (invalid type).

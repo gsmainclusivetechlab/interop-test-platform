@@ -1,6 +1,6 @@
 name: Payee/Merchant-Initiated Merchant Payment with Auth Code - debitParty and creditParty - callback - success
 slug: payee-initiated-merchant-payment-with-auth-code-debitparty-creditparty-callback-success
-use_case: Merchant Payment
+use_case: Merchant Payments (New)
 behavior: positive
 description: |
   Customer client sets up a pre-authorised code for merchant payments using the through the Mobile Money API and the Mobile Money Provider handles the request and responds with an asynchronous callback. The authorisation code request is successful and the code object is sent back to the customer client. Offline the customer gives the code to the merchant. The Service Provider requests a Payee-initiated merchant payment through the Mobile Money API sending the customer's pre-authorised code and the Mobile Money Provider handles the request and responds with an asynchronous callback. The payment request is successful and the transaction object is sent back to the service provider.
