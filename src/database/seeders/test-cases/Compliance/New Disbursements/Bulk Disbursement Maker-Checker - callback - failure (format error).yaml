@@ -1,9 +1,9 @@
-name: 2-Step Bulk Disbursement - callback - success
-slug: 2-step-bulk-disbursement-callback-success
+name: Bulk Disbursement with Maker-Checker - callback - failure (format error)
+slug: bulk-disbursement-maker-checker-callback-failure-format-error
 use_case: Disbursements (New)
-behavior: positive
+behavior: negative
 description: |
-  The Service Provider wants to test if he is capable of making a 2 step bulk disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the maker part of the organisation creating a batch transaction request, and the checker or approver part of the organisation approving the request.  In this case both steps are successful.
+  The Service Provider wants to test if he is capable of making a 2 step bulk disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the maker part of the organisation creating a batch transaction request, and the checker or approver part of the organisation approving the request.  In this case the second step fails because the request sends an invalid batch status value in the PATCH request.
 
 precondition: |
   - Service Provider has GSMA Mobile Money API Implemented.
@@ -153,7 +153,7 @@ test_steps:
       body:
         - path: '/batchStatus'
           op: 'replace'
-          value: 'approved'
+          value: 'xyz'
 
     response:
       status: 202
@@ -176,7 +176,15 @@ test_steps:
     callback:
       origin_method: PATCH
       origin_path: /batchtransactions/{batchId}
-      name: batchTransactionsUpdateSuccessEvent
+      name: batchTransactionsUpdateFailureEvent
+
+    test_request_scripts:
+      - name: Error category is valid
+        rules:
+          body.errorCategory: 'required|in:validation'
+      - name: Error code is valid
+        rules:
+          body.errorCode: 'required|in:formatError'
 
     test_response_scripts:
       - name: Batch transaction was successfully accepted
@@ -190,7 +198,8 @@ test_steps:
         content-type: 'application/json'
         x-date: '{{ new_date_iso8601() }}'
       body:
-        result: 'success'
+        errorCategory: 'validation'
+        errorCode: 'formatError'
 
     response:
       status: 204

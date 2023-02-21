@@ -1,5 +1,5 @@
-name: Retrieve Bulk Disbursements Rejected - success
-slug: retrieve-bulk-disbursements-rejected-success
+name: Bulk Disbursement - retrieve rejected transactions - sync - success
+slug: bulk-disbursement-retrieve-rejected-transactions-sync-success
 use_case: Disbursements (New)
 behavior: positive
 description: |

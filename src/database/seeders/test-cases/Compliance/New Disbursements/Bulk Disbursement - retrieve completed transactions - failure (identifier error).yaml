@@ -1,5 +1,5 @@
-name: Retrieve Bulk Disbursements Completed - failure
-slug: retrieve-bulk-disbursements-completed-failure
+name: Bulk Disbursement - retrieve completed transactions - failure (identifier error)
+slug: bulk-disbursement-retrieve-completed-transactions-failure-identifier-error
 use_case: Disbursements (New)
 behavior: negative
 description: |

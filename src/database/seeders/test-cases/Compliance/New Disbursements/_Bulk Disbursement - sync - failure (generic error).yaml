@@ -1,5 +1,5 @@
-name: 1-Step Bulk Disbursement - callback - failure - sync
-slug: 1-step-bulk-disbursement-callback-failure-sync
+name: Bulk Disbursement - sync - failure (generic error)
+slug: bulk-disbursement-sync-failure-generic-error
 use_case: Disbursements (New)
 behavior: negative
 description: |

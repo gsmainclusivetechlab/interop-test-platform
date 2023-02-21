@@ -1,5 +1,5 @@
-name: Retrieve Bulk Disbursements Rejected - failure
-slug: retrieve-bulk-disbursements-rejected-failure
+name: Bulk Disbursement - retrieve rejected transactions - failure (identifier error)
+slug: bulk-disbursement-retrieve-rejected-transactions-failure-identifier-error
 use_case: Disbursements (New)
 behavior: negative
 description: |
