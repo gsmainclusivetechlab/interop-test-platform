@@ -1,5 +1,5 @@
 name: Check for Service Availability - sync - success
-slug: check-for-service-availability-sync-success
+slug: disbursement-check-for-service-availability-sync-success
 use_case: Disbursements (New)
 behavior: positive
 description: |

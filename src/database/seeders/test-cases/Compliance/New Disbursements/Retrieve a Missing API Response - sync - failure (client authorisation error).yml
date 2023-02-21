@@ -1,5 +1,5 @@
 name: Retrieve a Missing API Response - sync - failure (client authorisation error)
-slug: retrieve-missing-api-response-sync-failure-client-authorisation-error
+slug: disbursement-retrieve-missing-api-response-sync-failure-client-authorisation-error
 use_case: Disbursements (New)
 behavior: negative
 description: |

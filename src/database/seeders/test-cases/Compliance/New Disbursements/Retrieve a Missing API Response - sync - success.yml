@@ -1,5 +1,5 @@
 name: Retrieve a Missing API Response - sync - success
-slug: retrieve-missing-api-response-sync-success
+slug: disbursement-retrieve-missing-api-response-sync-success
 use_case: Disbursements (New)
 behavior: positive
 description: |
