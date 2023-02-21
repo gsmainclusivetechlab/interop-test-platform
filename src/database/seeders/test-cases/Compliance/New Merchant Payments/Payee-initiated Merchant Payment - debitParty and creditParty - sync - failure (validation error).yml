@@ -1,4 +1,4 @@
-\name: Payee/Merchant-Initiated Merchant Payment - debitParty and creditParty - sync - failure (validation error)
+name: Payee/Merchant-Initiated Merchant Payment - debitParty and creditParty - sync - failure (validation error)
 slug: payee-initiated-merchant-payment-debitparty-creditparty-sync-failure-validation-error
 use_case: Merchant Payments (New)
 behavior: negative
