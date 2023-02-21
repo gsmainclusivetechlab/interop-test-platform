@@ -1,6 +1,6 @@
 name: Retrieve Bulk Disbursements Rejected - success
 slug: retrieve-bulk-disbursements-rejected-success
-use_case: Disbursement
+use_case: Disbursements (New)
 behavior: positive
 description: |
   The Service Provider wants to test if he is capable of retrieving details of completed transactions in previously made bulk disbursement from their account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to retrieve only the completed set of transactions for a batch. This flow shows the necessary steps for this request simulating a successful retrieval.
@@ -21,7 +21,7 @@ test_steps:
     method: GET
     source: sp
     target: mmap
-    api_spec: MM v1.1.3
+    api_spec: MM v1.2.0
     test_response_scripts:
       - name: Batch Transactions  successfully sent
         rules:

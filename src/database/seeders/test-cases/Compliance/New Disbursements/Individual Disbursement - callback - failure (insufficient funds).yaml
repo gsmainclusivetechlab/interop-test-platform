@@ -1,6 +1,6 @@
-name: Indivudual Disbursement - callback - failure
-slug: indivudual-disbursement-callback-failure
-use_case: Disbursement
+name: Individual Disbursement - callback - failure (insufficient funds)
+slug: individual-disbursement-callback-failure-insufficient-funds
+use_case: Disbursements (New)
 behavior: negative
 description: |
   The Service Provider wants to test if he is capable of making a single disbursement from their account with MMO to beneficiary account with MMO. In this case, we simulate the scenario when the Service Provider (the Payer) would like to make a payment to the beneficiary (the Payee). This flow shows the necessary steps for this transaction simulating a declined single disbursement with error 400 by the Payee.
@@ -26,7 +26,7 @@ test_steps:
     method: POST
     source: sp
     target: mmap
-    api_spec: MM v1.1.3
+    api_spec: MM v1.2.0
     trigger:
       amount: '51'
 
@@ -88,7 +88,7 @@ test_steps:
     method: PUT
     source: mmap
     target: sp
-    api_spec: MM v1.1.3
+    api_spec: MM v1.2.0
 
     callback:
       origin_method: POST

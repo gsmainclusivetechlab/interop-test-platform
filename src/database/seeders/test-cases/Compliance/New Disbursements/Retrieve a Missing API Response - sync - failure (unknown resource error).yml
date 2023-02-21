@@ -1,0 +1,50 @@
+name: Retrieve a Missing API Response - sync - failure (unknown resource error)
+slug: retrieve-missing-api-response-sync-failure-unknown-resource-error
+use_case: Disbursements (New)
+behavior: negative
+description: |
+  Service Provider requests the responses for their client correlation ID through the Mobile Money API and the Mobile Money Provider responds synchronously with an error indicating the client correlation ID does not map to valid resources.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API Implemented.
+components:
+  -
+    name: 'Service Provider'
+    slug: sp
+  -
+    name: 'Mobile Money API Provider'
+    slug: mmap
+test_steps:
+  -
+    path: '/responses/{clientCorrelationId}'
+    pattern: '^responses/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    method: GET
+    source: sp
+    target: mmap
+    api_spec: 'MM v1.2.0'
+    test_response_scripts:
+      -
+        name: 'Response succesfully gives error code'
+        rules:
+          status: 'required|in:404'
+      -
+        name: 'Response error is correct'
+        rules:
+          body.errorCode: 'required|in:identifierError'
+          body.errorCategory: 'required|in:identification'
+    request:
+      method: GET
+      uri: '/responses/{{ uuidv4() }}'
+      headers:
+        accept: application/json
+        x-date: '{{ new_date_iso8601() }}'
+        x-client-id: '{{ env.X_CLIENT_ID|default("PROVIDER12345")}}'
+        content-type: application/json
+      body: empty_body
+    response:
+      status: 404
+      headers:
+        x-date: '{{ new_date_iso8601() }}'
+        content-type: application/json
+      body:
+        errorCode: identifierError
+        errorCategory: identification
