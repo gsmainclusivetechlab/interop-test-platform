@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin\TestCases;
 
 use App\Exports\TestCaseExport;
-use App\Http\Resources\{TestCaseResource, UseCaseResource};
+use App\Http\Resources\{TestCaseResource, UseCaseResource, ScenarioResource};
 use App\Imports\TestCaseImport;
-use App\Models\{TestCase, UseCase};
+use App\Models\{TestCase, UseCase, Scenario};
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -34,7 +34,7 @@ class TestCaseInfoController extends Controller
         $this->authorize('update', $testCase);
         return Inertia::render('admin/test-cases/info/show', [
             'testCase' => (new TestCaseResource(
-                $testCase->load(['useCase'])
+                $testCase->load(['useCase', 'scenario'])
             ))->resolve(),
         ]);
     }
@@ -48,7 +48,7 @@ class TestCaseInfoController extends Controller
     {
         $this->authorize('update', $testCase);
         $testCaseResource = (new TestCaseResource(
-            $testCase->load(['groups', 'useCase', 'testSteps'])
+            $testCase->load(['groups', 'useCase', 'scenario', 'testSteps'])
         ))->resolve();
 
         if (!$testCase->draft) {
@@ -96,6 +96,9 @@ class TestCaseInfoController extends Controller
             'testCase' => $testCaseResource,
             'useCases' => UseCaseResource::collection(
                 UseCase::get()
+            )->resolve(),
+            'scenarios' => ScenarioResource::collection(
+                Scenario::get()
             )->resolve(),
         ]);
     }

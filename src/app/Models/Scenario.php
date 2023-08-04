@@ -10,61 +10,32 @@ use Illuminate\Support\Facades\DB;
  * @mixin \Eloquent
  * @method static withTestCasesOfSession(Session $session, bool $withTestRuns)
  */
-class UseCase extends Model
+class Scenario extends Model
 {
     /**
      * @var string
      */
-    protected $table = 'use_cases';
+    protected $table = 'scenarios';
 
     /**
      * @var array
      */
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'use_case_id'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function useCase()
+    {
+        return $this->belongsTo(UseCase::class, 'use_case_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function testCases()
     {
-        return $this->hasMany(TestCase::class, 'use_case_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function scenarios()
-    {
-        return $this->hasMany(Scenario::class, 'use_case_id');
-    }
-
-    /**
-     * @param Builder $query
-     * @param Session $session
-     * @return mixed
-     */
-    public function scopeScenariosOfSession($query, Session $session)
-    {
-        return $query->with([
-            'scenarios' => function ($query) use ($session) {
-                $query
-                    ->whereExists(function ($query) use ($session) {
-                        $query
-                            ->select(DB::raw(1))
-                            ->from('session_test_cases')
-                            ->where('session_test_cases.deleted_at', null)
-                            ->where(
-                                'session_test_cases.session_id',
-                                $session->getKey()
-                            )
-                            ->whereColumn(
-                                'session_test_cases.test_case_id',
-                                'test_cases.id'
-                            );
-                    })
-                    ->orderBy('name');
-            },
-        ]);
+        return $this->hasMany(TestCase::class, 'scenario_id');
     }
 
     /**
@@ -76,40 +47,29 @@ class UseCase extends Model
     {
         return $query
             ->with([
-                'scenarios' => function ($query) use ($session) {
-                    $query->with([
-                        'testCases' => function ($query) use ($session) {
+                'testCases' => function ($query) use ($session) {
+                    $query
+                        ->with([
+                            'lastTestRun' => function ($query) use ($session) {
+                                $query->where('session_id', $session->getKey());
+                            },
+                            'scenario',
+                        ])
+                        ->whereExists(function ($query) use ($session) {
                             $query
-                                ->with([
-                                    'lastTestRun' => function ($query) use (
-                                        $session
-                                    ) {
-                                        $query->where(
-                                            'session_id',
-                                            $session->getKey()
-                                        );
-                                    },
-                                ])
-                                ->whereExists(function ($query) use ($session) {
-                                    $query
-                                        ->select(DB::raw(1))
-                                        ->from('session_test_cases')
-                                        ->where(
-                                            'session_test_cases.deleted_at',
-                                            null
-                                        )
-                                        ->where(
-                                            'session_test_cases.session_id',
-                                            $session->getKey()
-                                        )
-                                        ->whereColumn(
-                                            'session_test_cases.test_case_id',
-                                            'test_cases.id'
-                                        );
-                                })
-                                ->orderBy('name');
-                        },
-                    ]);
+                                ->select(DB::raw(1))
+                                ->from('session_test_cases')
+                                ->where('session_test_cases.deleted_at', null)
+                                ->where(
+                                    'session_test_cases.session_id',
+                                    $session->getKey()
+                                )
+                                ->whereColumn(
+                                    'session_test_cases.test_case_id',
+                                    'test_cases.id'
+                                );
+                        })
+                        ->orderBy('name');
                 },
             ])
             ->whereHas('testCases', function ($query) use ($session) {

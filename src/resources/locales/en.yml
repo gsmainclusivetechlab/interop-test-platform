@@ -103,6 +103,7 @@ layout:
       sessions: Sessions
       test-cases: Test Cases
       use-cases: Use Cases
+      scenarios: Scenarios
       users: Users
       faqs: FAQ
     user-menu:

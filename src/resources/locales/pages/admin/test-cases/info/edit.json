@@ -18,6 +18,10 @@
                 "label": "Use Case",
                 "placeholder": "Select use case"
             },
+            "scenario": {
+                "label": "Scenario",
+                "placeholder": "Select scenario"
+            },
             "precondition": {
                 "label": "Precondition"
             },

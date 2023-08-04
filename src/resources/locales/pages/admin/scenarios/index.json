@@ -1,13 +1,12 @@
 {
     "en": {
         "page": {
-            "title": "Use Cases"
+            "title": "Scenarios"
         },
         "table": {
             "header": {
                 "name": "Name",
-                "test-cases": "Test Cases",
-                "scenarios": "Scenarios"
+                "test-cases": "Test Cases"
             },
             "menu": {
                 "edit": "Edit",
@@ -22,7 +21,7 @@
             "no-results": "No Results"
         },
         "buttons": {
-            "create": "New Use Case"
+            "create": "New Scenario"
         }
     },
     "ru": {

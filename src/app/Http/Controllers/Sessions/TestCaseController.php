@@ -9,7 +9,8 @@ use App\Http\Resources\{
     SessionResource,
     TestCaseResource,
     TestRunResource,
-    TestStepResource
+    TestStepResource,
+    ScenarioResource
 };
 use App\Jobs\ExecuteSessionTestCasesJob;
 use App\Jobs\ExecuteTestRunJob;
@@ -53,6 +54,7 @@ class TestCaseController extends Controller
                     'testCases' => function ($query) use ($session) {
                         return $query->with([
                             'useCase',
+                            'scenario',
                             'lastTestRun' => function ($query) use ($session) {
                                 $query->where('session_id', $session->id);
                             },
@@ -64,6 +66,7 @@ class TestCaseController extends Controller
                 ])
             ))->resolve(),
             'testCase' => (new TestCaseResource($testCase))->resolve(),
+            'scenario' => (new ScenarioResource($testCase))->resolve(),
             'isAvailableRun' => $session->isAvailableTestCaseRun($testCase),
             'testRunAttempts' => config(
                 'service_session.compliance_session_execution_limit'

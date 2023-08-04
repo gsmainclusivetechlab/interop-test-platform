@@ -49,6 +49,7 @@ class TestCase extends Model
         'description',
         'precondition',
         'use_case_id',
+        'scenario_id',
         'test_case_group_id',
     ];
 
@@ -91,6 +92,14 @@ class TestCase extends Model
     public function useCase()
     {
         return $this->belongsTo(UseCase::class, 'use_case_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function scenario()
+    {
+        return $this->belongsTo(Scenario::class, 'scenario_id');
     }
 
     /**
@@ -147,8 +156,7 @@ class TestCase extends Model
      */
     public function testRuns()
     {
-        return $this->hasMany(TestRun::class, 'test_case_id')
-            ->latest();
+        return $this->hasMany(TestRun::class, 'test_case_id')->latest();
     }
 
     /**

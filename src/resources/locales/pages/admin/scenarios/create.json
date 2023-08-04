@@ -1,0 +1,40 @@
+{
+    "en": {
+        "page": {
+            "title": "Create new scenario"
+        },
+        "inputs": {
+            "name": {
+                "label": "Name"
+            },
+            "description": {
+                "label": "Description"
+            },
+            "use-case": {
+                "label": "Use Case",
+                "placeholder": "Select use case"
+            }
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "create": "Create"
+        }
+    },
+    "ru": {
+        "page": {
+            "title": "Создать новый образец использования"
+        },
+        "inputs": {
+            "name": {
+                "label": "Имя"
+            },
+            "description": {
+                "label": "Описание"
+            }
+        },
+        "buttons": {
+            "cancel": "Отмена",
+            "create": "Создать"
+        }
+    }
+}

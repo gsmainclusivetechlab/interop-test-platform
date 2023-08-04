@@ -1,5 +1,5 @@
 <template>
-    <layout :session="session" :useCases="useCases">
+    <layout :session="session" :useCases="useCases" :scenarios="scenarios">
         <div v-if="sutUrls.items && sutUrls.items.length" class="card">
             <div class="card-header">
                 <h2 class="card-title"><b>Session SUTs URLs</b></h2>
@@ -447,7 +447,9 @@
                             <thead>
                                 <tr>
                                     <th class="text-nowrap w-auto">ID</th>
-                                    <th class="text-nowrap w-auto">Test Case</th>
+                                    <th class="text-nowrap w-auto">
+                                        Test Case
+                                    </th>
                                     <th class="text-nowrap w-auto">Status</th>
                                     <th class="text-nowrap w-auto">Duration</th>
                                     <th class="text-nowrap w-auto">Date</th>
@@ -556,59 +558,66 @@
 </template>
 
 <script>
-import Layout from '@/layouts/sessions/main';
-import SessionChart from '@/components/sessions/chart';
-import ChangeStatus from '@/components/sessions/change-status';
+    import Layout from '@/layouts/sessions/main';
+    import SessionChart from '@/components/sessions/chart';
+    import ChangeStatus from '@/components/sessions/change-status';
 
-export default {
-    components: {
-        Layout,
-        SessionChart,
-        ChangeStatus,
-    },
-    props: {
-        session: {
-            type: Object,
-            required: true,
+    export default {
+        components: {
+            Layout,
+            SessionChart,
+            ChangeStatus,
         },
-        questionnaire: {
-            type: Object,
-            required: true,
+        props: {
+            session: {
+                type: Object,
+                required: true,
+            },
+            questionnaire: {
+                type: Object,
+                required: true,
+            },
+            useCases: {
+                type: Object,
+                required: true,
+            },
+            scenarios: {
+                type: Object,
+                required: true,
+            },
+            testRuns: {
+                type: Object,
+                required: true,
+            },
+            sutUrls: {
+                type: Object,
+                required: false,
+            },
         },
-        useCases: {
-            type: Object,
-            required: true,
-        },
-        testRuns: {
-            type: Object,
-            required: true,
-        },
-        sutUrls: {
-            type: Object,
-            required: false,
-        },
-    },
-    methods: {
-        allTestsPass() {
-            var testCase = this.session.testCases.data;
-            for (var t in testCase) {
-                if (testCase[t].lastTestRun && !testCase[t].lastTestRun.successful) {
-                    this.warning = true;
-                    return [this.warning];
+        methods: {
+            allTestsPass() {
+                var testCase = this.session.testCases.data;
+                for (var t in testCase) {
+                    if (
+                        testCase[t].lastTestRun &&
+                        !testCase[t].lastTestRun.successful
+                    ) {
+                        this.warning = true;
+                        return [this.warning];
+                    }
                 }
-            }
-            this.warning = false;
-            return this.warning;
+                this.warning = false;
+                return this.warning;
+            },
         },
-    },
-    mounted() {
-        this.allTestsPass();
-    },
-    data() {
-        return {
-            warning: false,
-            isCompliance: this.session.type === 'compliance',
-        };
-    },
-};
+        mounted() {
+            this.allTestsPass();
+        },
+        data() {
+            return {
+                warning: false,
+                isCompliance: this.session.type === 'compliance',
+            };
+        },
+    };
 </script>
