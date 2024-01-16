@@ -1,0 +1,50 @@
+name: Retrieval of Bills - success
+slug: retrieval-of-bills-success
+use_case: Bill Payments
+behavior: positive
+description: |
+  Mobile Money Provider can retrieve bills for a given service provider customer account.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API implemented.
+components:
+  - name: Service Provider
+    slug: sp
+  - name: Mobile Money API Provider
+    slug: mmap
+test_steps:
+  - path: /accounts/{identifierType}/{identifier}/bills
+    pattern: '^accounts/([a-zA-Z]*)/([a-zA-Z0-9]*)/bills$'
+    method: GET
+    source: mmap
+    target: sp
+    api_spec: MM API v1.2
+    test_response_scripts:
+      - name: Retrieval of Bills was successfully received
+        rules:
+          status: 'required|in:200'
+      - name: Response array is specified correctly with at least 1 bill object
+        rules:
+          body.*: ['required', 'array', 'min:1']
+
+    request:
+      method: GET
+      uri:
+        /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER
+        | default('1') }}/bills
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        - billReference: 'REF-000001'
+          billStatus: 'unpaid'
+          amountDue: '50.00'
+          minimumAmountDue: '15.00'
+          currency: 'GBP'
+          dueDate: '2024-01-10'
+          creationDate: '{{ new_date_iso8601() }}'
+          modificationDate: '{{ new_date_iso8601() }}'
