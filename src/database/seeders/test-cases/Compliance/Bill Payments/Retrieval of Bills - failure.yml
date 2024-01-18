@@ -1,14 +1,14 @@
-name: Retrieval of Bills - success
-slug: retrieval-of-bills-success
+name: Retrieval of Bills - failure
+slug: retrieval-of-bills-failure
 use_case: Bill Payments
-behavior: positive
+behavior: negative
 description: |
-  Mobile Money Provider can retrieve bills for a given service provider customer account.
+  Service Provider is unable to return bill details from the Mobile Money Provider. The Service Provider responds with an error due to incorrect identifier.
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API implemented.
   - Define the environment variables to customise this test case:
     - `ACCOUNT_ID`, default value is `accountid`
-    - `IDENTIFIER`, default value is `1`
+    - `IDENTIFIER`, default value is `2`
 components:
   - name: Mobile Money API Provider
     slug: mmap
@@ -23,31 +23,22 @@ test_steps:
     target: sp
     api_spec: MM API v1.2
     test_response_scripts:
-      - name: Retrieval of Bills was successfully received
+      - name: Retrieval of Bills was successfully rejected
         rules:
-          status: 'required|in:200'
-      - name: Response array is specified correctly with at least 1 bill object
-        rules:
-          body.*: ['required', 'array', 'min:1']
+          status: 'required|in:404'
     request:
       method: GET
       uri:
         /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER
-        | default('1') }}/bills
+        | default('2') }}/bills
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
     response:
-      status: 200
+      status: 404
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
       body:
-        - billReference: 'REF-000001'
-          billStatus: 'unpaid'
-          amountDue: '50.00'
-          minimumAmountDue: '15.00'
-          currency: 'GBP'
-          dueDate: '2024-01-10'
-          creationDate: '{{ new_date_iso8601() }}'
-          modificationDate: '{{ new_date_iso8601() }}'
+        errorCategory: 'identification'
+        errorCode: 'identifierError'
