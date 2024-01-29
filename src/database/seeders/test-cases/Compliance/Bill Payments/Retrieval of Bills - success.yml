@@ -31,9 +31,7 @@ test_steps:
           body.*: ['required', 'array', 'min:1']
     request:
       method: GET
-      uri:
-        /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER
-        | default('1') }}/bills
+      uri: /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'

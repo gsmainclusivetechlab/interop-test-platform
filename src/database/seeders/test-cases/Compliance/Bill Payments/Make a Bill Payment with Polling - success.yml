@@ -42,10 +42,7 @@ test_steps:
           body.notificationMethod: 'required|in:polling'
     request:
       method: POST
-      uri:
-        /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER
-        | default('1') }}/bills/{{ env.BILL_REFERENCE | default('REF-000001')
-        }}/payments
+      uri: /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills/{{ env.BILL_REFERENCE | default('REF-000001') }}/payments
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'

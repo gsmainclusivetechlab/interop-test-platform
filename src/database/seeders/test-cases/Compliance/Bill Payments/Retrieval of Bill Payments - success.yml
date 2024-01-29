@@ -28,12 +28,12 @@ test_steps:
       - name: Transaction was successfully received
         rules:
           status: 'required|in:200'
+      - name: Response array is specified correctly with a maximun of 10 transactions
+        rules:
+          body.*: ['required', 'array', 'max:10']
     request:
       method: GET
-      uri:
-        /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER
-        | default('1') }}/bills/{{ env.BILL_REFERENCE | default('REF-000001')
-        }}/payments
+      uri: /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills/{{ env.BILL_REFERENCE | default('REF-000001') }}/payments?offset=0&limit=10
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
@@ -43,6 +43,33 @@ test_steps:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
       body:
-        billPaymentStatus: 'unpaid'
-        amountPaid: '10.00'
-        currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.00'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.05'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.10'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.15'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.20'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.25'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.30'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.35'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.40'
+          currency: 'GBP'
+        - billPaymentStatus: 'unpaid'
+          amountPaid: '10.45'
+          currency: 'GBP'

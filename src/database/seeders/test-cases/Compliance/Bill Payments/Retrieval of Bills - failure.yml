@@ -28,9 +28,7 @@ test_steps:
           status: 'required|in:404'
     request:
       method: GET
-      uri:
-        /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER
-        | default('2') }}/bills
+      uri: /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER | default('2') }}/bills
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
