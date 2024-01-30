@@ -134,7 +134,7 @@ test_steps:
           body.amount: 'regex:/^13([.][0-9]{0,4})?$/'
       - name: Transaction is a Transfer
         rules:
-          body.type: 'required|in:trasnfer'
+          body.type: 'required|in:transfer'
       - name: Transaction was approved
         rules:
           body.transactionStatus: 'required|in:completed'

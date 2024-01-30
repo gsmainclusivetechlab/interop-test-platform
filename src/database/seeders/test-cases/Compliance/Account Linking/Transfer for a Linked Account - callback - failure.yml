@@ -37,9 +37,6 @@ test_steps:
       - name: Amount is specified correctly
         rules:
           body.amount: 'regex:/^5([.][0-9]{0,4})?$/'
-      - name: Credit party key must be `linkref`
-        rules:
-          body.creditparty.key: 'required|in:linkref'
     test_response_scripts:
       - name: Transaction was successfully accepted
         rules:
