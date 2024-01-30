@@ -1,0 +1,113 @@
+name: Transfer for a Linked Account - callback - failure
+slug: transfer-linked-account-callback-failure
+use_case: Account Linking
+behavior: negative
+description: |
+  The Requesting FSP initiates a transfer to the FSP using an established link. The FSP is unable to process the transfer and returns a callback containing the error object.
+precondition: |
+  - Financial Service Provider has GSMA Mobile Money API Implemented.
+  - Financial Service Provider is capable of handled async calls.
+  - Required Parameters for Execution:
+    - Amount should be the value `5.50`.
+    - Credit party key is set to `linkref`
+  - Define the environment variables to customise this test case:
+    - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `accountid`
+    - `DEBIT_PARTY_VALUE`, default value is `1`
+    - `CREDIT_PARTY_VALUE`, default value is `REF-0000001`
+components:
+  - name: Requesting Financial Service Provider
+    slug: rfsp
+  - name: Financial Service Provider
+    slug: fsp
+test_steps:
+  ## 1 ---------- POST /transactions/type/transfer: RFSP -> FSP ---------- ##
+  - path: /transactions/type/{transactionType}
+    pattern: '^transactions/type/transfer$'
+    method: POST
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2
+    trigger:
+      amount: '5.50'
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL.*: 'required|url'
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^5([.][0-9]{0,4})?$/'
+      - name: Credit party key must be `linkref`
+        rules:
+          body.creditparty.key: 'required|in:linkref'
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: POST
+      uri: /transactions/type/transfer
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["rfsp"]["fsp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amount: '5.50'
+        currency: '{{ env.CURRENCY | default("USD") }}'
+        debitParty:
+          - key: '{{ env.DEBIT_PARTY_KEY | default("accountid")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE | default("1") }}'
+        creditParty:
+          - key: 'linkref'
+            value: '{{ env.CREDIT_PARTY_VALUE | default("REF-0000001") }}'
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+  
+  ## 2 ---------- PUT /callback: FSP -> RFSP ---------- ##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: fsp
+    target: rfsp
+    api_spec: MM v1.2
+    callback:
+      origin_method: POST
+      origin_path: /transactions/type/{transactionType}
+      name: transactionsFailureEvent
+    test_request_scripts:
+      - name: Error category is valid
+        rules:
+          body.errorCategory: 'required|in:businessRule'
+      - name: Error code is valid
+        rules:
+          body.errorCode: 'required|in:insufficientFunds'
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'required|in:204'
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["x-callback-url"].0 }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        errorCategory: 'businessRule'
+        errorCode: 'insufficientFunds'
+    response:
+      status: 204

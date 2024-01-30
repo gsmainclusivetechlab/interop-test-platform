@@ -1,36 +1,47 @@
-name: Perform a Transfer Reversal
-slug: perform-transfer-reversal-success
+name: Transfer for a Linked Account - callback - success
+slug: transfer-linked-account-callback-success
 use_case: Account Linking
 behavior: positive
 description: |
-  Requesting Financial Service Provider requests a reversal for other Financial Service Provider through the Mobile Money API and the Financial Service Provider handles the request and responds with an asynchronous callback. The reversal is successful and the reversal object is sent back to the Requesting Financial Service Provider.
+  The Requesting FSP initiates a transfer to the FSP using an established link.
 precondition: |
   - Financial Service Provider has GSMA Mobile Money API Implemented.
   - Financial Service Provider is capable of handled async calls.
   - Required Parameters for Execution:
-    - `transactionReference`` should be a valid value to reply the inform
-  - Define the envrionment variables to customise this test case:
-    - `TRANSACTION_REFERENCE`, default value is `99999911-2222-4e3d-8111-98211e4f910c`
+    - Amount should be the value `5.50`.
+    - Credit party key is set to `linkref`
+  - Define the environment variables to customise this test case:
     - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `accountid`
+    - `DEBIT_PARTY_VALUE`, default value is `1`
+    - `CREDIT_PARTY_VALUE`, default value is `REF-0000001`
 components:
   - name: Requesting Financial Service Provider
     slug: rfsp
   - name: Financial Service Provider
     slug: fsp
 test_steps:
-  ## 1 ---------- POST /transactions/{transactionReference}/reversals: RFSP -> FSP ---------- ##
-  - path: /transactions/{transactionReference}/reversals
-    pattern: '^transactions/.*/reversals$'
+  ## 1 ---------- POST /transactions/type/transfer: RFSP -> FSP ---------- ##
+  - path: /transactions/type/{transactionType}
+    pattern: '^transactions/type/transfer$'
     method: POST
     source: rfsp
     target: fsp
     api_spec: MM v1.2
+    trigger:
+      amount: '5.50'
     test_request_scripts:
       - name: Header has the Url Callback
         rules:
           headers.X-Callback-URL.*: 'required|url'
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^5([.][0-9]{0,4})?$/'
+      - name: Credit party key must be `linkref`
+        rules:
+          body.creditparty.key: 'required|in:linkref'
     test_response_scripts:
-      - name: Transaction was successfully Accepted
+      - name: Transaction was successfully accepted
         rules:
           status: 'required|in:202'
       - name: Status is specified correctly
@@ -41,7 +52,7 @@ test_steps:
           body.notificationMethod: 'required|in:callback'
     request:
       method: POST
-      uri: /transactions/{{ env.TRANSACTION_REFERENCE | default("99999911-2222-4e3d-8111-98211e4f910c") }}/reversals
+      uri: /transactions/type/transfer
       headers:
         Accept: 'application/json'
         Content-Type: 'application/json'
@@ -49,17 +60,25 @@ test_steps:
         X-Date: '{{ new_date_iso8601() }}'
         X-CorrelationID: '{{ uuidv4() }}'
       body:
-        type: 'reversal'
+        amount: '5.50'
+        currency: '{{ env.CURRENCY | default("USD") }}'
+        debitParty:
+          - key: '{{ env.DEBIT_PARTY_KEY | default("accountid")}}'
+            value: '{{ env.DEBIT_PARTY_VALUE | default("1") }}'
+        creditParty:
+          - key: 'linkref'
+            value: '{{ env.CREDIT_PARTY_VALUE | default("REF-0000001") }}'
     response:
       status: 202
       headers:
         Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
       body:
         serverCorrelationId: '{{ uuidv4() }}'
         status: 'pending'
         notificationMethod: 'callback'
 
-  ## 1 ---------- PUT /callback: FSP -> RFSP ---------- ##
+  ## 2 ---------- PUT /callback: FSP -> RFSP ---------- ##
   - path: '{X-Callback-URL}'
     pattern: '.*'
     method: PUT
@@ -68,21 +87,20 @@ test_steps:
     api_spec: MM v1.2
     callback:
       origin_method: POST
-      origin_path: /transactions/{transactionReference}/reversals
-      name: reversalsSuccessEvent
+      origin_path: /transactions/type/{transactionType}
+      name: transactionsSuccessEvent
     test_request_scripts:
-      - name: Transaction is a reversal
+      - name: Amount is specified correctly
         rules:
-          body.type: 'required|in:reversal'
+          body.amount: 'regex:/^5([.][0-9]{0,4})?$/'
+      - name: Transaction is a Transfer
+        rules:
+          body.type: 'required|in:transfer'
       - name: Transaction was approved
         rules:
           body.transactionStatus: 'required|in:completed'
-          body.type: 'required|in:reversal'
-      - name: The originalTransactionReference is valid
-        rules:
-          body.originalTransactionReference: 'required|in:{{ env.TRANSACTION_REFERENCE | default("99999911-2222-4e3d-8111-98211e4f910c" )}}'
     test_response_scripts:
-      - name: Transaction was successfully Accepted
+      - name: Transaction was successfully accepted
         rules:
           status: 'required|in:204'
     request:
@@ -92,11 +110,14 @@ test_steps:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
       body:
-        amount: '21.00'
-        currency: '{{ env.CURRENCY | default("USD")}}'
-        type: 'reversal'
-        transactionStatus: 'completed'
-        transactionReference: '{{ uuidv4() }}'
-        originalTransactionReference: '{{ env.TRANSACTION_REFERENCE | default("99999911-2222-4e3d-8111-98211e4f910c" )}}'
+        '{{ steps.1.request.body 
+        | merge(
+          {
+            type: "transfer",
+            transactionStatus: "completed",
+            transactionReference: uuidv4()
+          }
+        )
+        | json_encode }}'
     response:
       status: 204
