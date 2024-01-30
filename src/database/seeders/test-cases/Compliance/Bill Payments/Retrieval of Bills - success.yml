@@ -7,7 +7,7 @@ description: |
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API implemented.
   - Define the environment variables to customise this test case:
-    - `ACCOUNT_ID`, default value is `accountid`
+    - `IDENTIFIER_TYPE`, default value is `accountid`
     - `IDENTIFIER`, default value is `1`
 components:
   - name: Mobile Money API Provider
@@ -31,7 +31,7 @@ test_steps:
           body.*: ['required', 'array', 'min:1']
     request:
       method: GET
-      uri: /accounts/{{ env.ACCOUNT_ID | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills
+      uri: /accounts/{{ env.IDENTIFIER_TYPE | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills
       headers:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
@@ -41,7 +41,7 @@ test_steps:
         Content-Type: 'application/json'
         X-Date: '{{ new_date_iso8601() }}'
       body:
-        - billReference: 'REF-000001'
+        - billReference: 'REF-0000001'
           billStatus: 'unpaid'
           amountDue: '50.00'
           minimumAmountDue: '15.00'
