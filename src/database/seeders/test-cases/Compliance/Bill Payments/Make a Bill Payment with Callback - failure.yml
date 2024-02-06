@@ -77,17 +77,14 @@ test_steps:
       origin_path: /accounts/{identifierType}/{identifier}/bills/{billReference}/payments
       name: billsPaymentsFailureEvent
     test_request_scripts:
-      - name: Amount Paid is specified correctly
+      - name: Error category is valid
         rules:
-          body.amountPaid: 'regex:/^5([.][0-9]{0,4})?$/'
-      - name: Currency is specified correctly
+          body.errorCategory: 'required|in:businessRule'
+      - name: Error code is valid
         rules:
-          body.currency: 'required|in:{{ env.CURRENCY | default("GBP") }}'
-      - name: Bill Payment Status is present
-        rules:
-          body.billPaymentStatus: 'required'
+          body.errorCode: 'required|in:insufficientFunds'
     test_response_scripts:
-      - name: Transaction was successfully accepted
+      - name: Transaction was successfully declined
         rules:
           status: 'required|in:204'
     request:
