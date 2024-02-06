@@ -6,7 +6,7 @@ description: |
   The Requesting FSP initiates a transfer to the FSP using an established link.
 precondition: |
   - Financial Service Provider has GSMA Mobile Money API Implemented.
-  - Financial Service Provider is capable of handled async calls.
+  - Financial Service Provider is capable of handling async calls.
   - Required Parameters for Execution:
     - Amount should be the value `5.50`.
     - Credit party key is set to `linkref`
@@ -16,9 +16,9 @@ precondition: |
     - `DEBIT_PARTY_VALUE`, default value is `1`
     - `CREDIT_PARTY_VALUE`, default value is `REF-0000001`
 components:
-  - name: Requesting Financial Service Provider
+  - name: Requesting FSP
     slug: rfsp
-  - name: Financial Service Provider
+  - name: FSP
     slug: fsp
 test_steps:
   ## 1 ---------- POST /transactions/type/transfer: RFSP -> FSP ---------- ##

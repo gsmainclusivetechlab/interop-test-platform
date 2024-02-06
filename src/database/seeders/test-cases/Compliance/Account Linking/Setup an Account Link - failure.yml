@@ -14,9 +14,9 @@ precondition: |
     - REQUESTING_ORGANISATION_IDENTIFIER_TYPE, default value is `organisationid`
     - REQUESTING_ORGANISATION_IDENTIFIER, default value is `12345`
 components:
-  - name: Requesting Financial Service Provider
+  - name: Requesting FSP
     slug: rfsp
-  - name: Financial Service Provider
+  - name: FSP
     slug: fsp
 test_steps:
   ## 1 ---------- POST /accounts/{identifierType}/{identifier}/links: RFSP -> FSP ---------- ##

@@ -15,9 +15,9 @@ precondition: |
     - `CREDIT_PARTY_KEY`, default value is `msisdn`
     - `CREDIT_PARTY_VALUE`, default value is `+4412345678`
 components:
-  - name: Requesting Financial Service Provider
+  - name: Requesting FSP
     slug: rfsp
-  - name: Financial Service Provider
+  - name: FSP
     slug: fsp
 test_steps:
   ## 1 ---------- POST /transactions/type/transfer: RFSP -> FSP ---------- ##

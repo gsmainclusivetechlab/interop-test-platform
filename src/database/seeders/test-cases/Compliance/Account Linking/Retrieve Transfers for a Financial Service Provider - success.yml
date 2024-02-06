@@ -3,7 +3,7 @@ slug: retrieve-transfers-financial-service-provider-success
 use_case: Account Linking
 behavior: positive
 description: |
-  Requesting FSP can retrieve retrieve all transfers for a FSP via multiple requests.
+  Requesting FSP can retrieve all transfers for a FSP via multiple requests.
 precondition: |
   - Mobile Money Operator has GSMA Mobile Money API implemented.
   - Define the environment variables to customise this test case:
@@ -11,9 +11,9 @@ precondition: |
     - `IDENTIFIER`, default value is `1`
     - `CURRENCY`, default value is `USD`
 components:
-  - name: Requesting Financial Service Provider
+  - name: Requesting FSP
     slug: rfsp
-  - name: Financial Service Provider
+  - name: FSP
     slug: fsp
 test_steps:
   ## 1 ---------- GET /accounts/{identifierType}/{identifier}/transactions: RFSP -> FSP ---------- ##

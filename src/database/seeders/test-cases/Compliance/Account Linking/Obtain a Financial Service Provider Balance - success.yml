@@ -10,9 +10,9 @@ precondition: |
     - IDENTIFIER_TYPE, default value is `accountid`
     - IDENTIFIER, default value is `1`
 components:
-  - name: Requesting Financial Service Provider
+  - name: Requesting FSP
     slug: rfsp
-  - name: Financial Service Provider
+  - name: FSP
     slug: fsp
 test_response_scripts:
   - name: Response request was successfully received

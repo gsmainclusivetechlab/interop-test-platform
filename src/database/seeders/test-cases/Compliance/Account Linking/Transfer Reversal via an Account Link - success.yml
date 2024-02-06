@@ -6,16 +6,16 @@ description: |
   Requesting Financial Service Provider requests a reversal for other Financial Service Provider through the Mobile Money API and the Financial Service Provider handles the request and responds with an asynchronous callback. The reversal is successful and the reversal object is sent back to the Requesting Financial Service Provider.
 precondition: |
   - Financial Service Provider has GSMA Mobile Money API Implemented.
-  - Financial Service Provider is capable of handled async calls.
+  - Financial Service Provider is capable of handling async calls.
   - Required Parameters for Execution:
     - `transactionReference`` should be a valid value to reply the inform
   - Define the envrionment variables to customise this test case:
     - `TRANSACTION_REFERENCE`, default value is `99999911-2222-4e3d-8111-98211e4f910c`
     - `CURRENCY`, default value is `USD`
 components:
-  - name: Requesting Financial Service Provider
+  - name: Requesting FSP
     slug: rfsp
-  - name: Financial Service Provider
+  - name: FSP
     slug: fsp
 test_steps:
   ## 1 ---------- POST /transactions/{transactionReference}/reversals: RFSP -> FSP ---------- ##
