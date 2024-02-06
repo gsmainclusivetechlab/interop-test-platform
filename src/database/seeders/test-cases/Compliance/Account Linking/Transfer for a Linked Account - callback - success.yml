@@ -27,7 +27,7 @@ test_steps:
     method: POST
     source: rfsp
     target: fsp
-    api_spec: MM v1.2
+    api_spec: MM v1.2.0
     trigger:
       amount: '5.50'
     test_request_scripts:
@@ -81,7 +81,7 @@ test_steps:
     method: PUT
     source: fsp
     target: rfsp
-    api_spec: MM v1.2
+    api_spec: MM v1.2.0
     callback:
       origin_method: POST
       origin_path: /transactions/type/{transactionType}

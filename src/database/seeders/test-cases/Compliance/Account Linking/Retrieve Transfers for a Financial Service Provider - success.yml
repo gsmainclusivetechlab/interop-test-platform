@@ -22,7 +22,7 @@ test_steps:
     method: GET
     source: rfsp
     target: fsp
-    api_spec: MM API v1.2
+    api_spec: MM v1.2.0
     test_response_scripts:
       - name: Transaction was successfully received
         rules:
